@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2355 2015/02/28 21:51:14 tom Exp $
+-- $Id: NEWS,v 1.2357 2015/03/07 23:38:25 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150307
+	+ document limitations of getwin in manual page (prompted by discussion
+	  with John S Urban).
+	+ extend test/savescreen.c to demonstrate that color pair values
+	  and graphic characters can be restored using getwin.
 
 20150228
 	+ modify win_driver.c to eliminate the constructor, to make it more

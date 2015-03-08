@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2010,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2011,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.15 2011/01/15 18:15:11 tom Exp $
+ * $Id: savescreen.c,v 1.21 2015/03/07 21:55:35 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -105,13 +105,25 @@ after_load(void)
 static void
 show_what(int which, int last)
 {
-    int y, x;
-    time_t now = time((time_t *) 0);
+    int y, x, n;
+    time_t now;
+    char *mytime;
 
     getyx(stdscr, y, x);
 
     move(0, 0);
-    printw("Saved %d of %d - %s", which, last + 1, ctime(&now));
+    printw("Saved %d of %d (? for help)", which, last + 1);
+
+    now = time((time_t *) 0);
+    mytime = ctime(&now);
+    for (n = (int) strlen(mytime) - 1; n >= 0; --n) {
+	if (isspace(UChar(mytime[n]))) {
+	    mytime[n] = '\0';
+	} else {
+	    break;
+	}
+    }
+    mvprintw(0, (COLS - n - 2), " %s", mytime);
 
     move(y, x);
 
@@ -123,7 +135,7 @@ get_command(int which, int last)
 {
     int ch;
 
-    timeout(100);
+    timeout(50);
 
     do {
 	show_what(which, last);
@@ -131,6 +143,61 @@ get_command(int which, int last)
     } while (ch == ERR);
 
     return ch;
+}
+
+static void
+show_help(const char **help)
+{
+    WINDOW *mywin = newwin(LINES, COLS, 0, 0);
+    int n;
+
+    box(mywin, 0, 0);
+    wmove(mywin, 1, 1);
+    for (n = 0; help[n] != 0; ++n) {
+	wmove(mywin, 1 + n, 2);
+	wprintw(mywin, "%.*s", COLS - 4, help[n]);
+    }
+    wgetch(mywin);
+    delwin(mywin);
+    touchwin(stdscr);
+    refresh();
+}
+
+static void
+editor_help(void)
+{
+    static const char *msgs[] =
+    {
+	"You are now in the screen-editor, which allows you to make some",
+	"lines on the screen, as well as save copies of the screen to a",
+	"temporary file",
+	"",
+	"Keys:",
+	"   q           quit",
+	"   n           run the screen-loader to show the saved screens",
+	"   <space>     dump a screen",
+	"",
+	"   a           toggle between '#' and graphic symbol for drawing",
+	"   c           change color drawn by line to next in palette",
+	"   h,j,k,l or arrows to move around the screen, drawing",
+    };
+    show_help(msgs);
+}
+
+static void
+replay_help(void)
+{
+    static const char *msgs[] =
+    {
+	"You are now in the screen-loader, which allows you to view",
+	"the dumped/restored screens.",
+	"",
+	"Keys:",
+	"   q           quit",
+	"   <space>     load the next screen",
+	"   <backspace> load the previous screen",
+    };
+    show_help(msgs);
 }
 
 static void
@@ -189,10 +256,19 @@ main(int argc, char *argv[])
     keypad(stdscr, TRUE);
     curs_set(0);
     if (has_colors()) {
+	short pair;
+	short color;
+
 	start_color();
-	for (ch = 0; ch < COLOR_PAIRS; ++ch) {
-	    short pair = (short) (ch % COLOR_PAIRS);
-	    init_pair(pair, COLOR_WHITE, (short) (ch % COLORS));
+	/*
+	 * Assume pairs is the square of colors, and assign pairs going down
+	 * so that there is minimal conflict with the background color (which
+	 * counts up).  The intent is just to show how color pair values are
+	 * saved and restored.
+	 */
+	for (pair = 0; pair < COLOR_PAIRS; ++pair) {
+	    color = (short) (pair % (COLORS - 1));
+	    init_pair(pair, COLOR_WHITE - color, color);
 	}
     }
 
@@ -227,7 +303,6 @@ main(int argc, char *argv[])
 		done = TRUE;
 		break;
 	    case 'q':
-		endwin();
 		cleanup(files);
 		done = TRUE;
 		break;
@@ -239,6 +314,9 @@ main(int argc, char *argv[])
 	    case ' ':
 		if (++which > last)
 		    which = 0;
+		break;
+	    case '?':
+		replay_help();
 		break;
 	    default:
 		beep();
@@ -256,17 +334,12 @@ main(int argc, char *argv[])
 		wrefresh(curscr);
 	    }
 	}
+	endwin();
     } else {
-	int y;
-	int x;
-
-	move(2, 0);
-	printw("Use h,j,k,l or arrows to move around the screen\n");
-	printw("Press 'q' to quit, ' ' to dump a screen\n");
-	printw("When the last screen has been dumped, press 'n' to run the\n");
-	printw("screen-loader.  That allows only 'q', backspace and ' ' for\n");
-	printw("stepping through the dumped/restored screens.\n");
-	getyx(stdscr, y, x);
+	int y = 0;
+	int x = 0;
+	int color = 0;
+	int altchars = 0;
 
 	while (!done) {
 	    switch (get_command(which, last)) {
@@ -275,7 +348,6 @@ main(int argc, char *argv[])
 		done = TRUE;
 		break;
 	    case 'q':
-		endwin();
 		cleanup(files);
 		done = TRUE;
 		break;
@@ -291,8 +363,22 @@ main(int argc, char *argv[])
 		    }
 		    ++which;
 		    if (has_colors()) {
+			int cx, cy;
 			short pair = (short) (which % COLOR_PAIRS);
+			/*
+			 * Change the background color, to make it more
+			 * obvious.  But that changes the existing text-color. 
+			 * Copy the old values from the currently displayed
+			 * screen.
+			 */
 			bkgd((chtype) COLOR_PAIR(pair));
+			for (cy = 1; cy < LINES; ++cy) {
+			    for (cx = 0; cx < COLS; ++cx) {
+				wmove(curscr, cy, cx);
+				wmove(stdscr, cy, cx);
+				waddch(stdscr, winch(curscr));
+			    }
+			}
 		    }
 		} else {
 		    beep();
@@ -318,20 +404,32 @@ main(int argc, char *argv[])
 		if (++x >= COLS)
 		    x = 0;
 		break;
+	    case 'a':
+		altchars = !altchars;
+		break;
+	    case 'c':
+		color = (color + 1) % COLORS;
+		break;
+	    case '?':
+		editor_help();
+		break;
+	    default:
+		beep();
+		continue;
 	    }
 	    if (!done) {
-		time_t now = time((time_t *) 0);
-
-		move(0, 0);
-		addstr(ctime(&now));
+		attr_t attr = (A_REVERSE | COLOR_PAIR(color * COLORS));
+		chtype ch2 = (altchars ? ACS_DIAMOND : '#');
 		move(y, x);
-		addch('#' | A_REVERSE);
+		addch(ch2 | attr);
 		move(y, x);
 	    }
 	}
+	endwin();
     }
     ExitProgram(EXIT_SUCCESS);
 }
+
 #else
 int
 main(int argc, char *argv[])
