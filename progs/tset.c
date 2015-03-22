@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.93 2013/12/15 01:05:56 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.94 2015/03/21 16:34:59 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -745,7 +745,7 @@ get_termcap_entry(char *userarg)
 #define DISABLED(val)   ((int)(val) <= 0)
 #endif
 
-#define CHK(val, dft)   (DISABLED(val) ? dft : val)
+#define CHK(val, dft)   (unsigned char) (DISABLED(val) ? dft : val)
 
 static bool set_tabs(void);
 
@@ -1305,8 +1305,8 @@ main(int argc, char **argv)
 	    if (WINSIZE_ROWS(win) == 0 &&
 		WINSIZE_COLS(win) == 0 &&
 		tlines > 0 && tcolumns > 0) {
-		WINSIZE_ROWS(win) = tlines;
-		WINSIZE_COLS(win) = tcolumns;
+		WINSIZE_ROWS(win) = (unsigned short) tlines;
+		WINSIZE_COLS(win) = (unsigned short) tcolumns;
 		(void) ioctl(STDERR_FILENO, IOCTL_SET_WINSIZE, &win);
 	    }
 	}

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.21 2015/03/07 21:55:35 tom Exp $
+ * $Id: savescreen.c,v 1.23 2015/03/21 21:35:00 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -51,6 +51,7 @@
 #endif
 
 static bool use_init = FALSE;
+static bool keep_dumps = FALSE;
 
 static int
 fexists(const char *name)
@@ -71,8 +72,10 @@ cleanup(char *files[])
 {
     int n;
 
-    for (n = 0; files[n] != 0; ++n) {
-	unlink(files[n]);
+    if (!keep_dumps) {
+	for (n = 0; files[n] != 0; ++n) {
+	    unlink(files[n]);
+	}
     }
 }
 
@@ -209,6 +212,7 @@ usage(void)
 	"",
 	"Options:",
 	" -i  use scr_init/scr_restore rather than scr_set",
+	" -k  keep the restored dump-files rather than removing them",
 	" -r  replay the screen-dump files"
     };
     unsigned n;
@@ -228,10 +232,15 @@ main(int argc, char *argv[])
     bool done = FALSE;
     char **files;
 
-    while ((ch = getopt(argc, argv, "ir")) != -1) {
+    setlocale(LC_ALL, "");
+
+    while ((ch = getopt(argc, argv, "ikr")) != -1) {
 	switch (ch) {
 	case 'i':
 	    use_init = TRUE;
+	    break;
+	case 'k':
+	    keep_dumps = TRUE;
 	    break;
 	case 'r':
 	    replaying = TRUE;
@@ -268,7 +277,7 @@ main(int argc, char *argv[])
 	 */
 	for (pair = 0; pair < COLOR_PAIRS; ++pair) {
 	    color = (short) (pair % (COLORS - 1));
-	    init_pair(pair, COLOR_WHITE - color, color);
+	    init_pair(pair, (short) (COLOR_WHITE - color), color);
 	}
     }
 
