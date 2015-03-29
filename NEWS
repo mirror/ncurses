@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2363 2015/03/28 21:50:39 tom Exp $
+-- $Id: NEWS,v 1.2365 2015/03/29 14:38:58 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150329
+	+ correct cut/paste error for "--enable-ext-putwin" that made it the
+	  same as "--enable-ext-colors" (report by Roumen Petrov)
 
 20150328
 	+ add "-f" option to test/savescreen.c to help with testing/debugging

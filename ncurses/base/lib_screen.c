@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.70 2015/03/29 00:16:00 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.72 2015/03/29 15:25:29 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -321,7 +321,7 @@ decode_chtype(char *source, chtype fillin, chtype *target)
     T(("decode_chtype '%s'", source));
     source = decode_attr(source, &attr, &color);
     source = decode_char(source, &value);
-    *target = ChCharOf(value) | attr | COLOR_PAIR(color);
+    *target = (ChCharOf(value) | attr | (chtype) COLOR_PAIR(color));
     /* FIXME - ignore combining characters */
     return source;
 }
@@ -334,6 +334,7 @@ decode_cchar(char *source, cchar_t *fillin, cchar_t *target)
     attr_t attr = fillin->attr;
     wchar_t chars[CCHARW_MAX];
     int append = 0;
+    int value = 0;
 
     T(("decode_cchar  '%s'", source));
     *target = blank;
@@ -344,14 +345,14 @@ decode_cchar(char *source, cchar_t *fillin, cchar_t *target)
 #endif
     source = decode_attr(source, &attr, &color);
     memset(chars, 0, sizeof(chars));
-    source = decode_char(source, &chars[0]);
+    source = decode_char(source, &value);
+    chars[0] = (wchar_t) value;
     /* handle combining characters */
     while (source[0] == MARKER && source[1] == APPEND) {
-	int value;
 	source += 2;
 	source = decode_char(source, &value);
 	if (append++ < CCHARW_MAX) {
-	    chars[append] = value;
+	    chars[append] = (wchar_t) value;
 	}
     }
     setcchar(target, chars, attr, (short) color, NULL);
@@ -694,21 +695,22 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
     }
 #endif
     for (n = 0; n < SIZEOF(source->chars); ++n) {
-	if (source->chars[n] == 0)
+	unsigned uch = source->chars[n];
+	if (uch == 0)
 	    continue;
 	if (n) {
 	    *target++ = MARKER;
 	    *target++ = APPEND;
 	}
 	*target++ = MARKER;
-	if (source->chars[n] > 0xffff) {
-	    sprintf(target, "U%08x", source->chars[n]);
-	} else if (source->chars[n] > 0xff) {
-	    sprintf(target, "u%04x", source->chars[n]);
-	} else if (source->chars[n] < 32 || source->chars[n] >= 127) {
-	    sprintf(target, "%03o", source->chars[n] & 0xff);
+	if (uch > 0xffff) {
+	    sprintf(target, "U%08x", uch);
+	} else if (uch > 0xff) {
+	    sprintf(target, "u%04x", uch);
+	} else if (uch < 32 || uch >= 127) {
+	    sprintf(target, "%03o", uch & 0xff);
 	} else {
-	    switch (source->chars[n]) {
+	    switch (uch) {
 	    case ' ':
 		strcpy(target, "s");
 		break;
@@ -717,7 +719,7 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 		*target = '\0';
 		break;
 	    default:
-		sprintf(--target, "%c", source->chars[n]);
+		sprintf(--target, "%c", uch);
 		break;
 	    }
 	}
