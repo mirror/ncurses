@@ -41,17 +41,15 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.64 2015/03/21 23:59:32 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.70 2015/03/29 00:16:00 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
 #define MARKER '\\'
+#define APPEND '+'
 #define GUTTER '|'
 #define L_CURL '{'
 #define R_CURL '}'
-
-#define L_MARK "\\{"
-#define R_MARK "}"
 
 /*
  * Use 0x8888 as the magic number for new-format files, since it cannot be
@@ -61,7 +59,7 @@ MODULE_ID("$Id: lib_screen.c,v 1.64 2015/03/21 23:59:32 tom Exp $")
 static char my_magic[] =
 {'\210', '\210', '\210', '\210'};
 
-#if NCURSES_EXT_SCREEN_DUMP
+#if NCURSES_EXT_PUTWIN
 typedef enum {
     pINT			/* int */
     ,pSHORT			/* short */
@@ -266,10 +264,12 @@ decode_char(char *source, int *target)
     T(("decode_char   '%s'", source));
     *target = ' ';
     switch (*source) {
-    case '\\':
+    case MARKER:
 	switch (*++source) {
-	case '\\':
-	    *target = '\\';
+	case APPEND:
+	    break;
+	case MARKER:
+	    *target = MARKER;
 	    ++source;
 	    break;
 	case 's':
@@ -322,6 +322,7 @@ decode_chtype(char *source, chtype fillin, chtype *target)
     source = decode_attr(source, &attr, &color);
     source = decode_char(source, &value);
     *target = ChCharOf(value) | attr | COLOR_PAIR(color);
+    /* FIXME - ignore combining characters */
     return source;
 }
 
@@ -332,6 +333,7 @@ decode_cchar(char *source, cchar_t *fillin, cchar_t *target)
     int color;
     attr_t attr = fillin->attr;
     wchar_t chars[CCHARW_MAX];
+    int append = 0;
 
     T(("decode_cchar  '%s'", source));
     *target = blank;
@@ -343,7 +345,15 @@ decode_cchar(char *source, cchar_t *fillin, cchar_t *target)
     source = decode_attr(source, &attr, &color);
     memset(chars, 0, sizeof(chars));
     source = decode_char(source, &chars[0]);
-    /* FIXME - handle combining characters at this point */
+    /* handle combining characters */
+    while (source[0] == MARKER && source[1] == APPEND) {
+	int value;
+	source += 2;
+	source = decode_char(source, &value);
+	if (append++ < CCHARW_MAX) {
+	    chars[append] = value;
+	}
+    }
     setcchar(target, chars, attr, (short) color, NULL);
     return source;
 }
@@ -423,7 +433,18 @@ read_row(char *source, NCURSES_CH_T * prior, NCURSES_CH_T * target, int length)
 {
     while (*source != '\0' && length > 0) {
 #if NCURSES_WIDECHAR
+	int n, len;
 	source = decode_cchar(source, prior, target);
+	len = wcwidth(target->chars[0]);
+	if (len > 1) {
+	    SetWidecExt(CHDEREF(target), 0);
+	    for (n = 1; n < len; ++n) {
+		target[n] = target[0];
+		SetWidecExt(CHDEREF(target), n);
+	    }
+	    target += (len - 1);
+	    length -= (len - 1);
+	}
 #else
 	source = decode_chtype(source, *prior, target);
 #endif
@@ -437,7 +458,7 @@ read_row(char *source, NCURSES_CH_T * prior, NCURSES_CH_T * target, int length)
     /* FIXME - see what error conditions should apply if I need to return ERR */
     return 0;
 }
-#endif /* NCURSES_EXT_SCREEN_DUMP */
+#endif /* NCURSES_EXT_PUTWIN */
 
 /*
  * Originally, getwin/putwin used fread/fwrite, because they used binary data.
@@ -487,7 +508,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
      * If this is a new-format file, and we do not support it, give up.
      */
     if (!memcmp(&tmp, my_magic, 4)) {
-#if NCURSES_EXT_SCREEN_DUMP
+#if NCURSES_EXT_PUTWIN
 	if (read_win(&tmp, filep) < 0)
 #endif
 	    returnWin(0);
@@ -563,7 +584,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 		}
 	    }
 	}
-#if NCURSES_EXT_SCREEN_DUMP
+#if NCURSES_EXT_PUTWIN
 	else {
 	    char *txt;
 	    bool success = TRUE;
@@ -616,17 +637,20 @@ getwin(FILE *filep)
 }
 #endif
 
-#if NCURSES_EXT_SCREEN_DUMP
+#if NCURSES_EXT_PUTWIN
 static void
 encode_attr(char *target, attr_t source, attr_t prior)
 {
+    source &= ~A_CHARTEXT;
+    prior &= ~A_CHARTEXT;
+
     *target = '\0';
     if (source != prior) {
 	size_t n;
 	bool first = TRUE;
 
-	strcpy(target, L_MARK);
-	target += strlen(target);
+	*target++ = MARKER;
+	*target++ = L_CURL;
 
 	for (n = 0; n < SIZEOF(scr_attrs); ++n) {
 	    if ((source & scr_attrs[n].attr) != 0 ||
@@ -648,7 +672,8 @@ encode_attr(char *target, attr_t source, attr_t prior)
 	    target += strlen(target);
 	}
 
-	strcpy(target, R_MARK);
+	*target++ = R_CURL;
+	*target = '\0';
     }
 }
 
@@ -665,28 +690,34 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
     target += strlen(target);
 #if NCURSES_EXT_COLORS
     if (previous->ext_color != source->ext_color) {
-	sprintf(target, "%sC%d%s", L_MARK, source->ext_color, R_MARK);
+	sprintf(target, "%c%cC%d%c", MARKER, L_CURL, source->ext_color, R_CURL);
     }
 #endif
     for (n = 0; n < SIZEOF(source->chars); ++n) {
 	if (source->chars[n] == 0)
 	    continue;
+	if (n) {
+	    *target++ = MARKER;
+	    *target++ = APPEND;
+	}
+	*target++ = MARKER;
 	if (source->chars[n] > 0xffff) {
-	    sprintf(target, "\\U%08x", source->chars[n]);
+	    sprintf(target, "U%08x", source->chars[n]);
 	} else if (source->chars[n] > 0xff) {
-	    sprintf(target, "\\u%04x", source->chars[n]);
+	    sprintf(target, "u%04x", source->chars[n]);
 	} else if (source->chars[n] < 32 || source->chars[n] >= 127) {
-	    sprintf(target, "\\%03o", source->chars[n] & 0xff);
+	    sprintf(target, "%03o", source->chars[n] & 0xff);
 	} else {
 	    switch (source->chars[n]) {
 	    case ' ':
-		strcpy(target, "\\s");
+		strcpy(target, "s");
 		break;
-	    case '\\':
-		strcpy(target, "\\\\");
+	    case MARKER:
+		*target++ = MARKER;
+		*target = '\0';
 		break;
 	    default:
-		sprintf(target, "%c", source->chars[n]);
+		sprintf(--target, "%c", source->chars[n]);
 		break;
 	    }
 	}
@@ -700,18 +731,20 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 	encode_attr(target, AttrOfD(source), AttrOfD(previous));
     }
     target += strlen(target);
+    *target++ = MARKER;
     if (ch < 32 || ch >= 127) {
-	sprintf(target, "\\%03o", ch);
+	sprintf(target, "%03o", ch);
     } else {
 	switch (ch) {
 	case ' ':
-	    strcpy(target, "\\s");
+	    strcpy(target, "s");
 	    break;
-	case '\\':
-	    strcpy(target, "\\\\");
+	case MARKER:
+	    *target++ = MARKER;
+	    *target = '\0';
 	    break;
 	default:
-	    sprintf(target, "%c", ch);
+	    sprintf(--target, "%c", ch);
 	    break;
 	}
     }
@@ -728,7 +761,7 @@ putwin(WINDOW *win, FILE *filep)
 
     T((T_CALLED("putwin(%p,%p)"), (void *) win, (void *) filep));
 
-#if NCURSES_EXT_SCREEN_DUMP
+#if NCURSES_EXT_PUTWIN
     if (win != 0) {
 	const char *version = curses_version();
 	char buffer[1024];
@@ -808,9 +841,12 @@ putwin(WINDOW *win, FILE *filep)
 		|| ferror(filep))
 		returnCode(code);
 	    for (x = 0; x <= win->_maxx; x++) {
+		int len = wcwidth(data[x].chars[0]);
 		encode_cell(buffer, CHREF(data[x]), CHREF(last_cell));
 		last_cell = data[x];
 		PUTS(buffer);
+		if (len > 1)
+		    x += (len - 1);
 	    }
 	    PUTS("\n");
 	}

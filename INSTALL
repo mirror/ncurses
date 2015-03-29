@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.184 2015/01/24 23:24:22 tom Exp $
+-- $Id: INSTALL,v 1.185 2015/03/28 00:34:22 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -545,6 +545,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 	NOTE: using this option will make libraries which are not binary-
 	compatible with libncursesw 5.4.  None of the interfaces change, but
 	applications which have mouse mask mmask_t's must be recompiled.
+
+    --enable-ext-putwin
+	Modify the file-format written by putwin() to use printable text rather
+	than binary files, allowing getwin() to read screen dumps written by
+	differently-configured ncurses libraries.  The extended getwin() can
+	still read binary screen dumps from the "same" configuration of
+	ncurses.  This does not change the ABI (the binary interface seen by
+	calling applications).
 
     --enable-getcap
 	Use the 4.4BSD getcap code if available, or a bundled version of it to

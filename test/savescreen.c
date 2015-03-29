@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.23 2015/03/21 21:35:00 tom Exp $
+ * $Id: savescreen.c,v 1.27 2015/03/28 23:21:28 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -211,9 +211,10 @@ usage(void)
 	"Usage: savescreen [-r] files",
 	"",
 	"Options:",
-	" -i  use scr_init/scr_restore rather than scr_set",
-	" -k  keep the restored dump-files rather than removing them",
-	" -r  replay the screen-dump files"
+	" -f file  fill/initialize screen using text from this file",
+	" -i       use scr_init/scr_restore rather than scr_set",
+	" -k       keep the restored dump-files rather than removing them",
+	" -r       replay the screen-dump files"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
@@ -231,11 +232,19 @@ main(int argc, char *argv[])
     bool replaying = FALSE;
     bool done = FALSE;
     char **files;
+    char *fill_by = 0;
+#if USE_WIDEC_SUPPORT
+    cchar_t mycc;
+    int myxx;
+#endif
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "ikr")) != -1) {
+    while ((ch = getopt(argc, argv, "f:ikr")) != -1) {
 	switch (ch) {
+	case 'f':
+	    fill_by = optarg;
+	    break;
 	case 'i':
 	    use_init = TRUE;
 	    break;
@@ -278,6 +287,31 @@ main(int argc, char *argv[])
 	for (pair = 0; pair < COLOR_PAIRS; ++pair) {
 	    color = (short) (pair % (COLORS - 1));
 	    init_pair(pair, (short) (COLOR_WHITE - color), color);
+	}
+    }
+
+    if (fill_by != 0) {
+	FILE *fp = fopen(fill_by, "r");
+	if (fp != 0) {
+	    bool filled = FALSE;
+	    move(1, 0);
+	    while ((ch = fgetc(fp)) != EOF) {
+		if (addch(UChar(ch)) == ERR) {
+		    filled = TRUE;
+		    break;
+		}
+	    }
+	    fclose(fp);
+	    if (!filled) {
+		while (addch(' ') != ERR) {
+		    ;
+		}
+	    }
+	    move(0, 0);
+	} else {
+	    endwin();
+	    fprintf(stderr, "Cannot open \"%s\"\n", fill_by);
+	    ExitProgram(EXIT_FAILURE);
 	}
     }
 
@@ -385,7 +419,17 @@ main(int argc, char *argv[])
 			    for (cx = 0; cx < COLS; ++cx) {
 				wmove(curscr, cy, cx);
 				wmove(stdscr, cy, cx);
+#if USE_WIDEC_SUPPORT
+				if (win_wch(curscr, &mycc) != ERR) {
+				    myxx = wcwidth(mycc.chars[0]);
+				    if (myxx > 0) {
+					wadd_wchnstr(stdscr, &mycc, 1);
+					cx += (myxx - 1);
+				    }
+				}
+#else
 				waddch(stdscr, winch(curscr));
+#endif
 			    }
 			}
 		    }

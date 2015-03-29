@@ -49,6 +49,7 @@ configure-stamp:
 		--enable-const \
 		--enable-ext-colors \
 		--enable-ext-mouse \
+		--enable-ext-putwin \
 		--enable-hard-tabs \
 		--enable-interop \
 		--enable-pc-files \

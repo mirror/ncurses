@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.68 2015/03/21 16:52:07 tom Exp $
+# $Id: ncurses_defs,v 1.69 2015/03/27 10:47:31 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -189,7 +189,7 @@ NCURSES_CHAR_EQ
 NCURSES_EXPANDED
 NCURSES_EXT_COLORS
 NCURSES_EXT_FUNCS
-NCURSES_EXT_SCREEN_DUMP
+NCURSES_EXT_PUTWIN
 NCURSES_NO_PADDING
 NCURSES_OSPEED_COMPAT
 NCURSES_PATHSEP	':'

@@ -35,6 +35,7 @@ CONFIG_OPTIONS = \
 	--enable-const \
 	--enable-ext-colors \
 	--enable-ext-mouse \
+	--enable-ext-putwin \
 	--enable-interop \
 	--enable-sp-funcs \
 	--enable-term-driver \
