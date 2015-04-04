@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <progs.priv.h>
 
-MODULE_ID("$Id: tabs.c,v 1.34 2013/06/11 08:18:27 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.35 2015/04/04 14:57:47 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -338,36 +338,35 @@ skip_list(char *value)
 static void
 usage(void)
 {
-    static const char *msg[] =
+#define DATA(s) s "\n"
+    static const char msg[] =
     {
-	"Usage: tabs [options] [tabstop-list]"
-	,""
-	,"Options:"
-	,"  -0       reset tabs"
-	,"  -8       set tabs to standard interval"
-	,"  -a       Assembler, IBM S/370, first format"
-	,"  -a2      Assembler, IBM S/370, second format"
-	,"  -c       COBOL, normal format"
-	,"  -c2      COBOL compact format"
-	,"  -c3      COBOL compact format extended"
-	,"  -d       debug (show ruler with expected/actual tab positions)"
-	,"  -f       FORTRAN"
-	,"  -n       no-op (do not modify terminal settings)"
-	,"  -p       PL/I"
-	,"  -s       SNOBOL"
-	,"  -u       UNIVAC 1100 Assembler"
-	,"  -T name  use terminal type 'name'"
-	,"  -V       print version"
-	,""
-	,"A tabstop-list is an ordered list of column numbers, e.g., 1,11,21"
-	,"or 1,+10,+10 which is the same."
+	DATA("Usage: tabs [options] [tabstop-list]")
+	DATA("")
+	DATA("Options:")
+	DATA("  -0       reset tabs")
+	DATA("  -8       set tabs to standard interval")
+	DATA("  -a       Assembler, IBM S/370, first format")
+	DATA("  -a2      Assembler, IBM S/370, second format")
+	DATA("  -c       COBOL, normal format")
+	DATA("  -c2      COBOL compact format")
+	DATA("  -c3      COBOL compact format extended")
+	DATA("  -d       debug (show ruler with expected/actual tab positions)")
+	DATA("  -f       FORTRAN")
+	DATA("  -n       no-op (do not modify terminal settings)")
+	DATA("  -p       PL/I")
+	DATA("  -s       SNOBOL")
+	DATA("  -u       UNIVAC 1100 Assembler")
+	DATA("  -T name  use terminal type 'name'")
+	DATA("  -V       print version")
+	DATA("")
+	DATA("A tabstop-list is an ordered list of column numbers, e.g., 1,11,21")
+	DATA("or 1,+10,+10 which is the same.")
     };
-    unsigned n;
+#undef DATA
 
     fflush(stdout);
-    for (n = 0; n < SIZEOF(msg); ++n) {
-	fprintf(stderr, "%s\n", msg[n]);
-    }
+    fputs(msg, stderr);
     ExitProgram(EXIT_FAILURE);
 }
 

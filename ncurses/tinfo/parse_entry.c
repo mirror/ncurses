@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.79 2012/10/27 21:43:45 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.80 2015/04/04 14:18:38 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -581,32 +581,32 @@ append_acs(string_desc * dst, int code, char *src)
  * list.  For each capability, we may assume there is a keycap that sends the
  * string which is the value of that capability.
  */
+#define DATA(from, to) { { from }, { to } }
 typedef struct {
-    const char *from;
-    const char *to;
+    const char from[3];
+    const char to[6];
 } assoc;
 static assoc const ko_xlate[] =
 {
-    {"al", "kil1"},		/* insert line key  -> KEY_IL    */
-    {"bt", "kcbt"},		/* back tab         -> KEY_BTAB  */
-    {"cd", "ked"},		/* clear-to-eos key -> KEY_EOL   */
-    {"ce", "kel"},		/* clear-to-eol key -> KEY_EOS   */
-    {"cl", "kclr"},		/* clear key        -> KEY_CLEAR */
-    {"ct", "tbc"},		/* clear all tabs   -> KEY_CATAB */
-    {"dc", "kdch1"},		/* delete char      -> KEY_DC    */
-    {"dl", "kdl1"},		/* delete line      -> KEY_DL    */
-    {"do", "kcud1"},		/* down key         -> KEY_DOWN  */
-    {"ei", "krmir"},		/* exit insert key  -> KEY_EIC   */
-    {"ho", "khome"},		/* home key         -> KEY_HOME  */
-    {"ic", "kich1"},		/* insert char key  -> KEY_IC    */
-    {"im", "kIC"},		/* insert-mode key  -> KEY_SIC   */
-    {"le", "kcub1"},		/* le key           -> KEY_LEFT  */
-    {"nd", "kcuf1"},		/* nd key           -> KEY_RIGHT */
-    {"nl", "kent"},		/* new line key     -> KEY_ENTER */
-    {"st", "khts"},		/* set-tab key      -> KEY_STAB  */
-    {"ta", CANCELLED_STRING},
-    {"up", "kcuu1"},		/* up-arrow key     -> KEY_UP    */
-    {(char *) 0, (char *) 0},
+    DATA("al", "kil1"),		/* insert line key  -> KEY_IL    */
+    DATA("bt", "kcbt"),		/* back tab         -> KEY_BTAB  */
+    DATA("cd", "ked"),		/* clear-to-eos key -> KEY_EOL   */
+    DATA("ce", "kel"),		/* clear-to-eol key -> KEY_EOS   */
+    DATA("cl", "kclr"),		/* clear key        -> KEY_CLEAR */
+    DATA("ct", "tbc"),		/* clear all tabs   -> KEY_CATAB */
+    DATA("dc", "kdch1"),	/* delete char      -> KEY_DC    */
+    DATA("dl", "kdl1"),		/* delete line      -> KEY_DL    */
+    DATA("do", "kcud1"),	/* down key         -> KEY_DOWN  */
+    DATA("ei", "krmir"),	/* exit insert key  -> KEY_EIC   */
+    DATA("ho", "khome"),	/* home key         -> KEY_HOME  */
+    DATA("ic", "kich1"),	/* insert char key  -> KEY_IC    */
+    DATA("im", "kIC"),		/* insert-mode key  -> KEY_SIC   */
+    DATA("le", "kcub1"),	/* le key           -> KEY_LEFT  */
+    DATA("nd", "kcuf1"),	/* nd key           -> KEY_RIGHT */
+    DATA("nl", "kent"),		/* new line key     -> KEY_ENTER */
+    DATA("st", "khts"),		/* set-tab key      -> KEY_STAB  */
+    DATA("ta", ""),
+    DATA("up", "kcuu1"),	/* up-arrow key     -> KEY_UP    */
 };
 
 /*
@@ -789,7 +789,6 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 	char *bp, *cp, *dp;
 	struct name_table_entry const *from_ptr;
 	struct name_table_entry const *to_ptr;
-	assoc const *ap;
 	char buf2[MAX_TERMINFO_LENGTH];
 	bool foundim;
 
@@ -802,17 +801,21 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 	     (cp = strchr(base, ',')) != 0;
 	     base = cp + 1) {
 	    size_t len = (unsigned) (cp - base);
+	    size_t n;
+	    assoc const *ap = 0;
 
-	    for (ap = ko_xlate; ap->from; ap++) {
-		if (len == strlen(ap->from)
-		    && strncmp(ap->from, base, len) == 0)
+	    for (n = 0; n < SIZEOF(ko_xlate); ++n) {
+		if (len == strlen(ko_xlate[n].from)
+		    && strncmp(ko_xlate[n].from, base, len) == 0) {
+		    ap = ko_xlate + n;
 		    break;
+		}
 	    }
-	    if (!(ap->from && ap->to)) {
+	    if (ap == 0) {
 		_nc_warning("unknown capability `%.*s' in ko string",
 			    (int) len, base);
 		continue;
-	    } else if (ap->to == CANCELLED_STRING)	/* ignore it */
+	    } else if (ap->to[0] == '\0')	/* ignore it */
 		continue;
 
 	    /* now we know we found a match in ko_table, so... */

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.36 2014/11/16 00:44:29 tom Exp $
+.\" $Id: curs_color.3x,v 1.37 2015/04/04 19:42:47 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -94,12 +94,36 @@ The \fBstart_color\fR routine requires no arguments.
 It must be called if the programmer wants to use colors, and before any other
 color manipulation routine is called.
 It is good practice to call this routine right after \fBinitscr\fR.
-\fBstart_color\fR initializes eight basic colors (black, red, green, yellow, blue, magenta, cyan,
-and white), and two global variables, \fBCOLORS\fR and
+\fBstart_color\fR does this:
+.bP
+It initializes two global variables, \fBCOLORS\fR and
 \fBCOLOR_PAIRS\fR (respectively defining the maximum number of colors
 and color-pairs the terminal can support).
-It also restores the colors on the terminal to the values they had when the terminal was
-just turned on.
+.bP
+It initializes the special color pair \fB0\fP to the default foreground
+and background colors.
+No other color pairs are initialized.
+.bP
+It restores the colors on the terminal to the values
+they had when the terminal was just turned on.
+.bP
+If the terminal supports the \fBinitc\fP (\fBinitialize_color\fP) capability,
+\fBstart_color\fP
+initializes its internal table representing the
+red, green and blue components of the color palette.
+.IP
+The components depend on whether the terminal uses
+CGA (aka "ANSI") or
+HLS (i.e., the \fBhls\fP (\fBhue_lightness_saturation\fP) capability is set).
+The table is initialized first for eight basic colors
+(black, red, green, yellow, blue, magenta, cyan, and white),
+and after that (if the terminal supports more than eight colors)
+the components are initialized to \fB1000\fP.
+.IP
+\fBstart_color\fP does not attempt to set the terminal's color palette
+to match its built-in table.
+An application may use \fBinit_color\fP to alter the internal table
+along with the terminal's color.
 .PP
 These limits apply to color values and color pairs.
 Values outside these limits are not legal, and may result in a runtime error:

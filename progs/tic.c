@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.208 2014/10/18 09:34:29 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.209 2015/04/04 14:53:41 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -138,50 +138,48 @@ failed(const char *msg)
 static void
 usage(void)
 {
-    static const char *const tbl[] =
+#define DATA(s) s "\n"
+    static const char options_string[] =
     {
-	"Options:",
-	"  -1         format translation output one capability per line",
+	DATA("Options:")
+	DATA("  -1         format translation output one capability per line")
 #if NCURSES_XNAMES
-	"  -a         retain commented-out capabilities (sets -x also)",
+	DATA("  -a         retain commented-out capabilities (sets -x also)")
 #endif
-	"  -C         translate entries to termcap source form",
-	"  -D         print list of tic's database locations (first must be writable)",
-	"  -c         check only, validate input without compiling or translating",
-	"  -e<names>  translate/compile only entries named by comma-separated list",
-	"  -f         format complex strings for readability",
-	"  -G         format %{number} to %'char'",
-	"  -g         format %'char' to %{number}",
-	"  -I         translate entries to terminfo source form",
-	"  -K         translate entries to termcap source form with BSD syntax",
-	"  -L         translate entries to full terminfo source form",
-	"  -N         disable smart defaults for source translation",
-	"  -o<dir>    set output directory for compiled entry writes",
-	"  -R<name>   restrict translation to given terminfo/termcap version",
-	"  -r         force resolution of all use entries in source translation",
-	"  -s         print summary statistics",
-	"  -T         remove size-restrictions on compiled description",
+	DATA("  -C         translate entries to termcap source form")
+	DATA("  -D         print list of tic's database locations (first must be writable)")
+	DATA("  -c         check only, validate input without compiling or translating")
+	DATA("  -e<names>  translate/compile only entries named by comma-separated list")
+	DATA("  -f         format complex strings for readability")
+	DATA("  -G         format %{number} to %'char'")
+	DATA("  -g         format %'char' to %{number}")
+	DATA("  -I         translate entries to terminfo source form")
+	DATA("  -K         translate entries to termcap source form with BSD syntax")
+	DATA("  -L         translate entries to full terminfo source form")
+	DATA("  -N         disable smart defaults for source translation")
+	DATA("  -o<dir>    set output directory for compiled entry writes")
+	DATA("  -R<name>   restrict translation to given terminfo/termcap version")
+	DATA("  -r         force resolution of all use entries in source translation")
+	DATA("  -s         print summary statistics")
+	DATA("  -T         remove size-restrictions on compiled description")
 #if NCURSES_XNAMES
-	"  -t         suppress commented-out capabilities",
+	DATA("  -t         suppress commented-out capabilities")
 #endif
-	"  -U         suppress post-processing of entries",
-	"  -V         print version",
-	"  -v[n]      set verbosity level",
-	"  -w[n]      set format width for translation output",
+	DATA("  -U         suppress post-processing of entries")
+	DATA("  -V         print version")
+	DATA("  -v[n]      set verbosity level")
+	DATA("  -w[n]      set format width for translation output")
 #if NCURSES_XNAMES
-	"  -x         treat unknown capabilities as user-defined",
+	DATA("  -x         treat unknown capabilities as user-defined")
 #endif
-	"",
-	"Parameters:",
-	"  <file>     file to translate or compile"
+	DATA("")
+	DATA("Parameters:")
+	DATA("  <file>     file to translate or compile")
     };
-    size_t j;
+#undef DATA
 
     fprintf(stderr, "Usage: %s %s\n", _nc_progname, usage_string);
-    for (j = 0; j < SIZEOF(tbl); j++) {
-	fputs(tbl[j], stderr);
-	putc('\n', stderr);
-    }
+    fputs(options_string, stderr);
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -1580,77 +1578,80 @@ check_screen(TERMTYPE *tp)
 static int
 expected_params(const char *name)
 {
+#define DATA(name,count) { { name }, count }
     /* *INDENT-OFF* */
     static const struct {
-	const char *name;
+	const char name[9];
 	int count;
     } table[] = {
-	{ "S0",			1 },	/* 'screen' extension */
-	{ "birep",		2 },
-	{ "chr",		1 },
-	{ "colornm",		1 },
-	{ "cpi",		1 },
-	{ "csnm",		1 },
-	{ "csr",		2 },
-	{ "cub",		1 },
-	{ "cud",		1 },
-	{ "cuf",		1 },
-	{ "cup",		2 },
-	{ "cuu",		1 },
-	{ "cvr",		1 },
-	{ "cwin",		5 },
-	{ "dch",		1 },
-	{ "defc",		3 },
-	{ "dial",		1 },
-	{ "dispc",		1 },
-	{ "dl",			1 },
-	{ "ech",		1 },
-	{ "getm",		1 },
-	{ "hpa",		1 },
-	{ "ich",		1 },
-	{ "il",			1 },
-	{ "indn",		1 },
-	{ "initc",		4 },
-	{ "initp",		7 },
-	{ "lpi",		1 },
-	{ "mc5p",		1 },
-	{ "mrcup",		2 },
-	{ "mvpa",		1 },
-	{ "pfkey",		2 },
-	{ "pfloc",		2 },
-	{ "pfx",		2 },
-	{ "pfxl",		3 },
-	{ "pln",		2 },
-	{ "qdial",		1 },
-	{ "rcsd",		1 },
-	{ "rep",		2 },
-	{ "rin",		1 },
-	{ "sclk",		3 },
-	{ "scp",		1 },
-	{ "scs",		1 },
-	{ "scsd",		2 },
-	{ "setab",		1 },
-	{ "setaf",		1 },
-	{ "setb",		1 },
-	{ "setcolor",		1 },
-	{ "setf",		1 },
-	{ "sgr",		9 },
-	{ "sgr1",		6 },
-	{ "slength",		1 },
-	{ "slines",		1 },
-	{ "smgbp",		1 },	/* 2 if smgtp is not given */
-	{ "smglp",		1 },
-	{ "smglr",		2 },
-	{ "smgrp",		1 },
-	{ "smgtb",		2 },
-	{ "smgtp",		1 },
-	{ "tsl",		1 },
-	{ "u6",			-1 },
-	{ "vpa",		1 },
-	{ "wind",		4 },
-	{ "wingo",		1 },
+	DATA( "S0",		1 ),	/* 'screen' extension */
+	DATA( "birep",		2 ),
+	DATA( "chr",		1 ),
+	DATA( "colornm",	1 ),
+	DATA( "cpi",		1 ),
+	DATA( "csnm",		1 ),
+	DATA( "csr",		2 ),
+	DATA( "cub",		1 ),
+	DATA( "cud",		1 ),
+	DATA( "cuf",		1 ),
+	DATA( "cup",		2 ),
+	DATA( "cuu",		1 ),
+	DATA( "cvr",		1 ),
+	DATA( "cwin",		5 ),
+	DATA( "dch",		1 ),
+	DATA( "defc",		3 ),
+	DATA( "dial",		1 ),
+	DATA( "dispc",		1 ),
+	DATA( "dl",		1 ),
+	DATA( "ech",		1 ),
+	DATA( "getm",		1 ),
+	DATA( "hpa",		1 ),
+	DATA( "ich",		1 ),
+	DATA( "il",		1 ),
+	DATA( "indn",		1 ),
+	DATA( "initc",		4 ),
+	DATA( "initp",		7 ),
+	DATA( "lpi",		1 ),
+	DATA( "mc5p",		1 ),
+	DATA( "mrcup",		2 ),
+	DATA( "mvpa",		1 ),
+	DATA( "pfkey",		2 ),
+	DATA( "pfloc",		2 ),
+	DATA( "pfx",		2 ),
+	DATA( "pfxl",		3 ),
+	DATA( "pln",		2 ),
+	DATA( "qdial",		1 ),
+	DATA( "rcsd",		1 ),
+	DATA( "rep",		2 ),
+	DATA( "rin",		1 ),
+	DATA( "sclk",		3 ),
+	DATA( "scp",		1 ),
+	DATA( "scs",		1 ),
+	DATA( "scsd",		2 ),
+	DATA( "setab",		1 ),
+	DATA( "setaf",		1 ),
+	DATA( "setb",		1 ),
+	DATA( "setcolor",	1 ),
+	DATA( "setf",		1 ),
+	DATA( "sgr",		9 ),
+	DATA( "sgr1",		6 ),
+	DATA( "slength",	1 ),
+	DATA( "slines",		1 ),
+	DATA( "smgbp",		1 ),	/* 2 if smgtp is not given */
+	DATA( "smglp",		1 ),
+	DATA( "smglr",		2 ),
+	DATA( "smgrp",		1 ),
+	DATA( "smgtb",		2 ),
+	DATA( "smgtp",		1 ),
+	DATA( "tsl",		1 ),
+	DATA( "u6",		-1 ),
+	DATA( "vpa",		1 ),
+	DATA( "wind",		4 ),
+	DATA( "wingo",		1 ),
     };
     /* *INDENT-ON* */
+
+#undef DATA
 
     unsigned n;
     int result = 0;		/* function-keys, etc., use none */
@@ -1999,19 +2000,21 @@ ignore_delays(char *s)
 static bool
 similar_sgr(int num, char *a, char *b)
 {
-    static const char *names[] =
+#define DATA(name) { #name }
+    static const char names[][11] =
     {
-	"none"
-	,"standout"
-	,"underline"
-	,"reverse"
-	,"blink"
-	,"dim"
-	,"bold"
-	,"invis"
-	,"protect"
-	,"altcharset"
+	DATA(none),
+	DATA(standout),
+	DATA(underline),
+	DATA(reverse),
+	DATA(blink),
+	DATA(dim),
+	DATA(bold),
+	DATA(invis),
+	DATA(protect),
+	DATA(altcharset),
     };
+#undef DATA
     char *base_a = a;
     char *base_b = b;
     int delaying = 0;

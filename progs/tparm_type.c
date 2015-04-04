@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <tparm_type.h>
 
-MODULE_ID("$Id: tparm_type.c,v 1.1 2014/05/21 16:50:57 tom Exp $")
+MODULE_ID("$Id: tparm_type.c,v 1.2 2015/04/04 15:01:13 tom Exp $")
 
 /*
  * Lookup the type of call we should make to tparm().  This ignores the actual
@@ -42,12 +42,15 @@ MODULE_ID("$Id: tparm_type.c,v 1.1 2014/05/21 16:50:57 tom Exp $")
 TParams
 tparm_type(const char *name)
 {
-#define TD(code, longname, ti, tc) {code,longname},{code,ti},{code,tc}
+#define TD(code, longname, ti, tc) \
+    	{code, {longname} }, \
+	{code, {ti} }, \
+	{code, {tc} }
     TParams result = Numbers;
     /* *INDENT-OFF* */
     static const struct {
 	TParams code;
-	const char *name;
+	const char name[12];
     } table[] = {
 	TD(Num_Str,	"pkey_key",	"pfkey",	"pk"),
 	TD(Num_Str,	"pkey_local",	"pfloc",	"pl"),

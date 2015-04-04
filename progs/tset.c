@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.94 2015/03/21 16:34:59 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.95 2015/04/04 15:09:24 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -307,87 +307,91 @@ typedef struct map {
 
 static MAP *cur, *maplist;
 
+#define DATA(name,value) { { name }, value }
+
 typedef struct speeds {
-    const char *string;
+    const char string[7];
     int speed;
 } SPEEDS;
 
 static const SPEEDS speeds[] =
 {
-    {"0", B0},
-    {"50", B50},
-    {"75", B75},
-    {"110", B110},
-    {"134", B134},
-    {"134.5", B134},
-    {"150", B150},
-    {"200", B200},
-    {"300", B300},
-    {"600", B600},
-    {"1200", B1200},
-    {"1800", B1800},
-    {"2400", B2400},
-    {"4800", B4800},
-    {"9600", B9600},
+    DATA("0", B0),
+    DATA("50", B50),
+    DATA("75", B75),
+    DATA("110", B110),
+    DATA("134", B134),
+    DATA("134.5", B134),
+    DATA("150", B150),
+    DATA("200", B200),
+    DATA("300", B300),
+    DATA("600", B600),
+    DATA("1200", B1200),
+    DATA("1800", B1800),
+    DATA("2400", B2400),
+    DATA("4800", B4800),
+    DATA("9600", B9600),
     /* sgttyb may define up to this point */
 #ifdef B19200
-    {"19200", B19200},
+    DATA("19200", B19200),
 #endif
 #ifdef B38400
-    {"38400", B38400},
+    DATA("38400", B38400),
 #endif
 #ifdef B19200
-    {"19200", B19200},
+    DATA("19200", B19200),
 #endif
 #ifdef B38400
-    {"38400", B38400},
+    DATA("38400", B38400),
 #endif
 #ifdef B19200
-    {"19200", B19200},
+    DATA("19200", B19200),
 #else
 #ifdef EXTA
-    {"19200", EXTA},
+    DATA("19200", EXTA),
 #endif
 #endif
 #ifdef B38400
-    {"38400", B38400},
+    DATA("38400", B38400),
 #else
 #ifdef EXTB
-    {"38400", EXTB},
+    DATA("38400", EXTB),
 #endif
 #endif
 #ifdef B57600
-    {"57600", B57600},
+    DATA("57600", B57600),
 #endif
 #ifdef B115200
-    {"115200", B115200},
+    DATA("115200", B115200),
 #endif
 #ifdef B230400
-    {"230400", B230400},
+    DATA("230400", B230400),
 #endif
 #ifdef B460800
-    {"460800", B460800},
+    DATA("460800", B460800),
 #endif
-    {(char *) 0, 0}
 };
+#undef DATA
 
 static int
 tbaudrate(char *rate)
 {
-    const SPEEDS *sp;
+    const SPEEDS *sp = 0;
     int found = FALSE;
+    size_t n;
 
     /* The baudrate number can be preceded by a 'B', which is ignored. */
     if (*rate == 'B')
 	++rate;
 
-    for (sp = speeds; sp->string; ++sp) {
-	if (!CaselessCmp(rate, sp->string)) {
+    for (n = 0; n < SIZEOF(speeds); ++n) {
+	if (!CaselessCmp(rate, speeds[n].string)) {
 	    found = TRUE;
+	    sp = speeds + n;
 	    break;
 	}
     }
-    if (!found)
+    if (sp == 0)
 	err("unknown baud rate %s", rate);
     return (sp->speed);
 }
@@ -1167,26 +1171,26 @@ obsolete(char **argv)
 static void
 usage(void)
 {
-    static const char *tbl[] =
+#define DATA(s) s "\n"
+    static const char msg[] =
     {
-	""
-	,"Options:"
-	,"  -c          set control characters"
-	,"  -e ch       erase character"
-	,"  -I          no initialization strings"
-	,"  -i ch       interrupt character"
-	,"  -k ch       kill character"
-	,"  -m mapping  map identifier to type"
-	,"  -Q          do not output control key settings"
-	,"  -r          display term on stderr"
-	,"  -s          output TERM set command"
-	,"  -V          print curses-version"
-	,"  -w          set window-size"
+	DATA("")
+	DATA("Options:")
+	DATA("  -c          set control characters")
+	DATA("  -e ch       erase character")
+	DATA("  -I          no initialization strings")
+	DATA("  -i ch       interrupt character")
+	DATA("  -k ch       kill character")
+	DATA("  -m mapping  map identifier to type")
+	DATA("  -Q          do not output control key settings")
+	DATA("  -r          display term on stderr")
+	DATA("  -s          output TERM set command")
+	DATA("  -V          print curses-version")
+	DATA("  -w          set window-size")
     };
-    unsigned n;
+#undef DATA
     (void) fprintf(stderr, "Usage: %s [options] [terminal]\n", _nc_progname);
-    for (n = 0; n < sizeof(tbl) / sizeof(tbl[0]); ++n)
-	fprintf(stderr, "%s\n", tbl[n]);
+    fputs(msg, stderr);
     exit_error();
     /* NOTREACHED */
 }

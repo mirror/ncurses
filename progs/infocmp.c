@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.129 2014/02/01 22:11:03 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.131 2015/04/04 16:22:19 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -631,98 +631,103 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
  *
  ***************************************************************************/
 
+#define DATA(from, to) { { from }, { to } }
+#define DATAX()        DATA("", "")
+
 typedef struct {
-    const char *from;
-    const char *to;
+    const char from[4];
+    const char to[12];
 } assoc;
 
 static const assoc std_caps[] =
 {
     /* these are specified by X.364 and iBCS2 */
-    {"\033c", "RIS"},		/* full reset */
-    {"\0337", "SC"},		/* save cursor */
-    {"\0338", "RC"},		/* restore cursor */
-    {"\033[r", "RSR"},		/* not an X.364 mnemonic */
-    {"\033[m", "SGR0"},		/* not an X.364 mnemonic */
-    {"\033[2J", "ED2"},		/* clear page */
+    DATA("\033c", "RIS"),	/* full reset */
+    DATA("\0337", "SC"),	/* save cursor */
+    DATA("\0338", "RC"),	/* restore cursor */
+    DATA("\033[r", "RSR"),	/* not an X.364 mnemonic */
+    DATA("\033[m", "SGR0"),	/* not an X.364 mnemonic */
+    DATA("\033[2J", "ED2"),	/* clear page */
 
     /* this group is specified by ISO 2022 */
-    {"\033(0", "ISO DEC G0"},	/* enable DEC graphics for G0 */
-    {"\033(A", "ISO UK G0"},	/* enable UK chars for G0 */
-    {"\033(B", "ISO US G0"},	/* enable US chars for G0 */
-    {"\033)0", "ISO DEC G1"},	/* enable DEC graphics for G1 */
-    {"\033)A", "ISO UK G1"},	/* enable UK chars for G1 */
-    {"\033)B", "ISO US G1"},	/* enable US chars for G1 */
+    DATA("\033(0", "ISO DEC G0"),	/* enable DEC graphics for G0 */
+    DATA("\033(A", "ISO UK G0"),	/* enable UK chars for G0 */
+    DATA("\033(B", "ISO US G0"),	/* enable US chars for G0 */
+    DATA("\033)0", "ISO DEC G1"),	/* enable DEC graphics for G1 */
+    DATA("\033)A", "ISO UK G1"),	/* enable UK chars for G1 */
+    DATA("\033)B", "ISO US G1"),	/* enable US chars for G1 */
 
     /* these are DEC private controls widely supported by emulators */
-    {"\033=", "DECPAM"},	/* application keypad mode */
-    {"\033>", "DECPNM"},	/* normal keypad mode */
-    {"\033<", "DECANSI"},	/* enter ANSI mode */
-    {"\033[!p", "DECSTR"},	/* soft reset */
-    {"\033 F", "S7C1T"},	/* 7-bit controls */
+    DATA("\033=", "DECPAM"),	/* application keypad mode */
+    DATA("\033>", "DECPNM"),	/* normal keypad mode */
+    DATA("\033<", "DECANSI"),	/* enter ANSI mode */
+    DATA("\033[!p", "DECSTR"),	/* soft reset */
+    DATA("\033 F", "S7C1T"),	/* 7-bit controls */
 
-    {(char *) 0, (char *) 0}
+    DATAX()
 };
 
 static const assoc std_modes[] =
 /* ECMA \E[ ... [hl] modes recognized by many emulators */
 {
-    {"2", "AM"},		/* keyboard action mode */
-    {"4", "IRM"},		/* insert/replace mode */
-    {"12", "SRM"},		/* send/receive mode */
-    {"20", "LNM"},		/* linefeed mode */
-    {(char *) 0, (char *) 0}
+    DATA("2", "AM"),		/* keyboard action mode */
+    DATA("4", "IRM"),		/* insert/replace mode */
+    DATA("12", "SRM"),		/* send/receive mode */
+    DATA("20", "LNM"),		/* linefeed mode */
+    DATAX()
 };
 
 static const assoc private_modes[] =
 /* DEC \E[ ... [hl] modes recognized by many emulators */
 {
-    {"1", "CKM"},		/* application cursor keys */
-    {"2", "ANM"},		/* set VT52 mode */
-    {"3", "COLM"},		/* 132-column mode */
-    {"4", "SCLM"},		/* smooth scroll */
-    {"5", "SCNM"},		/* reverse video mode */
-    {"6", "OM"},		/* origin mode */
-    {"7", "AWM"},		/* wraparound mode */
-    {"8", "ARM"},		/* auto-repeat mode */
-    {(char *) 0, (char *) 0}
+    DATA("1", "CKM"),		/* application cursor keys */
+    DATA("2", "ANM"),		/* set VT52 mode */
+    DATA("3", "COLM"),		/* 132-column mode */
+    DATA("4", "SCLM"),		/* smooth scroll */
+    DATA("5", "SCNM"),		/* reverse video mode */
+    DATA("6", "OM"),		/* origin mode */
+    DATA("7", "AWM"),		/* wraparound mode */
+    DATA("8", "ARM"),		/* auto-repeat mode */
+    DATAX()
 };
 
 static const assoc ecma_highlights[] =
 /* recognize ECMA attribute sequences */
 {
-    {"0", "NORMAL"},		/* normal */
-    {"1", "+BOLD"},		/* bold on */
-    {"2", "+DIM"},		/* dim on */
-    {"3", "+ITALIC"},		/* italic on */
-    {"4", "+UNDERLINE"},	/* underline on */
-    {"5", "+BLINK"},		/* blink on */
-    {"6", "+FASTBLINK"},	/* fastblink on */
-    {"7", "+REVERSE"},		/* reverse on */
-    {"8", "+INVISIBLE"},	/* invisible on */
-    {"9", "+DELETED"},		/* deleted on */
-    {"10", "MAIN-FONT"},	/* select primary font */
-    {"11", "ALT-FONT-1"},	/* select alternate font 1 */
-    {"12", "ALT-FONT-2"},	/* select alternate font 2 */
-    {"13", "ALT-FONT-3"},	/* select alternate font 3 */
-    {"14", "ALT-FONT-4"},	/* select alternate font 4 */
-    {"15", "ALT-FONT-5"},	/* select alternate font 5 */
-    {"16", "ALT-FONT-6"},	/* select alternate font 6 */
-    {"17", "ALT-FONT-7"},	/* select alternate font 7 */
-    {"18", "ALT-FONT-1"},	/* select alternate font 1 */
-    {"19", "ALT-FONT-1"},	/* select alternate font 1 */
-    {"20", "FRAKTUR"},		/* Fraktur font */
-    {"21", "DOUBLEUNDER"},	/* double underline */
-    {"22", "-DIM"},		/* dim off */
-    {"23", "-ITALIC"},		/* italic off */
-    {"24", "-UNDERLINE"},	/* underline off */
-    {"25", "-BLINK"},		/* blink off */
-    {"26", "-FASTBLINK"},	/* fastblink off */
-    {"27", "-REVERSE"},		/* reverse off */
-    {"28", "-INVISIBLE"},	/* invisible off */
-    {"29", "-DELETED"},		/* deleted off */
-    {(char *) 0, (char *) 0}
+    DATA("0", "NORMAL"),	/* normal */
+    DATA("1", "+BOLD"),		/* bold on */
+    DATA("2", "+DIM"),		/* dim on */
+    DATA("3", "+ITALIC"),	/* italic on */
+    DATA("4", "+UNDERLINE"),	/* underline on */
+    DATA("5", "+BLINK"),	/* blink on */
+    DATA("6", "+FASTBLINK"),	/* fastblink on */
+    DATA("7", "+REVERSE"),	/* reverse on */
+    DATA("8", "+INVISIBLE"),	/* invisible on */
+    DATA("9", "+DELETED"),	/* deleted on */
+    DATA("10", "MAIN-FONT"),	/* select primary font */
+    DATA("11", "ALT-FONT-1"),	/* select alternate font 1 */
+    DATA("12", "ALT-FONT-2"),	/* select alternate font 2 */
+    DATA("13", "ALT-FONT-3"),	/* select alternate font 3 */
+    DATA("14", "ALT-FONT-4"),	/* select alternate font 4 */
+    DATA("15", "ALT-FONT-5"),	/* select alternate font 5 */
+    DATA("16", "ALT-FONT-6"),	/* select alternate font 6 */
+    DATA("17", "ALT-FONT-7"),	/* select alternate font 7 */
+    DATA("18", "ALT-FONT-1"),	/* select alternate font 1 */
+    DATA("19", "ALT-FONT-1"),	/* select alternate font 1 */
+    DATA("20", "FRAKTUR"),	/* Fraktur font */
+    DATA("21", "DOUBLEUNDER"),	/* double underline */
+    DATA("22", "-DIM"),		/* dim off */
+    DATA("23", "-ITALIC"),	/* italic off */
+    DATA("24", "-UNDERLINE"),	/* underline off */
+    DATA("25", "-BLINK"),	/* blink off */
+    DATA("26", "-FASTBLINK"),	/* fastblink off */
+    DATA("27", "-REVERSE"),	/* reverse off */
+    DATA("28", "-INVISIBLE"),	/* invisible off */
+    DATA("29", "-DELETED"),	/* deleted off */
+    DATAX()
 };
+
+#undef DATA
 
 static int
 skip_csi(const char *cap)
@@ -757,7 +762,7 @@ lookup_params(const assoc * table, char *dst, char *src)
 	do {
 	    bool found = FALSE;
 
-	    for (ap = table; ap->from; ap++) {
+	    for (ap = table; ap->from[0]; ap++) {
 		size_t tlen = strlen(ap->from);
 
 		if (same_param(ap->from, ep, tlen)) {
@@ -839,7 +844,7 @@ analyze_string(const char *name, const char *cap, TERMTYPE *tp)
 	/* now check the standard capabilities */
 	if (!expansion) {
 	    csi = skip_csi(sp);
-	    for (ap = std_caps; ap->from; ap++) {
+	    for (ap = std_caps; ap->from[0]; ap++) {
 		size_t adj = (size_t) (csi ? 2 : 0);
 
 		len = strlen(ap->from);
@@ -1155,12 +1160,18 @@ file_comparison(int argc, char *argv[])
 static void
 usage(void)
 {
-    static const char *tbl[] =
+#define DATA(s) s "\n"
+    static const char head[] =
     {
-	"Usage: infocmp [options] [-A directory] [-B directory] [termname...]"
-	,""
-	,"Options:"
-	,"  -0    print single-row"
+	DATA("Usage: infocmp [options] [-A directory] [-B directory] [termname...]")
+	DATA("")
+	DATA("Options:")
+    };
+#undef DATA
+#define DATA(s) s
+    static const char options[][45] =
+    {
+	"  -0    print single-row"
 	,"  -1    print single-column"
 	,"  -K    use termcap-names and BSD syntax"
 	,"  -C    use termcap-names"
@@ -1169,7 +1180,7 @@ usage(void)
 	,"  -L    use long names"
 	,"  -R subset (see manpage)"
 	,"  -T    eliminate size limits (test)"
-	,"  -U    eliminate post-processing of entries"
+	,"  -U    do not post-process entries"
 	,"  -D    print database locations"
 	,"  -V    print version"
 #if NCURSES_XNAMES
@@ -1197,20 +1208,21 @@ usage(void)
 	,"  -v number  (verbose)"
 	,"  -w number  (width)"
 #if NCURSES_XNAMES
-	,"  -x    treat unknown capabilities as user-defined"
+	,"  -x    unknown capabilities are user-defined"
 #endif
     };
-    const size_t first = 3;
-    const size_t last = SIZEOF(tbl);
-    const size_t left = (last - first + 1) / 2 + first;
+#undef DATA
+    const size_t last = SIZEOF(options);
+    const size_t left = (last + 1) / 2;
     size_t n;
 
+    fputs(head, stderr);
     for (n = 0; n < left; n++) {
-	size_t m = (n < first) ? last : n + left - first;
+	size_t m = n + left;
 	if (m < last)
-	    fprintf(stderr, "%-40.40s%s\n", tbl[n], tbl[m]);
+	    fprintf(stderr, "%-40.40s%s\n", options[n], options[m]);
 	else
-	    fprintf(stderr, "%s\n", tbl[n]);
+	    fprintf(stderr, "%s\n", options[n]);
     }
     ExitProgram(EXIT_FAILURE);
 }

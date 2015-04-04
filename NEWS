@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2365 2015/03/29 14:38:58 tom Exp $
+-- $Id: NEWS,v 1.2368 2015/04/04 19:43:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150404
+	+ improve description of start_color() in the manual.
+	+ modify several files in ncurses- and progs-directories to allow
+	  const data used in internal tables to be put by the linker into the
+	  readonly text segment.
 
 20150329
 	+ correct cut/paste error for "--enable-ext-putwin" that made it the

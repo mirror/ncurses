@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.72 2015/03/29 15:25:29 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.74 2015/04/04 14:00:34 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -56,7 +56,7 @@ MODULE_ID("$Id: lib_screen.c,v 1.72 2015/03/29 15:25:29 tom Exp $")
  * mistaken for the _cury/_curx pair of 16-bit numbers which start the old
  * format.  It happens to be unused in the file 5.22 database (2015/03/07).
  */
-static char my_magic[] =
+static const char my_magic[] =
 {'\210', '\210', '\210', '\210'};
 
 #if NCURSES_EXT_PUTWIN
@@ -73,19 +73,19 @@ typedef enum {
 } PARAM_TYPE;
 
 typedef struct {
-    const char *name;
+    const char name[11];
     attr_t attr;
 } SCR_ATTRS;
 
 typedef struct {
-    const char *name;
+    const char name[17];
     PARAM_TYPE type;
     size_t size;
     size_t offset;
 } SCR_PARAMS;
 
-#define DATA(name) { #name, A_##name }
-static SCR_ATTRS scr_attrs[] =
+#define DATA(name) { { #name }, A_##name }
+static const SCR_ATTRS scr_attrs[] =
 {
     DATA(NORMAL),
     DATA(STANDOUT),
@@ -111,9 +111,9 @@ static SCR_ATTRS scr_attrs[] =
 #undef DATA
 
 #define sizeof2(type,name) sizeof(((type *)0)->name)
-#define DATA(name, type) { #name, type, sizeof2(WINDOW, name), offsetof(WINDOW, name) }
+#define DATA(name, type) { { #name }, type, sizeof2(WINDOW, name), offsetof(WINDOW, name) }
 
-static SCR_PARAMS scr_params[] =
+static const SCR_PARAMS scr_params[] =
 {
     DATA(_cury, pSIZE),
     DATA(_curx, pSIZE),
@@ -220,16 +220,16 @@ decode_attr(char *source, attr_t *target, int *color)
 		++next;
 	    } else if (*next == 'C') {
 		int value = 0;
+		unsigned pair;
 		next++;
 		while (isdigit(UChar(*next))) {
 		    value = value * 10 + (*next++ - '0');
 		}
 		*target &= ~A_COLOR;
-		if (value > 256) {
-		    *target |= COLOR_PAIR(255);
-		} else {
-		    *target |= COLOR_PAIR(value);
-		}
+		pair = (unsigned) ((value > 256)
+				   ? COLOR_PAIR(255)
+				   : COLOR_PAIR(value));
+		*target |= pair;
 		*color = value;
 	    } else {
 		while (isalnum(UChar(*next))) {
@@ -315,7 +315,7 @@ static char *
 decode_chtype(char *source, chtype fillin, chtype *target)
 {
     attr_t attr = ChAttrOf(fillin);
-    int color = PAIR_NUMBER(attr);
+    int color = PAIR_NUMBER((int) attr);
     int value;
 
     T(("decode_chtype '%s'", source));
@@ -669,7 +669,7 @@ encode_attr(char *target, attr_t source, attr_t prior)
 	if ((source & A_COLOR) != (prior & A_COLOR)) {
 	    if (!first)
 		*target++ = '|';
-	    sprintf(target, "C%d", PAIR_NUMBER(source));
+	    sprintf(target, "C%d", PAIR_NUMBER((int) source));
 	    target += strlen(target);
 	}
 
@@ -695,7 +695,7 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
     }
 #endif
     for (n = 0; n < SIZEOF(source->chars); ++n) {
-	unsigned uch = source->chars[n];
+	unsigned uch = (unsigned) source->chars[n];
 	if (uch == 0)
 	    continue;
 	if (n) {
