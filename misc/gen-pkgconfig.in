@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.21 2015/02/21 21:36:31 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.22 2015/04/12 15:18:19 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -107,7 +107,7 @@ do
 		fi
 	fi
 
-	echo "** creating ${name}.pc"
+	echo "** creating ${name}${suffix}.pc"
 	cat >${name}${suffix}.pc <<EOF
 prefix=$show_prefix
 exec_prefix=$show_exec_prefix

@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.74 2015/04/04 14:00:34 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.75 2015/04/18 21:58:03 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -735,7 +735,7 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
     target += strlen(target);
     *target++ = MARKER;
     if (ch < 32 || ch >= 127) {
-	sprintf(target, "%03o", ch);
+	sprintf(target, "%03o", UChar(ch));
     } else {
 	switch (ch) {
 	case ' ':
@@ -746,7 +746,7 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 	    *target = '\0';
 	    break;
 	default:
-	    sprintf(--target, "%c", ch);
+	    sprintf(--target, "%c", UChar(ch));
 	    break;
 	}
     }
@@ -843,12 +843,18 @@ putwin(WINDOW *win, FILE *filep)
 		|| ferror(filep))
 		returnCode(code);
 	    for (x = 0; x <= win->_maxx; x++) {
+#if NCURSES_WIDECHAR
 		int len = wcwidth(data[x].chars[0]);
 		encode_cell(buffer, CHREF(data[x]), CHREF(last_cell));
 		last_cell = data[x];
 		PUTS(buffer);
 		if (len > 1)
 		    x += (len - 1);
+#else
+		encode_cell(buffer, CHREF(data[x]), CHREF(last_cell));
+		last_cell = data[x];
+		PUTS(buffer);
+#endif
 	    }
 	    PUTS("\n");
 	}

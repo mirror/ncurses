@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2368 2015/04/04 19:43:50 tom Exp $
+-- $Id: NEWS,v 1.2380 2015/04/18 22:22:01 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150418
+	+ avoid a blank line in output from tabs program by ending it with
+	  a carriage return as done in FreeBSD (patch by James Clarke).
+	+ build-fix for the "--enable-ext-putwin" feature when not using
+	  wide characters (report by Werner Fink).
+	+ modify autoconf macros to use scripting improvement from xterm.
+	+ add -brtl option to compiler options on AIX 5-7, needed to link
+	  with the shared libraries.
+	+ add --with-extra-suffix option to help with installing nonconflicting
+	  ncurses6 packages, e.g., avoiding header- and library-conflicts.
+	  NOTE: as a side-effect, this renames
+		  adacurses-config to adacurses5-config and
+		  adacursesw-config to adacursesw5-config
+	+ modify debian/rules test package to suffix programs with "6".
+	+ clarify in curs_inopts.3x that window-specific settings do not
+	  inherit into new windows.
 
 20150404
 	+ improve description of start_color() in the manual.

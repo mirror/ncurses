@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.150 2014/11/01 12:30:47 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.151 2015/04/18 22:08:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -245,10 +245,11 @@ no_mouse_wrap(SCREEN *sp GCC_UNUSED)
 static const char *
 extract_fgbg(const char *src, int *result)
 {
-    char *dst = 0;
-    long value = strtol(src, &dst, 0);
+    const char *dst = 0;
+    char *tmp = 0;
+    long value = strtol(src, &tmp, 0);
 
-    if (dst == 0) {
+    if ((dst = tmp) == 0) {
 	dst = src;
     } else if (value >= 0) {
 	*result = value;
@@ -453,7 +454,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	if (sp->_default_fg >= MaxColors) {
 	    if (set_a_foreground != ABSENT_STRING
 		&& !strcmp(set_a_foreground, "\033[3%p1%dm")) {
-		set_a_foreground = "\033[3%?%p1%{8}%>%t9%e%p1%d%;m";
+		set_a_foreground = strdup("\033[3%?%p1%{8}%>%t9%e%p1%d%;m");
 	    } else {
 		sp->_default_fg %= MaxColors;
 	    }
@@ -461,7 +462,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	if (sp->_default_bg >= MaxColors) {
 	    if (set_a_background != ABSENT_STRING
 		&& !strcmp(set_a_background, "\033[4%p1%dm")) {
-		set_a_background = "\033[4%?%p1%{8}%>%t9%e%p1%d%;m";
+		set_a_background = strdup("\033[4%?%p1%{8}%>%t9%e%p1%d%;m");
 	    } else {
 		sp->_default_bg %= MaxColors;
 	    }

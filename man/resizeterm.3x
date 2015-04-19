@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.17 2013/06/22 20:41:54 tom Exp $
+.\" $Id: resizeterm.3x,v 1.18 2015/04/11 10:23:49 tom Exp $
 .TH resizeterm 3X ""
 .SH NAME
 \fBis_term_resized\fR,
@@ -63,7 +63,7 @@ without additional interaction with the application.
 .LP
 A support function \fBis_term_resized\fR is provided so that applications
 can check if the \fBresize_term\fR function would modify the window structures.
-It returns TRUE if the windows would be modified, and FALSE otherwise.
+It returns \fBTRUE\fP if the windows would be modified, and \fBFALSE\fP otherwise.
 .SH RETURN VALUE
 Except as noted, these functions return
 the integer \fBERR\fR upon failure and \fBOK\fR on success.

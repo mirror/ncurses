@@ -14,9 +14,10 @@ DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 CC_NORMAL = -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_STRICT = $(CC_NORMAL) -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
-MY_DIR=/usr/local/ncurses6
+MY_ABI=6
+MY_DIR=/usr/local/ncurses$(MY_ABI)
 MYDATA=/usr/local/ncurses/share/terminfo
-BUILD_DIR=$(CURDIR)/debian/ncurses6
+BUILD_DIR=$(CURDIR)/debian/ncurses$(MY_ABI)
 
 CFLAGS = $(CC_NORMAL)
 
@@ -57,11 +58,12 @@ configure-stamp:
 		--enable-sp-funcs \
 		--enable-warnings \
 		--enable-widec \
+		--program-suffix=$(MY_ABI) \
 		--verbose \
 		--with-chtype=uint32_t \
 		--with-mmask_t=uint32_t \
 		--with-develop \
-		--with-pc-suffix=6 \
+		--with-extra-suffix=$(MY_ABI) \
 		--with-shared \
 		--with-termlib \
 		--with-ticlib \
@@ -103,7 +105,7 @@ install-stamp: build-stamp
 	$(MAKE) install.libs install.progs DESTDIR=$(BUILD_DIR)
 
 	( cd test && make ncurses LOCAL_LIBDIR=$(MY_DIR)/lib )
-	mv test/ncurses $(BUILD_DIR)$(MY_DIR)/bin/ncurses6
+	mv test/ncurses $(BUILD_DIR)$(MY_DIR)/bin/ncurses$(MY_ABI)
 
 	touch install-stamp
 

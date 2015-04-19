@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.40 2015/03/15 13:58:59 tom Exp $
+.\" $Id: curs_util.3x,v 1.41 2015/04/11 10:22:50 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -100,7 +100,7 @@ DEL (character 127) is displayed as \fB^?\fP.
 .bP
 Values above 128 are either meta characters
 (if the screen has not been initialized,
-or if \fBmeta\fP has been called with a TRUE parameter),
+or if \fBmeta\fP has been called with a \fBTRUE\fP parameter),
 shown in the \fBM\-\fR\fIX\fR notation,
 or are displayed as themselves.
 In the latter case, the values may not be printable;

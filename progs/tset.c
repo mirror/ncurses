@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.95 2015/04/04 15:09:24 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.96 2015/04/12 15:36:06 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -377,7 +377,6 @@ static int
 tbaudrate(char *rate)
 {
     const SPEEDS *sp = 0;
-    int found = FALSE;
     size_t n;
 
     /* The baudrate number can be preceded by a 'B', which is ignored. */
@@ -386,7 +385,6 @@ tbaudrate(char *rate)
 
     for (n = 0; n < SIZEOF(speeds); ++n) {
 	if (!CaselessCmp(rate, speeds[n].string)) {
-	    found = TRUE;
 	    sp = speeds + n;
 	    break;
 	}

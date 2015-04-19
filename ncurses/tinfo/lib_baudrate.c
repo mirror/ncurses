@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.35 2014/04/26 18:48:19 juergen Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.36 2015/04/18 22:08:58 tom Exp $")
 
 /*
  *	int
@@ -161,7 +161,7 @@ _nc_baudrate(int OSpeed)
     if (result == ERR) {
 	if (OSpeed >= 0) {
 	    for (i = 0; i < SIZEOF(speeds); i++) {
-		if (speeds[i].s == OSpeed) {
+		if ((int) speeds[i].s == OSpeed) {
 		    result = speeds[i].sp;
 		    break;
 		}

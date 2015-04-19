@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.81 2014/05/31 23:38:17 tom Exp $
+#  $Id: Makefile.in,v 1.82 2015/04/18 17:06:24 tom Exp $
 #
 .SUFFIXES:
 
@@ -80,7 +80,7 @@ RANLIB		= @RANLIB@
 M4		= m4
 M4FLAGS		= -DNCURSES_EXT_FUNCS=@NCURSES_EXT_FUNCS@
 
-ADACURSES_CONFIG = adacurses@DFT_ARG_SUFFIX@-config
+ADACURSES_CONFIG = adacurses@USE_CFG_SUFFIX@-config
 
 WRAPPER		= @NCURSES_SHLIB2@
 

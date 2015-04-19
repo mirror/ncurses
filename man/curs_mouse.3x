@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.40 2014/10/10 09:31:18 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.41 2015/04/11 10:23:49 tom Exp $
 .TH curs_mouse 3X ""
 .na
 .hy 0
@@ -157,8 +157,8 @@ a \fBKEY_MOUSE\fR event onto the input queue, and associates with that event
 the given state data and screen-relative character-cell coordinates.
 .PP
 The \fBwenclose\fR function tests whether a given pair of screen-relative
-character-cell coordinates is enclosed by a given window, returning TRUE
-if it is and FALSE otherwise.
+character-cell coordinates is enclosed by a given window, returning \fBTRUE\fP
+if it is and \fBFALSE\fP otherwise.
 It is useful for determining what subset of
 the screen windows enclose the location of a mouse event.
 .PP
@@ -201,7 +201,7 @@ This function returns the previous interval value.
 Use \fBmouseinterval(\-1)\fR to obtain the interval without altering it.
 The default is one sixth of a second.
 .PP
-The \fBhas_mouse\fP function returns TRUE if the mouse driver has been
+The \fBhas_mouse\fP function returns \fBTRUE\fP if the mouse driver has been
 successfully initialized.
 .PP
 Note that mouse events will be ignored when input is in cooked mode, and will

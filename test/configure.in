@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.117 2014/09/20 21:03:23 tom Exp $
+dnl $Id: configure.in,v 1.119 2015/04/18 18:11:16 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -73,11 +73,13 @@ LDFLAGS_STATIC=""				AC_SUBST(LDFLAGS_STATIC)
 LD_MODEL=""						AC_SUBST(LD_MODEL)
 LD_SHARED_OPTS=""				AC_SUBST(LD_SHARED_OPTS)
 LIBTOOL=""						AC_SUBST(LIBTOOL)
+LIBTOOL_OPTS=""					AC_SUBST(LIBTOOL_OPTS)
 LIB_CLEAN=""					AC_SUBST(LIB_CLEAN)
 LIB_COMPILE=""					AC_SUBST(LIB_COMPILE)
 LIB_LINK='${CC}'				AC_SUBST(LIB_LINK)
 LINK_TESTS=""					AC_SUBST(LINK_TESTS)
 LOCAL_LDFLAGS=""				AC_SUBST(LOCAL_LDFLAGS)
+PACKAGE="ncurses-examples"		AC_SUBST(PACKAGE)
 PTHREAD="-lm"					AC_SUBST(PTHREAD)
 TEST_ARGS=""					AC_SUBST(TEST_ARGS)
 TEST_DEPS=""					AC_SUBST(TEST_DEPS)
@@ -120,11 +122,11 @@ CF_HELP_MESSAGE(Curses Version-dependent Options:)
 CF_WITH_NCURSES_ETC
 
 case $cf_cv_screen in
-curses|curses_*)
+(curses|curses_*)
 	CF_NETBSD_FORM_H
 	CF_NETBSD_MENU_H
 	;;
-ncursesw)
+(ncursesw)
 	cf_cv_libtype=w
 	;;
 esac
@@ -134,10 +136,10 @@ dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
-case $cf_cv_screen in #(vi
-pdcurses) #(vi
+case $cf_cv_screen in
+(pdcurses)
 	;;
-*)
+(*)
 	# look for curses-related libraries
 	: ${cf_panel_lib:=panel}
 	: ${cf_menu_lib:=menu}

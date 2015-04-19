@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.32 2015/02/21 21:36:16 tom Exp $
+# $Id: ncurses-config.in,v 1.34 2015/04/18 17:25:07 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2012,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -45,9 +45,11 @@ datarootdir="@datarootdir@"
 datadir="@datadir@"
 mandir="@mandir@"
 
-THIS="@LIB_NAME@@DFT_ARG_SUFFIX@"
+THIS="@LIB_NAME@@USE_LIB_SUFFIX@"
 TINFO_LIB="@TINFO_ARG_SUFFIX@"
 RPATH_LIST="@RPATH_LIST@"
+
+includesubdir="@includedir@/${THIS}@EXTRA_SUFFIX@"
 
 # Ensure that RPATH_LIST contains only absolute pathnames, if it is nonempty.
 # We cannot filter it out within the build-process since the variable is used
@@ -78,7 +80,7 @@ fi
 #	<ncurses@LIB_SUFFIX@/curses.h>
 if test x@WITH_OVERWRITE@ = xno ; then
 	case $includedir in
-	$prefix/include/ncurses@LIB_SUFFIX@)
+	$prefix/include/ncurses@LIB_SUFFIX@@EXTRA_SUFFIX@)
 		includedir=`echo "$includedir" | sed -e 's,/[^/]*$,,'`
 		;;
 	esac
@@ -99,7 +101,7 @@ while test $# -gt 0; do
 	--cflags)
 		INCS="@PKG_CFLAGS@"
 		if test "x@WITH_OVERWRITE@" = xno ; then
-			INCS="$INCS -I${includedir}/${THIS}"
+			INCS="$INCS -I${includesubdir}"
 		fi
 		if test "${includedir}" != /usr/include ; then
 			INCS="$INCS -I${includedir}"
@@ -163,7 +165,7 @@ ENDECHO
 	# general info
 	--help)
 		cat <<ENDHELP
-Usage: ${THIS}-config [options]
+Usage: `basename $0` [options]
 
 Options:
   --prefix           echos the package-prefix of ${THIS}

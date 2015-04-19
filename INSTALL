@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.185 2015/03/28 00:34:22 tom Exp $
+-- $Id: INSTALL,v 1.186 2015/04/12 14:41:20 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -847,6 +847,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Limit exported symbols using libtool.  The configure script
 	automatically chooses an appropriate ".sym" file, which lists the
 	symbols which are part of the ABI.
+
+    --with-extra-suffix[=XXX]
+	Add the given suffix to header- and library-names to simplify
+	installing incompatible ncurses libraries, e.g., those using a
+	different ABI.  The renaming affects the name of the
+	include-subdirectory if --disable-overwrite is given.
 
     --with-fallbacks=XXX
 	Specify a list of fallback terminal descriptions which will be
