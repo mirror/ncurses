@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# MAde with the aid of dh_make, by Craig Small
+# Made with the aid of dh_make, by Craig Small
 # Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
 # Some lines taken from debmake, by Cristoph Lameter.
 
@@ -122,6 +122,7 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 	dh_installdeb
+	dh_makeshlibs
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2011,2013 Free Software Foundation, Inc.                   *
+.\" Copyright (c) 2011-2013,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.4 2013/12/21 22:17:39 tom Exp $
+.\" $Id: term_variables.3x,v 1.6 2015/04/22 00:34:49 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
 .na
@@ -55,28 +55,28 @@
 \fB#include <term.h>\fR
 .PP
 \fBchtype acs_map[];\fR
-.br
+.sp
+\fBTERMINAL * cur_term;\fR
+.sp
+\fBchar ttytype[];\fR
+.sp
 \fBNCURSES_CONST char * const * boolcodes;\fR
 .br
 \fBNCURSES_CONST char * const * boolfnames;\fR
 .br
 \fBNCURSES_CONST char * const * boolnames;\fR
-.br
-\fBTERMINAL * cur_term;\fR
-.br
+.sp
 \fBNCURSES_CONST char * const * numcodes;\fR
 .br
 \fBNCURSES_CONST char * const * numfnames;\fR
 .br
 \fBNCURSES_CONST char * const * numnames;\fR
-.br
+.sp
 \fBNCURSES_CONST char * const * strcodes;\fR
 .br
 \fBNCURSES_CONST char * const * strfnames;\fR
 .br
 \fBNCURSES_CONST char * const * strnames;\fR
-.br
-\fBchar ttytype[];\fR
 .br
 .fi
 .SH DESCRIPTION
@@ -114,25 +114,44 @@ The \fB@TIC@\fP(1) and \fB@INFOCMP@\fP(1) programs use lookup tables for
 the long and short names of terminfo capabilities,
 as well as the corresponding names for termcap capabilities.
 These are available to other applications,
-though the hash-tables are not available.
+although the hash-tables used by
+the terminfo and termcap functions are not available.
 .PP
 The long terminfo capability names use a "l" (ell) in their names:
-boolfnames
-numfnames
-strfnames
+\fBboolfnames\fP,
+\fBnumfnames\fP, and
+\fBstrfnames\fP.
 .PP
 These are the short names for terminfo capabilities:
-boolnames,
-numnames, and
-strnames.
+\fBboolnames\fP,
+\fBnumnames\fP, and
+\fBstrnames\fP.
 .PP
 These are the corresponding names used for termcap descriptions:
-boolcodes,
-numcodes, and
-strcodes.
+\fBboolcodes\fP,
+\fBnumcodes\fP, and
+\fBstrcodes\fP.
+.\"
 .SS Terminal Type
 On initialization of the curses or terminfo interfaces,
 \fBsetupterm\fP copies the terminal name to the array \fBttytype\fP.
+.\"
+.SS Terminfo Names
+.PP
+In addition to the variables, \fB<term.h>\fP also defines a symbol for each
+terminfo capability \fIlong name\fP.
+These are in terms of the symbol \fBCUR\fP,
+which is defined
+.PP
+.nf
+.ft CW
+#define CUR cur_term->type.
+.fi
+.ft R
+.PP
+These symbols provide a faster method of accessing terminfo capabilities
+than using \fBtigetstr\fR(3X), etc.
+.\"
 .SH NOTES
 The low-level terminfo interface is initialized using
 .hy 0
@@ -140,6 +159,7 @@ The low-level terminfo interface is initialized using
 .hy
 The upper-level curses interface uses the low-level terminfo interface,
 internally.
+.\"
 .SH PORTABILITY
 X/Open Curses does not describe any of these except for \fBcur_term\fP.
 (The inclusion of \fBcur_term\fP appears to be an oversight,
@@ -148,6 +168,10 @@ since other comparable low-level information is omitted by X/Open).
 Other implementations may have comparable variables.
 Some implementations provide the variables in their libraries,
 but omit them from the header files.
+.PP
+All implementations which provide terminfo interfaces add definitions
+as described in the \fBTerminfo Names\fP section.
+Most, but not all, base the definition upon the \fBcur_term\fP variable.
 .SH SEE ALSO
 .hy 0
 \fBcurses\fR(3X),

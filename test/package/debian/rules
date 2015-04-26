@@ -32,7 +32,7 @@ configure-stamp:
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--bindir=\$${prefix}/bin/ncurses-examples \
 		--prefix=/usr \
-		--with-ncursesw \
+		--with-screen=ncursesw6 \
 		--disable-rpath-hack
 
 	touch configure-stamp

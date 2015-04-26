@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.97 2015/04/18 13:04:25 tom Exp $
+dnl $Id: aclocal.m4,v 1.98 2015/04/25 09:52:32 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -656,7 +656,7 @@ cf_save_CFLAGS="$cf_save_CFLAGS -Qunused-arguments"
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_HEADER version: 4 updated: 2015/04/18 09:03:58
+dnl CF_CURSES_HEADER version: 5 updated: 2015/04/23 20:35:30
 dnl ----------------
 dnl Find a "curses" header file, e.g,. "curses.h", or one of the more common
 dnl variations of ncurses' installs.
@@ -665,11 +665,9 @@ dnl $1 = ncurses when looking for ncurses, or is empty
 AC_DEFUN([CF_CURSES_HEADER],[
 AC_CACHE_CHECK(if we have identified curses headers,cf_cv_ncurses_header,[
 cf_cv_ncurses_header=none
-for cf_header in ifelse($1,,,[ \
-	$1/ncurses.h \
-	$1/curses.h]) \
-	ncurses.h \
-	curses.h ifelse($1,,[ncurses/ncurses.h ncurses/curses.h])
+for cf_header in \
+	ncurses.h ifelse($1,,,[$1/ncurses.h]) \
+	curses.h ifelse($1,,,[$1/curses.h]) ifelse($1,,[ncurses/ncurses.h ncurses/curses.h])
 do
 AC_TRY_COMPILE([#include <${cf_header}>],
 	[initscr(); tgoto("?", 0,0)],
@@ -2191,46 +2189,86 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 10 updated: 2012/10/06 08:57:51
+dnl CF_NCURSES_CONFIG version: 12 updated: 2015/04/24 20:52:45
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses.
 dnl Prefer the "-config" script from ncurses 6.x, to simplify analysis.
 dnl Allow that to be overridden using the $NCURSES_CONFIG environment variable.
 dnl
 dnl $1 is the root library name (default: "ncurses")
-AC_DEFUN([CF_NCURSES_CONFIG],
-[
+AC_DEFUN([CF_NCURSES_CONFIG],[
+AC_REQUIRE([CF_PKG_CONFIG])
 cf_ncuconfig_root=ifelse($1,,ncurses,$1)
+cf_have_ncuconfig=no
 
-echo "Looking for ${cf_ncuconfig_root}-config"
+if test "x$PKG_CONFIG" != xnone; then
+	AC_MSG_CHECKING(pkg-config for $cf_ncuconfig_root)
+	if "$PKG_CONFIG" --exists $cf_ncuconfig_root ; then
+		AC_MSG_RESULT(yes)
 
-CF_ACVERSION_CHECK(2.52,
-	[AC_CHECK_TOOLS(NCURSES_CONFIG, ${cf_ncuconfig_root}6-config ${cf_ncuconfig_root}5-config, none)],
-	[AC_PATH_PROGS(NCURSES_CONFIG, ${cf_ncuconfig_root}6-config ${cf_ncuconfig_root}5-config, none)])
+		AC_MSG_CHECKING(if the $cf_ncuconfig_root package files work)
+		cf_have_ncuconfig=unknown
 
-if test "$NCURSES_CONFIG" != none ; then
+		cf_save_CPPFLAGS="$CPPFLAGS"
+		cf_save_LIBS="$LIBS"
 
-CPPFLAGS="$CPPFLAGS `$NCURSES_CONFIG --cflags`"
-CF_ADD_LIBS(`$NCURSES_CONFIG --libs`)
+		CPPFLAGS="$CPPFLAGS `$PKG_CONFIG --cflags $cf_ncuconfig_root`"
+		CF_ADD_LIBS(`$PKG_CONFIG --libs $cf_ncuconfig_root`)
 
-# even with config script, some packages use no-override for curses.h
-CF_CURSES_HEADER(ifelse($1,,ncurses,$1))
+		AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
+			[initscr(); mousemask(0,0); tgoto((char *)0, 0, 0);],
+			[AC_TRY_RUN([#include <${cf_cv_ncurses_header:-curses.h}>
+				int main(void)
+				{ char *xx = curses_version(); return (xx == 0); }],
+				[cf_have_ncuconfig=yes],
+				[cf_have_ncuconfig=no])],
+			[cf_have_ncuconfig=no])
 
-dnl like CF_NCURSES_CPPFLAGS
-AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
+		AC_MSG_RESULT($cf_have_ncuconfig)
+		if test "$cf_have_ncuconfig" != "yes"
+		then
+			CPPFLAGS="$cf_save_CPPFLAGS"
+			LIBS="$cf_save_LIBS"
+		else
+			AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
+		fi
 
-dnl like CF_NCURSES_LIBS
-CF_UPPER(cf_nculib_ROOT,HAVE_LIB$cf_ncuconfig_root)
-AC_DEFINE_UNQUOTED($cf_nculib_ROOT)
+	else
+		AC_MSG_RESULT(no)
+	fi
+fi
 
-dnl like CF_NCURSES_VERSION
-cf_cv_ncurses_version=`$NCURSES_CONFIG --version`
+if test "x$cf_have_ncuconfig" = "xno"; then
+	echo "Looking for ${cf_ncuconfig_root}-config"
 
-else
+	CF_ACVERSION_CHECK(2.52,
+		[AC_CHECK_TOOLS(NCURSES_CONFIG, ${cf_ncuconfig_root}-config ${cf_ncuconfig_root}6-config ${cf_ncuconfig_root}5-config, none)],
+		[AC_PATH_PROGS(NCURSES_CONFIG,  ${cf_ncuconfig_root}-config ${cf_ncuconfig_root}6-config ${cf_ncuconfig_root}5-config, none)])
 
-CF_NCURSES_CPPFLAGS(ifelse($1,,ncurses,$1))
-CF_NCURSES_LIBS(ifelse($1,,ncurses,$1))
+	if test "$NCURSES_CONFIG" != none ; then
 
+		CPPFLAGS="$CPPFLAGS `$NCURSES_CONFIG --cflags`"
+		CF_ADD_LIBS(`$NCURSES_CONFIG --libs`)
+
+		# even with config script, some packages use no-override for curses.h
+		CF_CURSES_HEADER(ifelse($1,,ncurses,$1))
+
+		dnl like CF_NCURSES_CPPFLAGS
+		AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
+
+		dnl like CF_NCURSES_LIBS
+		CF_UPPER(cf_nculib_ROOT,HAVE_LIB$cf_ncuconfig_root)
+		AC_DEFINE_UNQUOTED($cf_nculib_ROOT)
+
+		dnl like CF_NCURSES_VERSION
+		cf_cv_ncurses_version=`$NCURSES_CONFIG --version`
+
+	else
+
+		CF_NCURSES_CPPFLAGS(ifelse($1,,ncurses,$1))
+		CF_NCURSES_LIBS(ifelse($1,,ncurses,$1))
+
+	fi
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------

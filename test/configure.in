@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.119 2015/04/18 18:11:16 tom Exp $
+dnl $Id: configure.in,v 1.122 2015/04/25 11:39:47 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -122,12 +122,12 @@ CF_HELP_MESSAGE(Curses Version-dependent Options:)
 CF_WITH_NCURSES_ETC
 
 case $cf_cv_screen in
+(ncurses*)
+	cf_cv_libtype=`echo "$cf_cv_screen" | sed -e 's/^ncurses//'`
+	;;
 (curses|curses_*)
 	CF_NETBSD_FORM_H
 	CF_NETBSD_MENU_H
-	;;
-(ncursesw)
-	cf_cv_libtype=w
 	;;
 esac
 
@@ -141,12 +141,9 @@ case $cf_cv_screen in
 	;;
 (*)
 	# look for curses-related libraries
-	: ${cf_panel_lib:=panel}
-	: ${cf_menu_lib:=menu}
-	: ${cf_form_lib:=form}
-	AC_CHECK_LIB($cf_panel_lib$cf_cv_libtype,new_panel)
-	AC_CHECK_LIB($cf_menu_lib$cf_cv_libtype,menu_driver)
-	AC_CHECK_LIB($cf_form_lib$cf_cv_libtype,form_driver)
+	CF_CHECK_CURSES_LIB(panel,$cf_cv_libtype,new_panel)
+	CF_CHECK_CURSES_LIB(menu,$cf_cv_libtype,menu_driver)
+	CF_CHECK_CURSES_LIB(form,$cf_cv_libtype,form_driver)
 
 	# look for curses-related headers
 	AC_CHECK_HEADERS( \

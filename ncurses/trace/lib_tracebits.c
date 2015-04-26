@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.25 2015/04/04 13:45:27 tom Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.26 2015/04/19 14:58:39 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
@@ -85,7 +85,7 @@ lookup_bits(char *buf, const BITNAMES * table, const char *label, unsigned int v
 
     _nc_STRCAT(buf, label, TRACE_BUF_SIZE(0));
     _nc_STRCAT(buf, ": {", TRACE_BUF_SIZE(0));
-    for (sp = table; sp->name; sp++)
+    for (sp = table; sp->name[0]; sp++)
 	if (sp->val != 0
 	    && (val & sp->val) == sp->val) {
 	    _nc_STRCAT(buf, sp->name, TRACE_BUF_SIZE(0));

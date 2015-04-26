@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2380 2015/04/18 22:22:01 tom Exp $
+-- $Id: NEWS,v 1.2390 2015/04/26 00:51:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,24 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150425
+	+ expanded description of tgetstr's area pointer in manual page
+	  (report by Todd M Lewis).
+	+ in-progress changes to modify test-packages to use ncursesw6 rather
+	  than ncursesw, with updated configure scripts.
+	+ modify CF_NCURSES_CONFIG in Ada95- and test-configure scripts to
+	  check for ".pc" files via pkg-config, but add a linkage check since
+	  frequently pkg-config configurations are broken.
+	+ modify misc/gen-pkgconfig.in to include EXTRA_LDFLAGS, e.g., for the
+	  rpath option.
+	+ add 'dim' capability to screen entry (report by Leonardo B Schenkel)
+	+ add several key definitions to nsterm-bce to match preconfigured
+	  keys, e.g., with OSX 10.9 and 10.10 (report by Leonardo B Schenkel)
+	+ fix repeated "extra-suffix" in ncurses-config.in (cf: 20150418).
+	+ improve term_variables manual page, adding section on the terminfo
+	  long-name symbols which are defined in the term.h header.
+	+ fix bug in lib_tracebits.c introduced in const-fixes (cf: 20150404).
 
 20150418
 	+ avoid a blank line in output from tabs program by ending it with

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.525 $
-#	$Date: 2014/10/19 01:16:56 $
+#	$Revision: 1.531 $
+#	$Date: 2015/04/22 10:20:24 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1223,8 +1223,15 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 #   + the vt52 emulation does not give a usable shell because screen-clearing
 #     does not work as expected.
 #   + selecting "xterm" or "xterm-16color" sets TERM to "xterm-256color".
+# + OSX 10.9 (Yosemite) added more extended keys in the default configuration
+#   as well as unmasking F10 (which had been used in the window manager). Those
+#   keys are listed in this entry.
 nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
-	bce, use=nsterm-16color,
+	bce,
+	kDC=\E[3;2~, kLFT=\E[1;2D, kRIT=\E[1;2C, kcbt=\E[Z,
+	kf18=\E[32~, kDC5=\E[3;5~, kDC7=\E[3;5~, kLFT3=\Eb,
+	kLFT5=\E[1;5D, kRIT3=\Ef, kRIT5=\E[1;5C,
+	use=nsterm-16color,
 
 # This is tested with OS X 10.8 (Mountain Lion), 2012/08/11
 #	TERM_PROGRAM_VERSION=309
@@ -4444,7 +4451,7 @@ xterm-x11hilite|X11 mouse with highlight,
 # CDE's dtterm was introduced around the same time, with no mouse protocol -TD
 
 # xterm patch #83 (1998/10/7), added Jason Bacon's changes to provide an
-# "any-event" mouse mode. 
+# "any-event" mouse mode.
 xterm+sm+1002|xterm any-event mouse,
 	kmous=\E[M, XM=\E[?1002%?%p1%{1}%=%th%el%;,
 xterm-1002|xterm any-event mouse,
@@ -5899,19 +5906,19 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\EM,
-	cvvis=\E[34l, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM,
-	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0,
-	flash=\Eg, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
-	il=\E[%p1%dL, il1=\E[L, ind=^J, is2=\E)0, kbs=^H, kcbt=\E[Z,
-	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
-	kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~,
+	cvvis=\E[34l, dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m,
+	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
+	enacs=\E(B\E)0, flash=\Eg, home=\E[H, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=^J, is2=\E)0,
+	kbs=^H, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
+	kcuu1=\EOA, kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, kpp=\E[5~,
 	nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
 	rmcup=\E[?1049l, rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m,
 	rmul=\E[24m, rs2=\Ec\E[?1000l\E[?25h, sc=\E7,
-	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5%t;2%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smcup=\E[?1049h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
 	S0=\E(%p1%c, use=ecma+color,
@@ -23572,5 +23579,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2014-10-18
 #	+ reviewed terminology 0.6.1, add function key definitions.  None of
 #	  the vt100-compatibility issues were improved -TD
+#
+# 2015-04-22
+#	+ add 'dim' capability to screen entry (report by Leonardo B Schenkel)
+#	+ add several key definitions to nsterm-bce to match preconfigured
+#	  keys, e.g., with OSX 10.9 and 10.10 (report by Leonardo B Schenkel)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

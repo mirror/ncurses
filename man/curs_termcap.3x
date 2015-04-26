@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.30 2013/01/19 15:58:48 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.31 2015/04/26 00:49:10 tom Exp $
 .TH curs_termcap 3X ""
 .de bP
 .IP \(bu 4
@@ -121,9 +121,24 @@ or \-1 if it is not available.
 The \fBtgetstr\fR routine returns the string entry for \fIid\fR,
 or zero if it is not available.
 Use \fBtputs\fR to output the returned string.
-The return value will also be copied to the buffer pointed to by \fIarea\fR,
+The \fIarea\fP parameter is used as follows:
+.RS 3
+.bP
+It is assumed to be the address of a pointer to a buffer managed by the
+calling application.
+.bP
+However, ncurses checks to ensure that \fBarea\fP is not NULL,
+and also that the resulting buffer pointer is not NULL.
+If either check fails, the \fIarea\fP parameter is ignored.
+.bP
+If the checks succeed, ncurses also copies the return value to
+the buffer pointed to by \fIarea\fR,
 and the \fIarea\fR value will be updated to point past the null ending
 this value.
+.bP
+The return value itself is an address in the terminal description which
+is loaded into memory.
+.RE
 .PP
 Only the first two characters of the \fBid\fR parameter of
 \fBtgetflag\fR,
