@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.98 2015/04/25 09:52:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.101 2015/04/26 22:09:06 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2080,10 +2080,11 @@ AC_DEFUN([CF_MSG_LOG],[
 echo "${as_me:-configure}:__oline__: testing $* ..." 1>&AC_FD_CC
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_ADDON version: 4 updated: 2011/03/27 17:10:13
+dnl CF_NCURSES_ADDON version: 5 updated: 2015/04/26 18:06:58
 dnl ----------------
 dnl Configure an ncurses add-on, built outside the ncurses tree.
 AC_DEFUN([CF_NCURSES_ADDON],[
+AC_REQUIRE([CF_NCURSES_CONFIG])
 
 AC_PROVIDE([CF_SUBST_NCURSES_VERSION])
 
@@ -2094,42 +2095,55 @@ AC_ARG_ENABLE(widec,
 	[with_widec=no])
 AC_MSG_RESULT($with_widec)
 if test "$with_widec" = yes ; then
-	CF_UTF8_LIB 
+	CF_UTF8_LIB
 	CF_NCURSES_CONFIG(ncursesw)
 else
 	CF_NCURSES_CONFIG(ncurses)
 fi
 
-if test "$NCURSES_CONFIG" != none ; then
+if test "$NCURSES_CONFIG_PKG" != none ; then
+	cf_version=`$PKG_CONFIG --modversion $NCURSES_CONFIG_PKG 2>/dev/null`
 
-cf_version=`$NCURSES_CONFIG --version`
+	NCURSES_MAJOR=`echo "$cf_version" | sed -e 's/\..*//'`
+	NCURSES_MINOR=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.//' -e 's/\..*//'`
+	NCURSES_PATCH=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.//'`
 
-NCURSES_MAJOR=`echo "$cf_version" | sed -e 's/\..*//'`
-NCURSES_MINOR=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.//' -e 's/\..*//'`
-NCURSES_PATCH=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.//'`
+	cf_cv_abi_version=`$PKG_CONFIG --variable=abi_version $NCURSES_CONFIG_PKG 2>/dev/null`
+	if test -z "$cf_cv_abi_version"
+	then
+		cf_cv_abi_version=`$PKG_CONFIG --variable=major_version $NCURSES_CONFIG_PKG 2>/dev/null`
+	fi
 
-# ABI version is not available from headers
-cf_cv_abi_version=`$NCURSES_CONFIG --abi-version`
+elif test "$NCURSES_CONFIG" != none ; then
+
+	cf_version=`$NCURSES_CONFIG --version 2>/dev/null`
+
+	NCURSES_MAJOR=`echo "$cf_version" | sed -e 's/\..*//'`
+	NCURSES_MINOR=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.//' -e 's/\..*//'`
+	NCURSES_PATCH=`echo "$cf_version" | sed -e 's/^[[0-9]][[0-9]]*\.[[0-9]][[0-9]]*\.//'`
+
+	# ABI version is not available from headers
+	cf_cv_abi_version=`$NCURSES_CONFIG --abi-version 2>/dev/null`
 
 else
 
-for cf_name in MAJOR MINOR PATCH
-do
-cat >conftest.$ac_ext <<CF_EOF
-#include <${cf_cv_ncurses_header:-curses.h}>
-AUTOCONF_$cf_name NCURSES_VERSION_$cf_name
+	for cf_name in MAJOR MINOR PATCH
+	do
+	cat >conftest.$ac_ext <<CF_EOF
+	#include <${cf_cv_ncurses_header:-curses.h}>
+	AUTOCONF_$cf_name NCURSES_VERSION_$cf_name
 CF_EOF
-	cf_try="$ac_cpp conftest.$ac_ext 2>&5 | fgrep AUTOCONF_$cf_name >conftest.out"
-	AC_TRY_EVAL(cf_try)
-	if test -f conftest.out ; then
-		cf_result=`cat conftest.out | sed -e "s/^.*AUTOCONF_$cf_name[[ 	]][[ 	]]*//"`
-		eval NCURSES_$cf_name=\"$cf_result\"
-		# cat conftest.$ac_ext
-		# cat conftest.out
-	fi
-done
+		cf_try="$ac_cpp conftest.$ac_ext 2>&5 | fgrep AUTOCONF_$cf_name >conftest.out"
+		AC_TRY_EVAL(cf_try)
+		if test -f conftest.out ; then
+			cf_result=`cat conftest.out | sed -e "s/^.*AUTOCONF_$cf_name[[ 	]][[ 	]]*//"`
+			eval NCURSES_$cf_name=\"$cf_result\"
+			# cat conftest.$ac_ext
+			# cat conftest.out
+		fi
+	done
 
-cf_cv_abi_version=${NCURSES_MAJOR}
+	cf_cv_abi_version=${NCURSES_MAJOR}
 
 fi
 
@@ -2189,11 +2203,13 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 12 updated: 2015/04/24 20:52:45
+dnl CF_NCURSES_CONFIG version: 13 updated: 2015/04/26 18:06:58
 dnl -----------------
-dnl Tie together the configure-script macros for ncurses.
-dnl Prefer the "-config" script from ncurses 6.x, to simplify analysis.
-dnl Allow that to be overridden using the $NCURSES_CONFIG environment variable.
+dnl Tie together the configure-script macros for ncurses, preferring these in
+dnl order:
+dnl a) ".pc" files for pkg-config, using $NCURSES_CONFIG_PKG
+dnl b) the "-config" script from ncurses, using $NCURSES_CONFIG
+dnl c) just plain libraries
 dnl
 dnl $1 is the root library name (default: "ncurses")
 AC_DEFUN([CF_NCURSES_CONFIG],[
@@ -2229,13 +2245,18 @@ if test "x$PKG_CONFIG" != xnone; then
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
 			LIBS="$cf_save_LIBS"
+			NCURSES_CONFIG_PKG=none
 		else
 			AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
+			NCURSES_CONFIG_PKG=$cf_ncuconfig_root
 		fi
 
 	else
 		AC_MSG_RESULT(no)
+		NCURSES_CONFIG_PKG=none
 	fi
+else
+	NCURSES_CONFIG_PKG=none
 fi
 
 if test "x$cf_have_ncuconfig" = "xno"; then
@@ -2269,6 +2290,8 @@ if test "x$cf_have_ncuconfig" = "xno"; then
 		CF_NCURSES_LIBS(ifelse($1,,ncurses,$1))
 
 	fi
+else
+	NCURSES_CONFIG=none
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -2592,7 +2615,7 @@ case ".[$]$1" in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 9 updated: 2015/04/12 15:39:00
+dnl CF_PKG_CONFIG version: 10 updated: 2015/04/26 18:06:58
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -2621,7 +2644,7 @@ esac
 test -z "$PKG_CONFIG" && PKG_CONFIG=none
 if test "$PKG_CONFIG" != none ; then
 	CF_PATH_SYNTAX(PKG_CONFIG)
-else
+elif test "x$cf_pkg_config" != xno ; then
 	AC_MSG_WARN(pkg-config is not installed)
 fi
 
@@ -3675,15 +3698,19 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 6 updated: 2015/04/17 21:13:04
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 7 updated: 2015/04/26 18:06:58
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
 AC_MSG_CHECKING(for $PKG_CONFIG library directory)
-AC_ARG_WITH(pkg-config-libdir,
-	[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
-	[PKG_CONFIG_LIBDIR=$withval],
-	[PKG_CONFIG_LIBDIR=yes])
+if test "x$PKG_CONFIG" = xnone ; then
+	PKG_CONFIG_LIBDIR=none
+else
+	AC_ARG_WITH(pkg-config-libdir,
+		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
+		[PKG_CONFIG_LIBDIR=$withval],
+		[PKG_CONFIG_LIBDIR=yes])
+fi
 
 case x$PKG_CONFIG_LIBDIR in
 (x/*)
@@ -3739,7 +3766,9 @@ case x$PKG_CONFIG_LIBDIR in
 	;;
 esac
 
-AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+if test "x$PKG_CONFIG" != xnone ; then
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+fi
 
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl

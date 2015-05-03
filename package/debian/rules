@@ -15,11 +15,19 @@ CC_NORMAL = -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_STRICT = $(CC_NORMAL) -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
 MY_ABI=6
-MY_DIR=/usr/local/ncurses$(MY_ABI)
+MY_DIR=/usr
 MYDATA=/usr/local/ncurses/share/terminfo
 BUILD_DIR=$(CURDIR)/debian/ncurses$(MY_ABI)
 
 CFLAGS = $(CC_NORMAL)
+
+ifneq ($(MY_DIR),/usr)
+	RPATH_ENV = RPATH_LIST=../lib:$(MY_DIR)/lib
+	RPATH_OPT = --enable-rpath
+else
+	RPATH_ENV =
+	RPATH_OPT = --disable-rpath --disable-rpath-hack
+endif
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
         CFLAGS += -O0
@@ -35,8 +43,7 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
-	RPATH_LIST=../lib:$(MY_DIR)/lib \
-	CFLAGS="$(CFLAGS)" ./configure \
+	$(RPATH_ENV) CFLAGS="$(CFLAGS)" ./configure $(RPATH_OPT) \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=$(MY_DIR) \
@@ -46,6 +53,7 @@ configure-stamp:
 		--disable-getcap \
 		--disable-leaks \
 		--disable-macros  \
+		--disable-overwrite  \
 		--disable-termcap \
 		--enable-const \
 		--enable-ext-colors \
@@ -54,9 +62,9 @@ configure-stamp:
 		--enable-hard-tabs \
 		--enable-interop \
 		--enable-pc-files \
-		--enable-rpath \
 		--enable-sp-funcs \
 		--enable-warnings \
+		--enable-wgetch-events \
 		--enable-widec \
 		--program-suffix=$(MY_ABI) \
 		--verbose \

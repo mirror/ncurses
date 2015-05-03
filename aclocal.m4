@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.743 2015/04/18 13:01:42 tom Exp $
+dnl $Id: aclocal.m4,v 1.748 2015/05/02 21:22:41 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -60,6 +60,37 @@ AC_CACHE_CHECK([for nl_langinfo and CODESET], am_cv_langinfo_codeset,
 		AC_DEFINE(HAVE_LANGINFO_CODESET, 1,
 		[Define if you have <langinfo.h> and nl_langinfo(CODESET).])
 	fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ABI_DEFAULTS version: 1 updated: 2015/05/02 17:21:13
+dnl ---------------
+dnl Provide configure-script defaults for different ncurses ABIs.
+AC_DEFUN([CF_ABI_DEFAULTS],[
+AC_REQUIRE([CF_WITH_ABI_VERSION])
+case x$cf_cv_abi_version in
+(x6)
+	cf_dft_ext_colors=yes
+	cf_dft_ext_const=yes
+	cf_dft_ext_mouse=yes
+	cf_dft_ext_putwin=yes
+	cf_dft_ext_spfuncs=yes
+	cf_dft_chtype=uint32_t
+	cf_dft_mmask_t=uint32_t
+	cf_dft_interop=yes
+	cf_dft_tparm_arg=intptr_t
+	;;
+(*)
+	cf_dft_ext_colors=no
+	cf_dft_ext_const=no
+	cf_dft_ext_mouse=no
+	cf_dft_ext_putwin=no
+	cf_dft_ext_spfuncs=no
+	cf_dft_chtype=auto
+	cf_dft_mmask_t=auto
+	cf_dft_interop=no
+	cf_dft_tparm_arg=long
+	;;
+esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ACVERSION_CHECK version: 5 updated: 2014/06/04 19:11:49
@@ -3191,7 +3222,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 80 updated: 2015/04/17 21:13:04
+dnl CF_LIB_RULES version: 81 updated: 2015/04/30 20:30:18
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3297,7 +3328,7 @@ CF_EOF
 						case "$cf_cv_system_name" in
 						(darwin*)
 							# "w", etc?
-							cf_suffix="${LIB_SUFFIX}"'.${'$cf_version_name'}'"$cf_shared_suffix"
+							cf_suffix="${USE_LIB_SUFFIX}"'.${'$cf_version_name'}'"$cf_shared_suffix"
 							;;
 						(*)
 							cf_suffix="$cf_suffix"'.${'$cf_version_name'}'
@@ -3480,24 +3511,24 @@ CF_EOF
 			if test -n "$USE_LIB_SUFFIX" ; then
 				case $USE_LIB_SUFFIX in
 				(tw*)
-					cf_libname=`echo $cf_libname | sed 's/tw$//'`
+					cf_libname=`echo $cf_libname | sed 's/tw'$EXTRA_SUFFIX'$//'`
 					cf_suffix=`echo $cf_suffix | sed 's/^tw'$EXTRA_SUFFIX'//'`
-					cf_dir_suffix=tw
+					cf_dir_suffix=tw$EXTRA_SUFFIX
 					;;
 				(t*)
-					cf_libname=`echo $cf_libname | sed 's/t$//'`
+					cf_libname=`echo $cf_libname | sed 's/t'$EXTRA_SUFFIX'$//'`
 					cf_suffix=`echo $cf_suffix | sed 's/^t'$EXTRA_SUFFIX'//'`
-					cf_dir_suffix=t
+					cf_dir_suffix=t$EXTRA_SUFFIX
 					;;
 				(w*)
-					cf_libname=`echo $cf_libname | sed 's/w$//'`
+					cf_libname=`echo $cf_libname | sed 's/w'$EXTRA_SUFFIX'$//'`
 					cf_suffix=`echo $cf_suffix | sed 's/^w'$EXTRA_SUFFIX'//'`
-					cf_dir_suffix=w
+					cf_dir_suffix=w$EXTRA_SUFFIX
 					;;
 				(*)
-					cf_libname=`echo $cf_libname | sed 's/$//'`
+					cf_libname=`echo $cf_libname | sed 's/'$EXTRA_SUFFIX'$//'`
 					cf_suffix=`echo $cf_suffix | sed 's/^'$EXTRA_SUFFIX'//'`
-					cf_dir_suffix=
+					cf_dir_suffix=$EXTRA_SUFFIX
 					;;
 				esac
 			fi
@@ -4895,7 +4926,7 @@ case ".[$]$1" in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 9 updated: 2015/04/12 15:39:00
+dnl CF_PKG_CONFIG version: 10 updated: 2015/04/26 18:06:58
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -4924,7 +4955,7 @@ esac
 test -z "$PKG_CONFIG" && PKG_CONFIG=none
 if test "$PKG_CONFIG" != none ; then
 	CF_PATH_SYNTAX(PKG_CONFIG)
-else
+elif test "x$cf_pkg_config" != xno ; then
 	AC_MSG_WARN(pkg-config is not installed)
 fi
 
@@ -7210,15 +7241,19 @@ AC_SUBST($3)dnl
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 6 updated: 2015/04/17 21:13:04
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 7 updated: 2015/04/26 18:06:58
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
 AC_MSG_CHECKING(for $PKG_CONFIG library directory)
-AC_ARG_WITH(pkg-config-libdir,
-	[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
-	[PKG_CONFIG_LIBDIR=$withval],
-	[PKG_CONFIG_LIBDIR=yes])
+if test "x$PKG_CONFIG" = xnone ; then
+	PKG_CONFIG_LIBDIR=none
+else
+	AC_ARG_WITH(pkg-config-libdir,
+		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
+		[PKG_CONFIG_LIBDIR=$withval],
+		[PKG_CONFIG_LIBDIR=yes])
+fi
 
 case x$PKG_CONFIG_LIBDIR in
 (x/*)
@@ -7274,7 +7309,9 @@ case x$PKG_CONFIG_LIBDIR in
 	;;
 esac
 
-AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+if test "x$PKG_CONFIG" != xnone ; then
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+fi
 
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl

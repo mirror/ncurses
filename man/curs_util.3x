@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.41 2015/04/11 10:22:50 tom Exp $
+.\" $Id: curs_util.3x,v 1.42 2015/04/26 14:27:03 Sven.Joachim Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -307,7 +307,7 @@ A few applications may happen to write extra data in the file using
 these functions.
 Doing that can run into problems mixing block- and buffered-I/O.
 This implementation reduces the problem on writes by flushing the output.
-However, reading from a file written using mixed schemes may not be succesful.
+However, reading from a file written using mixed schemes may not be successful.
 .SS unctrl/wunctrl
 .PP
 The XSI Curses standard, Issue 4 describes these functions.

@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.93 2014/11/15 00:34:28 tom Exp $
+# $Id: Makefile.in,v 1.94 2015/05/01 00:47:26 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -301,7 +301,7 @@ clean :: mostlyclean
 	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
 	-rm -f $(AUTO_SRC)
 	-rm -f $(PROGS)
-	-rm -rf .libs
+	-rm -rf .libs *.dSYM
 
 distclean :: clean
 	-rm -f Makefile

@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 2002-2010,2011 Free Software Foundation, Inc.                #
+# Copyright (c) 2002-2011,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 # Author: Thomas Dickey
 #
-# $Id: Caps.osf1r5,v 1.6 2011/10/15 22:52:09 tom Exp $
+# $Id: Caps.osf1r5,v 1.7 2015/04/26 15:25:55 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is designed to align with OSF/1 version 5 (Tru64) terminfo.
@@ -97,7 +97,7 @@
 # 3. List it in the standard table.  You almost certainly do *not* want
 # to do this -- the capabilities in that one, and their order, have been
 # carefully chosen to be SVr4-binary-compatible when they're written out
-# as a terminfo object, and breaking this would be bad.  It's up the ncurses
+# as a terminfo object, and breaking this would be bad.  It's up to the ncurses
 # library what to do with the terminfo data after it's read in.
 #
 # 4. List it in the aliases table with an IGNORE target field.  If you
@@ -227,7 +227,7 @@ move_standout_mode		msgr	bool	ms	-	-	YBCGE	safe to move while in standout mode
 over_strike			os	bool	os	-	-	YBCG-	terminal can overstrike
 status_line_esc_ok		eslok	bool	es	-	-	YB-G-	escape can be used on the status line
 dest_tabs_magic_smso		xt	bool	xt	-	-	YBCGE	tabs destructive, magic so char (t1061)
-tilde_glitch			hz	bool	hz	-	-	YB-GE	cannot print ~'s (hazeltine)
+tilde_glitch			hz	bool	hz	-	-	YB-GE	cannot print ~'s (Hazeltine)
 transparent_underline		ul	bool	ul	-	-	YBCGE	underline character overstrikes
 xon_xoff			xon	bool	xo	-	-	YB---	terminal uses xon/xoff handshaking
 back_color_erase		bce	bool	ut	-	-	-----	screen erased with background color
@@ -280,7 +280,7 @@ max_colors			colors	num	Co	-	-	-----	maximum number of colors on screen
 max_micro_address		maddr	num	Yd	-	-	-----	maximum value in micro_..._address
 max_micro_jump			mjump	num	Ye	-	-	-----	maximum value in parm_..._micro
 max_pairs			pairs	num	pa	-	-	-----	maximum number of color-pairs on the screen
-maximum_windows			wnum	num	MW	-	-	-----	maximum number of defineable windows
+maximum_windows			wnum	num	MW	-	-	-----	maximum number of definable windows
 micro_col_size			mcs	num	Yf	-	-	-----	character step size when in micro mode
 micro_line_size			mls	num	Yg	-	-	-----	line step size when in micro mode
 no_color_video			ncv	num	NC	-	-	-----	video attributes that can not be used with colors
@@ -574,7 +574,7 @@ clr_bol				el1	str	cb	-		-	-----	Clear to beginning of line
 code_set_init			csin	str	ci	-		-	-----	Init sequence for multiple codesets
 color_names			colornm	str	Yw	-		-	-----	Give name for color #1
 create_window			cwin	str	CW	-		-	-----	define a window #1 from #2,#3 to #4,#5
-define_bit_image_region		defbi	str	Yx	-		-	-----	Define rectangualar bit image region
+define_bit_image_region		defbi	str	Yx	-		-	-----	Define rectangular bit image region
 define_char			defc	str	ZE	-		-	-----	Define a character #1, #2 dots wide, descender #3
 device_type			devt	str	dv	-		-	-----	Indicate language/codeset support
 dial_phone			dial	str	DI	-		-	-----	dial number #1

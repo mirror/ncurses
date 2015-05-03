@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -75,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.68 2014/03/08 20:32:59 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.69 2015/05/02 22:23:16 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -121,7 +121,7 @@ _nc_eventlist_timeout(_nc_eventlist * evl)
 	    _nc_event *ev = evl->events[n];
 
 	    if (ev->type == _NC_EVENT_TIMEOUT_MSEC) {
-		event_delay = ev->data.timeout_msec;
+		event_delay = (int) ev->data.timeout_msec;
 		if (event_delay < 0)
 		    event_delay = INT_MAX;	/* FIXME Is this defined? */
 	    }

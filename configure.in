@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.611 2015/04/18 17:26:15 tom Exp $
+dnl $Id: configure.in,v 1.613 2015/05/02 21:19:00 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.611 $)
+AC_REVISION($Revision: 1.613 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -53,6 +53,8 @@ cf_user_CFLAGS="$CFLAGS"
 
 ###	Default install-location
 CF_CFG_DEFAULTS
+### Defaults for ncurses ABI
+CF_ABI_DEFAULTS
 
 ###	Checks for programs.
 AC_ARG_WITH(ada,
@@ -937,7 +939,7 @@ AC_MSG_CHECKING(for type of chtype)
 AC_ARG_WITH(chtype,
 	[  --with-chtype=TYPE      override type of chtype],
 	[NCURSES_CHTYPE="$withval"],
-	[NCURSES_CHTYPE=auto])
+	[NCURSES_CHTYPE=$cf_dft_chtype])
 AC_MSG_RESULT($NCURSES_CHTYPE)
 
 ###   use option --with-ospeed to override ospeed's type
@@ -954,7 +956,7 @@ AC_MSG_CHECKING(for type of mmask_t)
 AC_ARG_WITH(mmask-t,
 	[  --with-mmask-t=TYPE     override type of mmask_t],
 	[NCURSES_MMASK_T="$withval"],
-	[NCURSES_MMASK_T=auto])
+	[NCURSES_MMASK_T=$cf_dft_mmask_t])
 AC_MSG_RESULT($NCURSES_MMASK_T)
 
 ###   use option --with-ccharw-max to override CCHARW_MAX size
@@ -971,7 +973,7 @@ AC_MSG_CHECKING(for type of tparm args)
 AC_ARG_WITH(tparm-arg,
 	[  --with-tparm-arg=TYPE   override parameter type of tparm],
 	[NCURSES_TPARM_ARG="$withval"],
-	[NCURSES_TPARM_ARG=long])
+	[NCURSES_TPARM_ARG=$cf_dft_tparm_arg])
 AC_MSG_RESULT($NCURSES_TPARM_ARG)
 AC_SUBST(NCURSES_TPARM_ARG)
 
@@ -1018,15 +1020,15 @@ fi
 AC_SUBST(NCURSES_EXT_FUNCS)
 AC_SUBST(GENERATED_EXT_FUNCS)
 
-AC_MSG_CHECKING(if you want to build with experimental SCREEN extensions)
+AC_MSG_CHECKING(if you want to build with SCREEN extensions)
 AC_ARG_ENABLE(sp-funcs,
-	[  --enable-sp-funcs       enable experimental SCREEN-extensions],
+	[  --enable-sp-funcs       enable SCREEN-extensions],
 	[with_sp_funcs=$enableval],
-	[with_sp_funcs=no])
+	[with_sp_funcs=$cf_dft_ext_spfuncs])
 AC_MSG_RESULT($with_sp_funcs)
 if test "x$with_sp_funcs" = xyes ; then
 	NCURSES_SP_FUNCS=1
-	AC_DEFINE(NCURSES_SP_FUNCS,1,[Define to 1 to enable experimental SCREEN-extensions])
+	AC_DEFINE(NCURSES_SP_FUNCS,1,[Define to 1 to enable SCREEN-extensions])
 	GENERATED_SP_FUNCS=generated
 else
 	NCURSES_SP_FUNCS=0
@@ -1035,14 +1037,14 @@ fi
 AC_SUBST(NCURSES_SP_FUNCS)
 AC_SUBST(GENERATED_SP_FUNCS)
 
-AC_MSG_CHECKING(if you want to build with experimental terminal-driver)
+AC_MSG_CHECKING(if you want to build with terminal-driver)
 AC_ARG_ENABLE(term-driver,
-	[  --enable-term-driver    enable experimental terminal-driver],
+	[  --enable-term-driver    enable terminal-driver],
 	[with_term_driver=$enableval],
 	[with_term_driver=no])
 AC_MSG_RESULT($with_term_driver)
 if test "x$with_term_driver" = xyes ; then
-	AC_DEFINE(USE_TERM_DRIVER,1,[Define to 1 to enable experimental terminal-driver])
+	AC_DEFINE(USE_TERM_DRIVER,1,[Define to 1 to enable terminal-driver])
 	if test "x$with_sp_funcs" != xyes ; then
 		AC_MSG_ERROR(The term-driver option relies upon sp-funcs)
 	fi
@@ -1053,7 +1055,7 @@ AC_MSG_CHECKING(for extended use of const keyword)
 AC_ARG_ENABLE(const,
 	[  --enable-const          compile with extra/non-standard const],
 	[with_ext_const=$enableval],
-	[with_ext_const=no])
+	[with_ext_const=$cf_dft_ext_const])
 AC_MSG_RESULT($with_ext_const)
 NCURSES_CONST='/*nothing*/'
 if test "x$with_ext_const" = xyes ; then
@@ -1066,18 +1068,18 @@ AC_MSG_CHECKING(if you want to use extended colors)
 AC_ARG_ENABLE(ext-colors,
 	[  --enable-ext-colors     compile for 256-color support],
 	[with_ext_colors=$enableval],
-	[with_ext_colors=no])
+	[with_ext_colors=$cf_dft_ext_colors])
 AC_MSG_RESULT($with_ext_colors)
 NCURSES_EXT_COLORS=0
 if test "x$with_ext_colors" = xyes ; then
 	if test "x$with_widec" != xyes ; then
-		AC_MSG_ERROR(This option applies only to wide-character library)
+		AC_MSG_WARN(This option applies only to wide-character library)
 	else
 		# cannot be ABI 5 since it changes sizeof(cchar_t)
 		CF_NCURSES_ABI_6
+		NCURSES_EXT_COLORS=1
+		AC_DEFINE(NCURSES_EXT_COLORS,1,[Define to 1 to compile for 256-color support])
 	fi
-	NCURSES_EXT_COLORS=1
-	AC_DEFINE(NCURSES_EXT_COLORS,1,[Define to 1 to compile for 256-color support])
 fi
 AC_SUBST(NCURSES_EXT_COLORS)
 
@@ -1086,7 +1088,7 @@ AC_MSG_CHECKING(if you want to use extended mouse encoding)
 AC_ARG_ENABLE(ext-mouse,
 	[  --enable-ext-mouse      compile for extended mouse-encoding],
 	[with_ext_mouse=$enableval],
-	[with_ext_mouse=no])
+	[with_ext_mouse=$cf_dft_ext_mouse])
 AC_MSG_RESULT($with_ext_mouse)
 NCURSES_MOUSE_VERSION=1
 if test "x$with_ext_mouse" = xyes ; then
@@ -1100,7 +1102,7 @@ AC_MSG_CHECKING(if you want to use extended putwin/screendump)
 AC_ARG_ENABLE(ext-putwin,
 	[  --enable-ext-putwin     compile with extended putwin/screendump],
 	[with_ext_putwin=$enableval],
-	[with_ext_putwin=no])
+	[with_ext_putwin=$cf_dft_ext_putwin])
 AC_MSG_RESULT($with_ext_putwin)
 if test "x$with_ext_putwin" = xyes ; then
 	AC_DEFINE(NCURSES_EXT_PUTWIN,1,[Define to 1 to compile with extended putwin/screendump])
@@ -1208,9 +1210,9 @@ test "x$with_colorfgbg" = xyes && AC_DEFINE(USE_COLORFGBG,1,[Define to 1 to comp
 ###   use option --enable-interop to turn on use of bindings used for interop
 AC_MSG_CHECKING(if you want interop bindings)
 AC_ARG_ENABLE(interop,
-	[  --enable-interop        compile-in experimental interop bindings],
+	[  --enable-interop        compile-in interop bindings],
 	[with_exp_interop=$enableval],
-	[with_exp_interop=no])
+	[with_exp_interop=$cf_dft_interop])
 AC_MSG_RESULT($with_exp_interop)
 
 NCURSES_INTEROP_FUNCS=0
@@ -1264,9 +1266,9 @@ AC_SUBST(PTHREAD)
 # opaque outside of that, so there is no --enable-opaque option.  We can use
 # this option without --with-pthreads, but this will be always set for
 # pthreads.
-AC_MSG_CHECKING(if you want experimental reentrant code)
+AC_MSG_CHECKING(if you want reentrant code)
 AC_ARG_ENABLE(reentrant,
-	[  --enable-reentrant      compile with experimental reentrant code],
+	[  --enable-reentrant      compile with reentrant code],
 	[with_reentrant=$enableval],
 	[with_reentrant=no])
 AC_MSG_RESULT($with_reentrant)
@@ -1298,7 +1300,7 @@ if test "x$with_reentrant" = xyes ; then
 			;;
 		esac
 	fi
-	AC_DEFINE(USE_REENTRANT,1,[Define to 1 to use experimental reentrant feature])
+	AC_DEFINE(USE_REENTRANT,1,[Define to 1 to use reentrant feature])
 	CF_NCURSES_ABI_6
 else
 	cf_cv_enable_reentrant=0
@@ -1345,13 +1347,13 @@ AC_MSG_RESULT($with_scroll_hints)
 test "x$with_scroll_hints" = xyes && AC_DEFINE(USE_SCROLL_HINTS,1,[Define to 1 to compile without scroll-hints code])
 fi
 
-AC_MSG_CHECKING(if you want experimental wgetch-events code)
+AC_MSG_CHECKING(if you want wgetch-events code)
 AC_ARG_ENABLE(wgetch-events,
-	[  --enable-wgetch-events  compile with experimental wgetch-events code],
+	[  --enable-wgetch-events  compile with wgetch-events code],
 	[with_wgetch_events=$enableval],
 	[with_wgetch_events=no])
 AC_MSG_RESULT($with_wgetch_events)
-test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with experimental wgetch-events code])
+test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with wgetch-events code])
 
 ###############################################################################
 CF_HELP_MESSAGE(Testing/development Options:)

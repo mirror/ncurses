@@ -1,6 +1,6 @@
-# $Id: mk-test.awk,v 1.12 2010/11/06 23:06:48 tom Exp $
+# $Id: mk-test.awk,v 1.13 2015/05/01 00:47:26 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2007,2010 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2010,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -107,7 +107,7 @@ END	{
 	print	""
 	print	"clean :: mostlyclean"
 	print	"	-$(SHELL) -c \"if test -n '$x' ; then $(MAKE) clean x=''; fi\""
-	print	"	-rm -rf *$o screendump *.lis $(TESTS) .libs"
+	print	"	-rm -rf *$o screendump *.lis $(TESTS) .libs *.dSYM"
 	print	""
 	print	"distclean :: clean"
 	print	"	-rm -f Makefile ncurses_cfg.h config.status config.log"

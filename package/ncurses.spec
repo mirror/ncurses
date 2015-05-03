@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 5.9
-Release: 20150425
+Release: 20150502
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -15,8 +15,8 @@ Source: ncurses-%{version}-%{release}.tgz
 # save value before redefining
 %global sys_libdir %{_libdir}
 
-# redefine...
-%global _prefix /usr/local/ncurses%{MY_ABI}
+# was redefined...
+#global _prefix /usr/local/ncurses#{MY_ABI}
 
 %global MY_PKG %{sys_libdir}/pkgconfig
 %define MYDATA /usr/local/ncurses/share/terminfo
@@ -57,8 +57,10 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--enable-rpath \
 	--enable-sp-funcs \
 	--enable-warnings \
+	--enable-wgetch-events \
 	--enable-widec \
 	--verbose \
+	--program-suffix=%{MY_ABI} \
 	--with-chtype=uint32_t \
 	--with-mmask_t=uint32_t \
 	--with-develop \
@@ -95,6 +97,9 @@ rm -rf $RPM_BUILD_ROOT
 %{MY_PKG}/*.pc
 
 %changelog
+
+* Sun Apr 26 2015 Thomas E. Dickey
+- move package to /usr
 
 * Sun Apr 12 2015 Thomas E. Dickey
 - factor-out MY_ABI

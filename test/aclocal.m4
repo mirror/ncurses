@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.112 2015/04/26 00:54:24 tom Exp $
+dnl $Id: aclocal.m4,v 1.113 2015/05/01 00:39:44 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1910,11 +1910,13 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 12 updated: 2015/04/24 20:52:45
+dnl CF_NCURSES_CONFIG version: 13 updated: 2015/04/26 18:06:58
 dnl -----------------
-dnl Tie together the configure-script macros for ncurses.
-dnl Prefer the "-config" script from ncurses 6.x, to simplify analysis.
-dnl Allow that to be overridden using the $NCURSES_CONFIG environment variable.
+dnl Tie together the configure-script macros for ncurses, preferring these in
+dnl order:
+dnl a) ".pc" files for pkg-config, using $NCURSES_CONFIG_PKG
+dnl b) the "-config" script from ncurses, using $NCURSES_CONFIG
+dnl c) just plain libraries
 dnl
 dnl $1 is the root library name (default: "ncurses")
 AC_DEFUN([CF_NCURSES_CONFIG],[
@@ -1950,13 +1952,18 @@ if test "x$PKG_CONFIG" != xnone; then
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
 			LIBS="$cf_save_LIBS"
+			NCURSES_CONFIG_PKG=none
 		else
 			AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
+			NCURSES_CONFIG_PKG=$cf_ncuconfig_root
 		fi
 
 	else
 		AC_MSG_RESULT(no)
+		NCURSES_CONFIG_PKG=none
 	fi
+else
+	NCURSES_CONFIG_PKG=none
 fi
 
 if test "x$cf_have_ncuconfig" = "xno"; then
@@ -1990,6 +1997,8 @@ if test "x$cf_have_ncuconfig" = "xno"; then
 		CF_NCURSES_LIBS(ifelse($1,,ncurses,$1))
 
 	fi
+else
+	NCURSES_CONFIG=none
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -2441,7 +2450,7 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 9 updated: 2015/04/12 15:39:00
+dnl CF_PKG_CONFIG version: 10 updated: 2015/04/26 18:06:58
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
 AC_DEFUN([CF_PKG_CONFIG],
@@ -2470,7 +2479,7 @@ esac
 test -z "$PKG_CONFIG" && PKG_CONFIG=none
 if test "$PKG_CONFIG" != none ; then
 	CF_PATH_SYNTAX(PKG_CONFIG)
-else
+elif test "x$cf_pkg_config" != xno ; then
 	AC_MSG_WARN(pkg-config is not installed)
 fi
 

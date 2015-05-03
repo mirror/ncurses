@@ -3,7 +3,7 @@ Summary: AdaCurses - Ada95 binding documentation for ncurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
 %define AppPackage %{AppProgram}-doc
-# $Id: AdaCurses-doc.spec,v 1.1 2011/03/26 19:22:39 tom Exp $
+# $Id: AdaCurses-doc.spec,v 1.3 2015/04/26 23:39:31 tom Exp $
 Name: %{AppPackage}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -17,6 +17,8 @@ Packager: Thomas Dickey <dickey@invisible-island.net>
 This is the Ada95 binding documentation from the ncurses MAJOR.MINOR
 distribution, for patch-date YYYYMMDD.
 %prep
+
+%define debug_package %{nil}
 
 %setup -q -n %{AppProgram}-%{AppRelease}
 
@@ -44,5 +46,5 @@ INSTALL_PROGRAM='${INSTALL}' \
 %changelog
 # each patch should add its ChangeLog entries here
 
-* Sat Mar 26 2010 Thomas Dickey
+* Sat Mar 26 2011 Thomas Dickey
 - initial version

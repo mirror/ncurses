@@ -36,7 +36,8 @@ configure-stamp:
 		--prefix=/usr \
 		--disable-rpath-link \
 		--with-shared \
-		--with-ada-sharedlib
+		--with-ada-sharedlib \
+		--without-pkg-config
 
 	touch configure-stamp
 
@@ -88,6 +89,7 @@ binary-arch: build install
 	dh_compress
 	dh_fixperms
 	dh_installdeb
+	dh_makeshlibs
 	dh_shlibdeps
 	dh_gencontrol
 	dh_md5sums

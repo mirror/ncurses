@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.531 $
-#	$Date: 2015/04/22 10:20:24 $
+#	$Revision: 1.536 $
+#	$Date: 2015/05/02 22:39:46 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1227,11 +1227,7 @@ nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
 #   as well as unmasking F10 (which had been used in the window manager). Those
 #   keys are listed in this entry.
 nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (bce),
-	bce,
-	kDC=\E[3;2~, kLFT=\E[1;2D, kRIT=\E[1;2C, kcbt=\E[Z,
-	kf18=\E[32~, kDC5=\E[3;5~, kDC7=\E[3;5~, kLFT3=\Eb,
-	kLFT5=\E[1;5D, kRIT3=\Ef, kRIT5=\E[1;5C,
-	use=nsterm-16color,
+	bce, use=nsterm-16color,
 
 # This is tested with OS X 10.8 (Mountain Lion), 2012/08/11
 #	TERM_PROGRAM_VERSION=309
@@ -1240,9 +1236,19 @@ nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (b
 nsterm-256color|Terminal.app in OS X 10.8,
 	use=xterm+256setaf, use=nsterm-bce,
 
+nsterm-build326|Terminal.app in OS X 10.9,
+	kDC=\E[3;2~, kLFT=\E[1;2D, kRIT=\E[1;2C, kcbt=\E[Z,
+	kf18=\E[32~, kDC5=\E[3;5~, kDC7=\E[3;5~, kLFT3=\Eb,
+	kLFT5=\E[1;5D, kRIT3=\Ef, kRIT5=\E[1;5C,
+	use=nsterm-256color,
+
+# actually "343.7"
+nsterm-build343|Terminal.app in OS X 10.10,
+	kend=\EOF, khome=\EOH, use=nsterm-build326,
+
 # This is an alias which should always point to the "current" version
 nsterm|Apple_Terminal|AppKit Terminal.app,
-	use=nsterm-256color,
+	use=nsterm-build343,
 
 # iTerm.app from http://iterm.sourceforge.net/ is an alternative (and
 # more featureful) terminal emulator for Mac OS X. It is similar
@@ -1647,7 +1653,7 @@ linux2.6|linux 2.6.x console,
 # The 3.0 kernel adds support for clearing scrollback buffer (capability E3).
 # It is the same as xterm's erase-saved-lines feature.
 linux3.0|linux 3.0 kernels,
-	E3=\E[3;J, use=linux2.6,
+	E3=\E[3J, use=linux2.6,
 
 # This is Linux console for ncurses.
 linux|linux console,
@@ -3536,7 +3542,7 @@ putty|PuTTY terminal emulator,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
 	smir=\E[4h, smpch=\E[11m, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3;J, use=vt102+enq,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J, use=vt102+enq,
 	use=xterm+sl,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
@@ -4112,7 +4118,7 @@ xterm-basic|modern xterm terminal emulator - common,
 	sgr0=\E(B\E[m, sitm=\E[3m, smacs=\E(0, smam=\E[?7h,
 	smcup=\E[?1049h, smir=\E[4h, smkx=\E[?1h\E=,
 	smm=\E[?1034h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	vpa=\E[%i%p1%dd, E3=\E[3;J, use=ansi+pp, use=xterm+kbs,
+	vpa=\E[%i%p1%dd, E3=\E[3J, use=ansi+pp, use=xterm+kbs,
 	use=vt100+enq,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
@@ -6112,6 +6118,15 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 	rmir=\E[4l, rmkx=\E>, rmso=\E[23m, rmul=\E[24m, rs1=\Ec,
 	sc=\E7, sgr0=\E[m, smir=\E[4h, smkx=\E=, smso=\E[3m,
 	smul=\E[4m, tbc=\E[3g,
+
+# tmux is compatible with screen, but has support for italics, and some of the
+# xterm cursor bits.
+tmux|tmux terminal multiplexer,
+	ritm=\E[23m, rmso=\E[27m, sitm=\E[3m, smso=\E[7m, Ms@,
+	use=xterm+tmux, use=screen,
+
+tmux-256color|tmux with 256 colors,
+	use=xterm+256setaf, use=tmux,
 
 #### NCSA Telnet
 
@@ -15249,31 +15264,42 @@ ibm3151|IBM 3151 display,
 	sgr0=\E4@\E>B, smacs=\E>A, smcup=\E>B, use=ibm3162,
 # From: Mark Easter <marke@fsi-ssd.csg.ssd.fsi.com> 29 Oct 1992
 # removed kend, knp, kpp -TD
+#
+# From: Stephen Powell <zlinuxman@wowway.com> 23 Apr 2015
+# Added ich1 (kich1 without ich1 doesn't make sense).
+# Added il1 (kil1 without il1 doesn't make sense).
+# Added xon (terminal uses XON/XOFF flow control).
+#
 ibm3161|ibm3163|wy60-316X|wyse60-316X|IBM 3161/3163 display,
-	OTbs, am, mir, msgr,
+	OTbs, am, mir, msgr, xon,
 	cols#80, it#8, lines#24,
 	acsc=j\352k\353l\354m\355n\356q\361t\364u\365v\366w\367x\370,
 	bel=^G, blink=\E4D, bold=\E4H, clear=\EH\EJ, cr=^M, cub1=\ED,
 	cud1=\EB, cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
-	cuu1=\EA, dch1=\EQ, dl1=\EO, ed=\EJ, el=\EI, home=\EH, ind=^J,
-	invis=\E4P, kbs=^H, kcbt=\E2, kclr=\EL\r, kctab=\E1,
-	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kdch1=\EQ,
-	kdl1=\EO, ked=\EJ, kel=\EI, kf1=\Ea\r, kf10=\Ej\r,
-	kf11=\Ek\r, kf12=\El\r, kf13=\E!a\r, kf14=\E!b\r,
-	kf15=\E!c\r, kf16=\E!d\r, kf17=\E!e\r, kf18=\E!f\r,
-	kf19=\E!g\r, kf2=\Eb\r, kf20=\E!h\r, kf21=\E!i\r,
-	kf22=\E!j\r, kf23=\E!k\r, kf24=\E!l\r, kf3=\Ec\r,
-	kf4=\Ed\r, kf5=\Ee\r, kf6=\Ef\r, kf7=\Eg\r, kf8=\Eh\r,
-	kf9=\Ei\r, khome=\EH, khts=\E0, kich1=\EP \010, kil1=\EN,
-	ktbc=\E 1, mc4=^P^T, mc5=^P^R, rev=\E4A, rmcup=\E>A,
-	rmso=\E4@, rmul=\E4@,
+	cuu1=\EA, dch1=\EQ, dl1=\EO, ed=\EJ, el=\EI, home=\EH,
+	ich1=\EP \010, il1=\EN, ind=^J, invis=\E4P, kbs=^H, kcbt=\E2,
+	kclr=\EL\r, kctab=\E1, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
+	kcuu1=\EA, kdch1=\EQ, kdl1=\EO, ked=\EJ, kel=\EI, kf1=\Ea\r,
+	kf10=\Ej\r, kf11=\Ek\r, kf12=\El\r, kf13=\E!a\r,
+	kf14=\E!b\r, kf15=\E!c\r, kf16=\E!d\r, kf17=\E!e\r,
+	kf18=\E!f\r, kf19=\E!g\r, kf2=\Eb\r, kf20=\E!h\r,
+	kf21=\E!i\r, kf22=\E!j\r, kf23=\E!k\r, kf24=\E!l\r,
+	kf3=\Ec\r, kf4=\Ed\r, kf5=\Ee\r, kf6=\Ef\r, kf7=\Eg\r,
+	kf8=\Eh\r, kf9=\Ei\r, khome=\EH, khts=\E0, kich1=\EP \010,
+	kil1=\EN, ktbc=\E 1, mc4=^P^T, mc5=^P^R, rev=\E4A,
+	rmcup=\E>A, rmso=\E4@, rmul=\E4@,
 	sgr=\E4%{64}%?%p1%t%{65}%|%;%?%p2%t%{66}%|%;%?%p3%t%{65}%|%;%?%p4%t%{68}%|%;%?%p5%t%{64}%|%;%?%p6%t%{72}%|%;%?%p7%t%{80}%|%;%c%?%p9%t\E>A%e\E<@%;,
 	sgr0=\E4@\E<@, smcup=\E>A, smso=\E4A, smul=\E4B,
 
 ibm3161-C|IBM 3161-C NLS terminal using cartridge,
 	rmcup=\E>B, s0ds=\E>B, s1ds=\E>A, smcup=\E>B, use=ibm3161,
+#
+# From: Stephen Powell <zlinuxman@wowway.com> 23 Apr 2015
+# Deleted il1.  (il1 will now be inherited from ibm3161-C, which inherits
+# it from ibm3161.
+#
 ibm3162|IBM 3162 display,
-	blink=\E4$a, bold=\E4(a, il1=\EN, invis=\E40a, rev=\E4!a,
+	blink=\E4$a, bold=\E4(a, invis=\E40a, rev=\E4!a,
 	rmso=\E4>b, rmul=\E4=b, sgr0=\E4@, smso=\E4!a, smul=\E4"a,
 	use=ibm3161-C,
 
@@ -23584,5 +23610,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add 'dim' capability to screen entry (report by Leonardo B Schenkel)
 #	+ add several key definitions to nsterm-bce to match preconfigured
 #	  keys, e.g., with OSX 10.9 and 10.10 (report by Leonardo B Schenkel)
+#
+# 2015-05-02
+#	+ remove unnecessary ';' from E3 capabilities -TD
+#	+ add tmux entry, derived from screen (patch by Nicholas Marriott).
+#	+ split-out recent change to nsterm-bce as nsterm-build326, and add
+#	  nsterm-build342 to reflect changes with successive releases of OSX
+#	  (discussion with Leonardo B Schenkel)
+#	+ add xon, ich1, il1 to ibm3161 (patch by Stephen Powell,
+#	  Debian #783806)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

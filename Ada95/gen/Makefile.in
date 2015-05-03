@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.82 2015/04/18 17:06:24 tom Exp $
+#  $Id: Makefile.in,v 1.83 2015/04/26 15:49:35 tom Exp $
 #
 .SUFFIXES:
 
@@ -55,12 +55,15 @@ LN_S		= @LN_S@
 
 CC		= @CC@
 HOST_CC		= @BUILD_CC@
-CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= @ACPPFLAGS@ @CPPFLAGS@ \
+CFLAGS		= @CFLAGS@
+HOST_CFLAGS	= @BUILD_CFLAGS@
+
+CPPFLAGS	= @CPPFLAGS@
+HOST_CPPFLAGS	= @ACPPFLAGS@ @BUILD_CPPFLAGS@ \
 		  -DHAVE_CONFIG_H -I$(srcdir)
 
-CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
+CCFLAGS		= $(HOST_CPPFLAGS) $(HOST_CFLAGS)
 CFLAGS_NORMAL	= $(CCFLAGS)
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
@@ -73,7 +76,12 @@ ABI_VERSION	= @cf_cv_abi_version@
 LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= $(HOST_CC)
-LD_FLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @TINFO_LDFLAGS2@ @LDFLAGS@ @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_LIBS@
+
+LDFLAGS		= @LDFLAGS@
+HOST_LDFLAGS	= @BUILD_LDFLAGS@
+
+LIBS		= @LIBS@
+HOST_LIBS	= @BUILD_LIBS@
 
 RANLIB		= @RANLIB@
 
@@ -147,7 +155,7 @@ uninstall.libs ::
 	-rm -f $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
 
 $(PROG_GENERATE):  gen.o
-	@ECHO_LD@ $(LINK) $(CFLAGS_NORMAL) gen.o $(LD_FLAGS) -o $@
+	@ECHO_LD@ $(LINK) $(CFLAGS_NORMAL) gen.o $(HOST_LDFLAGS) $(HOST_LIBS) -o $@
 
 gen.o:	$(srcdir)/gen.c
 	$(HOST_CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c

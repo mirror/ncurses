@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.151 2015/04/18 22:08:18 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.152 2015/05/02 19:20:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -190,6 +190,7 @@ delscreen(SCREEN *sp)
 
 	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
 	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx sp->_term);
+	FreeIfNeeded(sp->out_buffer);
 	free(sp);
 
 	/*
@@ -206,6 +207,12 @@ delscreen(SCREEN *sp)
 	    COLOR_PAIRS = 0;
 #endif
 	    _nc_set_screen(0);
+#if USE_WIDEC_SUPPORT
+	    if (SP == 0) {
+		FreeIfNeeded(_nc_wacs);
+		_nc_wacs = 0;
+	    }
+#endif
 	}
     }
     _nc_unlock_global(curses);
@@ -574,7 +581,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_ARG);
 #if USE_WIDEC_SUPPORT
     sp->_screen_unicode = _nc_unicode_locale();
-    _nc_init_wacs();
+    if (_nc_wacs == 0) {
+	_nc_init_wacs();
+    }
     if (_nc_wacs == 0) {
 	ReturnScreenError();
     }

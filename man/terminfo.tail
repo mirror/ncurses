@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.68 2013/11/09 15:20:48 tom Exp $
+.\" $Id: terminfo.tail,v 1.69 2015/04/26 14:47:23 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -205,7 +205,7 @@ Next, if the environment variable TERMINFO_DIRS is set,
 as a list of colon-separated directories (or database files) to be searched.
 .IP
 An empty directory name (i.e., if the variable begins or ends
-with a colon, or contains adacent colons)
+with a colon, or contains adjacent colons)
 is interpreted as the system location \fI\*d\fR.
 .bP
 Finally, \fBncurses\fP searches these compiled-in locations:

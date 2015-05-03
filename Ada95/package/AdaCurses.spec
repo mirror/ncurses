@@ -2,7 +2,7 @@ Summary: AdaCurses - Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.13 2014/06/07 17:49:23 tom Exp $
+# $Id: AdaCurses.spec,v 1.15 2015/04/26 23:55:55 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -19,6 +19,12 @@ patch-date YYYYMMDD.
 In addition to a library, this package installs sample programs in
 "bin/AdaCurses" to avoid conflict with other packages.
 %prep
+
+%define debug_package %{nil}
+
+# http://fedoraproject.org/wiki/EPEL:Packaging_Autoprovides_and_Requires_Filtering
+%filter_from_requires /libAdaCurses.so.1/d
+%filter_setup
 
 %setup -q -n %{AppProgram}-%{AppRelease}
 
