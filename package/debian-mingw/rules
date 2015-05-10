@@ -37,6 +37,7 @@ CONFIG_OPTIONS = \
 	--enable-ext-mouse \
 	--enable-ext-putwin \
 	--enable-interop \
+	--enable-pc-files \
 	--enable-sp-funcs \
 	--enable-term-driver \
 	--enable-warnings \
@@ -79,6 +80,7 @@ configure-stamp:
 		--target=$(TARGET) \
 		--prefix=$(MINGW_TOP) \
 		--with-build-cc=$(BUILD_CC) \
+		--with-pkg-config-libdir=/usr/$(TARGET)/lib/pkgconfig \
 		$(CONFIG_OPTIONS)
 
 	touch configure-stamp

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2411 2015/05/02 23:00:00 tom Exp $
+-- $Id: NEWS,v 1.2417 2015/05/09 18:19:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150509
+	+ add test-packages for cross-compiling ncurses-examples using the
+	  MinGW test-packages.  These are only the Debian packages; RPM later.
+	+ cleanup format of debian/copyright files
+	+ add pc-files to the MinGW cross-compiling test-packages.
+	+ correct a couple of places in gen-pkgconfig.in to handle renaming of
+	  the tinfo library.
 
 20150502
 	+ modify the configure script to allow different default values
