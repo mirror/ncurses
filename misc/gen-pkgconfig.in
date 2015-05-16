@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.27 2015/05/04 09:15:46 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.28 2015/05/16 20:04:42 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -75,7 +75,7 @@ if test "$includedir" != "/usr/include" ; then
 	CFLAGS="$CFLAGS -I\${includedir}"
 fi
 
-LDFLAGS="@LDFLAGS@"
+LDFLAGS=
 if test "$libdir" != "/usr/lib" ; then
 	LDFLAGS="$LDFLAGS -L\${libdir}"
 fi

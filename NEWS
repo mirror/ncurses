@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2417 2015/05/09 18:19:39 tom Exp $
+-- $Id: NEWS,v 1.2421 2015/05/16 20:29:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150516
+	+ amend change to ".pc" files to only use the extra loader flags which
+	  may have rpath options (report by Sven Joachim, cf: 20150502).
+	+ change versioning for dpkg's in test-packages for Ada95 and
+	  ncurses-examples for consistency with Debian, to work with package
+	  updates.
+	+ regenerate html manpages.
+	+ clarify handling of carriage return in waddch manual page; it was
+	  discussed only in the portability section (prompted by comment on
+	  Stack Overflow forum):
 
 20150509
 	+ add test-packages for cross-compiling ncurses-examples using the

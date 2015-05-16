@@ -19,7 +19,9 @@ MY_DIR=/usr
 MYDATA=/usr/local/ncurses/share/terminfo
 BUILD_DIR=$(CURDIR)/debian/ncurses$(MY_ABI)
 
-CFLAGS = $(CC_NORMAL)
+CFLAGS   = $(shell dpkg-buildflags --get CFLAGS) $(CC_NORMAL)
+CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
+LDFLAGS  = $(shell dpkg-buildflags --get LDFLAGS)
 
 ifneq ($(MY_DIR),/usr)
 	RPATH_ENV = RPATH_LIST=../lib:$(MY_DIR)/lib
@@ -43,7 +45,10 @@ configure: configure-stamp
 configure-stamp:
 	dh_testdir
 
-	$(RPATH_ENV) CFLAGS="$(CFLAGS)" ./configure $(RPATH_OPT) \
+	$(RPATH_ENV) \
+	CFLAGS="$(CFLAGS)" \
+	CPPFLAGS="$(CPPFLAGS)" \
+	LDFLAGS="$(LDFLAGS)" ./configure $(RPATH_OPT) \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=$(MY_DIR) \

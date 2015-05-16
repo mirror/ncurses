@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.33 2014/05/24 19:47:41 tom Exp $
+.\" $Id: curs_addch.3x,v 1.35 2015/05/13 19:18:37 tom Exp $
 .TH curs_addch 3X ""
 .de bP
 .IP \(bu 4
@@ -71,11 +71,13 @@ writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line
 .PP
-If \fIch\fR is a tab, newline, or backspace,
+If \fIch\fR is a tab, newline, carriage return or backspace,
 the cursor is moved appropriately within the window:
 .bP
 Backspace moves the cursor one character left; at the left
 edge of a window it does nothing.
+.bP
+Carriage return moves the cursor to the window left margin on the current line.
 .bP
 Newline does a \fBclrtoeol\fR,
 then moves the cursor to the window left margin on the next line,
@@ -84,7 +86,7 @@ scrolling the window if on the last line.
 Tabs are considered to be at every eighth column.
 The tab interval may be altered by setting the \fBTABSIZE\fR variable.
 .PP
-If \fIch\fR is any control character other than tab, newline, or backspace, it
+If \fIch\fR is any other control character, it
 is drawn in \fB^\fR\fIX\fR notation.  Calling \fBwinch\fR after adding a
 control character does not return the character itself, but instead returns
 the ^-representation of the control character.

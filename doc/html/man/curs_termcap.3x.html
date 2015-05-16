@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termcap.3x,v 1.30 2013/01/19 15:58:48 tom Exp @
+  * @Id: curs_termcap.3x,v 1.31 2015/04/26 00:49:10 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -38,8 +38,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>curs_termcap 3x</H1>
-<HR>
+<H1 class="no-header">curs_termcap 3x</H1>
 <PRE>
 <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>                                       <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>
 
@@ -118,9 +117,23 @@
 
        The <STRONG>tgetstr</STRONG> routine returns the string entry  for  <EM>id</EM>,  or
        zero  if it is not available.  Use <STRONG>tputs</STRONG> to output the re-
-       turned string.  The return value will also  be  copied  to
-       the  buffer pointed to by <EM>area</EM>, and the <EM>area</EM> value will be
-       updated to point past the null ending this value.
+       turned string.  The <EM>area</EM> parameter is used as follows:
+
+          <STRONG>o</STRONG>   It is assumed to be the address of a pointer  to  a
+              buffer managed by the calling application.
+
+          <STRONG>o</STRONG>   However,  ncurses checks to ensure that <STRONG>area</STRONG> is not
+              NULL, and also that the resulting buffer pointer is
+              not  NULL.  If either check fails, the <EM>area</EM> parame-
+              ter is ignored.
+
+          <STRONG>o</STRONG>   If the checks succeed, ncurses also copies the  re-
+              turn  value  to  the buffer pointed to by <EM>area</EM>, and
+              the <EM>area</EM> value will be updated to  point  past  the
+              null ending this value.
+
+          <STRONG>o</STRONG>   The return value itself is an address in the termi-
+              nal description which is loaded into memory.
 
        Only the first two characters of the <STRONG>id</STRONG> parameter of <STRONG>tget-</STRONG>
        <STRONG>flag</STRONG>, <STRONG>tgetnum</STRONG> and <STRONG>tgetstr</STRONG> are compared in lookups.

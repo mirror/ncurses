@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.33 2014/05/24 19:47:41 tom Exp @
+  * @Id: curs_addch.3x,v 1.35 2015/05/13 19:18:37 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -39,8 +39,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>curs_addch 3x</H1>
-<HR>
+<H1 class="no-header">curs_addch 3x</H1>
 <PRE>
 <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>                                           <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
 
@@ -86,25 +85,27 @@
            returned because it is not possible to wrap to  a  new
            line
 
-       If <EM>ch</EM> is a tab, newline, or backspace, the cursor is moved
-       appropriately within the window:
+       If <EM>ch</EM> is a tab, newline, carriage return or backspace, the
+       cursor is moved appropriately within the window:
 
        <STRONG>o</STRONG>   Backspace moves the cursor one character left; at  the
            left edge of a window it does nothing.
 
-       <STRONG>o</STRONG>   Newline  does a <STRONG>clrtoeol</STRONG>, then moves the cursor to the
-           window left margin on the  next  line,  scrolling  the
+       <STRONG>o</STRONG>   Carriage  return  moves  the cursor to the window left
+           margin on the current line.
+
+       <STRONG>o</STRONG>   Newline does a <STRONG>clrtoeol</STRONG>, then moves the cursor to  the
+           window  left  margin  on  the next line, scrolling the
            window if on the last line.
 
        <STRONG>o</STRONG>   Tabs are considered to be at every eighth column.  The
-           tab interval may be altered  by  setting  the  <STRONG>TABSIZE</STRONG>
+           tab  interval  may  be  altered by setting the <STRONG>TABSIZE</STRONG>
            variable.
 
-       If <EM>ch</EM> is any control character other than tab, newline, or
-       backspace, it is drawn  in  <STRONG>^</STRONG><EM>X</EM>  notation.   Calling  <STRONG>winch</STRONG>
-       after adding a control character does not return the char-
-       acter itself, but instead returns the ^-representation  of
-       the control character.
+       If <EM>ch</EM> is any other control character, it is  drawn  in  <STRONG>^</STRONG><EM>X</EM>
+       notation.   Calling <STRONG>winch</STRONG> after adding a control character
+       does not return the character itself, but instead  returns
+       the ^-representation of the control character.
 
        Video attributes can be combined with a character argument
        passed to <STRONG>addch</STRONG> or related functions by logical-ORing them

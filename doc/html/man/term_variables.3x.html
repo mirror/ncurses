@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2011,2013 Free Software Foundation, Inc.                   *
+  * Copyright (c) 2011-2013,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term_variables.3x,v 1.4 2013/12/21 22:17:39 tom Exp @
+  * @Id: term_variables.3x,v 1.6 2015/04/22 00:34:49 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -38,8 +38,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>term_variables 3x</H1>
-<HR>
+<H1 class="no-header">term_variables 3x</H1>
 <PRE>
 <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>                                   <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>
 
@@ -59,17 +58,22 @@
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
        <STRONG>chtype</STRONG> <STRONG>acs_map[];</STRONG>
+
+       <STRONG>TERMINAL</STRONG> <STRONG>*</STRONG> <STRONG>cur_term;</STRONG>
+
+       <STRONG>char</STRONG> <STRONG>ttytype[];</STRONG>
+
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>boolcodes;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>boolfnames;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>boolnames;</STRONG>
-       <STRONG>TERMINAL</STRONG> <STRONG>*</STRONG> <STRONG>cur_term;</STRONG>
+
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>numcodes;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>numfnames;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>numnames;</STRONG>
+
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>strcodes;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>strfnames;</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>const</STRONG> <STRONG>*</STRONG> <STRONG>strnames;</STRONG>
-       <STRONG>char</STRONG> <STRONG>ttytype[];</STRONG>
 
 
 </PRE>
@@ -118,23 +122,36 @@
        The  <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>  and <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG> programs use lookup tables for
        the long and short names of terminfo capabilities, as well
        as  the  corresponding  names  for  termcap  capabilities.
-       These are available  to  other  applications,  though  the
-       hash-tables are not available.
+       These are available to other  applications,  although  the
+       hash-tables used by the terminfo and termcap functions are
+       not available.
 
-       The  long  terminfo  capability  names  use a "l" (ell) in
-       their names: boolfnames numfnames strfnames
+       The long terminfo capability names  use  a  "l"  (ell)  in
+       their names: <STRONG>boolfnames</STRONG>, <STRONG>numfnames</STRONG>, and <STRONG>strfnames</STRONG>.
 
-       These are the short names for terminfo capabilities: bool-
-       names, numnames, and strnames.
+       These are the short names for terminfo capabilities: <STRONG>bool-</STRONG>
+       <STRONG>names</STRONG>, <STRONG>numnames</STRONG>, and <STRONG>strnames</STRONG>.
 
-       These  are  the  corresponding  names used for termcap de-
-       scriptions: boolcodes, numcodes, and strcodes.
+       These are the corresponding names  used  for  termcap  de-
+       scriptions: <STRONG>boolcodes</STRONG>, <STRONG>numcodes</STRONG>, and <STRONG>strcodes</STRONG>.
 
 
 </PRE>
 <H3><a name="h3-Terminal-Type">Terminal Type</a></H3><PRE>
-       On initialization of the curses  or  terminfo  interfaces,
+       On  initialization  of  the curses or terminfo interfaces,
        <STRONG>setupterm</STRONG> copies the terminal name to the array <STRONG>ttytype</STRONG>.
+
+
+</PRE>
+<H3><a name="h3-Terminfo-Names">Terminfo Names</a></H3><PRE>
+       In addition to the variables, <STRONG>&lt;term.h&gt;</STRONG> also defines a sym-
+       bol  for each terminfo capability <EM>long</EM> <EM>name</EM>.  These are in
+       terms of the symbol <STRONG>CUR</STRONG>, which is defined
+
+       #define CUR cur_term-&gt;type.
+
+       These symbols provide a faster method of accessing termin-
+       fo capabilities than using <STRONG><A HREF="tigetstr.3x.html">tigetstr(3x)</A></STRONG>, etc.
 
 
 </PRE>
@@ -154,6 +171,11 @@
        Other implementations may have comparable variables.  Some
        implementations  provide the variables in their libraries,
        but omit them from the header files.
+
+       All implementations which provide terminfo interfaces  add
+       definitions  as  described  in the <STRONG>Terminfo</STRONG> <STRONG>Names</STRONG> section.
+       Most, but not all, base the definition upon  the  <STRONG>cur_term</STRONG>
+       variable.
 
 
 </PRE>
@@ -175,6 +197,7 @@
 <li><a href="#h3-Current-Terminal-Data">Current Terminal Data</a></li>
 <li><a href="#h3-Terminfo-Names">Terminfo Names</a></li>
 <li><a href="#h3-Terminal-Type">Terminal Type</a></li>
+<li><a href="#h3-Terminfo-Names">Terminfo Names</a></li>
 </ul>
 </li>
 <li><a href="#h2-NOTES">NOTES</a></li>

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2009,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.36 2014/11/16 00:44:29 tom Exp @
+  * @Id: curs_color.3x,v 1.37 2015/04/04 19:42:47 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -38,8 +38,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1>curs_color 3x</H1>
-<HR>
+<H1 class="no-header">curs_color 3x</H1>
 <PRE>
 <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>                                           <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>
 
@@ -101,16 +100,39 @@
        called  if  the programmer wants to use colors, and before
        any other color manipulation routine  is  called.   It  is
        good  practice  to  call this routine right after <STRONG>initscr</STRONG>.
-       <STRONG>start_color</STRONG> initializes eight basic  colors  (black,  red,
-       green,  yellow,  blue,  magenta, cyan, and white), and two
-       global variables,  <STRONG>COLORS</STRONG>  and  <STRONG>COLOR_PAIRS</STRONG>  (respectively
-       defining  the maximum number of colors and color-pairs the
-       terminal can support).  It also restores the colors on the
-       terminal to the values they had when the terminal was just
-       turned on.
+       <STRONG>start_color</STRONG> does this:
 
-       These limits apply to color values and color pairs.   Val-
-       ues  outside these limits are not legal, and may result in
+       <STRONG>o</STRONG>   It initializes two global variables, <STRONG>COLORS</STRONG>  and  <STRONG>COL-</STRONG>
+           <STRONG>OR_PAIRS</STRONG>  (respectively defining the maximum number of
+           colors and color-pairs the terminal can support).
+
+       <STRONG>o</STRONG>   It initializes the special color pair <STRONG>0</STRONG> to the default
+           foreground  and  background  colors.   No  other color
+           pairs are initialized.
+
+       <STRONG>o</STRONG>   It restores the colors on the terminal to  the  values
+           they had when the terminal was just turned on.
+
+       <STRONG>o</STRONG>   If  the terminal supports the <STRONG>initc</STRONG> (<STRONG>initialize_color</STRONG>)
+           capability, <STRONG>start_color</STRONG> initializes its internal table
+           representing the red, green and blue components of the
+           color palette.
+
+           The components depend on whether the terminal uses CGA
+           (aka "ANSI") or HLS (i.e., the <STRONG>hls</STRONG> (<STRONG>hue_lightness_sat-</STRONG>
+           <STRONG>uration</STRONG>) capability is set).  The table is initialized
+           first  for eight basic colors (black, red, green, yel-
+           low, blue, magenta, cyan, and white), and  after  that
+           (if  the terminal supports more than eight colors) the
+           components are initialized to <STRONG>1000</STRONG>.
+
+           <STRONG>start_color</STRONG> does not attempt  to  set  the  terminal's
+           color  palette to match its built-in table.  An appli-
+           cation may use <STRONG>init_color</STRONG> to alter the internal  table
+           along with the terminal's color.
+
+       These  limits apply to color values and color pairs.  Val-
+       ues outside these limits are not legal, and may result  in
        a runtime error:
 
        <STRONG>o</STRONG>   <STRONG>COLORS</STRONG> corresponds to the terminal database's <STRONG>max_col-</STRONG>
@@ -120,96 +142,96 @@
        <STRONG>o</STRONG>   color values are expected to be in the range <STRONG>0</STRONG> to <STRONG>COL-</STRONG>
            <STRONG>ORS-1</STRONG>, inclusive (including <STRONG>0</STRONG> and <STRONG>COLORS-1</STRONG>).
 
-       <STRONG>o</STRONG>   a  special  color value <STRONG>-1</STRONG> is used in certain extended
-           functions to denote the  <EM>default</EM>  <EM>color</EM>  (see  <STRONG>use_de-</STRONG>
+       <STRONG>o</STRONG>   a special color value <STRONG>-1</STRONG> is used in  certain  extended
+           functions  to  denote  the  <EM>default</EM> <EM>color</EM> (see <STRONG>use_de-</STRONG>
            <STRONG>fault_colors</STRONG>).
 
-       <STRONG>o</STRONG>   <STRONG>COLOR_PAIRS</STRONG>  corresponds  to  the  terminal database's
-           <STRONG>max_pairs</STRONG> capability,  which  is  typically  a  signed
+       <STRONG>o</STRONG>   <STRONG>COLOR_PAIRS</STRONG> corresponds  to  the  terminal  database's
+           <STRONG>max_pairs</STRONG>  capability,  which  is  typically  a signed
            16-bit integer (see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>).
 
-       <STRONG>o</STRONG>   legal  color  pair  values  are in the range <STRONG>1</STRONG> to <STRONG>COL-</STRONG>
+       <STRONG>o</STRONG>   legal color pair values are in the  range  <STRONG>1</STRONG>  to  <STRONG>COL-</STRONG>
            <STRONG>OR_PAIRS-1</STRONG>, inclusive.
 
        <STRONG>o</STRONG>   color pair <STRONG>0</STRONG> is special; it denotes "no color".
 
-           Color pair <STRONG>0</STRONG> is assumed to be white on black,  but  is
+           Color  pair  <STRONG>0</STRONG> is assumed to be white on black, but is
            actually whatever the terminal implements before color
            is initialized.  It cannot be modified by the applica-
            tion.
 
-       The  <STRONG>init_pair</STRONG>  routine changes the definition of a color-
-       pair.  It takes three arguments: the number of the  color-
-       pair  to  be changed, the foreground color number, and the
+       The <STRONG>init_pair</STRONG> routine changes the definition of  a  color-
+       pair.   It takes three arguments: the number of the color-
+       pair to be changed, the foreground color number,  and  the
        background color number.  For portable applications:
 
-       <STRONG>o</STRONG>   The first argument must be a legal color  pair  value.
-           If  default  colors  are used (see <STRONG>use_default_colors</STRONG>)
-           the upper limit is adjusted to allow for  extra  pairs
-           which  use  a default color in foreground and/or back-
+       <STRONG>o</STRONG>   The  first  argument must be a legal color pair value.
+           If default colors are  used  (see  <STRONG>use_default_colors</STRONG>)
+           the  upper  limit is adjusted to allow for extra pairs
+           which use a default color in foreground  and/or  back-
            ground.
 
-       <STRONG>o</STRONG>   The second and third arguments  must  be  legal  color
+       <STRONG>o</STRONG>   The  second  and  third  arguments must be legal color
            values.
 
-       If  the  color-pair was previously initialized, the screen
-       is refreshed and all occurrences of  that  color-pair  are
+       If the color-pair was previously initialized,  the  screen
+       is  refreshed  and  all occurrences of that color-pair are
        changed to the new definition.
 
-       As  an  extension,  ncurses allows you to set color pair <STRONG>0</STRONG>
-       via the <STRONG>assume_default_colors</STRONG> routine, or to  specify  the
-       use  of  default colors (color number <STRONG>-1</STRONG>) if you first in-
+       As an extension, ncurses allows you to set  color  pair  <STRONG>0</STRONG>
+       via  the  <STRONG>assume_default_colors</STRONG> routine, or to specify the
+       use of default colors (color number <STRONG>-1</STRONG>) if you  first  in-
        voke the <STRONG>use_default_colors</STRONG> routine.
 
-       The <STRONG>init_color</STRONG> routine changes the definition of a  color.
-       It  takes  four  arguments:  the number of the color to be
-       changed followed by three RGB values (for the  amounts  of
+       The  <STRONG>init_color</STRONG> routine changes the definition of a color.
+       It takes four arguments: the number of  the  color  to  be
+       changed  followed  by three RGB values (for the amounts of
        red, green, and blue components).  The first argument must
-       be a legal color value; default  colors  are  not  allowed
-       here.   (See  the section <STRONG>Colors</STRONG> for the default color in-
+       be  a  legal  color  value; default colors are not allowed
+       here.  (See the section <STRONG>Colors</STRONG> for the default  color  in-
        dex.)  Each of the last three arguments must be a value in
-       the  range  <STRONG>0</STRONG>  through <STRONG>1000</STRONG>.  When <STRONG>init_color</STRONG> is used, all
+       the range <STRONG>0</STRONG> through <STRONG>1000</STRONG>.  When <STRONG>init_color</STRONG>  is  used,  all
        occurrences of that color on the screen immediately change
        to the new definition.
 
-       The  <STRONG>has_colors</STRONG> routine requires no arguments.  It returns
-       <STRONG>TRUE</STRONG> if the terminal can manipulate colors; otherwise,  it
+       The <STRONG>has_colors</STRONG> routine requires no arguments.  It  returns
+       <STRONG>TRUE</STRONG>  if the terminal can manipulate colors; otherwise, it
        returns <STRONG>FALSE</STRONG>.  This routine facilitates writing terminal-
-       independent programs.  For example, a programmer  can  use
-       it  to decide whether to use color or some other video at-
+       independent  programs.   For example, a programmer can use
+       it to decide whether to use color or some other video  at-
        tribute.
 
-       The <STRONG>can_change_color</STRONG> routine requires  no  arguments.   It
-       returns  <STRONG>TRUE</STRONG>  if  the  terminal  supports  colors and can
-       change their definitions; other, it returns  <STRONG>FALSE</STRONG>.   This
+       The  <STRONG>can_change_color</STRONG>  routine  requires no arguments.  It
+       returns <STRONG>TRUE</STRONG> if  the  terminal  supports  colors  and  can
+       change  their  definitions; other, it returns <STRONG>FALSE</STRONG>.  This
        routine facilitates writing terminal-independent programs.
 
-       The  <STRONG>color_content</STRONG> routine gives programmers a way to find
+       The <STRONG>color_content</STRONG> routine gives programmers a way to  find
        the intensity of the red, green, and blue (RGB) components
        in a color.  It requires four arguments: the color number,
-       and three addresses of <STRONG>short</STRONG>s for storing the  information
-       about  the  amounts  of red, green, and blue components in
+       and  three addresses of <STRONG>short</STRONG>s for storing the information
+       about the amounts of red, green, and  blue  components  in
        the given color.  The first argument must be a legal color
-       value,  i.e.,  <STRONG>0</STRONG>  through <STRONG>COLORS-1</STRONG>, inclusive.  The values
-       that are stored at the addresses pointed to  by  the  last
-       three  arguments are in the range <STRONG>0</STRONG> (no component) through
+       value, i.e., <STRONG>0</STRONG> through <STRONG>COLORS-1</STRONG>,  inclusive.   The  values
+       that  are  stored  at the addresses pointed to by the last
+       three arguments are in the range <STRONG>0</STRONG> (no component)  through
        <STRONG>1000</STRONG> (maximum amount of component), inclusive.
 
-       The <STRONG>pair_content</STRONG> routine allows programmers  to  find  out
-       what  colors  a given color-pair consists of.  It requires
-       three arguments: the color-pair number, and two  addresses
-       of  <STRONG>short</STRONG>s  for  storing the foreground and the background
-       color numbers.  The first argument must be a  legal  color
-       value,  i.e., in the range <STRONG>1</STRONG> through <STRONG>COLOR_PAIRS-1</STRONG>, inclu-
+       The  <STRONG>pair_content</STRONG>  routine  allows programmers to find out
+       what colors a given color-pair consists of.   It  requires
+       three  arguments: the color-pair number, and two addresses
+       of <STRONG>short</STRONG>s for storing the foreground  and  the  background
+       color  numbers.   The first argument must be a legal color
+       value, i.e., in the range <STRONG>1</STRONG> through <STRONG>COLOR_PAIRS-1</STRONG>,  inclu-
        sive.  The values that are stored at the addresses pointed
-       to  by  the  second and third arguments are in the range <STRONG>0</STRONG>
+       to by the second and third arguments are in  the  range  <STRONG>0</STRONG>
        through <STRONG>COLORS</STRONG>, inclusive.
 
 
 </PRE>
 <H3><a name="h3-Colors">Colors</a></H3><PRE>
        In <STRONG>&lt;curses.h&gt;</STRONG> the following macros are defined.  These are
-       the  default colors.  <STRONG>curses</STRONG> also assumes that <STRONG>COLOR_BLACK</STRONG>
+       the default colors.  <STRONG>curses</STRONG> also assumes that  <STRONG>COLOR_BLACK</STRONG>
        is the default background color for all terminals.
 
              <STRONG>COLOR_BLACK</STRONG>
@@ -224,60 +246,60 @@
 
 </PRE>
 <H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The routines <STRONG>can_change_color()</STRONG>  and  <STRONG>has_colors()</STRONG>  return
+       The  routines  <STRONG>can_change_color()</STRONG>  and <STRONG>has_colors()</STRONG> return
        <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>.
 
        All other routines return the integer <STRONG>ERR</STRONG> upon failure and
-       an <STRONG>OK</STRONG> (SVr4 specifies only "an integer  value  other  than
+       an  <STRONG>OK</STRONG>  (SVr4  specifies only "an integer value other than
        <STRONG>ERR</STRONG>") upon successful completion.
 
-       X/Open  defines  no error conditions.  This implementation
-       will return <STRONG>ERR</STRONG> on attempts to use  color  values  outside
+       X/Open defines no error conditions.   This  implementation
+       will  return  <STRONG>ERR</STRONG>  on attempts to use color values outside
        the range <STRONG>0</STRONG> to COLORS-1 (except for the default colors ex-
-       tension), or use color pairs outside the range <STRONG>0</STRONG>  to  <STRONG>COL-</STRONG>
-       <STRONG>OR_PAIRS-1</STRONG>.   Color  values  used in <STRONG>init_color</STRONG> must be in
-       the range <STRONG>0</STRONG> to <STRONG>1000</STRONG>.  An error is returned from all  func-
-       tions  if the terminal has not been initialized.  An error
-       is returned from secondary functions such as <STRONG>init_pair</STRONG>  if
+       tension),  or  use color pairs outside the range <STRONG>0</STRONG> to <STRONG>COL-</STRONG>
+       <STRONG>OR_PAIRS-1</STRONG>.  Color values used in <STRONG>init_color</STRONG>  must  be  in
+       the  range <STRONG>0</STRONG> to <STRONG>1000</STRONG>.  An error is returned from all func-
+       tions if the terminal has not been initialized.  An  error
+       is  returned from secondary functions such as <STRONG>init_pair</STRONG> if
        <STRONG>start_color</STRONG> was not called.
 
           <STRONG>init_color</STRONG>
-               returns  an error if the terminal does not support
-               this feature, e.g., if the <EM>initialize</EM><STRONG>_</STRONG><EM>color</EM>  capa-
+               returns an error if the terminal does not  support
+               this  feature, e.g., if the <EM>initialize</EM><STRONG>_</STRONG><EM>color</EM> capa-
                bility is absent from the terminal description.
 
           <STRONG>start_color</STRONG>
-               returns  an error if the color table cannot be al-
+               returns an error if the color table cannot be  al-
                located.
 
 
 </PRE>
 <H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       In the <EM>ncurses</EM> implementation, there is a  separate  color
+       In  the  <EM>ncurses</EM> implementation, there is a separate color
        activation flag, color palette, color pairs table, and as-
-       sociated COLORS and COLOR_PAIRS counts  for  each  screen;
-       the  <STRONG>start_color</STRONG> function only affects the current screen.
+       sociated  COLORS  and  COLOR_PAIRS counts for each screen;
+       the <STRONG>start_color</STRONG> function only affects the current  screen.
        The SVr4/XSI interface is not really designed with this in
-       mind,  and  historical  implementations  may  use a single
+       mind, and historical  implementations  may  use  a  single
        shared color palette.
 
        Note that setting an implicit background color via a color
-       pair  affects  only character cells that a character write
-       operation explicitly touches.  To  change  the  background
-       color  used  when parts of a window are blanked by erasing
+       pair affects only character cells that a  character  write
+       operation  explicitly  touches.   To change the background
+       color used when parts of a window are blanked  by  erasing
        or scrolling operations, see <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>.
 
-       Several caveats apply on 386 and 486  machines  with  VGA-
+       Several  caveats  apply  on 386 and 486 machines with VGA-
        compatible graphics:
 
-       <STRONG>o</STRONG>   COLOR_YELLOW  is  actually  brown.  To get yellow, use
+       <STRONG>o</STRONG>   COLOR_YELLOW is actually brown.  To  get  yellow,  use
            COLOR_YELLOW combined with the <STRONG>A_BOLD</STRONG> attribute.
 
        <STRONG>o</STRONG>   The A_BLINK attribute should in theory cause the back-
-           ground  to  go  bright.  This often fails to work, and
+           ground to go bright.  This often fails  to  work,  and
            even some cards for which it mostly works (such as the
-           Paradise  and compatibles) do the wrong thing when you
-           try to set a bright "yellow"  background  (you  get  a
+           Paradise and compatibles) do the wrong thing when  you
+           try  to  set  a  bright "yellow" background (you get a
            blinking yellow foreground instead).
 
        <STRONG>o</STRONG>   Color RGB values are not settable.
@@ -285,20 +307,20 @@
 
 </PRE>
 <H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       This  implementation  satisfies XSI Curses's minimum maxi-
+       This implementation satisfies XSI Curses's  minimum  maxi-
        mums for <STRONG>COLORS</STRONG> and <STRONG>COLOR_PAIRS</STRONG>.
 
-       The <STRONG>init_pair</STRONG> routine accepts  negative  values  of  fore-
-       ground   and  background  color  to  support  the  <STRONG>use_de-</STRONG>
-       <STRONG>fault_colors</STRONG> extension, but only if that routine has  been
+       The  <STRONG>init_pair</STRONG>  routine  accepts  negative values of fore-
+       ground  and  background  color  to  support  the   <STRONG>use_de-</STRONG>
+       <STRONG>fault_colors</STRONG>  extension, but only if that routine has been
        first invoked.
 
-       The  assumption that <STRONG>COLOR_BLACK</STRONG> is the default background
-       color for all terminals can  be  modified  using  the  <STRONG>as-</STRONG>
+       The assumption that <STRONG>COLOR_BLACK</STRONG> is the default  background
+       color  for  all  terminals  can  be modified using the <STRONG>as-</STRONG>
        <STRONG>sume_default_colors</STRONG> extension.
 
-       This  implementation  checks  the  pointers, e.g., for the
-       values returned by  <STRONG>color_content</STRONG>  and  <STRONG>pair_content</STRONG>,  and
+       This implementation checks the  pointers,  e.g.,  for  the
+       values  returned  by  <STRONG>color_content</STRONG>  and <STRONG>pair_content</STRONG>, and
        will treat those as optional parameters when null.
 
 
