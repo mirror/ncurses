@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.131 2015/04/04 16:22:19 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.132 2015/05/22 22:41:28 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1836,6 +1836,8 @@ main(int argc, char *argv[])
 	    analyze_string("rs3", reset_3string, &entries[0].tterm);
 	    analyze_string("smcup", enter_ca_mode, &entries[0].tterm);
 	    analyze_string("rmcup", exit_ca_mode, &entries[0].tterm);
+	    analyze_string("smkx", keypad_xmit, &entries[0].tterm);
+	    analyze_string("rmkx", keypad_local, &entries[0].tterm);
 #undef CUR
 	} else {
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.40 2014/05/21 17:00:19 tom Exp $
+ * $Id: progs.priv.h,v 1.41 2015/05/23 23:53:55 tom Exp $
  *
  *	progs.priv.h
  *
@@ -134,6 +134,12 @@ extern int optind;
 #define ExitProgram(code) _nc_free_tic(code)
 #endif
 #endif
+
+#if defined(__GNUC__) && defined(_FORTIFY_SOURCE)
+#define IGNORE_RC(func) errno = (int) func
+#else
+#define IGNORE_RC(func) (void) func
+#endif /* gcc workarounds */
 
 /* usually in <unistd.h> */
 #ifndef STDOUT_FILENO

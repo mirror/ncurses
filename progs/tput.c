@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.50 2014/05/21 16:57:16 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.51 2015/05/23 23:42:55 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 #define PUTCHAR(c)	putchar(c)
@@ -120,7 +120,7 @@ tput(int argc, char *argv[])
     check_aliases(name);
     if (is_reset || is_init) {
 	if (init_prog != 0) {
-	    system(init_prog);
+	    IGNORE_RC(system(init_prog));
 	}
 	FLUSH;
 

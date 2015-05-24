@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.417 2014/10/10 09:09:41 tom Exp $
+$Id: ncurses.c,v 1.420 2015/05/23 23:41:25 tom Exp $
 
 ***************************************************************************/
 
@@ -5143,10 +5143,15 @@ panner_v_cleanup(int from_y, int from_x, int to_y)
 }
 
 static void
-fill_pad(WINDOW *panpad, bool pan_lines)
+fill_pad(WINDOW *panpad, bool pan_lines, bool colored)
 {
     int y, x;
     unsigned gridcount = 0;
+    chtype fill = 0;
+#ifdef A_COLOR
+    if (colored)
+	fill = (chtype) COLOR_PAIR(1);
+#endif
 
     wmove(panpad, 0, 0);
     for (y = 0; y < getmaxy(panpad); y++) {
@@ -5160,7 +5165,7 @@ fill_pad(WINDOW *panpad, bool pan_lines)
 		    waddch(panpad, pan_lines ? ACS_LTEE : '+');
 		else
 		    waddch(panpad, (chtype) ((pan_lines ? 'a' : 'A') +
-					     (int) (gridcount++ % 26)));
+					     (int) (gridcount++ % 26)) | fill);
 	    } else if (y % GRIDSIZE == 0)
 		waddch(panpad, pan_lines ? ACS_HLINE : '-');
 	    else if (x % GRIDSIZE == 0)
@@ -5174,7 +5179,8 @@ fill_pad(WINDOW *panpad, bool pan_lines)
 static void
 panner(WINDOW *pad,
        int top_x, int top_y, int porty, int portx,
-       int (*pgetc) (WINDOW *))
+       int (*pgetc) (WINDOW *),
+       bool colored)
 {
 #if HAVE_GETTIMEOFDAY
     struct timeval before, after;
@@ -5221,7 +5227,7 @@ panner(WINDOW *pad,
 	    break;
 	case 'a':
 	    pan_lines = !pan_lines;
-	    fill_pad(pad, pan_lines);
+	    fill_pad(pad, pan_lines, colored);
 	    pending_pan = FALSE;
 	    break;
 
@@ -5508,7 +5514,7 @@ padgetch(WINDOW *win)
 #define PAD_WIDE 200
 
 static void
-demo_pad(void)
+demo_pad(bool colored)
 /* Demonstrate pads. */
 {
     WINDOW *panpad = newpad(PAD_HIGH, PAD_WIDE);
@@ -5518,7 +5524,14 @@ demo_pad(void)
 	return;
     }
 
-    fill_pad(panpad, FALSE);
+#ifdef A_COLOR
+    if (colored && use_colors) {
+	init_pair(1, COLOR_BLACK, COLOR_GREEN);
+	init_pair(2, COLOR_CYAN, COLOR_BLUE);
+	wbkgd(panpad, (chtype) (COLOR_PAIR(2) | ' '));
+    }
+#endif
+    fill_pad(panpad, FALSE, colored);
 
     panner_legend(LINES - 4);
     panner_legend(LINES - 3);
@@ -5531,7 +5544,7 @@ demo_pad(void)
      * We'll still be able to widen it during a test, since that's required
      * for testing boundaries.
      */
-    panner(panpad, 2, 2, LINES - 5, COLS - 15, padgetch);
+    panner(panpad, 2, 2, LINES - 5, COLS - 15, padgetch, colored);
 
     delwin(panpad);
     endwin();
@@ -6795,7 +6808,11 @@ do_single_test(const char c)
 #endif
 
     case 'p':
-	demo_pad();
+	demo_pad(FALSE);
+	break;
+
+    case 'P':
+	demo_pad(TRUE);
 	break;
 
 #if USE_LIBFORM
@@ -6951,6 +6968,7 @@ main_menu(bool top)
 #endif
 #endif
 	(void) puts("p = exercise pad features");
+	(void) puts("P = exercise pad features, using color");
 	(void) puts("q = quit");
 #if USE_LIBFORM
 	(void) puts("r = exercise forms code");

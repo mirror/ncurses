@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2010 Free Software Foundation, Inc.                        *
+  * Copyright (c) 2010-2011,2014 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,104 +26,123 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: MKncu_config.in,v 1.3 2010/03/06 22:29:17 tom Exp @
+  * @Id: MKada_config.in,v 1.8 2014/06/07 19:32:52 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see http://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>ncurses5-config 1</TITLE>
+<TITLE>ADACURSES 1   User Commands</TITLE>
 <link rev=made href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">ncurses5-config 1</H1>
+<H1>ADACURSES 1   User Commands</H1>
+<HR>
 <PRE>
-<STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>                                   <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
+<STRONG><A HREF="ADACURSES.1.html">ADACURSES(1)</A></STRONG>                 User Commands                 <STRONG><A HREF="ADACURSES.1.html">ADACURSES(1)</A></STRONG>
 
 
 
 
 </PRE>
 <H2><a name="h2-NAME">NAME</a></H2><PRE>
-       ncurses5-config - helper script for ncurses libraries
+       adacurses-config - helper script for AdaCurses libraries
 
 
 </PRE>
 <H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>ncurses5-config</STRONG> [<EM>options</EM>]
+       <STRONG>adacurses-config</STRONG> [<EM>options</EM>]
 
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       This is a shell script which simplifies configuring appli-
-       cations against a particular set of ncurses libraries.
+       This  is  a  shell  script which simplifies configuring an
+       application  to  use  the  AdaCurses  library  binding  to
+       ncurses.
 
 
 </PRE>
 <H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
-       <STRONG>--prefix</STRONG>
-              echos the package-prefix of ncurses
-
-       <STRONG>--exec-prefix</STRONG>
-              echos the executable-prefix of ncurses
-
        <STRONG>--cflags</STRONG>
-              echos the C compiler flags needed to  compile  with
-              ncurses
+              echos  the gnat (Ada compiler) flags needed to com-
+              pile with AdaCurses.
 
-       <STRONG>--libs</STRONG> echos the libraries needed to link with ncurses
+       <STRONG>--libs</STRONG> echos  the  gnat  libraries  needed  to  link  with
+              AdaCurses.
 
        <STRONG>--version</STRONG>
-              echos the release+patchdate version of ncurses
+              echos  the release+patchdate version of the ncurses
+              libraries used to configure and build AdaCurses.
 
-       <STRONG>--abi-version</STRONG>
-              echos the ABI version of ncurses
+       <STRONG>--help</STRONG> prints a  list  of  the  <STRONG>adacurses-config</STRONG>  script's
+              options.
 
-       <STRONG>--mouse-version</STRONG>
-              echos the mouse-interface version of ncurses
+       If  no options are given, <STRONG>adacurses-config</STRONG> prints the com-
+       bination of <STRONG>--cflags</STRONG> and <STRONG>--libs</STRONG> that <STRONG>gnatmake</STRONG> expects (see
+       example).
 
-       <STRONG>--bindir</STRONG>
-              echos the directory containing ncurses programs
 
-       <STRONG>--datadir</STRONG>
-              echos the directory containing ncurses data
+</PRE>
+<H2><a name="h2-EXAMPLE">EXAMPLE</a></H2><PRE>
+       For example, supposing that you want to compile the "Hello
+       World!"   program  for  AdaCurses.   Make  a  file   named
+       "hello.adb":
+              with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 
-       <STRONG>--includedir</STRONG>
-              echos the directory containing ncurses header files
+              procedure Hello is
 
-       <STRONG>--libdir</STRONG>
-              echos the directory containing ncurses libraries
+                 Visibility : Cursor_Visibility := Invisible;
+                 done : Boolean := False;
+                 c : Key_Code;
 
-       <STRONG>--mandir</STRONG>
-              echos the directory containing ncurses manpages
+              begin
 
-       <STRONG>--terminfo</STRONG>
-              echos the $TERMINFO terminfo database path, e.g.,
-              /usr/share/terminfo
+                 Init_Screen;
+                 Set_Echo_Mode (False);
 
-       <STRONG>--terminfo-dirs</STRONG>
-              echos the $TERMINFO_DIRS directory list, e.g.,
-              /usr/local/ncurses/share/terminfo:/usr/share/ter-
-              minfo
+                 Set_Cursor_Visibility (Visibility);
+                 Set_Timeout_Mode (Standard_Window, Non_Blocking, 0);
 
-       <STRONG>--termpath</STRONG>
-              echos the $TERMPATH termcap list,  if  support  for
-              termcap is configured.
+                 Move_Cursor (Line =&gt; Lines / 2, Column =&gt; (Columns - 12) / 2);
+                 Add (Str =&gt; "Hello World!");
 
-       <STRONG>--help</STRONG> prints this message
+                 while not done loop
+
+                    c := Get_Keystroke (Standard_Window);
+                    case c is
+                    when Character'Pos ('q') =&gt; done := True;
+                    when others =&gt; null;
+                    end case;
+
+                    Nap_Milli_Seconds (50);
+
+                 end loop;
+
+                 End_Windows;
+
+              end Hello;
+
+       Then, using
+              gnatmake  `adacurses-config  --cflags` hello -largs
+              `adacurses-config --libs`
+
+       or (simpler):
+              gnatmake hello `adacurses-config`
+
+       you will compile and link the program.
 
 
 </PRE>
 <H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20150523).
+       This describes <STRONG>ncurses</STRONG> version 5.9 (patch 20150215).
 
 
 
-                                                     <STRONG><A HREF="ncurses5-config.1.html">ncurses5-config(1)</A></STRONG>
+                                                           <STRONG><A HREF="ADACURSES.1.html">ADACURSES(1)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>
@@ -131,6 +150,7 @@
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
 <li><a href="#h2-OPTIONS">OPTIONS</a></li>
+<li><a href="#h2-EXAMPLE">EXAMPLE</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 </ul>
 </div>

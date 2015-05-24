@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.54 2014/03/29 23:18:29 tom Exp $
+.\" $Id: infocmp.1m,v 1.56 2015/05/23 20:50:00 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .de bP
@@ -319,7 +319,11 @@ rather than their decimal equivalents.
 .TP 5
 \fB\-i\fR
 Analyze the initialization (\fBis1\fR, \fBis2\fR, \fBis3\fR), and reset
-(\fBrs1\fR, \fBrs2\fR, \fBrs3\fR), strings in the entry.
+(\fBrs1\fR, \fBrs2\fR, \fBrs3\fR), strings in the entry,
+as well as those used for starting/stopping cursor-positioning mode
+(\fBsmcup\fP, \fBrmcup\fP) as well as starting/stopping keymap mode
+(\fBsmkx\fP, \fBrmkx\fP).
+.IP
 For each string, the
 code tries to analyze it into actions in terms of the other capabilities in the
 entry, certain X3.64/ISO 6429/ECMA\-48 capabilities, and certain DEC VT-series
@@ -329,9 +333,9 @@ Each report line consists
 of the capability name, followed by a colon and space, followed by a printable
 expansion of the capability string with sections matching recognized actions
 translated into {}-bracketed descriptions.
+.IP
 Here is a list of the DEC/ANSI
 special sequences recognized:
-i.
 .TS
 center tab(/) ;
 l l
@@ -396,6 +400,7 @@ This option is for use with archaic
 versions of terminfo like those on SVr1, Ultrix, or HP/UX that do not support
 the full set of SVR4/XSI Curses terminfo; and variants such as AIX
 that have their own extensions incompatible with SVr4/XSI.
+.IP
 Available terminfo
 subsets are "SVr1", "Ultrix", "HP", and "AIX"; see \fBterminfo\fR(\*n) for
 details.

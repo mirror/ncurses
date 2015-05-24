@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.37 2015/04/04 19:42:47 tom Exp $
+.\" $Id: curs_color.3x,v 1.38 2015/05/23 21:36:35 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -68,7 +68,7 @@
 .br
 .SH DESCRIPTION
 .SS Overview
-\fBcurses\fR support color attributes on terminals with that capability.
+\fBcurses\fR supports color attributes on terminals with that capability.
 To use these routines \fBstart_color\fR must be called, usually right after
 \fBinitscr\fR.
 Colors are always used in pairs (referred to as color-pairs).
@@ -89,6 +89,50 @@ programmer to extract the amounts of red, green, and blue components in an
 initialized color.
 The routine \fBpair_content\fR allows a programmer to find
 out how a given color-pair is currently defined.
+.SS Color Rendering
+The \fBcurses\fP library combines these inputs to produce the
+actual foreground and background colors shown on the screen:
+.bP
+per-character video attributes (e.g., via \fBwaddch\fP),
+.bP
+the window attribute (e.g., by \fBwattrset\fP), and
+.bP
+the background character (e.g., \fBwbkgdset\fP).
+.PP
+Per-character and window attributes are usually set by a parameter containing
+video attributes including a \fBCOLOR_PAIR\fP value.
+Some functions such as \fBwattr_set\fP use a separate parameter which
+is the color pair number.
+.PP
+The background character is a special case: it includes a character value,
+just as if it were passed to \fBwaddch\fP.
+.PP
+The \fBcurses\fP library does the actual work of combining these color
+pairs in an internal function called from \fBwaddch\fP:
+.bP
+If the parameter passed to \fBwaddch\fP is \fIblank\fP,
+and it uses the special color pair 0,
+.RS
+.bP
+\fBcurses\fP next checks the window attribute.
+.bP
+If the window attribute does not use color pair 0,
+\fBcurses\fP uses the color pair from the window attribute.
+.bP
+Otherwise, \fBcurses\fP uses the background character.
+.RE
+.bP
+If the parameter passed to \fBwaddch\fP is \fInot blank\fP,
+or it does not use the special color pair 0,
+\fBcurses\fP prefers the color pair from the parameter,
+if it is nonzero.
+Otherwise, it tries the window attribute next, and finally the
+background character.
+.PP
+Some \fBcurses\fP functions such as \fBwprintw\fP call \fBwaddch\fP.
+Those do not combine its parameter with a color pair.
+Consequently those calls use only the window attribute or
+the background character.
 .SS Routine Descriptions
 The \fBstart_color\fR routine requires no arguments.
 It must be called if the programmer wants to use colors, and before any other

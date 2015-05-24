@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.161 2014/11/01 12:33:16 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.162 2015/05/17 17:15:03 tom Exp $")
 
 /****************************************************************************
  *
@@ -578,6 +578,7 @@ _nc_locale_breaks_acs(TERMINAL * termp)
     int value;
     int result = 0;
 
+    T((T_CALLED("_nc_locale_breaks_acs:%d"), result));
     if (getenv(env_name) != 0) {
 	result = _nc_getenv_num(env_name);
     } else if ((value = tigetnum("U8")) >= 0) {
@@ -597,7 +598,7 @@ _nc_locale_breaks_acs(TERMINAL * termp)
 	    }
 	}
     }
-    return result;
+    returnCode(result);
 }
 
 NCURSES_EXPORT(int)

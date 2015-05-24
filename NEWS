@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2421 2015/05/16 20:29:02 tom Exp $
+-- $Id: NEWS,v 1.2425 2015/05/23 21:56:15 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150523
+	+ add 'P' menu item to test/ncurses.c, to show pad in color.
+	+ improve discussion in curs_color.3x about color rendering (prompted
+	  by comment on Stack Overflow forum):
+	+ remove screen-bce.mlterm, since mlterm does not do "bce" -TD
+	+ add several screen.XXX entries to support the respective variations
+	  for 256 colors -TD
+	+ add putty+fnkeys* building-block entries -TD
+	+ add smkx/rmkx to capabilities analyzed with infocmp "-i" option.
 
 20150516
 	+ amend change to ".pc" files to only use the extra loader flags which
