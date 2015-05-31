@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.209 2015/04/04 14:53:41 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.210 2015/05/27 00:58:18 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -907,16 +907,17 @@ main(int argc, char *argv[])
 	}
     }
 
-    if (infodump) {
+    if (infodump || check_only) {
 	dump_init(tversion,
 		  smart_defaults
 		  ? outform
 		  : F_LITERAL,
-		  sortmode, width, height, debug_level, formatted);
+		  sortmode, width, height, debug_level, formatted ||
+		  check_only, check_only);
     } else if (capdump) {
 	dump_init(tversion,
 		  outform,
-		  sortmode, width, height, debug_level, FALSE);
+		  sortmode, width, height, debug_level, FALSE, FALSE);
     }
 
     /* parse entries out of the source file */
@@ -954,7 +955,21 @@ main(int argc, char *argv[])
     }
 
     /* write or dump all entries */
-    if (!check_only) {
+    if (check_only) {
+	/* this is in case infotocap() generates warnings */
+	_nc_curr_col = _nc_curr_line = -1;
+
+	for_entry_list(qp) {
+	    if (matches(namelst, qp->tterm.term_names)) {
+		/* this is in case infotocap() generates warnings */
+		_nc_set_type(_nc_first_name(qp->tterm.term_names));
+		_nc_curr_line = (int) qp->startline;
+		repair_acsc(&qp->tterm);
+		dump_entry(&qp->tterm, suppress_untranslatable,
+			   limited, numbers, NULL);
+	    }
+	}
+    } else {
 	if (!infodump && !capdump) {
 	    _nc_set_writedir(outdir);
 	    for_entry_list(qp) {

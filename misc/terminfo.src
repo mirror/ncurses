@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.542 $
-#	$Date: 2015/05/23 18:50:12 $
+#	$Revision: 1.545 $
+#	$Date: 2015/05/30 20:30:55 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4809,10 +4809,16 @@ vte+pcfkeys|VTE's variation on xterm+pcfkeys,
 gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
 	use=vte+pcfkeys,
 
-vte|VTE aka GNOME Terminal,
-	use=vte-2012,
+# deprecated - use "vte" for newer versions
 gnome|GNOME Terminal,
-	use=vte,
+	use=vte-2012,
+
+# relevant changes were made in January 2014
+vte-2014|VTE 0.35.1,
+	use=xterm+pcfkeys, use=vte-2012,
+
+vte|VTE aka GNOME Terminal,
+	use=vte-2014,
 
 # palette is hardcoded...
 vte-256color|VTE with xterm 256-colors,
@@ -5624,7 +5630,7 @@ st|stterm| simpleterm 0.4.1,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}%=%t3%e%p1%d%;m,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%;m,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m,
 	sgr0=\E[0m, sitm=\E[3m, smacs=\E(0, smcup=\E[?1049h,
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
 	tbc=\E[3g, tsl=\E]0;, u6=\E[%i%d;%dR, u7=\E[6n,
@@ -23678,5 +23684,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2015-05-23
 #	+ add putty+fnkeys* building-block entries -TD
+#
+# 2015-05-30
+#	+ remove spurious "%;" from st entry (report by Daniel Pitts) -TD
+#	+ add vte-2014, update vte to use that -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

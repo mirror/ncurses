@@ -10,7 +10,7 @@ include(M4MACRO)dnl
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -38,8 +38,8 @@ include(M4MACRO)dnl
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.31 $
---  $Date: 2014/05/24 21:31:57 $
+--  $Revision: 1.32 $
+--  $Date: 2015/05/30 23:19:19 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -154,7 +154,10 @@ package Terminal_Interface.Curses.Mouse is
    pragma Inline (Mouse_Interval);
 
 private
-   type Event_Mask is new Interfaces.C.unsigned_long;
+   --  This can be as little as 32 bits (unsigned), or as long as the system's
+   --  unsigned long.  Declare it as the minimum size to handle all valid
+   --  sizes.
+   type Event_Mask is mod 4294967296;
 
    type Mouse_Event is
       record

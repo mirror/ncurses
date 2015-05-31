@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.132 2015/05/22 22:41:28 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.133 2015/05/27 00:57:41 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -989,7 +989,7 @@ file_comparison(int argc, char *argv[])
     int i, n;
 
     memset(heads, 0, sizeof(heads));
-    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE);
+    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE, FALSE);
 
     for (n = 0; n < argc && n < MAXCOMPARE; n++) {
 	if (freopen(argv[n], "r", stdin) == 0)
@@ -1750,7 +1750,8 @@ main(int argc, char *argv[])
     }
 
     /* set up for display */
-    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace, formatted);
+    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace,
+	      formatted, FALSE);
 
     if (!filecompare) {
 	/* grab the entries */

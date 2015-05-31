@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.114 2014/10/18 09:32:54 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.115 2015/05/27 00:57:40 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -61,6 +61,7 @@ static int height = 65535;	/* max number of lines for listings */
 static int column;		/* current column, limited by 'width' */
 static int oldcol;		/* last value of column before wrap */
 static bool pretty;		/* true if we format if-then-else strings */
+static bool checking;		/* true if we are checking for tic */
 
 static char *save_sgr;
 
@@ -190,12 +191,14 @@ dump_init(const char *version,
 	  int twidth,
 	  int theight,
 	  unsigned traceval,
-	  bool formatted)
+	  bool formatted,
+	  bool check)
 /* set up for entry display */
 {
     width = twidth;
     height = theight;
     pretty = formatted;
+    checking = check;
 
     /* versions */
     if (version == 0)
@@ -537,9 +540,10 @@ fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
 			    indent_DYN(&tmpbuf, level + 1);
 			}
 		    } else if (level == 1) {
-			_nc_warning("%s: %%%c without %%? in %s",
-				    _nc_first_name(tterm->term_names),
-				    *src, capability);
+			if (checking)
+			    _nc_warning("%s: %%%c without %%? in %s",
+					_nc_first_name(tterm->term_names),
+					*src, capability);
 		    }
 		}
 		continue;
@@ -561,9 +565,10 @@ fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
 		    }
 		    return src;
 		}
-		_nc_warning("%s: %%; without %%? in %s",
-			    _nc_first_name(tterm->term_names),
-			    capability);
+		if (checking)
+		    _nc_warning("%s: %%; without %%? in %s",
+				_nc_first_name(tterm->term_names),
+				capability);
 	    }
 	    break;
 	case 'p':
