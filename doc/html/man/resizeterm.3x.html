@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.18 2015/04/11 10:23:49 tom Exp @
+  * @Id: resizeterm.3x,v 1.19 2015/06/06 23:38:18 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -66,12 +66,20 @@
        This is an extension to the curses library.   It  provides
        callers  with  a hook into the <STRONG>ncurses</STRONG> data to resize win-
        dows, primarily for use by programs running in an X Window
-       terminal  (e.g.,  xterm).  The function <STRONG>resizeterm</STRONG> resizes
-       the standard and current windows to the  specified  dimen-
-       sions,  and  adjusts  other  bookkeeping  data used by the
-       <STRONG>ncurses</STRONG> library that record the window dimensions such  as
-       the <STRONG>LINES</STRONG> and <STRONG>COLS</STRONG> variables.
+       terminal (e.g., xterm).
 
+
+</PRE>
+<H3><a name="h3-resizeterm">resizeterm</a></H3><PRE>
+       The  function  <STRONG>resizeterm</STRONG> resizes the standard and current
+       windows to the specified  dimensions,  and  adjusts  other
+       bookkeeping  data  used by the <STRONG>ncurses</STRONG> library that record
+       the window dimensions such as the  <STRONG>LINES</STRONG>  and  <STRONG>COLS</STRONG>  vari-
+       ables.
+
+
+</PRE>
+<H3><a name="h3-resize_term">resize_term</a></H3><PRE>
        Most   of   the   work  is  done  by  the  inner  function
        <STRONG>resize_term</STRONG>.  The outer function <STRONG>resizeterm</STRONG> adds bookkeep-
        ing  for the SIGWINCH handler.  When resizing the windows,
@@ -82,6 +90,9 @@
        pads, it is not possible to  resize  these  without  addi-
        tional interaction with the application.
 
+
+</PRE>
+<H3><a name="h3-is_term_resized">is_term_resized</a></H3><PRE>
        A  support  function  <STRONG>is_term_resized</STRONG>  is provided so that
        applications can check if the <STRONG>resize_term</STRONG>  function  would
        modify the window structures.  It returns <STRONG>TRUE</STRONG> if the win-
@@ -135,7 +146,13 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-resizeterm">resizeterm</a></li>
+<li><a href="#h3-resize_term">resize_term</a></li>
+<li><a href="#h3-is_term_resized">is_term_resized</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

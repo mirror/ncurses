@@ -56,7 +56,7 @@
 <span class="comment"><EM>--  Binding Version 01.00</EM></span>
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
 
-<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_47_28">Curses</A>.<span class="symbol"><A NAME="ref_42_35" HREF="terminal_interface-curses-trace__adb.htm#ref_42_40">Trace</A></span> <b>is</b>
+<b>package</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_47_28">Curses</A>.<span class="symbol"><A NAME="ref_42_35" HREF="terminal_interface-curses-trace__adb.htm#ref_43_40">Trace</A></span> <b>is</b>
    <b>pragma</b> Preelaborate (<A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_47_28">Curses</A>.<A HREF="terminal_interface-curses-trace__ads.htm#ref_42_35">Trace</A>);
 
    <b>type</b> <span class="symbol"><A NAME="ref_45_9">Trace_Attribute_Set</A></span> <b>is</b>
@@ -79,35 +79,35 @@
 
    <b>for</b> <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A> <b>use</b>
       <b>record</b>
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_47_10">Times</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_360_4">TRACE_TIMES_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_361_4">TRACE_TIMES_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_48_10">Tputs</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_362_4">TRACE_TPUTS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_363_4">TRACE_TPUTS_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_49_10">Update</A>           <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_364_4">TRACE_UPDATE_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_365_4">TRACE_UPDATE_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_50_10">Cursor_Move</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_366_4">TRACE_MOVE_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_367_4">TRACE_MOVE_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_51_10">Character_Output</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_368_4">TRACE_CHARPUT_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_369_4">TRACE_CHARPUT_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_52_10">Calls</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_370_4">TRACE_CALLS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_371_4">TRACE_CALLS_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_53_10">Virtual_Puts</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_372_4">TRACE_VIRTPUT_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_373_4">TRACE_VIRTPUT_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_54_10">Input_Events</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_374_4">TRACE_IEVENT_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_375_4">TRACE_IEVENT_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_55_10">TTY_State</A>        <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_376_4">TRACE_BITS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_377_4">TRACE_BITS_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_56_10">Internal_Calls</A>   <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_378_4">TRACE_ICALLS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_379_4">TRACE_ICALLS_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_57_10">Character_Calls</A>  <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_380_4">TRACE_CCALLS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_381_4">TRACE_CCALLS_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_58_10">Termcap_TermInfo</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_382_4">TRACE_DATABASE_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_383_4">TRACE_DATABASE_Last</A>;
-         <A HREF="terminal_interface-curses-trace__ads.htm#ref_59_10">Attribute_Color</A>  <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_384_4">TRACE_ATTRS_First</A>
-           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_385_4">TRACE_ATTRS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_47_10">Times</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_356_4">TRACE_TIMES_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_357_4">TRACE_TIMES_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_48_10">Tputs</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_358_4">TRACE_TPUTS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_359_4">TRACE_TPUTS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_49_10">Update</A>           <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_360_4">TRACE_UPDATE_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_361_4">TRACE_UPDATE_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_50_10">Cursor_Move</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_362_4">TRACE_MOVE_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_363_4">TRACE_MOVE_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_51_10">Character_Output</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_364_4">TRACE_CHARPUT_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_365_4">TRACE_CHARPUT_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_52_10">Calls</A>            <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_366_4">TRACE_CALLS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_367_4">TRACE_CALLS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_53_10">Virtual_Puts</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_368_4">TRACE_VIRTPUT_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_369_4">TRACE_VIRTPUT_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_54_10">Input_Events</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_370_4">TRACE_IEVENT_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_371_4">TRACE_IEVENT_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_55_10">TTY_State</A>        <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_372_4">TRACE_BITS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_373_4">TRACE_BITS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_56_10">Internal_Calls</A>   <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_374_4">TRACE_ICALLS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_375_4">TRACE_ICALLS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_57_10">Character_Calls</A>  <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_376_4">TRACE_CCALLS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_377_4">TRACE_CCALLS_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_58_10">Termcap_TermInfo</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_378_4">TRACE_DATABASE_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_379_4">TRACE_DATABASE_Last</A>;
+         <A HREF="terminal_interface-curses-trace__ads.htm#ref_59_10">Attribute_Color</A>  <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_380_4">TRACE_ATTRS_First</A>
+           .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_381_4">TRACE_ATTRS_Last</A>;
       <b>end</b> <b>record</b>;
    <b>pragma</b> Warnings (Off);
-   <b>for</b> <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A>'Size <b>use</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_386_4">Trace_Size</A>;
+   <b>for</b> <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A>'Size <b>use</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_382_4">Trace_Size</A>;
    <b>pragma</b> Warnings (On);
 
    <span class="symbol"><A NAME="ref_96_4">Trace_Disable</A></span>  : <b>constant</b> <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A> := (<b>others</b> =&gt; False);
@@ -128,11 +128,11 @@
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
    <span class="comment"><EM>--  #1A NAME="AFU_1"#2|</EM></span>
-   <b>procedure</b> <span class="symbol"><A NAME="ref_114_14" HREF="terminal_interface-curses-trace__adb.htm#ref_44_14">Trace_On</A></span> (<span class="symbol"><A NAME="ref_114_24" HREF="terminal_interface-curses-trace__adb.htm#ref_44_24">x</A></span> : <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_114_14" HREF="terminal_interface-curses-trace__adb.htm#ref_45_14">Trace_On</A></span> (<span class="symbol"><A NAME="ref_114_24" HREF="terminal_interface-curses-trace__adb.htm#ref_45_24">x</A></span> : <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A>);
    <span class="comment"><EM>--  The debugging library has trace.</EM></span>
 
    <span class="comment"><EM>--  #1A NAME="AFU_2"#2|</EM></span>
-   <b>procedure</b> <span class="symbol"><A NAME="ref_118_14" HREF="terminal_interface-curses-trace__adb.htm#ref_50_14">Trace_Put</A></span> (<span class="symbol"><A NAME="ref_118_25" HREF="terminal_interface-curses-trace__adb.htm#ref_50_25">str</A></span> : String);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_118_14" HREF="terminal_interface-curses-trace__adb.htm#ref_52_14">Trace_Put</A></span> (<span class="symbol"><A NAME="ref_118_25" HREF="terminal_interface-curses-trace__adb.htm#ref_52_25">str</A></span> : String);
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_trace.3x.html">_tracef()</A></EM></span>
 
    <span class="symbol"><A NAME="ref_121_4">Current_Trace_Setting</A></span> : <A HREF="terminal_interface-curses-trace__ads.htm#ref_45_9">Trace_Attribute_Set</A>;

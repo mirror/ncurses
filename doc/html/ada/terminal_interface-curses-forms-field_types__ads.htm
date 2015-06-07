@@ -163,12 +163,12 @@
 
    <span class="comment"><EM>--  Two wrapper functions to access those low-level fieldtypes defined</EM></span>
    <span class="comment"><EM>--  in this package.</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_149_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_220_13">C_Builtin_Router</A></span> <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A>;
-   <b>function</b> <span class="symbol"><A NAME="ref_150_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_243_13">C_Choice_Router</A></span>  <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_149_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_221_13">C_Builtin_Router</A></span> <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_150_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_244_13">C_Choice_Router</A></span>  <b>return</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A>;
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_152_14" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_126_14">Wrap_Builtin</A></span> (<span class="symbol"><A NAME="ref_152_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_126_28">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
-                           <span class="symbol"><A NAME="ref_153_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_127_28">Typ</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_53_9">Field_Type</A>'Class;
-                           <span class="symbol"><A NAME="ref_154_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_128_28">Cft</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_149_13">C_Builtin_Router</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_152_14" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_127_14">Wrap_Builtin</A></span> (<span class="symbol"><A NAME="ref_152_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_127_28">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
+                           <span class="symbol"><A NAME="ref_153_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_128_28">Typ</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_53_9">Field_Type</A>'Class;
+                           <span class="symbol"><A NAME="ref_154_28" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_129_28">Cft</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_133_9">C_Field_Type</A> := <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_149_13">C_Builtin_Router</A>);
    <span class="comment"><EM>--  This procedure has to be called by the Set_Field_Type implementation</EM></span>
    <span class="comment"><EM>--  for builtin low-level fieldtypes to replace it by an Ada95</EM></span>
    <span class="comment"><EM>--  conformant Field_Type object.</EM></span>
@@ -182,42 +182,42 @@
    <span class="comment"><EM>--  This is the Makearg_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced by this binding.</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_168_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_95_13">Copy_Arg</A></span> (<span class="symbol"><A NAME="ref_168_23" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_95_23">Usr</A></span> : System.Address) <b>return</b> System.Address;
+   <b>function</b> <span class="symbol"><A NAME="ref_168_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_96_13">Copy_Arg</A></span> (<span class="symbol"><A NAME="ref_168_23" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_96_23">Usr</A></span> : System.Address) <b>return</b> System.Address;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_168_13">Copy_Arg</A>);
    <span class="comment"><EM>--  This is the Copyarg_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced by this binding.</EM></span>
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_173_14" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_101_14">Free_Arg</A></span> (<span class="symbol"><A NAME="ref_173_24" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_101_24">Usr</A></span> : System.Address);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_173_14" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_102_14">Free_Arg</A></span> (<span class="symbol"><A NAME="ref_173_24" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_102_24">Usr</A></span> : System.Address);
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_173_14">Free_Arg</A>);
    <span class="comment"><EM>--  This is the Freearg_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced by this binding.</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_178_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_158_13">Field_Check_Router</A></span> (<span class="symbol"><A NAME="ref_178_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_158_33">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
-                                <span class="symbol"><A NAME="ref_179_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_159_33">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_178_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_159_13">Field_Check_Router</A></span> (<span class="symbol"><A NAME="ref_178_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_159_33">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
+                                <span class="symbol"><A NAME="ref_179_33" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_160_33">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_178_13">Field_Check_Router</A>);
    <span class="comment"><EM>--  This is the Field_Check_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced to wrap the low-level types by a Field_Type derived</EM></span>
    <span class="comment"><EM>--  type. It routes the call to the corresponding low-level validation</EM></span>
    <span class="comment"><EM>--  function.</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_186_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_173_13">Char_Check_Router</A></span> (<span class="symbol"><A NAME="ref_186_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_173_32">Ch</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_47_12">C_Int</A>;
-                               <span class="symbol"><A NAME="ref_187_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_174_32">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_186_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_174_13">Char_Check_Router</A></span> (<span class="symbol"><A NAME="ref_186_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_174_32">Ch</A></span> : <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_47_12">C_Int</A>;
+                               <span class="symbol"><A NAME="ref_187_32" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_175_32">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_186_13">Char_Check_Router</A>);
    <span class="comment"><EM>--  This is the Char_Check_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced to wrap the low-level types by a Field_Type derived</EM></span>
    <span class="comment"><EM>--  type. It routes the call to the corresponding low-level validation</EM></span>
    <span class="comment"><EM>--  function.</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_194_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_188_13">Next_Router</A></span> (<span class="symbol"><A NAME="ref_194_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_188_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
-                         <span class="symbol"><A NAME="ref_195_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_189_26">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_194_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_189_13">Next_Router</A></span> (<span class="symbol"><A NAME="ref_194_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_189_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
+                         <span class="symbol"><A NAME="ref_195_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_190_26">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_194_13">Next_Router</A>);
    <span class="comment"><EM>--  This is the Choice_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced to wrap the low-level types by a Field_Type derived</EM></span>
    <span class="comment"><EM>--  type. It routes the call to the corresponding low-level next_choice</EM></span>
    <span class="comment"><EM>--  function.</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_202_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_203_13">Prev_Router</A></span> (<span class="symbol"><A NAME="ref_202_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_203_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
-                         <span class="symbol"><A NAME="ref_203_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_204_26">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
+   <b>function</b> <span class="symbol"><A NAME="ref_202_13" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_204_13">Prev_Router</A></span> (<span class="symbol"><A NAME="ref_202_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_204_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
+                         <span class="symbol"><A NAME="ref_203_26" HREF="terminal_interface-curses-forms-field_types__adb.htm#ref_205_26">Usr</A></span> : System.Address) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_2098_9">Curses_Bool</A>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_202_13">Prev_Router</A>);
    <span class="comment"><EM>--  This is the Choice_Function for the internal low-level types</EM></span>
    <span class="comment"><EM>--  introduced to wrap the low-level types by a Field_Type derived</EM></span>

@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
-Version: 5.9
-Release: 20150530
+Version: 6.0
+Release: 20150606
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -48,21 +48,15 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--disable-macros  \
 	--disable-overwrite  \
 	--disable-termcap \
-	--enable-const \
-	--enable-ext-colors \
-	--enable-ext-mouse \
 	--enable-hard-tabs \
-	--enable-interop \
 	--enable-pc-files \
 	--enable-rpath \
-	--enable-sp-funcs \
 	--enable-warnings \
 	--enable-wgetch-events \
 	--enable-widec \
 	--verbose \
 	--program-suffix=%{MY_ABI} \
-	--with-chtype=uint32_t \
-	--with-mmask_t=uint32_t \
+	--with-abi-version=%{MY_ABI} \
 	--with-develop \
 	--with-shared \
 	--with-termlib \

@@ -2550,7 +2550,7 @@ fi
 echo "$as_me:2550: checking for $PKG_CONFIG library directory" >&5
 echo $ECHO_N "checking for $PKG_CONFIG library directory... $ECHO_C" >&6
 if test "x$PKG_CONFIG" = xnone ; then
-	PKG_CONFIG_LIBDIR=none
+	PKG_CONFIG_LIBDIR=no
 else
 
 # Check whether --with-pkg-config-libdir or --without-pkg-config-libdir was given.
@@ -3706,7 +3706,7 @@ if { (eval echo "$as_me:3697: \"$ac_link\"") >&5
   echo "$as_me:3706: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if test "$cross_compiling" = yes; then
-  cf_have_ncuconfig=unknown
+  cf_have_ncuconfig=maybe
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line 3712 "configure"
@@ -3741,9 +3741,9 @@ cat conftest.$ac_ext >&5
 cf_have_ncuconfig=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-
-		echo "$as_me:3745: result: $cf_have_ncuconfig" >&5
+		echo "$as_me:3744: result: $cf_have_ncuconfig" >&5
 echo "${ECHO_T}$cf_have_ncuconfig" >&6
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
@@ -5804,7 +5804,7 @@ if { (eval echo "$as_me:5795: \"$ac_link\"") >&5
   echo "$as_me:5804: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if test "$cross_compiling" = yes; then
-  cf_have_ncuconfig=unknown
+  cf_have_ncuconfig=maybe
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line 5810 "configure"
@@ -5839,9 +5839,9 @@ cat conftest.$ac_ext >&5
 cf_have_ncuconfig=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-
-		echo "$as_me:5843: result: $cf_have_ncuconfig" >&5
+		echo "$as_me:5842: result: $cf_have_ncuconfig" >&5
 echo "${ECHO_T}$cf_have_ncuconfig" >&6
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
@@ -7349,7 +7349,7 @@ if { (eval echo "$as_me:7340: \"$ac_link\"") >&5
   echo "$as_me:7349: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if test "$cross_compiling" = yes; then
-  cf_have_ncuconfig=unknown
+  cf_have_ncuconfig=maybe
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line 7355 "configure"
@@ -7384,9 +7384,9 @@ cat conftest.$ac_ext >&5
 cf_have_ncuconfig=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-
-		echo "$as_me:7388: result: $cf_have_ncuconfig" >&5
+		echo "$as_me:7387: result: $cf_have_ncuconfig" >&5
 echo "${ECHO_T}$cf_have_ncuconfig" >&6
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"

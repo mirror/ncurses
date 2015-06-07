@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.42 2015/04/26 14:27:03 Sven.Joachim Exp $
+.\" $Id: curs_util.3x,v 1.43 2015/06/06 23:36:27 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -81,12 +81,15 @@
 \fBint flushinp(void);\fR
 .br
 .SH DESCRIPTION
+.SS unctrl
+.PP
 The \fBunctrl\fR routine returns a character string which is a printable
 representation of the character \fIc\fR, ignoring attributes.
 Control characters are displayed in the \fB^\fR\fIX\fR notation.
 Printing characters are displayed as is.
 The corresponding \fBwunctrl\fR returns a printable representation of
 a wide character.
+.SS keyname/key_name
 .PP
 The \fBkeyname\fR routine returns a character string
 corresponding to the key \fIc\fR:
@@ -117,6 +120,7 @@ The corresponding \fBkey_name\fR returns a character string corresponding
 to the wide-character value \fIw\fR.
 The two functions do not return the same set of strings;
 the latter returns null where the former would display a meta character.
+.SS filter/nofilter
 .PP
 The \fBfilter\fR routine, if used, must be called before \fBinitscr\fR or
 \fBnewterm\fR are called.
@@ -131,6 +135,7 @@ That allows the caller to initialize a screen on a different device,
 using a different value of \fB$TERM\fP.
 The limitation arises because the \fBfilter\fP routine modifies the
 in-memory copy of the terminal information.
+.SS use_env
 .PP
 The \fBuse_env\fR routine, if used,
 should be called before \fBinitscr\fR or
@@ -156,6 +161,7 @@ from the operating system or terminal database.
 .IP
 Ncurses also updates the screen size in response to SIGWINCH,
 unless overridden by the \fBLINES\fR or \fBCOLUMNS\fR environment variables,
+.SS use_tioctl
 .PP
 The \fBuse_tioctl\fR routine, if used,
 should be called before \fBinitscr\fR or \fBnewterm\fR are called
@@ -196,6 +202,7 @@ FALSE/FALSE/T{
 ncurses relies on the terminal database to determine size.
 T}
 .TE
+.SS putwin/getwin
 .PP
 The \fBputwin\fR routine writes all data associated
 with window (or pad) \fIwin\fR into
@@ -224,6 +231,7 @@ but not the actual color \fInumbers\fP.
 If cells in the retrieved window use color pairs which have not been
 created in the application using \fBinit_pair\fP,
 they will not be colored when the window is refreshed.
+.SS delay_output
 .PP
 The \fBdelay_output\fR routine inserts an \fIms\fR millisecond pause
 in output.
@@ -231,6 +239,7 @@ This routine should not be used extensively because
 padding characters are used rather than a CPU pause.
 If no padding character is specified,
 this uses \fBnapms\fR to perform the delay.
+.SS flushinp
 .PP
 The \fBflushinp\fR routine throws away any typeahead that has been typed by the
 user and has not yet been read by the program.

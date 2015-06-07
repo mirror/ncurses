@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.116 2015/05/30 00:58:37 tom Exp $
+dnl $Id: aclocal.m4,v 1.119 2015/06/06 18:01:51 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1912,7 +1912,7 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 15 updated: 2015/05/28 20:56:07
+dnl CF_NCURSES_CONFIG version: 16 updated: 2015/06/06 14:00:48
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses, preferring these in
 dnl order:
@@ -1947,10 +1947,10 @@ if test "x$PKG_CONFIG" != xnone; then
 				{ char *xx = curses_version(); return (xx == 0); }],
 				[cf_have_ncuconfig=yes],
 				[cf_have_ncuconfig=no],
-				[cf_have_ncuconfig=unknown])],
+				[cf_have_ncuconfig=maybe])],
 			[cf_have_ncuconfig=no])
-
 		AC_MSG_RESULT($cf_have_ncuconfig)
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"

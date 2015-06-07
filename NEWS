@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2431 2015/05/31 00:14:53 tom Exp $
+-- $Id: NEWS,v 1.2437 2015/06/06 23:53:34 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,22 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150606 pre-release
+	+ make ABI 6 the default by updates to dist.mk and VERSION, with the
+	  intention that the existing ABI 5 should build as before using the
+	  "--with-abi=5" option.
+	+ regenerate ada- and man-html documentation.
+	+ minor fixes to color- and util-manpages.
+	+ fix a regression in Ada95/gen/Makefile.in, to handle special case of
+	  Cygwin, which uses the broken-linker feature.
+	+ amend fix for CF_NCURSES_CONFIG used in test/configure to assume that
+	  ncurses package scripts work when present for cross-compiling, as the
+	  lessor of two evils (cf: 20150530).
+	+ add check in configure script to disallow conflicting options
+	  "--with-termlib" and "--enable-term-driver".
+	+ move defaults for "--disable-lp64" and "--with-versioned-syms" into
+	  CF_ABI_DEFAULTS macro.
 
 20150530
 	+ change private type for Event_Mask in Ada95 binding to work when

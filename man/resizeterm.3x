@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.18 2015/04/11 10:23:49 tom Exp $
+.\" $Id: resizeterm.3x,v 1.19 2015/06/06 23:38:18 tom Exp $
 .TH resizeterm 3X ""
 .SH NAME
 \fBis_term_resized\fR,
@@ -43,14 +43,18 @@
 .br
 \fBint resizeterm(int lines, int columns);\fR
 .SH DESCRIPTION
+.PP
 This is an extension to the curses library.
 It provides callers with a hook into the \fBncurses\fR data to resize windows,
 primarily for use by programs running in an X Window terminal (e.g., xterm).
+.SS resizeterm
+.PP
 The function \fBresizeterm\fR resizes the standard and current windows
 to the specified dimensions, and adjusts other bookkeeping data used by
 the \fBncurses\fR library that record the window dimensions
 such as the \fBLINES\fP and \fBCOLS\fP variables.
-.LP
+.SS resize_term
+.PP
 Most of the work is done by the inner function \fBresize_term\fR.
 The outer function \fBresizeterm\fR adds bookkeeping for the SIGWINCH handler.
 When resizing the windows,
@@ -60,7 +64,8 @@ The \fBresize_term\fR function attempts to resize all windows.
 However, due to the calling convention of pads,
 it is not possible to resize these
 without additional interaction with the application.
-.LP
+.SS is_term_resized
+.PP
 A support function \fBis_term_resized\fR is provided so that applications
 can check if the \fBresize_term\fR function would modify the window structures.
 It returns \fBTRUE\fP if the windows would be modified, and \fBFALSE\fP otherwise.

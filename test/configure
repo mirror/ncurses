@@ -6128,7 +6128,7 @@ if { (eval echo "$as_me:6119: \"$ac_link\"") >&5
   echo "$as_me:6128: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if test "$cross_compiling" = yes; then
-  cf_have_ncuconfig=unknown
+  cf_have_ncuconfig=maybe
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line 6134 "configure"
@@ -6163,9 +6163,9 @@ cat conftest.$ac_ext >&5
 cf_have_ncuconfig=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-
-		echo "$as_me:6167: result: $cf_have_ncuconfig" >&5
+		echo "$as_me:6166: result: $cf_have_ncuconfig" >&5
 echo "${ECHO_T}$cf_have_ncuconfig" >&6
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
@@ -7666,7 +7666,7 @@ if { (eval echo "$as_me:7657: \"$ac_link\"") >&5
   echo "$as_me:7666: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   if test "$cross_compiling" = yes; then
-  cf_have_ncuconfig=unknown
+  cf_have_ncuconfig=maybe
 else
   cat >conftest.$ac_ext <<_ACEOF
 #line 7672 "configure"
@@ -7701,9 +7701,9 @@ cat conftest.$ac_ext >&5
 cf_have_ncuconfig=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-
-		echo "$as_me:7705: result: $cf_have_ncuconfig" >&5
+		echo "$as_me:7704: result: $cf_have_ncuconfig" >&5
 echo "${ECHO_T}$cf_have_ncuconfig" >&6
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"

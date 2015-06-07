@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.103 2015/05/30 00:57:23 tom Exp $
+dnl $Id: aclocal.m4,v 1.104 2015/06/06 18:03:45 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2205,7 +2205,7 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 15 updated: 2015/05/28 20:56:07
+dnl CF_NCURSES_CONFIG version: 16 updated: 2015/06/06 14:00:48
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses, preferring these in
 dnl order:
@@ -2240,10 +2240,10 @@ if test "x$PKG_CONFIG" != xnone; then
 				{ char *xx = curses_version(); return (xx == 0); }],
 				[cf_have_ncuconfig=yes],
 				[cf_have_ncuconfig=no],
-				[cf_have_ncuconfig=unknown])],
+				[cf_have_ncuconfig=maybe])],
 			[cf_have_ncuconfig=no])
-
 		AC_MSG_RESULT($cf_have_ncuconfig)
+		test "$cf_have_ncuconfig" = maybe && cf_have_ncuconfig=yes
 		if test "$cf_have_ncuconfig" != "yes"
 		then
 			CPPFLAGS="$cf_save_CPPFLAGS"
@@ -3701,13 +3701,13 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 7 updated: 2015/04/26 18:06:58
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 8 updated: 2015/06/06 13:49:58
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
 AC_MSG_CHECKING(for $PKG_CONFIG library directory)
 if test "x$PKG_CONFIG" = xnone ; then
-	PKG_CONFIG_LIBDIR=none
+	PKG_CONFIG_LIBDIR=no
 else
 	AC_ARG_WITH(pkg-config-libdir,
 		[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],

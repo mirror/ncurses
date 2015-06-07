@@ -35,9 +35,9 @@
 
    <span class="comment"><EM>--  Version of the ncurses library from extensions(3NCURSES)</EM></span>
 
-   <span class="symbol"><A NAME="ref_21_4">NCURSES_VERSION_MAJOR</A></span>        : <b>constant</b> := 5;
-   <span class="symbol"><A NAME="ref_22_4">NCURSES_VERSION_MINOR</A></span>        : <b>constant</b> := 9;
-   <span class="symbol"><A NAME="ref_23_4">Version</A></span> : <b>constant</b> String := "5.9";
+   <span class="symbol"><A NAME="ref_21_4">NCURSES_VERSION_MAJOR</A></span>        : <b>constant</b> := 6;
+   <span class="symbol"><A NAME="ref_22_4">NCURSES_VERSION_MINOR</A></span>        : <b>constant</b> := 0;
+   <span class="symbol"><A NAME="ref_23_4">Version</A></span> : <b>constant</b> String := "6.0";
 
    <span class="comment"><EM>--  Character non-color attributes from attr(3NCURSES)</EM></span>
 
@@ -333,8 +333,8 @@
    <span class="symbol"><A NAME="ref_316_4">MEVENT_z_First</A></span>               : <b>constant</b> := 96;
    <span class="symbol"><A NAME="ref_317_4">MEVENT_z_Last</A></span>                : <b>constant</b> := 127;
    <span class="symbol"><A NAME="ref_318_4">MEVENT_bstate_First</A></span>          : <b>constant</b> := 128;
-   <span class="symbol"><A NAME="ref_319_4">MEVENT_bstate_Last</A></span>           : <b>constant</b> := 191;
-   <span class="symbol"><A NAME="ref_320_4">MEVENT_Size</A></span>                  : <b>constant</b> := 192;
+   <span class="symbol"><A NAME="ref_319_4">MEVENT_bstate_Last</A></span>           : <b>constant</b> := 159;
+   <span class="symbol"><A NAME="ref_320_4">MEVENT_Size</A></span>                  : <b>constant</b> := 160;
 
    <span class="comment"><EM>--  mouse events from mouse(3NCURSES)</EM></span>
 
@@ -343,63 +343,59 @@
    <span class="symbol"><A NAME="ref_326_4">BUTTON1_CLICKED</A></span>              : <b>constant</b> := 4;
    <span class="symbol"><A NAME="ref_327_4">BUTTON1_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 8;
    <span class="symbol"><A NAME="ref_328_4">BUTTON1_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 16;
-   <span class="symbol"><A NAME="ref_329_4">BUTTON1_RESERVED_EVENT</A></span>       : <b>constant</b> := 32;
-   <span class="symbol"><A NAME="ref_330_4">all_events_button_1</A></span>          : <b>constant</b> := 63;
-   <span class="symbol"><A NAME="ref_331_4">BUTTON2_RELEASED</A></span>             : <b>constant</b> := 64;
-   <span class="symbol"><A NAME="ref_332_4">BUTTON2_PRESSED</A></span>              : <b>constant</b> := 128;
-   <span class="symbol"><A NAME="ref_333_4">BUTTON2_CLICKED</A></span>              : <b>constant</b> := 256;
-   <span class="symbol"><A NAME="ref_334_4">BUTTON2_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 512;
-   <span class="symbol"><A NAME="ref_335_4">BUTTON2_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 1024;
-   <span class="symbol"><A NAME="ref_336_4">BUTTON2_RESERVED_EVENT</A></span>       : <b>constant</b> := 2048;
-   <span class="symbol"><A NAME="ref_337_4">all_events_button_2</A></span>          : <b>constant</b> := 4032;
-   <span class="symbol"><A NAME="ref_338_4">BUTTON3_RELEASED</A></span>             : <b>constant</b> := 4096;
-   <span class="symbol"><A NAME="ref_339_4">BUTTON3_PRESSED</A></span>              : <b>constant</b> := 8192;
-   <span class="symbol"><A NAME="ref_340_4">BUTTON3_CLICKED</A></span>              : <b>constant</b> := 16384;
-   <span class="symbol"><A NAME="ref_341_4">BUTTON3_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 32768;
-   <span class="symbol"><A NAME="ref_342_4">BUTTON3_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 65536;
-   <span class="symbol"><A NAME="ref_343_4">BUTTON3_RESERVED_EVENT</A></span>       : <b>constant</b> := 131072;
-   <span class="symbol"><A NAME="ref_344_4">all_events_button_3</A></span>          : <b>constant</b> := 258048;
-   <span class="symbol"><A NAME="ref_345_4">BUTTON4_RELEASED</A></span>             : <b>constant</b> := 262144;
-   <span class="symbol"><A NAME="ref_346_4">BUTTON4_PRESSED</A></span>              : <b>constant</b> := 524288;
-   <span class="symbol"><A NAME="ref_347_4">BUTTON4_CLICKED</A></span>              : <b>constant</b> := 1048576;
-   <span class="symbol"><A NAME="ref_348_4">BUTTON4_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 2097152;
-   <span class="symbol"><A NAME="ref_349_4">BUTTON4_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 4194304;
-   <span class="symbol"><A NAME="ref_350_4">BUTTON4_RESERVED_EVENT</A></span>       : <b>constant</b> := 8388608;
-   <span class="symbol"><A NAME="ref_351_4">all_events_button_4</A></span>          : <b>constant</b> := 16515072;
-   <span class="symbol"><A NAME="ref_352_4">BUTTON_CTRL</A></span>                  : <b>constant</b> := 16777216;
-   <span class="symbol"><A NAME="ref_353_4">BUTTON_SHIFT</A></span>                 : <b>constant</b> := 33554432;
-   <span class="symbol"><A NAME="ref_354_4">BUTTON_ALT</A></span>                   : <b>constant</b> := 67108864;
-   <span class="symbol"><A NAME="ref_355_4">REPORT_MOUSE_POSITION</A></span>        : <b>constant</b> := 134217728;
-   <span class="symbol"><A NAME="ref_356_4">ALL_MOUSE_EVENTS</A></span>             : <b>constant</b> := 134217727;
+   <span class="symbol"><A NAME="ref_329_4">all_events_button_1</A></span>          : <b>constant</b> := 31;
+   <span class="symbol"><A NAME="ref_330_4">BUTTON2_RELEASED</A></span>             : <b>constant</b> := 32;
+   <span class="symbol"><A NAME="ref_331_4">BUTTON2_PRESSED</A></span>              : <b>constant</b> := 64;
+   <span class="symbol"><A NAME="ref_332_4">BUTTON2_CLICKED</A></span>              : <b>constant</b> := 128;
+   <span class="symbol"><A NAME="ref_333_4">BUTTON2_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 256;
+   <span class="symbol"><A NAME="ref_334_4">BUTTON2_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 512;
+   <span class="symbol"><A NAME="ref_335_4">all_events_button_2</A></span>          : <b>constant</b> := 992;
+   <span class="symbol"><A NAME="ref_336_4">BUTTON3_RELEASED</A></span>             : <b>constant</b> := 1024;
+   <span class="symbol"><A NAME="ref_337_4">BUTTON3_PRESSED</A></span>              : <b>constant</b> := 2048;
+   <span class="symbol"><A NAME="ref_338_4">BUTTON3_CLICKED</A></span>              : <b>constant</b> := 4096;
+   <span class="symbol"><A NAME="ref_339_4">BUTTON3_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 8192;
+   <span class="symbol"><A NAME="ref_340_4">BUTTON3_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 16384;
+   <span class="symbol"><A NAME="ref_341_4">all_events_button_3</A></span>          : <b>constant</b> := 31744;
+   <span class="symbol"><A NAME="ref_342_4">BUTTON4_RELEASED</A></span>             : <b>constant</b> := 32768;
+   <span class="symbol"><A NAME="ref_343_4">BUTTON4_PRESSED</A></span>              : <b>constant</b> := 65536;
+   <span class="symbol"><A NAME="ref_344_4">BUTTON4_CLICKED</A></span>              : <b>constant</b> := 131072;
+   <span class="symbol"><A NAME="ref_345_4">BUTTON4_DOUBLE_CLICKED</A></span>       : <b>constant</b> := 262144;
+   <span class="symbol"><A NAME="ref_346_4">BUTTON4_TRIPLE_CLICKED</A></span>       : <b>constant</b> := 524288;
+   <span class="symbol"><A NAME="ref_347_4">all_events_button_4</A></span>          : <b>constant</b> := 1015808;
+   <span class="symbol"><A NAME="ref_348_4">BUTTON_CTRL</A></span>                  : <b>constant</b> := 33554432;
+   <span class="symbol"><A NAME="ref_349_4">BUTTON_SHIFT</A></span>                 : <b>constant</b> := 67108864;
+   <span class="symbol"><A NAME="ref_350_4">BUTTON_ALT</A></span>                   : <b>constant</b> := 134217728;
+   <span class="symbol"><A NAME="ref_351_4">REPORT_MOUSE_POSITION</A></span>        : <b>constant</b> := 268435456;
+   <span class="symbol"><A NAME="ref_352_4">ALL_MOUSE_EVENTS</A></span>             : <b>constant</b> := 268435455;
 
    <span class="comment"><EM>--  trace selection from trace(3NCURSES)</EM></span>
 
-   <span class="symbol"><A NAME="ref_360_4">TRACE_TIMES_First</A></span>            : <b>constant</b> := 0;
-   <span class="symbol"><A NAME="ref_361_4">TRACE_TIMES_Last</A></span>             : <b>constant</b> := 0;
-   <span class="symbol"><A NAME="ref_362_4">TRACE_TPUTS_First</A></span>            : <b>constant</b> := 1;
-   <span class="symbol"><A NAME="ref_363_4">TRACE_TPUTS_Last</A></span>             : <b>constant</b> := 1;
-   <span class="symbol"><A NAME="ref_364_4">TRACE_UPDATE_First</A></span>           : <b>constant</b> := 2;
-   <span class="symbol"><A NAME="ref_365_4">TRACE_UPDATE_Last</A></span>            : <b>constant</b> := 2;
-   <span class="symbol"><A NAME="ref_366_4">TRACE_MOVE_First</A></span>             : <b>constant</b> := 3;
-   <span class="symbol"><A NAME="ref_367_4">TRACE_MOVE_Last</A></span>              : <b>constant</b> := 3;
-   <span class="symbol"><A NAME="ref_368_4">TRACE_CHARPUT_First</A></span>          : <b>constant</b> := 4;
-   <span class="symbol"><A NAME="ref_369_4">TRACE_CHARPUT_Last</A></span>           : <b>constant</b> := 4;
-   <span class="symbol"><A NAME="ref_370_4">TRACE_CALLS_First</A></span>            : <b>constant</b> := 5;
-   <span class="symbol"><A NAME="ref_371_4">TRACE_CALLS_Last</A></span>             : <b>constant</b> := 5;
-   <span class="symbol"><A NAME="ref_372_4">TRACE_VIRTPUT_First</A></span>          : <b>constant</b> := 6;
-   <span class="symbol"><A NAME="ref_373_4">TRACE_VIRTPUT_Last</A></span>           : <b>constant</b> := 6;
-   <span class="symbol"><A NAME="ref_374_4">TRACE_IEVENT_First</A></span>           : <b>constant</b> := 7;
-   <span class="symbol"><A NAME="ref_375_4">TRACE_IEVENT_Last</A></span>            : <b>constant</b> := 7;
-   <span class="symbol"><A NAME="ref_376_4">TRACE_BITS_First</A></span>             : <b>constant</b> := 8;
-   <span class="symbol"><A NAME="ref_377_4">TRACE_BITS_Last</A></span>              : <b>constant</b> := 8;
-   <span class="symbol"><A NAME="ref_378_4">TRACE_ICALLS_First</A></span>           : <b>constant</b> := 9;
-   <span class="symbol"><A NAME="ref_379_4">TRACE_ICALLS_Last</A></span>            : <b>constant</b> := 9;
-   <span class="symbol"><A NAME="ref_380_4">TRACE_CCALLS_First</A></span>           : <b>constant</b> := 10;
-   <span class="symbol"><A NAME="ref_381_4">TRACE_CCALLS_Last</A></span>            : <b>constant</b> := 10;
-   <span class="symbol"><A NAME="ref_382_4">TRACE_DATABASE_First</A></span>         : <b>constant</b> := 11;
-   <span class="symbol"><A NAME="ref_383_4">TRACE_DATABASE_Last</A></span>          : <b>constant</b> := 11;
-   <span class="symbol"><A NAME="ref_384_4">TRACE_ATTRS_First</A></span>            : <b>constant</b> := 12;
-   <span class="symbol"><A NAME="ref_385_4">TRACE_ATTRS_Last</A></span>             : <b>constant</b> := 12;
-   <span class="symbol"><A NAME="ref_386_4">Trace_Size</A></span>                   : <b>constant</b> := 32;
+   <span class="symbol"><A NAME="ref_356_4">TRACE_TIMES_First</A></span>            : <b>constant</b> := 0;
+   <span class="symbol"><A NAME="ref_357_4">TRACE_TIMES_Last</A></span>             : <b>constant</b> := 0;
+   <span class="symbol"><A NAME="ref_358_4">TRACE_TPUTS_First</A></span>            : <b>constant</b> := 1;
+   <span class="symbol"><A NAME="ref_359_4">TRACE_TPUTS_Last</A></span>             : <b>constant</b> := 1;
+   <span class="symbol"><A NAME="ref_360_4">TRACE_UPDATE_First</A></span>           : <b>constant</b> := 2;
+   <span class="symbol"><A NAME="ref_361_4">TRACE_UPDATE_Last</A></span>            : <b>constant</b> := 2;
+   <span class="symbol"><A NAME="ref_362_4">TRACE_MOVE_First</A></span>             : <b>constant</b> := 3;
+   <span class="symbol"><A NAME="ref_363_4">TRACE_MOVE_Last</A></span>              : <b>constant</b> := 3;
+   <span class="symbol"><A NAME="ref_364_4">TRACE_CHARPUT_First</A></span>          : <b>constant</b> := 4;
+   <span class="symbol"><A NAME="ref_365_4">TRACE_CHARPUT_Last</A></span>           : <b>constant</b> := 4;
+   <span class="symbol"><A NAME="ref_366_4">TRACE_CALLS_First</A></span>            : <b>constant</b> := 5;
+   <span class="symbol"><A NAME="ref_367_4">TRACE_CALLS_Last</A></span>             : <b>constant</b> := 5;
+   <span class="symbol"><A NAME="ref_368_4">TRACE_VIRTPUT_First</A></span>          : <b>constant</b> := 6;
+   <span class="symbol"><A NAME="ref_369_4">TRACE_VIRTPUT_Last</A></span>           : <b>constant</b> := 6;
+   <span class="symbol"><A NAME="ref_370_4">TRACE_IEVENT_First</A></span>           : <b>constant</b> := 7;
+   <span class="symbol"><A NAME="ref_371_4">TRACE_IEVENT_Last</A></span>            : <b>constant</b> := 7;
+   <span class="symbol"><A NAME="ref_372_4">TRACE_BITS_First</A></span>             : <b>constant</b> := 8;
+   <span class="symbol"><A NAME="ref_373_4">TRACE_BITS_Last</A></span>              : <b>constant</b> := 8;
+   <span class="symbol"><A NAME="ref_374_4">TRACE_ICALLS_First</A></span>           : <b>constant</b> := 9;
+   <span class="symbol"><A NAME="ref_375_4">TRACE_ICALLS_Last</A></span>            : <b>constant</b> := 9;
+   <span class="symbol"><A NAME="ref_376_4">TRACE_CCALLS_First</A></span>           : <b>constant</b> := 10;
+   <span class="symbol"><A NAME="ref_377_4">TRACE_CCALLS_Last</A></span>            : <b>constant</b> := 10;
+   <span class="symbol"><A NAME="ref_378_4">TRACE_DATABASE_First</A></span>         : <b>constant</b> := 11;
+   <span class="symbol"><A NAME="ref_379_4">TRACE_DATABASE_Last</A></span>          : <b>constant</b> := 11;
+   <span class="symbol"><A NAME="ref_380_4">TRACE_ATTRS_First</A></span>            : <b>constant</b> := 12;
+   <span class="symbol"><A NAME="ref_381_4">TRACE_ATTRS_Last</A></span>             : <b>constant</b> := 12;
+   <span class="symbol"><A NAME="ref_382_4">Trace_Size</A></span>                   : <b>constant</b> := 32;
 <b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>;
 </PRE></BODY></HTML>

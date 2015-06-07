@@ -24,7 +24,7 @@
 <span class="comment"><EM>--                                 S P E C                                  --</EM></span>
 <span class="comment"><EM>--                                                                          --</EM></span>
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
-<span class="comment"><EM>-- Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              --</EM></span>
+<span class="comment"><EM>-- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              --</EM></span>
 <span class="comment"><EM>--                                                                          --</EM></span>
 <span class="comment"><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></span>
 <span class="comment"><EM>-- copy of this software and associated documentation files (the            --</EM></span>
@@ -52,8 +52,8 @@
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
 <span class="comment"><EM>--  Author:  Juergen Pfeifer, 1996</EM></span>
 <span class="comment"><EM>--  Version Control:</EM></span>
-<span class="comment"><EM>--  @Revision: 1.31 @</EM></span>
-<span class="comment"><EM>--  @Date: 2014/05/24 21:31:57 @</EM></span>
+<span class="comment"><EM>--  @Revision: 1.32 @</EM></span>
+<span class="comment"><EM>--  @Date: 2015/05/30 23:19:19 @</EM></span>
 <span class="comment"><EM>--  Binding Version 01.00</EM></span>
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
 <b>with</b> System;
@@ -167,53 +167,56 @@
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_146_13">Enclosed_In_Window</A>);
 
    <span class="comment"><EM>--  #1A NAME="AFU_5"#2|</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_153_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_209_13">Mouse_Interval</A></span> (<span class="symbol"><A NAME="ref_153_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_209_29">Msec</A></span> : Natural := 200) <b>return</b> Natural;
+   <b>function</b> <span class="symbol"><A NAME="ref_153_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_210_13">Mouse_Interval</A></span> (<span class="symbol"><A NAME="ref_153_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_210_29">Msec</A></span> : Natural := 200) <b>return</b> Natural;
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">mouseinterval()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_153_13">Mouse_Interval</A>);
 
 <b>private</b>
-   <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> <b>is</b> <b>new</b> <A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.unsigned_long;
+   <span class="comment"><EM>--  This can be as little as 32 bits (unsigned), or as long as the system's</EM></span>
+   <span class="comment"><EM>--  unsigned long.  Declare it as the minimum size to handle all valid</EM></span>
+   <span class="comment"><EM>--  sizes.</EM></span>
+   <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> <b>is</b> <b>mod</b> 4294967296;
 
    <b>type</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A> <b>is</b>
       <b>record</b>
-         <span class="symbol"><A NAME="ref_162_10">Id</A></span>      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'First) ..
+         <span class="symbol"><A NAME="ref_165_10">Id</A></span>      : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'First) ..
                                  Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.short'Last);
-         <span class="symbol"><A NAME="ref_164_10">X</A></span>, <span class="symbol"><A NAME="ref_164_13">Y</A></span>, <span class="symbol"><A NAME="ref_164_16">Z</A></span> : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int'First) ..
+         <span class="symbol"><A NAME="ref_167_10">X</A></span>, <span class="symbol"><A NAME="ref_167_13">Y</A></span>, <span class="symbol"><A NAME="ref_167_16">Z</A></span> : Integer <b>range</b> Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int'First) ..
                                  Integer (<A HREF="interfac__ads.htm#ref_36_9">Interfaces</A>.C.int'Last);
-         <span class="symbol"><A NAME="ref_166_10">Bstate</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>;
+         <span class="symbol"><A NAME="ref_169_10">Bstate</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>;
       <b>end</b> <b>record</b>;
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>);
 
    <b>for</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A> <b>use</b>
       <b>record</b>
-         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_162_10">Id</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_310_4">MEVENT_id_First</A>
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_165_10">Id</A>     <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_310_4">MEVENT_id_First</A>
            .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_311_4">MEVENT_id_Last</A>;
-         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_164_10">X</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_312_4">MEVENT_x_First</A>
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_167_10">X</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_312_4">MEVENT_x_First</A>
            .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_313_4">MEVENT_x_Last</A>;
-         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_164_13">Y</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_314_4">MEVENT_y_First</A>
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_167_13">Y</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_314_4">MEVENT_y_First</A>
            .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_315_4">MEVENT_y_Last</A>;
-         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_164_16">Z</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_316_4">MEVENT_z_First</A>
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_167_16">Z</A>      <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_316_4">MEVENT_z_First</A>
            .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_317_4">MEVENT_z_Last</A>;
-         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_166_10">Bstate</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_318_4">MEVENT_bstate_First</A>
+         <A HREF="terminal_interface-curses-mouse__ads.htm#ref_169_10">Bstate</A> <b>at</b> 0 <b>range</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_318_4">MEVENT_bstate_First</A>
            .. <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_319_4">MEVENT_bstate_Last</A>;
       <b>end</b> <b>record</b>;
    <b>for</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>'Size <b>use</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_320_4">MEVENT_Size</A>;
    Generation_Bit_Order : System.Bit_Order <b>renames</b> <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_10_4">Bit_Order</A>;
 
-   <span class="symbol"><A NAME="ref_186_4">BUTTON_CTRL</A></span>      : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_352_4">BUTTON_CTRL</A>;
-   <span class="symbol"><A NAME="ref_187_4">BUTTON_SHIFT</A></span>     : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_353_4">BUTTON_SHIFT</A>;
-   <span class="symbol"><A NAME="ref_188_4">BUTTON_ALT</A></span>       : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_354_4">BUTTON_ALT</A>;
-   <span class="symbol"><A NAME="ref_189_4">BUTTON1_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
-     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_330_4">all_events_button_1</A>;
-   <span class="symbol"><A NAME="ref_191_4">BUTTON2_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
-     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_337_4">all_events_button_2</A>;
-   <span class="symbol"><A NAME="ref_193_4">BUTTON3_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
-     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_344_4">all_events_button_3</A>;
-   <span class="symbol"><A NAME="ref_195_4">BUTTON4_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
-     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_351_4">all_events_button_4</A>;
-   <span class="symbol"><A NAME="ref_197_4">ALL_MOUSE_EVENTS</A></span> : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_356_4">ALL_MOUSE_EVENTS</A>;
+   <span class="symbol"><A NAME="ref_189_4">BUTTON_CTRL</A></span>      : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_348_4">BUTTON_CTRL</A>;
+   <span class="symbol"><A NAME="ref_190_4">BUTTON_SHIFT</A></span>     : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_349_4">BUTTON_SHIFT</A>;
+   <span class="symbol"><A NAME="ref_191_4">BUTTON_ALT</A></span>       : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_350_4">BUTTON_ALT</A>;
+   <span class="symbol"><A NAME="ref_192_4">BUTTON1_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
+     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_329_4">all_events_button_1</A>;
+   <span class="symbol"><A NAME="ref_194_4">BUTTON2_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
+     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_335_4">all_events_button_2</A>;
+   <span class="symbol"><A NAME="ref_196_4">BUTTON3_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
+     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_341_4">all_events_button_3</A>;
+   <span class="symbol"><A NAME="ref_198_4">BUTTON4_EVENTS</A></span>   : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>
+     := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_347_4">all_events_button_4</A>;
+   <span class="symbol"><A NAME="ref_200_4">ALL_MOUSE_EVENTS</A></span> : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses_constants__ads.htm#ref_6_28">Curses_Constants</A>.<A HREF="terminal_interface-curses_constants__ads.htm#ref_352_4">ALL_MOUSE_EVENTS</A>;
    <A HREF="terminal_interface-curses-mouse__ads.htm#ref_57_4">No_Events</A>        : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := 0;
-   <A HREF="terminal_interface-curses-mouse__ads.htm#ref_58_4">All_Events</A>       : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_197_4">ALL_MOUSE_EVENTS</A>;
+   <A HREF="terminal_interface-curses-mouse__ads.htm#ref_58_4">All_Events</A>       : <b>constant</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_200_4">ALL_MOUSE_EVENTS</A>;
 
 <b>end</b> <A HREF="terminal_interface__ads.htm#ref_42_9">Terminal_Interface</A>.<A HREF="terminal_interface-curses__ads.htm#ref_47_28">Curses</A>.<A HREF="terminal_interface-curses-mouse__ads.htm#ref_44_35">Mouse</A>;
 </PRE></BODY></HTML>

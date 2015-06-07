@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.83 2015/04/26 15:49:35 tom Exp $
+#  $Id: Makefile.in,v 1.84 2015/06/06 21:27:35 tom Exp $
 #
 .SUFFIXES:
 
@@ -76,12 +76,17 @@ ABI_VERSION	= @cf_cv_abi_version@
 LOCAL_LIBDIR	= @top_builddir@/lib
 
 LINK		= $(HOST_CC)
-
 LDFLAGS		= @LDFLAGS@
-HOST_LDFLAGS	= @BUILD_LDFLAGS@
-
 LIBS		= @LIBS@
-HOST_LIBS	= @BUILD_LIBS@
+
+# For the wide-character configuration combined with broken_linker, we need
+# addresses of ACS_xxx constants, which requires linking with the newly built
+# ncurses library.  If cross-compiling, the developer has to fill in a workable
+# native library for this purpose.
+NATIVE_LDFLAGS	= @LD_MODEL@ $(LOCAL_LIBS) @TINFO_LDFLAGS2@ $(LDFLAGS) @LIBS@ @LOCAL_LDFLAGS2@ $(LDFLAGS) @TINFO_LIBS@
+CROSS_LDFLAGS	= @BUILD_LDFLAGS@ @BUILD_LIBS@
+
+ACTUAL_LDFLAGS	= @ADAGEN_LDFLAGS@
 
 RANLIB		= @RANLIB@
 
@@ -155,7 +160,7 @@ uninstall.libs ::
 	-rm -f $(DESTDIR)$(bindir)/$(ADACURSES_CONFIG)
 
 $(PROG_GENERATE):  gen.o
-	@ECHO_LD@ $(LINK) $(CFLAGS_NORMAL) gen.o $(HOST_LDFLAGS) $(HOST_LIBS) -o $@
+	@ECHO_LD@ $(LINK) $(CFLAGS_NORMAL) gen.o $(ACTUAL_LDFLAGS) -o $@
 
 gen.o:	$(srcdir)/gen.c
 	$(HOST_CC) $(CFLAGS_NORMAL) -c -o $@ $(srcdir)/gen.c
