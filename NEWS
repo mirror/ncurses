@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2437 2015/06/06 23:53:34 tom Exp $
+-- $Id: NEWS,v 1.2441 2015/06/14 01:13:38 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,10 +45,20 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20150613
+	+ fix overflow warning for OSX with lib_baudrate.c (cf: 20010630).
+	+ modify script used to generate map/sym files to mark 5.9.20150530 as
+	  the last "5.9" version, and regenerated the files.  That makes the
+	  files not use ".current" for the post-5.9 symbols.  This also
+	  corrects the label for _nc_sigprocmask used in when weak symbols are
+	  configured for the ncursest/ncursestw libraries (prompted by
+	  discussion with Sven Joachim).
+	+ fix typo in NEWS (report by Sven Joachim).
+
 20150606 pre-release
 	+ make ABI 6 the default by updates to dist.mk and VERSION, with the
 	  intention that the existing ABI 5 should build as before using the
-	  "--with-abi=5" option.
+	  "--with-abi-version=5" option.
 	+ regenerate ada- and man-html documentation.
 	+ minor fixes to color- and util-manpages.
 	+ fix a regression in Ada95/gen/Makefile.in, to handle special case of

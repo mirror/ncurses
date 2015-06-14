@@ -49,7 +49,7 @@
  * of the indices up to B115200 fit nicely in a 'short', allowing us to retain
  * ospeed's type for compatibility.
  */
-#if NCURSES_OSPEED_COMPAT && ((defined(__FreeBSD__) && (__FreeBSD_version < 700000)) || defined(__NetBSD__) || defined(__OpenBSD__))
+#if NCURSES_OSPEED_COMPAT && ((defined(__FreeBSD__) && (__FreeBSD_version < 700000)) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__))
 #undef B0
 #undef B50
 #undef B75
@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.36 2015/04/18 22:08:58 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.37 2015/06/14 00:34:12 tom Exp $")
 
 /*
  *	int
