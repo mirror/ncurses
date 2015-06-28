@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.162 2015/05/17 17:15:03 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.164 2015/06/27 18:10:55 tom Exp $")
 
 /****************************************************************************
  *
@@ -706,7 +706,7 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    termp->Filedes = (short) Filedes;
 	    termp->_termname = strdup(tname);
 	} else {
-	    ret_error0(TGETENT_ERR,
+	    ret_error0(errret ? *errret : TGETENT_ERR,
 		       "Could not find any driver to handle this terminal.\n");
 	}
 #else
@@ -865,5 +865,6 @@ _nc_setupterm(NCURSES_CONST char *tname,
 NCURSES_EXPORT(int)
 setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
 {
+    START_TRACE();
     return _nc_setupterm(tname, Filedes, errret, FALSE);
 }

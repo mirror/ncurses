@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.50 2015/05/02 20:47:29 tom Exp $
+-- $Id: README,v 1.51 2015/06/27 19:41:39 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -72,6 +72,7 @@ to list the options.
 
 These programs provide examples of use, but do not comprise a complete set of
 tests.  Here is a list of library externals, noting those that are used:
+
 
 libform:
 -------
@@ -525,7 +526,7 @@ new_prescr			lib: ncurses
 newpad				test: edit_field ncurses testcurs
 newpad_sp			lib: ncurses
 newscr				lib: ncurses
-newterm				test: demo_altkeys ditto dots_mvcur filter foldkeys gdc key_names keynames
+newterm				test: demo_altkeys ditto dots_mvcur filter foldkeys gdc key_names keynames test_setupterm
 newterm_sp			-
 newwin				test: cardfile chgat clip_printw demo_defkey demo_forms demo_keyok demo_menus demo_panels ditto edit_field firstlast inch_wide inchs ins_wide insdelln inserts knight movewindow ncurses newdemo redraw savescreen test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs xmas
 newwin_sp			lib: ncurses
@@ -569,7 +570,7 @@ redrawwin			test: redraw view
 refresh				test: blue bs demo_defkey demo_forms demo_keyok demo_menus demo_panels dots_curses echochar filter firstlast form_driver_w gdc hanoi hashtest lrtest movewindow ncurses savescreen tclock testcurs view xmas
 reset_prog_mode			test: filter ncurses
 reset_prog_mode_sp		lib: ncurses
-reset_shell_mode		test: bs filter savescreen
+reset_shell_mode		test: bs filter savescreen test_setupterm
 reset_shell_mode_sp		lib: ncurses
 resetty				-
 resetty_sp			-
@@ -577,7 +578,7 @@ resize_term			test: view
 resize_term_sp			-
 resizeterm			-
 resizeterm_sp			lib: ncurses
-restartterm			-
+restartterm			test: test_setupterm
 restartterm_sp			-
 ripoffline			test: demo_menus ncurses
 ripoffline_sp			-
@@ -603,7 +604,7 @@ set_tabsize_sp			-
 set_term			lib: ncurses
 setcchar			test: demo_panels ins_wide ncurses test_add_wchstr test_addwstr view
 setscrreg			test: view
-setupterm			test: demo_terminfo dots test_vid_puts test_vidputs progs: clear tabs tput tset
+setupterm			test: demo_terminfo dots test_setupterm test_vid_puts test_vidputs progs: clear tabs tput tset
 slk_attr			-
 slk_attr_off			-
 slk_attr_on			-
@@ -701,11 +702,11 @@ use_window			test: rain worm
 vid_attr			test: test_vid_puts
 vid_attr_sp			-
 vid_puts			test: test_vid_puts
-vid_puts_sp			-
+vid_puts_sp			lib: ncurses
 vidattr				test: test_vidputs
 vidattr_sp			-
 vidputs				test: test_vidputs
-vidputs_sp			lib: ncurses
+vidputs_sp			-
 vline				test: gdc ncurses
 vline_set			-
 vw_printw			test: clip_printw

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.545 $
-#	$Date: 2015/05/30 20:30:55 $
+#	$Revision: 1.546 $
+#	$Date: 2015/06/27 18:57:21 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -6013,7 +6013,7 @@ screen-256color-bce-s|GNU Screen with 256 colors using BCE and status line,
 	bce, use=xterm+256setaf, use=screen-s,
 
 screen.xterm-256color|GNU Screen with xterm using 256 colors,
-	use=xterm+256setaf, use=screen.xterm,
+	use=xterm+256setaf, use=screen.xterm-new,
 
 screen.konsole-256color|GNU Screen with konsole using 256 colors,
 	use=xterm+256setaf, use=screen.konsole,
@@ -6071,8 +6071,8 @@ screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
 	E3@, use=screen+italics, use=screen+fkeys, use=xterm-new,
-screen.xterm|screen for modern xterm,
-	use=screen.xterm-new,
+#:screen.xterm|screen for modern xterm,
+#:	use=screen.xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
 screen.xterm-r6|screen customized for X11R6 xterm,
@@ -23688,5 +23688,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2015-05-30
 #	+ remove spurious "%;" from st entry (report by Daniel Pitts) -TD
 #	+ add vte-2014, update vte to use that -TD
+#
+# 2015-6-27
+#	+ comment-out "screen.xterm" entry, and inherit screen.xterm-256color
+#	  from xterm-new (report by Richard Birkett) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

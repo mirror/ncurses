@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.39 2014/09/27 21:58:57 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.40 2015/06/27 01:20:41 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -113,6 +113,9 @@ drv_Name(TERMINAL_CONTROL_BLOCK * TCB)
     return "tinfo";
 }
 
+#undef SETUP_FAIL
+#define SETUP_FAIL FALSE
+
 static bool
 drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 {
@@ -121,6 +124,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     TERMINAL *termp;
     SCREEN *sp;
 
+    START_TRACE();
     T((T_CALLED("tinfo::drv_CanHandle(%p)"), TCB));
 
     assert(TCB != 0 && tname != 0);
@@ -1186,7 +1190,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     if ((pthread_self) && (pthread_kill) && (pthread_equal))
 	_nc_globals.read_thread = pthread_self();
 # endif
-    n = read(sp->_ifd, &c2, (size_t) 1);
+    n = (int) read(sp->_ifd, &c2, (size_t) 1);
 #if USE_PTHREADS_EINTR
     _nc_globals.read_thread = 0;
 #endif

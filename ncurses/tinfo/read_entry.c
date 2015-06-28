@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.128 2014/06/14 22:30:41 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.129 2015/06/27 16:16:40 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -626,6 +626,7 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
 	const char *path;
 
 	_nc_first_db(&state, &offset);
+	code = TGETENT_ERR;
 	while ((path = _nc_next_db(&state, &offset)) != 0) {
 	    TR(TRACE_DATABASE, ("_nc_read_tic_entry path=%s, name=%s", path, name));
 	    code = _nc_read_tic_entry(filename, PATH_MAX, path, name, tp);

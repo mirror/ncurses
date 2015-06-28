@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.546 2014/11/01 13:52:34 tom Exp $
+ * $Id: curses.priv.h,v 1.547 2015/06/27 01:22:16 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1947,9 +1947,10 @@ extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, int);
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 /* lib_setup.c */
+#define SETUP_FAIL ERR
 #define ret_error(code, fmt, arg)	if (errret) {\
 					    *errret = code;\
-					    returnCode(ERR);\
+					    returnCode(SETUP_FAIL);\
 					} else {\
 					    fprintf(stderr, fmt, arg);\
 					    exit(EXIT_FAILURE);\
@@ -1959,7 +1960,7 @@ extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 #define ret_error0(code, msg)		if (errret) {\
 					    *errret = code;\
-					    returnCode(ERR);\
+					    returnCode(SETUP_FAIL);\
 					} else {\
 					    fprintf(stderr, msg);\
 					    exit(EXIT_FAILURE);\

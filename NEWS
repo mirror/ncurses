@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2441 2015/06/14 01:13:38 tom Exp $
+-- $Id: NEWS,v 1.2448 2015/06/27 23:12:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150627
+	+ modify configure script to remove deprecated ABI 5 symbols when
+	  building ABI 6.
+	+ add symbols _nc_Default_Field, _nc_Default_Form, _nc_has_mouse to
+	  map-files, but marked as deprecated so that they can easily be
+	  suppressed from ABI 6 builds (Debian #788610).
+	+ comment-out "screen.xterm" entry, and inherit screen.xterm-256color
+	  from xterm-new (report by Richard Birkett) -TD
+	+ modify read_entry.c to set the error-return to -1 if no terminal
+	  databases were found, as documented for setupterm.
+	+ add test_setupterm.c to demonstrate normal/error returns from the
+	  setupterm and restartterm functions.
+	+ amend cleanup change from 20110813 which removed redundant definition
+	  of ret_error, etc., from tinfo_driver.c, to account for the fact that
+	  it should return a bool rather than int (report/analysis by Johannes
+	  Schindelin).
 
 20150613
 	+ fix overflow warning for OSX with lib_baudrate.c (cf: 20010630).

@@ -1,6 +1,6 @@
-# $Id: programs,v 1.25 2014/06/21 15:28:49 tom Exp $
+# $Id: programs,v 1.26 2015/06/27 10:40:53 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2013,2014 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -86,6 +86,7 @@ test_getstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_getstr
 test_instr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_instr
 test_inwstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_inwstr
 test_opaque	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_opaque
+test_setupterm	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_setupterm
 test_vid_puts	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vid_puts
 test_vidputs	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vidputs
 testaddch	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	testaddch

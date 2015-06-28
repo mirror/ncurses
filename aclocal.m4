@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.758 2015/06/06 23:27:44 tom Exp $
+dnl $Id: aclocal.m4,v 1.759 2015/06/27 23:10:38 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3228,7 +3228,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 81 updated: 2015/04/30 20:30:18
+dnl CF_LIB_RULES version: 82 updated: 2015/06/27 19:09:23
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3285,6 +3285,7 @@ do
 		if test -n "${cf_cv_abi_version}" && test "x${cf_cv_abi_version}" != "x5"
 		then
 			cf_sed_options="$cf_sed_options -e \"s/NCURSES\\([[WT]]\\+\\)\?_/NCURSES\\1${cf_cv_abi_version}_/g\""
+			cf_sed_options="$cf_sed_options -e \"/deprecated in ABI${cf_cv_abi_version}/d\""
 		fi
 
 		if test "x$WILDCARD_SYMS" = xno

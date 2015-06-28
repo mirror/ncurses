@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.617 2015/06/06 21:29:03 tom Exp $
+dnl $Id: configure.in,v 1.618 2015/06/27 22:59:56 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.617 $)
+AC_REVISION($Revision: 1.618 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2160,13 +2160,7 @@ cf_filter_syms=no
 if test -n "$RESULTING_SYMS"
 then
 	cf_filter_syms=$cf_dft_filter_syms
-	if test "$cf_filter_syms" = yes
-	then
-		CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
-		cf_filter_syms=yes
-	else
-		CF_VERBOSE(will map symbols to default ABI)
-	fi
+	CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
 fi
 
 if test "x$WILDCARD_SYMS" = xno
