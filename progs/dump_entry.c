@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.115 2015/05/27 00:57:40 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.117 2015/07/05 00:01:04 tom Exp $")
 
 #define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
@@ -156,17 +156,17 @@ _nc_leaks_dump_entry(void)
 #endif
 
 #define NameTrans(check,result) \
-	    if (OkIndex(np->nte_index, check) \
+	    if ((np->nte_index <= OK_ ## check) \
 		&& check[np->nte_index]) \
 		return (result[np->nte_index])
 
 NCURSES_CONST char *
 nametrans(const char *name)
-/* translate a capability name from termcap to terminfo */
+/* translate a capability name to termcap from terminfo */
 {
     const struct name_table_entry *np;
 
-    if ((np = _nc_find_entry(name, _nc_get_hash_table(0))) != 0)
+    if ((np = _nc_find_entry(name, _nc_get_hash_table(0))) != 0) {
 	switch (np->nte_type) {
 	case BOOLEAN:
 	    NameTrans(bool_from_termcap, boolcodes);
@@ -180,6 +180,7 @@ nametrans(const char *name)
 	    NameTrans(str_from_termcap, strcodes);
 	    break;
 	}
+    }
 
     return (0);
 }
@@ -777,6 +778,8 @@ fmt_entry(TERMTYPE *tterm,
 		    trimmed_sgr0 = _nc_trim_sgr0(tterm);
 		    if (strcmp(capability, trimmed_sgr0))
 			capability = trimmed_sgr0;
+		    else
+			free(trimmed_sgr0);
 
 		    set_attributes = my_sgr;
 		}

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.42 2014/08/09 22:28:42 tom Exp $
+ * $Id: gdc.c,v 1.44 2015/07/04 21:28:28 tom Exp $
  */
 
 #include <test.priv.h>
@@ -380,7 +380,11 @@ main(int argc, char *argv[])
 
 	/* this depends on the detailed format of ctime(3) */
 	(void) strncpy(buf, ctime(&now), (size_t) 30);
-	(void) strcpy(buf + 10, buf + 19);
+	{
+	    char *d2 = buf + 10;
+	    char *s2 = buf + 19;
+	    while ((*d2++ = *s2++) != '\0') ;
+	}
 	MvAddStr(16, 30, buf);
 
 	move(6, 0);

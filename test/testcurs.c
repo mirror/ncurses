@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.49 2014/07/27 00:25:14 tom Exp $
+ * $Id: testcurs.c,v 1.50 2015/07/05 00:11:10 tom Exp $
  */
 
 #include <test.priv.h>
@@ -437,7 +437,7 @@ inputTest(WINDOW *win)
 	    "%d %[][a-zA-Z]s",
 	    "%d %[^0-9]"
 	};
-	const char *format = fmt[(unsigned) repeat % SIZEOF(fmt)];
+	char *format = strdup(fmt[(unsigned) repeat % SIZEOF(fmt)]);
 
 	wclear(win);
 	MvWAddStr(win, 3, 2, "The window should have moved");
@@ -453,12 +453,13 @@ inputTest(WINDOW *win)
 	noraw();
 	num = 0;
 	*buffer = 0;
-	answered = mvwscanw(win, 7, 6, strdup(format), &num, buffer);
+	answered = mvwscanw(win, 7, 6, format, &num, buffer);
 	MvWPrintw(win, 8, 6,
 		  "String: %s Number: %d (%d values read)",
 		  buffer, num, answered);
 	Continue(win);
 	++repeat;
+	free(format);
     } while (answered > 0);
 }
 

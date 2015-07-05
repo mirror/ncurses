@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.210 2015/05/27 00:58:18 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.211 2015/07/04 21:12:41 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2337,12 +2337,14 @@ check_termtype(TERMTYPE *tp, bool literal)
 		      ("will trim sgr0\n\toriginal sgr0=%s\n\ttrimmed  sgr0=%s",
 		       _nc_visbuf2(1, exit_attribute_mode),
 		       _nc_visbuf2(2, check_sgr0)));
-		free(check_sgr0);
 	    } else {
 		DEBUG(2,
 		      ("will not trim sgr0\n\toriginal sgr0=%s",
 		       _nc_visbuf(exit_attribute_mode)));
 	    }
+	}
+	if (check_sgr0 != exit_attribute_mode) {
+	    free(check_sgr0);
 	}
     }
 #ifdef TRACE

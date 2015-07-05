@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.75 2015/04/18 21:58:03 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.77 2015/07/04 22:54:14 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -179,6 +179,7 @@ read_txt(FILE *fp)
 		    result = 0;
 		    break;
 		}
+		result = buffer;
 	    }
 	    ch = fgetc(fp);
 	    if (ch == EOF)
@@ -351,7 +352,7 @@ decode_cchar(char *source, cchar_t *fillin, cchar_t *target)
     while (source[0] == MARKER && source[1] == APPEND) {
 	source += 2;
 	source = decode_char(source, &value);
-	if (append++ < CCHARW_MAX) {
+	if (++append < CCHARW_MAX) {
 	    chars[append] = (wchar_t) value;
 	}
     }

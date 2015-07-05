@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.28 2015/05/16 20:04:42 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.29 2015/07/04 20:37:01 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -66,9 +66,9 @@ FORM_LIBRARY="${FORM_NAME}@USE_ARG_SUFFIX@"
 
 CFLAGS="@PKG_CFLAGS@"
 if test "$includedir" != "/usr/include" ; then
-	includetop=`echo "$includedir" | sed -e 's,/include/[^/]*$,/include/,'`
+	includetop=`echo "$includedir" | sed -e 's,/include/[^/]*$,/include,'`
 	test "$includetop" = "/usr/include" && includetop="$includedir"
-	if test "x$includetop" != "$includedir"
+	if test "x$includetop" != "x$includedir"
 	then
 		CFLAGS="$CFLAGS -I${includetop}"
 	fi

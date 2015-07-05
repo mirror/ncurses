@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2448 2015/06/27 23:12:23 tom Exp $
+-- $Id: NEWS,v 1.2451 2015/07/04 21:01:57 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150704
+	+ fix a few problems reported by Coverity.
+	+ fix comparison against "/usr/include" in misc/gen-pkgconfig.in
+	  (report by Daiki Ueno, Debian #790548, cf:  20141213).
 
 20150627
 	+ modify configure script to remove deprecated ABI 5 symbols when

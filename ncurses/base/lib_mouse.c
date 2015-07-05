@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.165 2014/11/01 12:27:59 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.166 2015/07/05 00:28:27 tom Exp $")
 
 #include <tic.h>
 
@@ -1248,7 +1248,6 @@ decode_xterm_SGR1006(SCREEN *sp, MEVENT * eventp)
 	int b = data.params[0];
 	int b3 = 1 + (b & 3);
 
-	result = TRUE;
 	eventp->id = NORMAL_EVENT;
 	if (data.final == 'M') {
 	    (void) handle_wheel(sp, eventp, b, (b & 64) == 64);
