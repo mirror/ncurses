@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.38 2014/10/10 00:35:28 tom Exp $
+ * $Id: demo_terminfo.c,v 1.39 2015/07/10 23:45:44 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -266,6 +266,10 @@ abcdefghijklmnopqrstuvwxyz_";
     if (!q_opt)
 	printf("Terminal type \"%s\"\n", name);
     setupterm((NCURSES_CONST char *) name, 1, (int *) 0);
+    if (!q_opt) {
+	if (strcmp(name, ttytype))
+	    printf("... actual \"%s\"\n", ttytype);
+    }
 
     for (length = 1; length <= MAX_FORCE; ++length) {
 	/* set all digits to zeros */

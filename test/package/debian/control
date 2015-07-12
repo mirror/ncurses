@@ -14,3 +14,13 @@ Description: ncurses-examples - example/test programs from ncurses
  .
  This package installs in "bin/ncurses-examples" to avoid conflict with other
  packages.
+
+Package: ncursest-examples
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: ncurses-examples - example/test programs from ncurses
+ These are the example/test programs from the ncurses distribution, using
+ the thread configuration.
+ .
+ This package installs in "bin/ncursest-examples" to avoid conflict with other
+ packages.

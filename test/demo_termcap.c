@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.46 2014/10/10 00:35:43 tom Exp $
+ * $Id: demo_termcap.c,v 1.47 2015/07/10 23:36:16 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -44,6 +44,10 @@
 #undef NCURSES_XNAMES
 #define NCURSES_XNAMES 0
 #endif
+#endif
+
+#ifdef NCURSES_VERSION
+#include <termcap.h>
 #endif
 
 static void
@@ -163,6 +167,72 @@ free_dblist(void)
 }
 
 static void
+show_string(const char *name, const char *value)
+{
+    printf(FNAME(str), name);
+    if (value == ((char *) -1)) {
+	printf("CANCELLED");
+    } else if (value == ((char *) 0)) {
+	printf("ABSENT");
+    } else {
+	while (*value != 0) {
+	    int ch = UChar(*value++);
+	    switch (ch) {
+	    case '\177':
+		fputs("^?", stdout);
+		break;
+	    case '\033':
+		fputs("\\E", stdout);
+		break;
+	    case '\b':
+		fputs("\\b", stdout);
+		break;
+	    case '\f':
+		fputs("\\f", stdout);
+		break;
+	    case '\n':
+		fputs("\\n", stdout);
+		break;
+	    case '\r':
+		fputs("\\r", stdout);
+		break;
+	    case ' ':
+		fputs("\\s", stdout);
+		break;
+	    case '\t':
+		fputs("\\t", stdout);
+		break;
+	    case '^':
+		fputs("\\^", stdout);
+		break;
+	    case ':':
+		fputs("\\072", stdout);
+		break;
+	    case '\\':
+		fputs("\\\\", stdout);
+		break;
+	    default:
+		if (isgraph(ch))
+		    fputc(ch, stdout);
+		else if (ch < 32)
+		    printf("^%c", ch + '@');
+		else
+		    printf("\\%03o", ch);
+		break;
+	    }
+	}
+    }
+    printf("\n");
+}
+
+static void
+show_number(const char *name, int value)
+{
+    printf(FNAME(num), name);
+    printf(" %d\n", value);
+}
+
+static void
 dumpit(NCURSES_CONST char *cap)
 {
     /*
@@ -184,61 +254,13 @@ dumpit(NCURSES_CONST char *cap)
 	     * Note that the strings returned are mostly terminfo format, since
 	     * ncurses does not convert except for a handful of special cases.
 	     */
-	    printf(FNAME(str), cap);
-	    while (*str != 0) {
-		int ch = UChar(*str++);
-		switch (ch) {
-		case '\177':
-		    fputs("^?", stdout);
-		    break;
-		case '\033':
-		    fputs("\\E", stdout);
-		    break;
-		case '\b':
-		    fputs("\\b", stdout);
-		    break;
-		case '\f':
-		    fputs("\\f", stdout);
-		    break;
-		case '\n':
-		    fputs("\\n", stdout);
-		    break;
-		case '\r':
-		    fputs("\\r", stdout);
-		    break;
-		case ' ':
-		    fputs("\\s", stdout);
-		    break;
-		case '\t':
-		    fputs("\\t", stdout);
-		    break;
-		case '^':
-		    fputs("\\^", stdout);
-		    break;
-		case ':':
-		    fputs("\\072", stdout);
-		    break;
-		case '\\':
-		    fputs("\\\\", stdout);
-		    break;
-		default:
-		    if (isgraph(ch))
-			fputc(ch, stdout);
-		    else if (ch < 32)
-			printf("^%c", ch + '@');
-		    else
-			printf("\\%03o", ch);
-		    break;
-		}
-	    }
-	    printf("\n");
+	    show_string(cap, str);
 	}
     } else if ((num = tgetnum(cap)) >= 0) {
 	total_values++;
 	total_n_values++;
 	if (!q_opt) {
-	    printf(FNAME(num), cap);
-	    printf(" %d\n", num);
+	    show_number(cap, num);
 	}
     } else if (tgetflag(cap) > 0) {
 	total_values++;
@@ -712,6 +734,7 @@ usage(void)
 	" -q       quiet (prints only counts)",
 	" -r COUNT repeat for given count",
 	" -s       print string-capabilities",
+	" -v       print termcap-variables",
 #ifdef NCURSES_VERSION
 	" -x       print extended capabilities",
 #endif
@@ -729,12 +752,13 @@ main(int argc, char *argv[])
     int n;
     char *name;
     bool a_opt = FALSE;
+    bool v_opt = FALSE;
     char *input_name = 0;
 
     int repeat;
     int r_opt = 1;
 
-    while ((n = getopt(argc, argv, "abd:e:i:nqr:sxy")) != -1) {
+    while ((n = getopt(argc, argv, "abd:e:i:nqr:svxy")) != -1) {
 	switch (n) {
 	case 'a':
 	    a_opt = TRUE;
@@ -763,6 +787,9 @@ main(int argc, char *argv[])
 	    break;
 	case 's':
 	    s_opt = TRUE;
+	    break;
+	case 'v':
+	    v_opt = TRUE;
 	    break;
 #if NCURSES_XNAMES
 	case 'x':
@@ -835,6 +862,13 @@ main(int argc, char *argv[])
 
     printf("%ld values (%ld booleans, %ld numbers, %ld strings)\n",
 	   total_values, total_b_values, total_n_values, total_s_values);
+
+    if (v_opt) {
+	show_number("PC", PC);
+	show_string("UP", UP);
+	show_string("BC", BC);
+	show_number("ospeed", ospeed);
+    }
 
     free_dblist();
 
