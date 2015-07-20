@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2455 2015/07/11 22:54:54 tom Exp $
+-- $Id: NEWS,v 1.2461 2015/07/19 23:55:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150719
+	+ correct an old logic error for %A and %O in tparm (report by "zreed").
+	+ improve documentation for signal handlers by adding section in the
+	  curs_initscr.3x page.
+	+ modify logic in make_keys.c to not assume anything about the size
+	  of strnames and strfnames variables, since those may be functions
+	  in the thread- or broken-linker configurations (problem found by
+	  Coverity).
+	+ modify test/configure script to check for pthreads configuration,
+	  e.g., ncursestw library.
 
 20150711
 	+ modify scripts to build/use test-packages for the pthreads

@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.40 2015/04/11 10:23:49 tom Exp @
+  * @Id: curs_getch.3x,v 1.41 2015/07/16 09:29:33 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -66,6 +66,9 @@
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE>
+<H3><a name="h3-Reading-characters">Reading characters</a></H3><PRE>
        The <STRONG>getch</STRONG>, <STRONG>wgetch</STRONG>, <STRONG>mvgetch</STRONG> and <STRONG>mvwgetch</STRONG>, routines  read  a
        character  from the window.  In no-delay mode, if no input
        is waiting, the value <STRONG>ERR</STRONG> is returned.  In delay mode, the
@@ -99,6 +102,9 @@
        fied since the last call to  <STRONG>wrefresh</STRONG>,  <STRONG>wrefresh</STRONG>  will  be
        called before another character is read.
 
+
+</PRE>
+<H3><a name="h3-Keypad-mode">Keypad mode</a></H3><PRE>
        If  <STRONG>keypad</STRONG> is <STRONG>TRUE</STRONG>, and a function key is pressed, the to-
        ken for that function key is returned instead of  the  raw
        characters.   Possible function keys are defined in <STRONG>&lt;curs-</STRONG>
@@ -116,6 +122,9 @@
        experience a delay between the time a user presses the es-
        cape key and the escape is returned to the program.
 
+
+</PRE>
+<H3><a name="h3-Ungetting-characters">Ungetting characters</a></H3><PRE>
        The <STRONG>ungetch</STRONG> routine places <EM>ch</EM> back onto the input queue to
        be returned by the next call to <STRONG>wgetch</STRONG>.  There is just one
        input queue for all windows.
@@ -177,10 +186,10 @@
             KEY_FIND        Find key
             KEY_HELP        Help key
             KEY_MARK        Mark key
+
             KEY_MESSAGE     Message key
             KEY_MOUSE       Mouse event read
             KEY_MOVE        Move key
-
             KEY_NEXT        Next object key
             KEY_OPEN        Open key
             KEY_OPTIONS     Options key
@@ -239,9 +248,9 @@
        and returns <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG> according to whether the current
        terminal type recognizes a key with that value.  Note that
        a  few  values  do  not  correspond  to  a real key, e.g.,
-       <STRONG>KEY_RESIZE</STRONG> and <STRONG>KEY_MOUSE</STRONG>.  See <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG> for more de-
-       tails  about  <STRONG>KEY_RESIZE</STRONG>, and <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> for a discus-
-       sion of <STRONG>KEY_MOUSE</STRONG>.
+       <STRONG>KEY_RESIZE</STRONG>  and  <STRONG>KEY_MOUSE</STRONG>.   See  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>   and   <STRONG>re-</STRONG>
+       <STRONG><A HREF="resizeterm.3x.html">sizeterm(3x)</A></STRONG>   for  more  details  about  <STRONG>KEY_RESIZE</STRONG>,  and
+       <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> for a discussion of <STRONG>KEY_MOUSE</STRONG>.
 
 
 </PRE>
@@ -364,6 +373,9 @@
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
 <ul>
+<li><a href="#h3-Reading-characters">Reading characters</a></li>
+<li><a href="#h3-Keypad-mode">Keypad mode</a></li>
+<li><a href="#h3-Ungetting-characters">Ungetting characters</a></li>
 <li><a href="#h3-Function-Keys">Function Keys</a></li>
 </ul>
 </li>

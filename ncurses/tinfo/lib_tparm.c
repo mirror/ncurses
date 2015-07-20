@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.93 2014/10/11 03:04:31 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.94 2015/07/17 01:03:35 tom Exp $")
 
 /*
  *	char *
@@ -672,11 +672,15 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 		break;
 
 	    case 'A':
-		npush(npop() && npop());
+		y = npop();
+		x = npop();
+		npush(y && x);
 		break;
 
 	    case 'O':
-		npush(npop() || npop());
+		y = npop();
+		x = npop();
+		npush(y || x);
 		break;
 
 	    case '&':

@@ -332,7 +332,7 @@ Using the Library
    function names and parameters as mentioned above.
 
    Here is a sample program to motivate the discussion:
-#include <curses.h>
+#include <stdlib.h>
 #include <curses.h>
 #include <signal.h>
 

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.51 2015/06/27 19:41:39 tom Exp $
+-- $Id: README,v 1.52 2015/07/11 14:17:01 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -229,7 +229,7 @@ unpost_menu			test: demo_menus ncurses
 
 libncurses:
 ----------
-BC				-
+BC				test: demo_termcap
 COLORS				test: dots_curses echochar ncurses savescreen xmas
 COLOR_PAIR			test: background blue bs cardfile clip_printw demo_forms demo_menus demo_panels dots_curses echochar filter firework gdc hanoi ins_wide insdelln inserts knight ncurses newdemo rain savescreen tclock test_add_wchstr test_addchstr test_addstr test_addwstr testaddch testcurs view worm xmas
 COLOR_PAIRS			test: dots_curses echochar ncurses newdemo savescreen
@@ -237,10 +237,10 @@ COLS				test: cardfile demo_altkeys demo_defkey demo_forms demo_keyok demo_menus
 ESCDELAY			test: test_opaque
 LINES				test: cardfile demo_defkey demo_keyok demo_menus demo_panels ditto dots_curses echochar edit_field firework hanoi hashtest inch_wide inchs ins_wide inserts lrtest movewindow ncurses newdemo rain savescreen tclock test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs view worm xmas
 PAIR_NUMBER			test: ncurses
-PC				lib: ncurses
+PC				test: demo_termcap
 SP				lib: form
 TABSIZE				test: test_opaque
-UP				-
+UP				test: demo_termcap
 acs_map				test: background gdc ins_wide inserts knight movewindow ncurses newdemo savescreen test_add_wchstr test_addchstr test_addstr test_addwstr testcurs
 add_wch				test: demo_panels ncurses test_add_wchstr test_addwstr
 add_wchnstr			test: test_add_wchstr
@@ -549,7 +549,7 @@ notimeout			test: test_opaque
 numcodes			test: demo_termcap test_arrays progs: dump_entry
 numfnames			test: demo_terminfo test_arrays progs: dump_entry
 numnames			test: demo_termcap demo_terminfo test_arrays progs: dump_entry infocmp
-ospeed				progs: tset
+ospeed				test: demo_termcap progs: tset
 overlay				test: ncurses testcurs xmas
 overwrite			test: ncurses savescreen
 pair_content			test: background color_set
@@ -676,7 +676,7 @@ tparm				test: dots dots_mvcur progs: tabs tic tput
 tputs				test: dots dots_mvcur dots_termcap railroad test_vid_puts test_vidputs progs: clear tabs tset
 tputs_sp			lib: ncurses
 trace				test: demo_menus hashtest lrtest ncurses testcurs view worm
-ttytype				lib: ncurses
+ttytype				test: demo_terminfo
 typeahead			test: testcurs
 typeahead_sp			lib: ncurses
 unctrl				test: ncurses redraw test_add_wchstr test_addchstr testcurs

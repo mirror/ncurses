@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.122 2015/04/25 11:39:47 tom Exp $
+dnl $Id: configure.in,v 1.123 2015/07/16 00:51:52 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -286,6 +286,20 @@ then
 else
 	AC_DEFINE(USE_WIDEC_SUPPORT,0)
 fi
+
+AC_CACHE_CHECK(if $cf_cv_screen library uses pthreads,cf_cv_use_pthreads,[
+AC_TRY_LINK([
+#include <${cf_cv_ncurses_header:-curses.h}>
+extern void _nc_init_pthreads(void);
+],
+[
+	initscr();
+	_nc_init_pthreads();
+	],
+	[cf_cv_use_pthreads=yes],
+	[cf_cv_use_pthreads=no])
+])
+test $cf_cv_use_pthreads = yes && AC_DEFINE(USE_PTHREADS)
 
 CF_SYS_TIME_SELECT
 CF_FUNC_CURSES_VERSION

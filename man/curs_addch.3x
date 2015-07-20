@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.35 2015/05/13 19:18:37 tom Exp $
+.\" $Id: curs_addch.3x,v 1.36 2015/07/16 09:14:44 tom Exp $
 .TH curs_addch 3X ""
 .de bP
 .IP \(bu 4
@@ -55,6 +55,7 @@
 \fBint wechochar(WINDOW *win, const chtype ch);\fR
 .br
 .SH DESCRIPTION
+.SS Adding characters
 The \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR and \fBmvwaddch\fR routines put
 the character \fIch\fR into the given window at its current window position,
 which is then advanced.  They are analogous to \fBputchar\fR in \fBstdio\fR(3).
@@ -97,6 +98,7 @@ Video attributes can be combined with a character argument passed to
 using \fBinch\fR and \fBaddch\fR.)  See the \fBcurs_attr\fR(3X) page for
 values of predefined video attribute constants that can be usefully OR'ed
 into characters.
+.SS Echoing characters
 .PP
 The \fBechochar\fR and \fBwechochar\fR routines are equivalent to a call to
 \fBaddch\fR followed by a call to \fBrefresh\fR, or a call to \fBwaddch\fR
