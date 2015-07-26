@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_pad.3x,v 1.17 2010/12/04 18:41:07 tom Exp $
+.\" $Id: curs_pad.3x,v 1.18 2015/07/21 08:58:44 tom Exp $
 .TH curs_pad 3X ""
 .na
 .hy 0
@@ -42,21 +42,22 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBWINDOW *newpad(int nlines, int ncols);\fR
+\fBWINDOW *newpad(int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB);\fR
 .br
-\fBWINDOW *subpad(WINDOW *orig, int nlines, int ncols,\fR
-      \fBint begin_y, int begin_x);\fR
+\fBWINDOW *subpad(WINDOW *\fP\fIorig\fP\fB, int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fR
+      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fR
 .br
-\fBint prefresh(WINDOW *pad, int pminrow, int pmincol,\fR
-      \fBint sminrow, int smincol, int smaxrow, int smaxcol);\fR
+\fBint prefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fR
+      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fR
 .br
-\fBint pnoutrefresh(WINDOW *pad, int pminrow, int pmincol,\fR
-      \fBint sminrow, int smincol, int smaxrow, int smaxcol);\fR
+\fBint pnoutrefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fR
+      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fR
 .br
-\fBint pechochar(WINDOW *pad, chtype ch);\fR
+\fBint pechochar(WINDOW *\fP\fIpad\fP\fB, chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint pecho_wchar(WINDOW *pad, const cchar_t *wch);\fR
+\fBint pecho_wchar(WINDOW *\fP\fIpad\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fR
 .SH DESCRIPTION
+.SS newpad
 The \fBnewpad\fR routine creates and returns a pointer to a new pad data
 structure with the given number of lines, \fInlines\fR, and columns,
 \fIncols\fR.
@@ -73,6 +74,7 @@ legal to call \fBwrefresh\fR with a \fIpad\fR as an argument; the routines
 Note that these
 routines require additional parameters to specify the part of the pad to be
 displayed and the location on the screen to be used for the display.
+.SS subpad
 .PP
 The \fBsubpad\fR routine creates and returns a pointer to a subwindow within a
 pad with the given number of lines, \fInlines\fR, and columns, \fIncols\fR.
@@ -84,6 +86,7 @@ affect both windows.
 During the use of this routine, it will often be
 necessary to call \fBtouchwin\fR or \fBtouchline\fR on \fIorig\fR before
 calling \fBprefresh\fR.
+.SS prefresh, pnoutrefresh
 .PP
 The \fBprefresh\fR and \fBpnoutrefresh\fR routines are analogous to
 \fBwrefresh\fR and \fBwnoutrefresh\fR except that they relate to pads instead
@@ -104,6 +107,7 @@ contained within their respective structures.
 Negative values of
 \fIpminrow\fR, \fIpmincol\fR, \fIsminrow\fR, or \fIsmincol\fR are treated as if
 they were zero.
+.SS pechochar
 .PP
 The \fBpechochar\fR routine is functionally equivalent to a call to \fBaddch\fR
 followed by a call to \fBrefresh\fR, a call to \fBwaddch\fR followed by a call
@@ -115,6 +119,7 @@ performance gain might be seen by using these routines instead of their
 equivalents.
 In the case of \fBpechochar\fR, the last location of the pad on
 the screen is reused for the arguments to \fBprefresh\fR.
+.SS pecho_wchar
 .PP
 The \fBpecho_wchar\fR function is the analogous wide-character
 form of \fBpechochar\fR.
@@ -130,7 +135,7 @@ to \fBENOMEM\fR.
 .PP
 X/Open does not define any error conditions.
 In this implementation
-.RS
+.RS 3
 .TP 5
 \fBprefresh\fP and \fBpnoutrefresh\fP
 return an error

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_overlay.3x,v 1.17 2013/04/06 23:48:51 tom Exp @
+  * @Id: curs_overlay.3x,v 1.18 2015/07/21 00:51:31 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,22 +55,28 @@
 <H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>overlay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*srcwin,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*dstwin);</STRONG>
-       <STRONG>int</STRONG> <STRONG>overwrite(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*srcwin,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*dstwin);</STRONG>
-       <STRONG>int</STRONG> <STRONG>copywin(const</STRONG>  <STRONG>WINDOW</STRONG>  <STRONG>*srcwin,</STRONG>  <STRONG>WINDOW</STRONG>  <STRONG>*dstwin,</STRONG>  <STRONG>int</STRONG>
-       <STRONG>sminrow,</STRONG>
-             <STRONG>int</STRONG> <STRONG>smincol,</STRONG> <STRONG>int</STRONG> <STRONG>dminrow,</STRONG> <STRONG>int</STRONG> <STRONG>dmincol,</STRONG> <STRONG>int</STRONG> <STRONG>dmaxrow,</STRONG>
-             <STRONG>int</STRONG> <STRONG>dmaxcol,</STRONG> <STRONG>int</STRONG> <STRONG>overlay);</STRONG>
+       <STRONG>int</STRONG> <STRONG>overlay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>overwrite(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>copywin(const</STRONG>  <STRONG>WINDOW</STRONG>  <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG>  <STRONG>WINDOW</STRONG>  <STRONG>*</STRONG><EM>dstwin</EM><STRONG>,</STRONG>  <STRONG>int</STRONG>
+       <EM>sminrow</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>smincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dmincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dmaxrow</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>dmaxcol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>overlay</EM><STRONG>);</STRONG>
 
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE>
+<H3><a name="h3-overlay_-overwrite">overlay, overwrite</a></H3><PRE>
        The  <STRONG>overlay</STRONG>  and <STRONG>overwrite</STRONG> routines overlay <EM>srcwin</EM> on top
        of <EM>dstwin</EM>.  <EM>scrwin</EM> and <EM>dstwin</EM> are not required to  be  the
        same  size;  only  text  where  the two windows overlap is
        copied.  The difference is that <STRONG>overlay</STRONG> is non-destructive
        (blanks are not copied) whereas <STRONG>overwrite</STRONG> is destructive.
 
+
+</PRE>
+<H3><a name="h3-copywin">copywin</a></H3><PRE>
        The  <STRONG>copywin</STRONG>  routine provides a finer granularity of con-
        trol over the <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines.  As  in  the
        <STRONG>prefresh</STRONG> routine, a rectangle is specified in the destina-
@@ -117,7 +123,12 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-overlay_-overwrite">overlay, overwrite</a></li>
+<li><a href="#h3-copywin">copywin</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>

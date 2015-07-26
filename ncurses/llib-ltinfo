@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2012,2013 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2012-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 2012                                           *
+ *  Author: Thomas E. Dickey       2012-on                                  *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -103,11 +103,11 @@ void	_nc_copy_termtype(
 /* ./codes.c */
 
 #undef boolcodes
-char	*const boolcodes[] = {0};
+const char *const boolcodes[] = {0};
 #undef numcodes
-char	*const numcodes[] = {0};
+const char *const numcodes[] = {0};
 #undef strcodes
-char	*const strcodes[] = {0};
+const char *const strcodes[] = {0};
 
 /* ./comp_captab.c */
 
@@ -336,7 +336,7 @@ void	_nc_init_acs(void)
 #include <termcap.h>
 
 struct speed {
-    int s; 
+    short s; 
     int sp; 
 };
 
@@ -462,17 +462,22 @@ int	flushinp(void)
 struct kn { short offset; int code; };
 
 #undef keyname_sp
-char	*keyname_sp(
+const char *keyname_sp(
 		SCREEN	*sp, 
 		int	c)
-		{ return(*(char **)0); }
+		{ return(*(const char **)0); }
 
 #undef keyname
-char	*keyname(
+const char *keyname(
 		int	c)
-		{ return(*(char **)0); }
+		{ return(*(const char **)0); }
 
 /* ./tinfo/lib_longname.c */
+
+#undef longname_sp
+char	*longname_sp(
+		SCREEN	*sp)
+		{ return(*(char **)0); }
 
 #undef longname
 char	*longname(void)
@@ -755,7 +760,7 @@ int	_nc_locale_breaks_acs(
 
 #undef _nc_setupterm
 int	_nc_setupterm(
-		char	*tname, 
+		const char *tname, 
 		int	Filedes, 
 		int	*errret, 
 		int	reuse)
@@ -767,7 +772,7 @@ SCREEN	*new_prescr(void)
 
 #undef setupterm
 int	setupterm(
-		char	*tname, 
+		const char *tname, 
 		int	Filedes, 
 		int	*errret)
 		{ return(*(int *)0); }
@@ -801,35 +806,35 @@ int	tgetent(
 #undef tgetflag_sp
 int	tgetflag_sp(
 		SCREEN	*sp, 
-		char	*id)
+		const char *id)
 		{ return(*(int *)0); }
 
 #undef tgetflag
 int	tgetflag(
-		char	*id)
+		const char *id)
 		{ return(*(int *)0); }
 
 #undef tgetnum_sp
 int	tgetnum_sp(
 		SCREEN	*sp, 
-		char	*id)
+		const char *id)
 		{ return(*(int *)0); }
 
 #undef tgetnum
 int	tgetnum(
-		char	*id)
+		const char *id)
 		{ return(*(int *)0); }
 
 #undef tgetstr_sp
 char	*tgetstr_sp(
 		SCREEN	*sp, 
-		char	*id, 
+		const char *id, 
 		char	**area)
 		{ return(*(char **)0); }
 
 #undef tgetstr
 char	*tgetstr(
-		char	*id, 
+		const char *id, 
 		char	**area)
 		{ return(*(char **)0); }
 
@@ -858,34 +863,34 @@ char	*tgoto(
 #undef tigetflag_sp
 int	tigetflag_sp(
 		SCREEN	*sp, 
-		char	*str)
+		const char *str)
 		{ return(*(int *)0); }
 
 #undef tigetflag
 int	tigetflag(
-		char	*str)
+		const char *str)
 		{ return(*(int *)0); }
 
 #undef tigetnum_sp
 int	tigetnum_sp(
 		SCREEN	*sp, 
-		char	*str)
+		const char *str)
 		{ return(*(int *)0); }
 
 #undef tigetnum
 int	tigetnum(
-		char	*str)
+		const char *str)
 		{ return(*(int *)0); }
 
 #undef tigetstr_sp
 char	*tigetstr_sp(
 		SCREEN	*sp, 
-		char	*str)
+		const char *str)
 		{ return(*(char **)0); }
 
 #undef tigetstr
 char	*tigetstr(
-		char	*str)
+		const char *str)
 		{ return(*(char **)0); }
 
 /* ./tinfo/lib_tparm.c */
@@ -902,7 +907,7 @@ int	_nc_tparm_analyze(
 
 #undef tparm
 char	*tparm(
-		char	*string, 
+		const char *string, 
 		...)
 		{ return(*(char **)0); }
 
@@ -1065,9 +1070,9 @@ const char *_nc_retrace_cptr(
 		{ return(*(const char **)0); }
 
 #undef _nc_retrace_cvoid_ptr
-void	*_nc_retrace_cvoid_ptr(
-		void	*code)
-		{ return(*(void **)0); }
+const void *_nc_retrace_cvoid_ptr(
+		const void *code)
+		{ return(*(const void **)0); }
 
 #undef _nc_retrace_void_ptr
 void	*_nc_retrace_void_ptr(
@@ -1133,7 +1138,7 @@ chtype	_nc_retrace_chtype(
 
 typedef struct {
     unsigned int val;
-    const char *name;
+    const char name[8];
 } BITNAMES;
 
 #undef _nc_trace_ttymode
@@ -1263,17 +1268,17 @@ int	_nc_name_match(
 /* ./names.c */
 
 #undef boolnames
-char	*const boolnames[] = {0};
+const char *const boolnames[] = {0};
 #undef boolfnames
-char	*const boolfnames[] = {0};
+const char *const boolfnames[] = {0};
 #undef numnames
-char	*const numnames[] = {0};
+const char *const numnames[] = {0};
 #undef numfnames
-char	*const numfnames[] = {0};
+const char *const numfnames[] = {0};
 #undef strnames
-char	*const strnames[] = {0};
+const char *const strnames[] = {0};
 #undef strfnames
-char	*const strfnames[] = {0};
+const char *const strfnames[] = {0};
 
 /* ./tinfo/obsolete.c */
 
@@ -1413,15 +1418,15 @@ char	*_nc_trim_sgr0(
 /* ./unctrl.c */
 
 #undef unctrl_sp
-char	*unctrl_sp(
+const char *unctrl_sp(
 		SCREEN	*sp, 
 		chtype	ch)
-		{ return(*(char **)0); }
+		{ return(*(const char **)0); }
 
 #undef unctrl
-char	*unctrl(
+const char *unctrl(
 		chtype	ch)
-		{ return(*(char **)0); }
+		{ return(*(const char **)0); }
 
 /* ./trace/visbuf.c */
 

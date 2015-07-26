@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_outopts.3x,v 1.25 2010/12/04 18:38:55 tom Exp @
+  * @Id: curs_outopts.3x,v 1.26 2015/07/21 00:23:43 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,14 +55,14 @@
 <H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>clearok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>idlok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>void</STRONG> <STRONG>idcok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>void</STRONG> <STRONG>immedok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>leaveok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>setscrreg(int</STRONG> <STRONG>top,</STRONG> <STRONG>int</STRONG> <STRONG>bot);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wsetscrreg(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>top,</STRONG> <STRONG>int</STRONG> <STRONG>bot);</STRONG>
-       <STRONG>int</STRONG> <STRONG>scrollok(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
+       <STRONG>int</STRONG> <STRONG>clearok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>idlok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>idcok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>immedok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>leaveok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>setscrreg(int</STRONG> <EM>top</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bot</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wsetscrreg(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>top</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bot</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scrollok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>nl(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>nonl(void);</STRONG>
 
@@ -74,6 +74,9 @@
        otherwise stated.  It is not necessary to turn  these  op-
        tions off before calling <STRONG>endwin</STRONG>.
 
+
+</PRE>
+<H3><a name="h3-clearok">clearok</a></H3><PRE>
        If  <STRONG>clearok</STRONG> is called with <STRONG>TRUE</STRONG> as argument, the next call
        to <STRONG>wrefresh</STRONG> with this window will clear  the  screen  com-
        pletely  and  redraw the entire screen from scratch.  This
@@ -83,6 +86,9 @@
        the  next  call  to  <STRONG>wrefresh</STRONG>  with  any window causes the
        screen to be cleared and repainted from scratch.
 
+
+</PRE>
+<H3><a name="h3-idlok">idlok</a></H3><PRE>
        If <STRONG>idlok</STRONG> is called with <STRONG>TRUE</STRONG> as  second  argument,  <STRONG>curses</STRONG>
        considers using the hardware insert/delete line feature of
        terminals so equipped.  Calling <STRONG>idlok</STRONG> with <STRONG>FALSE</STRONG> as second
@@ -95,6 +101,9 @@
        not  be  used,  <STRONG>curses</STRONG> redraws the changed portions of all
        lines.
 
+
+</PRE>
+<H3><a name="h3-idcok">idcok</a></H3><PRE>
        If <STRONG>idcok</STRONG> is called with <STRONG>FALSE</STRONG> as second  argument,  <STRONG>curses</STRONG>
        no longer considers using the hardware insert/delete char-
        acter feature of terminals so equipped.  Use of  character
@@ -102,6 +111,9 @@
        <STRONG>TRUE</STRONG> as second argument re-enables use of character inser-
        tion and deletion.
 
+
+</PRE>
+<H3><a name="h3-immedok">immedok</a></H3><PRE>
        If  <STRONG>immedok</STRONG> is called with <STRONG>TRUE</STRONG> <STRONG>as</STRONG> <STRONG>argument</STRONG>, any change in
        the window image, such as the ones caused by <STRONG>waddch,</STRONG> <STRONG>wclr-</STRONG>
        <STRONG>tobot,</STRONG>  <STRONG>wscrl</STRONG>,  etc.,  automatically  cause a call to <STRONG>wre-</STRONG>
@@ -109,12 +121,18 @@
        due  to repeated calls to <STRONG>wrefresh</STRONG>.  It is disabled by de-
        fault.
 
+
+</PRE>
+<H3><a name="h3-leaveok">leaveok</a></H3><PRE>
        Normally, the hardware cursor is left at the  location  of
        the window cursor being refreshed.  The <STRONG>leaveok</STRONG> option al-
        lows the cursor to be left wherever the update happens  to
        leave  it.  It is useful for applications where the cursor
        is not used, since it reduces the need for cursor motions.
 
+
+</PRE>
+<H3><a name="h3-setscrreg">setscrreg</a></H3><PRE>
        The <STRONG>setscrreg</STRONG> and <STRONG>wsetscrreg</STRONG> routines allow  the  applica-
        tion  programmer  to  set a software scrolling region in a
        window.  The <EM>top</EM> and <EM>bot</EM> parameters are the  line  numbers
@@ -130,6 +148,9 @@
        scrolling region or insert/delete  line  capability,  they
        will probably be used by the output routines.)
 
+
+</PRE>
+<H3><a name="h3-scrollok">scrollok</a></H3><PRE>
        The  <STRONG>scrollok</STRONG> option controls what happens when the cursor
        of a window is  moved  off  the  edge  of  the  window  or
        scrolling  region,  either as a result of a newline action
@@ -140,6 +161,9 @@
        scrolling effect on the terminal, it is also necessary  to
        call <STRONG>idlok</STRONG>).
 
+
+</PRE>
+<H3><a name="h3-nl_-nonl">nl, nonl</a></H3><PRE>
        The  <STRONG>nl</STRONG>  and  <STRONG>nonl</STRONG> routines control whether the underlying
        display device translates the return key into  newline  on
        input,  and  whether it translates newline into return and
@@ -158,7 +182,7 @@
        cess and <STRONG>ERR</STRONG> upon failure.  All other routines that return
        an integer always return <STRONG>OK</STRONG>.
 
-       X/Open does not define any error conditions.
+       X/Open Curses does not define any error conditions.
 
        In this implementation, those functions that have a window
        pointer  will  return  an  error  if the window pointer is
@@ -217,8 +241,8 @@
 
 </PRE>
 <H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,        <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>,         <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,    <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3x)</A></STRONG>,    <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>, <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,
        <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 
@@ -229,7 +253,18 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-clearok">clearok</a></li>
+<li><a href="#h3-idlok">idlok</a></li>
+<li><a href="#h3-idcok">idcok</a></li>
+<li><a href="#h3-immedok">immedok</a></li>
+<li><a href="#h3-leaveok">leaveok</a></li>
+<li><a href="#h3-setscrreg">setscrreg</a></li>
+<li><a href="#h3-scrollok">scrollok</a></li>
+<li><a href="#h3-nl_-nonl">nl, nonl</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>

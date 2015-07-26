@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey       1996-2005,2010                           *
+ *  Author: Thomas E. Dickey       1996-on                                  *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -674,6 +674,10 @@ alnumARG;
 #undef TYPE_ALNUM
 FIELDTYPE *TYPE_ALNUM;
 
+#undef _nc_TYPE_ALNUM
+FIELDTYPE *_nc_TYPE_ALNUM(void)
+		{ return(*(FIELDTYPE **)0); }
+
 /* ./fty_alpha.c */
 
 typedef struct
@@ -684,6 +688,10 @@ alphaARG;
 
 #undef TYPE_ALPHA
 FIELDTYPE *TYPE_ALPHA;
+
+#undef _nc_TYPE_ALPHA
+FIELDTYPE *_nc_TYPE_ALPHA(void)
+		{ return(*(FIELDTYPE **)0); }
 
 /* ./fty_enum.c */
 
@@ -707,11 +715,49 @@ enumParams;
 #undef TYPE_ENUM
 FIELDTYPE *TYPE_ENUM;
 
+#undef _nc_TYPE_ENUM
+FIELDTYPE *_nc_TYPE_ENUM(void)
+		{ return(*(FIELDTYPE **)0); }
+
 /* ./fty_generic.c */
 
-#undef _nc_fty_generic
-void	_nc_fty_generic(void)
-		{ /* void */ }
+#undef _nc_generic_fieldtype
+FIELDTYPE *_nc_generic_fieldtype(
+		NCURSES_BOOL (*const field_check)(
+		FORM	*p1, 
+		FIELD	*p2, 
+		const void *p3), 
+		NCURSES_BOOL (*const char_check)(
+		int	p1, 
+		FORM	*p2, 
+		FIELD	*p3, 
+		const void *p4), 
+		NCURSES_BOOL (*const next)(
+		FORM	*p1, 
+		FIELD	*p2, 
+		const void *p3), 
+		NCURSES_BOOL (*const prev)(
+		FORM	*p1, 
+		FIELD	*p2, 
+		const void *p3), 
+		void	(*freecallback)(
+		void	*p1))
+		{ return(*(FIELDTYPE **)0); }
+
+#undef _nc_set_generic_fieldtype
+int	_nc_set_generic_fieldtype(
+		FIELD	*field, 
+		FIELDTYPE *ftyp, 
+		int	(*argiterator)(
+		void	**p1))
+		{ return(*(int *)0); }
+
+#undef _nc_form_cursor
+WINDOW	*_nc_form_cursor(
+		const FORM *form, 
+		int	*pRow, 
+		int	*pCol)
+		{ return(*(WINDOW **)0); }
 
 /* ./fty_int.c */
 
@@ -734,9 +780,18 @@ integerPARM;
 #undef TYPE_INTEGER
 FIELDTYPE *TYPE_INTEGER;
 
+#undef _nc_TYPE_INTEGER
+FIELDTYPE *_nc_TYPE_INTEGER(void)
+		{ return(*(FIELDTYPE **)0); }
+
 /* ./fty_ipv4.c */
+
 #undef TYPE_IPV4
 FIELDTYPE *TYPE_IPV4;
+
+#undef _nc_TYPE_IPV4
+FIELDTYPE *_nc_TYPE_IPV4(void)
+		{ return(*(FIELDTYPE **)0); }
 
 /* ./fty_num.c */
 
@@ -762,6 +817,10 @@ thisPARM;
 #undef TYPE_NUMERIC
 FIELDTYPE *TYPE_NUMERIC;
 
+#undef _nc_TYPE_NUMERIC
+FIELDTYPE *_nc_TYPE_NUMERIC(void)
+		{ return(*(FIELDTYPE **)0); }
+
 /* ./fty_regex.c */
 
 #include <regex.h>
@@ -775,3 +834,7 @@ RegExp_Arg;
 
 #undef TYPE_REGEXP
 FIELDTYPE *TYPE_REGEXP;
+
+#undef _nc_TYPE_REGEXP
+FIELDTYPE *_nc_TYPE_REGEXP(void)
+		{ return(*(FIELDTYPE **)0); }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2013,2015 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey 2013                                           *
+ *  Author: Thomas E. Dickey       2013-on                                  *
  ****************************************************************************/
 /* LINTLIBRARY */
 
@@ -189,8 +189,8 @@ int	_nc_capcmp(
 		{ return(*(int *)0); }
 
 typedef struct {
-    const char *from;
-    const char *to;
+    const char from[3];
+    const char to[6];
 } assoc;
 
 /* ./tinfo/write_entry.c */
@@ -199,7 +199,7 @@ typedef struct {
 
 #undef _nc_set_writedir
 void	_nc_set_writedir(
-		char	*dir)
+		const char *dir)
 		{ /* void */ }
 
 #undef _nc_write_entry

@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.47 2014/12/06 18:56:25 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.48 2015/07/25 19:02:45 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -65,6 +65,23 @@ if test "${LC_COLLATE+set}"  = set; then LC_COLLATE=C;  export LC_COLLATE;  fi
 preprocessor="$1 -DNCURSES_INTERNALS -I../include"
 AWK="$2"
 USE="$3"
+
+# A patch discussed here:
+#	https://gcc.gnu.org/ml/gcc-patches/2014-06/msg02185.html
+# introduces spurious #line markers into the preprocessor output.  The result
+# appears in gcc 5.0 and (with modification) in 5.1, making it necessary to
+# determine if we are using gcc, and if so, what version because the proposed
+# solution uses a nonstandard option.
+PRG=`echo "$1" | sed -e 's/[[:space:]].*$//'`
+FSF=`"$PRG" --version 2>/dev/null | fgrep "Free Software Foundation" | head -n 1`
+ALL=`"$PRG" -dumpversion 2>/dev/null `
+ONE=`echo "$ALL" | sed -e 's/\..*$//'`
+if test -n "$FSF" && test -n "$ALL" && test -n "$ONE" ; then
+	if test $ONE -ge 5 ; then
+		echo ".. adding -P option to work around $PRG $ALL" >&2
+		preprocessor="$preprocessor -P"
+	fi
+fi
 
 PID=$$
 ED1=sed1_${PID}.sed
@@ -474,22 +491,11 @@ sed -n -f $ED1 \
 	-e 's/gen_$//' \
 	-e 's/  / /g' >>$TMP
 
-cat >$ED1 <<EOF
-s/  / /g
-s/^ //
-s/ $//
-s/P_NCURSES_BOOL/NCURSES_BOOL/g
-EOF
-
-# A patch discussed here:
-#	https://gcc.gnu.org/ml/gcc-patches/2014-06/msg02185.html
-# introduces spurious #line markers.  Work around that by ignoring the system's
-# attempt to define "bool" and using our own symbol here.
-sed -e 's/bool/P_NCURSES_BOOL/g' $TMP > $ED2
-cat $ED2 >$TMP
-
 $preprocessor $TMP 2>/dev/null \
-| sed -f $ED1 \
+| sed \
+	-e 's/  / /g' \
+	-e 's/^ //' \
+	-e 's/_Bool/NCURSES_BOOL/g' \
 | $AWK -f $AW2 \
 | sed -f $ED3 \
 | sed \

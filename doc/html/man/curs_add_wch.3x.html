@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2011,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2012,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.15 2012/11/03 23:03:59 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.16 2015/07/20 23:44:56 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -67,6 +67,9 @@
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE>
+<H3><a name="h3-add_wch">add_wch</a></H3><PRE>
        The <STRONG>add_wch</STRONG>, <STRONG>wadd_wch</STRONG>, <STRONG>mvadd_wch</STRONG>, and <STRONG>mvwadd_wch</STRONG> functions
        put the complex character <EM>wch</EM> into the given window at its
        current position, which is then advanced.  These functions
@@ -89,6 +92,9 @@
            backspace  or  other  control character, the window is
            updated and the cursor moves as if <STRONG>addch</STRONG> were called.
 
+
+</PRE>
+<H3><a name="h3-echo_wchar">echo_wchar</a></H3><PRE>
        The <STRONG>echo_wchar</STRONG> function is functionally  equivalent  to  a
        call to <STRONG>add_wch</STRONG> followed by a call to <STRONG>refresh</STRONG>.  Similarly,
        the <STRONG>wecho_wchar</STRONG> is functionally equivalent to  a  call  to
@@ -111,9 +117,9 @@
        WACS_BLOCK        0x25ae     #         solid square block
        WACS_BOARD        0x2592     #         board of squares
        WACS_BTEE         0x2534     +         bottom tee
+
        WACS_BULLET       0x00b7     o         bullet
        WACS_CKBOARD      0x2592     :         checker board (stipple)
-
        WACS_DARROW       0x2193     v         arrow pointing down
        WACS_DEGREE       0x00b0     '         degree symbol
        WACS_DIAMOND      0x25c6     +         diamond
@@ -229,6 +235,8 @@
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
 <ul>
+<li><a href="#h3-add_wch">add_wch</a></li>
+<li><a href="#h3-echo_wchar">echo_wchar</a></li>
 <li><a href="#h3-Line-Graphics">Line Graphics</a></li>
 </ul>
 </li>

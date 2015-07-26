@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2011,2014 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2014,2015 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.6 $
---  $Date: 2014/09/13 19:10:18 $
+--  $Revision: 1.7 $
+--  $Date: 2015/07/25 23:43:19 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with ncurses2.util; use ncurses2.util;
@@ -94,7 +94,7 @@ begin
    Add (Str => "This test shows the behavior of wnoutrefresh() with " &
         "respect to");
    Add (Ch => newl);
-   Add (Str => "the shared region of two overlapping windows A and B. "&
+   Add (Str => "the shared region of two overlapping windows A and B. " &
         "The cross");
    Add (Ch => newl);
    Add (Str => "pattern in each window does not overlap the other.");

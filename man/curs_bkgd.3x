@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2003,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.22 2010/12/04 18:36:44 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.23 2015/07/21 00:11:05 tom Exp $
+.de bP
+.IP \(bu 4
+..
 .TH curs_bkgd 3X ""
 .SH NAME
 \fBbkgdset\fR, \fBwbkgdset\fR,
@@ -35,17 +38,18 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .PP
-\fBvoid bkgdset(chtype ch);\fR
+\fBvoid bkgdset(chtype \fP\fIch\fP\fB);\fR
 .br
-\fBvoid wbkgdset(WINDOW *win, chtype ch);\fR
+\fBvoid wbkgdset(WINDOW *\fP\fIwin, chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint bkgd(chtype ch);\fR
+\fBint bkgd(chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint wbkgd(WINDOW *win, chtype ch);\fR
+\fBint wbkgd(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fR
 .br
-\fBchtype getbkgd(WINDOW *win);\fR
+\fBchtype getbkgd(WINDOW *\fP\fIwin\fP\fB);\fR
 .br
 .SH DESCRIPTION
+.SS bkgdset
 The \fBbkgdset\fR and \fBwbkgdset\fR routines manipulate the
 background of the named window.
 The window background is a \fBchtype\fR consisting of
@@ -60,32 +64,39 @@ insert/delete line/character operations.
 To the extent possible on a particular terminal,
 the attribute part of the background is displayed
 as the graphic rendition of the character put on the screen.
+.SS bkgd
 .PP
 The \fBbkgd\fR and \fBwbkgd\fR functions
 set the background property of the current or specified window
 and then apply this setting to every character position in that window:
 .PP
-.RS
+.bP
 The rendition of every character on the screen is changed to
 the new background rendition.
-.PP
+.bP
 Wherever the former background character
 appears, it is changed to the new background character.
 .RE
+.SS getbkgd
 .PP
 The \fBgetbkgd\fR function returns the given window's current background
 character/attribute pair.
 .SH RETURN VALUE
+.PP
 The routines \fBbkgd\fR and \fBwbkgd\fR return the integer \fBOK\fR.
 The SVr4.0 manual says "or a non-negative integer if \fBimmedok\fR is set",
 but this appears to be an error.
 .SH NOTES
+.PP
 Note that \fBbkgdset\fR and \fBbkgd\fR may be macros.
 .SH PORTABILITY
+.PP
 These functions are described in the XSI Curses standard, Issue 4.
 It specifies that \fBbkgd\fR and \fBwbkgd\fR return \fBERR\fR on failure,
 but gives no failure conditions.
 .SH SEE ALSO
+.na
+.PP
 \fBcurses\fR(3X),
 \fBcurs_addch\fR(3X),
 \fBcurs_attr\fR(3X),

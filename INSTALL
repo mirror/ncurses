@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.186 2015/04/12 14:41:20 tom Exp $
+-- $Id: INSTALL,v 1.187 2015/07/16 23:59:08 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1258,6 +1258,9 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
     you may encounter when building a system with different versions of
     ncurses:
 
+    6.0 (??? ??, 2015)
+
+    5.9 (Apr 04, 2011)
     5.8 (Feb 26, 2011)
 	Interface changes:
 

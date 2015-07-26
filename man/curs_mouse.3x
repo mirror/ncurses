@@ -27,7 +27,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.41 2015/04/11 10:23:49 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.42 2015/07/21 09:27:39 tom Exp $
+.de bP
+.IP \(bu 4
+..
 .TH curs_mouse 3X ""
 .na
 .hy 0
@@ -54,27 +57,28 @@
 .PP
 \fBbool has_mouse(void);\fR
 .br
-\fBint getmouse(MEVENT *event);\fR
+\fBint getmouse(MEVENT *\fP\fIevent\fP\fB);\fR
 .br
-\fBint ungetmouse(MEVENT *event);\fR
+\fBint ungetmouse(MEVENT *\fP\fIevent\fP\fB);\fR
 .br
-\fBmmask_t mousemask(mmask_t newmask, mmask_t *oldmask);\fR
+\fBmmask_t mousemask(mmask_t \fP\fInewmask\fP\fB, mmask_t *\fP\fIoldmask\fP\fB);\fR
 .br
-\fBbool wenclose(const WINDOW *win, int y, int x);\fR
+\fBbool wenclose(const WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
 .br
-\fBbool mouse_trafo(int* pY, int* pX, bool to_screen);\fR
+\fBbool mouse_trafo(int* \fP\fIpY\fP\fB, int* \fP\fIpX\fP\fB, bool \fP\fIto_screen\fP\fB);\fR
 .br
-\fBbool wmouse_trafo(const WINDOW* win, int* pY, int* pX,\fR
+\fBbool wmouse_trafo(const WINDOW* \fP\fIwin\fP\fB, int* \fP\fIpY\fP\fB, int* \fP\fIpX\fP\fB,\fR
 .br
-	\fBbool to_screen);\fR
+	\fBbool \fP\fIto_screen\fP\fB);\fR
 .br
-\fBint mouseinterval(int erval);\fR
+\fBint mouseinterval(int \fP\fIerval\fP\fB);\fR
 .br
 .SH DESCRIPTION
 These functions provide an interface to mouse events from
 \fBncurses\fR(3X).
 Mouse events are represented by \fBKEY_MOUSE\fR
 pseudo-key values in the \fBwgetch\fR input stream.
+.SS mousemask
 .PP
 To make mouse events visible, use the \fBmousemask\fR function.
 This will set
@@ -89,6 +93,7 @@ window's mouse event mask.
 As a side effect, setting a zero mousemask may turn off the mouse pointer;
 setting a nonzero mask may turn it on.
 Whether this happens is device-dependent.
+.SS Mouse events
 .PP
 Here are the mouse event type masks which may be defined:
 .PP
@@ -134,6 +139,7 @@ ALL_MOUSE_EVENTS	report all button state changes
 REPORT_MOUSE_POSITION	report mouse movement
 _
 .TE
+.SS getmouse
 .PP
 Once a class of mouse events has been made visible in a window,
 calling the \fBwgetch\fR function on that window may return
@@ -150,48 +156,57 @@ indicate the event type.
 The corresponding data in the queue is marked invalid.
 A subsequent call to \fBgetmouse\fP will retrieve the next older
 item from the queue.
+.SS ungetmouse
 .PP
 The \fBungetmouse\fR function behaves analogously to \fBungetch\fR.
 It pushes
 a \fBKEY_MOUSE\fR event onto the input queue, and associates with that event
 the given state data and screen-relative character-cell coordinates.
+.SS wenclose
 .PP
 The \fBwenclose\fR function tests whether a given pair of screen-relative
 character-cell coordinates is enclosed by a given window, returning \fBTRUE\fP
 if it is and \fBFALSE\fP otherwise.
 It is useful for determining what subset of
 the screen windows enclose the location of a mouse event.
+.SS wmouse_trafo
 .PP
 The \fBwmouse_trafo\fR function transforms a given pair of coordinates
 from stdscr-relative coordinates
 to coordinates relative to the given window or vice versa.
-Please remember, that stdscr-relative coordinates are not always identical
+The resulting stdscr-relative coordinates are not always identical
 to window-relative coordinates due to the mechanism to reserve lines on top
 or bottom of the screen for other purposes
-(see the \fBripoffline()\fP and \fBslk_init\fR calls, for example).
+(see the \fBripoffline\fP and \fBslk_init\fR calls, for example).
+.bP
 If the parameter \fBto_screen\fR is \fBTRUE\fR, the pointers
 \fBpY, pX\fR must reference the coordinates of a location
 inside the window \fBwin\fR.
 They are converted to window-relative coordinates and returned
 through the pointers.
 If the conversion was successful, the function returns \fBTRUE\fR.
+.bP
 If one of the parameters was NULL or the location is
 not inside the window, \fBFALSE\fR is returned.
+.bP
 If \fBto_screen\fR is
 \fBFALSE\fR, the pointers \fBpY, pX\fR must reference window-relative
 coordinates.
 They are converted to stdscr-relative coordinates if the
 window \fBwin\fR encloses this point.
 In this case the function returns \fBTRUE\fR.
+.bP
 If one of the parameters is NULL or the point is not inside the
 window, \fBFALSE\fR is returned.
-Please notice, that the referenced coordinates
+The referenced coordinates
 are only replaced by the converted coordinates if the transformation was
 successful.
+.SS mouse_trafo
 .PP
 The \fBmouse_trafo\fR function performs the same translation
 as \fBwmouse_trafo\fR,
 using stdscr for \fBwin\fR.
+.SS mouseinterval
 .PP
 The \fBmouseinterval\fR function sets the maximum time (in thousands of a
 second) that can elapse between press and release events for them to
@@ -200,6 +215,7 @@ Use \fBmouseinterval(0)\fR to disable click resolution.
 This function returns the previous interval value.
 Use \fBmouseinterval(\-1)\fR to obtain the interval without altering it.
 The default is one sixth of a second.
+.SS has_mouse
 .PP
 The \fBhas_mouse\fP function returns \fBTRUE\fP if the mouse driver has been
 successfully initialized.
@@ -211,14 +227,16 @@ termination.
 .SH RETURN VALUE
 \fBgetmouse\fR and \fBungetmouse\fR
 return the integer \fBERR\fR upon failure or \fBOK\fR
-upon successful completion.
-.RS
+upon successful completion:
+.RS 3
 .TP 5
 \fBgetmouse\fP
 returns an error.
+.bP
 If no mouse driver was initialized, or
 if the mask parameter is zero,
-it also returns an error if no more events remain in the queue.
+.bP
+It also returns an error if no more events remain in the queue.
 .TP 5
 \fBungetmouse\fP
 returns an error if the FIFO is full.
@@ -245,7 +263,7 @@ If the interface is changed, the value of \fBNCURSES_MOUSE_VERSION\fR will be
 incremented.
 These values for \fBNCURSES_MOUSE_VERSION\fR may be
 specified when configuring ncurses:
-.RS
+.RS 3
 .TP 3
 1
 has definitions for reserved events.
@@ -263,13 +281,15 @@ Additional fields may be added to the structure in the future.
 Under \fBncurses\fR(3X), these calls are implemented using either
 xterm's built-in mouse-tracking API or
 platform-specific drivers including
-.RS
+.RS 3
+.bP
 Alessandro Rubini's gpm server
-.br
+.bP
 FreeBSD sysmouse
-.br
+.bP
 OS/2 EMX
 .RE
+.PP
 If you are using an unsupported configuration,
 mouse events will not be visible to
 \fBncurses\fR(3X) (and the \fBmousemask\fR function will always
@@ -280,11 +300,12 @@ this is used in the xterm mouse driver to control the
 way the terminal is initialized for mouse operation.
 The default, if \fBXM\fR is not found,
 corresponds to private mode 1000 of xterm:
-.RS
+.PP
+.RS 3
 \\E[?1000%?%p1%{1}%=%th%el%;
 .RE
 .PP
-The z member in the event structure is not presently used.
+The \fIz\fP member in the event structure is not presently used.
 It is intended
 for use with touch screens (which may be pressure-sensitive) or with
 3D-mice/trackballs/power gloves.

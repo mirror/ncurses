@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_pad.3x,v 1.17 2010/12/04 18:41:07 tom Exp @
+  * @Id: curs_pad.3x,v 1.18 2015/07/21 08:58:44 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,19 +55,22 @@
 <H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>WINDOW</STRONG> <STRONG>*newpad(int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols);</STRONG>
-       <STRONG>WINDOW</STRONG> <STRONG>*subpad(WINDOW</STRONG> <STRONG>*orig,</STRONG> <STRONG>int</STRONG> <STRONG>nlines,</STRONG> <STRONG>int</STRONG> <STRONG>ncols,</STRONG>
-             <STRONG>int</STRONG> <STRONG>begin_y,</STRONG> <STRONG>int</STRONG> <STRONG>begin_x);</STRONG>
-       <STRONG>int</STRONG> <STRONG>prefresh(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>int</STRONG> <STRONG>pminrow,</STRONG> <STRONG>int</STRONG> <STRONG>pmincol,</STRONG>
-             <STRONG>int</STRONG> <STRONG>sminrow,</STRONG> <STRONG>int</STRONG> <STRONG>smincol,</STRONG> <STRONG>int</STRONG> <STRONG>smaxrow,</STRONG> <STRONG>int</STRONG> <STRONG>smaxcol);</STRONG>
-       <STRONG>int</STRONG> <STRONG>pnoutrefresh(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>int</STRONG> <STRONG>pminrow,</STRONG> <STRONG>int</STRONG> <STRONG>pmincol,</STRONG>
-             <STRONG>int</STRONG> <STRONG>sminrow,</STRONG> <STRONG>int</STRONG> <STRONG>smincol,</STRONG> <STRONG>int</STRONG> <STRONG>smaxrow,</STRONG> <STRONG>int</STRONG> <STRONG>smaxcol);</STRONG>
-       <STRONG>int</STRONG> <STRONG>pechochar(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
-       <STRONG>int</STRONG> <STRONG>pecho_wchar(WINDOW</STRONG> <STRONG>*pad,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*wch);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*newpad(int</STRONG> <EM>nlines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ncols</EM><STRONG>);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*subpad(WINDOW</STRONG> <STRONG>*</STRONG><EM>orig</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>nlines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ncols</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>begin</EM><STRONG>_</STRONG><EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>begin</EM><STRONG>_</STRONG><EM>x</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>prefresh(WINDOW</STRONG> <STRONG>*</STRONG><EM>pad</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pmincol</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>sminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smaxrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smaxcol</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>pnoutrefresh(WINDOW</STRONG> <STRONG>*</STRONG><EM>pad</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pmincol</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>sminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smaxrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>smaxcol</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>pechochar(WINDOW</STRONG> <STRONG>*</STRONG><EM>pad</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>pecho_wchar(WINDOW</STRONG> <STRONG>*</STRONG><EM>pad</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
 
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE>
+<H3><a name="h3-newpad">newpad</a></H3><PRE>
        The <STRONG>newpad</STRONG> routine creates and returns a pointer to a  new
        pad data structure with the given number of lines, <EM>nlines</EM>,
        and columns, <EM>ncols</EM>.  A pad is like a window,  except  that
@@ -83,6 +86,9 @@
        of the pad to be displayed and the location on the  screen
        to be used for the display.
 
+
+</PRE>
+<H3><a name="h3-subpad">subpad</a></H3><PRE>
        The <STRONG>subpad</STRONG> routine creates and returns a pointer to a sub-
        window within a  pad  with  the  given  number  of  lines,
        <EM>nlines</EM>,  and  columns,  <EM>ncols</EM>.   Unlike <STRONG>subwin</STRONG>, which uses
@@ -93,6 +99,9 @@
        ten be necessary to call <STRONG>touchwin</STRONG> or <STRONG>touchline</STRONG> on <EM>orig</EM> be-
        fore calling <STRONG>prefresh</STRONG>.
 
+
+</PRE>
+<H3><a name="h3-prefresh_-pnoutrefresh">prefresh, pnoutrefresh</a></H3><PRE>
        The  <STRONG>prefresh</STRONG>  and  <STRONG>pnoutrefresh</STRONG> routines are analogous to
        <STRONG>wrefresh</STRONG> and <STRONG>wnoutrefresh</STRONG> except that they relate to  pads
        instead  of windows.  The additional parameters are needed
@@ -108,6 +117,9 @@
        respective  structures.  Negative values of <EM>pminrow</EM>, <EM>pmin-</EM>
        <EM>col</EM>, <EM>sminrow</EM>, or <EM>smincol</EM> are treated as if they were zero.
 
+
+</PRE>
+<H3><a name="h3-pechochar">pechochar</a></H3><PRE>
        The <STRONG>pechochar</STRONG> routine is functionally equivalent to a call
        to  <STRONG>addch</STRONG>  followed by a call to <STRONG>refresh</STRONG>, a call to <STRONG>waddch</STRONG>
        followed by a call to <STRONG>wrefresh</STRONG>, or a call to  <STRONG>waddch</STRONG>  fol-
@@ -119,6 +131,9 @@
        last location of the pad on the screen is reused  for  the
        arguments to <STRONG>prefresh</STRONG>.
 
+
+</PRE>
+<H3><a name="h3-pecho_wchar">pecho_wchar</a></H3><PRE>
        The  <STRONG>pecho_wchar</STRONG>  function is the analogous wide-character
        form of <STRONG>pechochar</STRONG>.  It outputs one character to a pad  and
        immediately  refreshes the pad.  It does this by a call to
@@ -137,22 +152,21 @@
        X/Open  does not define any error conditions.  In this im-
        plementation
 
-              <STRONG>prefresh</STRONG> and <STRONG>pnoutrefresh</STRONG>
-                   return an error if the window pointer is null,
-                   or if the window is not really a pad or if the
-                   area to refresh extends off-screen or  if  the
-                   minimum coordinates are greater than the maxi-
-                   mum.
+          <STRONG>prefresh</STRONG> and <STRONG>pnoutrefresh</STRONG>
+               return an error if the window pointer is null,  or
+               if  the  window is not really a pad or if the area
+               to refresh extends off-screen or  if  the  minimum
+               coordinates are greater than the maximum.
 
-              <STRONG>pechochar</STRONG>
-                   returns an error if the window is not really a
-                   pad,  and the associated call to <STRONG>wechochar</STRONG> re-
-                   turns an error.
+          <STRONG>pechochar</STRONG>
+               returns  an  error  if  the window is not really a
+               pad, and the associated call to <STRONG>wechochar</STRONG>  returns
+               an error.
 
-              <STRONG>pecho_wchar</STRONG>
-                   returns an error if the window is not really a
-                   pad,  and  the  associated call to <STRONG>wecho_wchar</STRONG>
-                   returns an error.
+          <STRONG>pecho_wchar</STRONG>
+               returns  an  error  if  the window is not really a
+               pad, and the associated call  to  <STRONG>wecho_wchar</STRONG>  re-
+               turns an error.
 
 
 </PRE>
@@ -162,7 +176,7 @@
 
 </PRE>
 <H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The XSI Curses standard, Issue  4  describes  these  func-
+       The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
@@ -179,7 +193,15 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-newpad">newpad</a></li>
+<li><a href="#h3-subpad">subpad</a></li>
+<li><a href="#h3-prefresh_-pnoutrefresh">prefresh, pnoutrefresh</a></li>
+<li><a href="#h3-pechochar">pechochar</a></li>
+<li><a href="#h3-pecho_wchar">pecho_wchar</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>

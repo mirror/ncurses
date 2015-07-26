@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.546 $
-#	$Date: 2015/06/27 18:57:21 $
+#	$Revision: 1.549 $
+#	$Date: 2015/07/25 19:27:20 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5584,8 +5584,13 @@ mgr-linux|Mgr window with Linux keyboard,
 # Rather, it acts like xterm - when the meta feature is disabled.
 #
 # Removed invis -TD
+# Added eo, removed ul -TD
+#
+# Reviewed st 0.5:
+# implements control-modifier, but not control-shift for special keys
+# implements alt-modifier, but not alt-shift for special keys
 st|stterm| simpleterm 0.4.1,
-	am, bce, hs, mir, msgr, ul, xenl,
+	am, bce, eo, hs, mir, msgr, xenl,
 	colors#8, cols#80, it#8, lines#24, ncv#3, pairs#64,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -6180,7 +6185,7 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 # xterm cursor bits.
 tmux|tmux terminal multiplexer,
 	ritm=\E[23m, rmso=\E[27m, sitm=\E[3m, smso=\E[7m, Ms@,
-	use=xterm+tmux, use=screen,
+	use=xterm+sl, use=xterm+tmux, use=screen,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
@@ -23689,8 +23694,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ remove spurious "%;" from st entry (report by Daniel Pitts) -TD
 #	+ add vte-2014, update vte to use that -TD
 #
-# 2015-6-27
+# 2015-06-27
 #	+ comment-out "screen.xterm" entry, and inherit screen.xterm-256color
 #	  from xterm-new (report by Richard Birkett) -TD
+#
+# 2015-07-25
+#	+ add status line to tmux via xterm+sl (patch by Nicholas Marriott).
+#	+ fixes for st 0.5 from testing with tack -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

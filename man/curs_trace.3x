@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2000-2009,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2000-2010,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,10 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.12 2010/12/04 18:40:45 tom Exp $
+.\" $Id: curs_trace.3x,v 1.13 2015/07/20 22:54:44 tom Exp $
+.de bP
+.IP \(bu 4
+..
 .TH curs_trace 3X ""
 .na
 .hy 0
@@ -48,116 +51,136 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBvoid _tracef(const char *format, ...);\fR
+\fBvoid _tracef(const char *\fP\fIformat\fP\fB, ...);\fR
 .br
-\fBvoid _tracedump(const char *label, WINDOW *win);\fR
+\fBvoid _tracedump(const char *\fP\fIlabel\fP\fB, WINDOW *\fP\fIwin\fP\fB);\fR
 .br
-\fBchar *_traceattr(attr_t attr);\fR
+\fBchar *_traceattr(attr_t \fP\fIattr\fP\fB);\fR
 .br
-\fBchar *_traceattr2(int buffer, chtype ch);\fR
+\fBchar *_traceattr2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fR
 .br
 \fBchar *_nc_tracebits(void);\fR
 .br
-\fBchar * _tracecchar_t(const cchar_t *string);\fR
+\fBchar * _tracecchar_t(const cchar_t *\fP\fIstring\fP\fB);\fR
 .br
-\fBchar * _tracecchar_t2(int buffer, const cchar_t *string);\fR
+\fBchar * _tracecchar_t2(int \fP\fIbuffer\fP\fB, const cchar_t *\fP\fIstring\fP\fB);\fR
 .br
-\fBchar *_tracechar(int ch);\fR
+\fBchar *_tracechar(int \fP\fIch\fP\fB);\fR
 .br
-\fBchar *_tracechtype(chtype ch);\fR
+\fBchar *_tracechtype(chtype \fP\fIch\fP\fB);\fR
 .br
-\fBchar *_tracechtype2(int buffer, chtype ch);\fR
+\fBchar *_tracechtype2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fR
 .br
-\fBchar *_tracemouse(const MEVENT *event);\fR
+\fBchar *_tracemouse(const MEVENT *\fP\fIevent\fP\fB);\fR
 .br
-\fBvoid trace(const unsigned int param);\fR
+\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fR
 .SH DESCRIPTION
 The \fBtrace\fR routines are used for debugging the ncurses libraries,
 as well as applications which use the ncurses libraries.
 These functions are normally available only with the debugging library
-\fIlibncurses_g.a\fR, but may be compiled into any model (shared, static,
+e.g., \fIlibncurses_g.a\fR, but may be compiled into any model (shared, static,
 profile) by defining the symbol \fBTRACE\fR.
 Additionally, some functions are only available with the wide-character
 configuration of the libraries.
 .PP
-The principal parts of this interface are the \fBtrace\fR routine which
-selectively enables different tracing features, and the \fB_tracef\fR
-routine which writes formatted data to the \fItrace\fR file.
+The principal parts of this interface are
+.bP
+\fBtrace\fR, which selectively enables different tracing features, and
+.bP
+\fB_tracef\fR, which writes formatted data to the \fItrace\fR file.
 .PP
 Calling \fBtrace\fR with a nonzero parameter opens the file \fBtrace\fR
-in the current directory for output.  The parameter is formed by OR'ing
+in the current directory for output.
+The parameter is formed by OR'ing
 values from the list of \fBTRACE_\fP\fIxxx\fR definitions in \fB<curses.h>\fR.
 These include:
 .TP 5
-TRACE_DISABLE
+.B TRACE_DISABLE
 turn off tracing.
 .TP 5
-TRACE_TIMES
+.B TRACE_TIMES
 trace user and system times of updates.
 .TP 5
-TRACE_TPUTS
+.B TRACE_TPUTS
 trace tputs calls.
 .TP 5
-TRACE_UPDATE
+.B TRACE_UPDATE
 trace update actions, old & new screens.
 .TP 5
-TRACE_MOVE
+.B TRACE_MOVE
 trace cursor movement and scrolling.
 .TP 5
-TRACE_CHARPUT
+.B TRACE_CHARPUT
 trace all character outputs.
 .TP 5
-TRACE_ORDINARY
+.B TRACE_ORDINARY
 trace all update actions.
 The old and new screen contents are written to the trace file
 for each refresh.
 .TP 5
-TRACE_CALLS
+.B TRACE_CALLS
 trace all curses calls.
 The parameters for each call are traced, as well as return values.
 .TP 5
-TRACE_VIRTPUT
+.B TRACE_VIRTPUT
 trace virtual character puts, i.e., calls to \fBaddch\fR.
 .TP 5
-TRACE_IEVENT
+.B TRACE_IEVENT
 trace low-level input processing, including timeouts.
 .TP 5
-TRACE_BITS
+.B TRACE_BITS
 trace state of TTY control bits.
 .TP 5
-TRACE_ICALLS
+.B TRACE_ICALLS
 trace internal/nested calls.
 .TP 5
-TRACE_CCALLS
+.B TRACE_CCALLS
 trace per-character calls.
 .TP 5
-TRACE_DATABASE
+.B TRACE_DATABASE
 trace read/write of terminfo/termcap data.
 .TP 5
-TRACE_ATTRS
+.B TRACE_ATTRS
 trace changes to video attributes and colors.
 .TP 5
-TRACE_MAXIMUM
+.B TRACE_MAXIMUM
 maximum trace level, enables all of the separate trace features.
 .PP
 Some tracing features are enabled whenever the \fBtrace\fR parameter
-is nonzero.  Some features overlap.
+is nonzero.
+Some features overlap.
 The specific names are used as a guideline.
+.PP
+The other functions either return a pointer to a string-area
+(allocated by the corresponding function),
+or return no value (such as \fB_tracedump\fP, which implements the
+screen dump for \fBTRACE_UPDATE\fP).
+The caller should not free these
+strings, since the allocation is reused on successive calls.
+To work around the problem of a single string-area per function,
+some use a buffer-number parameter, telling the library to allocate
+additional string-areas.
 .PP
 These functions check the \fBNCURSES_TRACE\fP environment variable,
 to set the tracing feature as if \fBtrace\fP was called:
 .RS
+.PP
+.na
 filter,
 initscr,
 new_prescr,
 newterm,
 nofilter,
+restartterm,
 ripoffline,
 setupterm,
 slk_init,
-tgetent
+tgetent,
+use_env,
+use_extended_names,
+use_tioctl
+.ad
 .RE
-
 .SH RETURN VALUE
 Routines which return a value are designed to be used as parameters
 to the \fB_tracef\fR routine.
