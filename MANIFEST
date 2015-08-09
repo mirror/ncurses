@@ -981,6 +981,7 @@
 ./ncurses/widechar/lib_vline_set.c
 ./ncurses/widechar/lib_wacs.c
 ./ncurses/widechar/lib_wunctrl.c
+./ncurses/widechar/widechars.c
 ./ncurses/win32con/gettimeofday.c
 ./ncurses/win32con/wcwidth.c
 ./ncurses/win32con/win_driver.c
@@ -1169,7 +1170,6 @@
 ./test/tracemunch
 ./test/view.c
 ./test/widechars-utf8.txt
-./test/widechars.c
 ./test/widechars.h
 ./test/worm.c
 ./test/xmas.c
