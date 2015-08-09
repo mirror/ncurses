@@ -2547,11 +2547,11 @@ elif test "x$cf_pkg_config" != xno ; then
 echo "$as_me: WARNING: pkg-config is not installed" >&2;}
 fi
 
-echo "$as_me:2550: checking for $PKG_CONFIG library directory" >&5
-echo $ECHO_N "checking for $PKG_CONFIG library directory... $ECHO_C" >&6
 if test "x$PKG_CONFIG" = xnone ; then
 	PKG_CONFIG_LIBDIR=no
 else
+	echo "$as_me:2553: checking for $PKG_CONFIG library directory" >&5
+echo $ECHO_N "checking for $PKG_CONFIG library directory... $ECHO_C" >&6
 
 # Check whether --with-pkg-config-libdir or --without-pkg-config-libdir was given.
 if test "${with_pkg_config_libdir+set}" = set; then
@@ -2896,7 +2896,7 @@ else
 	for cf_option in '-${MAKEFLAGS}' '${MFLAGS}'
 	do
 		cat >cf_makeflags.tmp <<CF_EOF
-SHELL = /bin/sh
+SHELL = $SHELL
 all :
 	@ echo '.$cf_option'
 CF_EOF
@@ -3649,7 +3649,7 @@ fi
 cf_ncuconfig_root=ncurses
 cf_have_ncuconfig=no
 
-if test "x$PKG_CONFIG" != xnone; then
+if test "x${PKG_CONFIG:=none}" != xnone; then
 	echo "$as_me:3653: checking pkg-config for $cf_ncuconfig_root" >&5
 echo $ECHO_N "checking pkg-config for $cf_ncuconfig_root... $ECHO_C" >&6
 	if "$PKG_CONFIG" --exists $cf_ncuconfig_root ; then
@@ -5747,7 +5747,7 @@ fi
 cf_ncuconfig_root=ncursesw
 cf_have_ncuconfig=no
 
-if test "x$PKG_CONFIG" != xnone; then
+if test "x${PKG_CONFIG:=none}" != xnone; then
 	echo "$as_me:5751: checking pkg-config for $cf_ncuconfig_root" >&5
 echo $ECHO_N "checking pkg-config for $cf_ncuconfig_root... $ECHO_C" >&6
 	if "$PKG_CONFIG" --exists $cf_ncuconfig_root ; then
@@ -7292,7 +7292,7 @@ else
 cf_ncuconfig_root=ncurses
 cf_have_ncuconfig=no
 
-if test "x$PKG_CONFIG" != xnone; then
+if test "x${PKG_CONFIG:=none}" != xnone; then
 	echo "$as_me:7296: checking pkg-config for $cf_ncuconfig_root" >&5
 echo $ECHO_N "checking pkg-config for $cf_ncuconfig_root... $ECHO_C" >&6
 	if "$PKG_CONFIG" --exists $cf_ncuconfig_root ; then
@@ -9139,14 +9139,14 @@ echo "${ECHO_T}$CC_SHARED_OPTS" >&6
 		;;
 	(cygwin*)
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
+		MK_SHARED_LIB=$SHELL' '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
 		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
 		cf_cv_shlib_version=cygdll
 		cf_cv_shlib_version_infix=cygdll
 		shlibdir=$bindir
 		MAKE_DLLS=
 		cat >mk_shared_lib.sh <<-CF_EOF
-		#!/bin/sh
+		#!$SHELL
 		SHARED_LIB=\$1
 		IMPORT_LIB=\`echo "\$1" | sed -e 's/cyg/lib/' -e 's/[0-9]*\.dll$/.dll.a/'\`
 		shift
@@ -9161,14 +9161,14 @@ CF_EOF
 		;;
 	(msys*)
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
+		MK_SHARED_LIB=$SHELL' '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
 		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
 		cf_cv_shlib_version=msysdll
 		cf_cv_shlib_version_infix=msysdll
 		shlibdir=$bindir
 		MAKE_DLLS=
 		cat >mk_shared_lib.sh <<-CF_EOF
-		#!/bin/sh
+		#!$SHELL
 		SHARED_LIB=\$1
 		IMPORT_LIB=\`echo "\$1" | sed -e 's/msys-/lib/' -e 's/[0-9]*\.dll$/.dll.a/'\`
 		shift
@@ -9307,10 +9307,10 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 			EXTRA_LDFLAGS="-Wl,--enable-auto-import $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='sh '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
+		MK_SHARED_LIB=$SHELL' '$rel_builddir'/mk_shared_lib.sh $@ ${CC} ${CFLAGS}'
 		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
 		cat >mk_shared_lib.sh <<-CF_EOF
-		#!/bin/sh
+		#!$SHELL
 		SHARED_LIB=\$1
 		IMPORT_LIB=\`echo "\$1" | sed -e 's/[0-9]*\.dll$/.dll.a/'\`
 		shift

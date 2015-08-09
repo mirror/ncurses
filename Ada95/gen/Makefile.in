@@ -28,11 +28,11 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.84 2015/06/06 21:27:35 tom Exp $
+#  $Id: Makefile.in,v 1.85 2015/08/05 23:06:31 tom Exp $
 #
 .SUFFIXES:
 
-SHELL		= /bin/sh
+SHELL		= @SHELL@
 VPATH		= @srcdir@
 THIS		= Makefile
 

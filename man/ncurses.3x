@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.121 2015/07/21 23:49:19 tom Exp $
+.\" $Id: ncurses.3x,v 1.124 2015/08/08 14:57:51 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -444,7 +444,9 @@ is_leaveok/\fBcurs_opaque\fR(3X)*
 is_linetouched/\fBcurs_touch\fR(3X)
 is_nodelay/\fBcurs_opaque\fR(3X)*
 is_notimeout/\fBcurs_opaque\fR(3X)*
+is_pad/\fBcurs_opaque\fR(3X)*
 is_scrollok/\fBcurs_opaque\fR(3X)*
+is_subwin/\fBcurs_opaque\fR(3X)*
 is_syncok/\fBcurs_opaque\fR(3X)*
 is_term_resized/\fBresizeterm\fR(3X)*
 is_wintouched/\fBcurs_touch\fR(3X)
@@ -577,6 +579,7 @@ refresh/\fBcurs_refresh\fR(3X)
 reset_prog_mode/\fBcurs_kernel\fR(3X)
 reset_shell_mode/\fBcurs_kernel\fR(3X)
 resetty/\fBcurs_kernel\fR(3X)
+resize_term/\fBresizeterm\fR(3X)*
 resizeterm/\fBresizeterm\fR(3X)*
 restartterm/\fBcurs_terminfo\fR(3X)
 ripoffline/\fBcurs_kernel\fR(3X)
@@ -629,6 +632,7 @@ tgoto/\fBcurs_termcap\fR(3X)
 tigetflag/\fBcurs_terminfo\fR(3X)
 tigetnum/\fBcurs_terminfo\fR(3X)
 tigetstr/\fBcurs_terminfo\fR(3X)
+tiparm/\fBcurs_terminfo\fR(3X)*
 timeout/\fBcurs_inopts\fR(3X)
 touchline/\fBcurs_touch\fR(3X)
 touchwin/\fBcurs_touch\fR(3X)
@@ -696,8 +700,11 @@ wget_wch/\fBcurs_get_wch\fR(3X)
 wget_wstr/\fBcurs_get_wstr\fR(3X)
 wgetbkgrnd/\fBcurs_bkgrnd\fR(3X)
 wgetch/\fBcurs_getch\fR(3X)
+wgetdelay/\fBcurs_opaque\fR(3X)*
 wgetn_wstr/\fBcurs_get_wstr\fR(3X)
 wgetnstr/\fBcurs_getstr\fR(3X)
+wgetparent/\fBcurs_opaque\fR(3X)*
+wgetscrreg/\fBcurs_opaque\fR(3X)*
 wgetstr/\fBcurs_getstr\fR(3X)
 whline/\fBcurs_border\fR(3X)
 whline_set/\fBcurs_border_set\fR(3X)

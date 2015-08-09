@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.152 2015/05/02 19:20:18 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.153 2015/08/07 23:57:58 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -269,7 +269,7 @@ extract_fgbg(const char *src, int *result)
 }
 #endif
 
-#define ReturnScreenError() { _nc_set_screen(0); \
+#define ReturnScreenError() do { _nc_set_screen(0); \
                             returnCode(ERR); } while (0)
 
 /* OS-independent screen initializations */

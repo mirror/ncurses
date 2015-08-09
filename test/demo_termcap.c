@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.47 2015/07/10 23:36:16 tom Exp $
+ * $Id: demo_termcap.c,v 1.48 2015/08/08 20:25:39 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -863,12 +863,14 @@ main(int argc, char *argv[])
     printf("%ld values (%ld booleans, %ld numbers, %ld strings)\n",
 	   total_values, total_b_values, total_n_values, total_s_values);
 
+#if defined(NCURSES_VERSION) || defined(HAVE_CURSES_DATA_OSPEED)
     if (v_opt) {
 	show_number("PC", PC);
 	show_string("UP", UP);
 	show_string("BC", BC);
 	show_number("ospeed", ospeed);
     }
+#endif
 
     free_dblist();
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2011,2014 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2011-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,8 +26,20 @@
  * authorization.                                                           *
  ****************************************************************************/
 
+/* $Id: c_threaded_variables.h,v 1.3 2015/08/06 23:09:47 tom Exp $ */
+
 #ifndef __C_THREADED_VARIABLES_H
 #define __C_THREADED_VARIABLES_H
+
+#include <ncurses_cfg.h>
+
+#if HAVE_INTTYPES_H
+# include <inttypes.h>
+#else
+# if HAVE_STDINT_H
+#  include <stdint.h>
+# endif
+#endif
 
 #include <curses.h>
 

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.94 2015/05/01 00:47:26 tom Exp $
+# $Id: Makefile.in,v 1.95 2015/08/05 09:24:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -42,7 +42,7 @@
 # turn off _all_ suffix rules; we'll generate our own
 .SUFFIXES:
 
-SHELL		= /bin/sh
+SHELL		= @SHELL@
 VPATH		= @srcdir@
 THIS		= Makefile
 
@@ -188,7 +188,7 @@ transform.h :
 	echo "#define __TRANSFORM_H 1"					>>$@
 	echo "#include <progs.priv.h>"					>>$@
 	echo "extern bool same_program(const char *, const char *);"	>>$@
-	-sh -c 'if test -n "$x" ; then echo "#define SUFFIX_IGNORED \"$x\"">>$@; fi'
+	-$(SHELL) -c 'if test -n "$x" ; then echo "#define SUFFIX_IGNORED \"$x\"">>$@; fi'
 	echo "#define PROG_CAPTOINFO \"$(define_captoinfo)\""		>>$@
 	echo "#define PROG_INFOTOCAP \"$(define_infotocap)\""		>>$@
 	echo "#define PROG_RESET     \"$(define_reset)\""		>>$@
@@ -282,7 +282,7 @@ tset$x: $(DEPS_TSET) $(DEPS_CURSES) transform.h
 	@ECHO_LD@ $(LINK) $(DEPS_TSET) $(LDFLAGS_TINFO) -o $@
 
 termsort.c: $(srcdir)/MKtermsort.sh
-	sh $(srcdir)/MKtermsort.sh $(AWK) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
+	$(SHELL) $(srcdir)/MKtermsort.sh $(AWK) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
 
 #
 # Utility productions start here
@@ -298,7 +298,7 @@ mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac trace
 
 clean :: mostlyclean
-	-sh -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
+	-$(SHELL) -c "if test -n '$x' ; then $(MAKE) clean x=''; fi"
 	-rm -f $(AUTO_SRC)
 	-rm -f $(PROGS)
 	-rm -rf .libs *.dSYM
