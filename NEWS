@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2478 2015/08/10 09:27:32 tom Exp $
+-- $Id: NEWS,v 1.2481 2015/08/15 22:33:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150815
+	+ disallow "no" as a possible value for "--with-shlib-version" option,
+	  overlooked in cleanup-changes for 20000708 (report by Tommy Alex).
+	+ update release notes in INSTALL.
+	+ regenerate llib-* files to help with review for release notes.
 
 20150810
 	+ workaround for Debian #65617, which was fixed in mawk's upstream

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.187 2015/07/16 23:59:08 tom Exp $
+-- $Id: INSTALL,v 1.192 2015/08/15 20:11:48 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -196,16 +196,15 @@ INSTALLATION PROCEDURE:
     NOTE: You must have installed the terminfo database, or set the
     environment variable $TERMINFO to point to a SVr4-compatible terminfo
     database before running the test programs.  Not all vendors' terminfo
-    databases are SVr4-compatible, but most seem to be.  Exceptions include
-    DEC's Digital Unix (formerly known as OSF/1).
+    databases are SVr4-compatible, but most seem to be.
+
+    It is possible to configure ncurses to use other terminfo database formats.
+    A few are provided as examples in the include-directory (see --with-caps).
 
     If you run the test programs WITHOUT installing terminfo, ncurses may
     read the termcap file and cache that in $HOME/.terminfo, which will
     thereafter be used instead of the terminfo database.  See the comments
     on "--enable-getcap-cache", to see why this is a Bad Thing.
-
-    It is possible to configure ncurses to use other terminfo database formats.
-    A few are provided as examples in the include-directory (see --with-caps).
 
     The ncurses program is designed specifically to test the ncurses library.
     You can use it to verify that the screen highlights work correctly, that
@@ -227,8 +226,7 @@ INSTALLATION PROCEDURE:
   ############################################################################
   #     CAVEAT EMPTOR: `install.data' run as root will NUKE any existing     #
   #  terminfo database. If you have any custom or unusual entries SAVE them  #
-  #  before you install ncurses.  I have a file called terminfo.custom for   #
-  #  this purpose.  Don't forget to run tic on the file once you're done.    #
+  #  before you install ncurses.                                             #
   ############################################################################
 
     The terminfo(5) manual page must be preprocessed with tbl(1) before
@@ -1246,19 +1244,60 @@ SUMMARY OF CONFIGURE OPTIONS:
 COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 --------------------------------------------
 
-    Because ncurses implements the X/Open Curses Specification, its interface
-    is fairly stable.  That does not mean the interface does not change.
-    Changes are made to the documented interfaces when we find differences
-    between ncurses and X/Open or implementations which they certify (such as
-    Solaris).  We add extensions to those interfaces to solve problems not
-    addressed by the original curses design, but those must not conflict with
-    the X/Open documentation.
+    Because ncurses implements X/Open Curses, its interface is fairly stable. 
+    That does not mean the interface does not change.  Changes are made to the
+    documented interfaces when we find differences between ncurses and X/Open
+    or implementations which largely correspond to X/Open (such as Solaris). 
+    We add extensions to those interfaces to solve problems not addressed by
+    the original curses design, but those must not conflict with the X/Open
+    documentation.
 
     Here are some of the major interface changes, and related problems which
     you may encounter when building a system with different versions of
     ncurses:
 
-    6.0 (??? ??, 2015)
+    6.0 (Aug 08, 2015)
+	Interface changes:
+
+	+ The 6.0 ABI modifies the defaults for these configure options:
+	   --enable-const
+	   --enable-ext-colors
+	   --enable-ext-mouse
+	   --enable-ext-putwin
+	   --enable-interop
+	   --enable-lp64
+	   --enable-sp-funcs
+	   --with-chtype=uint32_t
+	   --with-mmask_t=uint32_t
+	   --with-tparm-arg=intptr_t
+
+	+ ncurses supports symbol versioning.  If you use this feature, about
+	  half of the "_nc_" private symbols are changed to local symbols.
+
+	+ a few applications may need to explicitly flush the standard output
+	  when switching between printf's and (curses) printw.
+
+	Added extensions:
+
+	+ use_tioctl is an improvement over use_env
+
+	+ added wgetdelay to support the NCURSES_OPAQUE feature.
+
+	Added internal functions (other than "_sp" variants):
+		_nc_init_termtype
+		_nc_mvcur
+		_nc_putchar
+		_nc_setenv_num
+		_nc_trace_mmask_t
+
+	Removed internal functions:
+		none
+
+	Modified internal functions:
+		_nc_do_color - change parameters from short/bool to int
+		_nc_keypad - change parameter from bool to int
+		_nc_setupscreen - change parameter from bool to int
+		_nc_signal_handler - change parameter from bool to int
 
     5.9 (Apr 04, 2011)
     5.8 (Feb 26, 2011)
@@ -1811,9 +1850,10 @@ IF YOU ARE A SYSTEM INTEGRATOR:
     Configuration and Installation:
 
 	On platforms where ncurses is assumed to be installed in /usr/lib,
-	the configure script uses "/usr" as a default:
+	the configure script uses "/usr" as a default.  These include any
+	that use the Linux kernel, as well as these special cases:
 
-		GNU/Linux, FreeBSD, NetBSD, OpenBSD, Cygwin
+		FreeBSD, NetBSD, OpenBSD, Cygwin, MinGW
 
 	For other platforms, the default is "/usr/local".  See the discussion
 	of the "--disable-overwrite" option.
@@ -1974,11 +2014,10 @@ installation), there are a couple of details you need to be aware of.
 They have to do with the ncurses library, which uses terminfo rather
 than termcap for describing terminal characteristics.
 
-Though the ncurses library is terminfo-based, it will interpret your
+Though the ncurses library is terminfo-based, it can interpret your
 TERMCAP variable (if present), any local termcap files you reference
-through it, and the system termcap file.  However, in order to avoid
-slowing down your application startup, it will only do this once per
-terminal type!
+through it, and the system termcap file.  However, to avoid slowing
+down your application startup, it does this only once per terminal type!
 
 The first time you load a given terminal type from your termcap
 database, the library initialization code will automatically write it

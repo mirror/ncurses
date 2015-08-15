@@ -2520,10 +2520,6 @@ void	_nc_do_xmc_glitch(
 
 /* ./trace/varargs.c */
 
-typedef enum {
-    atUnknown = 0, atInteger, atFloat, atPoint, atString
-} ARGTYPE;
-
 #undef _nc_varargs
 char	*_nc_varargs(
 		const char *fmt, 
@@ -3894,11 +3890,6 @@ chtype	_nc_retrace_chtype(
 
 /* ./trace/lib_tracebits.c */
 
-typedef struct {
-    unsigned int val;
-    const char name[8];
-} BITNAMES;
-
 #undef _nc_trace_ttymode
 char	*_nc_trace_ttymode(
 		struct termios *tty)
@@ -4093,9 +4084,11 @@ int	_nc_read_entry(
 
 /* ./tinfo/read_termcap.c */
 
-#undef _nc_read_termcap
-void	_nc_read_termcap(void)
-		{ /* void */ }
+#undef _nc_read_termcap_entry
+int	_nc_read_termcap_entry(
+		const char *const tn, 
+		TERMTYPE *const tp)
+		{ return(*(int *)0); }
 
 /* ./tinfo/strings.c */
 
@@ -4376,11 +4369,6 @@ int	_nc_capcmp(
 		const char *s, 
 		const char *t)
 		{ return(*(int *)0); }
-
-typedef struct {
-    const char from[3];
-    const char to[6];
-} assoc;
 
 /* ./tinfo/write_entry.c */
 

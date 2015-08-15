@@ -34,8 +34,6 @@
 /* ./tinfo/alloc_entry.c */
 
 #include <curses.priv.h>
-#include <tic.h>
-
 #undef _nc_init_entry
 void	_nc_init_entry(
 		TERMTYPE *const tp)
@@ -64,8 +62,6 @@ void	_nc_merge_entry(
 		{ /* void */ }
 
 /* ./tinfo/captoinfo.c */
-
-#include <ctype.h>
 
 #undef _nc_captoinfo
 char	*_nc_captoinfo(
@@ -188,14 +184,7 @@ int	_nc_capcmp(
 		const char *t)
 		{ return(*(int *)0); }
 
-typedef struct {
-    const char from[3];
-    const char to[6];
-} assoc;
-
 /* ./tinfo/write_entry.c */
-
-#include <hashed_db.h>
 
 #undef _nc_set_writedir
 void	_nc_set_writedir(

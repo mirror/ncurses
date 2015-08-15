@@ -34,9 +34,6 @@
 /* ./tinfo/access.c */
 
 #include <curses.priv.h>
-#include <ctype.h>
-#include <tic.h>
-
 #undef _nc_rootname
 char	*_nc_rootname(
 		char	*path)
@@ -115,8 +112,6 @@ const char *const *_nc_strcodes(void)
 		{ return(*(const char **)0); }
 
 /* ./comp_captab.c */
-
-#include <hashsize.h>
 
 #undef _nc_get_table
 const struct name_table_entry *_nc_get_table(
@@ -200,8 +195,6 @@ struct name_table_entry const *_nc_find_type_entry(
 		{ return(*(struct name_table_entry const **)0); }
 
 /* ./tinfo/db_iterator.c */
-
-#include <time.h>
 
 #undef _nc_tic_dir
 const char *_nc_tic_dir(
@@ -308,15 +301,6 @@ char	*_nc_home_terminfo(void)
 
 /* ./tinfo/init_keytry.c */
 
-#if 0
-
-#include <init_keytry.h>
-
-#undef _nc_tinfo_fkeys
-const struct tinfo_fkeys _nc_tinfo_fkeys[] = {0};
-
-#endif
-
 #undef _nc_init_keytry
 void	_nc_init_keytry(
 		SCREEN	*sp)
@@ -338,8 +322,6 @@ void	_nc_init_acs(void)
 		{ /* void */ }
 
 /* ./tinfo/lib_baudrate.c */
-
-#include <termcap.h>
 
 struct speed {
     short s; 
@@ -714,10 +696,6 @@ int	intrflush(
 
 /* ./tinfo/lib_setup.c */
 
-#include <locale.h>
-#include <sys/ioctl.h>
-#include <langinfo.h>
-
 #undef _nc_ttytype
 char	*_nc_ttytype(void)
 		{ return(*(char **)0); }
@@ -856,12 +834,6 @@ int	tgetent_sp(
 		char	*bufp, 
 		const char *name)
 		{ return(*(int *)0); }
-
-#if 0
-
-#include <capdefaults.c>
-
-#endif
 
 #undef tgetent
 int	tgetent(
@@ -1238,11 +1210,6 @@ char	*_tracecchar_t(
 
 /* ./trace/lib_tracebits.c */
 
-typedef struct {
-    unsigned int val;
-    const char name[8];
-} BITNAMES;
-
 #undef _nc_trace_ttymode
 char	*_nc_trace_ttymode(
 		struct termios *tty)
@@ -1345,8 +1312,6 @@ int	resetty(void)
 
 /* ./tty/lib_twait.c */
 
-#include <sys/time.h>
-
 #undef _nc_timed_wait
 int	_nc_timed_wait(
 		SCREEN	*sp, 
@@ -1412,8 +1377,6 @@ void	_nc_set_buffer(
 
 /* ./tinfo/read_entry.c */
 
-#include <hashed_db.h>
-
 #undef _nc_init_termtype
 void	_nc_init_termtype(
 		TERMTYPE *const tp)
@@ -1440,8 +1403,6 @@ int	_nc_read_entry(
 		{ return(*(int *)0); }
 
 /* ./tinfo/read_termcap.c */
-
-#include <sys/types.h>
 
 #undef _nc_read_termcap
 void	_nc_read_termcap(void)

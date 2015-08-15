@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.761 2015/08/06 00:46:34 tom Exp $
+dnl $Id: aclocal.m4,v 1.762 2015/08/15 22:39:55 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5511,7 +5511,7 @@ CF_VERBOSE(...checked $1 [$]$1)
 AC_SUBST(EXTRA_LDFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 88 updated: 2015/08/05 20:44:28
+dnl CF_SHARED_OPTS version: 89 updated: 2015/08/15 18:38:59
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -5564,11 +5564,12 @@ AC_DEFUN([CF_SHARED_OPTS],
 	(yes)
 		cf_cv_shlib_version=auto
 		;;
-	(rel|abi|auto|no)
+	(rel|abi|auto)
 		cf_cv_shlib_version=$withval
 		;;
 	(*)
-		AC_MSG_ERROR([option value must be one of: rel, abi, auto or no])
+		AC_MSG_RESULT($withval)
+		AC_MSG_ERROR([option value must be one of: rel, abi, or auto])
 		;;
 	esac
 	],[cf_cv_shlib_version=auto])

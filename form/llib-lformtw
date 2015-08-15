@@ -808,8 +808,6 @@ FIELDTYPE *_nc_TYPE_IPV4(void)
 
 /* ./fty_num.c */
 
-#include <locale.h>
-
 typedef struct
   {
     int precision;
@@ -835,8 +833,6 @@ FIELDTYPE *_nc_TYPE_NUMERIC(void)
 		{ return(*(FIELDTYPE **)0); }
 
 /* ./fty_regex.c */
-
-#include <regex.h>
 
 typedef struct
   {
