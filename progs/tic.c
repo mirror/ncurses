@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.211 2015/07/04 21:12:41 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.213 2015/08/22 23:49:57 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -142,6 +142,7 @@ usage(void)
     static const char options_string[] =
     {
 	DATA("Options:")
+	DATA("  -0         format translation output all capabilities on one line")
 	DATA("  -1         format translation output one capability per line")
 #if NCURSES_XNAMES
 	DATA("  -a         retain commented-out capabilities (sets -x also)")
@@ -2149,7 +2150,7 @@ get_fkey_list(TERMTYPE *tp)
     NAME_VALUE *result = typeMalloc(NAME_VALUE, NUM_STRINGS(tp) + 1);
     const struct tinfo_fkeys *all_fkeys = _nc_tinfo_fkeys;
     int used = 0;
-    int j;
+    unsigned j;
 
     if (result == 0)
 	failed("get_fkey_list");
@@ -2165,7 +2166,7 @@ get_fkey_list(TERMTYPE *tp)
     }
 #if NCURSES_XNAMES
     for (j = STRCOUNT; j < NUM_STRINGS(tp); ++j) {
-	const char *name = ExtStrname(tp, j, strnames);
+	const char *name = ExtStrname(tp, (int) j, strnames);
 	if (*name == 'k') {
 	    result[used].keycode = -1;
 	    result[used].name = name;

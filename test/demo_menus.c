@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.54 2014/09/05 08:34:06 tom Exp $
+ * $Id: demo_menus.c,v 1.55 2015/08/22 22:59:56 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -868,10 +868,6 @@ perform_menus(void)
 	    beep();
 	continue;
     }
-
-#ifdef NCURSES_MOUSE_VERSION
-    mousemask(0, (mmask_t *) 0);
-#endif
 }
 
 static void

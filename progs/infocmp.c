@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.133 2015/05/27 00:57:41 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.134 2015/08/22 23:54:25 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -1173,15 +1173,17 @@ usage(void)
     {
 	"  -0    print single-row"
 	,"  -1    print single-column"
-	,"  -K    use termcap-names and BSD syntax"
 	,"  -C    use termcap-names"
+	,"  -D    print database locations"
+	,"  -E    format output as C tables"
 	,"  -F    compare terminfo-files"
+	,"  -G    format %{number} to %'char'"
 	,"  -I    use terminfo-names"
+	,"  -K    use termcap-names and BSD syntax"
 	,"  -L    use long names"
 	,"  -R subset (see manpage)"
 	,"  -T    eliminate size limits (test)"
 	,"  -U    do not post-process entries"
-	,"  -D    print database locations"
 	,"  -V    print version"
 #if NCURSES_XNAMES
 	,"  -a    with -F, list commented-out caps"
@@ -1189,9 +1191,7 @@ usage(void)
 	,"  -c    list common capabilities"
 	,"  -d    list different capabilities"
 	,"  -e    format output for C initializer"
-	,"  -E    format output as C tables"
 	,"  -f    with -1, format complex strings"
-	,"  -G    format %{number} to %'char'"
 	,"  -g    format %'char' to %{number}"
 	,"  -i    analyze initialization/reset"
 	,"  -l    output terminfo names"

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.110 2014/03/08 20:04:44 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.111 2015/08/22 22:38:58 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -544,7 +544,7 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
 
     SP_PARM->_color_pairs[pair] = result;
     if (GET_SCREEN_PAIR(SP_PARM) == pair)
-	SET_SCREEN_PAIR(SP_PARM, (chtype) (~0));	/* force attribute update */
+	SET_SCREEN_PAIR(SP_PARM, (int) (~0));	/* force attribute update */
 
 #ifdef USE_TERM_DRIVER
     CallDriver_3(SP_PARM, td_initpair, pair, f, b);
