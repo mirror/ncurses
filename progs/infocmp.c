@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.134 2015/08/22 23:54:25 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.136 2015/09/05 15:49:57 tom Exp $")
 
 #define L_CURL "{"
 #define R_CURL "}"
@@ -989,7 +989,8 @@ file_comparison(int argc, char *argv[])
     int i, n;
 
     memset(heads, 0, sizeof(heads));
-    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE, FALSE);
+    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE,
+	      FALSE, FALSE);
 
     for (n = 0; n < argc && n < MAXCOMPARE; n++) {
 	if (freopen(argv[n], "r", stdin) == 0)
@@ -1197,6 +1198,7 @@ usage(void)
 	,"  -l    output terminfo names"
 	,"  -n    list capabilities in neither"
 	,"  -p    ignore padding specifiers"
+	,"  -Q number  dump compiled description"
 	,"  -q    brief listing, removes headers"
 	,"  -r    with -C, output in termcap form"
 	,"  -r    with -F, resolve use-references"
@@ -1506,6 +1508,7 @@ main(int argc, char *argv[])
     int initdump = 0;
     bool init_analyze = FALSE;
     bool suppress_untranslatable = FALSE;
+    int quickdump = 0;
 
     /* where is the terminfo database location going to default to? */
     restdir = firstdir = 0;
@@ -1527,7 +1530,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "01A:aB:CcDdEeFfGgIiKLlnpqR:rs:TtUuVv:w:x")) != -1) {
+		       "01A:aB:CcDdEeFfGgIiKLlnpQ:qR:rs:TtUuVv:w:x")) != -1) {
 	switch (c) {
 	case '0':
 	    mwidth = 65535;
@@ -1626,6 +1629,10 @@ main(int argc, char *argv[])
 
 	case 'p':
 	    ignorepads = TRUE;
+	    break;
+
+	case 'Q':
+	    quickdump = optarg_to_number();
 	    break;
 
 	case 'q':
@@ -1751,7 +1758,7 @@ main(int argc, char *argv[])
 
     /* set up for display */
     dump_init(tversion, outform, sortmode, mwidth, mheight, itrace,
-	      formatted, FALSE);
+	      formatted, FALSE, quickdump);
 
     if (!filecompare) {
 	/* grab the entries */
@@ -1852,8 +1859,10 @@ main(int argc, char *argv[])
 				   "%s: about to dump %s\n",
 				   _nc_progname,
 				   tname[0]);
-		(void) printf("#\tReconstructed via infocmp from file: %s\n",
-			      tfile[0]);
+		if (!quiet)
+		    (void)
+				  printf("#\tReconstructed via infocmp from file: %s\n",
+				  tfile[0]);
 		dump_entry(&entries[0].tterm,
 			   suppress_untranslatable,
 			   limited,

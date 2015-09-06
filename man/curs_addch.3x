@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.36 2015/07/16 09:14:44 tom Exp $
+.\" $Id: curs_addch.3x,v 1.37 2015/09/05 21:13:25 tom Exp $
 .TH curs_addch 3X ""
 .de bP
 .IP \(bu 4
@@ -110,7 +110,10 @@ their equivalents.
 The following variables may be used to add line drawing characters to the
 screen with routines of the \fBaddch\fR family.  The default character listed
 below is used if the \fBacsc\fR capability does not define a terminal-specific
-replacement for it.
+replacement for it,
+or if the terminal and locale configuration requires Unicode but the
+library is unable to use Unicode.
+.PP
 The names are taken from VT100 nomenclature.
 .PP
 .TS
@@ -184,6 +187,18 @@ any publicly released System V.  However, many publicly available terminfos
 include \fBacsc\fR strings in which their key characters (pryz{|}) are
 embedded, and a second-hand list of their character descriptions has come
 to light.  The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
+.LP
+The \fIdisplayed\fP values for the \fIACS_\fP and \fIWACS_\fP constants
+depend on 
+.bP
+the library configuration, i.e., \fBncurses\fP versus \fBncursesw\fP,
+where the latter is capable of displaying Unicode while the former is not, and
+.bP
+whether the \fIlocale\fP uses UTF-8 encoding.
+.LP
+In certain cases, the terminal is unable to display line-drawing characters
+except by using UTF-8 (see the discussion of \fBNCURSES_NO_UTF8_ACS\fP in
+ncurses(3X)).
 .LP
 The \fBTABSIZE\fR variable is implemented in some versions of curses,
 but is not part of X/Open curses.

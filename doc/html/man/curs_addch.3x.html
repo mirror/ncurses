@@ -136,8 +136,11 @@
        characters to the screen with routines of the  <STRONG>addch</STRONG>  fam-
        ily.   The  default  character listed below is used if the
        <STRONG>acsc</STRONG>  capability  does  not  define  a   terminal-specific
-       replacement for it.  The names are taken from VT100 nomen-
-       clature.
+       replacement for it, or if the terminal and locale configu-
+       ration requires Unicode but the library is unable  to  use
+       Unicode.
+
+       The names are taken from VT100 nomenclature.
 
        <EM>Name</EM>           <EM>Default</EM>   <EM>Description</EM>
        --------------------------------------------------
@@ -178,40 +181,53 @@
 </PRE>
 <H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
-       success  (the  SVr4 manuals specify only "an integer value
+       success (the SVr4 manuals specify only "an  integer  value
        other than <STRONG>ERR</STRONG>") upon successful completion, unless other-
        wise noted in the preceding routine descriptions.
 
-       Functions  with a "mv" prefix first perform a cursor move-
-       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
+       Functions with a "mv" prefix first perform a cursor  move-
+       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
        outside the window, or if the window pointer is null.
 
 
 </PRE>
 <H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note  that  <STRONG>addch</STRONG>,  <STRONG>mvaddch</STRONG>, <STRONG>mvwaddch</STRONG>, and <STRONG>echochar</STRONG> may be
+       Note that <STRONG>addch</STRONG>, <STRONG>mvaddch</STRONG>, <STRONG>mvwaddch</STRONG>, and  <STRONG>echochar</STRONG>  may  be
        macros.
 
 
 </PRE>
 <H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       All these functions are described in the XSI Curses  stan-
-       dard,  Issue  4.  The defaults specified for forms-drawing
+       All  these functions are described in the XSI Curses stan-
+       dard, Issue 4.  The defaults specified  for  forms-drawing
        characters apply in the POSIX locale.
 
-       X/Open Curses states that the <EM>ACS</EM><STRONG>_</STRONG>  definitions  are  <STRONG>char</STRONG>
-       constants.   For  the  wide-character  implementation (see
+       X/Open  Curses  states  that the <EM>ACS</EM><STRONG>_</STRONG> definitions are <STRONG>char</STRONG>
+       constants.  For  the  wide-character  implementation  (see
        <STRONG>curs_add_wch</STRONG>), there are analogous <EM>WACS</EM><STRONG>_</STRONG> definitions which
        are <STRONG>cchar_t</STRONG> constants.
 
-       Some  ACS symbols (ACS_S3, ACS_S7, ACS_LEQUAL, ACS_GEQUAL,
-       ACS_PI, ACS_NEQUAL, ACS_STERLING) were not  documented  in
-       any  publicly  released  System V.  However, many publicly
-       available terminfos include <STRONG>acsc</STRONG> strings  in  which  their
-       key  characters  (pryz{|}) are embedded, and a second-hand
-       list of their character descriptions has  come  to  light.
-       The   ACS-prefixed   names  for  them  were  invented  for
+       Some ACS symbols (ACS_S3, ACS_S7, ACS_LEQUAL,  ACS_GEQUAL,
+       ACS_PI,  ACS_NEQUAL,  ACS_STERLING) were not documented in
+       any publicly released System V.   However,  many  publicly
+       available  terminfos  include  <STRONG>acsc</STRONG> strings in which their
+       key characters (pryz{|}) are embedded, and  a  second-hand
+       list  of  their  character descriptions has come to light.
+       The  ACS-prefixed  names  for  them  were   invented   for
        <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.
+
+       The  <EM>displayed</EM>  values  for  the  <EM>ACS</EM><STRONG>_</STRONG> and <EM>WACS</EM><STRONG>_</STRONG> constants
+       depend on
+
+       <STRONG>o</STRONG>   the library configuration, i.e., <STRONG>ncurses</STRONG> versus <STRONG>ncurs-</STRONG>
+           <STRONG>esw</STRONG>, where the latter is capable of displaying Unicode
+           while the former is not, and
+
+       <STRONG>o</STRONG>   whether the <EM>locale</EM> uses UTF-8 encoding.
+
+       In certain cases, the terminal is unable to display  line-
+       drawing  characters except by using UTF-8 (see the discus-
+       sion of <STRONG>NCURSES_NO_UTF8_ACS</STRONG> in <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>).
 
        The <STRONG>TABSIZE</STRONG> variable is implemented in  some  versions  of
        curses, but is not part of X/Open curses.

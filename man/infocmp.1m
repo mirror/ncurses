@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.56 2015/05/23 20:50:00 tom Exp $
+.\" $Id: infocmp.1m,v 1.57 2015/09/05 20:50:22 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .de bP
@@ -65,7 +65,7 @@ u\
 x\
 \fR]
 .br
-      [\fB\-v\fR \fIn\fR] [\fB\-s d\fR| \fBi\fR| \fBl\fR| \fBc\fR] [\fB\-R \fR\fBsubset\fR]
+      [\fB\-v\fR \fIn\fR] [\fB\-s d\fR| \fBi\fR| \fBl\fR| \fBc\fR] [\fB\-Q\fR \fIn\fR] [\fB\-R \fR\fBsubset\fR]
 .br
       [\fB\-w\fR\ \fIwidth\fR] [\fB\-A\fR\ \fIdirectory\fR] [\fB\-B\fR\ \fIdirectory\fR]
 .br
@@ -390,9 +390,31 @@ Set output format to terminfo.
 \fB\-p\fR
 Ignore padding specifications when comparing strings.
 .TP 5
+\fB\-Q\fR \fIn\fR
+Rather than show source in terminfo (text) format,
+print the compiled (binary) format in hexadecimal or base64 form,
+depending on the option's value:
+.RS 8
+.TP 3
+1
+hexadecimal
+.TP 3
+2
+base64
+.TP 3
+3
+hexadecimal and base64
+.RE
+.TP 5
 \fB\-q\fR
+This makes the output a little shorter:
+.RS
+.bP
 Make the comparison listing shorter by omitting subheadings, and using
 "\-" for absent capabilities, "@" for canceled rather than "NULL".
+.bP
+Omit the "Reconstructed from" comment for source listings.
+.RE
 .TP 5
 \fB\-R\fR\fIsubset\fR
 Restrict output to a given subset.

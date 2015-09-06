@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.40 2015/07/20 23:35:38 tom Exp $
+.\" $Id: curs_attr.3x,v 1.41 2015/09/05 21:13:25 tom Exp $
 .TH curs_attr 3X ""
 .na
 .hy 0
@@ -168,7 +168,7 @@ the given window; \fBattr_get\fR returns the current attribute and color pair
 for \fBstdscr\fR.
 .PP
 There is no corresponding \fBattrget\fP function as such in X/Open Curses,
-although ncurses provides \fBgetattrs\fP (see curs_legacy(3x)).
+although ncurses provides \fBgetattrs\fP (see curs_legacy(3X)).
 .SS chgat
 .PP
 The routine \fBchgat\fR changes the attributes of a given number of characters
@@ -188,7 +188,7 @@ presently used, but is reserved for the future (leave it \fBNULL\fR).
 .SS Attributes
 The following video attributes, defined in \fB<curses.h>\fR, can be passed to
 the routines \fBattron\fR, \fBattroff\fR, and \fBattrset\fR, or OR'd with the
-characters passed to \fBaddch\fR (see curs_addch(3x)).
+characters passed to \fBaddch\fR (see curs_addch(3X)).
 .PP
 .RS
 .TS

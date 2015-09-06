@@ -39,9 +39,8 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.118 2015/07/07 08:06:39 Werner.Fink Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.123 2015/09/05 23:31:12 tom Exp $")
 
-#define INDENT			8
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
 
@@ -62,6 +61,7 @@ static int column;		/* current column, limited by 'width' */
 static int oldcol;		/* last value of column before wrap */
 static bool pretty;		/* true if we format if-then-else strings */
 static bool checking;		/* true if we are checking for tic */
+static int quickdump;		/* true if we are dumping compiled data */
 
 static char *save_sgr;
 
@@ -75,6 +75,7 @@ static NCURSES_CONST char *const *num_names;
 static NCURSES_CONST char *const *str_names;
 
 static const char *separator = "", *trailer = "";
+static int indent = 8;
 
 /* cover various ports and variants of terminfo */
 #define V_ALLCAPS	0	/* all capabilities (SVr4, XSI, ncurses) */
@@ -193,13 +194,15 @@ dump_init(const char *version,
 	  int theight,
 	  unsigned traceval,
 	  bool formatted,
-	  bool check)
+	  bool check,
+	  int quick)
 /* set up for entry display */
 {
     width = twidth;
     height = theight;
     pretty = formatted;
     checking = check;
+    quickdump = (quick & 3);
 
     /* versions */
     if (version == 0)
@@ -244,6 +247,7 @@ dump_init(const char *version,
 	trailer = "\\\n\t:";
 	break;
     }
+    indent = 8;
 
     /* implement sort modes */
     switch (sortmode = sort) {
@@ -413,7 +417,7 @@ force_wrap(void)
     oldcol = column;
     trim_trailing();
     strcpy_DYN(&outbuf, trailer);
-    column = INDENT;
+    column = indent;
 }
 
 static void
@@ -422,7 +426,7 @@ wrap_concat(const char *src)
     size_t need = strlen(src);
     size_t want = strlen(separator) + need;
 
-    if (column > INDENT
+    if (column > indent
 	&& column + (int) want > width) {
 	force_wrap();
     }
@@ -628,7 +632,7 @@ fmt_entry(TERMTYPE *tterm,
 
     strcpy_DYN(&outbuf, 0);
     if (content_only) {
-	column = INDENT;	/* FIXME: workaround to prevent empty lines */
+	column = indent;	/* FIXME: workaround to prevent empty lines */
     } else {
 	strcpy_DYN(&outbuf, tterm->term_names);
 
@@ -671,7 +675,7 @@ fmt_entry(TERMTYPE *tterm,
 	}
     }
 
-    if (column != INDENT && height > 1)
+    if (column != indent && height > 1)
 	force_wrap();
 
     for_each_number(j, tterm) {
@@ -699,7 +703,7 @@ fmt_entry(TERMTYPE *tterm,
 	}
     }
 
-    if (column != INDENT && height > 1)
+    if (column != indent && height > 1)
 	force_wrap();
 
     len += (int) (num_bools
@@ -1112,6 +1116,34 @@ purged_acs(TERMTYPE *tterm)
     return result;
 }
 
+static void
+encode_b64(char *target, char *source, unsigned state, int *saved)
+{
+    /* RFC-4648 */
+    static const char data[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    "abcdefghijklmnopqrstuvwxyz"
+    "0123456789" "-_";
+    int ch = UChar(source[state]);
+
+    switch (state % 3) {
+    case 0:
+	*target++ = data[ch & 077];
+	*saved = (ch >> 6) & 3;
+	break;
+    case 1:
+	*target++ = data[((ch << 2) | *saved) & 077];
+	*saved = (ch >> 4) & 017;
+	break;
+    case 2:
+	*target++ = data[((ch << 4) | *saved) & 077];
+	*target++ = data[(ch >> 2) & 077];
+	*saved = 0;
+	break;
+    }
+    *target = '\0';
+}
+
 /*
  * Dump a single entry.
  */
@@ -1126,6 +1158,48 @@ dump_entry(TERMTYPE *tterm,
     int len, critlen;
     const char *legend;
     bool infodump;
+
+    if (quickdump) {
+	char bigbuf[65536];
+	unsigned n;
+	unsigned offset = 0;
+	separator = "";
+	trailer = "\n";
+	indent = 0;
+	if (_nc_write_object(tterm, bigbuf, &offset, sizeof(bigbuf)) == OK) {
+	    char numbuf[80];
+	    if (quickdump & 1) {
+		if (outbuf.used)
+		    wrap_concat("\n");
+		wrap_concat("hex:");
+		for (n = 0; n < offset; ++n) {
+		    sprintf(numbuf, "%02X", UChar(bigbuf[n]));
+		    wrap_concat(numbuf);
+		}
+	    }
+	    if (quickdump & 2) {
+		int value = 0;
+		if (outbuf.used)
+		    wrap_concat("\n");
+		wrap_concat("b64:");
+		for (n = 0; n < offset; ++n) {
+		    encode_b64(numbuf, bigbuf, n, &value);
+		    wrap_concat(numbuf);
+		}
+		switch (n % 3) {
+		case 0:
+		    break;
+		case 1:
+		    wrap_concat("===");
+		    break;
+		case 2:
+		    wrap_concat("==");
+		    break;
+		}
+	    }
+	}
+	return;
+    }
 
     if (outform == F_TERMCAP || outform == F_TCONVERR) {
 	critlen = MAX_TERMCAP_LENGTH;
@@ -1276,8 +1350,10 @@ show_entry(void)
 	}
 	outbuf.text[outbuf.used] = '\0';
     }
-    (void) fputs(outbuf.text, stdout);
-    putchar('\n');
+    if (outbuf.text != 0) {
+	(void) fputs(outbuf.text, stdout);
+	putchar('\n');
+    }
     return (int) outbuf.used;
 }
 

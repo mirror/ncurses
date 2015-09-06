@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,12 +47,11 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.92 2014/11/01 14:47:00 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.93 2015/09/05 21:24:29 tom Exp $")
 
 static int total_written;
 
 static int make_db_root(const char *);
-static int write_object(TERMTYPE *, char *, unsigned *, unsigned);
 
 #if !USE_HASHED_DB
 static void
@@ -69,7 +68,7 @@ write_file(char *filename, TERMTYPE *tp)
     }
     DEBUG(1, ("Created %s", filename));
 
-    if (write_object(tp, buffer, &offset, limit) == ERR
+    if (_nc_write_object(tp, buffer, &offset, limit) == ERR
 	|| fwrite(buffer, sizeof(char), (size_t) offset, fp) != offset) {
 	_nc_syserr_abort("error writing %s/%s", _nc_tic_dir(0), filename);
     }
@@ -316,7 +315,7 @@ _nc_write_entry(TERMTYPE *const tp)
     _nc_set_type(first_name);
 
 #if USE_HASHED_DB
-    if (write_object(tp, buffer + 1, &offset, limit - 1) != ERR) {
+    if (_nc_write_object(tp, buffer + 1, &offset, limit - 1) != ERR) {
 	DB *capdb = _nc_db_open(_nc_tic_dir(0), TRUE);
 	DBT key, data;
 
@@ -620,8 +619,8 @@ extended_object(TERMTYPE *tp)
 }
 #endif
 
-static int
-write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
+NCURSES_EXPORT(int)
+_nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 {
     char *namelist;
     size_t namelen, boolmax, nummax, strmax;

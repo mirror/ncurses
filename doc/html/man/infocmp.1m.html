@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.56 2015/05/23 20:50:00 tom Exp @
+  * @Id: infocmp.1m,v 1.57 2015/09/05 20:50:22 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -54,7 +54,7 @@
 </PRE>
 <H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>infocmp</STRONG> [<STRONG>-1CDEFGIKLTUVcdegilnpqrtux</STRONG>]
-             [<STRONG>-v</STRONG> <EM>n</EM>] [<STRONG>-s</STRONG> <STRONG>d</STRONG>| <STRONG>i</STRONG>| <STRONG>l</STRONG>| <STRONG>c</STRONG>] [<STRONG>-R</STRONG> <STRONG>subset</STRONG>]
+             [<STRONG>-v</STRONG> <EM>n</EM>] [<STRONG>-s</STRONG> <STRONG>d</STRONG>| <STRONG>i</STRONG>| <STRONG>l</STRONG>| <STRONG>c</STRONG>] [<STRONG>-Q</STRONG> <EM>n</EM>] [<STRONG>-R</STRONG> <STRONG>subset</STRONG>]
              [<STRONG>-w</STRONG> <EM>width</EM>] [<STRONG>-A</STRONG> <EM>directory</EM>] [<STRONG>-B</STRONG> <EM>directory</EM>]
              [<EM>termname</EM>...]
 
@@ -374,29 +374,44 @@
 
        <STRONG>-p</STRONG>   Ignore padding specifications when comparing strings.
 
-       <STRONG>-q</STRONG>   Make  the comparison listing shorter by omitting sub-
-            headings, and using "-" for absent capabilities,  "@"
-            for canceled rather than "NULL".
+       <STRONG>-Q</STRONG> <EM>n</EM> Rather  than  show  source in terminfo (text) format,
+            print the compiled (binary) format in hexadecimal  or
+            base64 form, depending on the option's value:
+
+               1  hexadecimal
+
+               2  base64
+
+               3  hexadecimal and base64
+
+       <STRONG>-q</STRONG>   This makes the output a little shorter:
+
+            <STRONG>o</STRONG>   Make  the  comparison listing shorter by omitting
+                subheadings, and using "-" for  absent  capabili-
+                ties, "@" for canceled rather than "NULL".
+
+            <STRONG>o</STRONG>   Omit  the "Reconstructed from" comment for source
+                listings.
 
        <STRONG>-R</STRONG><EM>subset</EM>
-            Restrict  output  to  a given subset.  This option is
-            for use with archaic versions of terminfo like  those
-            on  SVr1,  Ultrix,  or  HP/UX that do not support the
-            full set of SVR4/XSI Curses  terminfo;  and  variants
+            Restrict output to a given subset.   This  option  is
+            for  use with archaic versions of terminfo like those
+            on SVr1, Ultrix, or HP/UX that  do  not  support  the
+            full  set  of  SVR4/XSI Curses terminfo; and variants
             such as AIX that have their own extensions incompati-
             ble with SVr4/XSI.
 
             Available  terminfo  subsets  are  "SVr1",  "Ultrix",
-            "HP",  and  "AIX";  see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for details.  You
-            can also choose the subset "BSD" which  selects  only
-            capabilities  with  termcap equivalents recognized by
+            "HP", and "AIX"; see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  for  details.   You
+            can  also  choose the subset "BSD" which selects only
+            capabilities with termcap equivalents  recognized  by
             4.4BSD.
 
        <STRONG>-s</STRONG> <EM>[d|i|l|c]</EM>
-            The <STRONG>-s</STRONG> option  sorts  the  fields  within  each  type
+            The  <STRONG>-s</STRONG>  option  sorts  the  fields  within each type
             according to the argument below:
 
-            <STRONG>d</STRONG>    leave  fields  in the order that they are stored
+            <STRONG>d</STRONG>    leave fields in the order that they  are  stored
                  in the <EM>terminfo</EM> database.
 
             <STRONG>i</STRONG>    sort by <EM>terminfo</EM> name.
@@ -406,38 +421,38 @@
             <STRONG>c</STRONG>    sort by the <EM>termcap</EM> name.
 
             If the <STRONG>-s</STRONG> option is not given, the fields printed out
-            will  be  sorted  alphabetically by the <STRONG>terminfo</STRONG> name
+            will be sorted alphabetically by  the  <STRONG>terminfo</STRONG>  name
             within each type, except in the case of the <STRONG>-C</STRONG> or the
             <STRONG>-L</STRONG> options, which cause the sorting to be done by the
-            <STRONG>termcap</STRONG> name or the long  C  variable  name,  respec-
+            <STRONG>termcap</STRONG>  name  or  the  long C variable name, respec-
             tively.
 
-       <STRONG>-T</STRONG>   eliminates  size-restrictions  on the generated text.
+       <STRONG>-T</STRONG>   eliminates size-restrictions on the  generated  text.
             This is mainly useful for testing and analysis, since
             the compiled descriptions are limited (e.g., 1023 for
             termcap, 4096 for terminfo).
 
        <STRONG>-t</STRONG>   tells  <STRONG>tic</STRONG>  to  discard  commented-out  capabilities.
-            Normally  when  translating from terminfo to termcap,
+            Normally when translating from terminfo  to  termcap,
             untranslatable capabilities are commented-out.
 
-       <STRONG>-U</STRONG>   tells <STRONG>infocmp</STRONG> to  not  post-process  the  data  after
-            parsing  the  source  file.   This feature helps when
-            comparing the actual contents of  two  source  files,
-            since  it  excludes the inferences that <STRONG>infocmp</STRONG> makes
+       <STRONG>-U</STRONG>   tells  <STRONG>infocmp</STRONG>  to  not  post-process  the data after
+            parsing the source file.   This  feature  helps  when
+            comparing  the  actual  contents of two source files,
+            since it excludes the inferences that  <STRONG>infocmp</STRONG>  makes
             to fill in missing data.
 
        <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
-       <STRONG>-v</STRONG> <EM>n</EM> prints  out  tracing information on standard error as
-            the program runs.  Higher values of n induce  greater
+       <STRONG>-v</STRONG> <EM>n</EM> prints out tracing information on standard  error  as
+            the  program runs.  Higher values of n induce greater
             verbosity.
 
        <STRONG>-w</STRONG> <EM>width</EM>
             changes the output to <EM>width</EM> characters.
 
-       <STRONG>-x</STRONG>   print   information  for  user-defined  capabilities.
+       <STRONG>-x</STRONG>   print  information  for  user-defined   capabilities.
             These are extensions to the terminfo repertoire which
             can be loaded using the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>.
 
@@ -450,13 +465,13 @@
 
 </PRE>
 <H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>,  <STRONG>-f</STRONG>,  <STRONG>-g</STRONG>,  <STRONG>-i</STRONG>,
-       <STRONG>-l</STRONG>,  <STRONG>-p</STRONG>,  <STRONG>-q</STRONG>  and  <STRONG>-t</STRONG>  options  are  not supported in SVr4
+       The  <STRONG>-0</STRONG>,  <STRONG>-1</STRONG>,  <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-i</STRONG>,
+       <STRONG>-l</STRONG>, <STRONG>-p</STRONG>, <STRONG>-q</STRONG> and  <STRONG>-t</STRONG>  options  are  not  supported  in  SVr4
        curses.
 
        The <STRONG>-r</STRONG> option's notion of `termcap' capabilities is System
-       V  Release  4's.   Actual  BSD curses versions will have a
-       more restricted set.  To see only the 4.4BSD set,  use  <STRONG>-r</STRONG>
+       V Release 4's.  Actual BSD curses  versions  will  have  a
+       more  restricted  set.  To see only the 4.4BSD set, use <STRONG>-r</STRONG>
        <STRONG>-RBSD</STRONG>.
 
 
@@ -467,12 +482,12 @@
 
 </PRE>
 <H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,     <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,     <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,     <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,     <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
        http://invisible-island.net/ncurses/tctest.html
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20150808).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20150905).
 
 
 </PRE>

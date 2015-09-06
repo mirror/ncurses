@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.213 2015/08/22 23:49:57 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.216 2015/09/05 19:22:49 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -159,6 +159,8 @@ usage(void)
 	DATA("  -L         translate entries to full terminfo source form")
 	DATA("  -N         disable smart defaults for source translation")
 	DATA("  -o<dir>    set output directory for compiled entry writes")
+	DATA("  -Q[n]      dump compiled description")
+	DATA("  -q    brief listing, removes headers")
 	DATA("  -R<name>   restrict translation to given terminfo/termcap version")
 	DATA("  -r         force resolution of all use entries in source translation")
 	DATA("  -s         print summary statistics")
@@ -660,6 +662,12 @@ show_databases(const char *outdir)
     }
 }
 
+static void
+add_digit(int *target, int source)
+{
+    *target = (*target * 10) + (source - '0');
+}
+
 #define VtoTrace(opt) (unsigned) ((opt > 0) ? opt : (opt == 0))
 
 int
@@ -690,6 +698,8 @@ main(int argc, char *argv[])
     char *outdir = (char *) NULL;
     bool check_only = FALSE;
     bool suppress_untranslatable = FALSE;
+    int quickdump = 0;
+    bool quiet = FALSE;
 
     log_fp = stderr;
 
@@ -715,14 +725,17 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CDIKLNR:TUVace:fGgo:rstvwx")) != -1) {
+			      "0123456789CDIKLNQR:TUVace:fGgo:qrstvwx")) != -1) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
+	    case 'Q':
+		add_digit(&quickdump, this_opt);
+		break;
 	    case 'v':
-		v_opt = (v_opt * 10) + (this_opt - '0');
+		add_digit(&v_opt, this_opt);
 		break;
 	    case 'w':
-		width = (width * 10) + (this_opt - '0');
+		add_digit(&width, this_opt);
 		break;
 	    default:
 		switch (this_opt) {
@@ -773,6 +786,9 @@ main(int argc, char *argv[])
 	    smart_defaults = FALSE;
 	    literal = TRUE;
 	    break;
+	case 'Q':
+	    quickdump = 0;
+	    break;
 	case 'R':
 	    tversion = optarg;
 	    break;
@@ -802,6 +818,9 @@ main(int argc, char *argv[])
 	    break;
 	case 'o':
 	    outdir = optarg;
+	    break;
+	case 'q':
+	    quiet = TRUE;
 	    break;
 	case 'r':
 	    forceresolve = TRUE;
@@ -914,11 +933,11 @@ main(int argc, char *argv[])
 		  ? outform
 		  : F_LITERAL,
 		  sortmode, width, height, debug_level, formatted ||
-		  check_only, check_only);
+		  check_only, check_only, quickdump);
     } else if (capdump) {
 	dump_init(tversion,
 		  outform,
-		  sortmode, width, height, debug_level, FALSE, FALSE);
+		  sortmode, width, height, debug_level, FALSE, FALSE, FALSE);
     }
 
     /* parse entries out of the source file */
@@ -989,12 +1008,14 @@ main(int argc, char *argv[])
 		    /* this is in case infotocap() generates warnings */
 		    _nc_set_type(_nc_first_name(qp->tterm.term_names));
 
-		    (void) fseek(tmp_fp, qp->cstart, SEEK_SET);
-		    while (j-- > 0) {
-			if (infodump)
-			    (void) putchar(fgetc(tmp_fp));
-			else
-			    put_translate(fgetc(tmp_fp));
+		    if (!quiet) {
+			(void) fseek(tmp_fp, qp->cstart, SEEK_SET);
+			while (j-- > 0) {
+			    if (infodump)
+				(void) putchar(fgetc(tmp_fp));
+			    else
+				put_translate(fgetc(tmp_fp));
+			}
 		    }
 
 		    repair_acsc(&qp->tterm);
@@ -1007,7 +1028,7 @@ main(int argc, char *argv[])
 			printf("# length=%d\n", len);
 		}
 	    }
-	    if (!namelst && _nc_tail) {
+	    if (!namelst && _nc_tail && !quiet) {
 		int c, oldc = '\0';
 		bool in_comment = FALSE;
 		bool trailing_comment = FALSE;

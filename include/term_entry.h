@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.46 2015/08/22 23:04:25 tom Exp $ */
+/* $Id: term_entry.h,v 1.47 2015/08/30 00:41:20 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -172,6 +172,7 @@ extern NCURSES_EXPORT(int) _nc_capcmp (const char *, const char *);
 /* write_entry.c: writing an entry to the file system */
 extern NCURSES_EXPORT(void) _nc_set_writedir (const char *);
 extern NCURSES_EXPORT(void) _nc_write_entry (TERMTYPE *const);
+extern NCURSES_EXPORT(int) _nc_write_object(TERMTYPE *, char *, unsigned *, unsigned);
 
 /* comp_parse.c: entry list handling */
 extern NCURSES_EXPORT(void) _nc_read_entry_source (FILE*, char*, int, bool, bool (*)(ENTRY*));
