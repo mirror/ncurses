@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.77 2015/07/04 22:54:14 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.78 2015/09/12 20:47:43 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -751,7 +751,6 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 	    break;
 	}
     }
-    target += strlen(target);
 #endif
 }
 #endif

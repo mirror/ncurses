@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.765 2015/08/22 21:12:39 tom Exp $
+dnl $Id: aclocal.m4,v 1.767 2015/09/12 20:00:59 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1693,7 +1693,7 @@ unset ac_ct_$1
 unset $1
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_DLSYM version: 3 updated: 2012/10/06 11:17:15
+dnl CF_FUNC_DLSYM version: 4 updated: 2015/09/12 14:46:44
 dnl -------------
 dnl Test for dlsym() and related functions, as well as libdl.
 dnl
@@ -1710,7 +1710,7 @@ AC_CHECK_LIB(dl,dlsym,[
 	cf_have_libdl=yes])])
 
 if test "$cf_have_dlsym" = yes ; then
-	test "$cf_have_libdl" = yes && CF_ADD_LIB(dl)
+	test "$cf_have_libdl" = yes && { CF_ADD_LIB(dl) }
 
 	AC_MSG_CHECKING(whether able to link to dl*() functions)
 	AC_TRY_LINK([#include <dlfcn.h>],[
@@ -1793,7 +1793,7 @@ int main() {
 test "$cf_cv_func_nanosleep" = "yes" && AC_DEFINE(HAVE_NANOSLEEP,1,[Define to 1 if we have nanosleep()])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_OPENPTY version: 4 updated: 2015/04/18 08:56:57
+dnl CF_FUNC_OPENPTY version: 5 updated: 2015/09/12 14:46:50
 dnl ---------------
 dnl Check for openpty() function, along with <pty.h> header.  It may need the
 dnl "util" library as well.
@@ -1802,7 +1802,7 @@ AC_DEFUN([CF_FUNC_OPENPTY],
 AC_CHECK_LIB(util,openpty,cf_cv_lib_util=yes,cf_cv_lib_util=no)
 AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
 	cf_save_LIBS="$LIBS"
-	test $cf_cv_lib_util = yes && CF_ADD_LIB(util)
+	test $cf_cv_lib_util = yes && { CF_ADD_LIB(util) }
 	for cf_header in pty.h libutil.h util.h
 	do
 	AC_TRY_LINK([
@@ -6247,33 +6247,51 @@ if test -n "$ADA_SUBDIRS"; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_STDCPP_LIBRARY version: 8 updated: 2015/04/17 21:13:04
+dnl CF_STDCPP_LIBRARY version: 10 updated: 2015/09/12 15:53:39
 dnl -----------------
 dnl Check for -lstdc++, which is GNU's standard C++ library.
+dnl If $CXXLIBS is set, add that to the libraries used for test-linking.
+dnl If -lstdc++ was not already added to $LIBS or $CXXLIBS, and is needed,
+dnl add it to $CXXLIBS.
 AC_DEFUN([CF_STDCPP_LIBRARY],
 [
 if test -n "$GXX" ; then
-case $cf_cv_system_name in
-(os2*)
-	cf_stdcpp_libname=stdcpp
-	;;
-(*)
-	cf_stdcpp_libname=stdc++
-	;;
-esac
-AC_CACHE_CHECK(for library $cf_stdcpp_libname,cf_cv_libstdcpp,[
+
 	cf_save="$LIBS"
-	CF_ADD_LIB($cf_stdcpp_libname)
-AC_TRY_LINK([
-#include <strstream.h>],[
-char buf[80];
-strstreambuf foo(buf, sizeof(buf))
-],
-	[cf_cv_libstdcpp=yes],
-	[cf_cv_libstdcpp=no])
+	LIBS="$LIBS $CXXLIBS"
+	AC_MSG_CHECKING(if we already have C++ library)
+	AC_TRY_LINK([
+			#include <iostream>],[
+			std::cout << "Hello World!" << std::endl;],
+		[cf_have_libstdcpp=yes],
+		[cf_have_libstdcpp=no])
+	AC_MSG_RESULT($cf_have_libstdcpp)
 	LIBS="$cf_save"
-])
-test "$cf_cv_libstdcpp" = yes && CF_ADD_LIB($cf_stdcpp_libname,CXXLIBS)
+
+	if test $cf_have_libstdcpp != yes
+	then
+		case $cf_cv_system_name in
+		(os2*)
+			cf_stdcpp_libname=stdcpp
+			;;
+		(*)
+			cf_stdcpp_libname=stdc++
+			;;
+		esac
+
+		AC_CACHE_CHECK(for library $cf_stdcpp_libname,cf_cv_libstdcpp,[
+			cf_save="$LIBS"
+			LIBS="$LIBS $CXXLIBS"
+			CF_ADD_LIB($cf_stdcpp_libname)
+		AC_TRY_LINK([
+				#include <iostream>],[
+				std::cout << "Hello World!" << std::endl;],
+			[cf_cv_libstdcpp=yes],
+			[cf_cv_libstdcpp=no])
+			LIBS="$cf_save"
+		])
+		test "$cf_cv_libstdcpp" = yes && { CF_ADD_LIB($cf_stdcpp_libname,CXXLIBS) }
+	fi
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------

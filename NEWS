@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2490 2015/09/05 21:14:36 tom Exp $
+-- $Id: NEWS,v 1.2493 2015/09/12 19:52:57 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,18 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20150912
+	+ fixes for configure/build using clang on OSX (prompted by report by
+	  William Gallafent).
+	  + do not redefine "inline" in ncurses_cfg.h; this was originally to
+	    solve a problem with gcc/g++, but is aggravated by clang's misuse
+	    of symbols to pretend it is gcc.
+	  + add braces to configure script to prevent unwanted add of
+	    "-lstdc++" to the CXXLIBS symbol.
+	  + improve/update test-program used for checking existence of stdc++
+	    library.
+	  + if $CXXLIBS is set, the linkage test uses that in addition to $LIBS
+
 20150905
 	+ add note in curs_addch.3x about line-drawing when it depends upon
 	  UTF-8.
@@ -62,7 +74,7 @@ it is not possible to add this information.
 	+ documented differences in ESCDELAY versus AIX's implementation.
 	+ fix some compiler warnings from ports.
 	+ modify --with-pkg-config-libdir option to make it possible to install
-	  ".pc" files even if pkg-config is not found (adapted by patch by
+	  ".pc" files even if pkg-config is not found (adapted from patch by
 	  Joshua Root).
 
 20150815
