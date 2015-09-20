@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.42 2015/07/21 08:44:04 tom Exp $
+.\" $Id: curs_getch.3x,v 1.43 2015/09/19 22:25:05 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -240,9 +240,14 @@ A few of these predefined values do \fInot\fP correspond to a real key:
 .B KEY_RESIZE
 is returned when the \fBSIGWINCH\fP signal has been detected
 (see \fBinitscr\fP(3X) and \fBresizeterm\fR(3X)).
+This code is returned whether or not \fBkeypad\fP has been enabled.
 .bP
 .B KEY_MOUSE
 is returned for mouse-events (see \fBcurs_mouse\fR(3X)).
+This code relies upon whether or not \fBkeypad\fP(3X) has been enabled,
+because (e.g., with \fIxterm\fP mouse prototocol) ncurses must
+read escape sequences,
+just like a function key.
 .SS Testing key-codes
 .PP
 The \fBhas_key\fR routine takes a key-code value from the above list, and
@@ -346,6 +351,13 @@ implementations, it varied depending on whether the operating system's
 implementation of handled signal receipt interrupts a \fBread\fR(2) call in
 progress or not, and also (in some implementations) depending on whether an
 input timeout or non-blocking mode has been set.
+.PP
+\fBKEY_MOUSE\fP is mentioned in XSI Curses, along with a few related
+terminfo capabilities, but no higher-level functions use the feature.
+The implementation in ncurses is an extension.
+.PP
+\fBKEY_RESIZE\fP is an extension first implemented for ncurses. 
+NetBSD curses later added this extension.
 .PP
 Programmers concerned about portability should be prepared for either of two
 cases: (a) signal receipt does not interrupt \fBgetch\fR; (b) signal receipt

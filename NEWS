@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2493 2015/09/12 19:52:57 tom Exp $
+-- $Id: NEWS,v 1.2496 2015/09/19 23:04:21 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20150919
+	+ clarify in resizeterm.3x how KEY_RESIZE is pushed onto the input
+	  stream.
+	+ clarify in curs_getch.3x that the keypad mode affects ability to
+	  read KEY_MOUSE codes, but does not affect KEY_RESIZE.
+	+ add overlooked build-fix needed with Cygwin for separate Ada95
+	  configure script, cf: 20150606 (report by Nicolas Boulenguez)
 
 20150912
 	+ fixes for configure/build using clang on OSX (prompted by report by

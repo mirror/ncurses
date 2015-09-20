@@ -28,8 +28,11 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.19 2015/06/06 23:38:18 tom Exp $
+.\" $Id: resizeterm.3x,v 1.20 2015/09/19 22:53:26 tom Exp $
 .TH resizeterm 3X ""
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fBis_term_resized\fR,
 \fBresize_term\fR,
@@ -81,11 +84,24 @@ context where \fBmalloc\fR or \fBrealloc\fR may have been interrupted,
 since it uses those functions.
 .PP
 If ncurses is configured to supply its own SIGWINCH handler,
-the \fBresizeterm\fR function \fBungetch\fP's a \fBKEY_RESIZE\fR which
-will be read on the next call to \fBgetch\fR.
-This is used to alert an application that the screen size has changed,
+.bP
+on receipt of a SIGWINCH, the handler sets a flag
+.bP
+which is tested in \fBwgetch\fP and \fBdoupdate\fP,
+.bP
+in turn, calling the \fBresizeterm\fR function,
+.bP
+which \fBungetch\fP's a \fBKEY_RESIZE\fR which
+will be read on the next call to \fBwgetch\fR.
+.IP
+The \fBKEY_RESIZE\fP alerts an application that the screen size has changed,
 and that it should repaint special features such as pads that cannot
 be done automatically.
+.IP
+Calling \fBresizeterm\fP or \fBresize_term\fP
+directly from a signal handler is unsafe.
+This indirect method is used to provide a safe way to resize the ncurses
+data structures.
 .PP
 If the environment variables \fBLINES\fP or \fBCOLUMNS\fP are set,
 this overrides the library's use of the window size obtained from

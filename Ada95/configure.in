@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.60 2015/04/18 18:49:57 tom Exp $
+dnl $Id: configure.in,v 1.61 2015/09/19 20:33:36 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.60 $)
+AC_REVISION($Revision: 1.61 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -448,6 +448,7 @@ AC_CHECK_LIB(bsd, gettimeofday,
 esac
 
 ###	Checks for header files.
+AC_CHECK_SIZEOF([signed char], 0)
 AC_STDC_HEADERS
 AC_HEADER_DIRENT
 AC_HEADER_TIME
@@ -583,6 +584,14 @@ AC_SUBST(EXTERNAL_TREE)
 # match layout used by make-tar.sh
 ADAHTML_DIR=../doc/ada
 AC_SUBST(ADAHTML_DIR)
+
+if test "x$cross_compiling" = xyes ; then
+	ADAGEN_LDFLAGS='$(CROSS_LDFLAGS)'
+else
+	ADAGEN_LDFLAGS='$(NATIVE_LDFLAGS)'
+fi
+
+AC_SUBST(ADAGEN_LDFLAGS)
 
 AC_OUTPUT( \
 	$SUB_MAKEFILES \

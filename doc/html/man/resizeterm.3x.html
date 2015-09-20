@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.19 2015/06/06 23:38:18 tom Exp @
+  * @Id: resizeterm.3x,v 1.20 2015/09/19 22:53:26 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -116,15 +116,30 @@
        tions.
 
        If  ncurses  is configured to supply its own SIGWINCH han-
-       dler, the <STRONG>resizeterm</STRONG> function <STRONG>ungetch</STRONG>'s a <STRONG>KEY_RESIZE</STRONG> which
-       will  be  read on the next call to <STRONG>getch</STRONG>.  This is used to
-       alert an application that the screen size has changed, and
-       that  it should repaint special features such as pads that
-       cannot be done automatically.
+       dler,
 
-       If the environment variables <STRONG>LINES</STRONG>  or  <STRONG>COLUMNS</STRONG>  are  set,
-       this  overrides  the  library's  use  of  the  window size
-       obtained from the operating system.  Thus, even if a  SIG-
+       <STRONG>o</STRONG>   on receipt of a SIGWINCH, the handler sets a flag
+
+       <STRONG>o</STRONG>   which is tested in <STRONG>wgetch</STRONG> and <STRONG>doupdate</STRONG>,
+
+       <STRONG>o</STRONG>   in turn, calling the <STRONG>resizeterm</STRONG> function,
+
+       <STRONG>o</STRONG>   which <STRONG>ungetch</STRONG>'s a <STRONG>KEY_RESIZE</STRONG> which will be read on the
+           next call to <STRONG>wgetch</STRONG>.
+
+           The  <STRONG>KEY_RESIZE</STRONG>  alerts an application that the screen
+           size has changed, and that it should  repaint  special
+           features  such  as  pads that cannot be done automati-
+           cally.
+
+           Calling <STRONG>resizeterm</STRONG> or <STRONG>resize_term</STRONG> directly from a sig-
+           nal  handler  is unsafe.  This indirect method is used
+           to provide a safe  way  to  resize  the  ncurses  data
+           structures.
+
+       If  the  environment  variables  <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set,
+       this overrides  the  library's  use  of  the  window  size
+       obtained  from the operating system.  Thus, even if a SIG-
        WINCH is received, no screen size change may be recorded.
 
 
