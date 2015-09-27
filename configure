@@ -23555,7 +23555,7 @@ do
 resulting.map: $UNALTERED_SYMS
 	sed $cf_sed_options < $UNALTERED_SYMS >\$@
 
-clean::
+distclean::
 	rm -f resulting.map
 CF_EOF
 		fi

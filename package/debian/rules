@@ -78,6 +78,7 @@ configure = \
 		--with-ticlib \
 		--with-trace \
 		--with-cxx-shared \
+		--with-terminfo-dirs=/lib/terminfo:/usr/share/terminfo \
 		--with-versioned-syms \
 		--with-xterm-kbs=DEL \
 		--without-ada \

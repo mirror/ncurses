@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.192 2015/08/15 20:11:48 tom Exp $
+-- $Id: INSTALL,v 1.193 2015/09/26 21:34:14 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1092,6 +1092,9 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-terminfo-dirs=XXX
 	Specify a search-list of terminfo directories which will be compiled
 	into the ncurses library (default: DATADIR/terminfo)
+
+	This is a colon-separated list, like the TERMINFO_DIRS environment
+	variable.
 
     --with-termlib[=XXX]
 	When building the ncurses library, organize this as two parts:  the

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996
-  * @Id: wresize.3x,v 1.13 2010/12/04 18:40:45 tom Exp @
+  * @Id: wresize.3x,v 1.14 2015/09/26 19:57:24 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -86,6 +86,14 @@
 
 
 </PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       It is not possible to resize windows with SVr4 curses.
+
+       This  extension of ncurses was introduced in mid-1995.  It
+       was adopted in NetBSD curses (2001) and PDCurses (2003).
+
+
+</PRE>
 <H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>.
 
@@ -106,6 +114,7 @@
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHOR">AUTHOR</a></li>
 </ul>

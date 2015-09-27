@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.20 2015/09/19 22:53:26 tom Exp @
+  * @Id: resizeterm.3x,v 1.21 2015/09/26 19:55:32 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -144,6 +144,20 @@
 
 
 </PRE>
+<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       It is possible to resize the screen with SVr4 curses, by
+
+       <STRONG>o</STRONG>   exiting curses with <STRONG><A HREF="endwin.3x.html">endwin(3x)</A></STRONG> and
+
+       <STRONG>o</STRONG>   resuming using <STRONG><A HREF="refresh.3x.html">refresh(3x)</A></STRONG>.
+
+       Doing that clears the screen and is visually distracting.
+
+       This extension of ncurses was introduced in mid-1995.   It
+       was adopted in NetBSD curses (2001) and PDCurses (2003).
+
+
+</PRE>
 <H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>.
 
@@ -170,6 +184,7 @@
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHOR">AUTHOR</a></li>
 </ul>

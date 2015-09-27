@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.767 2015/09/12 20:00:59 tom Exp $
+dnl $Id: aclocal.m4,v 1.768 2015/09/26 21:56:12 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3228,7 +3228,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 83 updated: 2015/08/05 20:44:28
+dnl CF_LIB_RULES version: 84 updated: 2015/09/26 17:54:46
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -3301,7 +3301,7 @@ do
 resulting.map: $UNALTERED_SYMS
 	sed $cf_sed_options < $UNALTERED_SYMS >\[$]@
 
-clean::
+distclean::
 	rm -f resulting.map
 CF_EOF
 		fi

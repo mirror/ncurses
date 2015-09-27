@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.20 2015/09/19 22:53:26 tom Exp $
+.\" $Id: resizeterm.3x,v 1.21 2015/09/26 19:55:32 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .IP \(bu 4
@@ -108,6 +108,19 @@ this overrides the library's use of the window size obtained from
 the operating system.
 Thus, even if a SIGWINCH is received,
 no screen size change may be recorded.
+.SH PORTABILITY
+.PP
+It is possible to resize the screen with SVr4 curses,
+by
+.bP
+exiting curses with \fBendwin\fP(3X) and
+.bP
+resuming using \fBrefresh\fP(3X).
+.PP
+Doing that clears the screen and is visually distracting.
+.PP
+This extension of ncurses was introduced in mid-1995.
+It was adopted in NetBSD curses (2001) and PDCurses (2003).
 .SH SEE ALSO
 \fBcurs_getch\fR(3X),
 \fBcurs_variables\fR(3X),
