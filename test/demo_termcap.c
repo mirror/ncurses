@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.48 2015/08/08 20:25:39 tom Exp $
+ * $Id: demo_termcap.c,v 1.49 2015/10/10 20:41:16 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -49,6 +49,8 @@
 #ifdef NCURSES_VERSION
 #include <termcap.h>
 #endif
+
+static void failed(const char *) GCC_NORETURN;
 
 static void
 failed(const char *msg)

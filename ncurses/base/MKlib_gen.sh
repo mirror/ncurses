@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.51 2015/08/10 08:56:39 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.52 2015/10/10 19:36:47 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
@@ -177,6 +177,7 @@ EOF3
 if test "$USE" = generated ; then
 cat >$ED4 <<EOF
 	s/^\(.*\) \(.*\) (\(.*\))\$/NCURSES_EXPORT(\1) (\2) (\3)/
+	/attr_[sg]et.* z)/s,z),z GCC_UNUSED),
 EOF
 else
 cat >$ED4 <<EOF

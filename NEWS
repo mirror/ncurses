@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2499 2015/09/26 21:58:14 tom Exp $
+-- $Id: NEWS,v 1.2505 2015/10/10 20:24:26 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151010
+	+ add configure check for openpty to test/configure script, for ditto.
+	+ minor fixes to test/view.c in investigating Debian #790847.
+	+ update autoconf patch to 2.52.20150926, incorporates a fix for Cdk.
+	+ add workaround for breakage of POSIX makefiles by recent binutils
+	  change.
+	+ improve check for working poll() by using posix_openpt() as a
+	  fallback in case there is no valid terminal on the standard input
+	  (prompted by discussion on bug-ncurses mailing list, Debian #676461).
 
 20150926
 	+ change makefile rule for removing resulting.map to distclean rather

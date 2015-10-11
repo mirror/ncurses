@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.768 2015/09/26 21:56:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.770 2015/10/10 19:27:07 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -423,15 +423,19 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AR_FLAGS version: 5 updated: 2010/05/20 20:24:29
+dnl CF_AR_FLAGS version: 6 updated: 2015/10/10 15:25:05
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
+dnl
+dnl In particular, handle some obsolete cases where the "-" might be omitted,
+dnl as well as a workaround for breakage of make's archive rules by the GNU
+dnl binutils "ar" program.
 AC_DEFUN([CF_AR_FLAGS],[
 AC_REQUIRE([CF_PROG_AR])
 
 AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
 	cf_cv_ar_flags=unknown
-	for cf_ar_flags in -curv curv -crv crv -cqv cqv -rv rv
+	for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
 	do
 
 		# check if $ARFLAGS already contains this choice
@@ -1821,11 +1825,12 @@ AC_CACHE_CHECK(for openpty header,cf_cv_func_openpty,[
 ])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_POLL version: 8 updated: 2012/10/04 05:24:07
+dnl CF_FUNC_POLL version: 9 updated: 2015/10/10 13:27:32
 dnl ------------
 dnl See if the poll function really works.  Some platforms have poll(), but
 dnl it does not work for terminals or files.
 AC_DEFUN([CF_FUNC_POLL],[
+tty 2>&1 >/dev/null || { AC_CHECK_FUNCS(posix_openpt) }
 AC_CACHE_CHECK(if poll really works,cf_cv_working_poll,[
 AC_TRY_RUN([
 #include <stdlib.h>
@@ -1837,7 +1842,7 @@ AC_TRY_RUN([
 #else
 #include <sys/poll.h>
 #endif
-int main() {
+int main(void) {
 	struct pollfd myfds;
 	int ret;
 
@@ -1857,6 +1862,11 @@ int main() {
 		if (!isatty(fd)) {
 			fd = open("/dev/tty", 2);	/* O_RDWR */
 		}
+#ifdef HAVE_POSIX_OPENPT
+		if (fd < 0) {
+			fd = posix_openpt(O_RDWR);
+		}
+#endif
 
 		if (fd >= 0) {
 			/* also check with standard input */

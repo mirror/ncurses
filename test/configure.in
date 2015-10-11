@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.124 2015/08/08 20:24:49 tom Exp $
+dnl $Id: configure.in,v 1.125 2015/10/10 20:23:49 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -302,6 +302,17 @@ extern void _nc_init_pthreads(void);
 test $cf_cv_use_pthreads = yes && AC_DEFINE(USE_PTHREADS)
 
 CF_SYS_TIME_SELECT
+
+# special check for test/ditto.c
+CF_FUNC_OPENPTY
+if test "$cf_cv_func_openpty" != no ; then
+	AC_DEFINE_UNQUOTED(USE_OPENPTY_HEADER,<$cf_cv_func_openpty>,[Define to actual header for openpty function])
+	AC_DEFINE(USE_XTERM_PTY,1,[Define to 1 if we should assume xterm pseudoterminal interface])
+	if test "x$cf_cv_lib_util" = xyes ; then
+		CF_ADD_LIB(util,TEST_LIBS)
+	fi
+fi
+
 CF_FUNC_CURSES_VERSION
 
 CF_CURSES_ACS_MAP

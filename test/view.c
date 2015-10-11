@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.94 2013/09/28 21:58:42 tom Exp $
+ * $Id: view.c,v 1.95 2015/10/10 20:03:58 tom Exp $
  */
 
 #include <test.priv.h>
@@ -188,20 +188,23 @@ ch_dup(char *src)
     for (j = k = 0; j < len; j++) {
 #if USE_WIDEC_SUPPORT
 	rc = (size_t) check_mbytes(wch, src + j, len - j, state);
-	if (rc == (size_t) -1 || rc == (size_t) -2)
+	if (rc == (size_t) -1 || rc == (size_t) -2) {
 	    break;
+	}
 	j += rc - 1;
-	if ((width = wcwidth(wch)) < 0)
-	    break;
-	if ((width > 0 && l > 0) || l == CCHARW_MAX) {
+	width = wcwidth(wch);
+	if (width == 0) {
+	    if (l == 0) {
+		wstr[l++] = L' ';
+	    }
+	} else if ((l > 0) || (l == CCHARW_MAX)) {
 	    wstr[l] = L'\0';
 	    l = 0;
-	    if (setcchar(dst + k, wstr, 0, 0, NULL) != OK)
+	    if (setcchar(dst + k, wstr, 0, 0, NULL) != OK) {
 		break;
+	    }
 	    ++k;
 	}
-	if (width == 0 && l == 0)
-	    wstr[l++] = L' ';
 	wstr[l++] = wch;
 #else
 	dst[k++] = (chtype) UChar(src[j]);
@@ -329,10 +332,11 @@ main(int argc, char *argv[])
 	/* convert tabs and nonprinting chars so that shift will work properly */
 	for (s = buf, d = temp, col = 0; (*d = *s) != '\0'; s++) {
 	    if (*d == '\r') {
-		if (s[1] == '\n')
+		if (s[1] == '\n') {
 		    continue;
-		else
+		} else {
 		    break;
+		}
 	    }
 	    if (*d == '\n') {
 		*d = '\0';

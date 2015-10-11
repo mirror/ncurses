@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.39 2015/07/10 23:45:44 tom Exp $
+ * $Id: demo_terminfo.c,v 1.40 2015/10/10 20:52:41 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -45,6 +45,8 @@
 #define NCURSES_XNAMES 0
 #endif
 #endif
+
+static void failed(const char *) GCC_NORETURN;
 
 static void
 failed(const char *msg)
@@ -914,7 +916,7 @@ main(int argc, char *argv[])
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    printf("This program requires the terminfo functions such as tigetstr\n");
+    failed("This program requires the terminfo functions such as tigetstr");
     ExitProgram(EXIT_FAILURE);
 }
 #endif /* HAVE_TIGETSTR */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.47 2014/10/13 08:56:49 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.48 2015/10/10 19:47:25 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -60,6 +60,12 @@ static int current_cols;
 #define CurCols  current_cols
 #define EXTRA_ARGS		/* nothing */
 #define EXTRA_DCLS		/* nothing */
+#endif
+
+#if NCURSES_SP_FUNCS && !defined(USE_SP_WINDOWLIST)
+#define UNUSED_SP  (void) sp
+#else
+#define UNUSED_SP		/* nothing */
 #endif
 
 #ifdef TRACE
@@ -276,6 +282,7 @@ decrease_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
     WINDOWLIST *wp;
 
     T((T_CALLED("decrease_size(%p, %d, %d)"), (void *) SP_PARM, ToLines, ToCols));
+    UNUSED_SP;
 
     do {
 	found = FALSE;
@@ -310,6 +317,7 @@ increase_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
     WINDOWLIST *wp;
 
     T((T_CALLED("increase_size(%p, %d, %d)"), (void *) SP_PARM, ToLines, ToCols));
+    UNUSED_SP;
 
     do {
 	found = FALSE;

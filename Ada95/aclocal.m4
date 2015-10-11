@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.106 2015/08/22 21:14:14 tom Exp $
+dnl $Id: aclocal.m4,v 1.107 2015/10/10 19:52:33 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -365,15 +365,19 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AR_FLAGS version: 5 updated: 2010/05/20 20:24:29
+dnl CF_AR_FLAGS version: 6 updated: 2015/10/10 15:25:05
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
+dnl
+dnl In particular, handle some obsolete cases where the "-" might be omitted,
+dnl as well as a workaround for breakage of make's archive rules by the GNU
+dnl binutils "ar" program.
 AC_DEFUN([CF_AR_FLAGS],[
 AC_REQUIRE([CF_PROG_AR])
 
 AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
 	cf_cv_ar_flags=unknown
-	for cf_ar_flags in -curv curv -crv crv -cqv cqv -rv rv
+	for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
 	do
 
 		# check if $ARFLAGS already contains this choice
