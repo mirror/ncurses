@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.619 2015/08/05 23:32:27 tom Exp $
+dnl $Id: configure.in,v 1.620 2015/10/17 23:01:54 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.619 $)
+AC_REVISION($Revision: 1.620 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2074,6 +2074,17 @@ AC_SUBST(PANEL_NAME)
 AC_SUBST(MENU_NAME)
 AC_SUBST(FORM_NAME)
 AC_SUBST(CXX_NAME)
+
+# workaround for OS/2 (20151017)
+case $cf_cv_system_name in
+(os2*)
+	LIBTOOL_OPTS_CXX="-os2dllname ncurs++"
+	;;
+(*)
+	LIBTOOL_OPTS_CXX=
+	;;
+esac
+AC_SUBST(LIBTOOL_OPTS_CXX)
 
 # workaround for g++ versus Solaris (20131116)
 case $cf_cv_system_name in

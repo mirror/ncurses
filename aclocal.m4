@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.770 2015/10/10 19:27:07 tom Exp $
+dnl $Id: aclocal.m4,v 1.774 2015/10/17 23:05:09 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3221,7 +3221,7 @@ fi
 test -z "$cf_cv_libtool_version" && unset cf_cv_libtool_version
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_PREFIX version: 11 updated: 2015/04/18 08:56:57
+dnl CF_LIB_PREFIX version: 12 updated: 2015/10/17 19:03:33
 dnl -------------
 dnl Compute the library-prefix for the given host system
 dnl $1 = variable to set
@@ -3229,7 +3229,11 @@ define([CF_LIB_PREFIX],
 [
 	case $cf_cv_system_name in
 	(OS/2*|os2*)
-		LIB_PREFIX=''
+		if test "$DFT_LWR_MODEL" = libtool; then
+			LIB_PREFIX='lib'
+		else
+			LIB_PREFIX=''
+		fi
 		;;
 	(*)	LIB_PREFIX='lib'
 		;;
@@ -6257,7 +6261,7 @@ if test -n "$ADA_SUBDIRS"; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_STDCPP_LIBRARY version: 10 updated: 2015/09/12 15:53:39
+dnl CF_STDCPP_LIBRARY version: 11 updated: 2015/10/17 19:03:33
 dnl -----------------
 dnl Check for -lstdc++, which is GNU's standard C++ library.
 dnl If $CXXLIBS is set, add that to the libraries used for test-linking.
@@ -6282,7 +6286,11 @@ if test -n "$GXX" ; then
 	then
 		case $cf_cv_system_name in
 		(os2*)
-			cf_stdcpp_libname=stdcpp
+			if test -z "`g++ -dM -E - < /dev/null | grep __KLIBC__`"; then
+				cf_stdcpp_libname=stdcpp
+			else
+				cf_stdcpp_libname=stdc++
+			fi
 			;;
 		(*)
 			cf_stdcpp_libname=stdc++
@@ -7047,7 +7055,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 32 updated: 2015/04/17 21:13:04
+dnl CF_WITH_LIBTOOL version: 33 updated: 2015/10/17 19:03:33
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -7145,7 +7153,7 @@ ifdef([AC_PROG_LIBTOOL],[
 	# special hack to add -no-undefined (which libtool should do for itself)
 	LT_UNDEF=
 	case "$cf_cv_system_name" in
-	(cygwin*|msys*|mingw32*|uwin*|aix[[4-7]])
+	(cygwin*|msys*|mingw32*|os2*|uwin*|aix[[4-7]])
 		LT_UNDEF=-no-undefined
 		;;
 	esac
@@ -7643,7 +7651,7 @@ AC_SUBST(VERSIONED_SYMS)
 AC_SUBST(WILDCARD_SYMS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 49 updated: 2015/04/12 15:39:00
+dnl CF_XOPEN_SOURCE version: 50 updated: 2015/10/17 19:03:33
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -7712,6 +7720,9 @@ case $host_os in
 	;;
 (openbsd*)
 	# setting _XOPEN_SOURCE breaks xterm on OpenBSD 2.8, is not needed for ncursesw
+	;;
+(os2*)
+	cf_XOPEN_SOURCE=
 	;;
 (osf[[45]]*)
 	cf_xopen_source="-D_OSF_SOURCE"

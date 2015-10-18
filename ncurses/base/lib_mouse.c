@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.166 2015/07/05 00:28:27 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.167 2015/10/17 22:08:05 KO.Myung-Hun Exp $")
 
 #include <tic.h>
 
@@ -888,7 +888,7 @@ _nc_mouse_event(SCREEN *sp)
     do { \
 	    eventp->bstate = MASK_PRESS(n); \
 	    sp->_mouse_bstate |= MASK_PRESS(n); \
-	    if (kbuf[0] & 0x40) { \
+	    if (button & 0x40) { \
 		    eventp->bstate = MASK_RELEASE(n); \
 		    sp->_mouse_bstate &= ~MASK_PRESS(n); \
 	    } \

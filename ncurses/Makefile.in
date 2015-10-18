@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.147 2015/08/05 23:15:41 tom Exp $
+# $Id: Makefile.in,v 1.148 2015/10/17 21:48:15 Esa.Peuha Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -225,7 +225,7 @@ init_keytry.h: make_keys$(BUILD_EXEEXT) keys.list
 	./make_keys$(BUILD_EXEEXT) keys.list > $@
 
 keys.list :	$(tinfo)/MKkeys_list.sh
-	AWK=$(AWK) $(SHELL) $(tinfo)/MKkeys_list.sh $(TERMINFO_CAPS) | sort >$@
+	AWK=$(AWK) $(SHELL) $(tinfo)/MKkeys_list.sh $(TERMINFO_CAPS) | LC_ALL=C sort >$@
 
 make_keys$(BUILD_EXEEXT) : \
 		$(tinfo)/make_keys.c \

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2505 2015/10/10 20:24:26 tom Exp $
+-- $Id: NEWS,v 1.2509 2015/10/17 22:02:46 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151017
+	+ modify ncurses/Makefile.in to sort keys.list in POSIX locale
+	  (Debian #801864, patch by Esa Peuha).
+	+ remove an early-return from _nc_do_color, which can interfere with
+	  data needed by bkgd when ncurses is configured with extended colors
+	  (patch by Denis Tikhomirov).
+	> fixes for OS/2 (patches by KO Myung-Hun)
+	+ use button instead of kbuf[0] in EMX-specific part of lib_mouse.c
+	+ support building with libtool on OS/2
+	+ use stdc++ on OS/2 kLIBC
+	+ clear cf_XOPEN_SOURCE on OS/2
 
 20151010
 	+ add configure check for openpty to test/configure script, for ditto.
@@ -1713,7 +1725,7 @@ it is not possible to add this information.
 	+ modify check_existence() in db_iterator.c to simply check if the
 	  path is a directory or file, according to the need.  Checking for
 	  directory size also gives no usable result with OS/2 (cf: 20120107).
-	+ support OS/2 kLIBC (patch by KO Myung-Han).
+	+ support OS/2 kLIBC (patch by KO Myung-Hun).
 
 20120114
 	+ several improvements to test/movewindow.c (prompted by discussion on

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.111 2015/08/05 23:15:41 tom Exp $
+# $Id: Makefile.in,v 1.113 2015/10/17 22:59:12 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -58,7 +58,7 @@ INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 PACKAGE		= @PACKAGE@
 
 LIBTOOL		= @LIBTOOL_CXX@
-LIBTOOL_OPTS	= @LIBTOOL_OPTS@
+LIBTOOL_OPTS	= @LIBTOOL_OPTS@ @LIBTOOL_OPTS_CXX@
 LIBTOOL_CLEAN	= @LIB_CLEAN@
 LIBTOOL_COMPILE	= @LIB_COMPILE@
 LIBTOOL_LINK	= @LIB_LINK@
