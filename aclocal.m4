@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.774 2015/10/17 23:05:09 tom Exp $
+dnl $Id: aclocal.m4,v 1.779 2015/10/25 00:51:20 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -7524,7 +7524,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_VERSIONED_SYMS version: 5 updated: 2015/04/17 21:13:04
+dnl CF_WITH_VERSIONED_SYMS version: 7 updated: 2015/10/24 20:50:26
 dnl ----------------------
 dnl Use this when building shared library with ELF, to markup symbols with the
 dnl version identifier from the given input file.  Generally that identifier is
@@ -7638,8 +7638,8 @@ EOF
 		# compile source, make library
 		if make -f conftest.mk 2>&AC_FD_CC >/dev/null
 		then
-			# test for missing symbol
-			cf_missing=`nm -P conftest.so 2>&AC_FD_CC |fgrep _ismissing | egrep '[[ 	]]T[[ 	]]'`
+			# test for missing symbol in either Data or Text section
+			cf_missing=`nm -P conftest.so 2>&AC_FD_CC |fgrep _ismissing | egrep '[[ 	]][[DT]][[ 	]]'`
 			test -n "$cf_missing" && WILDCARD_SYMS=yes
 		fi
 		AC_MSG_RESULT($WILDCARD_SYMS)

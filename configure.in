@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.620 2015/10/17 23:01:54 tom Exp $
+dnl $Id: configure.in,v 1.621 2015/10/24 17:57:55 Tomas.Cech Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.620 $)
+AC_REVISION($Revision: 1.621 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -566,7 +566,7 @@ AC_ARG_WITH(fallbacks,
 	[with_fallback=$withval],
 	[with_fallback=])
 AC_MSG_RESULT($with_fallback)
-FALLBACK_LIST=`echo "$with_fallback" | sed -e 's/,/ /g'`
+FALLBACK_LIST=`test "$with_fallback" != no && echo "$with_fallback" | sed -e 's/,/ /g'`
 AC_SUBST(FALLBACK_LIST)
 
 AC_MSG_CHECKING(if you want modern xterm or antique)

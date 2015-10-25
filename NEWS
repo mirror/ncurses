@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2509 2015/10/17 22:02:46 tom Exp $
+-- $Id: NEWS,v 1.2516 2015/10/25 00:17:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,27 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151024
+	+ modify MKexpanded.c to update the expansion of a temporary filename
+	  to "expanded.c", for use in trace statements.
+	+ modify layout of b/B tests in test/ncurses.c to allow for additional
+	  annotation on the right margin; some terminals with partial support
+	  did not display well.
+	+ fix typo in curs_attr.3x (patch by Sven Joachim).
+	+ fix typo in INSTALL (patch by Tomas Cech).
+	+ improve configure check for setting WILDCARD_SYMS variable; on ppc64
+	  the variable is in the Data section rather than Text (patch by Michel
+	  Normand).
+	+ using configure option "--without-fallbacks" incorrectly caused
+	  FALLBACK_LIST to be set to "no" (patch by Tomas Cech).
+	+ updated minitel entries to fix kel problem with emacs, and add
+	  minitel1b-nb (Alexandre Montaron).
+	+ reviewed/updated nsterm entry Terminal.app in OSX -TD
+	+ replace some dead URLs in comments with equivalents from the
+	  Internet Archive -TD
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20151017
 	+ modify ncurses/Makefile.in to sort keys.list in POSIX locale

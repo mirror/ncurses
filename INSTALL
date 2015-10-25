@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.193 2015/09/26 21:34:14 tom Exp $
+-- $Id: INSTALL,v 1.194 2015/10/24 19:03:42 Tomas.Cech Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -978,7 +978,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	copying the man-page for each alias.
 
     --with-manpage-tbl
-	Tell the configure script that you with to preprocess the manpages
+	Tell the configure script that you wish to preprocess the manpages
 	by running them through tbl to generate tables understandable by
 	nroff.
 

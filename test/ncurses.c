@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.420 2015/05/23 23:41:25 tom Exp $
+$Id: ncurses.c,v 1.421 2015/10/24 23:32:57 tom Exp $
 
 ***************************************************************************/
 
@@ -1255,9 +1255,10 @@ my_termattrs(void)
 #define ATTRSTRING_1ST 32	/* ' ' */
 #define ATTRSTRING_END 126	/* '~' */
 
-#define COL_ATTRSTRING 25
-#define MARGIN_4_ATTRS (COL_ATTRSTRING + 8)
-#define LEN_ATTRSTRING (COLS - MARGIN_4_ATTRS)
+#define COLS_PRE_ATTRS 5
+#define COLS_AFT_ATTRS 15
+#define COL_ATTRSTRING (COLS_PRE_ATTRS + 17)
+#define LEN_ATTRSTRING (COLS - (COL_ATTRSTRING + COLS_AFT_ATTRS))
 #define MAX_ATTRSTRING (ATTRSTRING_END + 1 - ATTRSTRING_1ST)
 
 static char attr_test_string[MAX_ATTRSTRING + 1];
@@ -1415,8 +1416,8 @@ show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *n
     chtype test = attr & (chtype) (~A_ALTCHARSET);
 
     if (arrow)
-	MvPrintw(row, 5, "-->");
-    MvPrintw(row, 8, "%s mode:", name);
+	MvPrintw(row, COLS_PRE_ATTRS - 3, "-->");
+    MvPrintw(row, COLS_PRE_ATTRS, "%s mode:", name);
     MvPrintw(row, COL_ATTRSTRING - 1, "|");
     if (skip)
 	printw("%*s", skip, " ");
@@ -1661,10 +1662,10 @@ attr_test(void)
 				my_list[j].name);
 	    }
 
-	    MvPrintw(row, 8,
+	    MvPrintw(row, COLS_PRE_ATTRS,
 		     "This terminal does %shave the magic-cookie glitch",
 		     get_xmc() > -1 ? "" : "not ");
-	    MvPrintw(row + 1, 8, "Enter '?' for help.");
+	    MvPrintw(row + 1, COLS_PRE_ATTRS, "Enter '?' for help.");
 	    show_color_attr(fg, bg, tx);
 	    printw("  ACS (%d)", ac != 0);
 
@@ -1802,8 +1803,8 @@ wide_show_attr(WINDOW *win,
     chtype test = attr & ~WA_ALTCHARSET;
 
     if (arrow)
-	MvPrintw(row, 5, "-->");
-    MvPrintw(row, 8, "%s mode:", name);
+	MvPrintw(row, COLS_PRE_ATTRS - 3, "-->");
+    MvPrintw(row, COLS_PRE_ATTRS, "%s mode:", name);
     MvPrintw(row, COL_ATTRSTRING - 1, "|");
     if (skip)
 	printw("%*s", skip, " ");
@@ -2012,10 +2013,10 @@ wide_attr_test(void)
 				     my_list[j].name);
 	    }
 
-	    MvPrintw(row, 8,
+	    MvPrintw(row, COLS_PRE_ATTRS,
 		     "This terminal does %shave the magic-cookie glitch",
 		     get_xmc() > -1 ? "" : "not ");
-	    MvPrintw(row + 1, 8, "Enter '?' for help.");
+	    MvPrintw(row + 1, COLS_PRE_ATTRS, "Enter '?' for help.");
 	    show_color_attr(fg, bg, tx);
 	    printw("  ACS (%d)", ac != 0);
 
@@ -5523,7 +5524,6 @@ demo_pad(bool colored)
 	Cannot("cannot create requested pad");
 	return;
     }
-
 #ifdef A_COLOR
     if (colored && use_colors) {
 	init_pair(1, COLOR_BLACK, COLOR_GREEN);
