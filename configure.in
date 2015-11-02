@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.621 2015/10/24 17:57:55 Tomas.Cech Exp $
+dnl $Id: configure.in,v 1.622 2015/11/01 01:22:57 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.621 $)
+AC_REVISION($Revision: 1.622 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2035,13 +2035,9 @@ SUB_MAKEFILES="$SUB_MAKEFILES misc/run_tic.sh:misc/run_tic.in"
 SUB_MAKEFILES="$SUB_MAKEFILES misc/ncurses-config:misc/ncurses-config.in"
 SUB_MAKEFILES="$SUB_MAKEFILES man/ncurses${USE_CFG_SUFFIX}-config.1:man/MKncu_config.in"
 
-if test "x$enable_pc_files" = xyes ; then \
+if test "x$enable_pc_files" = xyes && test -z "$MAKE_PC_FILES" ; then
 SUB_MAKEFILES="$SUB_MAKEFILES misc/gen-pkgconfig:misc/gen-pkgconfig.in"
-MAKE_PC_FILES=
-else
-MAKE_PC_FILES="#"
 fi
-AC_SUBST(MAKE_PC_FILES)
 AC_SUBST(cross_compiling)
 
 AC_PATH_PROG(TIC_PATH,tic,unknown,$PATH:/usr/local/ncurses/bin)

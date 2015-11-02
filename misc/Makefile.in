@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.63 2015/08/05 23:15:41 tom Exp $
+# $Id: Makefile.in,v 1.65 2015/11/01 20:01:20 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -110,8 +110,22 @@ NCURSES_CONFIG	= ncurses@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config
 install.libs :: $(DESTDIR)$(bindir) ncurses-config
 	$(INSTALL_SCRIPT) ncurses-config $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
 
-@MAKE_PC_FILES@install.libs :: pc-files $(DESTDIR)$(PKG_CONFIG_LIBDIR)
-@MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do $(INSTALL_DATA) $$name $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; done'
+# some packagers prefer to be able to construct pc-files on servers where
+# pkg-config is not installed.  Work around that by creating the library
+# directory during this rule:
+@MAKE_PC_FILES@install.libs :: pc-files
+@MAKE_PC_FILES@	@$(SHELL) -c 'case "x$(DESTDIR)$(PKG_CONFIG_LIBDIR)" in \
+	(x/*) \
+		mkdir -p $(DESTDIR)$(PKG_CONFIG_LIBDIR); \
+		for name in *.pc; do \
+			echo installing $$name; \
+			$(INSTALL_DATA) $$name $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; \
+		done \
+		;; \
+	(*) \
+		echo "...skip actual install: no destination was given" ; \
+		;; \
+	esac'
 
 @MAKE_PC_FILES@sources :: pc-files
 @MAKE_PC_FILES@pc-files :
@@ -131,8 +145,7 @@ run_tic.sed :
 $(DESTDIR)$(bindir) \
 $(DESTDIR)$(libdir) \
 $(DESTDIR)$(datadir) \
-$(DESTDIR)$(tabsetdir) \
-$(DESTDIR)$(PKG_CONFIG_LIBDIR) :
+$(DESTDIR)$(tabsetdir) :
 	mkdir -p $@
 
 uninstall : @MISC_UNINSTALL_DATA@ uninstall.libs
@@ -144,7 +157,14 @@ uninstall.data :
 
 uninstall.libs :
 	-rm -f $(DESTDIR)$(bindir)/$(NCURSES_CONFIG)
-@MAKE_PC_FILES@	$(SHELL) -c 'for name in *.pc; do rm -f $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; done'
+@MAKE_PC_FILES@	@$(SHELL) -c 'case x$(DESTDIR)$(PKG_CONFIG_LIBDIR) in \
+	(x/*) \
+		for name in *.pc; do \
+			echo uninstalling $$name; \
+			rm -f $(DESTDIR)$(PKG_CONFIG_LIBDIR)/$$name; \
+		done \
+		;; \
+	esac'
 
 tags :
 

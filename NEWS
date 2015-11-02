@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2516 2015/10/25 00:17:28 tom Exp $
+-- $Id: NEWS,v 1.2522 2015/11/01 10:27:24 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,17 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20151101
+	+ amend change for pkg-config which allows build of pc-files when no
+	  valid pkg-config library directory was configured to suppress the
+	  actual install if it is not overridden to a valid directory at
+	  install time (cf: 20150822).
+	+ modify editing script which generates resulting.map to work with the
+	  clang configuration on recent FreeBSD, which gives an error on an
+	  empty "local" section.
+	+ fix a spurious "(Part)" message in test/ncurses.c b/B tests due
+	  to incorrect attribute-masking.
+
 20151024
 	+ modify MKexpanded.c to update the expansion of a temporary filename
 	  to "expanded.c", for use in trace statements.
@@ -55,7 +66,7 @@ it is not possible to add this information.
 	+ fix typo in INSTALL (patch by Tomas Cech).
 	+ improve configure check for setting WILDCARD_SYMS variable; on ppc64
 	  the variable is in the Data section rather than Text (patch by Michel
-	  Normand).
+	  Normand, Novell #946048).
 	+ using configure option "--without-fallbacks" incorrectly caused
 	  FALLBACK_LIST to be set to "no" (patch by Tomas Cech).
 	+ updated minitel entries to fix kel problem with emacs, and add

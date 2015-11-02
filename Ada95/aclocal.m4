@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.108 2015/10/17 23:07:06 tom Exp $
+dnl $Id: aclocal.m4,v 1.109 2015/11/01 01:03:41 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -740,45 +740,6 @@ CF_ARG_DISABLE(gnat-projects,
 	[enable_gnat_projects=no],
 	[enable_gnat_projects=yes])
 AC_MSG_RESULT($enable_gnat_projects)
-])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 12 updated: 2015/04/17 21:13:04
-dnl ------------------
-dnl This is the "--enable-pc-files" option, which is available if there is a
-dnl pkg-config configuration on the local machine.
-AC_DEFUN([CF_ENABLE_PC_FILES],[
-AC_REQUIRE([CF_PKG_CONFIG])
-AC_REQUIRE([CF_WITH_PKG_CONFIG_LIBDIR])
-
-if test "x$PKG_CONFIG" != xnone
-then
-	AC_MSG_CHECKING(if we should install .pc files for $PKG_CONFIG)
-else
-	AC_MSG_CHECKING(if we should install .pc files)
-fi
-
-AC_ARG_ENABLE(pc-files,
-	[  --enable-pc-files       generate and install .pc files for pkg-config],
-	[enable_pc_files=$enableval],
-	[enable_pc_files=no])
-AC_MSG_RESULT($enable_pc_files)
-
-if test "x$enable_pc_files" != xno
-then
-	case "x$PKG_CONFIG_LIBDIR" in
-	(xno|xyes)
-		AC_MSG_WARN(no PKG_CONFIG_LIBDIR was found)
-		MAKE_PC_FILES="#"
-		;;
-	(*)
-		CF_PATH_SYNTAX(PKG_CONFIG_LIBDIR)
-		MAKE_PC_FILES=
-		;;
-	esac
-else
-	MAKE_PC_FILES="#"
-fi
-AC_SUBST(MAKE_PC_FILES)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FIND_LIBRARY version: 9 updated: 2008/03/23 14:48:54

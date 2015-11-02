@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.421 2015/10/24 23:32:57 tom Exp $
+$Id: ncurses.c,v 1.423 2015/10/31 19:53:06 tom Exp $
 
 ***************************************************************************/
 
@@ -1413,7 +1413,7 @@ static int
 show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *name)
 {
     int ncv = get_ncv();
-    chtype test = attr & (chtype) (~A_ALTCHARSET);
+    chtype test = attr & (chtype) (~(A_ALTCHARSET | A_CHARTEXT));
 
     if (arrow)
 	MvPrintw(row, COLS_PRE_ATTRS - 3, "-->");
@@ -1478,8 +1478,9 @@ show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *n
 		if (found)
 		    printw(" (NCV)");
 	    }
-	    if ((termattrs() & test) != test)
+	    if ((termattrs() & test) != test) {
 		printw(" (Part)");
+	    }
 	}
     }
     return row + 2;
@@ -1868,8 +1869,9 @@ wide_show_attr(WINDOW *win,
 		if (found)
 		    printw(" (NCV)");
 	    }
-	    if ((term_attrs() & test) != test)
+	    if ((term_attrs() & test) != test) {
 		printw(" (Part)");
+	    }
 	}
     }
     return row + 2;

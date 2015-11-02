@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.167 2015/10/17 22:08:05 KO.Myung-Hun Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.168 2015/10/31 20:47:41 tom Exp $")
 
 #include <tic.h>
 
@@ -641,13 +641,14 @@ initialize_mousetype(SCREEN *sp)
 
 #if USE_SYSMOUSE
     {
+	static char dev_tty[] = "/dev/tty";
 	struct mouse_info the_mouse;
 	char *the_device = 0;
 
 	if (NC_ISATTY(sp->_ifd))
 	    the_device = ttyname(sp->_ifd);
 	if (the_device == 0)
-	    the_device = "/dev/tty";
+	    the_device = dev_tty;
 
 	sp->_mouse_fd = open(the_device, O_RDWR);
 
