@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.622 2015/11/01 01:22:57 tom Exp $
+dnl $Id: configure.in,v 1.623 2015/11/07 22:41:37 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.622 $)
+AC_REVISION($Revision: 1.623 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1859,17 +1859,20 @@ if test "$with_ticlib" != no ; then
 
 	if test "x$with_ticlib" != xyes ; then
 		TICS_NAME=$with_ticlib
+		TICS_SUFFIX="`echo ${DFT_LIB_SUFFIX}|sed -e "s/^${USE_LIB_SUFFIX}//"`"
 		TICS_ARG_SUFFIX="${with_ticlib}`echo ${USE_ARG_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TICS_DEP_SUFFIX="${with_ticlib}`echo ${DFT_DEP_SUFFIX}|sed -e "s/^${LIB_SUFFIX}//"`"
 		TICS_LIB_SUFFIX="${with_ticlib}"
 	else
+		TICS_SUFFIX=${DFT_LIB_SUFFIX}
 		TICS_ARG_SUFFIX="${TICS_NAME}${USE_ARG_SUFFIX}"
 		TICS_DEP_SUFFIX="${TICS_NAME}${DFT_DEP_SUFFIX}"
 		TICS_LIB_SUFFIX="${TICS_NAME}${USE_LIB_SUFFIX}"
 	fi
 	TICS_LDFLAGS="-L${LIB_DIR}"
-	TICS_LIBS="-l${TICS_LIB_SUFFIX}"
+	TICS_LIBS="-l${TICS_ARG_SUFFIX}"
 else
+	TICS_SUFFIX=${DFT_LIB_SUFFIX}
 	TICS_LDFLAGS="-L${LIB_DIR}"
 	TICS_LIBS="-l${LIB_NAME}${USE_ARG_SUFFIX}"
 fi
@@ -2236,6 +2239,7 @@ TERMINFO="$TERMINFO"
 TICS_ARG_SUFFIX="$TICS_ARG_SUFFIX"
 TICS_LIB_SUFFIX="$TICS_LIB_SUFFIX"
 TICS_NAME="$TICS_NAME"
+TICS_SUFFIX="$TICS_SUFFIX"
 TIC_PATH="$TIC_PATH"
 TINFO_ARG_SUFFIX="$TINFO_ARG_SUFFIX"
 TINFO_LIB_SUFFIX="$TINFO_LIB_SUFFIX"

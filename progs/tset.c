@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.96 2015/04/12 15:36:06 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.97 2015/11/08 01:45:47 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1293,7 +1293,7 @@ main(int argc, char **argv)
 	reset_mode();
     }
 
-    (void) get_termcap_entry(*argv);
+    ttype = get_termcap_entry(*argv);
 
     if (!noset) {
 #if HAVE_SIZECHANGE
@@ -1326,9 +1326,6 @@ main(int argc, char **argv)
 	    }
 	}
     }
-
-    /* Get the terminal name from the entry. */
-    ttype = _nc_first_name(cur_term->type.term_names);
 
     if (noset)
 	(void) printf("%s\n", ttype);
