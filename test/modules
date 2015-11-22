@@ -1,4 +1,4 @@
-# $Id: modules,v 1.52 2015/06/27 10:40:27 tom Exp $
+# $Id: modules,v 1.53 2015/11/21 16:05:48 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -90,6 +90,7 @@ test_instr	progs		$(srcdir)	$(HEADER_DEPS)
 test_inwstr	progs		$(srcdir)	$(HEADER_DEPS)
 test_opaque	progs		$(srcdir)	$(HEADER_DEPS)
 test_setupterm	progs		$(srcdir)	$(HEADER_DEPS)
+test_sgr	progs		$(srcdir)	$(HEADER_DEPS)
 test_vid_puts	progs		$(srcdir)	$(HEADER_DEPS)
 test_vidputs	progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)

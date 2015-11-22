@@ -1162,6 +1162,7 @@
 ./test/test_inwstr.c
 ./test/test_opaque.c
 ./test/test_setupterm.c
+./test/test_sgr.c
 ./test/test_vid_puts.c
 ./test/test_vidputs.c
 ./test/testaddch.c

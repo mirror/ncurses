@@ -1,4 +1,4 @@
-# $Id: programs,v 1.26 2015/06/27 10:40:53 tom Exp $
+# $Id: programs,v 1.27 2015/11/21 16:06:12 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -87,6 +87,7 @@ test_instr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_instr
 test_inwstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_inwstr
 test_opaque	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_opaque
 test_setupterm	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_setupterm
+test_sgr	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	test_sgr
 test_vid_puts	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vid_puts
 test_vidputs	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vidputs
 testaddch	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	testaddch
