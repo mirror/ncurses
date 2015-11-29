@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.132 2015/05/09 17:10:41 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.133 2015/11/29 01:28:52 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -497,6 +497,8 @@ _nc_wgetch(WINDOW *win,
 	    TR(TRACE_IEVENT, ("timed delay in wgetch()"));
 	    if (sp->_cbreak > 1)
 		delay = (sp->_cbreak - 1) * 100;
+	    else if (win->_notimeout)
+		delay = 0;
 	    else
 		delay = win->_delay;
 

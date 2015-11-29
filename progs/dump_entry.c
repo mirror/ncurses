@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.123 2015/09/05 23:31:12 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.124 2015/11/28 22:54:33 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -510,6 +510,10 @@ fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
 
     while (*src != '\0') {
 	switch (*src) {
+	case '^':
+	    percent = FALSE;
+	    strncpy_DYN(&tmpbuf, src++, (size_t) 1);
+	    break;
 	case '\\':
 	    percent = FALSE;
 	    strncpy_DYN(&tmpbuf, src++, (size_t) 1);

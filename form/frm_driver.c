@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.115 2014/09/25 21:55:24 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.117 2015/11/28 20:39:09 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -979,7 +979,9 @@ Perform_Justification(FIELD *field, WINDOW *win)
   int len;
   int col = 0;
 
-  bp = Get_Start_Of_Data(field->buf, Buffer_Length(field));
+  bp = (Field_Has_Option(field, O_NO_LEFT_STRIP)
+	? field->buf
+	: Get_Start_Of_Data(field->buf, Buffer_Length(field)));
   len = (int)(After_End_Of_Data(field->buf, Buffer_Length(field)) - bp);
 
   if (len > 0)
@@ -1023,7 +1025,9 @@ Undo_Justification(FIELD *field, WINDOW *win)
   FIELD_CELL *bp;
   int len;
 
-  bp = Get_Start_Of_Data(field->buf, Buffer_Length(field));
+  bp = (Field_Has_Option(field, O_NO_LEFT_STRIP)
+	? field->buf
+	: Get_Start_Of_Data(field->buf, Buffer_Length(field)));
   len = (int)(After_End_Of_Data(field->buf, Buffer_Length(field)) - bp);
 
   if (len > 0)

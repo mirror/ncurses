@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.h,v 0.24 2014/07/26 20:52:28 tom Exp $ */
+/* $Id: form.h,v 0.25 2015/11/28 20:13:39 Leon.Winter Exp $ */
 
 #ifndef FORM_H
 #define FORM_H
@@ -205,6 +205,7 @@ typedef void (*Form_Hook)(FORM *);
 #define O_PASSOK		(0x0100U)
 #define O_STATIC		(0x0200U)
 #define O_DYNAMIC_JUSTIFY	(0x0400U)	/* ncurses extension	*/
+#define O_NO_LEFT_STRIP		(0x0800U)	/* ncurses extension	*/
 
 /* form options */
 #define O_NL_OVERLOAD		(0x0001U)

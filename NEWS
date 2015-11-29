@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2530 2015/11/21 23:33:30 tom Exp $
+-- $Id: NEWS,v 1.2536 2015/11/29 01:31:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151128
+	+ add missing assignment in lib_getch.c to make notimeout() work
+	  (Debian #805618).
+	+ add 't' toggle for notimeout() function in test/ncurses.c a/A screens
+	+ add viewdata terminal description (Alexandre Montaron).
+	+ fix a case in tic/infocmp for formatting capabilities where a
+	  backslash at the end of a string was mishandled.
+	+ fix some typos in curs_inopts.3x (Benno Schulenberg).
 
 20151121
 	+ fix some inconsistencies in the pccon* entries -TD

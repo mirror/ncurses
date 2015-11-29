@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.423 2015/10/31 19:53:06 tom Exp $
+$Id: ncurses.c,v 1.425 2015/11/29 01:26:41 tom Exp $
 
 ***************************************************************************/
 
@@ -636,13 +636,20 @@ setup_getch(WINDOW *win, GetchFlags flags)
 }
 
 static void
-init_getch(WINDOW *win, GetchFlags flags)
+init_getch(WINDOW *win, GetchFlags flags, int delay)
 {
     memset(flags, FALSE, NUM_GETCH_FLAGS);
     flags[UChar('k')] = (win == stdscr);
     flags[UChar('m')] = TRUE;
+    flags[UChar('t')] = (delay != 0);
 
     setup_getch(win, flags);
+}
+
+static bool
+blocking_getch(GetchFlags flags, int delay)
+{
+    return ((delay < 0) && flags['t']);
 }
 
 static void
@@ -655,7 +662,8 @@ wgetch_help(WINDOW *win, GetchFlags flags)
 	,"k  -- toggle keypad/literal mode"
 	,"m  -- toggle meta (7-bit/8-bit) mode"
 	,"^q -- quit"
-	,"s  -- shell out\n"
+	,"s  -- shell out"
+	,"t  -- toggle timeout"
 	,"w  -- create a new window"
 #ifdef SIGTSTP
 	,"z  -- suspend this process"
@@ -810,9 +818,9 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     int c;
     int incount = 0;
     GetchFlags flags;
-    bool blocking = (delay < 0);
 
-    init_getch(win, flags);
+    init_getch(win, flags, delay);
+    notimeout(win, FALSE);
     wtimeout(win, delay);
     getyx(win, first_y, first_x);
 
@@ -823,7 +831,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     for (;;) {
 	while ((c = wGetchar(win)) == ERR) {
 	    incount++;
-	    if (blocking) {
+	    if (blocking_getch(flags, delay)) {
 		(void) wprintw(win, "%05d: input error", incount);
 		break;
 	    } else {
@@ -831,7 +839,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	    }
 	    wgetch_wrap(win, first_y);
 	}
-	if (c == ERR && blocking) {
+	if (c == ERR && blocking_getch(flags, delay)) {
 	    wprintw(win, "ERR");
 	    wgetch_wrap(win, first_y);
 	} else if (isQuit(c)) {
@@ -860,6 +868,10 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	    wgetch_help(win, flags);
 	} else if (c == 's') {
 	    ShellOut(TRUE);
+	} else if (c == 't') {
+	    notimeout(win, flags[UChar('t')]);
+	    flags[UChar('t')] = !flags[UChar('t')];
+	    wgetch_help(win, flags);
 	} else if (c == 'w') {
 	    int high = getmaxy(win) - 1 - first_y + 1;
 	    int wide = getmaxx(win) - first_x;
@@ -931,7 +943,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     wtimeout(win, -1);
 
     if (!level)
-	init_getch(win, flags);
+	init_getch(win, flags, delay);
 }
 
 static int
@@ -958,7 +970,7 @@ begin_getch_test(void)
 	delay = -1;
     }
     raw();
-    move(5, 0);
+    move(6, 0);
     return delay;
 }
 
@@ -1060,11 +1072,11 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     wint_t c;
     int incount = 0;
     GetchFlags flags;
-    bool blocking = (delay < 0);
     int code;
     char *temp;
 
-    init_getch(win, flags);
+    init_getch(win, flags, delay);
+    notimeout(win, FALSE);
     wtimeout(win, delay);
     getyx(win, first_y, first_x);
 
@@ -1075,7 +1087,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     for (;;) {
 	while ((code = wGet_wchar(win, &c)) == ERR) {
 	    incount++;
-	    if (blocking) {
+	    if (blocking_getch(flags, delay)) {
 		(void) wprintw(win, "%05d: input error", incount);
 		break;
 	    } else {
@@ -1083,7 +1095,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    }
 	    wgetch_wrap(win, first_y);
 	}
-	if (code == ERR && blocking) {
+	if (code == ERR && blocking_getch(flags, delay)) {
 	    wprintw(win, "ERR");
 	    wgetch_wrap(win, first_y);
 	} else if (isQuit((int) c)) {
@@ -1125,6 +1137,10 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    wgetch_help(win, flags);
 	} else if (c == 's') {
 	    ShellOut(TRUE);
+	} else if (c == 't') {
+	    notimeout(win, flags[UChar('t')]);
+	    flags[UChar('t')] = !flags[UChar('t')];
+	    wgetch_help(win, flags);
 	} else if (c == 'w') {
 	    int high = getmaxy(win) - 1 - first_y + 1;
 	    int wide = getmaxx(win) - first_x;
@@ -1184,7 +1200,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     wtimeout(win, -1);
 
     if (!level)
-	init_getch(win, flags);
+	init_getch(win, flags, delay);
 }
 
 static void

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.558 $
-#	$Date: 2015/11/22 01:01:00 $
+#	$Revision: 1.559 $
+#	$Date: 2015/11/28 21:35:00 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -18753,6 +18753,25 @@ minitel1b-nb|minitel 1b (40cols) noir & blanc sans couleurs avec bold et dim ...
 	sgr0=\EI\E\\\EB, smacs=^N, .invis=\E@, .rs2=^L\EB,
 	.u8=\001Cu|\004, use=minitel1b,
 
+# From: Alexandre Montaron, 19 Nov 2015
+#
+# He comments:
+# viewdata lacks a true cup capabilitie,
+# so I achieved it with home and cud1/cuf1 sequences only !
+viewdata|prestel/viewdata terminals,
+	am, bw, eslok, hz,
+	cols#40, lines#24,
+	bel=^G, civis=^T, clear=^L, cnorm=^Q, cr=^M, cub1=^H, cud1=^J,
+	cuf1=^I,
+	cup=\036%?%p1%{07}%>%t\n\n\n\n\n\n\n\n%;%?%p1%{15}%>%t\n\n\n\n\n\n\n\n%;%?%p1%{4}%&%t\n\n\n\n%;%?%p1%{2}%&%t\n\n%;%?%p1%{1}%&%t\n%;%?%p2%{07}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{15}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{23}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{31}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{4}%&%t\011\011\011\011%;%?%p2%{2}%&%t\011\011%;%?%p2%{1}%&%t\011%;,
+	cuu1=^K, home=^^, nel=^M^J, .el=^X, .ind=^J,
+	.rep=%p1%c\022%p2%'?'%+%c, .ri=^K,
+# Also:
+# viewdata-rv works with some applications (e.g. emacs, xemacs) but fails with vim.
+viewdata-rv|prestel/viewdata terminals with reverse capabilitie (as green),
+	xmc#1,
+	rmso=\EG, smso=\EB, use=viewdata,
+
 ######## OBSOLETE VDT TYPES
 #
 # These terminals are *long* dead -- these entries are retained for
@@ -23791,5 +23810,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2015-11-21
 #	+ fix some inconsistencies in the pccon* entries -TD
+#
+# 2015-11-28
+#	  add viewdata (Alexandre Montaron).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

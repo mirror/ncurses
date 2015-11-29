@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.38 2014/11/01 13:56:14 tom Exp $ */
+/* $Id: form.priv.h,v 0.39 2015/11/28 20:13:39 Leon.Winter Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -162,7 +162,8 @@ TypeArgument;
 
 #define ALL_FIELD_OPTS (Field_Options)( \
 			STD_FIELD_OPTS |\
-			O_DYNAMIC_JUSTIFY)
+			O_DYNAMIC_JUSTIFY |\
+			O_NO_LEFT_STRIP)
 
 #define C_BLANK ' '
 #define is_blank(c) ((c)==C_BLANK)

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.19 2015/04/11 10:21:38 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.20 2015/11/28 19:03:12 Benno.Schulenberg Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -93,7 +93,7 @@
 .br
 .SH DESCRIPTION
 The \fBncurses\fP library provides several functions which let an application
-change way input from the terminal is handled.
+change the way input from the terminal is handled.
 Some are global, applying to all windows.
 Others apply only to a specific window.
 Window-specific settings are not automatically applied to new or derived
@@ -141,19 +141,19 @@ The \fBhalfdelay\fR routine is used for half-delay mode, which is similar to
 available to the program.
 However, after blocking for \fItenths\fR tenths of
 seconds, ERR is returned if nothing has been typed.
-The value of \fBtenths\fR
+The value of \fItenths\fR
 must be a number between 1 and 255.
 Use \fBnocbreak\fR to leave half-delay
 mode.
 .\"
 .SS intrflush
 .PP
-If the \fBintrflush\fR option is enabled, (\fIbf\fR is \fBTRUE\fR), when an
-interrupt key is pressed on the keyboard (interrupt, break, quit) all output in
+If the \fBintrflush\fR option is enabled (\fIbf\fR is \fBTRUE\fR), and an
+interrupt key is pressed on the keyboard (interrupt, break, quit), all output in
 the tty driver queue will be flushed, giving the effect of faster response to
 the interrupt, but causing \fBcurses\fR to have the wrong idea of what is on
 the screen.
-Disabling (\fIbf\fR is \fBFALSE\fR), the option prevents the
+Disabling the option (\fIbf\fR is \fBFALSE\fR) prevents the
 flush.
 The default for the option is inherited from the tty driver settings.
 The window argument is ignored.
