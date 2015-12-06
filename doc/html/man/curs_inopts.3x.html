@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.19 2015/04/11 10:21:38 tom Exp @
+  * @Id: curs_inopts.3x,v 1.20 2015/11/28 19:03:12 Benno.Schulenberg Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -79,12 +79,12 @@
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>ncurses</STRONG> library provides several functions  which  let
-       an  application change way input from the terminal is han-
-       dled.  Some are global, applying to all  windows.   Others
-       apply only to a specific window.  Window-specific settings
-       are not automatically applied to new or  derived  windows.
-       An  application  must  apply  these to each window, if the
-       same behavior is needed.
+       an  application  change the way input from the terminal is
+       handled.  Some are global, applying to all windows.   Oth-
+       ers apply only to a specific window.  Window-specific set-
+       tings are not automatically applied to new or derived win-
+       dows.   An application must apply these to each window, if
+       the same behavior is needed.
 
 
 </PRE>
@@ -124,22 +124,22 @@
        is similar to <STRONG>cbreak</STRONG> mode in that characters typed by  the
        user  are  immediately available to the program.  However,
        after blocking for <EM>tenths</EM> tenths of seconds,  ERR  is  re-
-       turned  if  nothing  has  been typed.  The value of <STRONG>tenths</STRONG>
+       turned  if  nothing  has  been typed.  The value of <EM>tenths</EM>
        must be a number between 1 and 255.  Use <STRONG>nocbreak</STRONG> to leave
        half-delay mode.
 
 
 </PRE>
 <H3><a name="h3-intrflush">intrflush</a></H3><PRE>
-       If  the <STRONG>intrflush</STRONG> option is enabled, (<EM>bf</EM> is <STRONG>TRUE</STRONG>), when an
+       If  the  <STRONG>intrflush</STRONG>  option is enabled (<EM>bf</EM> is <STRONG>TRUE</STRONG>), and an
        interrupt key  is  pressed  on  the  keyboard  (interrupt,
-       break,  quit)  all  output in the tty driver queue will be
+       break,  quit),  all output in the tty driver queue will be
        flushed, giving the effect of faster response to  the  in-
        terrupt, but causing <STRONG>curses</STRONG> to have the wrong idea of what
-       is on the screen.  Disabling (<EM>bf</EM>  is  <STRONG>FALSE</STRONG>),  the  option
-       prevents  the flush.  The default for the option is inher-
-       ited from the tty driver settings.  The window argument is
-       ignored.
+       is on the screen.  Disabling the option (<EM>bf</EM> is <STRONG>FALSE</STRONG>) pre-
+       vents  the flush.  The default for the option is inherited
+       from the tty driver settings.  The window argument is  ig-
+       nored.
 
 
 </PRE>

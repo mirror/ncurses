@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_field_info.3x,v 1.12 2010/12/04 18:40:45 tom Exp @
+  * @Id: form_field_info.3x,v 1.13 2015/12/05 23:01:16 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -48,7 +48,8 @@
 
 </PRE>
 <H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>form_field_info</STRONG> - retrieve field characteristics
+       <STRONG>dynamic_field_info</STRONG>, <STRONG>field_info</STRONG> - retrieve field character-
+       istics
 
 
 </PRE>
@@ -56,21 +57,21 @@
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        int field_info(const FIELD *field, int *rows, int *cols,
                      int *frow, int *fcol, int *nrow, int *nbuf);
-       int  dynamic_field_info(const FIELD *field, int *rows, int
+       int dynamic_field_info(const FIELD *field, int *rows,  int
        *cols, int *max);
 
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  function  <STRONG>field_info</STRONG>  returns  the  sizes  and  other
-       attributes  passed  in  to the field at its creation time.
-       The attributes are: height, width, row of upper-left  cor-
-       ner,  column of upper-left corner, number off-screen rows,
+       attributes passed in to the field at  its  creation  time.
+       The  attributes are: height, width, row of upper-left cor-
+       ner, column of upper-left corner, number off-screen  rows,
        and number of working buffers.
 
        The function <STRONG>dynamic_field_info</STRONG> returns the actual size of
-       the  field,  and  its maximum possible size.  If the field
-       has no size limit, the location  addressed  by  the  third
+       the field, and its maximum possible size.   If  the  field
+       has  no  size  limit,  the location addressed by the third
        argument will be set to 0.  A field can be made dynamic by
        turning off the <STRONG>O_STATIC</STRONG> option with <STRONG>field_opts_off</STRONG>.
 
@@ -85,7 +86,7 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine detected an incorrect or  out-of-range  argu-
+            Routine  detected  an incorrect or out-of-range argu-
             ment.
 
 
@@ -103,17 +104,17 @@
 
 </PRE>
 <H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  routines  emulate the System V forms library.  They
+       These routines emulate the System V forms  library.   They
        were not supported on Version 7 or BSD versions.
 
-       A null (zero pointer) is accepted for any  of  the  return
-       values,  to  ignore  that  value.  Not all implementations
+       A  null  (zero  pointer) is accepted for any of the return
+       values, to ignore that  value.   Not  all  implementations
        allow this, e.g., Solaris 2.7 does not.
 
 
 </PRE>
 <H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 
 

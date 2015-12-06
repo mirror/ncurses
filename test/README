@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.52 2015/07/11 14:17:01 tom Exp $
+-- $Id: README,v 1.53 2015/12/06 00:38:26 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -289,7 +289,7 @@ color_content			test: ncurses
 color_content_sp		-
 color_set			test: color_set ncurses
 copywin				test: ncurses testcurs
-cur_term			test: demo_termcap demo_terminfo dots dots_mvcur lrtest test_vid_puts test_vidputs progs: clear tabs tput tset
+cur_term			test: demo_termcap demo_terminfo dots dots_mvcur lrtest test_sgr test_vid_puts test_vidputs progs: clear tabs tput tset
 curs_set			test: echochar firework gdc hanoi lrtest ncurses newdemo rain savescreen tclock testcurs worm xmas
 curs_set_sp			lib: ncurses
 curscr				test: demo_panels edit_field knight lrtest ncurses savescreen tclock view
@@ -300,7 +300,7 @@ def_shell_mode			-
 def_shell_mode_sp		lib: ncurses
 define_key			test: demo_altkeys demo_defkey foldkeys
 define_key_sp			-
-del_curterm			test: demo_terminfo
+del_curterm			test: demo_terminfo test_sgr
 del_curterm_sp			lib: ncurses
 delay_output			test: newdemo
 delay_output_sp			-
@@ -427,6 +427,7 @@ killchar_sp			lib: ncurses
 killwchar			-
 leaveok				test: hanoi test_opaque
 longname			test: testcurs progs: tput
+longname_sp			-
 mcprint				-
 mcprint_sp			-
 meta				test: key_names keynames ncurses
@@ -545,7 +546,7 @@ noqiflush			-
 noqiflush_sp			-
 noraw				test: demo_forms demo_menus ncurses testcurs
 noraw_sp			lib: ncurses
-notimeout			test: test_opaque
+notimeout			test: ncurses test_opaque
 numcodes			test: demo_termcap test_arrays progs: dump_entry
 numfnames			test: demo_terminfo test_arrays progs: dump_entry
 numnames			test: demo_termcap demo_terminfo test_arrays progs: dump_entry infocmp
@@ -559,7 +560,7 @@ pechochar			-
 pnoutrefresh			test: edit_field ncurses
 prefresh			test: testcurs
 printw				test: background blue bs color_set demo_altkeys demo_defkey demo_keyok filter foldkeys ncurses savescreen testcurs testscanw view
-putp				progs: tput
+putp				test: test_sgr progs: tput
 putp_sp				-
 putwin				test: ncurses
 qiflush				-
@@ -604,7 +605,7 @@ set_tabsize_sp			-
 set_term			lib: ncurses
 setcchar			test: demo_panels ins_wide ncurses test_add_wchstr test_addwstr view
 setscrreg			test: view
-setupterm			test: demo_terminfo dots test_setupterm test_vid_puts test_vidputs progs: clear tabs tput tset
+setupterm			test: demo_terminfo dots test_setupterm test_sgr test_vid_puts test_vidputs progs: clear tabs tput tset
 slk_attr			-
 slk_attr_off			-
 slk_attr_on			-
@@ -666,17 +667,17 @@ tigetflag			test: demo_terminfo progs: tic tput
 tigetflag_sp			-
 tigetnum			test: demo_terminfo ncurses progs: tput
 tigetnum_sp			-
-tigetstr			test: demo_defkey demo_terminfo foldkeys testcurs progs: clear tput
+tigetstr			test: demo_defkey demo_terminfo foldkeys test_sgr testcurs progs: clear tput
 tigetstr_sp			-
 timeout				test: rain savescreen
 tiparm				-
 touchline			test: chgat clip_printw insdelln
 touchwin			test: chgat clip_printw demo_menus edit_field filter firstlast inch_wide inchs ins_wide insdelln inserts movewindow ncurses redraw savescreen test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque xmas
-tparm				test: dots dots_mvcur progs: tabs tic tput
+tparm				test: dots dots_mvcur test_sgr progs: tabs tic tput
 tputs				test: dots dots_mvcur dots_termcap railroad test_vid_puts test_vidputs progs: clear tabs tset
 tputs_sp			lib: ncurses
 trace				test: demo_menus hashtest lrtest ncurses testcurs view worm
-ttytype				test: demo_terminfo
+ttytype				test: demo_terminfo test_sgr
 typeahead			test: testcurs
 typeahead_sp			lib: ncurses
 unctrl				test: ncurses redraw test_add_wchstr test_addchstr testcurs

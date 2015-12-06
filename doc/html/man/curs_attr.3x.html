@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.42 2015/10/24 19:10:42 Sven.Joachim Exp @
+  * @Id: curs_attr.3x,v 1.43 2015/12/05 18:46:04 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -90,6 +90,7 @@
              <STRONG>short</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG><EM>opts</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwchgat(WINDOW</STRONG> <STRONG>*</STRONG><EM>win,</EM> <EM>int</EM> <EM>y,</EM> <EM>int</EM> <EM>x,</EM> <EM>int</EM> <EM>n,</EM>
              <STRONG>attr_t</STRONG> <EM>attr</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG><EM>opts</EM><STRONG>);</STRONG>
+       <STRONG>PAIR_NUMBER(</STRONG><EM>attrs</EM><STRONG>);</STRONG>
 
 
 </PRE>
@@ -189,8 +190,8 @@
               <STRONG>A_INVIS</STRONG>         Invisible or blank mode
               <STRONG>A_ALTCHARSET</STRONG>    Alternate character set
               <STRONG>A_ITALIC</STRONG>        Italics (non-X/Open extension)
-              <STRONG>A_CHARTEXT</STRONG>      Bit-mask to extract a character
 
+              <STRONG>A_CHARTEXT</STRONG>      Bit-mask to extract a character
               <STRONG>COLOR_PAIR(</STRONG><EM>n</EM><STRONG>)</STRONG>   Color-pair number <EM>n</EM>
 
        These video attributes are supported by <STRONG>attr_on</STRONG> and relat-

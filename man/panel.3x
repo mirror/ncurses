@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2020,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.18 2015/04/11 10:23:49 tom Exp $
+.\" $Id: panel.3x,v 1.19 2015/12/05 23:42:45 tom Exp $
 .TH panel 3X ""
 .ds n 5
 .ds d @TERMINFO@
@@ -37,35 +37,35 @@ panel \- panel stack extension for curses
 .P
 \fBcc [flags] sourcefiles \-lpanel \-lncurses\fR
 .P
-\fBPANEL *new_panel(WINDOW *win)\fR
+\fBPANEL *new_panel(WINDOW *win);\fR
 .br
-\fBint bottom_panel(PANEL *pan)\fR
+\fBint bottom_panel(PANEL *pan);\fR
 .br
-\fBint top_panel(PANEL *pan)\fR
+\fBint top_panel(PANEL *pan);\fR
 .br
-\fBint show_panel(PANEL *pan)\fR
+\fBint show_panel(PANEL *pan);\fR
 .br
 \fBvoid update_panels();\fR
 .br
-\fBint hide_panel(PANEL *pan)\fR
+\fBint hide_panel(PANEL *pan);\fR
 .br
-\fBWINDOW *panel_window(const PANEL *pan)\fR
+\fBWINDOW *panel_window(const PANEL *pan);\fR
 .br
-\fBint replace_panel(PANEL *pan, WINDOW *window)\fR
+\fBint replace_panel(PANEL *pan, WINDOW *window);\fR
 .br
-\fBint move_panel(PANEL *pan, int starty, int startx)\fR
+\fBint move_panel(PANEL *pan, int starty, int startx);\fR
 .br
-\fBint panel_hidden(const PANEL *pan)\fR
+\fBint panel_hidden(const PANEL *pan);\fR
 .br
-\fBPANEL *panel_above(const PANEL *pan)\fR
+\fBPANEL *panel_above(const PANEL *pan);\fR
 .br
-\fBPANEL *panel_below(const PANEL *pan)\fR
+\fBPANEL *panel_below(const PANEL *pan);\fR
 .br
-\fBint set_panel_userptr(PANEL *pan, const void *ptr)\fR
+\fBint set_panel_userptr(PANEL *pan, const void *ptr);\fR
 .br
-\fBconst void *panel_userptr(const PANEL *pan)\fR
+\fBconst void *panel_userptr(const PANEL *pan);\fR
 .br
-\fBint del_panel(PANEL *pan)\fR
+\fBint del_panel(PANEL *pan);\fR
 .br
 .SH DESCRIPTION
 Panels are \fBcurses\fR(3X) windows with the added feature of

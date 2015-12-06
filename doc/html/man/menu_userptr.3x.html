@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: menu_userptr.3x,v 1.10 2010/12/04 18:40:45 tom Exp @
+  * @Id: menu_userptr.3x,v 1.11 2015/12/05 23:42:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -48,7 +48,8 @@
 
 </PRE>
 <H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>menu_userptr</STRONG> - associate application data with a menu item
+       <STRONG>set_menu_userptr</STRONG>,  <STRONG>menu_userptr</STRONG>  -  associate  application
+       data with a menu item
 
 
 </PRE>
@@ -60,7 +61,7 @@
 
 </PRE>
 <H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       Every  menu  and  every  menu item has a field that can be
+       Every menu and every menu item has a  field  that  can  be
        used to hold application-specific data (that is, the menu-
        driver code leaves it alone).  These functions get and set
        the menu user pointer field.
@@ -68,7 +69,7 @@
 
 </PRE>
 <H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>menu_userptr</STRONG> returns a pointer (which may  be  <STRONG>NULL</STRONG>).   It
+       <STRONG>menu_userptr</STRONG>  returns  a  pointer (which may be <STRONG>NULL</STRONG>).  It
        does not set errno.
 
        <STRONG>set_menu_userptr</STRONG> returns <STRONG>E_OK</STRONG> (success).
@@ -87,7 +88,7 @@
 
 </PRE>
 <H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V  menu  library.   They
+       These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
        The user pointer is a void pointer.  We chose not to leave
@@ -96,7 +97,7 @@
 
 </PRE>
 <H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
+       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 
 
