@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.14 2014/02/23 01:21:08 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.15 2015/12/13 00:56:03 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 
@@ -125,16 +125,12 @@ _nc_init_wacs(void)
 	    int wide = wcwidth((wchar_t) table[n].value[active]);
 
 	    m = table[n].map;
-	    if (active && (wide == 1)) {
-		SetChar(_nc_wacs[m], table[n].value[1], A_NORMAL);
-	    } else if (acs_map[m] & A_ALTCHARSET) {
-		SetChar(_nc_wacs[m], m, A_ALTCHARSET);
-	    } else {
-		SetChar(_nc_wacs[m], table[n].value[0], A_NORMAL);
-	    }
+	    SetChar(_nc_wacs[m],
+		    table[n].value[(active && (wide == 1)) ? 1 : 0],
+		    A_NORMAL);
 
-	    T(("#%d, SetChar(%c, %#04x) = %s",
-	       n, m,
+	    T(("#%d, wide:%d SetChar(%c, %#04x) = %s",
+	       n, wide, m,
 	       table[n].value[active],
 	       _tracecchar_t(&_nc_wacs[m])));
 	}

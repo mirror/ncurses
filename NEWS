@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2540 2015/12/05 23:45:23 tom Exp $
+-- $Id: NEWS,v 1.2543 2015/12/13 01:25:38 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151212
+	+ improve CF_XOPEN_CURSES macro used in test/configure, to define as
+	  needed NCURSES_WIDECHAR for platforms where _XOPEN_SOURCE_EXTENDED
+	  does not work.  Also modified the test program to ensure that if
+	  building with ncurses, that the cchar_t type is checked, since that
+	  normally is since 20111030 ifdef'd depending on this test.
+	+ improve 20121222 workaround for broken acs, letting Solaris "work"
+	  in spite of its m.isconfigured wcwidth which marks all of the line
+	  drawing characters as double-width.
 
 20151205
 	+ update form_cursor.3x, form_post.3x, menu_attributes.3x to list

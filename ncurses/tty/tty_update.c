@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.280 2014/08/23 19:25:18 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.281 2015/12/13 00:39:28 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -277,15 +277,17 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 	 * character, and uses the wide-character mapping when we expect the
 	 * normal one to be broken (by mis-design ;-).
 	 */
-	if (SP_PARM->_screen_acs_fix
-	    && SP_PARM->_screen_acs_map[CharOf(my_ch)]) {
-	    RemAttr(attr, A_ALTCHARSET);
-	    my_ch = _nc_wacs[CharOf(my_ch)];
-	} else if (SP_PARM->_screen_unicode
-		   && !SP_PARM->_screen_acs_map[CharOf(my_ch)]
-		   && _nc_wacs[CharOf(my_ch)].chars[0]) {
-	    RemAttr(attr, A_ALTCHARSET);
-	    my_ch = _nc_wacs[CharOf(my_ch)];
+	if (SP_PARM->_screen_unicode
+	    && _nc_wacs[CharOf(my_ch)].chars[0]) {
+	    if (SP_PARM->_screen_acs_map[CharOf(my_ch)]) {
+		if (SP_PARM->_screen_acs_fix) {
+		    RemAttr(attr, A_ALTCHARSET);
+		    my_ch = _nc_wacs[CharOf(my_ch)];
+		}
+	    } else {
+		RemAttr(attr, A_ALTCHARSET);
+		my_ch = _nc_wacs[CharOf(my_ch)];
+	    }
 	}
 #endif
 	/*
