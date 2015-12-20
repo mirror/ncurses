@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.43 2015/09/19 22:25:05 tom Exp $
+.\" $Id: curs_getch.3x,v 1.44 2015/12/20 01:43:03 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -118,9 +118,17 @@ returned by the next call to \fBwgetch\fR.
 There is just one input queue for all windows.
 .PP
 .SS Predefined key-codes
-The following special keys, defined in \fB<curses.h>\fR, may be returned by
-\fBgetch\fR if \fBkeypad\fR has been enabled.
+The following special keys are defined in \fB<curses.h>\fR.
+.bP
+Except for the special case \fBKEY_RESIZE\fP,
+it is necessary to enable \fBkeypad\fR for \fBgetch\fP to return these codes.
+.bP
 Not all of these are necessarily supported on any particular terminal.
+.bP
+The naming convention may seem obscure, with some apparent
+misspellings (such as "RSUME" for "resume").
+The names correspond to the long terminfo capability names for the keys,
+and were defined long ago, in the 1980s.
 .PP
 .TS
 center tab(/) ;

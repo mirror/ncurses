@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.785 2015/11/08 01:03:06 tom Exp $
+dnl $Id: aclocal.m4,v 1.786 2015/12/19 22:52:18 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1011,6 +1011,149 @@ if test $cf_cv_wchar_h_okay = no
 then
 	CF_PREDEFINE(_XOPEN_SOURCE_EXTENDED)
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_WCWIDTH_GRAPHICS version: 1 updated: 2015/12/19 17:47:56
+dnl -------------------------
+dnl Most "modern" terminal emulators are based to some degree on VT100, and
+dnl should support line-drawing.  Even with Unicode.  There is a problem.
+dnl
+dnl While most of the VT100 graphics characters were incorporated into Unicode,
+dnl all of those were combined into a page of useful graphics characters.
+dnl
+dnl So far, so good.
+dnl
+dnl However, while they are useful, there are other considerations.  CJK
+dnl is (because of poor device resolution) often rendered as double-width
+dnl characters.  So... for these generally-useful characters, what should
+dnl be the width (to make them consistent with adjacent characters)?
+dnl
+dnl The obvious choice would have been to make this locale-dependent, and use
+dnl wcwidth() to tell applications what the actual width is.  That was too
+dnl obvious.  Instead, we have a slew of "ambiguous-width" characters.
+dnl See for example
+dnl		http://www.unicode.org/reports/tr11/tr11-29.html
+dnl		http://www.cl.cam.ac.uk/~mgk25/ucs/scw-proposal.html
+dnl
+dnl The EastAsianWidth-6.2.0.txt file from the Unicode organization lists
+dnl more than 22,000 characters, with 1281 of those as ambiguous-width.  For
+dnl instance, it lists half (44/96) of the Latin-1 characters as
+dnl ambiguous-width.  Also, all of the box-characters at 0x2500 are ambiguous.
+dnl
+dnl What this means for the implementor is that on some systems wcwidth() can
+dnl give bad advice.  On Solaris, some of the ambiguous widths are returned as
+dnl 1 (the Latin-1 characters), while others are returned as 2 (line-drawing
+dnl characters).  These do not necessarily match the behavior of the terminal
+dnl emulator.  xterm, for instance, does an optional startup check to find if
+dnl this problem (or similar) exists with the system's locale tables, rejecting
+dnl them if they are too unreliable.
+AC_DEFUN([CF_CHECK_WCWIDTH_GRAPHICS],[
+AC_CACHE_CHECK(if wcwidth agrees graphics are single-width, cf_cv_wcwidth_graphics,[
+cat >conftest.in <<CF_EOF
+-	VT100 symbols
+0x250c	upper left corner
+0x2514	lower left corner
+0x2510	upper right corner
+0x2518	lower right corner
+0x251c	tee pointing left
+0x2524	tee pointing right
+0x2534	tee pointing up
+0x252c	tee pointing down
+0x2500	horizontal line
+0x2502	vertical line
+0x253c	large plus or crossover
+0x23ba	scan line 1
+0x23bd	scan line 9
+0x25c6	diamond
+0x2592	checker board (stipple)
+0x00b0	degree symbol
+0x00b1	plus/minus
+0x00b7	bullet
+-	Teletype 5410v1 symbols
+0x2190	arrow pointing left
+0x2192	arrow pointing right
+0x2193	arrow pointing down
+0x2191	arrow pointing up
+0x2592	board of squares
+0x2603	lantern symbol
+0x25ae	solid square block
+-	these defaults were invented for ncurses
+0x23bb	scan line 3
+0x23bc	scan line 7
+0x2264	less-than-or-equal-to
+0x2265	greater-than-or-equal-to
+0x03c0	greek pi
+0x2260	not-equal
+0x00a3	pound-sterling symbol
+-	thick-line-drawing
+0x250f	upper left corner
+0x2517	lower left corner
+0x2513	upper right corner
+0x251b	lower right corner
+0x2523	tee pointing left
+0x252b	tee pointing right
+0x253b	tee pointing up
+0x2533	tee pointing down
+0x2501	horizontal line
+0x2503	vertical line
+0x254b	large plus or crossover
+-	double-line-drawing
+0x2554	upper left corner
+0x255a	lower left corner
+0x2557	upper right corner
+0x255d	lower right corner
+0x2563	tee pointing left
+0x2560	tee pointing right
+0x2569	tee pointing up
+0x2566	tee pointing down
+0x2550	horizontal line
+0x2551	vertical line
+0x256c	large plus or crossover
+CF_EOF
+AC_TRY_RUN([
+#include <locale.h>
+#include <stdio.h>
+#include <wchar.h>
+
+#define MY_LEN 80
+
+int
+main(void)
+{
+	FILE *fp;
+	int value;
+	char buffer[MY_LEN + 1];
+	char notes[MY_LEN + 1];
+	int totals = 0;
+	int passed = 0;
+
+	if (setlocale(LC_ALL, "en_US.UTF8") ||
+		setlocale(LC_ALL, "en_US.UTF-8") ||
+		setlocale(LC_ALL, "en_US.utf8") ||
+		setlocale(LC_ALL, "en_US.utf-8")) {
+		if ((fp = fopen("conftest.in", "r")) != 0) {
+			while (fgets(buffer, MY_LEN, fp) != 0) {
+				if (*buffer == '-') {
+					fprintf(stderr, "\t%s", buffer);
+				} else if (sscanf(buffer, "%x %s", &value, notes) == 2) {
+					++totals;
+					if (wcwidth(value) == 1)
+						++passed;
+					fprintf(stderr, "%d\t%s", wcwidth(value), buffer);
+				} else {
+					fprintf(stderr, "?\t%s", buffer);
+				}
+			}
+		}
+	}
+	fprintf(stderr, "%d/%d passed wcwidth/graphics check\n", passed, totals);
+	return (totals == passed) ? 0 : 1;
+}
+],
+[cf_cv_wcwidth_graphics=yes],
+[cf_cv_wcwidth_graphics=no],
+[cf_cv_wcwidth_graphics=unknown])
+])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CLANG_COMPILER version: 2 updated: 2013/11/19 19:23:35
@@ -4832,6 +4975,26 @@ if test "${with_abi_version+set}" != set; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_NCURSES_WITH_ABI_VERSION version: 2 updated: 2015/12/19 17:51:52
+dnl ---------------------------
+dnl Allow ncurses's ABI to be overridden.  Generally this happens when a
+dnl packager has incremented the ABI past that used in the original package,
+dnl and wishes to keep doing this.
+dnl
+dnl $1 is the package name, if any, to derive a corresponding {package}_ABI
+dnl symbol.
+AC_DEFUN([CF_NCURSES_WITH_ABI_VERSION],[
+CF_WITH_ABI_VERSION($1)
+if test "x$cf_cv_abi_version" != "x$with_abi_version"
+then
+	case $cf_cv_rel_version in
+	(5.*)
+		cf_cv_rel_version=$with_abi_version.0
+		;;
+	esac
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_NO_LEAKS_OPTION version: 6 updated: 2015/04/12 15:39:00
 dnl ------------------
 dnl see CF_WITH_NO_LEAKS
@@ -6879,28 +7042,6 @@ AC_ARG_WITH(abi-version,
 ifelse($1,,,[
 $1_ABI=$cf_cv_abi_version
 ])
-])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_WITH_ABI_VERSION version: 1 updated: 2015/06/06 13:49:58
-dnl ---------------------------
-dnl CF_WITH_ABI_VERSION version: 1 updated: 2003/09/20 18:12:49
-dnl -------------------
-dnl Allow ncurses's ABI to be overridden.  Generally this happens when a
-dnl packager has incremented the ABI past that used in the original package,
-dnl and wishes to keep doing this.
-dnl
-dnl $1 is the package name, if any, to derive a corresponding {package}_ABI
-dnl symbol.
-AC_DEFUN([CF_NCURSES_WITH_ABI_VERSION],[
-CF_WITH_ABI_VERSION($1)
-if test "x$cf_cv_abi_version" != "x$with_abi_version"
-then
-	case $cf_cv_rel_version in
-	(5.*)
-		cf_cv_rel_version=$with_abi_version.0
-		;;
-	esac
-fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_ADA_COMPILER version: 2 updated: 2010/06/26 17:35:58

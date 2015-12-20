@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.241 2014/08/09 20:39:44 tom Exp $ */
+/* $Id: curses.h.in,v 1.242 2015/12/19 23:08:31 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -141,6 +141,13 @@
  */
 #undef NCURSES_TPARM_ARG
 #define NCURSES_TPARM_ARG @NCURSES_TPARM_ARG@
+
+/*
+ * Control whether ncurses uses wcwidth() for checking width of line-drawing
+ * characters.
+ */
+#undef NCURSES_WCWIDTH_GRAPHICS
+#define NCURSES_WCWIDTH_GRAPHICS @NCURSES_WCWIDTH_GRAPHICS@
 
 /*
  * NCURSES_CH_T is used in building the library, but not used otherwise in

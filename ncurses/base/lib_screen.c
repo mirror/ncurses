@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.78 2015/09/12 20:47:43 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.79 2015/12/20 01:22:59 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -588,7 +588,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 	}
 #if NCURSES_EXT_PUTWIN
 	else {
-	    char *txt;
+	    char *txt = 0;
 	    bool success = TRUE;
 	    NCURSES_CH_T prior = blank;
 

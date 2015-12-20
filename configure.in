@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.623 2015/11/07 22:41:37 tom Exp $
+dnl $Id: configure.in,v 1.625 2015/12/20 02:07:23 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.623 $)
+AC_REVISION($Revision: 1.625 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -830,6 +830,10 @@ AC_ARG_ENABLE(widec,
 	[with_widec=$enableval],
 	[with_widec=no])
 AC_MSG_RESULT($with_widec)
+
+NCURSES_WCWIDTH_GRAPHICS=1
+AC_SUBST(NCURSES_WCWIDTH_GRAPHICS)
+
 if test "x$with_widec" = xyes ; then
 	if test "x$disable_lib_suffixes" = xno ; then
 		LIB_SUFFIX="w${LIB_SUFFIX}"
@@ -838,6 +842,8 @@ if test "x$with_widec" = xyes ; then
 	AC_DEFINE(NCURSES_WIDECHAR,1,[Define to 1 to compile with wide-char/UTF-8 code])
 
 	CF_CHECK_WCHAR_H
+	CF_CHECK_WCWIDTH_GRAPHICS
+	test "$cf_cv_wcwidth_graphics" = no && NCURSES_WCWIDTH_GRAPHICS=0
 
 	# with_overwrite=no
 	NCURSES_CH_T=cchar_t
