@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2547 2015/12/20 02:03:35 tom Exp $
+-- $Id: NEWS,v 1.2550 2015/12/27 01:01:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20151226
+	+ add check in tic for use of bold, etc., video attributes in the
+	  color capabilities, accounting whether the feature is listed in ncv.
+	+ add check in tic for conflict between ritm, rmso, rmul versus sgr0.
 
 20151219
 	+ add a paragraph to curs_getch.3x discussing key naming (discussion

@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.216 2015/09/05 19:22:49 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.220 2015/12/27 01:46:01 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2028,6 +2028,23 @@ ignore_delays(char *s)
     return s;
 }
 
+#define DATA(name) { #name }
+static const char sgr_names[][11] =
+{
+    DATA(none),
+    DATA(standout),
+    DATA(underline),
+    DATA(reverse),
+    DATA(blink),
+    DATA(dim),
+    DATA(bold),
+    DATA(invis),
+    DATA(protect),
+    DATA(altcharset),
+    ""
+};
+#undef DATA
+
 /*
  * An sgr string may contain several settings other than the one we're
  * interested in, essentially sgr0 + rmacs + whatever.  As long as the
@@ -2037,21 +2054,6 @@ ignore_delays(char *s)
 static bool
 similar_sgr(int num, char *a, char *b)
 {
-#define DATA(name) { #name }
-    static const char names[][11] =
-    {
-	DATA(none),
-	DATA(standout),
-	DATA(underline),
-	DATA(reverse),
-	DATA(blink),
-	DATA(dim),
-	DATA(bold),
-	DATA(invis),
-	DATA(protect),
-	DATA(altcharset),
-    };
-#undef DATA
     char *base_a = a;
     char *base_b = b;
     int delaying = 0;
@@ -2059,12 +2061,14 @@ similar_sgr(int num, char *a, char *b)
     while (*b != 0) {
 	while (*a != *b) {
 	    if (*a == 0) {
-		if (b[0] == '$'
-		    && b[1] == '<') {
+		if (num < 0) {
+		    ;
+		} else if (b[0] == '$'
+			   && b[1] == '<') {
 		    _nc_warning("Did not find delay %s", _nc_visbuf(b));
 		} else {
 		    _nc_warning("checking sgr(%s) %s\n\tcompare to %s\n\tunmatched %s",
-				names[num], _nc_visbuf2(1, base_a),
+				sgr_names[num], _nc_visbuf2(1, base_a),
 				_nc_visbuf2(2, base_b),
 				_nc_visbuf2(3, b));
 		}
@@ -2264,6 +2268,92 @@ check_conflict(TERMTYPE *tp)
     }
 }
 
+/*
+ * Exiting a video mode should not duplicate sgr0
+ */
+static void
+check_exit_attribute(const char *name, char *test, char *trimmed, char *untrimmed)
+{
+    if (VALID_STRING(test)) {
+	if (similar_sgr(-1, trimmed, test) ||
+	    similar_sgr(-1, untrimmed, test)) {
+	    _nc_warning("%s matches exit_attribute_mode", name);
+	}
+    }
+}
+
+/*
+ * Returns true if the string looks like a standard SGR string.
+ */
+static bool
+is_sgr_string(char *value)
+{
+    bool result = FALSE;
+
+    if (VALID_STRING(value)) {
+	if (value[0] == '\033' && value[1] == '[') {
+	    result = TRUE;
+	    value += 2;
+	} else if (UChar(value[0]) == 0x9a) {
+	    result = TRUE;
+	    value += 1;
+	}
+	if (result) {
+	    int ch;
+	    while ((ch = UChar(*value++)) != '\0') {
+		if (isdigit(ch) || ch == ';') {
+		    ;
+		} else if (ch == 'm' && *value == '\0') {
+		    ;
+		} else {
+		    result = FALSE;
+		    break;
+		}
+	    }
+	}
+    }
+    return result;
+}
+
+/*
+ * Check if the given capability contains a given SGR attribute.
+ */
+static void
+check_sgr_param(TERMTYPE *tp, int code, const char *name, char *value)
+{
+    if (VALID_STRING(value)) {
+	int ncv = ((code != 0) ? (1 << (code - 1)) : 0);
+	char *test = tgoto(value, 0, 0);
+	if (is_sgr_string(test)) {
+	    int param = 0;
+	    int count = 0;
+	    while (*test != 0) {
+		if (isdigit(UChar(*test))) {
+		    param = 10 * param + (*test - '0');
+		    ++count;
+		} else {
+		    if (count) {
+			if (param == code)
+			    break;
+		    }
+		    count = 0;
+		    param = 0;
+		}
+		++test;
+	    }
+	    if (count != 0 && param == code) {
+		if (code == 0 ||
+		    no_color_video < 0 ||
+		    !(no_color_video & ncv)) {
+		    _nc_warning("\"%s\" SGR-attribute used in %s",
+				sgr_names[code],
+				name);
+		}
+	    }
+	}
+    }
+}
+
 /* other sanity-checks (things that we don't want in the normal
  * logic that reads a terminfo entry)
  */
@@ -2346,7 +2436,7 @@ check_termtype(TERMTYPE *tp, bool literal)
 	if (_nc_syntax == SYN_TERMINFO)
 	    _nc_warning("missing sgr string");
     }
-
+#define CHECK_SGR0(name) check_exit_attribute(#name, name, check_sgr0, exit_attribute_mode)
     if (PRESENT(exit_attribute_mode)) {
 	char *check_sgr0 = _nc_trim_sgr0(tp);
 
@@ -2365,9 +2455,19 @@ check_termtype(TERMTYPE *tp, bool literal)
 		       _nc_visbuf(exit_attribute_mode)));
 	    }
 	}
+	CHECK_SGR0(exit_italics_mode);
+	CHECK_SGR0(exit_standout_mode);
+	CHECK_SGR0(exit_underline_mode);
 	if (check_sgr0 != exit_attribute_mode) {
 	    free(check_sgr0);
 	}
+    }
+#define CHECK_SGR_PARAM(code, name) check_sgr_param(tp, (int)code, #name, name)
+    for (j = 0; *sgr_names[j] != '\0'; ++j) {
+	CHECK_SGR_PARAM(j, set_a_foreground);
+	CHECK_SGR_PARAM(j, set_a_background);
+	CHECK_SGR_PARAM(j, set_foreground);
+	CHECK_SGR_PARAM(j, set_background);
     }
 #ifdef TRACE
     show_where(2);
