@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.425 2015/11/29 01:26:41 tom Exp $
+$Id: ncurses.c,v 1.429 2016/01/03 01:50:10 tom Exp $
 
 ***************************************************************************/
 
@@ -2185,9 +2185,10 @@ color_test(void)
     int page_size = (LINES - grid_top);
     int pairs_max;
     int colors_max = COLORS;
+    int col_limit;
     int row_limit;
     int per_row;
-    char numbered[80];
+    char *numbered = 0;
     const char *hello;
     bool done = FALSE;
     bool opt_acsc = FALSE;
@@ -2196,6 +2197,15 @@ color_test(void)
     bool opt_nums = FALSE;
     bool opt_wide = FALSE;
     WINDOW *helpwin;
+
+    numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
+    done = ((COLS < 16) || (numbered == 0));
+
+    /*
+     * Because the number of colors is usually a power of two, we also use
+     * a power of two for the number of colors shown per line (to be tidy).
+     */
+    for (col_limit = 1; col_limit * 2 < COLS; col_limit *= 2) ;
 
     while (!done) {
 	int shown = 0;
@@ -2214,11 +2224,11 @@ color_test(void)
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (colors_max > 8) ? 16 : 8;
+	    per_row = (col_limit / ((colors_max > 8) ? 4 : 8));
 	} else {
 	    width = 8;
 	    hello = "Hello";
-	    per_row = 8;
+	    per_row = (col_limit / 8);
 	}
 	per_row -= min_colors;
 
@@ -2248,6 +2258,9 @@ color_test(void)
 	    int row = grid_top + (i / per_row) - base_row;
 	    int col = (i % per_row + 1) * width;
 	    NCURSES_PAIRS_T pair = i;
+
+	    if ((i / per_row) > row_limit)
+		break;
 
 #define InxToFG(i) (NCURSES_COLOR_T) ((i % (colors_max - min_colors)) + min_colors)
 #define InxToBG(i) (NCURSES_COLOR_T) ((i / (colors_max - min_colors)) + min_colors)
@@ -2375,6 +2388,8 @@ color_test(void)
 
     erase();
     endwin();
+
+    free(numbered);
 }
 
 #if USE_WIDEC_SUPPORT
@@ -2389,9 +2404,10 @@ wide_color_test(void)
     int page_size = (LINES - grid_top);
     int pairs_max = (unsigned short) (-1);
     int colors_max = COLORS;
+    int col_limit;
     int row_limit;
     int per_row;
-    char numbered[80];
+    char *numbered = 0;
     const char *hello;
     bool done = FALSE;
     bool opt_acsc = FALSE;
@@ -2400,8 +2416,18 @@ wide_color_test(void)
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
     bool opt_xchr = FALSE;
-    wchar_t buffer[80];
+    wchar_t *buffer = 0;
     WINDOW *helpwin;
+
+    numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
+    buffer = (wchar_t *) calloc((size_t) (COLS + 1), sizeof(wchar_t));
+    done = ((COLS < 16) || (numbered == 0) || (buffer == 0));
+
+    /*
+     * Because the number of colors is usually a power of two, we also use
+     * a power of two for the number of colors shown per line (to be tidy).
+     */
+    for (col_limit = 1; col_limit * 2 < COLS; col_limit *= 2) ;
 
     while (!done) {
 	int shown = 0;
@@ -2416,15 +2442,14 @@ wide_color_test(void)
 		pairs_max = COLOR_PAIRS;
 	}
 
-	/* this assumes an 80-column line */
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (colors_max > 8) ? 16 : 8;
+	    per_row = (col_limit / ((colors_max > 8) ? 4 : 8));
 	} else {
 	    width = 8;
 	    hello = "Hello";
-	    per_row = 8;
+	    per_row = (col_limit / 8);
 	}
 	per_row -= min_colors;
 
@@ -2462,6 +2487,9 @@ wide_color_test(void)
 	    int row = grid_top + (i / per_row) - base_row;
 	    int col = (i % per_row + 1) * width;
 	    NCURSES_PAIRS_T pair = (NCURSES_PAIRS_T) i;
+
+	    if ((i / per_row) > row_limit)
+		break;
 
 	    if (row >= 0 && move(row, col) != ERR) {
 		init_pair(pair, InxToFG(i), InxToBG(i));
@@ -2594,6 +2622,9 @@ wide_color_test(void)
 
     erase();
     endwin();
+
+    free(numbered);
+    free(buffer);
 }
 #endif /* USE_WIDEC_SUPPORT */
 

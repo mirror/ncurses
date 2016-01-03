@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2550 2015/12/27 01:01:41 tom Exp $
+-- $Id: NEWS,v 1.2554 2016/01/03 01:17:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160102
+	+ modify ncurses c/C color test-screens to take advantage of wide
+	  screens, reducing the number of lines used for 88- and 256-colors.
+	+ minor refinement to check versus ncv to ignore two parameters of
+	  SGR 38 and 48 when those come from color-capabilities.
 
 20151226
 	+ add check in tic for use of bold, etc., video attributes in the

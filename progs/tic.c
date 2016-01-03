@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.220 2015/12/27 01:46:01 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.221 2016/01/02 20:04:37 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2327,13 +2327,23 @@ check_sgr_param(TERMTYPE *tp, int code, const char *name, char *value)
 	if (is_sgr_string(test)) {
 	    int param = 0;
 	    int count = 0;
+	    int skips = 0;
+	    int color = (value == set_a_foreground ||
+			 value == set_a_background ||
+			 value == set_foreground ||
+			 value == set_background);
 	    while (*test != 0) {
 		if (isdigit(UChar(*test))) {
 		    param = 10 * param + (*test - '0');
 		    ++count;
 		} else {
 		    if (count) {
-			if (param == code)
+			/*
+			 * Avoid unnecessary warning for xterm 256color codes.
+			 */
+			if (color && (param == 38 || param == 48))
+			    skips = 3;
+			if ((skips-- <= 0) && (param == code))
 			    break;
 		    }
 		    count = 0;

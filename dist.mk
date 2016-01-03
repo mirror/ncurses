@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: dist.mk,v 1.1085 2015/12/26 15:21:12 tom Exp $
+# $Id: dist.mk,v 1.1087 2016/01/02 20:24:37 tom Exp $
 # Makefile for creating ncurses distributions.
 #
 # This only needs to be used directly as a makefile by developers, but
@@ -37,7 +37,7 @@ SHELL = /bin/sh
 # These define the major/minor/patch versions of ncurses.
 NCURSES_MAJOR = 6
 NCURSES_MINOR = 0
-NCURSES_PATCH = 20151226
+NCURSES_PATCH = 20160102
 
 # We don't append the patch to the version, since this only applies to releases
 VERSION = $(NCURSES_MAJOR).$(NCURSES_MINOR)
