@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.44 2014/09/25 08:51:13 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.46 2016/01/10 23:51:56 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -315,9 +315,9 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 		if (!isWidecExt(buf[j])) {
 		    PUTC_DATA;
 
-		    PUTC_INIT;
 		    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {
 			int k;
+			char temp[80];
 
 			PUTC_ch = buf[j].chars[PUTC_i];
 			if (PUTC_ch == L'\0') {
@@ -325,12 +325,17 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 				(void) _nc_trace_bufcat(bufnum, "\\000");
 			    break;
 			}
+			PUTC_INIT;
 			PUTC_n = (int) wcrtomb(PUTC_buf,
 					       buf[j].chars[PUTC_i], &PUT_st);
-			if (PUTC_n <= 0)
+			if (PUTC_n <= 0 || buf[j].chars[PUTC_i] > 255) {
+			    sprintf(temp, "{%d:\\u%x}",
+				    wcwidth(buf[j].chars[PUTC_i]),
+				    buf[j].chars[PUTC_i]);
+			    (void) _nc_trace_bufcat(bufnum, temp);
 			    break;
+			}
 			for (k = 0; k < PUTC_n; k++) {
-			    char temp[80];
 			    VisChar(temp, UChar(PUTC_buf[k]), sizeof(temp));
 			    (void) _nc_trace_bufcat(bufnum, temp);
 			}

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.83 2015/04/04 13:41:37 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.85 2016/01/16 21:23:43 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -338,7 +338,6 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 		PUTC_DATA;
 		int n;
 
-		PUTC_INIT;
 		(void) _nc_trace_bufcat(bufnum, "{ ");
 		for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {
 		    PUTC_ch = ch->chars[PUTC_i];
@@ -347,6 +346,7 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 			    (void) _nc_trace_bufcat(bufnum, "\\000");
 			break;
 		    }
+		    PUTC_INIT;
 		    PUTC_n = (int) wcrtomb(PUTC_buf, ch->chars[PUTC_i], &PUT_st);
 		    if (PUTC_n <= 0) {
 			if (PUTC_ch != L'\0') {
@@ -355,6 +355,13 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 						    _nc_tracechar(CURRENT_SCREEN,
 								  UChar(ch->chars[PUTC_i])));
 			}
+			break;
+		    } else if (ch->chars[PUTC_i] > 255) {
+			char temp[80];
+			sprintf(temp, "{%d:\\u%x}",
+				wcwidth(ch->chars[PUTC_i]),
+				ch->chars[PUTC_i]);
+			(void) _nc_trace_bufcat(bufnum, temp);
 			break;
 		    }
 		    for (n = 0; n < PUTC_n; n++) {

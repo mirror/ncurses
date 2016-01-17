@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.559 $
-#	$Date: 2015/11/28 21:35:00 $
+#	$Revision: 1.561 $
+#	$Date: 2016/01/17 00:25:26 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3580,28 +3580,31 @@ putty|PuTTY terminal emulator,
 	ind=^J, indn=\E[%p1%dS,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/%02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
-	kLFT=\EOD, kRIT=\EOC, kb2=\E[G, kbs=\177, kcbt=\E[Z,
-	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
+	kLFT=\E[D, kRIT=\E[C, kb2=\E[G, kbs=\177, kcbt=\E[Z,
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
 	kdch1=\E[3~, kend=\E[4~, khome=\E[1~, kich1=\E[2~,
-	kind=\EOB, kmous=\E[M, knp=\E[6~, kpp=\E[5~, kri=\EOA,
+	kind=\E[B, kmous=\E[M, knp=\E[6~, kpp=\E[5~, kri=\E[A,
 	kspd=^Z, nel=^M^J, oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m,
 	ri=\EM, rin=\E[%p1%dT, rmacs=^O, rmam=\E[?7l,
-	rmcup=\E[2J\E[?47l, rmir=\E[4l, rmpch=\E[10m,
-	rmso=\E[27m, rmul=\E[24m,
+	rmcup=\E[2J\E[?47l, rmir=\E[4l, rmkx=\E[?1l\E>,
+	rmpch=\E[10m, rmso=\E[27m, rmul=\E[24m,
 	rs2=\E<\E["p\E[50;6"p\Ec\E[?3l\E]R\E[?1000l,
 	s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m, sc=\E7,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
-	smir=\E[4h, smpch=\E[11m, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J, use=putty+fnkeys,
-	use=vt102+enq, use=xterm+sl,
+	smir=\E[4h, smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m,
+	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J,
+	use=putty+fnkeys, use=vt102+enq, use=xterm+sl,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
-# palette is hardcoded...
 putty-256color|PuTTY 0.58 with xterm 256-colors,
 	use=xterm+256setaf, use=putty,
+putty-noapp|putty with cursor keys in normal mode,
+	kLFT=\EOD, kRIT=\EOC, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C,
+	kcuu1=\E[A, kind=\EOB, kri=\EOA, rmkx=\E>, smkx=\E=,
+	use=putty,
 
 # One of the keyboard selections is "VT100+".
 # pterm (the X11 port) uses shifted F1-F10 as F11-F20
@@ -4235,6 +4238,7 @@ xterm+256color|xterm 256-color feature,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m,
 	setb@, setf@,
 
+# palette is hardcoded...
 xterm+256setaf|xterm 256-color (set-only),
 	ccc@,
 	colors#256, pairs#32767,
@@ -4876,7 +4880,6 @@ vte-2014|VTE 0.35.1,
 vte|VTE aka GNOME Terminal,
 	use=vte-2014,
 
-# palette is hardcoded...
 vte-256color|VTE with xterm 256-colors,
 	use=xterm+256color, use=vte,
 gnome-256color|GNOME Terminal with xterm 256-colors,
@@ -4996,7 +4999,6 @@ konsole-16color|klone of xterm-16color,
 konsole|KDE console window,
 	use=konsole-xf4x,
 
-# palette is hardcoded...
 konsole-256color|KDE console window with xterm 256-colors,
 	use=xterm+256setaf, use=konsole,
 
@@ -23812,6 +23814,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ fix some inconsistencies in the pccon* entries -TD
 #
 # 2015-11-28
-#	  add viewdata (Alexandre Montaron).
+#	+ add viewdata (Alexandre Montaron).
+#
+# 2016-01-16
+#	+ tidy up comments about hardcoded 256color palette (report by
+#	  Leonardo Brondani Schenkel) -TD
+#	+ add putty-noapp entry, and amend putty entry to use application mode
+#	  for better consistency with xterm (report by Leonardo Brondani
+#	  Schenkel) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2015 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2015,2016 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.4 2015/11/21 22:43:50 tom Exp $
+ * $Id: test_sgr.c,v 1.5 2016/01/09 18:15:53 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -146,7 +146,7 @@ dumpit(unsigned bits, unsigned ignore, const char *sgr, const char *sgr0)
     printf("%4d ", bits);
     bits &= ~ignore;
     for (n = 0; n < MAXPAR; ++n) {
-	putchar((bits & (1 << n)) ? params[n] : '-');
+	putchar((int) ((bits & (unsigned) (1 << n)) ? params[n] : '-'));
     }
     putchar(' ');
     putp(sgr);
@@ -236,7 +236,7 @@ brute_force(const char *name)
 	    }
 	}
 	for (j = 0; j < MAXPAR; ++j) {
-	    unsigned mask = (1 << j);
+	    unsigned mask = (unsigned) (1 << j);
 	    for (count = 0; count < MAXSGR; ++count) {
 		if ((count & mask) != 0)
 		    continue;

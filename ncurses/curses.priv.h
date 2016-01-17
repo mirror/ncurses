@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.547 2015/06/27 01:22:16 tom Exp $
+ * $Id: curses.priv.h,v 1.548 2016/01/10 22:17:19 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1428,11 +1428,11 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
 			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
-			    PUTC_INIT;						    \
 			    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {	    \
 				PUTC_ch = (ch).chars[PUTC_i];			    \
 				if (PUTC_ch == L'\0')				    \
 				    break;					    \
+				PUTC_INIT;						    \
 				PUTC_n = (int) wcrtomb(PUTC_buf,		    \
 						       (ch).chars[PUTC_i], &PUT_st); \
 				if (PUTC_n <= 0) {				    \
