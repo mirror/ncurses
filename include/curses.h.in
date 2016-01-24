@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.242 2015/12/19 23:08:31 tom Exp $ */
+/* $Id: curses.h.in,v 1.243 2016/01/23 22:20:31 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -1204,13 +1204,13 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define addchstr(str)		waddchstr(stdscr,(str))
 #define addnstr(str,n)		waddnstr(stdscr,(str),(n))
 #define addstr(str)		waddnstr(stdscr,(str),-1)
-#define attroff(at)		wattroff(stdscr,(at))
-#define attron(at)		wattron(stdscr,(at))
-#define attrset(at)		wattrset(stdscr,(at))
 #define attr_get(ap,cp,o)	wattr_get(stdscr,(ap),(cp),(o))
 #define attr_off(a,o)		wattr_off(stdscr,(a),(o))
 #define attr_on(a,o)		wattr_on(stdscr,(a),(o))
 #define attr_set(a,c,o)		wattr_set(stdscr,(a),(c),(o))
+#define attroff(at)		wattroff(stdscr,(at))
+#define attron(at)		wattron(stdscr,(at))
+#define attrset(at)		wattrset(stdscr,(at))
 #define bkgd(ch)		wbkgd(stdscr,(ch))
 #define bkgdset(ch)		wbkgdset(stdscr,(ch))
 #define chgat(n,a,c,o)		wchgat(stdscr,(n),(a),(c),(o))
@@ -1253,8 +1253,8 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define mvwaddchstr(win,y,x,str)	(wmove((win),(y),(x)) == ERR ? ERR : waddchnstr((win),(str),-1))
 #define mvwaddnstr(win,y,x,str,n)	(wmove((win),(y),(x)) == ERR ? ERR : waddnstr((win),(str),(n)))
 #define mvwaddstr(win,y,x,str)		(wmove((win),(y),(x)) == ERR ? ERR : waddnstr((win),(str),-1))
-#define mvwdelch(win,y,x)		(wmove((win),(y),(x)) == ERR ? ERR : wdelch(win))
 #define mvwchgat(win,y,x,n,a,c,o)	(wmove((win),(y),(x)) == ERR ? ERR : wchgat((win),(n),(a),(c),(o)))
+#define mvwdelch(win,y,x)		(wmove((win),(y),(x)) == ERR ? ERR : wdelch(win))
 #define mvwgetch(win,y,x)		(wmove((win),(y),(x)) == ERR ? ERR : wgetch(win))
 #define mvwgetnstr(win,y,x,str,n)	(wmove((win),(y),(x)) == ERR ? ERR : wgetnstr((win),(str),(n)))
 #define mvwgetstr(win,y,x,str)		(wmove((win),(y),(x)) == ERR ? ERR : wgetstr((win),(str)))

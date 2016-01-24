@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.133 2015/11/29 01:28:52 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.134 2016/01/23 21:32:00 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -651,7 +651,7 @@ wgetch_events(WINDOW *win, _nc_eventlist * evl)
     int code;
     int value;
 
-    T((T_CALLED("wgetch_events(%p,%p)"), win, evl));
+    T((T_CALLED("wgetch_events(%p,%p)"), (void *) win, (void *)evl));
     code = _nc_wgetch(win,
 		      &value,
 		      _nc_use_meta(win)

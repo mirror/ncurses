@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.548 2016/01/10 22:17:19 tom Exp $
+ * $Id: curses.priv.h,v 1.551 2016/01/24 01:39:09 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1630,7 +1630,10 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 #define TRACE_RETURN2(value,dst,src) return _nc_retrace_##dst##_##src(value)
 #define TRACE_RETURN_SP(value,type)  return _nc_retrace_##type(SP_PARM, value)
 
-#define NonNull(s)	((s) != 0 ? s : "<null>")
+typedef void VoidFunc(void);
+
+#define TR_FUNC(value)          ((const char*) &(value))
+#define NonNull(s)	        ((s) != 0 ? s : "<null>")
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)

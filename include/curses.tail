@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.21 2011/10/29 20:03:22 tom Exp $ */
+/* $Id: curses.tail,v 1.22 2016/01/23 22:03:27 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -111,7 +111,9 @@ extern NCURSES_EXPORT(mmask_t) NCURSES_SP_NAME(mousemask) (SCREEN*, mmask_t, mma
 extern NCURSES_EXPORT(int)     NCURSES_SP_NAME(mouseinterval) (SCREEN*, int);
 #endif
 
+#ifndef NCURSES_NOMACROS
 #define mouse_trafo(y,x,to_screen) wmouse_trafo(stdscr,y,x,to_screen)
+#endif
 
 /* other non-XSI functions */
 
