@@ -45,21 +45,17 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        term - format of compiled term file.
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>term</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-STORAGE-LOCATION">STORAGE LOCATION</a></H3><PRE>
+</PRE><H3><a name="h3-STORAGE-LOCATION">STORAGE LOCATION</a></H3><PRE>
        Compiled terminfo descriptions are placed under the direc-
        tory <STRONG>/usr/share/terminfo</STRONG>.   Two  configurations  are  sup-
        ported (when building the ncurses libraries):
@@ -92,8 +88,7 @@
             existing directory, and hashed database otherwise.
 
 
-</PRE>
-<H3><a name="h3-STORAGE-FORMAT">STORAGE FORMAT</a></H3><PRE>
+</PRE><H3><a name="h3-STORAGE-FORMAT">STORAGE FORMAT</a></H3><PRE>
        The format has been chosen so that it will be the same  on
        all  hardware.   An  8 or more bit byte is assumed, but no
        assumptions about byte  ordering  or  sign  extension  are
@@ -172,8 +167,7 @@
        section.  Each string is null terminated.
 
 
-</PRE>
-<H3><a name="h3-EXTENDED-STORAGE-FORMAT">EXTENDED STORAGE FORMAT</a></H3><PRE>
+</PRE><H3><a name="h3-EXTENDED-STORAGE-FORMAT">EXTENDED STORAGE FORMAT</a></H3><PRE>
        The  previous  section describes the conventional terminfo
        binary format.  With some minor variations of the  offsets
        (see  PORTABILITY),  the same binary format is used in all
@@ -212,8 +206,7 @@
        e.g., booleans, then numbers and finally strings.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        Note that it is possible for <EM>setupterm</EM> to expect a differ-
        ent  set  of capabilities than are actually present in the
        file.  Either the database may  have  been  updated  since
@@ -238,8 +231,7 @@
        sion of terminfo source compatibility issues.
 
 
-</PRE>
-<H2><a name="h2-EXAMPLE">EXAMPLE</a></H2><PRE>
+</PRE><H2><a name="h2-EXAMPLE">EXAMPLE</a></H2><PRE>
        As  an  example, here is a hex dump of the description for
        the Lear-Siegler ADM-3, a  popular  though  rather  stupid
        early terminal:
@@ -276,25 +268,21 @@
 
 
 
-</PRE>
-<H2><a name="h2-LIMITS">LIMITS</a></H2><PRE>
+</PRE><H2><a name="h2-LIMITS">LIMITS</a></H2><PRE>
        Some  limitations:  total  compiled  entries cannot exceed
        4096 bytes.  The name field cannot exceed 128 bytes.
 
 
-</PRE>
-<H2><a name="h2-FILES">FILES</a></H2><PRE>
+</PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        /usr/share/terminfo/*/*  compiled terminal capability data
        base
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Thomas E. Dickey
        extended terminfo format for ncurses 5.0
        hashed database support for ncurses 5.6

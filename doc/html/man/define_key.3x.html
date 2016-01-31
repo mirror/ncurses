@@ -46,20 +46,17 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>define_key</STRONG> - define a keycode
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>define_key(const</STRONG> <STRONG>char</STRONG> <STRONG>*definition,</STRONG> <STRONG>int</STRONG> <STRONG>keycode);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This is an extension to the curses library.  It permits an
        application to define keycodes  with  their  corresponding
        control  strings,  so that the ncurses library will inter-
@@ -72,8 +69,7 @@
        definition is removed.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The keycode must be greater than zero, and the string non-
        null, otherwise ERR is returned.  ERR may also be returned
        if there is insufficient memory to allocate  the  data  to
@@ -81,21 +77,18 @@
        returned.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="keyok.3x.html">keyok(3x)</A></STRONG>, <STRONG><A HREF="key_defined.3x.html">key_defined(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Thomas Dickey.
 
 

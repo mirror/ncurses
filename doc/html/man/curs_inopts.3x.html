@@ -45,16 +45,14 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>cbreak</STRONG>, <STRONG>nocbreak</STRONG>, <STRONG>echo</STRONG>, <STRONG>noecho</STRONG>, <STRONG>halfdelay</STRONG>, <STRONG>intrflush</STRONG>,
        <STRONG>keypad</STRONG>, <STRONG>meta</STRONG>, <STRONG>nodelay</STRONG>, <STRONG>notimeout</STRONG>, <STRONG>raw</STRONG>, <STRONG>noraw</STRONG>, <STRONG>noqiflush</STRONG>,
        <STRONG>qiflush</STRONG>, <STRONG>timeout</STRONG>, <STRONG>wtimeout</STRONG>, <STRONG>typeahead</STRONG> - <STRONG>curses</STRONG> input
        options
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>cbreak(void);</STRONG>
@@ -76,8 +74,7 @@
        <STRONG>int</STRONG> <STRONG>typeahead(int</STRONG> <STRONG>fd);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>ncurses</STRONG> library provides several functions  which  let
        an  application  change the way input from the terminal is
        handled.  Some are global, applying to all windows.   Oth-
@@ -87,8 +84,7 @@
        the same behavior is needed.
 
 
-</PRE>
-<H3><a name="h3-cbreak">cbreak</a></H3><PRE>
+</PRE><H3><a name="h3-cbreak">cbreak</a></H3><PRE>
        Normally, the tty driver buffers typed characters until  a
        newline  or  carriage return is typed.  The <STRONG>cbreak</STRONG> routine
        disables line buffering and erase/kill  character-process-
@@ -105,8 +101,7 @@
        these routines interact with <STRONG>echo</STRONG> and <STRONG>noecho</STRONG>.]
 
 
-</PRE>
-<H3><a name="h3-echo_noecho">echo/noecho</a></H3><PRE>
+</PRE><H3><a name="h3-echo_noecho">echo/noecho</a></H3><PRE>
        The  <STRONG>echo</STRONG>  and  <STRONG>noecho</STRONG> routines control whether characters
        typed by the user are echoed by <STRONG>getch</STRONG> as they  are  typed.
        Echoing by the tty driver is always disabled, but initial-
@@ -118,8 +113,7 @@
        interact with <STRONG>cbreak</STRONG> and <STRONG>nocbreak</STRONG>.]
 
 
-</PRE>
-<H3><a name="h3-halfdelay">halfdelay</a></H3><PRE>
+</PRE><H3><a name="h3-halfdelay">halfdelay</a></H3><PRE>
        The  <STRONG>halfdelay</STRONG>  routine is used for half-delay mode, which
        is similar to <STRONG>cbreak</STRONG> mode in that characters typed by  the
        user  are  immediately available to the program.  However,
@@ -129,8 +123,7 @@
        half-delay mode.
 
 
-</PRE>
-<H3><a name="h3-intrflush">intrflush</a></H3><PRE>
+</PRE><H3><a name="h3-intrflush">intrflush</a></H3><PRE>
        If  the  <STRONG>intrflush</STRONG>  option is enabled (<EM>bf</EM> is <STRONG>TRUE</STRONG>), and an
        interrupt key  is  pressed  on  the  keyboard  (interrupt,
        break,  quit),  all output in the tty driver queue will be
@@ -142,8 +135,7 @@
        nored.
 
 
-</PRE>
-<H3><a name="h3-keypad">keypad</a></H3><PRE>
+</PRE><H3><a name="h3-keypad">keypad</a></H3><PRE>
        The  <STRONG>keypad</STRONG> option enables the keypad of the user's termi-
        nal.  If enabled (<EM>bf</EM> is <STRONG>TRUE</STRONG>), the user can press a  func-
        tion  key (such as an arrow key) and <STRONG>wgetch</STRONG> returns a sin-
@@ -157,8 +149,7 @@
        keypad is <STRONG>FALSE</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-meta">meta</a></H3><PRE>
+</PRE><H3><a name="h3-meta">meta</a></H3><PRE>
        Initially, whether the terminal returns 7 or 8 significant
        bits on input depends on the control mode of the tty driv-
        er  [see  <STRONG>termio(7)</STRONG>].  To force 8 bits to be returned, in-
@@ -173,8 +164,7 @@
        <STRONG>FALSE</STRONG>) is called.
 
 
-</PRE>
-<H3><a name="h3-nodelay">nodelay</a></H3><PRE>
+</PRE><H3><a name="h3-nodelay">nodelay</a></H3><PRE>
        The <STRONG>nodelay</STRONG> option causes <STRONG>getch</STRONG> to be a non-blocking call.
        If  no input is ready, <STRONG>getch</STRONG> returns <STRONG>ERR</STRONG>.  If disabled (<EM>bf</EM>
        is <STRONG>FALSE</STRONG>), <STRONG>getch</STRONG> waits until a key is pressed.
@@ -187,8 +177,7 @@
        typed by a user.
 
 
-</PRE>
-<H3><a name="h3-raw_noraw">raw/noraw</a></H3><PRE>
+</PRE><H3><a name="h3-raw_noraw">raw/noraw</a></H3><PRE>
        The  <STRONG>raw</STRONG> and <STRONG>noraw</STRONG> routines place the terminal into or out
        of raw mode.  Raw mode is similar to <STRONG>cbreak</STRONG> mode, in  that
        characters typed are immediately passed through to the us-
@@ -199,8 +188,7 @@
        bits in the tty driver that are not set by <STRONG>curses</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-noqiflush">noqiflush</a></H3><PRE>
+</PRE><H3><a name="h3-noqiflush">noqiflush</a></H3><PRE>
        When the <STRONG>noqiflush</STRONG> routine is used, normal flush of  input
        and  output queues associated with the <STRONG>INTR</STRONG>, <STRONG>QUIT</STRONG> and <STRONG>SUSP</STRONG>
        characters will not be done [see <STRONG>termio(7)</STRONG>].  When <STRONG>qiflush</STRONG>
@@ -210,8 +198,7 @@
        the interrupt had not occurred, after the handler exits.
 
 
-</PRE>
-<H3><a name="h3-timeout_wtimeout">timeout/wtimeout</a></H3><PRE>
+</PRE><H3><a name="h3-timeout_wtimeout">timeout/wtimeout</a></H3><PRE>
        The <STRONG>timeout</STRONG> and <STRONG>wtimeout</STRONG> routines  set  blocking  or  non-
        blocking  read  for a given window.  If <EM>delay</EM> is negative,
        blocking read is used (i.e., waits  indefinitely  for  in-
@@ -224,8 +211,7 @@
        <EM>lay</EM> milliseconds (where <EM>delay</EM> is positive).
 
 
-</PRE>
-<H3><a name="h3-typeahead">typeahead</a></H3><PRE>
+</PRE><H3><a name="h3-typeahead">typeahead</a></H3><PRE>
        The  <STRONG>curses</STRONG>  library  does "line-breakout optimization" by
        looking for  typeahead  periodically  while  updating  the
        screen.   If  input is found, and it is coming from a tty,
@@ -239,8 +225,7 @@
        typeahead checking is done.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All  routines that return an integer return <STRONG>ERR</STRONG> upon fail-
        ure and OK (SVr4 specifies only "an  integer  value  other
        than  <STRONG>ERR</STRONG>")  upon  successful completion, unless otherwise
@@ -256,8 +241,7 @@
                    the range 1..255.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are described in the XSI Curses  standard,
        Issue 4.
 
@@ -304,8 +288,7 @@
        used.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note  that <STRONG>echo</STRONG>, <STRONG>noecho</STRONG>, <STRONG>halfdelay</STRONG>, <STRONG>intrflush</STRONG>, <STRONG>meta</STRONG>, <STRONG>node-</STRONG>
        <STRONG>lay</STRONG>, <STRONG>notimeout</STRONG>, <STRONG>noqiflush</STRONG>, <STRONG>qiflush</STRONG>, <STRONG>timeout</STRONG>, and  <STRONG>wtimeout</STRONG>
        may be macros.
@@ -318,8 +301,7 @@
        recommended.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>,        <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,
        <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>, <STRONG><A HREF="define_key.3x.html">define_key(3x)</A></STRONG>, <STRONG>termio(7)</STRONG>
 

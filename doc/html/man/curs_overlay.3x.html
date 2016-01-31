@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>overlay</STRONG>, <STRONG>overwrite</STRONG>, <STRONG>copywin</STRONG> - overlay and manipulate
        overlapped <STRONG>curses</STRONG> windows
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>overlay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>);</STRONG>
@@ -63,11 +61,9 @@
              <STRONG>int</STRONG> <EM>dmaxcol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>overlay</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-overlay_-overwrite">overlay, overwrite</a></H3><PRE>
+</PRE><H3><a name="h3-overlay_-overwrite">overlay, overwrite</a></H3><PRE>
        The  <STRONG>overlay</STRONG>  and <STRONG>overwrite</STRONG> routines overlay <EM>srcwin</EM> on top
        of <EM>dstwin</EM>.  <EM>scrwin</EM> and <EM>dstwin</EM> are not required to  be  the
        same  size;  only  text  where  the two windows overlap is
@@ -75,8 +71,7 @@
        (blanks are not copied) whereas <STRONG>overwrite</STRONG> is destructive.
 
 
-</PRE>
-<H3><a name="h3-copywin">copywin</a></H3><PRE>
+</PRE><H3><a name="h3-copywin">copywin</a></H3><PRE>
        The  <STRONG>copywin</STRONG>  routine provides a finer granularity of con-
        trol over the <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines.  As  in  the
        <STRONG>prefresh</STRONG> routine, a rectangle is specified in the destina-
@@ -86,8 +81,7 @@
        then copying is non-destructive, as in <STRONG>overlay</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines  that  return an integer return <STRONG>ERR</STRONG> upon failure,
        and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
        <STRONG>ERR</STRONG>") upon successful completion.
@@ -98,21 +92,18 @@
        the window would be placed off-screen.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The XSI Curses standard, Issue 4 describes these functions
        (adding the const qualifiers).  It further specifies their
        behavior in the presence of characters with multibyte ren-
        ditions (not yet supported in this implementation).
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
 
 

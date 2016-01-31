@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>erase</STRONG>, <STRONG>werase</STRONG>, <STRONG>clear</STRONG>, <STRONG>wclear</STRONG>, <STRONG>clrtobot</STRONG>, <STRONG>wclrtobot</STRONG>,
        <STRONG>clrtoeol</STRONG>, <STRONG>wclrtoeol</STRONG> - clear all or part of a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#</STRONG> <STRONG>include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>erase(void);</STRONG>
@@ -65,8 +63,7 @@
        <STRONG>int</STRONG> <STRONG>wclrtoeol(WINDOW</STRONG> <STRONG>*win);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>erase</STRONG> and <STRONG>werase</STRONG> routines copy blanks to  every  posi-
        tion in the window, clearing the screen.
 
@@ -88,8 +85,7 @@
        dition (as set by <STRONG>wbkgdset</STRONG>) merged into them.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>OK</STRONG> on success and  <STRONG>ERR</STRONG>  on
        failure.   The SVr4.0 manual says "or a non-negative inte-
        ger if <STRONG>immedok</STRONG> is set", but this appears to be an error.
@@ -99,14 +95,12 @@
        error if it is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>erase</STRONG>, <STRONG>werase</STRONG>, <STRONG>clear</STRONG>, <STRONG>wclear</STRONG>, <STRONG>clrtobot</STRONG>, and <STRONG>clr-</STRONG>
        <STRONG>toeol</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  The standard specifies that they return  <STRONG>ERR</STRONG>  on
        failure, but specifies no error conditions.
@@ -128,8 +122,7 @@
        ing the next <STRONG>wrefresh</STRONG>, use <STRONG>werase</STRONG> instead.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>
 

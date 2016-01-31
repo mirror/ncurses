@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.149 2016/01/23 21:32:00 tom Exp $
+# $Id: Makefile.in,v 1.150 2016/01/30 15:31:51 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -267,7 +267,7 @@ tags:
 
 mostlyclean ::
 	-rm -f core tags TAGS *~ *.bak *.i *.ln *.atac
-	-test -f trace || rm -f trace
+	-test -d trace || rm -f trace
 	-rm -f $(TEST_PROGS)
 
 clean :: mostlyclean

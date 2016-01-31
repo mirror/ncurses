@@ -46,15 +46,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>addch</STRONG>,  <STRONG>waddch</STRONG>,  <STRONG>mvaddch</STRONG>,  <STRONG>mvwaddch</STRONG>, <STRONG>echochar</STRONG>, <STRONG>wechochar</STRONG> -
        add a character (with attributes) to a <STRONG>curses</STRONG> window, then
        advance the cursor
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>addch(const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
@@ -65,11 +63,9 @@
        <STRONG>int</STRONG> <STRONG>wechochar(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-Adding-characters">Adding characters</a></H3><PRE>
+</PRE><H3><a name="h3-Adding-characters">Adding characters</a></H3><PRE>
        The  <STRONG>addch</STRONG>,  <STRONG>waddch</STRONG>, <STRONG>mvaddch</STRONG> and <STRONG>mvwaddch</STRONG> routines put the
        character <EM>ch</EM> into the given window at its  current  window
        position,  which  is then advanced.  They are analogous to
@@ -119,8 +115,7 @@
        into characters.
 
 
-</PRE>
-<H3><a name="h3-Echoing-characters">Echoing characters</a></H3><PRE>
+</PRE><H3><a name="h3-Echoing-characters">Echoing characters</a></H3><PRE>
        The  <STRONG>echochar</STRONG>  and  <STRONG>wechochar</STRONG> routines are equivalent to a
        call to <STRONG>addch</STRONG> followed by a call to <STRONG>refresh</STRONG>, or a call  to
        <STRONG>waddch</STRONG> followed by a call to <STRONG>wrefresh</STRONG>.  The knowledge that
@@ -130,8 +125,7 @@
        equivalents.
 
 
-</PRE>
-<H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
+</PRE><H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
        The  following  variables  may be used to add line drawing
        characters to the screen with routines of the  <STRONG>addch</STRONG>  fam-
        ily.   The  default  character listed below is used if the
@@ -178,8 +172,7 @@
        ACS_VLINE      |         vertical line
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on
        success (the SVr4 manuals specify only "an  integer  value
        other than <STRONG>ERR</STRONG>") upon successful completion, unless other-
@@ -190,14 +183,12 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>addch</STRONG>, <STRONG>mvaddch</STRONG>, <STRONG>mvwaddch</STRONG>, and  <STRONG>echochar</STRONG>  may  be
        macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        All  these functions are described in the XSI Curses stan-
        dard, Issue 4.  The defaults specified  for  forms-drawing
        characters apply in the POSIX locale.
@@ -237,8 +228,7 @@
        of other implementations, but is not documented.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>, <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>, <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>,
        <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>,  <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,   <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
        <STRONG>putc(3)</STRONG>.

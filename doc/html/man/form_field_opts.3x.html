@@ -46,14 +46,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>set_field_opts</STRONG>,  <STRONG>field_opts_on</STRONG>, <STRONG>field_opts_off</STRONG>, <STRONG>field_opts</STRONG>
        - set and get field options
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        int set_field_opts(FIELD *field, Field_Options opts);
        int field_opts_on(FIELD *field, Field_Options opts);
@@ -61,8 +59,7 @@
        Field_Options field_opts(const FIELD *field);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function <STRONG>set_field_opts</STRONG> sets  all  the  given  field's
        option  bits  (field  option  bits  may be logically-OR'ed
        together).
@@ -128,8 +125,7 @@
             which is normally discarded.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Except for <STRONG>field_opts</STRONG>, each routine  returns  one  of  the
        following:
 
@@ -146,25 +142,21 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.  <STRONG><A HREF="form_field_just.3x.html">form_field_just(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate the System V forms library.  They
        were not supported on Version 7 or BSD versions.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
        curses by Eric S. Raymond.
 

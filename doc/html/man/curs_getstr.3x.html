@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>getstr</STRONG>, <STRONG>getnstr</STRONG>, <STRONG>wgetstr</STRONG>, <STRONG>wgetnstr</STRONG>, <STRONG>mvgetstr</STRONG>, <STRONG>mvgetnstr</STRONG>,
        <STRONG>mvwgetstr</STRONG>, <STRONG>mvwgetnstr</STRONG> - accept character strings from
        <STRONG>curses</STRONG> terminal keyboard
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>getstr(char</STRONG> <STRONG>*str);</STRONG>
@@ -66,8 +64,7 @@
        <STRONG>int</STRONG> <STRONG>mvwgetnstr(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  function <STRONG>getstr</STRONG> is equivalent to a series of calls to
        <STRONG>getch</STRONG>, until a newline or carriage return is received (the
        terminating  character  is  not  included  in the returned
@@ -91,8 +88,7 @@
        vious character (typically a left motion).
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and an <STRONG>OK</STRONG>
        (SVr4 specifies only "an integer value  other  than  <STRONG>ERR</STRONG>")
        upon successful completion.
@@ -112,13 +108,11 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>getstr</STRONG>, <STRONG>mvgetstr</STRONG>, and <STRONG>mvwgetstr</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  They  read  single-byte  characters  only.   The
        standard  does  not define any error conditions.  This im-
@@ -138,8 +132,7 @@
        present but not documented in SVr4.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 

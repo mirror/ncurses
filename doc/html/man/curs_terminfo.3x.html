@@ -50,16 +50,14 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>del_curterm</STRONG>, <STRONG>mvcur</STRONG>, <STRONG>putp</STRONG>, <STRONG>restartterm</STRONG>, <STRONG>set_curterm</STRONG>,
        <STRONG>setterm</STRONG>, <STRONG>setupterm</STRONG>, <STRONG>tigetflag</STRONG>, <STRONG>tigetnum</STRONG>, <STRONG>tigetstr</STRONG>, <STRONG>tiparm</STRONG>,
        <STRONG>tparm</STRONG>, <STRONG>tputs</STRONG>, <STRONG>vid_attr</STRONG>, <STRONG>vid_puts</STRONG>, <STRONG>vidattr</STRONG>, <STRONG>vidputs</STRONG> -
        <STRONG>curses</STRONG> interfaces to terminfo database
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
@@ -82,8 +80,7 @@
        <STRONG>char</STRONG> <STRONG>*tiparm(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These low-level routines must be called by  programs  that
        have to deal directly with the <STRONG>terminfo</STRONG> database to handle
        certain terminal capabilities, such as  programming  func-
@@ -91,8 +88,7 @@
        are more suitable and their use is recommended.
 
 
-</PRE>
-<H3><a name="h3-Initialization">Initialization</a></H3><PRE>
+</PRE><H3><a name="h3-Initialization">Initialization</a></H3><PRE>
        Initially, <STRONG>setupterm</STRONG> should  be  called.   Note  that  <STRONG>se-</STRONG>
        <STRONG>tupterm</STRONG>  is  automatically  called by <STRONG>initscr</STRONG> and <STRONG>newterm</STRONG>.
        This  defines  the  set  of  terminal-dependent  variables
@@ -181,8 +177,7 @@
        not recommended for new programs.
 
 
-</PRE>
-<H3><a name="h3-The-Terminal-State">The Terminal State</a></H3><PRE>
+</PRE><H3><a name="h3-The-Terminal-State">The Terminal State</a></H3><PRE>
        The  <STRONG>setupterm</STRONG>  routine  stores  its information about the
        terminal in a <STRONG>TERMINAL</STRONG> structure pointed to by the  global
        variable  <STRONG>cur_term</STRONG>.   If  it  detects an error, or decides
@@ -219,8 +214,7 @@
        bits.
 
 
-</PRE>
-<H3><a name="h3-Formatting-Output">Formatting Output</a></H3><PRE>
+</PRE><H3><a name="h3-Formatting-Output">Formatting Output</a></H3><PRE>
        The <STRONG>tparm</STRONG> routine instantiates the string <EM>str</EM> with parame-
        ters  <EM>pi</EM>.  A pointer is returned to the result of <EM>str</EM> with
        the parameters applied.
@@ -230,8 +224,7 @@
        ters are integers (int) rather than longs.
 
 
-</PRE>
-<H3><a name="h3-Output-Functions">Output Functions</a></H3><PRE>
+</PRE><H3><a name="h3-Output-Functions">Output Functions</a></H3><PRE>
        The <STRONG>tputs</STRONG>  routine  applies  padding  information  to  the
        string  <EM>str</EM>  and  outputs  it.  The <EM>str</EM> must be a terminfo
        string variable or the return value from  <STRONG>tparm</STRONG>,  <STRONG>tgetstr</STRONG>,
@@ -266,8 +259,7 @@
        fresh).
 
 
-</PRE>
-<H3><a name="h3-Terminal-Capability-Functions">Terminal Capability Functions</a></H3><PRE>
+</PRE><H3><a name="h3-Terminal-Capability-Functions">Terminal Capability Functions</a></H3><PRE>
        The  <STRONG>tigetflag</STRONG>,  <STRONG>tigetnum</STRONG> and <STRONG>tigetstr</STRONG> routines return the
        value of the capability corresponding to the <STRONG>terminfo</STRONG> <EM>cap-</EM>
        <EM>name</EM>  passed  to them, such as <STRONG>xenl</STRONG>.  The <EM>capname</EM> for each
@@ -299,8 +291,7 @@
               scription.
 
 
-</PRE>
-<H3><a name="h3-Terminal-Capability-Names">Terminal Capability Names</a></H3><PRE>
+</PRE><H3><a name="h3-Terminal-Capability-Names">Terminal Capability Names</a></H3><PRE>
        These null-terminated arrays contain  the  short  terminfo
        names  ("codes"), the <STRONG>termcap</STRONG> names, and the long terminfo
        names ("fnames") for each of the predefined <STRONG>terminfo</STRONG> vari-
@@ -312,8 +303,7 @@
               <STRONG>char</STRONG> <STRONG>*strnames[]</STRONG>, <STRONG>*strcodes[]</STRONG>, <STRONG>*strfnames[]</STRONG>
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
        and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
        <STRONG>ERR</STRONG>")  upon  successful completion, unless otherwise noted
@@ -347,8 +337,7 @@
                  the output function <EM>putc</EM>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        X/Open notes that <STRONG>vidattr</STRONG> and <STRONG>vidputs</STRONG> may be macros.
 
        The  function  <STRONG>setterm</STRONG> is not described by X/Open and must
@@ -425,8 +414,7 @@
        <STRONG>tic</STRONG> <STRONG>-x</STRONG>, are not stored in the arrays described here.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,  <STRONG>curs_term-</STRONG>
        <STRONG><A HREF="curs_termcap.3x.html">cap(3x)</A></STRONG>,  <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>

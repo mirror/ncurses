@@ -45,20 +45,17 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>set_item_value</STRONG>, <STRONG>item_value</STRONG> - set and get menu item values
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_item_value(ITEM *item, bool value);
        bool item_value(const ITEM *item);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        If  you  turn  off  the menu option <STRONG>O_ONEVALUE</STRONG> (e.g., with
        <STRONG>set_menu_opts</STRONG> or <STRONG>menu_opts_off</STRONG>;  see  <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>),  the
        menu becomes multi-valued; that is, more than one item may
@@ -69,8 +66,7 @@
        lect it (second argument <STRONG>FALSE</STRONG>).
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The function <STRONG>set_item_value</STRONG> returns one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
@@ -82,25 +78,21 @@
             The menu driver could not process the request.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
        curses by Eric S. Raymond.
 

@@ -46,20 +46,17 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>wresize</STRONG> - resize a curses window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>wresize(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>lines,</STRONG> <STRONG>int</STRONG> <STRONG>columns);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  is  an  extension to the curses library.  It reallo-
        cates storage for an <STRONG>ncurses</STRONG> window to adjust  its  dimen-
        sions  to  the  specified  values.  If either dimension is
@@ -68,16 +65,14 @@
        tion (as set by <STRONG>wbkgdset</STRONG>) merged into them.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The function returns the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>
        on success.  It will fail if either of the dimensions less
        than or equal  to  zero,  or  if  an  error  occurs  while
        (re)allocating memory for the window.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The only restriction placed on the dimensions is that they
        be greater than zero.  The dimensions are not compared  to
        <STRONG>curses</STRONG>   screen   dimensions  to  simplify  the  logic  of
@@ -85,21 +80,18 @@
        dimensions fit within the actual screen dimensions.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        It is not possible to resize windows with SVr4 curses.
 
        This  extension of ncurses was introduced in mid-1995.  It
        was adopted in NetBSD curses (2001) and PDCurses (2003).
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Thomas Dickey (from an equivalent function written in 1988
        for BSD curses).
 

@@ -45,13 +45,11 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        panel - panel stack extension for curses
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;panel.h&gt;</STRONG>
 
        <STRONG>cc</STRONG> <STRONG>[flags]</STRONG> <STRONG>sourcefiles</STRONG> <STRONG>-lpanel</STRONG> <STRONG>-lncurses</STRONG>
@@ -73,8 +71,7 @@
        <STRONG>int</STRONG> <STRONG>del_panel(PANEL</STRONG> <STRONG>*pan);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        Panels  are  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>  windows with the added feature of
        depth.  Panel functions allow the use of  stacked  windows
        and  ensure  the  proper  portions  of each window and the
@@ -94,8 +91,7 @@
        minfo curses does.
 
 
-</PRE>
-<H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
+</PRE><H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
        <STRONG>new_panel(win)</STRONG>
               allocates   a   <STRONG>PANEL</STRONG> structure, associates it with
               <STRONG>win</STRONG>, places the panel  on  the  top  of  the  stack
@@ -172,15 +168,13 @@
               returns a pointer to the window of the given panel.
 
 
-</PRE>
-<H2><a name="h2-DIAGNOSTICS">DIAGNOSTICS</a></H2><PRE>
+</PRE><H2><a name="h2-DIAGNOSTICS">DIAGNOSTICS</a></H2><PRE>
        Each  routine  that  returns  a pointer returns <STRONG>NULL</STRONG> if an
        error occurs. Each  routine  that  returns  an  int  value
        returns <STRONG>OK</STRONG> if it executes successfully and <STRONG>ERR</STRONG> if not.
 
 
-</PRE>
-<H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
+</PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
        Reasonable  care  has been taken to  ensure  compatibility
        with  the  native  panel  facility  introduced  in  SVr3.2
        (inspection of the SVr4 manual pages suggests the program-
@@ -199,30 +193,26 @@
        libraries.
 
 
-</PRE>
-<H2><a name="h2-NOTE">NOTE</a></H2><PRE>
+</PRE><H2><a name="h2-NOTE">NOTE</a></H2><PRE>
        In your library list, libpanel.a should  be  before  libn-
        curses.a;  that  is,  you want to say `-lpanel -lncurses',
        not the other way around (which would usually give a link-
        error).
 
 
-</PRE>
-<H2><a name="h2-FILES">FILES</a></H2><PRE>
+</PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        panel.h interface for the panels library
 
        libpanel.a the panels library itself
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20151205).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160130).
 
 
-</PRE>
-<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Originally   written   by   Warren  Tucker  &lt;wht@n4hgf.mt-
        park.ga.us&gt;, primarily to assist  in  porting  u386mon  to
        systems  without  a native panels library.  Repackaged for

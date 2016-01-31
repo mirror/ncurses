@@ -46,14 +46,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>set_menu_spacing</STRONG>,  <STRONG>menu_spacing</STRONG>  -  set  and  get  spacing
        between menu items.
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_menu_spacing(MENU *menu,
                             int spc_description,
@@ -65,8 +63,7 @@
                         int* spc_columns);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function <STRONG>set_menu_spacing</STRONG> sets the spacing information
        for  the menu.  Its parameter <STRONG>spc_description</STRONG> controls the
        number of spaces between an item name and an item descrip-
@@ -86,34 +83,29 @@
        simply not returned.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Both  routines  return  <STRONG>E_OK</STRONG> on success.  <STRONG>set_menu_spacing</STRONG>
        may return <STRONG>E_POSTED</STRONG> if the menu is posted, or  <STRONG>E_BAD_ARGU-</STRONG>
        <STRONG>MENT</STRONG> if one of the spacing values is out of range.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 

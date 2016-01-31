@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.15 2010/12/04 18:38:55 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.16 2016/01/30 15:52:36 tom Exp $
 .TH curs_refresh 3X ""
 .na
 .hy 0
@@ -55,6 +55,7 @@
 \fBint wredrawln(WINDOW *win, int beg_line, int num_lines);\fR
 .br
 .SH DESCRIPTION
+.SS refresh/wrefresh
 The \fBrefresh\fR and \fBwrefresh\fR routines (or \fBwnoutrefresh\fR and
 \fBdoupdate\fR) must be called to get actual output to the terminal, as other
 routines merely manipulate data structures.
@@ -66,6 +67,7 @@ same, using \fBstdscr\fR as the default window.
 Unless \fBleaveok\fR has been
 enabled, the physical cursor of the terminal is left at the location of the
 cursor for that window.
+.SS wnoutrefresh/doupdate
 .PP
 The \fBwnoutrefresh\fR and \fBdoupdate\fR routines allow multiple updates with
 more efficiency than \fBwrefresh\fR alone.
@@ -98,6 +100,7 @@ order and the overlap region will be modified only when it is explicitly
 changed.
 (But see the section on \fBPORTABILITY\fR below for a warning about
 exploiting this behavior.)
+.SS wredrawln/redrawwin
 .PP
 The \fBwredrawln\fR routine indicates to \fBcurses\fR that some screen lines
 are corrupted and should be thrown away before anything is written over them.
@@ -110,7 +113,7 @@ completion.
 .PP
 X/Open does not define any error conditions.
 In this implementation
-.RS
+.RS 3
 .TP 5
 \fBwnoutrefresh\fP
 returns an error

@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>bkgdset</STRONG>,  <STRONG>wbkgdset</STRONG>,  <STRONG>bkgd</STRONG>,  <STRONG>wbkgd</STRONG>, <STRONG>getbkgd</STRONG> - <STRONG>curses</STRONG> window
        background manipulation routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>void</STRONG> <STRONG>bkgdset(chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
@@ -62,11 +60,9 @@
        <STRONG>chtype</STRONG> <STRONG>getbkgd(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-bkgdset">bkgdset</a></H3><PRE>
+</PRE><H3><a name="h3-bkgdset">bkgdset</a></H3><PRE>
        The <STRONG>bkgdset</STRONG> and <STRONG>wbkgdset</STRONG>  routines  manipulate  the  back-
        ground  of  the  named window.  The window background is a
        <STRONG>chtype</STRONG> consisting of any combination of attributes  (i.e.,
@@ -84,8 +80,7 @@
        graphic rendition of the character put on the screen.
 
 
-</PRE>
-<H3><a name="h3-bkgd">bkgd</a></H3><PRE>
+</PRE><H3><a name="h3-bkgd">bkgd</a></H3><PRE>
        The <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> functions set the  background  property
        of  the  current  or  specified window and then apply this
        setting to every character position in that window:
@@ -97,33 +92,28 @@
            is changed to the new background character.
 
 
-</PRE>
-<H3><a name="h3-getbkgd">getbkgd</a></H3><PRE>
+</PRE><H3><a name="h3-getbkgd">getbkgd</a></H3><PRE>
        The <STRONG>getbkgd</STRONG> function returns the  given  window's  current
        background character/attribute pair.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The  routines  <STRONG>bkgd</STRONG>  and <STRONG>wbkgd</STRONG> return the integer <STRONG>OK</STRONG>.  The
        SVr4.0 manual says "or a non-negative integer  if  <STRONG>immedok</STRONG>
        is set", but this appears to be an error.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>bkgdset</STRONG> and <STRONG>bkgd</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  It specifies that <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return  <STRONG>ERR</STRONG>  on
        failure, but gives no failure conditions.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>, <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>, <STRONG>curs_out-</STRONG>
        <STRONG><A HREF="curs_outopts.3x.html">opts(3x)</A></STRONG>
 

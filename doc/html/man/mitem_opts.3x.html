@@ -46,14 +46,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>set_item_opts</STRONG>,  <STRONG>item_opts_on</STRONG>,  <STRONG>item_opts_off</STRONG>,  <STRONG>item_opts</STRONG> -
        set and get menu item options
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_item_opts(ITEM *item, Item_Options opts);
        int item_opts_on(ITEM *item, Item_Options opts);
@@ -61,8 +59,7 @@
        Item_Options item_opts(const ITEM *item);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function  <STRONG>set_item_opts</STRONG>  sets  all  the  given  item's
        option  bits  (menu  option  bits  may  be logically-OR'ed
        together).
@@ -81,8 +78,7 @@
        cessing.  This option defaults to on.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Except for <STRONG>item_opts</STRONG>, each routine returns one of the fol-
        lowing:
 
@@ -92,25 +88,21 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate  the System V menu library.  They
        were not supported on Version 7 or BSD versions.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
        curses by Eric S. Raymond.
 

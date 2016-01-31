@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>instr</STRONG>,  <STRONG>innstr</STRONG>, <STRONG>winstr</STRONG>, <STRONG>winnstr</STRONG>, <STRONG>mvinstr</STRONG>, <STRONG>mvinnstr</STRONG>, <STRONG>mvwin-</STRONG>
        <STRONG>str</STRONG>, <STRONG>mvwinnstr</STRONG> - get a string of characters from a  <STRONG>curses</STRONG>
        window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>instr(char</STRONG> <STRONG>*str);</STRONG>
@@ -67,8 +65,7 @@
        <STRONG>n);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These routines return  a  string  of  characters  in  <EM>str</EM>,
        extracted  starting  at the current cursor position in the
        named window.  Attributes are stripped  from  the  charac-
@@ -77,8 +74,7 @@
        (exclusive of the trailing NUL).
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All  of the functions return <STRONG>ERR</STRONG> upon failure, or the num-
        ber of characters actually read into the string.
 
@@ -91,13 +87,11 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all routines except <STRONG>winnstr</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        SVr4 does not document whether a length limit includes  or
        excludes the trailing NUL.
 
@@ -106,8 +100,7 @@
        return the string ending at the right margin.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
 

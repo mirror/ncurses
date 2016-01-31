@@ -46,21 +46,18 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>menu_request_by_name</STRONG>, <STRONG>menu_request_name</STRONG> - handle printable
        menu request names
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        const char *menu_request_name(int request);
        int menu_request_by_name(const char *name);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function <STRONG>menu_request_name</STRONG> returns the printable  name
        of a menu request code.
        The function <STRONG>menu_request_by_name</STRONG> searches in the name-ta-
@@ -68,35 +65,30 @@
        request code.  Otherwise E_NO_MATCH is returned.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>menu_request_name</STRONG>  returns <STRONG>NULL</STRONG> on error and sets errno to
        <STRONG>E_BAD_ARGUMENT</STRONG>.
        <STRONG>menu_request_by_name</STRONG> returns <STRONG>E_NO_MATCH</STRONG> on error.  It does
        not set errno.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 

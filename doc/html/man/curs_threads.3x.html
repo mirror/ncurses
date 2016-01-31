@@ -47,13 +47,11 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>curs_threads</STRONG> - <STRONG>curses</STRONG> thread support
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_WINDOW_CB)(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
@@ -67,8 +65,7 @@
        <STRONG>*data);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation can be configured to provide rudimen-
        tary support for multi-threaded applications.  This  makes
        a  different set of libraries, e.g., <EM>libncursest</EM> since the
@@ -109,8 +106,7 @@
        supplied function to the application.
 
 
-</PRE>
-<H3><a name="h3-USAGE">USAGE</a></H3><PRE>
+</PRE><H3><a name="h3-USAGE">USAGE</a></H3><PRE>
        All of the ncurses library functions assume that  the  lo-
        cale  is  not altered during operation.  In addition, they
        use data which is maintained within a hierarchy of scopes.
@@ -602,26 +598,22 @@
       wvline_set              window
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These functions all return <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>, except as noted.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Both a macro and a function are provided for each name.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  are  specific  to ncurses.  They were not
        supported on Version 7, BSD or System  V  implementations.
        It  is  recommended that any code depending on ncurses ex-
        tensions be conditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 

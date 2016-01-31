@@ -48,13 +48,11 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        curs_sp_funcs - <STRONG>curses</STRONG> screen-pointer extension
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>assume_default_colors_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
@@ -187,8 +185,7 @@
        <STRONG>int</STRONG> <STRONG>tputs_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int,</STRONG> <STRONG>NCURSES_SP_OUTC);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation can be configured to provide a set of
        functions which improve the  ability  to  manage  multiple
        screens.  This feature can be added to any of the configu-
@@ -196,8 +193,7 @@
        without changing the meaning of any of the existing ones.
 
 
-</PRE>
-<H3><a name="h3-IMPROVED-FUNCTIONS">IMPROVED FUNCTIONS</a></H3><PRE>
+</PRE><H3><a name="h3-IMPROVED-FUNCTIONS">IMPROVED FUNCTIONS</a></H3><PRE>
        Most  of  the functions are new versions of existing func-
        tions.  A parameter is added at the front of the parameter
        list.  It is a SCREEN pointer.
@@ -208,8 +204,7 @@
        which must be modified to update multiple screens.
 
 
-</PRE>
-<H3><a name="h3-NEW-FUNCTIONS">NEW FUNCTIONS</a></H3><PRE>
+</PRE><H3><a name="h3-NEW-FUNCTIONS">NEW FUNCTIONS</a></H3><PRE>
        Here are the new functions:
 
        ceiling_panel
@@ -232,8 +227,7 @@
             initialization.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        This extension introduces some new names:
 
        NCURSES_SP_FUNCS
@@ -262,16 +256,14 @@
             stream, e.g., <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  are  specific  to ncurses.  They were not
        supported on Version 7, BSD or System  V  implementations.
        It  is  recommended that any code depending on ncurses ex-
        tensions be conditioned using <EM>NCURSES</EM><STRONG>_</STRONG><EM>SP</EM><STRONG>_</STRONG><EM>FUNCS</EM>.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>, <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>.
 
 

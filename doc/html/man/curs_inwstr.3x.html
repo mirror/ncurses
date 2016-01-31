@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>inwstr</STRONG>,  <STRONG>innwstr</STRONG>,  <STRONG>winwstr</STRONG>, <STRONG>winnwstr</STRONG>, <STRONG>mvinwstr</STRONG>, <STRONG>mvinnwstr</STRONG>,
        <STRONG>mvwinwstr</STRONG>, <STRONG>mvwinnwstr</STRONG> - get a string of <STRONG>wchar_t</STRONG> characters
        from a curses window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>inwstr(wchar_t</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
@@ -66,8 +64,7 @@
        <STRONG>int</STRONG> <STRONG>mvwinnwstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  routines  return  a string of <STRONG>wchar_t</STRONG> characters in
        <EM>wstr</EM>, extracted starting at the current cursor position in
        the  named window.  Attributes are stripped from the char-
@@ -81,13 +78,11 @@
        character, an error is generated.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all routines except <STRONG>winnwstr</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return <STRONG>ERR</STRONG> upon failure. Upon successful com-
        pletion, the *<STRONG>inwstr</STRONG> routines return <STRONG>OK</STRONG>, and the  *<STRONG>innwstr</STRONG>
        routines  return  the  number  of characters read into the
@@ -98,8 +93,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>, <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
 
 

@@ -46,14 +46,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>inch</STRONG>,  <STRONG>winch</STRONG>,  <STRONG>mvinch</STRONG>,  <STRONG>mvwinch</STRONG>  -  get  a  character  and
        attributes from a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>chtype</STRONG> <STRONG>inch(void);</STRONG>
@@ -62,8 +60,7 @@
        <STRONG>chtype</STRONG> <STRONG>mvwinch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These routines return the character, of  type  <STRONG>chtype</STRONG>,  at
        the   current  position  in  the  named  window.   If  any
        attributes are set for that  position,  their  values  are
@@ -72,8 +69,7 @@
        to extract the character or attributes alone.
 
 
-</PRE>
-<H3><a name="h3-Attributes">Attributes</a></H3><PRE>
+</PRE><H3><a name="h3-Attributes">Attributes</a></H3><PRE>
        The  following  bit-masks  may  be  AND-ed with characters
        returned by <STRONG>winch</STRONG>.
 
@@ -82,26 +78,22 @@
        <STRONG>A_COLOR</STRONG>        Bit-mask to extract color-pair field information
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Functions with a "mv" prefix first perform a cursor  move-
        ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all of these routines may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are described in the XSI Curses  standard,
        Issue 4.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
        Comparable  functions  in  the  wide-character  (ncursesw)

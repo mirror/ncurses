@@ -46,14 +46,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>new_field</STRONG>,  <STRONG>dup_field</STRONG>, <STRONG>link_field</STRONG>, <STRONG>free_field</STRONG> - create and
        destroy form fields
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
        FIELD *new_field(int height, int width,
                         int toprow, int leftcol,
@@ -63,8 +61,7 @@
        int free_field(FIELD *field);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function <STRONG>new_field</STRONG> allocates a new field and  initial-
        izes  it  from the parameters given: height, width, row of
        upper-left corner, column  of  upper-left  corner,  number
@@ -85,8 +82,7 @@
        with a field.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The function, <STRONG>new_field</STRONG>, <STRONG>dup_field</STRONG>, <STRONG>link_field</STRONG> return <STRONG>NULL</STRONG>
        on error.  They set errno according to their success:
 
@@ -111,19 +107,16 @@
             field is connected.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate the System V forms library.  They
        were not supported on Version 7 or BSD versions.
 
@@ -133,8 +126,7 @@
        what does not.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 

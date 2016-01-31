@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>newpad</STRONG>, <STRONG>subpad</STRONG>, <STRONG>prefresh</STRONG>, <STRONG>pnoutrefresh</STRONG>, <STRONG>pechochar</STRONG>,
        <STRONG>pecho_wchar</STRONG> - create and display <STRONG>curses</STRONG> pads
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>WINDOW</STRONG> <STRONG>*newpad(int</STRONG> <EM>nlines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ncols</EM><STRONG>);</STRONG>
@@ -66,11 +64,9 @@
        <STRONG>int</STRONG> <STRONG>pecho_wchar(WINDOW</STRONG> <STRONG>*</STRONG><EM>pad</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-newpad">newpad</a></H3><PRE>
+</PRE><H3><a name="h3-newpad">newpad</a></H3><PRE>
        The <STRONG>newpad</STRONG> routine creates and returns a pointer to a  new
        pad data structure with the given number of lines, <EM>nlines</EM>,
        and columns, <EM>ncols</EM>.  A pad is like a window,  except  that
@@ -87,8 +83,7 @@
        to be used for the display.
 
 
-</PRE>
-<H3><a name="h3-subpad">subpad</a></H3><PRE>
+</PRE><H3><a name="h3-subpad">subpad</a></H3><PRE>
        The <STRONG>subpad</STRONG> routine creates and returns a pointer to a sub-
        window within a  pad  with  the  given  number  of  lines,
        <EM>nlines</EM>,  and  columns,  <EM>ncols</EM>.   Unlike <STRONG>subwin</STRONG>, which uses
@@ -100,8 +95,7 @@
        fore calling <STRONG>prefresh</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-prefresh_-pnoutrefresh">prefresh, pnoutrefresh</a></H3><PRE>
+</PRE><H3><a name="h3-prefresh_-pnoutrefresh">prefresh, pnoutrefresh</a></H3><PRE>
        The  <STRONG>prefresh</STRONG>  and  <STRONG>pnoutrefresh</STRONG> routines are analogous to
        <STRONG>wrefresh</STRONG> and <STRONG>wnoutrefresh</STRONG> except that they relate to  pads
        instead  of windows.  The additional parameters are needed
@@ -118,8 +112,7 @@
        <EM>col</EM>, <EM>sminrow</EM>, or <EM>smincol</EM> are treated as if they were zero.
 
 
-</PRE>
-<H3><a name="h3-pechochar">pechochar</a></H3><PRE>
+</PRE><H3><a name="h3-pechochar">pechochar</a></H3><PRE>
        The <STRONG>pechochar</STRONG> routine is functionally equivalent to a call
        to  <STRONG>addch</STRONG>  followed by a call to <STRONG>refresh</STRONG>, a call to <STRONG>waddch</STRONG>
        followed by a call to <STRONG>wrefresh</STRONG>, or a call to  <STRONG>waddch</STRONG>  fol-
@@ -132,16 +125,14 @@
        arguments to <STRONG>prefresh</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-pecho_wchar">pecho_wchar</a></H3><PRE>
+</PRE><H3><a name="h3-pecho_wchar">pecho_wchar</a></H3><PRE>
        The  <STRONG>pecho_wchar</STRONG>  function is the analogous wide-character
        form of <STRONG>pechochar</STRONG>.  It outputs one character to a pad  and
        immediately  refreshes the pad.  It does this by a call to
        <STRONG>wadd_wch</STRONG> followed by a call to <STRONG>prefresh</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
        and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
        <STRONG>ERR</STRONG>") upon successful completion.
@@ -169,19 +160,16 @@
                turns an error.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>pechochar</STRONG> may be a macro.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,  <STRONG>curs_add-</STRONG>
        <STRONG><A HREF="curs_addch.3x.html">ch(3x)</A></STRONG>.
 

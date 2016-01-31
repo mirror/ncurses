@@ -46,13 +46,11 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>mitem_current</STRONG> - set and get current_menu_item
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_current_item(MENU *menu, const ITEM *item);
        ITEM *current_item(const MENU *menu);
@@ -61,8 +59,7 @@
        int item_index(const ITEM *item);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  function  <STRONG>set_current_item</STRONG> sets the current item (the
        item on  which  the  menu  cursor  is  positioned).   <STRONG>cur-</STRONG>
        <STRONG>rent_item</STRONG>  returns  a  pointer  to the current item in the
@@ -79,8 +76,7 @@
        <EM>item</EM> in the menu's item pointer list.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>current_item</STRONG> returns a pointer (which may  be  <STRONG>NULL</STRONG>).   It
        does not set errno.
 
@@ -107,19 +103,16 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines emulate the System V  menu  library.   They
        were not supported on Version 7 or BSD versions.
 
@@ -128,8 +121,7 @@
        <STRONG>ERR</STRONG>).
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 

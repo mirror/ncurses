@@ -46,22 +46,19 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>use_default_colors</STRONG>, <STRONG>assume_default_colors</STRONG> - use terminal's
        default colors
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>use_default_colors(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>assume_default_colors(int</STRONG> <STRONG>fg,</STRONG> <STRONG>int</STRONG> <STRONG>bg);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <EM>use</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM> and <EM>assume</EM><STRONG>_</STRONG><EM>default</EM><STRONG>_</STRONG><EM>colors()</EM> func-
        tions are extensions to the curses library.  They are used
        with terminals that support ISO 6429 color, or equivalent.
@@ -110,8 +107,7 @@
        black background for color pair 0.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These functions return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG>
        on success.  They will fail if either  the  terminal  does
        not  support  the <EM>orig</EM><STRONG>_</STRONG><EM>pair</EM> or <EM>orig</EM><STRONG>_</STRONG><EM>colors</EM> capability.  If
@@ -119,8 +115,7 @@
        an error as well.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Associated  with  this  extension,  the <STRONG>init_pair</STRONG> function
        accepts negative arguments to specify  default  foreground
        or background colors.
@@ -149,21 +144,18 @@
        setting specific values.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on them be  con-
        ditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>, <STRONG>ded(1)</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Thomas  Dickey  (from  an analysis of the requirements for
        color xterm for XFree86 3.1.2C, February 1996).
 

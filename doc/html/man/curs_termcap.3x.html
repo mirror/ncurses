@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>PC</STRONG>, <STRONG>UP</STRONG>, <STRONG>BC</STRONG>, <STRONG>ospeed</STRONG>, <STRONG>tgetent</STRONG>, <STRONG>tgetflag</STRONG>, <STRONG>tgetnum</STRONG>, <STRONG>tgetstr</STRONG>,
        <STRONG>tgoto</STRONG>, <STRONG>tputs</STRONG> - direct <STRONG>curses</STRONG> interface to the terminfo
        capability database
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
@@ -70,8 +68,7 @@
        <STRONG>int</STRONG> <STRONG>tputs(const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>affcnt,</STRONG> <STRONG>int</STRONG> <STRONG>(*putc)(int));</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  routines  are included as a conversion aid for pro-
        grams that use the <EM>termcap</EM> library.  Their parameters  are
        the  same and the routines are emulated using the <EM>terminfo</EM>
@@ -80,8 +77,7 @@
        compiled.
 
 
-</PRE>
-<H3><a name="h3-INITIALIZATION">INITIALIZATION</a></H3><PRE>
+</PRE><H3><a name="h3-INITIALIZATION">INITIALIZATION</a></H3><PRE>
        The <STRONG>tgetent</STRONG> routine loads the entry for <EM>name</EM>.  It returns:
 
           1  on success,
@@ -107,8 +103,7 @@
               terminal description has cursor-addressing.
 
 
-</PRE>
-<H3><a name="h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></H3><PRE>
+</PRE><H3><a name="h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></H3><PRE>
        The <STRONG>tgetflag</STRONG> routine gets the boolean entry for <EM>id</EM>, or ze-
        ro if it is not available.
 
@@ -139,8 +134,7 @@
        <STRONG>flag</STRONG>, <STRONG>tgetnum</STRONG> and <STRONG>tgetstr</STRONG> are compared in lookups.
 
 
-</PRE>
-<H3><a name="h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></H3><PRE>
+</PRE><H3><a name="h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></H3><PRE>
        The  <STRONG>tgoto</STRONG>  routine  instantiates  the parameters into the
        given capability.  The output from this routine is  to  be
        passed to <STRONG>tputs</STRONG>.
@@ -150,8 +144,7 @@
        cap or terminfo name.
 
 
-</PRE>
-<H3><a name="h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></H3><PRE>
+</PRE><H3><a name="h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></H3><PRE>
        The variables <STRONG>PC</STRONG>, <STRONG>UP</STRONG> and <STRONG>BC</STRONG> are set by <STRONG>tgetent</STRONG> to the ter-
        minfo   entry's   data   for   <STRONG>pad_char</STRONG>,   <STRONG>cursor_up</STRONG>   and
        <STRONG>backspace_if_not_bs</STRONG>,  respectively.   <STRONG>UP</STRONG>  is  not  used by
@@ -161,8 +154,7 @@
        minal speed.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Except where explicitly noted, routines that return an in-
        teger return <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 only  specifies
        "an integer value other than <STRONG>ERR</STRONG>") upon successful comple-
@@ -171,8 +163,7 @@
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
 
 
-</PRE>
-<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
+</PRE><H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        If you call <STRONG>tgetstr</STRONG> to fetch <STRONG>ca</STRONG> or any other parameterized
        string,  be aware that it will be returned in terminfo no-
        tation, not the older and not-quite-compatible termcap no-
@@ -197,8 +188,7 @@
        modate termcap's limitation in this respect.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  However, they are marked TO BE WITHDRAWN  and  may
        be removed in future versions.
@@ -239,8 +229,7 @@
            longer than two characters.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>.
 
        http://invisible-island.net/ncurses/tctest.html

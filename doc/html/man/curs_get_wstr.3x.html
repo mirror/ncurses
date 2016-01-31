@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>get_wstr</STRONG>, <STRONG>getn_wstr</STRONG>, <STRONG>wget_wstr</STRONG>, <STRONG>wgetn_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>,
        <STRONG>mvgetn_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, <STRONG>mvwgetn_wstr</STRONG> - get an array of
        wide characters from a curses terminal keyboard
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>get_wstr(wint_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
@@ -66,8 +64,7 @@
        <STRONG>int</STRONG> <STRONG>mvwgetn_wstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>wint_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  effect  of <STRONG>get_wstr</STRONG> is as though a series of calls to
        <STRONG>get_wch</STRONG> were made, until a newline, other end-of-line,  or
        end-of-file condition is processed.  An end-of-file condi-
@@ -102,8 +99,7 @@
        the application prevent overflow of the input buffer.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Using <STRONG>get_wstr</STRONG>, <STRONG>mvget_wstr</STRONG>, <STRONG>mvwget_wstr</STRONG>, or  <STRONG>wget_wstr</STRONG>  to
        read  a  line  that overflows the array pointed to by <STRONG>wstr</STRONG>
        causes  undefined  results.    The   use   of   <STRONG>getn_wstr</STRONG>,
@@ -117,8 +113,7 @@
        All of these routines except <STRONG>wgetn_wstr</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All of these functions return <STRONG>OK</STRONG> upon  successful  comple-
        tion.  Otherwise, they return <STRONG>ERR</STRONG>.
 
@@ -134,8 +129,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in The Single Unix Specifi-
        cation, Version 2.  No error conditions are defined.  This
        implementation  returns ERR if the window pointer is null,
@@ -149,8 +143,7 @@
        <STRONG>wint_t</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        Functions: <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_get_wch.3x.html">curs_get_wch(3x)</A></STRONG>, <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>.
 
 

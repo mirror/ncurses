@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>initscr</STRONG>, <STRONG>newterm</STRONG>, <STRONG>endwin</STRONG>, <STRONG>isendwin</STRONG>, <STRONG>set_term</STRONG>, <STRONG>delscreen</STRONG> -
        <STRONG>curses</STRONG> screen initialization and manipulation routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>WINDOW</STRONG> <STRONG>*initscr(void);</STRONG>
@@ -63,11 +61,9 @@
        <STRONG>void</STRONG> <STRONG>delscreen(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-initscr">initscr</a></H3><PRE>
+</PRE><H3><a name="h3-initscr">initscr</a></H3><PRE>
        <STRONG>initscr</STRONG> is normally the first <STRONG>curses</STRONG> routine to call  when
        initializing  a program.  A few special routines sometimes
        need to be called before it; these are  <STRONG>slk_init</STRONG>,  <STRONG>filter</STRONG>,
@@ -82,8 +78,7 @@
        <STRONG>stdscr</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-newterm">newterm</a></H3><PRE>
+</PRE><H3><a name="h3-newterm">newterm</a></H3><PRE>
        A  program  that  outputs to more than one terminal should
        use the <STRONG>newterm</STRONG>  routine  for  each  terminal  instead  of
        <STRONG>initscr</STRONG>.  A program that needs to inspect capabilities, so
@@ -103,8 +98,7 @@
        If the <EM>type</EM> parameter is <STRONG>NULL</STRONG>, <STRONG>$TERM</STRONG> will be used.
 
 
-</PRE>
-<H3><a name="h3-endwin">endwin</a></H3><PRE>
+</PRE><H3><a name="h3-endwin">endwin</a></H3><PRE>
        The  program must also call <STRONG>endwin</STRONG> for each terminal being
        used before exiting from <STRONG>curses</STRONG>.   If  <STRONG>newterm</STRONG>  is  called
        more  than  once for the same terminal, the first terminal
@@ -125,15 +119,13 @@
        es the program to resume visual mode.
 
 
-</PRE>
-<H3><a name="h3-isendwin">isendwin</a></H3><PRE>
+</PRE><H3><a name="h3-isendwin">isendwin</a></H3><PRE>
        The <STRONG>isendwin</STRONG> routine  returns  <STRONG>TRUE</STRONG>  if  <STRONG>endwin</STRONG>  has  been
        called without any subsequent calls to <STRONG>wrefresh</STRONG>, and <STRONG>FALSE</STRONG>
        otherwise.
 
 
-</PRE>
-<H3><a name="h3-set_term">set_term</a></H3><PRE>
+</PRE><H3><a name="h3-set_term">set_term</a></H3><PRE>
        The <STRONG>set_term</STRONG> routine is used to switch  between  different
        terminals.   The screen reference <STRONG>new</STRONG> becomes the new cur-
        rent terminal.  The previous terminal is returned  by  the
@@ -142,16 +134,14 @@
        rent terminal.
 
 
-</PRE>
-<H3><a name="h3-delscreen">delscreen</a></H3><PRE>
+</PRE><H3><a name="h3-delscreen">delscreen</a></H3><PRE>
        The  <STRONG>delscreen</STRONG>  routine  frees storage associated with the
        <STRONG>SCREEN</STRONG> data structure.  The <STRONG>endwin</STRONG>  routine  does  not  do
        this, so <STRONG>delscreen</STRONG> should be called after <STRONG>endwin</STRONG> if a par-
        ticular <STRONG>SCREEN</STRONG> is no longer needed.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>endwin</STRONG> returns the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>  upon
        successful completion.
 
@@ -171,20 +161,17 @@
        <STRONG>o</STRONG>   <STRONG>set_term</STRONG> returns no error.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>initscr</STRONG> and <STRONG>newterm</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions were described in the XSI Curses standard,
        Issue 4.  As of 2015, the current document is X/Open Curs-
        es, Issue 7.
 
 
-</PRE>
-<H3><a name="h3-Differences">Differences</a></H3><PRE>
+</PRE><H3><a name="h3-Differences">Differences</a></H3><PRE>
        X/Open specifies that portable applications must not  call
        <STRONG>initscr</STRONG> more than once:
 
@@ -200,8 +187,7 @@
        the return value of <STRONG>initscr</STRONG> in XSI Curses.
 
 
-</PRE>
-<H3><a name="h3-Unset-TERM-Variable">Unset TERM Variable</a></H3><PRE>
+</PRE><H3><a name="h3-Unset-TERM-Variable">Unset TERM Variable</a></H3><PRE>
        If the TERM variable is missing or empty, <STRONG>initscr</STRONG> uses the
        value  "unknown", which normally corresponds to a terminal
        entry with the <EM>generic</EM> (<EM>gn</EM>) capability.   Generic  entries
@@ -211,8 +197,7 @@
        ly.
 
 
-</PRE>
-<H3><a name="h3-Signal-Handlers">Signal Handlers</a></H3><PRE>
+</PRE><H3><a name="h3-Signal-Handlers">Signal Handlers</a></H3><PRE>
        Quoting from X/Open Curses, section 3.1.1:
 
             <EM>Curses</EM> <EM>implementations</EM> <EM>may</EM> <EM>provide</EM> <EM>for</EM>  <EM>special</EM>  <EM>han-</EM>
@@ -274,8 +259,7 @@
             <STRONG>stdscr</STRONG>, and update other data such as <STRONG>LINES</STRONG> and <STRONG>COLS</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,
        <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>, <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>, <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>, <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>.

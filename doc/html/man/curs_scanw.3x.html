@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG>, <STRONG>mvscanw</STRONG>, <STRONG>mvwscanw</STRONG>, <STRONG>vwscanw</STRONG>, <STRONG>vw_scanw</STRONG> - con-
        vert formatted input from a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>scanw(char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
@@ -63,8 +61,7 @@
        <STRONG>int</STRONG> <STRONG>vwscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG> and <STRONG>mvscanw</STRONG> routines  are  analogous  to
        <STRONG>scanf</STRONG>  [see <STRONG>scanf(3)</STRONG>].  The effect of these routines is as
        though <STRONG>wgetstr</STRONG> were called on the window, and the  result-
@@ -77,8 +74,7 @@
        ments, as defined in <STRONG>&lt;stdarg.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>vwscanw</STRONG> returns <STRONG>ERR</STRONG> on failure and an integer equal to the
        number of fields scanned on success.
 
@@ -91,8 +87,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The XSI Curses standard, Issue  4  describes  these  func-
        tions.   The  function  <STRONG>vwscanw</STRONG> is marked TO BE WITHDRAWN,
        and is to be replaced by a  function  <STRONG>vw_scanw</STRONG>  using  the
@@ -116,8 +111,7 @@
        something was processed.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>, <STRONG><A HREF="curs_printw.3x.html">curs_printw(3x)</A></STRONG>, <STRONG>scanf(3)</STRONG>
 
 

@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>printw</STRONG>, <STRONG>wprintw</STRONG>, <STRONG>mvprintw</STRONG>, <STRONG>mvwprintw</STRONG>, <STRONG>vwprintw</STRONG>, <STRONG>vw_printw</STRONG>
        - print formatted output in <STRONG>curses</STRONG> windows
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>printw(const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
@@ -66,8 +64,7 @@
        <STRONG>glist);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  <STRONG>printw</STRONG>,  <STRONG>wprintw</STRONG>, <STRONG>mvprintw</STRONG> and <STRONG>mvwprintw</STRONG> routines are
        analogous to  <STRONG>printf</STRONG>  [see  <STRONG>printf(3)</STRONG>].   In  effect,  the
        string that would be output by <STRONG>printf</STRONG> is output instead as
@@ -80,8 +77,7 @@
        <STRONG>&lt;stdarg.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
        and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
        <STRONG>ERR</STRONG>") upon successful completion.
@@ -96,8 +92,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  The function <STRONG>vwprintw</STRONG> is marked TO  BE  WITHDRAWN,
        and  is  to  be replaced by a function <STRONG>vw_printw</STRONG> using the
@@ -109,8 +104,7 @@
        is included in <STRONG>&lt;curses.h</STRONG>&gt;.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG>printf(3)</STRONG>, <STRONG>vprintf(3)</STRONG>
 
 

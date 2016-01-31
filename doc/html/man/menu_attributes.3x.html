@@ -46,15 +46,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>menu_back</STRONG>,  <STRONG>menu_fore</STRONG>, <STRONG>menu_grey</STRONG>, <STRONG>menu_pad</STRONG>, <STRONG>set_menu_back</STRONG>,
        <STRONG>set_menu_fore</STRONG>, <STRONG>set_menu_grey</STRONG>,  <STRONG>set_menu_pad</STRONG>  -  color  and
        attribute control for menus
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
        int set_menu_fore(MENU *menu, chtype attr);
        chtype menu_fore(const MENU *menu);
@@ -66,8 +64,7 @@
        int menu_pad(const MENU *menu);
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  function  <STRONG>set_menu_fore</STRONG> sets the foreground attribute
        of <EM>menu</EM>. This is the  highlight  used  for  selected  menu
        items.   <STRONG>menu_fore</STRONG>  returns the foreground attribute.  The
@@ -91,8 +88,7 @@
        The default is a blank.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
@@ -105,26 +101,22 @@
             ment.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names begin "menu_" for
        detailed descriptions of the entry points.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
        file <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines emulate the System V  menu  library.   They
        were not supported on Version 7 or BSD versions.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Juergen  Pfeifer.   Manual  pages  and  adaptation for new
        curses by Eric S. Raymond.
 

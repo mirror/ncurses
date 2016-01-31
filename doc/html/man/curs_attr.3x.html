@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.43 2015/12/05 18:46:04 tom Exp @
+  * @Id: curs_attr.3x,v 1.44 2015/12/13 21:54:05 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -46,8 +46,7 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>attroff</STRONG>, <STRONG>wattroff</STRONG>, <STRONG>attron</STRONG>, <STRONG>wattron</STRONG>, <STRONG>attrset</STRONG>, <STRONG>wattrset</STRONG>,
        <STRONG>color_set</STRONG>, <STRONG>wcolor_set</STRONG>, <STRONG>standend</STRONG>, <STRONG>wstandend</STRONG>, <STRONG>standout</STRONG>,
        <STRONG>wstandout</STRONG>, <STRONG>attr_get</STRONG>, <STRONG>wattr_get</STRONG>, <STRONG>attr_off</STRONG>, <STRONG>wattr_off</STRONG>,
@@ -56,8 +55,7 @@
        window attribute control routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>int</STRONG> <STRONG>attroff(int</STRONG> <EM>attrs);</EM>
        <STRONG>int</STRONG> <STRONG>wattroff(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>attrs</EM><STRONG>);</STRONG>
@@ -93,8 +91,7 @@
        <STRONG>PAIR_NUMBER(</STRONG><EM>attrs</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  routines  manipulate  the current attributes of the
        named window.  The current attributes of a window apply to
        all characters that are written into the window with <STRONG>wadd-</STRONG>
@@ -106,8 +103,7 @@
        on the screen.
 
 
-</PRE>
-<H3><a name="h3-attrset">attrset</a></H3><PRE>
+</PRE><H3><a name="h3-attrset">attrset</a></H3><PRE>
        The  routine  <STRONG>attrset</STRONG>  sets  the current attributes of the
        given window to <EM>attrs</EM>.  The routine <STRONG>attroff</STRONG> turns off  the
        named  attributes  without turning any other attributes on
@@ -123,8 +119,7 @@
        used for erasing and clearing.
 
 
-</PRE>
-<H3><a name="h3-attr_set">attr_set</a></H3><PRE>
+</PRE><H3><a name="h3-attr_set">attr_set</a></H3><PRE>
        The <STRONG>attrset</STRONG> routine is actually a legacy feature predating
        SVr4 curses but kept in X/Open Curses for the same  reason
        that  SVr4 curses kept it: compatibility.  The routine <STRONG>at-</STRONG>
@@ -135,16 +130,14 @@
        ments of type <STRONG>attr_t</STRONG> rather than <STRONG>int</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-color_set">color_set</a></H3><PRE>
+</PRE><H3><a name="h3-color_set">color_set</a></H3><PRE>
        The routine <STRONG>color_set</STRONG> sets the current color of the  given
        window  to the foreground/background combination described
        by the color_pair_number.  The parameter opts is  reserved
        for future use, applications must supply a null pointer.
 
 
-</PRE>
-<H3><a name="h3-attr_get">attr_get</a></H3><PRE>
+</PRE><H3><a name="h3-attr_get">attr_get</a></H3><PRE>
        The  routine  <STRONG>wattr_get</STRONG>  returns the current attribute and
        color pair for the given window; <STRONG>attr_get</STRONG> returns the cur-
        rent attribute and color pair for <STRONG>stdscr</STRONG>.
@@ -154,8 +147,7 @@
        <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>).
 
 
-</PRE>
-<H3><a name="h3-chgat">chgat</a></H3><PRE>
+</PRE><H3><a name="h3-chgat">chgat</a></H3><PRE>
        The routine <STRONG>chgat</STRONG> changes the attributes of a given number
        of characters starting at the current cursor  location  of
        <STRONG>stdscr</STRONG>.   It  does not update the cursor and does not per-
@@ -170,8 +162,7 @@
        (leave it <STRONG>NULL</STRONG>).
 
 
-</PRE>
-<H3><a name="h3-Attributes">Attributes</a></H3><PRE>
+</PRE><H3><a name="h3-Attributes">Attributes</a></H3><PRE>
        The following video attributes, defined in <STRONG>&lt;curses.h&gt;</STRONG>, can
        be passed to the routines <STRONG>attron</STRONG>, <STRONG>attroff</STRONG>, and <STRONG>attrset</STRONG>, or
        OR'd with the characters passed to  <STRONG>addch</STRONG>  (see  <STRONG>curs_add-</STRONG>
@@ -220,8 +211,7 @@
        claims (falsely) that these routines always return <STRONG>1</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>attroff</STRONG>,  <STRONG>wattroff</STRONG>,  <STRONG>attron</STRONG>,  <STRONG>wattron</STRONG>,  <STRONG>attrset</STRONG>,
        <STRONG>wattrset</STRONG>, <STRONG>standend</STRONG> and <STRONG>standout</STRONG> may be macros.
 
@@ -233,8 +223,7 @@
        support more than 256 color pairs.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are supported in the XSI Curses  standard,
        Issue  4.   The  standard  defined  the dedicated type for
        highlights, <STRONG>attr_t</STRONG>, which is not defined in  SVr4  curses.
@@ -289,8 +278,7 @@
        (i.e., via the <STRONG>sgr1</STRONG> capability).
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>OK</STRONG> on success, or  <STRONG>ERR</STRONG>  on
        failure.
 
@@ -307,8 +295,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>, <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>,
        <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>, <STRONG><A HREF="curs_printw.3x.html">curs_printw(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>
 

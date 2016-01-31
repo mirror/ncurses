@@ -45,8 +45,7 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>slk_init</STRONG>, <STRONG>slk_set</STRONG>, <STRONG>slk_wset</STRONG>, <STRONG>slk_refresh</STRONG>, <STRONG>slk_noutrefresh</STRONG>,
        <STRONG>slk_label</STRONG>, <STRONG>slk_clear</STRONG>, <STRONG>slk_restore</STRONG>, <STRONG>slk_touch</STRONG>, <STRONG>slk_attron</STRONG>,
        <STRONG>slk_attrset</STRONG>, <STRONG>slk_attroff</STRONG>, <STRONG>slk_attr_on</STRONG>, <STRONG>slk_attr_set</STRONG>,
@@ -54,8 +53,7 @@
        routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>slk_init(int</STRONG> <STRONG>fmt);</STRONG>
@@ -78,8 +76,7 @@
        <STRONG>int</STRONG> <STRONG>slk_wset(int</STRONG> <STRONG>labnum,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*label,</STRONG> <STRONG>int</STRONG> <STRONG>fmt);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The slk* functions manipulate the set of soft function-key
        labels  that exist on many terminals.  For those terminals
        that do not have soft labels, <STRONG>curses</STRONG> takes over the bottom
@@ -153,8 +150,7 @@
        line of the screen.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return <STRONG>ERR</STRONG> upon failure and OK (SVr4 speci-
        fies only "an integer value other than <STRONG>ERR</STRONG>") upon success-
        ful completion.
@@ -201,14 +197,12 @@
                    be allocated.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Most applications would use <STRONG>slk_noutrefresh</STRONG> because a <STRONG>wre-</STRONG>
        <STRONG>fresh</STRONG> is likely to follow soon.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The XSI Curses standard, Issue 4,  describes  these  func-
        tions.   It changes the argument type of the attribute-ma-
        nipulation functions <STRONG>slk_attron</STRONG>, <STRONG>slk_attroff</STRONG>,  <STRONG>slk_attrset</STRONG>
@@ -217,8 +211,7 @@
        cific to ncurses.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,  <STRONG>curs_re-</STRONG>
        <STRONG><A HREF="curs_refresh.3x.html">fresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 

@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>touchwin</STRONG>, <STRONG>touchline</STRONG>, <STRONG>untouchwin</STRONG>, <STRONG>wtouchln</STRONG>, <STRONG>is_linetouched</STRONG>,
        <STRONG>is_wintouched</STRONG> - <STRONG>curses</STRONG> refresh control routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
        <STRONG>int</STRONG> <STRONG>touchwin(WINDOW</STRONG> <STRONG>*win);</STRONG>
        <STRONG>int</STRONG> <STRONG>touchline(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>start,</STRONG> <STRONG>int</STRONG> <STRONG>count);</STRONG>
@@ -62,8 +60,7 @@
        <STRONG>bool</STRONG> <STRONG>is_wintouched(WINDOW</STRONG> <STRONG>*win);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>touchwin</STRONG> and <STRONG>touchline</STRONG> routines throw away  all  opti-
        mization  information about which parts of the window have
        been touched, by pretending that  the  entire  window  has
@@ -88,8 +85,7 @@
        the given window.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All  routines  return  the integer <STRONG>ERR</STRONG> upon failure and an
        integer value other than <STRONG>ERR</STRONG> upon  successful  completion,
        unless  otherwise  noted in the preceding routine descrip-
@@ -111,8 +107,7 @@
                    window.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
@@ -122,13 +117,11 @@
        <STRONG>scr)</STRONG>.  This will not work under ncurses.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all routines except <STRONG>wtouchln</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 

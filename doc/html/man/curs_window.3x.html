@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>newwin</STRONG>, <STRONG>delwin</STRONG>, <STRONG>mvwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>mvderwin</STRONG>, <STRONG>dupwin</STRONG>,
        <STRONG>wsyncup</STRONG>, <STRONG>syncok</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>wsyncdown</STRONG> - create <STRONG>curses</STRONG>
        windows
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>WINDOW</STRONG> <STRONG>*newwin(</STRONG>
@@ -75,11 +73,9 @@
        <STRONG>void</STRONG> <STRONG>wsyncdown(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-newwin">newwin</a></H3><PRE>
+</PRE><H3><a name="h3-newwin">newwin</a></H3><PRE>
        Calling <STRONG>newwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines and columns.  The upper
        left-hand corner of the window is at
@@ -94,16 +90,14 @@
        <STRONG>newwin(0,0,0,0)</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-delwin">delwin</a></H3><PRE>
+</PRE><H3><a name="h3-delwin">delwin</a></H3><PRE>
        Calling <STRONG>delwin</STRONG> deletes the named window, freeing all memo-
        ry associated with it (it does not actually erase the win-
        dow's screen image).  Subwindows must  be  deleted  before
        the main window can be deleted.
 
 
-</PRE>
-<H3><a name="h3-mvwin">mvwin</a></H3><PRE>
+</PRE><H3><a name="h3-mvwin">mvwin</a></H3><PRE>
        Calling <STRONG>mvwin</STRONG> moves the window so that the upper left-hand
        corner is at position (<EM>x</EM>, <EM>y</EM>).  If the move would cause the
        window to be off the screen, it is an error and the window
@@ -111,8 +105,7 @@
        avoided.
 
 
-</PRE>
-<H3><a name="h3-subwin">subwin</a></H3><PRE>
+</PRE><H3><a name="h3-subwin">subwin</a></H3><PRE>
        Calling <STRONG>subwin</STRONG> creates and returns a pointer to a new win-
        dow with the given number of lines, <EM>nlines</EM>,  and  columns,
        <EM>ncols</EM>.   The  window  is at position (<EM>begin</EM>_<EM>y</EM>, <EM>begin</EM>_<EM>x</EM>) on
@@ -123,8 +116,7 @@
        the subwindow.
 
 
-</PRE>
-<H3><a name="h3-derwin">derwin</a></H3><PRE>
+</PRE><H3><a name="h3-derwin">derwin</a></H3><PRE>
        Calling <STRONG>derwin</STRONG> is the same as calling <STRONG>subwin,</STRONG> except  that
        <EM>begin</EM>_<EM>y</EM> and <EM>begin</EM>_<EM>x</EM> are relative to the origin of the win-
        dow <EM>orig</EM> rather than the screen.  There is  no  difference
@@ -137,37 +129,32 @@
        physical position on the screen.
 
 
-</PRE>
-<H3><a name="h3-dupwin">dupwin</a></H3><PRE>
+</PRE><H3><a name="h3-dupwin">dupwin</a></H3><PRE>
        Calling  <STRONG>dupwin</STRONG>  creates  an exact duplicate of the window
        <EM>win</EM>.
 
 
-</PRE>
-<H3><a name="h3-wsyncup">wsyncup</a></H3><PRE>
+</PRE><H3><a name="h3-wsyncup">wsyncup</a></H3><PRE>
        Calling <STRONG>wsyncup</STRONG> touches all locations in ancestors of  <EM>win</EM>
        that  are changed in <EM>win</EM>.  If <STRONG>syncok</STRONG> is called with second
        argument <STRONG>TRUE</STRONG> then <STRONG>wsyncup</STRONG> is called automatically whenev-
        er there is a change in the window.
 
 
-</PRE>
-<H3><a name="h3-wsyncdown">wsyncdown</a></H3><PRE>
+</PRE><H3><a name="h3-wsyncdown">wsyncdown</a></H3><PRE>
        The  <STRONG>wsyncdown</STRONG>  routine  touches each location in <EM>win</EM> that
        has been touched in any of  its  ancestor  windows.   This
        routine  is  called by <STRONG>wrefresh</STRONG>, so it should almost never
        be necessary to call it manually.
 
 
-</PRE>
-<H3><a name="h3-wcursyncup">wcursyncup</a></H3><PRE>
+</PRE><H3><a name="h3-wcursyncup">wcursyncup</a></H3><PRE>
        The routine <STRONG>wcursyncup</STRONG> updates the current cursor position
        of  all the ancestors of the window to reflect the current
        cursor position of the window.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines that return an integer return the integer <STRONG>ERR</STRONG> up-
        on  failure  and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value
        other than <STRONG>ERR</STRONG>") upon successful completion.
@@ -223,16 +210,14 @@
        been initialized, i.e., with <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        If many small changes are made to the window, the  <STRONG>wsyncup</STRONG>
        option could degrade performance.
 
        Note that <STRONG>syncok</STRONG> may be a macro.
 
 
-</PRE>
-<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
+</PRE><H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        The  subwindow  functions (<EM>subwin</EM>, <EM>derwin</EM>, <EM>mvderwin</EM>, <STRONG>wsyn-</STRONG>
        <STRONG>cup</STRONG>, <STRONG>wsyncdown</STRONG>, <STRONG>wcursyncup</STRONG>, <STRONG>syncok</STRONG>) are flaky, incomplete-
        ly implemented, and not well tested.
@@ -246,14 +231,12 @@
        may result in slower updates.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>,  <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>
 

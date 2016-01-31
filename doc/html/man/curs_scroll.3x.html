@@ -45,13 +45,11 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>scroll</STRONG>, <STRONG>scrl</STRONG>, <STRONG>wscrl</STRONG> - scroll a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>scroll(WINDOW</STRONG> <STRONG>*win);</STRONG>
@@ -59,8 +57,7 @@
        <STRONG>int</STRONG> <STRONG>wscrl(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  <STRONG>scroll</STRONG>  routine scrolls the window up one line.  This
        involves moving the lines in the  window  data  structure.
        As  an optimization, if the scrolling region of the window
@@ -77,8 +74,7 @@
        <STRONG>scrollok</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return <STRONG>ERR</STRONG> upon failure, and <STRONG>OK</STRONG> (SVr4  only
        specifies "an integer value other than <STRONG>ERR</STRONG>") upon success-
        ful completion.
@@ -90,8 +86,7 @@
        e.g., with <STRONG>scrollok</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>scrl</STRONG> and <STRONG>scroll</STRONG> may be macros.
 
        The SVr4 documentation says that the optimization of phys-
@@ -108,14 +103,12 @@
        plementation it is.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
 
 

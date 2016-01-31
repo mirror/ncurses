@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.29 2013/12/21 22:15:53 tom Exp $
+.\" $Id: tset.1,v 1.31 2016/01/30 15:41:41 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -39,6 +39,7 @@
 .br
 \fBreset\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
 .SH DESCRIPTION
+.SS tset - initialization
 \&\fBTset\fR initializes terminals.
 \fBTset\fR first determines the type of terminal that you are using.
 This determination is done as follows, using the first terminal type found.
@@ -75,6 +76,7 @@ standard error output.
 Use the \fB\-c\fP or \fB\-w\fP option to select only the window sizing
 versus the other initialization.
 If neither option is given, both are assumed.
+.SS reset - reinitialization
 .PP
 When invoked as \fBreset\fR, \fB@TSET@\fR sets cooked and echo modes,
 turns off cbreak and raw modes, turns on newline translation and
@@ -88,6 +90,7 @@ you may have to type
 (the line-feed character is normally control-J) to get the terminal
 to work, as carriage-return may no longer work in the abnormal state.
 Also, the terminal will often not echo the command.
+.SH OPTIONS 
 .PP
 The options are as follows:
 .TP 5

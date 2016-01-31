@@ -45,14 +45,12 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>deleteln</STRONG>,  <STRONG>wdeleteln</STRONG>,  <STRONG>insdelln</STRONG>, <STRONG>winsdelln</STRONG>, <STRONG>insertln</STRONG>, <STRONG>win-</STRONG>
        <STRONG>sertln</STRONG> - delete and insert lines in a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>deleteln(void);</STRONG>
@@ -63,8 +61,7 @@
        <STRONG>int</STRONG> <STRONG>winsertln(WINDOW</STRONG> <STRONG>*win);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The <STRONG>deleteln</STRONG> and <STRONG>wdeleteln</STRONG> routines delete the line  under
        the cursor in the window; all lines below the current line
        are moved up one line.  The bottom line of the  window  is
@@ -81,8 +78,7 @@
        above the current line and the bottom line is lost.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and an <STRONG>OK</STRONG>
        (SVr4 specifies only "an integer value  other  than  <STRONG>ERR</STRONG>")
        upon successful completion.
@@ -92,15 +88,13 @@
        returned.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  The standard specifies that they return  <STRONG>ERR</STRONG>  on
        failure, but specifies no error conditions.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all but <STRONG>winsdelln</STRONG> may be macros.
 
        These  routines  do  not require a hardware line delete or
@@ -109,8 +103,7 @@
        has been set on the current window.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
 

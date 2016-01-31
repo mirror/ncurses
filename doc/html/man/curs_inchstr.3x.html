@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>inchstr</STRONG>, <STRONG>inchnstr</STRONG>, <STRONG>winchstr</STRONG>, <STRONG>winchnstr</STRONG>, <STRONG>mvinchstr</STRONG>,
        <STRONG>mvinchnstr</STRONG>, <STRONG>mvwinchstr</STRONG>, <STRONG>mvwinchnstr</STRONG> - get a string of
        characters (and attributes) from a <STRONG>curses</STRONG> window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>inchstr(chtype</STRONG> <STRONG>*chstr);</STRONG>
@@ -67,8 +65,7 @@
        <STRONG>int</STRONG> <STRONG>n);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These routines return a NULL-terminated  array  of  <STRONG>chtype</STRONG>
        quantities, starting at the current cursor position in the
        named window and ending at the right margin of the window.
@@ -80,8 +77,7 @@
        the <EM>chstr</EM> [see <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>].
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon  failure  and  an
        integer  value  other  than <STRONG>ERR</STRONG> upon successful completion
        (the number of  characters  retrieved,  exclusive  of  the
@@ -96,8 +92,7 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note  that  all  routines  except <STRONG>winchnstr</STRONG> may be macros.
        SVr4 does not document whether the result string is  zero-
        terminated;  it  does  not document whether a length limit
@@ -105,16 +100,14 @@
        the meaning of the return value.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  functions are described in the XSI Curses standard,
        Issue 4.  It is no more specific than the SVr4  documenta-
        tion on the trailing 0.  It does specify that the success-
        ful return of the functions is <STRONG>OK</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>.
 
        Comparable functions in the wide-character (ncursesw)  li-

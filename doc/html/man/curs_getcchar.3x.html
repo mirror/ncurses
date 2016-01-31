@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>getcchar</STRONG>,  <STRONG>setcchar</STRONG> - Get a wide character string and ren-
        dition from a <STRONG>cchar_t</STRONG> or set a <STRONG>cchar_t</STRONG> from a wide-charac-
        ter string
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>getcchar(</STRONG>
@@ -71,11 +69,9 @@
                <STRONG>void</STRONG> <STRONG>*</STRONG><EM>opts</EM> <STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-getcchar">getcchar</a></H3><PRE>
+</PRE><H3><a name="h3-getcchar">getcchar</a></H3><PRE>
        The  <STRONG>getcchar</STRONG>  function  gets  a wide-character string and
        rendition from a <STRONG>cchar_t</STRONG> argument.  When <EM>wch</EM> is not a null
        pointer, the <STRONG>getcchar</STRONG> function does the following:
@@ -101,8 +97,7 @@
            <EM>color</EM><STRONG>_</STRONG><EM>pair</EM>
 
 
-</PRE>
-<H3><a name="h3-setcchar">setcchar</a></H3><PRE>
+</PRE><H3><a name="h3-setcchar">setcchar</a></H3><PRE>
        The  <STRONG>setcchar</STRONG> function initializes the location pointed to
        by <EM>wcval</EM> by using:
 
@@ -122,8 +117,7 @@
            allowed.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        The  <EM>opts</EM> argument is reserved for future use.  Currently,
        an application must provide a null pointer as <EM>opts</EM>.
 
@@ -133,8 +127,7 @@
        effect is unspecified.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        When <EM>wch</EM> is a null pointer, <STRONG>getcchar</STRONG> returns the number of
        wide characters referenced by <EM>wcval</EM>, including one  for  a
        trailing null.
@@ -146,8 +139,7 @@
        wise, it returns <STRONG>ERR</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        Functions:   <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
        <STRONG>wcwidth(3)</STRONG>.
 

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2011,2013 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tset.1,v 1.29 2013/12/21 22:15:53 tom Exp @
+  * @Id: tset.1,v 1.31 2016/01/30 15:41:41 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -45,21 +45,20 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>tset</STRONG>, <STRONG>reset</STRONG> - terminal initialization
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>tset</STRONG>  [<STRONG>-IQVcqrsw</STRONG>] [<STRONG>-</STRONG>] [<STRONG>-e</STRONG> <EM>ch</EM>] [<STRONG>-i</STRONG> <EM>ch</EM>] [<STRONG>-k</STRONG> <EM>ch</EM>] [<STRONG>-m</STRONG> <EM>mapping</EM>]
        [<EM>terminal</EM>]
        <STRONG>reset</STRONG> [<STRONG>-IQVcqrsw</STRONG>] [<STRONG>-</STRONG>] [<STRONG>-e</STRONG> <EM>ch</EM>] [<STRONG>-i</STRONG> <EM>ch</EM>] [<STRONG>-k</STRONG> <EM>ch</EM>] [<STRONG>-m</STRONG> <EM>mapping</EM>]
        [<EM>terminal</EM>]
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE><H3><a name="h3-tset---initialization">tset - initialization</a></H3><PRE>
        <STRONG>Tset</STRONG>  initializes  terminals.   <STRONG>Tset</STRONG>  first determines the
        type of terminal that you are using.   This  determination
        is done as follows, using the first terminal type found.
@@ -99,6 +98,8 @@
        versus  the  other  initialization.   If neither option is
        given, both are assumed.
 
+
+</PRE><H3><a name="h3-reset---reinitialization">reset - reinitialization</a></H3><PRE>
        When invoked as <STRONG>reset</STRONG>, <STRONG>tset</STRONG> sets cooked  and  echo  modes,
        turns  off cbreak and raw modes, turns on newline transla-
        tion and resets any  unset  special  characters  to  their
@@ -114,6 +115,8 @@
        the abnormal state.  Also, the  terminal  will  often  not
        echo the command.
 
+
+</PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
        The options are as follows:
 
        <STRONG>-c</STRONG>   Set control characters and modes.
@@ -158,8 +161,7 @@
        tion, i.e., control-h may be specified as "^H" or "^h".
 
 
-</PRE>
-<H2><a name="h2-SETTING-THE-ENVIRONMENT">SETTING THE ENVIRONMENT</a></H2><PRE>
+</PRE><H2><a name="h2-SETTING-THE-ENVIRONMENT">SETTING THE ENVIRONMENT</a></H2><PRE>
        It is often desirable  to  enter  the  terminal  type  and
        information  about  the  terminal's  capabilities into the
        shell's environment.  This is done using the <STRONG>-s</STRONG> option.
@@ -176,8 +178,7 @@
            eval `tset -s options ... `
 
 
-</PRE>
-<H2><a name="h2-TERMINAL-TYPE-MAPPING">TERMINAL TYPE MAPPING</a></H2><PRE>
+</PRE><H2><a name="h2-TERMINAL-TYPE-MAPPING">TERMINAL TYPE MAPPING</a></H2><PRE>
        When the terminal is not hardwired into the system (or the
        current system information is incorrect) the terminal type
        derived  from the <EM>/etc/ttys</EM> file or the <STRONG>TERM</STRONG> environmental
@@ -236,16 +237,14 @@
        marks ("!").
 
 
-</PRE>
-<H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
        The <STRONG>tset</STRONG> command appeared in BSD 3.0.  The <STRONG>ncurses</STRONG>  imple-
        mentation  was lightly adapted from the 4.4BSD sources for
        a terminfo environment by Eric S. Raymond &lt;esr@snark.thyr-
        sus.com&gt;.
 
 
-</PRE>
-<H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
+</PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
        The  <STRONG>tset</STRONG>  utility has been provided for backward-compati-
        bility with BSD environments (under  most  modern  UNIXes,
        <STRONG>/etc/inittab</STRONG>  and  <STRONG>getty(1)</STRONG> can set <STRONG>TERM</STRONG> appropriately for
@@ -286,8 +285,7 @@
        of <STRONG>tset</STRONG> has been removed.
 
 
-</PRE>
-<H2><a name="h2-ENVIRONMENT">ENVIRONMENT</a></H2><PRE>
+</PRE><H2><a name="h2-ENVIRONMENT">ENVIRONMENT</a></H2><PRE>
        The <STRONG>tset</STRONG> command uses these environment variables:
 
        SHELL
@@ -304,8 +302,7 @@
             looking for the terminal description.
 
 
-</PRE>
-<H2><a name="h2-FILES">FILES</a></H2><PRE>
+</PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        /etc/ttys
             system  port  name  to terminal type mapping database
             (BSD versions only).
@@ -314,12 +311,11 @@
             terminal capability database
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG>csh(1)</STRONG>,   <STRONG>sh(1)</STRONG>,   <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,   <STRONG>tty(4)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG>ttys(5)</STRONG>, <STRONG>environ(7)</STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20151205).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160130).
 
 
 
@@ -329,7 +325,13 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-tset---initialization">tset - initialization</a></li>
+<li><a href="#h3-reset---reinitialization">reset - reinitialization</a></li>
+</ul>
+</li>
+<li><a href="#h2-OPTIONS">OPTIONS</a></li>
 <li><a href="#h2-SETTING-THE-ENVIRONMENT">SETTING THE ENVIRONMENT</a></li>
 <li><a href="#h2-TERMINAL-TYPE-MAPPING">TERMINAL TYPE MAPPING</a></li>
 <li><a href="#h2-HISTORY">HISTORY</a></li>

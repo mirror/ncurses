@@ -60,25 +60,22 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        terminfo - terminal capability data base
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        /usr/share/terminfo/*/*
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        <EM>Terminfo</EM>  is  a  data  base  describing terminals, used by
        screen-oriented programs  such  as  <STRONG>nvi(1)</STRONG>,  <STRONG>rogue(1)</STRONG>  and
        libraries  such  as <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.  <EM>Terminfo</EM> describes termi-
        nals by giving a set of capabilities which they  have,  by
        specifying how to perform screen operations, and by speci-
        fying padding requirements and  initialization  sequences.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20151205).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160130).
 
        Entries in <EM>terminfo</EM> consist of a sequence of `,' separated
        fields (embedded commas may be escaped with a backslash or
@@ -133,8 +130,7 @@
        manual page.
 
 
-</PRE>
-<H3><a name="h3-Predefined-Capabilities">Predefined Capabilities</a></H3><PRE>
+</PRE><H3><a name="h3-Predefined-Capabilities">Predefined Capabilities</a></H3><PRE>
        The  following  is  a  complete  table of the capabilities
        included in a terminfo description block and available  to
        terminfo-using code.  In each line of the table,
@@ -1025,8 +1021,7 @@
                                              termcap).
 
 
-</PRE>
-<H3><a name="h3-User-Defined-Capabilities">User-Defined Capabilities</a></H3><PRE>
+</PRE><H3><a name="h3-User-Defined-Capabilities">User-Defined Capabilities</a></H3><PRE>
        The  preceding section listed the <EM>predefined</EM> capabilities.
        They deal with some  special  features  for  terminals  no
        longer  (or  possibly never) produced.  Occasionally there
@@ -1069,8 +1064,7 @@
        available using terminfo.
 
 
-</PRE>
-<H3><a name="h3-A-Sample-Entry">A Sample Entry</a></H3><PRE>
+</PRE><H3><a name="h3-A-Sample-Entry">A Sample Entry</a></H3><PRE>
        The following entry, describing an ANSI-standard terminal,
        is  representative  of  what a <STRONG>terminfo</STRONG> entry for a modern
        terminal typically looks like.
@@ -1121,8 +1115,7 @@
            be used to perform particular terminal operations.
 
 
-</PRE>
-<H3><a name="h3-Types-of-Capabilities">Types of Capabilities</a></H3><PRE>
+</PRE><H3><a name="h3-Types-of-Capabilities">Types of Capabilities</a></H3><PRE>
        All capabilities have names.  For instance, the fact  that
        ANSI-standard  terminals  have <EM>automatic</EM> <EM>margins</EM> (i.e., an
        automatic return and line-feed when the end of a  line  is
@@ -1194,8 +1187,7 @@
        example, see the second <STRONG>ind</STRONG> in the example above.
 
 
-</PRE>
-<H3><a name="h3-Fetching-Compiled-Descriptions">Fetching Compiled Descriptions</a></H3><PRE>
+</PRE><H3><a name="h3-Fetching-Compiled-Descriptions">Fetching Compiled Descriptions</a></H3><PRE>
        The <STRONG>ncurses</STRONG> library searches for terminal descriptions  in
        several places.  It uses only the first description found.
        The library has a compiled-in list  of  places  to  search
@@ -1232,8 +1224,7 @@
                (the compiled-in default).
 
 
-</PRE>
-<H3><a name="h3-Preparing-Descriptions">Preparing Descriptions</a></H3><PRE>
+</PRE><H3><a name="h3-Preparing-Descriptions">Preparing Descriptions</a></H3><PRE>
        We  now  outline how to prepare descriptions of terminals.
        The most effective way to prepare a  terminal  description
        is  by  imitating the description of a similar terminal in
@@ -1253,8 +1244,7 @@
        acter.
 
 
-</PRE>
-<H3><a name="h3-Basic-Capabilities">Basic Capabilities</a></H3><PRE>
+</PRE><H3><a name="h3-Basic-Capabilities">Basic Capabilities</a></H3><PRE>
        The  number  of  columns  on each line for the terminal is
        given by the <STRONG>cols</STRONG> numeric capability.  If the terminal  is
        a  CRT, then the number of lines on the screen is given by
@@ -1332,8 +1322,7 @@
                ind=^J, lines#24,
 
 
-</PRE>
-<H3><a name="h3-Parameterized-Strings">Parameterized Strings</a></H3><PRE>
+</PRE><H3><a name="h3-Parameterized-Strings">Parameterized Strings</a></H3><PRE>
        Cursor addressing and other strings  requiring  parameters
        in  the  terminal  are described by a parameterized string
        capability, with <EM>printf</EM>-like escapes such  as  <EM>%x</EM>  in  it.
@@ -1463,8 +1452,7 @@
        More complex arithmetic is possible using the stack.
 
 
-</PRE>
-<H3><a name="h3-Cursor-Motions">Cursor Motions</a></H3><PRE>
+</PRE><H3><a name="h3-Cursor-Motions">Cursor Motions</a></H3><PRE>
        If the terminal has a fast way to home the cursor (to very
        upper  left  corner  of  screen) then this can be given as
        <STRONG>home</STRONG>; similarly a fast way of getting to the  lower  left-
@@ -1504,8 +1492,7 @@
        <STRONG>rmcup</STRONG>), specify <STRONG>nrrmc</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-Area-Clears">Area Clears</a></H3><PRE>
+</PRE><H3><a name="h3-Area-Clears">Area Clears</a></H3><PRE>
        If the terminal can clear from the current position to the
        end  of  the  line,  leaving  the cursor where it is, this
        should be given as <STRONG>el</STRONG>.  If the terminal can clear from the
@@ -1518,8 +1505,7 @@
        number of lines, if a true <STRONG>ed</STRONG> is not available.)
 
 
-</PRE>
-<H3><a name="h3-Insert_delete-line-and-vertical-motions">Insert/delete line and vertical motions</a></H3><PRE>
+</PRE><H3><a name="h3-Insert_delete-line-and-vertical-motions">Insert/delete line and vertical motions</a></H3><PRE>
        If  the terminal can open a new blank line before the line
        where the cursor is, this should be given as <STRONG>il1</STRONG>; this  is
        done  only  from the first position of a line.  The cursor
@@ -1582,8 +1568,7 @@
        bring down non-blank lines.
 
 
-</PRE>
-<H3><a name="h3-Insert_Delete-Character">Insert/Delete Character</a></H3><PRE>
+</PRE><H3><a name="h3-Insert_Delete-Character">Insert/Delete Character</a></H3><PRE>
        There are two basic kinds of  intelligent  terminals  with
        respect  to insert/delete character which can be described
        using <EM>terminfo.</EM>  The most common  insert/delete  character
@@ -1672,8 +1657,7 @@
        with one parameter.
 
 
-</PRE>
-<H3><a name="h3-Highlighting_-Underlining_-and-Visible-Bells">Highlighting, Underlining, and Visible Bells</a></H3><PRE>
+</PRE><H3><a name="h3-Highlighting_-Underlining_-and-Visible-Bells">Highlighting, Underlining, and Visible Bells</a></H3><PRE>
        If  your  terminal  has  one  or  more  kinds  of  display
        attributes, these can be represented in a number  of  dif-
        ferent ways.  You should choose one display form as <EM>stand-</EM>
@@ -1801,8 +1785,7 @@
        giving <STRONG>eo</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-Keypad-and-Function-Keys">Keypad and Function Keys</a></H3><PRE>
+</PRE><H3><a name="h3-Keypad-and-Function-Keys">Keypad and Function Keys</a></H3><PRE>
        If the terminal has a keypad that transmits codes when the
        keys  are  pressed,  this  information can be given.  Note
        that it is not possible to handle terminals where the key-
@@ -1883,8 +1866,7 @@
        visible.
 
 
-</PRE>
-<H3><a name="h3-Tabs-and-Initialization">Tabs and Initialization</a></H3><PRE>
+</PRE><H3><a name="h3-Tabs-and-Initialization">Tabs and Initialization</a></H3><PRE>
        If  the terminal has hardware tabs, the command to advance
        to the next tab stop can be given as <STRONG>ht</STRONG>  (usually  control
        I).  A "back-tab" command which moves leftward to the pre-
@@ -1963,8 +1945,7 @@
        <STRONG>if</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-Delays-and-Padding">Delays and Padding</a></H3><PRE>
+</PRE><H3><a name="h3-Delays-and-Padding">Delays and Padding</a></H3><PRE>
        Many  older  and  slower  terminals  do not support either
        XON/XOFF or DTR handshaking, including hard copy terminals
        and  some  very  archaic CRTs (including, for example, DEC
@@ -1991,8 +1972,7 @@
        first character of the <STRONG>pad</STRONG> string is used.
 
 
-</PRE>
-<H3><a name="h3-Status-Lines">Status Lines</a></H3><PRE>
+</PRE><H3><a name="h3-Status-Lines">Status Lines</a></H3><PRE>
        Some terminals have an extra "status line"  which  is  not
        normally  used  by  software  (and thus not counted in the
        terminal's <STRONG>lines</STRONG> capability).
@@ -2028,8 +2008,7 @@
        become important.
 
 
-</PRE>
-<H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
+</PRE><H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
        Many terminals have alternate character  sets  useful  for
        forms-drawing.   Terminfo  and <STRONG>curses</STRONG> build in support for
        the drawing characters supported by the VT100,  with  some
@@ -2080,8 +2059,7 @@
        ACSC string.
 
 
-</PRE>
-<H3><a name="h3-Color-Handling">Color Handling</a></H3><PRE>
+</PRE><H3><a name="h3-Color-Handling">Color Handling</a></H3><PRE>
        Most color terminals are either "Tektronix-like"  or  "HP-
        like".   Tektronix-like terminals have a predefined set of
        N colors (where N usually 8), and can  set  character-cell
@@ -2205,8 +2183,7 @@
        and optimizes the output in favor of colors.
 
 
-</PRE>
-<H3><a name="h3-Miscellaneous">Miscellaneous</a></H3><PRE>
+</PRE><H3><a name="h3-Miscellaneous">Miscellaneous</a></H3><PRE>
        If the terminal requires other than a null (zero)  charac-
        ter  as  a  pad,  then this can be given as pad.  Only the
        first character of the pad string is used.  If the  termi-
@@ -2280,8 +2257,7 @@
        printer while an <STRONG>mc5p</STRONG> is in effect.
 
 
-</PRE>
-<H3><a name="h3-Glitches-and-Braindamage">Glitches and Braindamage</a></H3><PRE>
+</PRE><H3><a name="h3-Glitches-and-Braindamage">Glitches and Braindamage</a></H3><PRE>
        Hazeltine terminals, which do not allow "~" characters  to
        be displayed should indicate <STRONG>hz</STRONG>.
 
@@ -2314,8 +2290,7 @@
        adding more capabilities of the form <STRONG>x</STRONG><EM>x</EM>.
 
 
-</PRE>
-<H3><a name="h3-Similar-Terminals">Similar Terminals</a></H3><PRE>
+</PRE><H3><a name="h3-Similar-Terminals">Similar Terminals</a></H3><PRE>
        If there are two very similar terminals, one (the variant)
        can be defined as being just like  the  other  (the  base)
        with  certain  exceptions.  In the definition of the vari-
@@ -2340,8 +2315,7 @@
        modes for a terminal, or for different user preferences.
 
 
-</PRE>
-<H3><a name="h3-Pitfalls-of-Long-Entries">Pitfalls of Long Entries</a></H3><PRE>
+</PRE><H3><a name="h3-Pitfalls-of-Long-Entries">Pitfalls of Long Entries</a></H3><PRE>
        Long terminfo entries are unlikely to  be  a  problem;  to
        date,  no  entry  has even approached terminfo's 4096-byte
        string-table maximum.  Unfortunately, the termcap transla-
@@ -2427,8 +2401,7 @@
        lengths.
 
 
-</PRE>
-<H3><a name="h3-Binary-Compatibility">Binary Compatibility</a></H3><PRE>
+</PRE><H3><a name="h3-Binary-Compatibility">Binary Compatibility</a></H3><PRE>
        It is not wise to count on portability of binary  terminfo
        entries  between commercial UNIX versions.  The problem is
        that there are at least two versions  of  terminfo  (under
@@ -2438,8 +2411,7 @@
        and XSI Curses extensions.
 
 
-</PRE>
-<H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
+</PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
        Searching for terminal descriptions in <STRONG>$HOME/.terminfo</STRONG> and
        TERMINFO_DIRS is not supported by older implementations.
 
@@ -2508,20 +2480,17 @@
        <STRONG>OSF</STRONG> -- Supports both the SVr4 set and the AIX extensions.
 
 
-</PRE>
-<H2><a name="h2-FILES">FILES</a></H2><PRE>
+</PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        /usr/share/terminfo/?/*  files     containing     terminal
                                 descriptions
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,  <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG>printf(3)</STRONG>,   <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
        <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.
 
 
-</PRE>
-<H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
+</PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
        Zeyd  M.  Ben-Halim,  Eric  S.  Raymond, Thomas E. Dickey.
        Based on pcurses by Pavel Curtis.
 

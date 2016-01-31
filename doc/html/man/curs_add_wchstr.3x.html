@@ -45,16 +45,14 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>add_wchstr</STRONG>, <STRONG>add_wchnstr</STRONG>, <STRONG>wadd_wchstr</STRONG>, <STRONG>wadd_wchnstr</STRONG>,
        <STRONG>mvadd_wchstr</STRONG>, <STRONG>mvadd_wchnstr</STRONG>, <STRONG>mvwadd_wchstr</STRONG>, <STRONG>mvwadd_wchnstr</STRONG>
        - add an array of complex characters (and attributes) to a
        curses window
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>add_wchstr(const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wchstr</EM><STRONG>);</STRONG>
@@ -67,8 +65,7 @@
        <STRONG>int</STRONG> <STRONG>mvwadd_wchnstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wchstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These functions copy the (null-terminated) array  of  com-
        plex  characters  <EM>wchstr</EM>  into  the window image structure
        starting at the current cursor position.  The  four  func-
@@ -98,8 +95,7 @@
        background character and rendition.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All functions return the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>
        on success.
 
@@ -111,19 +107,16 @@
        outside the window, or if the window pointer is null.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        All functions except <STRONG>wadd_wchnstr</STRONG> may be macros.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These entry points are described in the XSI  Curses  stan-
        dard, Issue 4.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
        Comparable functions in the narrow-character (ncurses) li-

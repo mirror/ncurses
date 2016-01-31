@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>start_color</STRONG>, <STRONG>init_pair</STRONG>, <STRONG>init_color</STRONG>, <STRONG>has_colors</STRONG>,
        <STRONG>can_change_color</STRONG>, <STRONG>color_content</STRONG>, <STRONG>pair_content</STRONG>, <STRONG>COLOR_PAIR</STRONG>
        - <STRONG>curses</STRONG> color manipulation routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#</STRONG> <STRONG>include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>start_color(void);</STRONG>
@@ -67,11 +65,9 @@
        <STRONG>int</STRONG> <STRONG>COLOR_PAIR(int</STRONG> <STRONG>n);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-Overview">Overview</a></H3><PRE>
+</PRE><H3><a name="h3-Overview">Overview</a></H3><PRE>
        <STRONG>curses</STRONG> supports color attributes on  terminals  with  that
        capability.   To  use  these  routines <STRONG>start_color</STRONG> must be
        called, usually right after <STRONG>initscr</STRONG>.   Colors  are  always
@@ -95,8 +91,7 @@
        how a given color-pair is currently defined.
 
 
-</PRE>
-<H3><a name="h3-Color-Rendering">Color Rendering</a></H3><PRE>
+</PRE><H3><a name="h3-Color-Rendering">Color Rendering</a></H3><PRE>
        The <STRONG>curses</STRONG> library combines these inputs  to  produce  the
        actual  foreground  and  background  colors  shown  on the
        screen:
@@ -141,8 +136,7 @@
        background character.
 
 
-</PRE>
-<H3><a name="h3-Routine-Descriptions">Routine Descriptions</a></H3><PRE>
+</PRE><H3><a name="h3-Routine-Descriptions">Routine Descriptions</a></H3><PRE>
        The <STRONG>start_color</STRONG> routine requires no arguments.  It must be
        called if the programmer wants to use colors,  and  before
        any  other  color  manipulation  routine is called.  It is
@@ -275,8 +269,7 @@
        through <STRONG>COLORS</STRONG>, inclusive.
 
 
-</PRE>
-<H3><a name="h3-Colors">Colors</a></H3><PRE>
+</PRE><H3><a name="h3-Colors">Colors</a></H3><PRE>
        In <STRONG>&lt;curses.h&gt;</STRONG> the following macros are defined.  These are
        the  standard colors (ISO-6429).  <STRONG>curses</STRONG> also assumes that
        <STRONG>COLOR_BLACK</STRONG> is the default background color for all termi-
@@ -292,8 +285,7 @@
              <STRONG>COLOR_WHITE</STRONG>
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        The  routines  <STRONG>can_change_color()</STRONG>  and <STRONG>has_colors()</STRONG> return
        <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>.
 
@@ -321,8 +313,7 @@
                located.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        In  the  <EM>ncurses</EM> implementation, there is a separate color
        activation flag, color palette, color pairs table, and as-
        sociated  COLORS  and  COLOR_PAIRS counts for each screen;
@@ -353,8 +344,7 @@
        <STRONG>o</STRONG>   Color RGB values are not settable.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        This implementation satisfies XSI Curses's  minimum  maxi-
        mums for <STRONG>COLORS</STRONG> and <STRONG>COLOR_PAIRS</STRONG>.
 
@@ -372,8 +362,7 @@
        will treat those as optional parameters when null.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,  <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>, <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>
 

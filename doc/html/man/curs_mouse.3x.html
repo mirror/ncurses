@@ -46,15 +46,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>has_mouse</STRONG>, <STRONG>getmouse</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mousemask</STRONG>, <STRONG>wenclose</STRONG>,
        <STRONG>mouse_trafo</STRONG>, <STRONG>wmouse_trafo</STRONG>, <STRONG>mouseinterval</STRONG> - mouse interface
        through curses
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>typedef</STRONG> <STRONG>unsigned</STRONG> <STRONG>long</STRONG> <STRONG>mmask_t;</STRONG>
@@ -76,15 +74,13 @@
        <STRONG>int</STRONG> <STRONG>mouseinterval(int</STRONG> <EM>erval</EM><STRONG>);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  functions provide an interface to mouse events from
        <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.  Mouse events are  represented  by  <STRONG>KEY_MOUSE</STRONG>
        pseudo-key values in the <STRONG>wgetch</STRONG> input stream.
 
 
-</PRE>
-<H3><a name="h3-mousemask">mousemask</a></H3><PRE>
+</PRE><H3><a name="h3-mousemask">mousemask</a></H3><PRE>
        To  make mouse events visible, use the <STRONG>mousemask</STRONG> function.
        This will set the mouse events to  be  reported.   By  de-
        fault,  no  mouse  events are reported.  The function will
@@ -99,8 +95,7 @@
        Whether this happens is device-dependent.
 
 
-</PRE>
-<H3><a name="h3-Mouse-events">Mouse events</a></H3><PRE>
+</PRE><H3><a name="h3-Mouse-events">Mouse events</a></H3><PRE>
        Here are the mouse event type masks which may be defined:
 
        <EM>Name</EM>                     <EM>Description</EM>
@@ -145,8 +140,7 @@
        ---------------------------------------------------------------------
 
 
-</PRE>
-<H3><a name="h3-getmouse">getmouse</a></H3><PRE>
+</PRE><H3><a name="h3-getmouse">getmouse</a></H3><PRE>
        Once a class of mouse events has been made  visible  in  a
        window, calling the <STRONG>wgetch</STRONG> function on that window may re-
        turn <STRONG>KEY_MOUSE</STRONG> as an indicator that a mouse event has been
@@ -162,16 +156,14 @@
        next older item from the queue.
 
 
-</PRE>
-<H3><a name="h3-ungetmouse">ungetmouse</a></H3><PRE>
+</PRE><H3><a name="h3-ungetmouse">ungetmouse</a></H3><PRE>
        The <STRONG>ungetmouse</STRONG> function behaves  analogously  to  <STRONG>ungetch</STRONG>.
        It  pushes a <STRONG>KEY_MOUSE</STRONG> event onto the input queue, and as-
        sociates with that event the given state data and  screen-
        relative character-cell coordinates.
 
 
-</PRE>
-<H3><a name="h3-wenclose">wenclose</a></H3><PRE>
+</PRE><H3><a name="h3-wenclose">wenclose</a></H3><PRE>
        The  <STRONG>wenclose</STRONG>  function  tests  whether  a  given  pair of
        screen-relative character-cell coordinates is enclosed  by
        a  given  window, returning <STRONG>TRUE</STRONG> if it is and <STRONG>FALSE</STRONG> other-
@@ -179,8 +171,7 @@
        screen windows enclose the location of a mouse event.
 
 
-</PRE>
-<H3><a name="h3-wmouse_trafo">wmouse_trafo</a></H3><PRE>
+</PRE><H3><a name="h3-wmouse_trafo">wmouse_trafo</a></H3><PRE>
        The <STRONG>wmouse_trafo</STRONG> function transforms a given pair of coor-
        dinates from stdscr-relative  coordinates  to  coordinates
        relative to the given window or vice versa.  The resulting
@@ -211,14 +202,12 @@
            nates if the transformation was successful.
 
 
-</PRE>
-<H3><a name="h3-mouse_trafo">mouse_trafo</a></H3><PRE>
+</PRE><H3><a name="h3-mouse_trafo">mouse_trafo</a></H3><PRE>
        The <STRONG>mouse_trafo</STRONG> function performs the same translation  as
        <STRONG>wmouse_trafo</STRONG>, using stdscr for <STRONG>win</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-mouseinterval">mouseinterval</a></H3><PRE>
+</PRE><H3><a name="h3-mouseinterval">mouseinterval</a></H3><PRE>
        The <STRONG>mouseinterval</STRONG> function sets the maximum time (in thou-
        sands of a second) that can elapse between press  and  re-
        lease  events  for  them to be recognized as a click.  Use
@@ -228,8 +217,7 @@
        default is one sixth of a second.
 
 
-</PRE>
-<H3><a name="h3-has_mouse">has_mouse</a></H3><PRE>
+</PRE><H3><a name="h3-has_mouse">has_mouse</a></H3><PRE>
        The  <STRONG>has_mouse</STRONG>  function  returns <STRONG>TRUE</STRONG> if the mouse driver
        has been successfully initialized.
 
@@ -239,8 +227,7 @@
        <STRONG>str</STRONG> that expects a linefeed for input-loop termination.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>getmouse</STRONG>  and <STRONG>ungetmouse</STRONG> return the integer <STRONG>ERR</STRONG> upon fail-
        ure or <STRONG>OK</STRONG> upon successful completion:
 
@@ -266,8 +253,7 @@
        <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG> depending on their test result.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  calls  were  designed  for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, and are not
        found in SVr4 curses, 4.4BSD curses, or any other previous
        version of curses.
@@ -322,8 +308,7 @@
        ton-releases.
 
 
-</PRE>
-<H2><a name="h2-BUGS">BUGS</a></H2><PRE>
+</PRE><H2><a name="h2-BUGS">BUGS</a></H2><PRE>
        Mouse events under xterm will not in fact be ignored  dur-
        ing  cooked  mode, if they have been enabled by <STRONG>mousemask</STRONG>.
        Instead, the xterm mouse report sequence  will  appear  in
@@ -345,8 +330,7 @@
        events.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,   <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>,   <STRONG>curs_vari-</STRONG>
        <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>.
 

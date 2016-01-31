@@ -45,15 +45,13 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>baudrate</STRONG>, <STRONG>erasechar</STRONG>, <STRONG>erasewchar</STRONG>, <STRONG>has_ic</STRONG>, <STRONG>has_il</STRONG>, <STRONG>killchar</STRONG>,
        <STRONG>killwchar</STRONG>, <STRONG>longname</STRONG>,  <STRONG>term_attrs</STRONG>,  <STRONG>termattrs</STRONG>,  <STRONG>termname</STRONG>  -
        <STRONG>curses</STRONG> environment query routines
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>baudrate(void);</STRONG>
@@ -69,18 +67,15 @@
        <STRONG>char</STRONG> <STRONG>*termname(void);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
-</PRE>
-<H3><a name="h3-baudrate">baudrate</a></H3><PRE>
+</PRE><H3><a name="h3-baudrate">baudrate</a></H3><PRE>
        The  <STRONG>baudrate</STRONG> routine returns the output speed of the ter-
        minal.  The number returned is in  bits  per  second,  for
        example <STRONG>9600</STRONG>, and is an integer.
 
 
-</PRE>
-<H3><a name="h3-erasechar_-erasewchar">erasechar, erasewchar</a></H3><PRE>
+</PRE><H3><a name="h3-erasechar_-erasewchar">erasechar, erasewchar</a></H3><PRE>
        The  <STRONG>erasechar</STRONG>  routine  returns  the user's current erase
        character.
 
@@ -90,8 +85,7 @@
        erenced by <EM>ch</EM> is not changed.
 
 
-</PRE>
-<H3><a name="h3-has_is_-has_il">has_is, has_il</a></H3><PRE>
+</PRE><H3><a name="h3-has_is_-has_il">has_is, has_il</a></H3><PRE>
        The <STRONG>has_ic</STRONG> routine is true if the terminal has insert- and
        delete- character capabilities.
 
@@ -102,8 +96,7 @@
        <STRONG>scrollok</STRONG>.
 
 
-</PRE>
-<H3><a name="h3-killchar_-killwchar">killchar, killwchar</a></H3><PRE>
+</PRE><H3><a name="h3-killchar_-killwchar">killchar, killwchar</a></H3><PRE>
        The <STRONG>killchar</STRONG> routine returns the user's current line  kill
        character.
 
@@ -113,8 +106,7 @@
        location referenced by <EM>ch</EM> is not changed.
 
 
-</PRE>
-<H3><a name="h3-longname">longname</a></H3><PRE>
+</PRE><H3><a name="h3-longname">longname</a></H3><PRE>
        The <STRONG>longname</STRONG> routine returns a pointer to  a  static  area
        containing  a verbose description of the current terminal.
        The maximum length of a verbose description is 128 charac-
@@ -125,8 +117,7 @@
        used with multiple terminals.
 
 
-</PRE>
-<H3><a name="h3-termattrs_-term_attrs">termattrs, term_attrs</a></H3><PRE>
+</PRE><H3><a name="h3-termattrs_-term_attrs">termattrs, term_attrs</a></H3><PRE>
        If  a  given  terminal  does not support a video attribute
        that an application program is trying to use,  <STRONG>curses</STRONG>  may
        substitute  a  different video attribute for it.  The <STRONG>ter-</STRONG>
@@ -137,14 +128,12 @@
        appearance of the screen.
 
 
-</PRE>
-<H3><a name="h3-termname">termname</a></H3><PRE>
+</PRE><H3><a name="h3-termname">termname</a></H3><PRE>
        The <STRONG>termname</STRONG> routine returns the  terminal  name  used  by
        <STRONG>setupterm</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        <STRONG>longname</STRONG> and <STRONG>termname</STRONG> return <STRONG>NULL</STRONG> on error.
 
        Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
@@ -152,21 +141,18 @@
        <STRONG>ERR</STRONG>") upon successful completion.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>termattrs</STRONG> may be a macro.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The  XSI  Curses  standard,  Issue 4 describes these func-
        tions.  It changes the return type of <STRONG>termattrs</STRONG> to the new
        type  <STRONG>attr_t</STRONG>.  Most versions of curses truncate the result
        returned by <STRONG>termname</STRONG> to 14 characters.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
 
 

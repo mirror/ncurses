@@ -45,16 +45,14 @@
 
 
 
-</PRE>
-<H2><a name="h2-NAME">NAME</a></H2><PRE>
+</PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>is_cleared</STRONG>, <STRONG>is_idlok</STRONG>, <STRONG>is_idcok</STRONG>, <STRONG>is_immedok</STRONG>, <STRONG>is_keypad</STRONG>,
        <STRONG>is_leaveok</STRONG>, <STRONG>is_nodelay</STRONG>, <STRONG>is_notimeout</STRONG>, <STRONG>is_pad</STRONG>, <STRONG>is_scrollok</STRONG>,
        <STRONG>is_subwin</STRONG>, <STRONG>is_syncok</STRONG>, <STRONG>wgetdelay</STRONG>, <STRONG>wgetparent</STRONG>, <STRONG>wgetscrreg</STRONG> -
        <STRONG>curses</STRONG> window properties
 
 
-</PRE>
-<H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
+</PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>bool</STRONG> <STRONG>is_cleared(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win);</STRONG>
@@ -74,8 +72,7 @@
        <STRONG>int</STRONG> <STRONG>wgetscrreg(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>*top,</STRONG> <STRONG>int</STRONG> <STRONG>*bottom);</STRONG>
 
 
-</PRE>
-<H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+</PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This implementation provides functions which return  prop-
        erties  set  in  the  WINDOW  structure, allowing it to be
        "opaque" if the symbol <STRONG>NCURSES_OPAQUE</STRONG> is defined:
@@ -130,26 +127,22 @@
             margin as set in <STRONG>wsetscrreg</STRONG>.
 
 
-</PRE>
-<H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
+</PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These functions all return <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>, except as noted.
 
 
-</PRE>
-<H2><a name="h2-NOTES">NOTES</a></H2><PRE>
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Both a macro and a function are provided for each name.
 
 
-</PRE>
-<H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines are specific to  ncurses.   They  were  not
        supported  on  Version 7, BSD or System V implementations.
        It is recommended that any code depending on  ncurses  ex-
        tensions be conditioned using NCURSES_VERSION.
 
 
-</PRE>
-<H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
+</PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>,  <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>, <STRONG>curs_win-</STRONG>
        <STRONG><A HREF="curs_window.3x.html">dow(3x)</A></STRONG>
 
