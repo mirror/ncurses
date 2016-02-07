@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.42 2012/11/24 20:16:18 tom Exp $
+ * $Id: ditto.c,v 1.43 2016/02/06 21:19:28 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -155,6 +155,10 @@ open_tty(char *path)
     int aslave;
     char slave_name[1024];
     char s_option[sizeof(slave_name) + 80];
+    const char *xterm_prog = 0;
+
+    if ((xterm_prog = getenv("XTERM_PROG")) == 0)
+	xterm_prog = "xterm";
 
     if (openpty(&amaster, &aslave, slave_name, 0, 0) != 0
 	|| strlen(slave_name) > sizeof(slave_name) - 1)
@@ -165,7 +169,7 @@ open_tty(char *path)
     }
     sprintf(s_option, "-S%s/%d", slave_name, aslave);
     if (fork()) {
-	execlp("xterm", "xterm", s_option, "-title", path, (char *) 0);
+	execlp(xterm_prog, xterm_prog, s_option, "-title", path, (char *) 0);
 	_exit(0);
     }
     fp = fdopen(amaster, "r+");

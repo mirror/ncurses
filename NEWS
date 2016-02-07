@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2566 2016/01/30 19:38:41 tom Exp $
+-- $Id: NEWS,v 1.2568 2016/02/06 22:10:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160206
+	+ define WIN32_LEAN_AND_MEAN for MinGW port, making builds faster.
+	+ modify test/ditto.c to allow $XTERM_PROG environment variable to
+	  override "xterm" as the name of the program to run in the threaded
+	  configuration.
 
 20160130
 	+ improve formatting of man/curs_refresh.3x and man/tset.1 manpages

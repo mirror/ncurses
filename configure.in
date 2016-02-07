@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.625 2015/12/20 02:07:23 tom Exp $
+dnl $Id: configure.in,v 1.626 2016/02/06 21:59:17 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.625 $)
+AC_REVISION($Revision: 1.626 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1449,7 +1449,7 @@ CF_DISABLE_GNAT_PROJECTS
 ###	Checks for libraries.
 case $cf_cv_system_name in
 (*mingw32*|*mingw64*)
-	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501"
+	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501 -DWIN32_LEAN_AND_MEAN"
 	LIBS=" -lpsapi $LIBS"
 	;;
 (*)
