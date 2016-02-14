@@ -29,13 +29,14 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.5 2016/01/09 18:15:53 tom Exp $
+ * $Id: test_sgr.c,v 1.6 2016/02/13 22:08:16 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
 #define USE_TINFO
 #include <test.priv.h>
 
+#if !HAVE_TIGETSTR
 static void failed(const char *) GCC_NORETURN;
 
 static void
@@ -44,6 +45,7 @@ failed(const char *msg)
     fprintf(stderr, "%s\n", msg);
     ExitProgram(EXIT_FAILURE);
 }
+#endif
 
 #if HAVE_TIGETSTR
 

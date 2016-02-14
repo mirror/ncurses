@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2568 2016/02/06 22:10:53 tom Exp $
+-- $Id: NEWS,v 1.2571 2016/02/13 21:16:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160213
+	+ amend fix for _nc_ripoffline from 20091031 to make test/ditto.c work
+	  in threaded configuration.
+	+ move _nc_tracebits, _tracedump and _tracemouse to curses.priv.h,
+	  since they are not part of the suggested ABI6.
 
 20160206
 	+ define WIN32_LEAN_AND_MEAN for MinGW port, making builds faster.

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.164 2015/06/27 18:10:55 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.165 2016/02/13 21:20:05 tom Exp $")
 
 /****************************************************************************
  *
@@ -808,29 +808,27 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 NCURSES_EXPORT(SCREEN *)
 new_prescr(void)
 {
-    static SCREEN *sp;
+    SCREEN *sp;
 
     START_TRACE();
     T((T_CALLED("new_prescr()")));
 
-    if (sp == 0) {
-	sp = _nc_alloc_screen_sp();
-	if (sp != 0) {
-	    sp->rsp = sp->rippedoff;
-	    sp->_filtered = _nc_prescreen.filter_mode;
-	    sp->_use_env = _nc_prescreen.use_env;
+    sp = _nc_alloc_screen_sp();
+    if (sp != 0) {
+	sp->rsp = sp->rippedoff;
+	sp->_filtered = _nc_prescreen.filter_mode;
+	sp->_use_env = _nc_prescreen.use_env;
 #if NCURSES_NO_PADDING
-	    sp->_no_padding = _nc_prescreen._no_padding;
+	sp->_no_padding = _nc_prescreen._no_padding;
 #endif
-	    sp->slk_format = 0;
-	    sp->_slk = 0;
-	    sp->_prescreen = TRUE;
-	    SP_PRE_INIT(sp);
+	sp->slk_format = 0;
+	sp->_slk = 0;
+	sp->_prescreen = TRUE;
+	SP_PRE_INIT(sp);
 #if USE_REENTRANT
-	    sp->_TABSIZE = _nc_prescreen._TABSIZE;
-	    sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
+	sp->_TABSIZE = _nc_prescreen._TABSIZE;
+	sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
 #endif
-	}
     }
     returnSP(sp);
 }
