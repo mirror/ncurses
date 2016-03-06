@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.626 2016/02/06 21:59:17 tom Exp $
+dnl $Id: configure.in,v 1.627 2016/03/05 23:44:23 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.626 $)
+AC_REVISION($Revision: 1.627 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2183,6 +2183,8 @@ if test "x$WILDCARD_SYMS" = xno
 then
 	cf_filter_syms=yes
 fi
+
+test "x$cf_with_trace" = xyes && NCURSES_INLINE=
 
 UNALTERED_SYMS=`echo "$RESULTING_SYMS" | sed -e 's/\\$/\\\\$/g'`
 if test $cf_filter_syms = yes
