@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,15 +27,10 @@
  ****************************************************************************/
 
 /*
- * Author:  Thomas E. Dickey <dickey@clark.net> 1998
+ * Author:  Thomas E. Dickey 1998
  *
- * $Id: filter.c,v 1.16 2014/08/09 22:35:51 tom Exp $
- */
-#include <test.priv.h>
-
-#if HAVE_FILTER
-
-/*
+ * $Id: filter.c,v 1.22 2016/03/13 00:41:43 tom Exp $
+ *
  * An example of the 'filter()' function in ncurses, this program prompts
  * for commands and executes them (like a command shell).  It illustrates
  * how ncurses can be used to implement programs that are not full-screen.
@@ -46,31 +41,216 @@
  * reset_shell_mode() and reset_prog_mode() functions, we could invoke endwin()
  * and refresh(), but that does not work any better.
  */
+#include <test.priv.h>
+
+#if HAVE_FILTER
+
+#include <time.h>
 
 static int
-new_command(char *buffer, int length, int underline)
+show_prompt(int underline, bool clocked)
 {
-    int code;
+    int limit = COLS;
 
-    attron(A_BOLD);
-    printw("Command: ");
+    move(0, 0);
+    attrset(A_NORMAL);
+    clrtoeol();
+    attrset(A_BOLD);
+    addstr("Command: ");
+
+    limit -= getcurx(stdscr);
+
+    if (clocked) {
+	if (limit >= 3) {
+	    time_t now = time((time_t *) 0);
+	    struct tm *my = localtime(&now);
+	    char buffer[80];
+	    int skip, y, x;
+	    int margin;
+
+	    sprintf(buffer, "%02d:%02d:%02d",
+		    my->tm_hour,
+		    my->tm_min,
+		    my->tm_sec);
+
+	    if (limit > 9) {
+		skip = 0;
+	    } else if (limit > 6) {
+		skip = 3;
+	    } else {
+		skip = 6;
+	    }
+	    /*
+	     * Write the clock message on the right-margin so we can show the
+	     * results of resizing the screen.
+	     */
+	    getyx(stdscr, y, x);
+	    margin = (int) strlen(buffer) - skip;
+	    limit -= margin;
+	    move(0, COLS - margin);
+	    addstr(buffer);
+	    move(y, x);
+	}
+    }
     attron(underline);
-    code = getnstr(buffer, length);
-    /*
-     * If this returns anything except ERR/OK, it would be one of ncurses's
-     * extensions.  Fill the buffer with something harmless that the shell
-     * will execute as a comment.
-     */
+    return limit;
+}
+
+static int
+new_command(char *buffer, int length, int underline, bool clocked, bool polled)
+{
+    int code = OK;
+    int limit;
+
+    if (polled) {
+	bool done = FALSE;
+	bool first = TRUE;
+	int y, x;
+	int n;
+	int mark = 0;
+	int used = 0;
+	const int gap = 2;
+
+	timeout(20);		/* no one types 50CPS... */
+	while (!done) {
+	    int ch = getch();
+
+	    buffer[used] = '\0';
+
+	    limit = show_prompt(underline, clocked);
+	    if (first) {
+		getyx(stdscr, y, x);
+		first = FALSE;
+	    } else {
+		int left = 0;
+
+		/*
+		 * if the screen is too narrow to show the whole buffer,
+		 * shift the editing point left/right as needed.
+		 */
+		move(y, x);
+		if ((used + gap) > limit) {
+		    while ((mark - left + gap) > limit) {
+			left += limit / 2;
+		    }
+		}
+		printw("%.*s", limit, buffer + left);
+		move(y, x + mark - left);
+	    }
+
+	    switch (ch) {
+	    case ERR:
+		continue;
+	    case '\004':
+		code = ERR;
+		done = TRUE;
+		break;
+	    case KEY_ENTER:
+	    case '\n':
+		done = TRUE;
+		break;
+	    case KEY_BACKSPACE:
+	    case '\b':
+		if (used) {
+		    if (mark < used) {
+			/* getnstr does not do this */
+			if (mark > 0) {
+			    --mark;
+			    for (n = mark; n < used; ++n) {
+				buffer[n] = buffer[n + 1];
+			    }
+			} else {
+			    flash();
+			}
+		    } else {
+			/* getnstr does this */
+			mark = --used;
+			buffer[used] = '\0';
+		    }
+		} else {
+		    flash();
+		}
+		break;
+		/*
+		 * Unlike getnstr, this function can move the cursor into the
+		 * middle of the buffer and insert/delete at that point.
+		 */
+	    case KEY_HOME:
+		mark = 0;
+		break;
+	    case KEY_END:
+		mark = used;
+		break;
+	    case KEY_LEFT:
+		if (mark > 0) {
+		    mark--;
+		} else {
+		    flash();
+		}
+		break;
+	    case KEY_RIGHT:
+		if (mark < used) {
+		    mark++;
+		} else {
+		    flash();
+		}
+		break;
 #ifdef KEY_EVENT
-    if (code == KEY_EVENT)
-	strcpy(buffer, "# event!");
+	    case KEY_EVENT:
+		continue;
 #endif
 #ifdef KEY_RESIZE
-    if (code == KEY_RESIZE) {
-	strcpy(buffer, "# resize!");
-	getch();
-    }
+	    case KEY_RESIZE:
+		/*
+		 * Unlike getnstr, this function "knows" what the whole screen
+		 * is supposed to look like, and can handle resize events.
+		 */
+		continue;
 #endif
+	    case '\t':
+		ch = ' ';
+		/* FALLTHRU */
+	    default:
+		if (ch >= KEY_MIN) {
+		    flash();
+		    continue;
+		}
+		if (mark < used) {
+		    /* getnstr does not do this... */
+		    for (n = used + 1; n > mark; --n) {
+			buffer[n] = buffer[n - 1];
+		    }
+		    buffer[mark] = (char) ch;
+		    used++;
+		    mark++;
+		} else {
+		    /* getnstr does this part */
+		    buffer[used] = (char) ch;
+		    mark = ++used;
+		}
+		break;
+	    }
+	}
+    } else {
+	show_prompt(underline, clocked);
+
+	code = getnstr(buffer, length);
+	/*
+	 * If this returns anything except ERR/OK, it would be one of ncurses's
+	 * extensions.  Fill the buffer with something harmless that the shell
+	 * will execute as a comment.
+	 */
+#ifdef KEY_EVENT
+	if (code == KEY_EVENT)
+	    strcpy(buffer, "# event!");
+#endif
+#ifdef KEY_RESIZE
+	if (code == KEY_RESIZE) {
+	    strcpy(buffer, "# resize!");
+	    getch();
+	}
+#endif
+    }
     attroff(underline);
     attroff(A_BOLD);
     printw("\n");
@@ -86,7 +266,9 @@ usage(void)
 	"Usage: filter [options]"
 	,""
 	,"Options:"
+	,"  -c   show current time on prompt line with \"Command\""
 	,"  -i   use initscr() rather than newterm()"
+	,"  -p   poll for individual characters rather than using getnstr"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); n++)
@@ -100,14 +282,22 @@ main(int argc, char *argv[])
     int ch;
     char buffer[80];
     int underline;
+    bool c_option = FALSE;
     bool i_option = FALSE;
+    bool p_option = FALSE;
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "i")) != -1) {
+    while ((ch = getopt(argc, argv, "cip")) != -1) {
 	switch (ch) {
+	case 'c':
+	    c_option = TRUE;
+	    break;
 	case 'i':
 	    i_option = TRUE;
+	    break;
+	case 'p':
+	    p_option = TRUE;
 	    break;
 	default:
 	    usage();
@@ -138,8 +328,11 @@ main(int argc, char *argv[])
 	underline = A_UNDERLINE;
     }
 
-    while (new_command(buffer, sizeof(buffer) - 1, underline) != ERR
-	   && strlen(buffer) != 0) {
+    for (;;) {
+	int code = new_command(buffer, sizeof(buffer) - 1,
+			       underline, c_option, p_option);
+	if (code == ERR || *buffer == '\0')
+	    break;
 	reset_shell_mode();
 	printf("\n");
 	fflush(stdout);

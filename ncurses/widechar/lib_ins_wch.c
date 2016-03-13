@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.18 2016/02/20 22:01:09 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.20 2016/03/13 00:42:34 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -73,7 +73,7 @@ _nc_insert_wch(WINDOW *win, const cchar_t *wch)
 		SetWidecExt(temp1[cell], cell);
 	    }
 
-	    win->_curx += cells;
+	    win->_curx = (NCURSES_SIZE_T) (win->_curx + cells);
 	}
     }
     return code;
