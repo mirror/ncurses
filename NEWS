@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2580 2016/03/12 18:59:41 tom Exp $
+-- $Id: NEWS,v 1.2583 2016/03/19 23:00:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160319
+	+ improve description of tgoto parameters (report by Steffen Nurpmeso).
+	+ amend workaround for Solaris line-drawing to restore a special case
+	  that maps Unicode line-drawing characters into the acsc string for
+	  non-Unicode locales (Debian #816888).
 
 20160312
 	+ modified test/filter.c to illustrate an alternative to getnstr, that
