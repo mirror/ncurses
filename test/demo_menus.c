@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.55 2015/08/22 22:59:56 tom Exp $
+ * $Id: demo_menus.c,v 1.59 2016/03/27 00:02:01 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -270,13 +270,6 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
     if (mcols + (2 * margin + x) >= COLS)
 	mcols = COLS - (2 * margin + x);
 
-#ifdef TRACE
-    if (number == eTrace)
-	menu_opts_off(result, O_ONEVALUE);
-    else
-	menu_opts_on(result, O_ONEVALUE);
-#endif
-
     menuwin = newwin(mrows + (2 * margin), mcols + (2 * margin), y, x);
     set_menu_win(result, menuwin);
     keypad(menuwin, TRUE);
@@ -284,6 +277,16 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
 	box(menuwin, 0, 0);
 
     set_menu_sub(result, derwin(menuwin, mrows, mcols, margin, margin));
+
+#ifdef TRACE
+    if (number == eTrace)
+	menu_opts_off(result, O_ONEVALUE);
+    else
+	menu_opts_on(result, O_ONEVALUE);
+#endif
+#if defined(NCURSES_MOUSE_VERSION) && defined(O_MOUSE_MENU)
+    menu_opts_on(result, O_MOUSE_MENU);
+#endif
 
     post_menu(result);
 
@@ -751,6 +754,36 @@ move_menus(MENU * current, int by_y, int by_x)
     }
 }
 
+#ifdef KEY_RESIZE
+static void
+resize_menu(MENU ** menu)
+{
+#if 0
+    WINDOW *win = menu_win(*menu);
+    WINDOW *sub = menu_sub(*menu);
+#endif
+    (void) menu;
+}
+
+static void
+resize_menus(MENU * current)
+{
+    (void) current;
+
+    werase(status);
+    wnoutrefresh(status);
+    wresize(status, 1, COLS);
+    mvwin(status, LINES - 1, 0);
+
+    resize_menu(&mpBanner);
+    resize_menu(&mpFile);
+    resize_menu(&mpSelect);
+#ifdef TRACE
+    resize_menu(&mpTrace);
+#endif
+}
+#endif
+
 static void
 show_status(int ch, MENU * menu)
 {
@@ -774,7 +807,7 @@ perform_menus(void)
     int ch = ERR;
 
 #ifdef NCURSES_MOUSE_VERSION
-    mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
+    mousemask(BUTTON1_CLICKED, (mmask_t *) 0);
 #endif
 
     menu_display(last_menu);
@@ -803,6 +836,11 @@ perform_menus(void)
 	case KEY_SRIGHT:
 	    move_menus(last_menu, 0, 1);
 	    continue;
+#ifdef KEY_RESIZE
+	case KEY_RESIZE:
+	    resize_menus(last_menu);
+	    continue;
+#endif
 	}
 	cmd = menu_virtualize(ch);
 
@@ -836,9 +874,17 @@ perform_menus(void)
 #endif
 	    }
 
+#if defined(NCURSES_MOUSE_VERSION) && defined(O_MOUSE_MENU)
 	    if ((code == E_REQUEST_DENIED) && (cmd == KEY_MOUSE)) {
+		(void) menu_getc(mpBanner);
 		code = menu_driver(mpBanner, cmd);
+		if (code == E_REQUEST_DENIED) {
+		    MEVENT event;
+		    if (menu_getc(mpBanner) == KEY_MOUSE)
+			getmouse(&event);	/* give up */
+		}
 	    }
+#endif
 
 	    break;
 	}
@@ -946,7 +992,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "a:de:fhmp:s:t:")) != -1) {
+    while ((c = getopt(argc, argv, "fht:")) != -1) {
 	switch (c) {
 #if HAVE_RIPOFFLINE
 	case 'f':

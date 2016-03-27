@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: menu.priv.h,v 1.25 2014/11/01 14:47:00 tom Exp $ */
+/* $Id: menu.priv.h,v 1.26 2016/03/26 21:50:56 tom Exp $ */
 
 /***************************************************************************
 * Module menu.priv.h                                                       *
@@ -78,7 +78,8 @@ extern NCURSES_EXPORT_VAR(MENU) _nc_Default_Menu;
 		       O_ROWMAJOR     | \
 		       O_IGNORECASE   | \
 		       O_SHOWMATCH    | \
-		       O_NONCYCLIC    )
+		       O_NONCYCLIC    | \
+		       O_MOUSE_MENU   )
 
 #define ALL_ITEM_OPTS (O_SELECTABLE)
 

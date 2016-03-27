@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2007,2009 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2009,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: menu.h,v 1.20 2009/04/05 00:28:07 tom Exp $ */
+/* $Id: menu.h,v 1.21 2016/03/26 21:52:08 tom Exp $ */
 
 #ifndef ETI_MENU
 #define ETI_MENU
@@ -56,6 +56,7 @@ typedef int Item_Options;
 #define O_IGNORECASE    (0x08)
 #define O_SHOWMATCH     (0x10)
 #define O_NONCYCLIC     (0x20)
+#define O_MOUSE_MENU    (0x40)
 
 /* Item options: */
 #define O_SELECTABLE    (0x01)
