@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008-2011,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2008-2013,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,9 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.11 2013/06/22 18:11:57 tom Exp $
+.\" $Id: tabs.1,v 1.12 2016/04/02 23:40:46 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fB@TABS@\fR \- set tabs on a terminal
 .SH SYNOPSIS
@@ -123,8 +126,14 @@ SNOBOL
 UNIVAC 1100 Assembler
 .SH PORTABILITY
 .PP
-X/Open describes a \fB+m\fP option, to set a terminal's left-margin.
+IEEE Std 1003.1/The Open Group  Base Specifications Issue 7 (POSIX.1-2008) describes
+a \fBtabs\fP utility.  However
+.bP
+This standard describes a \fB+m\fP option, to set a terminal's left-margin.
 Very few of the entries in the terminal database provide this capability.
+.bP
+There is no counterpart in X/Open Curses Issue 7 for this utility,
+unlike @TPUT@(3X).
 .PP
 The \fB\-d\fP (debug) and \fB\-n\fP (no-op) options are extensions not provided
 by other implementations.

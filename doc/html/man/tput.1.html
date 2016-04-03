@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.32 2012/07/14 21:06:45 tom Exp @
+  * @Id: tput.1,v 1.36 2016/04/02 23:41:08 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -52,7 +52,7 @@
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <EM>capname</EM> [<EM>parms</EM> ... ]
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <EM>capname</EM> [<EM>parameters</EM>]
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>init</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>reset</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>longname</STRONG>
@@ -68,19 +68,19 @@
        terminal type.  The result depends upon  the  capability's
        type:
 
-              string
-                   <STRONG>tput</STRONG> writes the string to the standard output.
-                   No trailing newline is supplied.
+          string
+               <STRONG>tput</STRONG> writes the string to the standard output.  No
+               trailing newline is supplied.
 
-              integer
-                   <STRONG>tput</STRONG> writes the decimal value to the  standard
-                   output, with a trailing newline.
+          integer
+               <STRONG>tput</STRONG> writes the decimal value to the standard out-
+               put, with a trailing newline.
 
-              boolean
-                   <STRONG>tput</STRONG>  simply sets the exit code (<STRONG>0</STRONG> for TRUE if
-                   the terminal has the capability, <STRONG>1</STRONG>  for  FALSE
-                   if  it  does  not),  and writes nothing to the
-                   standard output.
+          boolean
+               <STRONG>tput</STRONG>  simply sets the exit code (<STRONG>0</STRONG> for TRUE if the
+               terminal has the capability, <STRONG>1</STRONG>  for  FALSE  if  it
+               does not), and writes nothing to the standard out-
+               put.
 
        Before using a value returned on the standard output,  the
        application  should  test  the  exit  code  (e.g., <STRONG>$?</STRONG>, see
@@ -88,28 +88,13 @@
        <STRONG>NOSTICS</STRONG>  sections.)   For  a complete list of capabilities
        and the <EM>capname</EM> associated with each, see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
+
+</PRE><H3><a name="h3-Options">Options</a></H3><PRE>
        <STRONG>-T</STRONG><EM>type</EM> indicates the  <EM>type</EM>  of  terminal.   Normally  this
               option is unnecessary, because the default is taken
               from the environment variable <STRONG>TERM</STRONG>.  If <STRONG>-T</STRONG> is spec-
               ified,  then  the shell variables <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG>
               will also be ignored.
-
-       <EM>capname</EM>
-              indicates the capability from  the  <STRONG>terminfo</STRONG>  data-
-              base.   When  <STRONG>termcap</STRONG>  support  is compiled in, the
-              <STRONG>termcap</STRONG> name for the capability is also accepted.
-
-       <EM>parms</EM>  If the capability is a string  that  takes  parame-
-              ters, the arguments <EM>parms</EM> will be instantiated into
-              the string.
-
-              Most parameters are numbers.  Only a  few  terminfo
-              capabilities require string parameters; <STRONG>tput</STRONG> uses a
-              table to decide which to pass as strings.  Normally
-              <STRONG>tput</STRONG>  uses  <STRONG>tparm</STRONG> (3x) to perform the substitution.
-              If no parameters are given for the capability, <STRONG>tput</STRONG>
-              writes  the string without performing the substitu-
-              tion.
 
        <STRONG>-S</STRONG>     allows more than one capability per  invocation  of
               <STRONG>tput</STRONG>.  The capabilities must be passed to <STRONG>tput</STRONG> from
@@ -120,65 +105,107 @@
               CODES section).
 
               Again, <STRONG>tput</STRONG> uses a table and the presence of param-
-              eters  in  its input to decide whether to use <STRONG>tparm</STRONG>
-              (3x), and how to interpret the parameters.
+              eters  in  its  input  to  decide  whether  to  use
+              <STRONG><A HREF="tparm.3x.html">tparm(3x)</A></STRONG>, and how to interpret the parameters.
 
        <STRONG>-V</STRONG>     reports the version of ncurses which  was  used  in
               this program, and exits.
+
+
+</PRE><H3><a name="h3-Commands">Commands</a></H3><PRE>
+       <EM>capname</EM>
+              indicates  the  capability  from the <STRONG>terminfo</STRONG> data-
+              base.  When <STRONG>termcap</STRONG> support  is  compiled  in,  the
+              <STRONG>termcap</STRONG> name for the capability is also accepted.
+
+              If  the  capability  is a string that takes parame-
+              ters, the arguments following the  capability  will
+              be used as parameters for the string.
+
+              Most  parameters  are numbers.  Only a few terminfo
+              capabilities require string parameters; <STRONG>tput</STRONG> uses a
+              table to decide which to pass as strings.  Normally
+              <STRONG>tput</STRONG> uses <STRONG><A HREF="tparm.3x.html">tparm(3x)</A></STRONG> to  perform  the  substitution.
+              If no parameters are given for the capability, <STRONG>tput</STRONG>
+              writes the string without performing the  substitu-
+              tion.
 
        <STRONG>init</STRONG>   If  the  <STRONG>terminfo</STRONG>  database is present and an entry
               for the user's terminal exists (see <STRONG>-T</STRONG><EM>type</EM>, above),
               the following will occur:
 
-              (1)    if  present,  the  terminal's initialization
-                     strings will be output as  detailed  in  the
-                     <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  section on <EM>Tabs</EM> <EM>and</EM> <EM>Initializa-</EM>
-                     <EM>tion</EM>,
+              (1)  if   present,  the  terminal's  initialization
+                   strings will be output as detailed in the <STRONG>ter-</STRONG>
+                   <STRONG><A HREF="terminfo.5.html">minfo(5)</A></STRONG> section on <EM>Tabs</EM> <EM>and</EM> <EM>Initialization</EM>,
 
-              (2)    any delays (e.g., newline) specified in  the
-                     entry will be set in the tty driver,
+              (2)  any  delays  (e.g.,  newline) specified in the
+                   entry will be set in the tty driver,
 
-              (3)    tabs  expansion  will  be  turned  on or off
-                     according to the specification in the entry,
-                     and
+              (3)  tabs  expansion  will  be  turned  on  or  off
+                   according  to  the specification in the entry,
+                   and
 
-              (4)    if tabs are not expanded, standard tabs will
-                     be set (every 8 spaces).
+              (4)  if tabs are not expanded, standard  tabs  will
+                   be set (every 8 spaces).
 
               If an entry does not contain the information needed
-              for any of the four above activities, that activity
-              will silently be skipped.
+              for any of these  activities,  that  activity  will
+              silently be skipped.
 
-       <STRONG>reset</STRONG>  Instead of putting out initialization strings,  the
-              terminal's  reset strings will be output if present
-              (<STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rs3</STRONG>, <STRONG>rf</STRONG>).  If the reset strings are  not
-              present,  but  initialization strings are, the ini-
-              tialization strings  will  be  output.   Otherwise,
+       <STRONG>reset</STRONG>  Instead  of putting out initialization strings, the
+              terminal's reset strings will be output if  present
+              (<STRONG>rs1</STRONG>,  <STRONG>rs2</STRONG>, <STRONG>rs3</STRONG>, <STRONG>rf</STRONG>).  If the reset strings are not
+              present, but initialization strings are,  the  ini-
+              tialization  strings  will  be  output.  Otherwise,
               <STRONG>reset</STRONG> acts identically to <STRONG>init</STRONG>.
 
        <STRONG>longname</STRONG>
-              If  the  <STRONG>terminfo</STRONG>  database is present and an entry
-              for the user's terminal exists (see <STRONG>-T</STRONG><EM>type</EM>  above),
+              If the <STRONG>terminfo</STRONG> database is present  and  an  entry
+              for  the user's terminal exists (see <STRONG>-T</STRONG><EM>type</EM> above),
               then the long name of the terminal will be put out.
               The long name is the last name in the first line of
               the terminal's description in the <STRONG>terminfo</STRONG> database
               [see <STRONG><A HREF="term.5.html">term(5)</A></STRONG>].
 
-       If <STRONG>tput</STRONG> is invoked by a link named  <STRONG>reset</STRONG>,  this  has  the
-       same effect as <STRONG>tput</STRONG> <STRONG>reset</STRONG>.  See <STRONG>tset</STRONG> for comparison, which
-       has similar behavior.
+
+</PRE><H3><a name="h3-Aliases">Aliases</a></H3><PRE>
+       <STRONG>tput</STRONG>  handles  the  <STRONG>init</STRONG>  and <STRONG>reset</STRONG> commands specially: it
+       allows for the possibility that it is invoked  by  a  link
+       with those names.
+
+       If  <STRONG>tput</STRONG>  is  invoked  by a link named <STRONG>reset</STRONG>, this has the
+       same effect as  <STRONG>tput</STRONG>  <STRONG>reset</STRONG>.   The  <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>  utility  also
+       treats a link named <STRONG>reset</STRONG> specially:
+
+       <STRONG>o</STRONG>   That  utility  resets  the  terminal modes and special
+           characters (not done here).
+
+       <STRONG>o</STRONG>   On the other hand, tset's repertoire of terminal capa-
+           bilities  for  resetting the terminal is more limited,
+           i.e., only <STRONG>reset_1string</STRONG>, <STRONG>reset_2string</STRONG> and <STRONG>reset_file</STRONG>
+           in contrast to the tab-stops and margins which are set
+           by this utility.
+
+       <STRONG>o</STRONG>   The <STRONG>reset</STRONG> program is usually an alias for tset, due to
+           the  resetting  of  terminal modes and special charac-
+           ters.
+
+       If <STRONG>tput</STRONG> is invoked by a link named <STRONG>init</STRONG>, this has the same
+       effect  as  <STRONG>tput</STRONG>  <STRONG>init</STRONG>.  Again, you are less likely to use
+       that link because another program named <STRONG>init</STRONG>  has  a  more
+       well-established use.
 
 
 </PRE><H2><a name="h2-EXAMPLES">EXAMPLES</a></H2><PRE>
        <STRONG>tput</STRONG> <STRONG>init</STRONG>
             Initialize the terminal according to the type of ter-
-            minal  in the environmental variable <STRONG>TERM</STRONG>.  This com-
-            mand should be included in everyone's .profile  after
+            minal in the environmental variable <STRONG>TERM</STRONG>.  This  com-
+            mand  should be included in everyone's .profile after
             the environmental variable <STRONG>TERM</STRONG> has been exported, as
             illustrated on the <STRONG>profile(5)</STRONG> manual page.
 
        <STRONG>tput</STRONG> <STRONG>-T5620</STRONG> <STRONG>reset</STRONG>
-            Reset an AT&amp;T 5620 terminal, overriding the  type  of
+            Reset  an  AT&amp;T 5620 terminal, overriding the type of
             terminal in the environmental variable <STRONG>TERM</STRONG>.
 
        <STRONG>tput</STRONG> <STRONG>cup</STRONG> <STRONG>0</STRONG> <STRONG>0</STRONG>
@@ -199,16 +226,16 @@
        <STRONG>bold=`tput</STRONG> <STRONG>smso`</STRONG> <STRONG>offbold=`tput</STRONG> <STRONG>rmso`</STRONG>
             Set the shell variables <STRONG>bold</STRONG>, to begin stand-out mode
             sequence, and <STRONG>offbold</STRONG>, to end standout mode sequence,
-            for the current terminal.  This might be followed  by
-            a  prompt:  <STRONG>echo</STRONG>  <STRONG>"${bold}Please</STRONG>  <STRONG>type</STRONG>  <STRONG>in</STRONG> <STRONG>your</STRONG> <STRONG>name:</STRONG>
+            for  the current terminal.  This might be followed by
+            a prompt: <STRONG>echo</STRONG>  <STRONG>"${bold}Please</STRONG>  <STRONG>type</STRONG>  <STRONG>in</STRONG>  <STRONG>your</STRONG>  <STRONG>name:</STRONG>
             <STRONG>${offbold}\c"</STRONG>
 
        <STRONG>tput</STRONG> <STRONG>hc</STRONG>
-            Set exit code to indicate if the current terminal  is
+            Set  exit code to indicate if the current terminal is
             a hard copy terminal.
 
        <STRONG>tput</STRONG> <STRONG>cup</STRONG> <STRONG>23</STRONG> <STRONG>4</STRONG>
-            Send  the sequence to move the cursor to row 23, col-
+            Send the sequence to move the cursor to row 23,  col-
             umn 4.
 
        <STRONG>tput</STRONG> <STRONG>cup</STRONG>
@@ -216,8 +243,8 @@
             parameters substituted.
 
        <STRONG>tput</STRONG> <STRONG>longname</STRONG>
-            Print  the  long  name from the <STRONG>terminfo</STRONG> database for
-            the type of terminal specified in  the  environmental
+            Print the long name from the  <STRONG>terminfo</STRONG>  database  for
+            the  type  of terminal specified in the environmental
             variable <STRONG>TERM</STRONG>.
 
             <STRONG>tput</STRONG> <STRONG>-S</STRONG> <STRONG>&lt;&lt;!</STRONG>
@@ -226,10 +253,10 @@
             <STRONG>&gt;</STRONG> <STRONG>bold</STRONG>
             <STRONG>&gt;</STRONG> <STRONG>!</STRONG>
 
-            This  example shows <STRONG>tput</STRONG> processing several capabili-
-            ties in one invocation.  It clears the screen,  moves
-            the  cursor  to  position  10,  10  and turns on bold
-            (extra bright) mode.  The list is  terminated  by  an
+            This example shows <STRONG>tput</STRONG> processing several  capabili-
+            ties  in one invocation.  It clears the screen, moves
+            the cursor to position  10,  10  and  turns  on  bold
+            (extra  bright)  mode.   The list is terminated by an
             exclamation mark (<STRONG>!</STRONG>) on a line by itself.
 
 
@@ -239,46 +266,44 @@
 
        <STRONG>/usr/share/tabset/*</STRONG>
               tab settings for some terminals, in a format appro-
-              priate  to  be  output  to  the  terminal   (escape
-              sequences  that  set  margins  and  tabs); for more
+              priate   to  be  output  to  the  terminal  (escape
+              sequences that set  margins  and  tabs);  for  more
               information, see the "Tabs and Initialization" sec-
               tion of <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 
 </PRE><H2><a name="h2-EXIT-CODES">EXIT CODES</a></H2><PRE>
        If the <STRONG>-S</STRONG> option is used, <STRONG>tput</STRONG> checks for errors from each
-       line, and if any errors are found, will set the exit  code
-       to  4  plus the number of lines with errors.  If no errors
-       are found, the exit code is <STRONG>0</STRONG>.   No  indication  of  which
+       line,  and if any errors are found, will set the exit code
+       to 4 plus the number of lines with errors.  If  no  errors
+       are  found,  the  exit  code is <STRONG>0</STRONG>.  No indication of which
        line failed can be given so exit code <STRONG>1</STRONG> will never appear.
-       Exit codes <STRONG>2</STRONG>, <STRONG>3</STRONG>, and <STRONG>4</STRONG> retain their usual  interpretation.
+       Exit  codes <STRONG>2</STRONG>, <STRONG>3</STRONG>, and <STRONG>4</STRONG> retain their usual interpretation.
        If the <STRONG>-S</STRONG> option is not used, the exit code depends on the
        type of <EM>capname</EM>:
 
-            <EM>boolean</EM>
-                   a value of <STRONG>0</STRONG> is set for TRUE and <STRONG>1</STRONG> for FALSE.
+          <EM>boolean</EM>
+                 a value of <STRONG>0</STRONG> is set for TRUE and <STRONG>1</STRONG> for FALSE.
 
-            <EM>string</EM> a value of <STRONG>0</STRONG> is set if the <EM>capname</EM> is  defined
-                   for  this  terminal <EM>type</EM> (the value of <EM>capname</EM>
-                   is returned on standard output); a value of  <STRONG>1</STRONG>
-                   is set if <EM>capname</EM> is not defined for this ter-
-                   minal <EM>type</EM> (nothing  is  written  to  standard
-                   output).
+          <EM>string</EM> a  value  of  <STRONG>0</STRONG> is set if the <EM>capname</EM> is defined
+                 for this terminal <EM>type</EM> (the value of <EM>capname</EM>  is
+                 returned  on  standard  output); a value of <STRONG>1</STRONG> is
+                 set if <EM>capname</EM> is not defined for this  terminal
+                 <EM>type</EM> (nothing is written to standard output).
 
-            <EM>integer</EM>
-                   a  value  of  <STRONG>0</STRONG>  is always set, whether or not
-                   <EM>capname</EM> is defined for this terminal <EM>type</EM>.  To
-                   determine  if <EM>capname</EM> is defined for this ter-
-                   minal <EM>type</EM>, the user must test the value writ-
-                   ten  to  standard output.  A value of <STRONG>-1</STRONG> means
-                   that <EM>capname</EM> is not defined for this  terminal
-                   <EM>type</EM>.
+          <EM>integer</EM>
+                 a  value of <STRONG>0</STRONG> is always set, whether or not <EM>cap-</EM>
+                 <EM>name</EM> is defined  for  this  terminal  <EM>type</EM>.   To
+                 determine  if <EM>capname</EM> is defined for this termi-
+                 nal <EM>type</EM>, the user must test the  value  written
+                 to  standard  output.   A value of <STRONG>-1</STRONG> means that
+                 <EM>capname</EM> is not defined for this terminal <EM>type</EM>.
 
-            <EM>other</EM>  <STRONG>reset</STRONG>  or  <STRONG>init</STRONG> may fail to find their respec-
-                   tive files.  In that case, the  exit  code  is
-                   set to 4 + <STRONG>errno</STRONG>.
+          <EM>other</EM>  <STRONG>reset</STRONG> or <STRONG>init</STRONG> may fail to find their  respective
+                 files.   In that case, the exit code is set to 4
+                 + <STRONG>errno</STRONG>.
 
-       Any  other  exit code indicates an error; see the DIAGNOS-
+       Any other exit code indicates an error; see  the  DIAGNOS-
        TICS section.
 
 
@@ -288,8 +313,8 @@
 
        exit code   error message
        ---------------------------------------------------------------------
-       <STRONG>0</STRONG>           (<EM>capname</EM>  is a numeric variable that is not specified in
-                   the <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> database for this  terminal  type,  e.g.
+       <STRONG>0</STRONG>           (<EM>capname</EM> is a numeric variable that is not specified  in
+                   the  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  database  for this terminal type, e.g.
                    <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>lines</STRONG> and <STRONG>tput</STRONG> <STRONG>-T2621</STRONG> <STRONG>xmc</STRONG>)
        <STRONG>1</STRONG>           no error message is printed, see the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> section.
        <STRONG>2</STRONG>           usage error
@@ -300,36 +325,65 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  <STRONG>longname</STRONG>  and <STRONG>-S</STRONG> options, and the parameter-substitu-
-       tion features used in the <STRONG>cup</STRONG> example, are  not  supported
+       The <STRONG>longname</STRONG> and <STRONG>-S</STRONG> options, and  the  parameter-substitu-
+       tion  features  used in the <STRONG>cup</STRONG> example, are not supported
        in BSD curses or in AT&amp;T/USL curses before SVr4.
 
-       X/Open  documents  only  the  operands for <STRONG>clear</STRONG>, <STRONG>init</STRONG> and
-       <STRONG>reset</STRONG>.  In this implementation, <STRONG>clear</STRONG> is part of the  <EM>cap-</EM>
-       <EM>name</EM> support.  Other implementations of <STRONG>tput</STRONG> on SVr4-based
-       systems such as Solaris, IRIX64 and HPUX as well as others
-       such  as  AIX  and Tru64 provide support for <EM>capname</EM> oper-
-       ands.
+       IEEE Std 1003.1/The Open Group  Base Specifications  Issue
+       7  (POSIX.1-2008)  documents  only the operands for <STRONG>clear</STRONG>,
+       <STRONG>init</STRONG> and <STRONG>reset</STRONG>.  There are a few interesting  observations
+       to make regarding that:
 
-       A few platforms such as FreeBSD and NetBSD recognize term-
-       cap  names  rather than terminfo capability names in their
-       respective <STRONG>tput</STRONG> commands.
+       <STRONG>o</STRONG>   In  this  implementation, <STRONG>clear</STRONG> is part of the <EM>capname</EM>
+           support.  The others (<STRONG>init</STRONG> and <STRONG>longname</STRONG>) do not corre-
+           spond to terminal capabilities.
+
+       <STRONG>o</STRONG>   Other  implementations  of  <STRONG>tput</STRONG> on SVr4-based systems
+           such as Solaris, IRIX64 and HPUX  as  well  as  others
+           such  as AIX and Tru64 provide support for <EM>capname</EM> op-
+           erands.
+
+       <STRONG>o</STRONG>   A few platforms  such  as  FreeBSD  recognize  termcap
+           names  rather  than terminfo capability names in their
+           respective <STRONG>tput</STRONG> commands.  Since 2010,  NetBSD's  <STRONG>tput</STRONG>
+           uses  terminfo  names.  Before that, it (like FreeBSD)
+           recognized termcap names.
+
+       Because (apparently) <EM>all</EM> of  the  certified  Unix  systems
+       support  the  full  set of capability names, the reasoning
+       for documenting only a few may not be apparent.
+
+       <STRONG>o</STRONG>   X/Open Curses Issue 7 documents <STRONG>tput</STRONG> differently, with
+           <EM>capname</EM>  and the other features used in this implemen-
+           tation.
+
+       <STRONG>o</STRONG>   That is, there are two standards for  <STRONG>tput</STRONG>:  POSIX  (a
+           subset)  and  X/Open Curses (the full implementation).
+           POSIX documents a subset to avoid the complication  of
+           including  X/Open Curses and the terminal capabilities
+           database.
+
+       <STRONG>o</STRONG>   While it is certainly possible to write a <STRONG>tput</STRONG> program
+           without using curses, none of the systems which have a
+           curses implementation provide  a  <STRONG>tput</STRONG>  utility  which
+           does not provide the <EM>capname</EM> feature.
 
        Most implementations which provide support for <EM>capname</EM> op-
-       erands  use the <EM>tparm</EM> function to expand parameters in it.
-       That function expects a  mixture  of  numeric  and  string
-       parameters,  requiring  <STRONG>tput</STRONG>  to  know  which type to use.
+       erands use the <EM>tparm</EM> function to expand parameters in  it.
+       That  function  expects  a  mixture  of numeric and string
+       parameters, requiring <STRONG>tput</STRONG> to  know  which  type  to  use.
        This implementation uses a table to determine that for the
-       standard  <EM>capname</EM>  operands, and an internal library func-
+       standard <EM>capname</EM> operands, and an internal  library  func-
        tion  to  analyze  nonstandard  <EM>capname</EM>  operands.   Other
-       implementations  may simply guess that an operand contain-
+       implementations may simply guess that an operand  contain-
        ing only digits is intended to be a number.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>stty(1)</STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>.
+       <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>,    <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>,   <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>,   <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>,
+       <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160326).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160402).
 
 
 
@@ -339,7 +393,13 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-Options">Options</a></li>
+<li><a href="#h3-Commands">Commands</a></li>
+<li><a href="#h3-Aliases">Aliases</a></li>
+</ul>
+</li>
 <li><a href="#h2-EXAMPLES">EXAMPLES</a></li>
 <li><a href="#h2-FILES">FILES</a></li>
 <li><a href="#h2-EXIT-CODES">EXIT CODES</a></li>

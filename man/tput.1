@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,14 +27,17 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.32 2012/07/14 21:06:45 tom Exp $
+.\" $Id: tput.1,v 1.36 2016/04/02 23:41:08 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fB@TPUT@\fR, \fBreset\fR \- initialize a terminal or query terminfo database
 .SH SYNOPSIS
-\fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fIcapname\fR [\fIparms\fR ... ]
+\fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fIcapname\fR [\fIparameters\fR]
 .br
 \fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fBinit\fR
 .br
@@ -52,7 +55,7 @@ values of terminal-dependent capabilities and information available to
 the shell (see \fBsh\fR(1)), to initialize or reset the terminal, or
 return the long name of the requested terminal type.
 The result depends upon the capability's type:
-.RS
+.RS 3
 .TP 5
 string
 \fB@TPUT@\fR writes the string to the standard output.
@@ -75,6 +78,7 @@ the application should test the exit code
 (See the \fBEXIT CODES\fR and \fBDIAGNOSTICS\fR sections.)
 For a complete list of capabilities
 and the \fIcapname\fR associated with each, see \fBterminfo\fR(5).
+.SS Options
 .TP
 \fB\-T\fR\fItype\fR
 indicates the \fItype\fR of terminal.
@@ -83,22 +87,6 @@ unnecessary, because the default is taken from the environment
 variable \fBTERM\fR.
 If \fB\-T\fR is specified, then the shell
 variables \fBLINES\fR and \fBCOLUMNS\fR will also be ignored.
-.TP
-\fIcapname\fR
-indicates the capability from the \fBterminfo\fR database.  When
-\fBtermcap\fR support is compiled in, the \fBtermcap\fR name for
-the capability is also accepted.
-.TP
-\fIparms\fR
-If the capability is a string that takes parameters, the arguments
-\fIparms\fR will be instantiated into the string.
-.IP
-Most parameters are numbers.
-Only a few terminfo capabilities require string parameters;
-\fB@TPUT@\fR uses a table to decide which to pass as strings.
-Normally \fB@TPUT@\fR uses \fBtparm\fR (3X) to perform the substitution.
-If no parameters are given for the capability,
-\fB@TPUT@\fR writes the string without performing the substitution.
 .TP
 \fB\-S\fR
 allows more than one capability per invocation of \fB@TPUT@\fR.  The
@@ -110,18 +98,34 @@ meaning of the \fB0\fR and \fB1\fR boolean and string exit codes (see the
 EXIT CODES section).
 .IP
 Again, \fB@TPUT@\fR uses a table and the presence of parameters in its input
-to decide whether to use \fBtparm\fR (3X),
+to decide whether to use \fBtparm\fR(3X),
 and how to interpret the parameters.
 .TP
 \fB\-V\fR
 reports the version of ncurses which was used in this program, and exits.
+.SS Commands
+.TP
+\fIcapname\fR
+indicates the capability from the \fBterminfo\fR database.  When
+\fBtermcap\fR support is compiled in, the \fBtermcap\fR name for
+the capability is also accepted.
+.IP
+If the capability is a string that takes parameters, the arguments
+following the capability will be used as parameters for the string.
+.IP
+Most parameters are numbers.
+Only a few terminfo capabilities require string parameters;
+\fB@TPUT@\fR uses a table to decide which to pass as strings.
+Normally \fB@TPUT@\fR uses \fBtparm\fR(3X) to perform the substitution.
+If no parameters are given for the capability,
+\fB@TPUT@\fR writes the string without performing the substitution.
 .TP
 \fBinit\fR
 If the \fBterminfo\fR database is present and an entry for the user's
 terminal exists (see \fB\-T\fR\fItype\fR, above), the following will
 occur:
 .RS
-.TP
+.TP 5
 (1)
 if present, the terminal's initialization strings will be
 output as detailed in the \fBterminfo\fR(5) section on
@@ -141,7 +145,7 @@ standard tabs will be set (every 8 spaces).
 .RE
 .IP
 If an entry does not
-contain the information needed for any of the four above activities,
+contain the information needed for any of these activities,
 that activity will silently be skipped.
 .TP
 \fBreset\fR
@@ -157,10 +161,27 @@ user's terminal exists (see \fB\-T\fR\fItype\fR above), then the long name
 of the terminal will be put out.  The long name is the last
 name in the first line of the terminal's description in the
 \fBterminfo\fR database [see \fBterm\fR(5)].
+.SS Aliases
+\fB@TPUT@\fR handles the \fBinit\fP and \fBreset\fP commands specially:
+it allows for the possibility that it is invoked by a link with those names.
 .PP
 If \fB@TPUT@\fR is invoked by a link named \fBreset\fR, this has the
 same effect as \fB@TPUT@ reset\fR.
-See \fB@TSET@\fR for comparison, which has similar behavior.
+The \fB@TSET@\fR(\*n) utility also treats a link named \fBreset\fP specially:
+.bP
+That utility resets the terminal modes and special characters (not done here).
+.bP
+On the other hand, @TSET@'s repertoire of terminal capabilities for
+resetting the terminal is more limited, i.e., only \fBreset_1string\fP, \fBreset_2string\fP and \fBreset_file\fP
+in contrast to the tab-stops and margins which are set by this utility.
+.bP
+The \fBreset\fP program is usually an alias for @TSET@,
+due to the resetting of terminal modes and special characters.
+.PP
+If \fB@TPUT@\fR is invoked by a link named \fBinit\fR, this has the
+same effect as \fB@TPUT@ init\fR.
+Again, you are less likely to use that link because another program
+named \fBinit\fP has a more well-established use.
 .SH EXAMPLES
 .TP 5
 \fB@TPUT@ init\fR
@@ -248,7 +269,7 @@ exit code \fB1\fR will never appear.  Exit codes \fB2\fR, \fB3\fR, and
 \fB4\fR retain their usual interpretation.
 If the \fB\-S\fR option is not used,
 the exit code depends on the type of \fIcapname\fR:
-.RS 5
+.RS 3
 .TP
 .I boolean
 a value of \fB0\fR is set for TRUE and \fB1\fR for FALSE.
@@ -302,15 +323,38 @@ The \fBlongname\fR and \fB\-S\fR options, and the parameter-substitution
 features used in the \fBcup\fR example, are not supported in BSD curses or in
 AT&T/USL curses before SVr4.
 .PP
-X/Open documents only the operands for \fBclear\fP, \fBinit\fP and \fBreset\fP.
+IEEE Std 1003.1/The Open Group  Base Specifications Issue 7 (POSIX.1-2008) 
+documents only the operands for \fBclear\fP, \fBinit\fP and \fBreset\fP.
+There are a few interesting observations to make regarding that:
+.bP
 In this implementation, \fBclear\fP is part of the \fIcapname\fR support.
+The others (\fBinit\fP and \fBlongname\fP) do not correspond to terminal
+capabilities.
+.bP
 Other implementations of \fB@TPUT@\fP on
 SVr4-based systems such as Solaris, IRIX64 and HPUX
 as well as others such as AIX and Tru64
 provide support for \fIcapname\fR operands.
-.PP
-A few platforms such as FreeBSD and NetBSD recognize termcap names rather
+.bP
+A few platforms such as FreeBSD recognize termcap names rather
 than terminfo capability names in their respective \fB@TPUT@\fP commands.
+Since 2010, NetBSD's \fBtput\fP uses terminfo names.
+Before that, it (like FreeBSD) recognized termcap names.
+.PP
+Because (apparently) \fIall\fP of the certified Unix systems
+support the full set of capability names, the reasoning for documenting
+only a few may not be apparent.
+.bP
+X/Open Curses Issue 7 documents \fBtput\fP differently, with \fIcapname\fP
+and the other features used in this implementation.
+.bP
+That is, there are two standards for \fBtput\fP: POSIX (a subset) and X/Open Curses (the full implementation).
+POSIX documents a subset to avoid the complication of including X/Open Curses
+and the terminal capabilities database.
+.bP
+While it is certainly possible to write a \fBtput\fP program without using curses,
+none of the systems which have a curses implementation provide
+a \fBtput\fP utility which does not provide the \fIcapname\fP feature.
 .PP
 Most implementations which provide support for \fIcapname\fR operands
 use the \fItparm\fP function to expand parameters in it.
@@ -322,9 +366,10 @@ function to analyze nonstandard \fIcapname\fR operands.
 Other implementations may simply guess that an operand containing only digits
 is intended to be a number.
 .SH SEE ALSO
-\fB@CLEAR@\fR(1),
+\fB@CLEAR@\fR(\*n),
 \fBstty\fR(1),
-\fBtabs\fR(\*n),
+\fB@TABS@\fR(\*n),
+\fB@TSET@\fR(\*n),
 \fBterminfo\fR(5),
 \fBcurs_termcap\fR(3X).
 .PP
