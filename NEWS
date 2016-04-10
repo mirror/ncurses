@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2589 2016/04/02 23:49:12 tom Exp $
+-- $Id: NEWS,v 1.2591 2016/04/09 20:58:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160409
+	+ modify test/blue.c to use Unicode values for card-glyphs when
+	  available, as well as improving the check for CP437 and CP850.
 
 20160402
 	+ regenerate HTML manpages.

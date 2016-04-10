@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.125 2015/10/10 20:23:49 tom Exp $
+dnl $Id: configure.in,v 1.126 2016/04/09 21:37:32 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -99,6 +99,12 @@ AC_OBJEXT
 CF_GCC_ATTRIBUTES
 CF_XOPEN_SOURCE
 CF_SIG_ATOMIC_T
+
+# Work around breakage on OS X
+CF_SIGWINCH
+
+# Checks for CODESET support.
+AM_LANGINFO_CODESET
 
 dnl ---------------------------------------------------------------------------
 CF_HELP_MESSAGE(General Options:)
