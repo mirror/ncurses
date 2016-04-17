@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.42 2016/04/09 23:55:52 tom Exp $
+ * $Id: blue.c,v 1.44 2016/04/16 23:20:09 tom Exp $
  */
 
 #include <test.priv.h>
@@ -105,7 +105,7 @@ static int letters[4] =
     'c',			/* clubs */
 };
 
-#ifdef HAVE_LANGINFO_CODESET
+#if HAVE_LANGINFO_CODESET
 
 #if HAVE_TIGETSTR
 static int glyphs[] =
@@ -202,9 +202,9 @@ printcard(int value)
     } else {
 	int which = (value / SUIT_LENGTH);
 	int isuit = (value % SUIT_LENGTH);
-	attr_t color = COLOR_PAIR(((which % 2) == 0)
-				  ? RED_ON_WHITE
-				  : BLACK_ON_WHITE);
+	attr_t color = (attr_t) COLOR_PAIR(((which % 2) == 0)
+					   ? RED_ON_WHITE
+					   : BLACK_ON_WHITE);
 
 	addch(ranks[isuit][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 	addch(ranks[isuit][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));

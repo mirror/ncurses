@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.97 2015/11/08 01:45:47 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.98 2016/04/16 18:15:35 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1210,7 +1210,7 @@ main(int argc, char **argv)
 
     obsolete(argv);
     noinit = noset = quiet = Sflag = sflag = showterm = 0;
-    while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:np:qQSrsVw")) != -1) {
+    while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:p:qQSrsVw")) != -1) {
 	switch (ch) {
 	case 'c':		/* set control-chars */
 	    opt_c = TRUE;
@@ -1235,8 +1235,6 @@ main(int argc, char **argv)
 	    break;
 	case 'm':		/* map identifier to type */
 	    add_mapping(0, optarg);
-	    break;
-	case 'n':		/* OBSOLETE: set new tty driver */
 	    break;
 	case 'p':		/* OBSOLETE: map identifier to type */
 	    add_mapping("plugboard", optarg);

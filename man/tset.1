@@ -26,18 +26,18 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.31 2016/01/30 15:41:41 tom Exp $
+.\" $Id: tset.1,v 1.33 2016/04/16 18:48:44 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fB@TSET@\fR, \fBreset\fR \- terminal initialization
+\fB@TSET@\fR, \fB@RESET@\fR \- terminal initialization
 .SH SYNOPSIS
 \fB@TSET@\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
 .br
-\fBreset\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
+\fB@RESET@\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
 .SH DESCRIPTION
 .SS tset - initialization
 \&\fBTset\fR initializes terminals.
@@ -78,14 +78,14 @@ versus the other initialization.
 If neither option is given, both are assumed.
 .SS reset - reinitialization
 .PP
-When invoked as \fBreset\fR, \fB@TSET@\fR sets cooked and echo modes,
+When invoked as \fB@RESET@\fR, \fB@TSET@\fR sets cooked and echo modes,
 turns off cbreak and raw modes, turns on newline translation and
 resets any unset special characters to their default values before
 doing the terminal initialization described above.  This is useful
 after a program dies leaving a terminal in an abnormal state.  Note,
 you may have to type
 .sp
-    \fB<LF>reset<LF>\fR
+    \fB<LF>@RESET@<LF>\fR
 .sp
 (the line-feed character is normally control-J) to get the terminal
 to work, as carriage-return may no longer work in the abnormal state.
@@ -225,6 +225,11 @@ The \fB@TSET@\fR command appeared in BSD 3.0.  The \fBncurses\fR implementation
 was lightly adapted from the 4.4BSD sources for a terminfo environment by Eric
 S. Raymond <esr@snark.thyrsus.com>.
 .SH COMPATIBILITY
+.PP
+Neither IEEE Std 1003.1/The Open Group Base Specifications Issue 7
+(POSIX.1-2008) nor
+X/Open Curses Issue 7 documents \fB@TSET@\fP or \fB@RESET@\fP.
+.PP
 The \fB@TSET@\fR utility has been provided for backward-compatibility with BSD
 environments (under most modern UNIXes, \fB/etc/inittab\fR and \fIgetty\fR(1)
 can set \fBTERM\fR appropriately for each dial-up line; this obviates what was
@@ -252,8 +257,13 @@ The \fB\-a\fR, \fB\-d\fR, and \fB\-p\fR options are similarly
 not documented or useful, but were retained as they appear to be in
 widespread use.  It is strongly recommended that any usage of these
 three options be changed to use the \fB\-m\fR option instead.
-The \fB\-n\fP option remains, but has no effect.
-The \fB\-adnp\fR options are therefore omitted from the usage summary above.
+The \fB\-a\fP, \fB\-d\fP, and \fB\-p\fR options are therefore omitted from the usage summary above.
+.PP
+Very old systems, e.g., 3BSD, used a different terminal driver which
+was replaced in 4BSD in the early 1980s.
+To accommodate these older systems, the 4BSD \fB@TSET@\fP provided a
+\fB\-n\fP option to specify that the new terminal driver should be used.
+This implementation does not provide that choice.
 .PP
 It is still permissible to specify the \fB\-e\fR, \fB\-i\fR,
 and \fB\-k\fR options without arguments,
@@ -261,7 +271,7 @@ although it is strongly recommended that such usage be fixed to
 explicitly specify the character.
 .PP
 As of 4.4BSD,
-executing \fB@TSET@\fR as \fBreset\fR no longer implies the \fB\-Q\fR option.
+executing \fB@TSET@\fR as \fB@RESET@\fR no longer implies the \fB\-Q\fR option.
 Also, the interaction between the \- option and the \fIterminal\fR
 argument in some historic implementations of \fB@TSET@\fR has been removed.
 .SH ENVIRONMENT
