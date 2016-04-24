@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.429 2016/01/03 01:50:10 tom Exp $
+$Id: ncurses.c,v 1.433 2016/04/24 01:00:06 tom Exp $
 
 ***************************************************************************/
 
@@ -2652,7 +2652,7 @@ change_color(NCURSES_PAIRS_T current, int field, int value, int usebase)
 }
 
 static void
-init_all_colors(void)
+reset_all_colors(void)
 {
     NCURSES_PAIRS_T c;
 
@@ -2663,6 +2663,85 @@ init_all_colors(void)
 		   all_colors[c].blue);
 }
 
+#define okCOLOR(n) ((n) >= 0 && (n) < max_colors)
+#define okRGB(n)   ((n) >= 0 && (n) <= 1000)
+#define DecodeRGB(n) ((n * 1000) / 0xffff)
+
+static void
+init_all_colors(bool xterm_colors, char *palette_file)
+{
+    NCURSES_PAIRS_T cp;
+    all_colors = typeMalloc(RGB_DATA, (unsigned) max_colors);
+    if (!all_colors)
+	failed("all_colors");
+    for (cp = 0; cp < max_colors; ++cp) {
+	color_content(cp,
+		      &all_colors[cp].red,
+		      &all_colors[cp].green,
+		      &all_colors[cp].blue);
+    }
+    /* xterm and compatible terminals can read results of an OSC string
+     * asking for the current color palette.
+     */
+    if (xterm_colors) {
+	int n;
+	int got;
+	char result[BUFSIZ];
+	int check_n, check_r, check_g, check_b;
+
+	raw();
+	noecho();
+	for (n = 0; n < max_colors; ++n) {
+	    fprintf(stderr, "\033]4;%d;?\007", n);
+	    got = read(0, result, sizeof(result) - 1);
+	    if (got < 0)
+		break;
+	    result[got] = '\0';
+	    if (sscanf(result, "\033]4;%d;rgb:%x/%x/%x\007",
+		       &check_n,
+		       &check_r,
+		       &check_g,
+		       &check_b) == 4 &&
+		check_n == n) {
+		all_colors[n].red = DecodeRGB(check_r);
+		all_colors[n].green = DecodeRGB(check_g);
+		all_colors[n].blue = DecodeRGB(check_b);
+	    } else {
+		break;
+	    }
+	}
+	reset_prog_mode();
+    }
+    if (palette_file != 0) {
+	FILE *fp = fopen(palette_file, "r");
+	if (fp != 0) {
+	    char buffer[BUFSIZ];
+	    int red, green, blue;
+	    int scale = 1000;
+	    int c;
+	    while (fgets(buffer, sizeof(buffer), fp) != 0) {
+		if (sscanf(buffer, "scale:%d", &c) == 1) {
+		    scale = c;
+		} else if (sscanf(buffer, "%d:%d %d %d",
+				  &c,
+				  &red,
+				  &green,
+				  &blue) == 4
+			   && okCOLOR(c)
+			   && okRGB(red)
+			   && okRGB(green)
+			   && okRGB(blue)) {
+#define Scaled(n) (NCURSES_COLOR_T) (((n) * 1000) / scale)
+		    all_colors[c].red = Scaled(red);
+		    all_colors[c].green = Scaled(green);
+		    all_colors[c].blue = Scaled(blue);
+		}
+	    }
+	    fclose(fp);
+	}
+    }
+}
+
 #define scaled_rgb(n) ((255 * (n)) / 1000)
 
 static void
@@ -2670,14 +2749,23 @@ color_edit(void)
 /* display the color test pattern, without trying to edit colors */
 {
     int i;
-    int current = 0;
-    int this_c = 0, value = 0, field = 0;
+    int current;
+    int this_c, value, field;
     int last_c;
-    int top_color = 0;
-    int page_size = (LINES - 6);
+    int top_color;
+    int page_size;
 
-    init_all_colors();
-    refresh();
+    reset_all_colors();
+#ifdef KEY_RESIZE
+  retry:
+#endif
+    current = 0;
+    this_c = 0;
+    value = 0;
+    field = 0;
+    top_color = 0;
+    page_size = (LINES - 6);
+    erase();
 
     for (i = 0; i < max_colors; i++)
 	init_pair((NCURSES_PAIRS_T) i,
@@ -2746,6 +2834,21 @@ color_edit(void)
 	    value = 0;
 
 	switch (this_c) {
+#ifdef KEY_RESIZE
+	case KEY_RESIZE:
+	    move(0, 0);
+	    goto retry;
+#endif
+	case '!':
+	    ShellOut(FALSE);
+	    /* FALLTHRU */
+	case CTRL('r'):
+	    endwin();
+	    refresh();
+	    break;
+	case CTRL('l'):
+	    refresh();
+	    break;
 	case CTRL('b'):
 	case KEY_PPAGE:
 	    if (current > 0)
@@ -2772,10 +2875,12 @@ color_edit(void)
 	    current = (current == (max_colors - 1) ? 0 : current + 1);
 	    break;
 
+	case '\t':
 	case KEY_RIGHT:
 	    field = (field == 2 ? 0 : field + 1);
 	    break;
 
+	case KEY_BTAB:
 	case KEY_LEFT:
 	    field = (field == 0 ? 2 : field - 1);
 	    break;
@@ -2817,6 +2922,8 @@ color_edit(void)
 	    P("as entered.  Finish by typing `='.  The change will take effect instantly.");
 	    P("To increment or decrement a value, use the same procedure, but finish");
 	    P("with a `+' or `-'.");
+	    P("");
+	    P("Use `!' to shell-out, ^R or ^L to repaint the screen.");
 	    P("");
 	    P("Press 'm' to invoke the top-level menu with the current color settings.");
 	    P("To quit, do ESC");
@@ -2862,7 +2969,7 @@ color_edit(void)
     /*
      * ncurses does not reset each color individually when calling endwin().
      */
-    init_all_colors();
+    reset_all_colors();
 
     endwin();
 }
@@ -6923,6 +7030,7 @@ usage(void)
 #ifdef TRACE
 	,"  -t mask  specify default trace-level (may toggle with ^T)"
 #endif
+	,"  -x       use xterm-compatible control for reading color palette"
     };
     size_t n;
     for (n = 0; n < SIZEOF(tbl); n++)
@@ -7088,9 +7196,6 @@ main_menu(bool top)
 	main(argc,argv)
 --------------------------------------------------------------------------*/
 
-#define okCOLOR(n) ((n) >= 0 && (n) < max_colors)
-#define okRGB(n)   ((n) >= 0 && (n) <= 1000)
-
 int
 main(int argc, char *argv[])
 {
@@ -7104,10 +7209,11 @@ main(int argc, char *argv[])
 #endif
     char *palette_file = 0;
     bool monochrome = FALSE;
+    bool xterm_colors = FALSE;
 
     setlocale(LC_ALL, "");
 
-    while ((c = getopt(argc, argv, "a:dEe:fhmp:s:Tt:")) != -1) {
+    while ((c = getopt(argc, argv, "a:dEe:fhmp:s:Tt:x")) != -1) {
 	switch (c) {
 #ifdef NCURSES_VERSION
 	case 'a':
@@ -7169,6 +7275,9 @@ main(int argc, char *argv[])
 	    save_trace = (unsigned) strtol(optarg, 0, 0);
 	    break;
 #endif
+	case 'x':
+	    xterm_colors = TRUE;
+	    break;
 	default:
 	    usage();
 	}
@@ -7203,6 +7312,9 @@ main(int argc, char *argv[])
     initscr();
     bkgdset(BLANK);
 
+    set_terminal_modes();
+    def_prog_mode();
+
     /* tests, in general, will want these modes */
     use_colors = (bool) (monochrome ? FALSE : has_colors());
 
@@ -7226,47 +7338,9 @@ main(int argc, char *argv[])
 	max_pairs = COLOR_PAIRS;	/* was > 256 ? 256 : COLOR_PAIRS */
 
 	if (can_change_color()) {
-	    NCURSES_PAIRS_T cp;
-	    all_colors = typeMalloc(RGB_DATA, (unsigned) max_colors);
-	    if (!all_colors)
-		failed("all_colors");
-	    for (cp = 0; cp < max_colors; ++cp) {
-		color_content(cp,
-			      &all_colors[cp].red,
-			      &all_colors[cp].green,
-			      &all_colors[cp].blue);
-	    }
-	    if (palette_file != 0) {
-		FILE *fp = fopen(palette_file, "r");
-		if (fp != 0) {
-		    char buffer[BUFSIZ];
-		    int red, green, blue;
-		    int scale = 1000;
-		    while (fgets(buffer, sizeof(buffer), fp) != 0) {
-			if (sscanf(buffer, "scale:%d", &c) == 1) {
-			    scale = c;
-			} else if (sscanf(buffer, "%d:%d %d %d",
-					  &c,
-					  &red,
-					  &green,
-					  &blue) == 4
-				   && okCOLOR(c)
-				   && okRGB(red)
-				   && okRGB(green)
-				   && okRGB(blue)) {
-#define Scaled(n) (NCURSES_COLOR_T) (((n) * 1000) / scale)
-			    all_colors[c].red = Scaled(red);
-			    all_colors[c].green = Scaled(green);
-			    all_colors[c].blue = Scaled(blue);
-			}
-		    }
-		    fclose(fp);
-		}
-	    }
+	    init_all_colors(xterm_colors, palette_file);
 	}
     }
-    set_terminal_modes();
-    def_prog_mode();
 
     /*
      * Return to terminal mode, so we're guaranteed of being able to

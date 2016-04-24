@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.561 $
-#	$Date: 2016/01/17 00:25:26 $
+#	$Revision: 1.562 $
+#	$Date: 2016/04/23 10:59:12 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4234,6 +4234,7 @@ xterm+256color|xterm 256-color feature,
 	ccc,
 	colors#256, pairs#32767,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*%{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
+	oc=\E]104\007,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;5;%p1%d%;m,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5;%p1%d%;m,
 	setb@, setf@,
@@ -23822,5 +23823,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add putty-noapp entry, and amend putty entry to use application mode
 #	  for better consistency with xterm (report by Leonardo Brondani
 #	  Schenkel) -TD
+#
+# 2016-04-23
+#	+ add 'oc' capability to xterm+256color, allowing palette reset for
+#	  xterm -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
