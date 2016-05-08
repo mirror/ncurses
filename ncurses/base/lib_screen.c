@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.79 2015/12/20 01:22:59 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.80 2016/05/04 00:46:06 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -858,6 +858,7 @@ putwin(WINDOW *win, FILE *filep)
 	    }
 	    PUTS("\n");
 	}
+	code = OK;
     }
 #else
     /*

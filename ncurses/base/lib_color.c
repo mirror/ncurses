@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -45,7 +45,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.112 2015/10/17 20:39:18 Denis.Tikhomirov Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.113 2016/05/07 23:50:54 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -858,6 +858,8 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
 	}
     } else {
 	reset_color_pair(NCURSES_SP_ARG);
+	if (old_pair < 0 && pair <= 0)
+	    return;
     }
 
 #if NCURSES_EXT_FUNCS

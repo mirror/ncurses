@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2597 2016/04/24 01:01:58 tom Exp $
+-- $Id: NEWS,v 1.2600 2016/05/07 23:49:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160507
+	+ amend change to _nc_do_color to restore the early return for the
+	  special case used in _nc_screen_wrap (report by Dick Streefland,
+	  cf: 20151017).
+	+ modify test/ncurses.c:
+	  + check return-value of putwin
+	  + correct ifdef which made the 'g' test's legend not reflect changes
+	    to keypad- and scroll-modes.
+	+ correct return-value of extended putwin (report by Mike Gran).
 
 20160423
 	+ modify test/ncurses.c 'd' edit-color menu to optionally read xterm

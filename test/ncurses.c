@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.433 2016/04/24 01:00:06 tom Exp $
+$Id: ncurses.c,v 1.437 2016/05/07 23:56:59 tom Exp $
 
 ***************************************************************************/
 
@@ -2665,7 +2665,7 @@ reset_all_colors(void)
 
 #define okCOLOR(n) ((n) >= 0 && (n) < max_colors)
 #define okRGB(n)   ((n) >= 0 && (n) <= 1000)
-#define DecodeRGB(n) ((n * 1000) / 0xffff)
+#define DecodeRGB(n) (NCURSES_COLOR_T) ((n * 1000) / 0xffff)
 
 static void
 init_all_colors(bool xterm_colors, char *palette_file)
@@ -2693,7 +2693,7 @@ init_all_colors(bool xterm_colors, char *palette_file)
 	noecho();
 	for (n = 0; n < max_colors; ++n) {
 	    fprintf(stderr, "\033]4;%d;?\007", n);
-	    got = read(0, result, sizeof(result) - 1);
+	    got = (int) read(0, result, sizeof(result) - 1);
 	    if (got < 0)
 		break;
 	    result[got] = '\0';
@@ -4361,13 +4361,10 @@ FRAME
     WINDOW *wind;
 };
 
-#if defined(NCURSES_VERSION)
-#if (NCURSES_VERSION_PATCH < 20070331) && NCURSES_EXT_FUNCS
+#if defined(NCURSES_VERSION) && NCURSES_EXT_FUNCS
+#if (NCURSES_VERSION_PATCH < 20070331)
 #define is_keypad(win)   (win)->_use_keypad
 #define is_scrollok(win) (win)->_scroll
-#elif !defined(is_keypad)
-#define is_keypad(win)   FALSE
-#define is_scrollok(win) FALSE
 #endif
 #else
 #define is_keypad(win)   FALSE
@@ -4403,46 +4400,26 @@ HaveScroll(FRAME * curp)
 static void
 newwin_legend(FRAME * curp)
 {
+#define DATA(num, name) { name, num }
     static const struct {
 	const char *msg;
 	int code;
     } legend[] = {
-	{
-	    "^C = create window", 0
-	},
-	{
-	    "^N = next window", 0
-	},
-	{
-	    "^P = previous window", 0
-	},
-	{
-	    "^F = scroll forward", 0
-	},
-	{
-	    "^B = scroll backward", 0
-	},
-	{
-	    "^K = keypad(%s)", 1
-	},
-	{
-	    "^S = scrollok(%s)", 2
-	},
-	{
-	    "^W = save window to file", 0
-	},
-	{
-	    "^R = restore window", 0
-	},
+	DATA(0, "^C = create window"),
+	    DATA(0, "^N = next window"),
+	    DATA(0, "^P = previous window"),
+	    DATA(0, "^F = scroll forward"),
+	    DATA(0, "^B = scroll backward"),
+	    DATA(1, "^K = keypad(%s)"),
+	    DATA(2, "^S = scrollok(%s)"),
+	    DATA(0, "^W = save window"),
+	    DATA(0, "^R = restore window"),
 #if HAVE_WRESIZE
-	{
-	    "^X = resize", 0
-	},
+	    DATA(0, "^X = resize"),
 #endif
-	{
-	    "^Q%s = exit", 3
-	}
+	    DATA(3, "^Q%s = exit")
     };
+#undef DATA
     size_t n;
     int x;
     bool do_keypad = HaveKeypad(curp);
@@ -4752,10 +4729,14 @@ acs_and_scroll(void)
 	    } else if ((fp = fopen(DUMPFILE, "w")) == (FILE *) 0) {
 		transient(current, "Can't open screen dump file");
 	    } else {
-		(void) putwin(frame_win(current), fp);
+		int rc = putwin(frame_win(current), fp);
 		(void) fclose(fp);
 
-		current = delete_framed(current, TRUE);
+		if (rc == OK) {
+		    current = delete_framed(current, TRUE);
+		} else {
+		    transient(current, "Can't write screen dump file");
+		}
 	    }
 	    break;
 
@@ -4840,12 +4821,6 @@ acs_and_scroll(void)
 	    }
 	    break;
 #endif /* HAVE_WRESIZE */
-
-	case KEY_F(10):	/* undocumented --- use this to test area clears */
-	    selectcell(0, 0, LINES - 1, COLS - 1);
-	    clrtobot();
-	    refresh();
-	    break;
 
 	case KEY_UP:
 	    newwin_move(current, -1, 0);
