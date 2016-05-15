@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.44 2015/12/20 01:43:03 tom Exp $
+.\" $Id: curs_getch.3x,v 1.45 2016/05/15 01:05:18 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -95,10 +95,17 @@ is read.
 .SS Keypad mode
 .PP
 If \fBkeypad\fR is \fBTRUE\fR, and a function key is pressed, the token for
-that function key is returned instead of the raw characters.
-Possible function
-keys are defined in \fB<curses.h>\fR as macros with values outside the range
-of 8-bit characters whose names begin with \fBKEY_\fR.
+that function key is returned instead of the raw characters:
+.bP
+The predefined function
+keys are listed in \fB<curses.h>\fR as macros with values outside the range
+of 8-bit characters.
+Their names begin with \fBKEY_\fR.
+.bP
+Other (user-defined) function keys which may be defined using \fBdefine_key\fP(3X)
+have no names, but also are expected to have values outside the range of
+8-bit characters.
+.PP
 Thus, a variable
 intended to hold the return value of a function key must be of short size or
 larger.

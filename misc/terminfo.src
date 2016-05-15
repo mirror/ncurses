@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.562 $
-#	$Date: 2016/04/23 10:59:12 $
+#	$Revision: 1.563 $
+#	$Date: 2016/05/15 00:30:28 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1681,13 +1681,17 @@ linux2.2|linux 2.2.x console,
 	cvvis=\E[?25h\E[?8c, use=linux-c-nc,
 
 # Linux 2.6.x has a fix for SI/SO to work with UTF-8 encoding added here:
-#	http://lkml.indiana.edu/hypermail/linux/kernel/0602.2/0868.html
-# Using SI/SO has the drawback that it confuses screen.  SCS would work.
-# However, SCS is buggy (see comment in Debian #515609) -TD
-# Further, this breaks longstanding workarounds for Linux console's line
-# drawing (see Debian 665959) -TD
+#	http://lkml.iu.edu/hypermail/linux/kernel/0602.2/0738.html
+# Although the kernel has mappings for these, they were not in the default
+# font (tested with Debian and Fedora):
+#	'`' diamond
+#	'~' scan line 1
+#	'p' scan line 3
+#	'r' scan line 7
+#	'_' scan line 9
 linux2.6|linux 2.6.x console,
-	rmacs=^O,
+	acsc=++\,\,--..00__``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}c~~,
+	enacs=\E(B\E)0, rmacs=^O,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p6%t;1%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, use=linux2.2,
 
@@ -1698,7 +1702,7 @@ linux3.0|linux 3.0 kernels,
 
 # This is Linux console for ncurses.
 linux|linux console,
-	use=linux2.2,
+	use=linux3.0,
 
 # Subject: linux 2.6.26 vt back_color_erase
 # Changes to the Linux console driver broke bce model as reported in
@@ -23827,5 +23831,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2016-04-23
 #	+ add 'oc' capability to xterm+256color, allowing palette reset for
 #	  xterm -TD
+#
+# 2016-05-14
+#	+ modify linux2.6 entry to improve line-drawing -TD
+#	+ make linux3.0 entry the default linux entry (Debian #823658) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
