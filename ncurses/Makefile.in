@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.150 2016/01/30 15:31:51 tom Exp $
+# $Id: Makefile.in,v 1.151 2016/05/21 21:28:51 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -101,7 +101,7 @@ CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)/../include
-CPPFLAGS	= -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -DHAVE_CONFIG_H -I../ncurses @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 

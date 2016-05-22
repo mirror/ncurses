@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2606 2016/05/15 01:20:32 tom Exp $
+-- $Id: NEWS,v 1.2609 2016/05/21 23:21:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160521
+	+ improved manual page description of tset/reset versus window-size.
+	+ fixes to work with a slightly broken compiler configuration which
+	  cannot compile "Hello World!" without adding compiler options
+	  (report by Ola x Nilsson):
+	  + pass appropriate compiler options to the CF_PROG_CC_C_O macro.
+	  + when separating compiler and options in CF_CC_ENV_FLAGS, ensure
+	    that all options are split-off into CFLAGS or CPPFLAGS
+	  + restore some -I options removed in 20140726 because they appeared
+	    to be redundant.  In fact, they are needed for a compiler that
+	    cannot combine -c and -o options.
 
 20160514
 	+ regenerate HTML manpages.

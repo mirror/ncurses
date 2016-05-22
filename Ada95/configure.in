@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2014,2015 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2015,2016 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.61 2015/09/19 20:33:36 tom Exp $
+dnl $Id: configure.in,v 1.62 2016/05/21 22:25:03 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.61 $)
+AC_REVISION($Revision: 1.62 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -53,7 +53,7 @@ CF_CFG_DEFAULTS
 CF_PROG_CC(gnatgcc gcc cc)
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
-CF_PROG_CC_C_O(CC)
+CF_PROG_CC_C_O(CC,[$CFLAGS $CPPFLAGS])
 
 AC_ARG_PROGRAM
 

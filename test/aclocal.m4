@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.127 2016/04/09 21:39:32 tom Exp $
+dnl $Id: aclocal.m4,v 1.128 2016/05/21 22:22:24 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -376,11 +376,15 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CC_ENV_FLAGS version: 2 updated: 2015/04/12 15:39:00
+dnl CF_CC_ENV_FLAGS version: 3 updated: 2016/05/21 18:10:17
 dnl ---------------
 dnl Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
 dnl into CC.  This will not help with broken scripts that wrap the compiler with
 dnl options, but eliminates a more common category of user confusion.
+dnl
+dnl Caveat: this also disallows blanks in the pathname for the compiler, but
+dnl the nuisance of having inconsistent settings for compiler and preprocessor
+dnl outweighs that limitation.
 AC_DEFUN([CF_CC_ENV_FLAGS],
 [
 # This should have been defined by AC_PROG_CC
@@ -388,13 +392,16 @@ AC_DEFUN([CF_CC_ENV_FLAGS],
 
 AC_MSG_CHECKING(\$CC variable)
 case "$CC" in
-(*[[\ \	]]-[[IUD]]*)
+(*[[\ \	]]-*)
 	AC_MSG_RESULT(broken)
 	AC_MSG_WARN(your environment misuses the CC variable to hold CFLAGS/CPPFLAGS options)
 	# humor him...
-	cf_flags=`echo "$CC" | sed -e 's/^[[^ 	]]*[[ 	]]//'`
+	cf_flags=`echo "$CC" | sed -e 's/^[[^ 	]]*[[ 	]][[ 	]]*//'`
 	CC=`echo "$CC" | sed -e 's/[[ 	]].*//'`
 	CF_ADD_CFLAGS($cf_flags)
+	CF_VERBOSE(resulting CC: '$CC')
+	CF_VERBOSE(resulting CFLAGS: '$CFLAGS')
+	CF_VERBOSE(resulting CPPFLAGS: '$CPPFLAGS')
 	;;
 (*)
 	AC_MSG_RESULT(ok)
@@ -2276,17 +2283,15 @@ CF_UPPER(cf_nculib_ROOT,HAVE_LIB$cf_nculib_root)
 AC_DEFINE_UNQUOTED($cf_nculib_ROOT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_PTHREADS version: 1 updated: 2016/02/20 19:23:20
+dnl CF_NCURSES_PTHREADS version: 2 updated: 2016/04/22 05:07:41
 dnl -------------------
 dnl Use this followup check to ensure that we link with pthreads if ncurses
 dnl uses it.
 AC_DEFUN([CF_NCURSES_PTHREADS],[
 : ${cf_nculib_root:=ifelse($1,,ncurses,$1)}
-AC_CACHE_CHECK(if $cf_nculib_root uses pthreads, cf_cv_ncurses_pthreads,[
-	AC_CHECK_LIB($cf_nculib_root,_nc_init_pthreads,
-		cf_cv_ncurses_pthreads=yes,
-		cf_cv_ncurses_pthreads=no)
-])
+AC_CHECK_LIB($cf_nculib_root,_nc_init_pthreads,
+	cf_cv_ncurses_pthreads=yes,
+	cf_cv_ncurses_pthreads=no)
 if test "$cf_cv_ncurses_pthreads" = yes
 then
 	CF_ADD_LIBS(-lpthread)

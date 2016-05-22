@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.629 2016/04/16 20:23:20 tom Exp $
+dnl $Id: configure.in,v 1.630 2016/05/21 22:02:18 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.629 $)
+AC_REVISION($Revision: 1.630 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -72,7 +72,7 @@ CF_PROG_CC($cf_PROG_CC)
 
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL
-CF_PROG_CC_C_O(CC)
+CF_PROG_CC_C_O(CC,[$CFLAGS $CPPFLAGS])
 CF_PROG_LDCONFIG
 
 dnl DEFECT in autoconf 2.12:	an attempt to set policy, this breaks the
@@ -1636,7 +1636,7 @@ CF_BOOL_DECL(cf_cv_cc_bool_type)
 if test -n "$CXX" ; then
 	AC_LANG_CPLUSPLUS
 	CF_STDCPP_LIBRARY
-	CF_PROG_CC_C_O(CXX)
+	CF_PROG_CC_C_O(CXX,[$CXXFLAGS $CPPFLAGS])
 
 	case $GXX_VERSION in
 	(1*|2.[0-6]*)

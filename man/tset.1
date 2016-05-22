@@ -26,12 +26,15 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.33 2016/04/16 18:48:44 tom Exp $
+.\" $Id: tset.1,v 1.37 2016/05/21 23:36:51 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de bP
+.IP \(bu 4
+..
 .SH NAME
 \fB@TSET@\fR, \fB@RESET@\fR \- terminal initialization
 .SH SYNOPSIS
@@ -73,9 +76,6 @@ and tab initialization strings are sent to the standard error output.
 Finally, if the erase, interrupt and line kill characters have changed,
 or are not set to their default values, their values are displayed to the
 standard error output.
-Use the \fB\-c\fP or \fB\-w\fP option to select only the window sizing
-versus the other initialization.
-If neither option is given, both are assumed.
 .SS reset - reinitialization
 .PP
 When invoked as \fB@RESET@\fR, \fB@TSET@\fR sets cooked and echo modes,
@@ -122,8 +122,8 @@ differ from the system's default values.
 .TP
 .B \-q
 The terminal type is displayed to the standard output, and the terminal is
-not initialized in any way.  The option `\-' by itself is equivalent but
-archaic.
+not initialized in any way.
+The option \*(``\-\*('' by itself is equivalent but archaic.
 .TP
 .B \-r
 Print the terminal type to the standard error output.
@@ -144,8 +144,11 @@ Normally this has no effect,
 unless \fBsetupterm\fP is not able to detect the window size.
 .PP
 The arguments for the \fB\-e\fR, \fB\-i\fR, and \fB\-k\fR
-options may either be entered as actual characters or by using the `hat'
+options may either be entered as actual characters
+or by using the \*(``hat\*(''
 notation, i.e., control-h may be specified as \*(``^H\*('' or \*(``^h\*(''.
+.PP
+If neither \fB\-c\fP or \fB\-w\fP is given, both options are assumed.
 .
 .SH SETTING THE ENVIRONMENT
 It is often desirable to enter the terminal type and information about
@@ -244,9 +247,11 @@ is no longer supported under terminfo-based \fBncurses\fR,
 which makes \fB@TSET@ \-S\fR useless
 (we made it die noisily rather than silently induce lossage).
 .PP
-There was an undocumented 4.4BSD feature that invoking tset via a link named
-`TSET` (or via any other name beginning with an upper-case letter) set the
-terminal to use upper-case only.  This feature has been omitted.
+There was an undocumented 4.4BSD feature
+that invoking \fBtset\fP via a link named
+\*(``TSET\*('' (or via any other name beginning with an upper-case letter)
+set the terminal to use upper-case only.
+This feature has been omitted.
 .PP
 The \fB\-A\fR, \fB\-E\fR, \fB\-h\fR, \fB\-u\fR and \fB\-v\fR
 options were deleted from the \fB@TSET@\fR
@@ -274,6 +279,31 @@ As of 4.4BSD,
 executing \fB@TSET@\fR as \fB@RESET@\fR no longer implies the \fB\-Q\fR option.
 Also, the interaction between the \- option and the \fIterminal\fR
 argument in some historic implementations of \fB@TSET@\fR has been removed.
+.PP
+The \fB\-c\fP and \fB\-w\fP options are not found in earlier implementations.
+However, a different window size-change feature was provided in 4.4BSD.
+.bP
+In 4.4BSD, \fBtset\fP uses the window size from the termcap description
+to set the window size if \fBtset\fP is not able to obtain the window
+size from the operating system.
+.bP
+In ncurses, \fB@TSET@\fR obtains the window size using
+\fBsetupterm\fP, which may be from
+the operating system,
+the \fBLINES\fP and \fBCOLUMNS\fP environment variables or
+the terminal description.
+.PP
+Obtaining the window size from the terminal description is common to
+both implementations, but considered obsolescent.
+Its only practical use is for hardware terminals.
+Generally speaking, a window size would be unset only if there were
+some problem obtaining the value from the operating system
+(and \fBsetupterm\fP would still fail).
+For that reason, the \fBLINES\fP and \fBCOLUMNS\fP environment variables
+may be useful for working around window-size problems.
+Those have the drawback that if the window is resized,
+those variables must be recomputed and reassigned.
+To do this more easily, use the \fBresize\fP(1) program.
 .SH ENVIRONMENT
 The \fB@TSET@\fR command uses these environment variables:
 .TP 5
@@ -287,7 +317,7 @@ Each terminal type is distinct, though many are similar.
 .TP 5
 TERMCAP
 may denote the location of a termcap database.
-If it is not an absolute pathname, e.g., begins with a `/',
+If it is not an absolute pathname, e.g., begins with a \*(``/\*('',
 \fB@TSET@\fP removes the variable from the environment before looking
 for the terminal description.
 .SH FILES
