@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2011,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,25 +39,29 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_inwstr.c,v 1.6 2011/05/28 22:49:49 tom Exp $")
+MODULE_ID("$Id: lib_inwstr.c,v 1.7 2016/05/28 23:36:34 tom Exp $")
 
 NCURSES_EXPORT(int)
 winnwstr(WINDOW *win, wchar_t *wstr, int n)
 {
-    int row, col, inx;
     int count = 0;
-    int last = 0;
     cchar_t *text;
-    wchar_t wch;
 
     T((T_CALLED("winnwstr(%p,%p,%d)"), (void *) win, (void *) wstr, n));
     if (wstr != 0) {
 	if (win) {
+	    int row, col;
+	    int last = 0;
+
 	    getyx(win, row, col);
 
 	    text = win->_line[row].text;
 	    while (count < n && count != ERR) {
+
 		if (!isWidecExt(text[col])) {
+		    int inx;
+		    wchar_t wch;
+
 		    for (inx = 0; (inx < CCHARW_MAX)
 			 && ((wch = text[col].chars[inx]) != 0);
 			 ++inx) {

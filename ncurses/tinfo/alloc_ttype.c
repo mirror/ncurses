@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.27 2013/06/08 16:54:50 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.28 2016/05/28 23:22:52 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -243,11 +243,12 @@ _nc_ext_data_index(TERMTYPE *tp, int n, int token_type)
 static bool
 _nc_del_ext_name(TERMTYPE *tp, char *name, int token_type)
 {
-    int j;
-    int first, last;
+    int first;
 
     if ((first = _nc_find_ext_name(tp, name, token_type)) >= 0) {
-	last = (int) NUM_EXT_NAMES(tp) - 1;
+	int j;
+	int last = (int) NUM_EXT_NAMES(tp) - 1;
+
 	for (j = first; j < last; j++) {
 	    tp->ext_Names[j] = tp->ext_Names[j + 1];
 	}
@@ -389,20 +390,22 @@ _nc_align_termtype(TERMTYPE *to, TERMTYPE *from)
 {
     int na = (int) NUM_EXT_NAMES(to);
     int nb = (int) NUM_EXT_NAMES(from);
-    int n;
-    bool same;
     char **ext_Names;
-    int ext_Booleans, ext_Numbers, ext_Strings;
-    bool used_ext_Names = FALSE;
 
     DEBUG(2, ("align_termtype to(%d:%s), from(%d:%s)", na, to->term_names,
 	      nb, from->term_names));
 
     if (na != 0 || nb != 0) {
+	int ext_Booleans, ext_Numbers, ext_Strings;
+	bool used_ext_Names = FALSE;
+
 	if ((na == nb)		/* check if the arrays are equivalent */
 	    &&(to->ext_Booleans == from->ext_Booleans)
 	    && (to->ext_Numbers == from->ext_Numbers)
 	    && (to->ext_Strings == from->ext_Strings)) {
+	    int n;
+	    bool same;
+
 	    for (n = 0, same = TRUE; n < na; n++) {
 		if (strcmp(to->ext_Names[n], from->ext_Names[n])) {
 		    same = FALSE;

@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.154 2016/01/23 21:32:00 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.155 2016/05/28 21:33:38 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -134,7 +134,6 @@ delink_screen(SCREEN *sp)
 NCURSES_EXPORT(void)
 delscreen(SCREEN *sp)
 {
-    int i;
 
     T((T_CALLED("delscreen(%p)"), (void *) sp));
 
@@ -159,7 +158,10 @@ delscreen(SCREEN *sp)
 	(void) _nc_freewin(StdScreen(sp));
 
 	if (sp->_slk != 0) {
+
 	    if (sp->_slk->ent != 0) {
+		int i;
+
 		for (i = 0; i < sp->_slk->labcnt; ++i) {
 		    FreeIfNeeded(sp->_slk->ent[i].ent_text);
 		    FreeIfNeeded(sp->_slk->ent[i].form_text);
@@ -286,7 +288,6 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 {
     char *env;
     int bottom_stolen = 0;
-    ripoff_t *rop;
     SCREEN *sp;
 #ifndef USE_TERM_DRIVER
     bool support_cookies = USE_XMC_SUPPORT;
@@ -631,6 +632,8 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
 
     if (safe_ripoff_sp && safe_ripoff_sp != safe_ripoff_stack) {
+	ripoff_t *rop;
+
 	for (rop = safe_ripoff_stack;
 	     rop != safe_ripoff_sp && (rop - safe_ripoff_stack) < N_RIPS;
 	     rop++) {

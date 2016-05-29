@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.165 2016/02/13 21:20:05 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.166 2016/05/28 21:55:30 tom Exp $")
 
 /****************************************************************************
  *
@@ -305,8 +305,6 @@ _nc_get_screensize(SCREEN *sp,
     *colp = (int) columns;
 
     if (_nc_prescreen.use_env || _nc_prescreen.use_tioctl) {
-	int value;
-
 #ifdef __EMX__
 	{
 	    int screendata[2];
@@ -341,6 +339,8 @@ _nc_get_screensize(SCREEN *sp,
 #endif /* HAVE_SIZECHANGE */
 
 	if (_nc_prescreen.use_env) {
+	    int value;
+
 	    if (_nc_prescreen.use_tioctl) {
 		/*
 		 * If environment variables are used, update them.
@@ -494,8 +494,6 @@ _nc_setup_tinfo(const char *const tn, TERMTYPE *const tp)
 void
 _nc_tinfo_cmdch(TERMINAL * termp, int proto)
 {
-    unsigned i;
-    char CC;
     char *tmp;
 
     /*
@@ -504,7 +502,9 @@ _nc_tinfo_cmdch(TERMINAL * termp, int proto)
      * name as an environment variable - using the same symbol.
      */
     if ((tmp = getenv("CC")) != 0 && strlen(tmp) == 1) {
-	CC = *tmp;
+	unsigned i;
+	char CC = *tmp;
+
 	for_each_string(i, &(termp->type)) {
 	    for (tmp = termp->type.Strings[i]; tmp && *tmp; tmp++) {
 		if (UChar(*tmp) == proto)
@@ -610,8 +610,6 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 {
 #ifdef USE_TERM_DRIVER
     TERMINAL_CONTROL_BLOCK *TCB = 0;
-#else
-    int status;
 #endif
     TERMINAL *termp;
     SCREEN *sp = 0;
@@ -692,6 +690,8 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	my_tcb = typeCalloc(TERMINAL_CONTROL_BLOCK, 1);
 	termp = &(my_tcb->term);
 #else
+	int status;
+
 	termp = typeCalloc(TERMINAL, 1);
 #endif
 	if (termp == 0) {

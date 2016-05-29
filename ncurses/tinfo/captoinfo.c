@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.77 2012/12/30 00:50:40 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.78 2016/05/28 23:22:52 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -525,13 +525,13 @@ bcd_expression(const char *str)
 static char *
 save_tc_char(char *bufptr, int c1)
 {
-    char temp[80];
-
     if (is7bits(c1) && isprint(c1)) {
 	if (c1 == ':' || c1 == '\\')
 	    bufptr = save_char(bufptr, '\\');
 	bufptr = save_char(bufptr, c1);
     } else {
+	char temp[80];
+
 	if (c1 == (c1 & 0x1f)) {	/* iscntrl() returns T on 255 */
 	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 			"%.20s", unctrl((chtype) c1));
@@ -625,13 +625,15 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 	    } else if (str[1] == ',') {
 		bufptr = save_char(bufptr, *++str);
 	    } else {
-		int xx1, xx2;
+		int xx1;
 
 		bufptr = save_char(bufptr, *str++);
 		xx1 = *str;
 		if (_nc_strict_bsd) {
+
 		    if (isdigit(UChar(xx1))) {
 			int pad = 0;
+			int xx2;
 
 			if (!isdigit(UChar(str[1])))
 			    pad = 2;

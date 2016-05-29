@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.129 2015/06/27 16:16:40 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.130 2016/05/28 23:22:52 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -432,14 +432,15 @@ _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 {
     FILE *fp = 0;
     int code;
-    int limit;
-    char buffer[MAX_ENTRY_SIZE + 1];
 
     if (_nc_access(filename, R_OK) < 0
 	|| (fp = fopen(filename, "rb")) == 0) {
 	TR(TRACE_DATABASE, ("cannot open terminfo %s (errno=%d)", filename, errno));
 	code = TGETENT_NO;
     } else {
+	int limit;
+	char buffer[MAX_ENTRY_SIZE + 1];
+
 	if ((limit = (int) fread(buffer, sizeof(char), sizeof(buffer), fp))
 	    > 0) {
 

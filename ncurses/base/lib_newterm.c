@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.92 2014/04/26 18:00:39 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.93 2016/05/28 23:11:26 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -166,16 +166,12 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 			  FILE *ofp,
 			  FILE *ifp)
 {
-    int value;
     int errret;
     SCREEN *result = 0;
     SCREEN *current;
     TERMINAL *its_term;
     FILE *_ofp = ofp ? ofp : stdout;
     FILE *_ifp = ifp ? ifp : stdin;
-    int cols;
-    int slk_format;
-    int filter_mode;
     TERMINAL *new_term = 0;
 
     START_TRACE();
@@ -202,6 +198,8 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
     if (
 	   TINFO_SETUP_TERM(&new_term, name,
 			    fileno(_ofp), &errret, FALSE) != ERR) {
+	int slk_format;
+	int filter_mode;
 
 	_nc_set_screen(0);
 #ifdef USE_TERM_DRIVER
@@ -232,6 +230,9 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 	    _nc_set_screen(current);
 	    result = 0;
 	} else {
+	    int value;
+	    int cols;
+
 #ifdef USE_TERM_DRIVER
 	    TERMINAL_CONTROL_BLOCK *TCB;
 #elif !NCURSES_SP_FUNCS

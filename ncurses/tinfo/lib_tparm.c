@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.94 2015/07/17 01:03:35 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.95 2016/05/28 23:22:52 tom Exp $")
 
 /*
  *	char *
@@ -527,7 +527,6 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
     termcap_hack = FALSE;
     if (popcount == 0) {
 	termcap_hack = TRUE;
-	popcount = number;
 	for (i = number - 1; i >= 0; i--) {
 	    if (p_is_s[i])
 		spush(p_is_s[i]);

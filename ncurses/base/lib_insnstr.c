@@ -40,16 +40,13 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insnstr.c,v 1.4 2016/02/20 21:22:46 tom Exp $")
+MODULE_ID("$Id: lib_insnstr.c,v 1.5 2016/05/28 21:03:33 tom Exp $")
 
 NCURSES_EXPORT(int)
 winsnstr(WINDOW *win, const char *s, int n)
 {
     int code = ERR;
-    NCURSES_SIZE_T oy;
-    NCURSES_SIZE_T ox;
     const unsigned char *str = (const unsigned char *) s;
-    const unsigned char *cp;
 
     T((T_CALLED("winsnstr(%p,%s,%d)"), (void *) win, _nc_visbufn(s, n), n));
 
@@ -80,9 +77,10 @@ winsnstr(WINDOW *win, const char *s, int n)
 	if (code == ERR)
 #endif
 	{
+	    NCURSES_SIZE_T oy = win->_cury;
+	    NCURSES_SIZE_T ox = win->_curx;
+	    const unsigned char *cp;
 
-	    oy = win->_cury;
-	    ox = win->_curx;
 	    for (cp = str; *cp && (n <= 0 || (cp - str) < n); cp++) {
 		_nc_insert_ch(sp, win, (chtype) UChar(*cp));
 	    }

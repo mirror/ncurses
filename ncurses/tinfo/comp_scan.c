@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.102 2013/11/16 19:57:50 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.103 2016/05/28 23:22:52 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -189,12 +189,11 @@ next_char(void)
 	 * quite hard to get completely right.  Try it and see.  If you
 	 * succeed, don't forget to hack push_back() correspondingly.
 	 */
-	size_t used;
 	size_t len;
 
 	do {
+	    size_t used = 0;
 	    bufstart = 0;
-	    used = 0;
 	    do {
 		if (used + (LEXBUFSIZ / 4) >= allocated) {
 		    allocated += (allocated + LEXBUFSIZ);
@@ -990,10 +989,8 @@ _nc_push_token(int tokclass)
 NCURSES_EXPORT(void)
 _nc_panic_mode(char ch)
 {
-    int c;
-
     for (;;) {
-	c = next_char();
+	int c = next_char();
 	if (c == ch)
 	    return;
 	if (c == EOF)

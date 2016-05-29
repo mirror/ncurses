@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_wacs.c,v 1.17 2016/03/19 19:00:09 tom Exp $")
+MODULE_ID("$Id: lib_wacs.c,v 1.18 2016/05/28 23:09:20 tom Exp $")
 
 NCURSES_EXPORT_VAR(cchar_t) * _nc_wacs = 0;
 
@@ -106,7 +106,6 @@ _nc_init_wacs(void)
     };
     /* *INDENT-ON* */
 
-    unsigned n, m;
     int active = _nc_unicode_locale();
 
     /*
@@ -120,8 +119,10 @@ _nc_init_wacs(void)
        active ? "" : " not"));
 
     if ((_nc_wacs = typeCalloc(cchar_t, ACS_LEN)) != 0) {
+	unsigned n;
 
 	for (n = 0; n < SIZEOF(table); ++n) {
+	    unsigned m;
 #if NCURSES_WCWIDTH_GRAPHICS
 	    int wide = wcwidth((wchar_t) table[n].value[active]);
 #else

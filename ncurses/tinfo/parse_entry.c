@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.80 2015/04/04 14:18:38 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.81 2016/05/28 23:22:52 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -486,16 +486,16 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
     if (!literal) {
 	if (_nc_syntax == SYN_TERMCAP) {
 	    bool has_base_entry = FALSE;
-	    unsigned i;
 
 	    /*
 	     * Don't insert defaults if this is a `+' entry meant only
 	     * for inclusion in other entries (not sure termcap ever
 	     * had these, actually).
 	     */
-	    if (strchr(entryp->tterm.term_names, '+'))
+	    if (strchr(entryp->tterm.term_names, '+')) {
 		has_base_entry = TRUE;
-	    else
+	    } else {
+		unsigned i;
 		/*
 		 * Otherwise, look for a base entry that will already
 		 * have picked up defaults via translation.
@@ -503,6 +503,7 @@ _nc_parse_entry(struct entry *entryp, int literal, bool silent)
 		for (i = 0; i < entryp->nuses; i++)
 		    if (!strchr((char *) entryp->uses[i].name, '+'))
 			has_base_entry = TRUE;
+	    }
 
 	    postprocess_termcap(&entryp->tterm, has_base_entry);
 	} else

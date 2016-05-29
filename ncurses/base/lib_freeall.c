@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.63 2015/05/02 23:46:26 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.64 2016/05/28 23:11:26 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -48,7 +48,6 @@ MODULE_ID("$Id: lib_freeall.c,v 1.63 2015/05/02 23:46:26 tom Exp $")
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 {
-    WINDOWLIST *p, *q;
     static va_list empty_va;
 
     T((T_CALLED("_nc_freeall()")));
@@ -66,6 +65,7 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 	_nc_lock_global(curses);
 
 	while (WindowList(SP_PARM) != 0) {
+	    WINDOWLIST *p, *q;
 	    bool deleted = FALSE;
 
 	    /* Delete only windows that're not a parent */

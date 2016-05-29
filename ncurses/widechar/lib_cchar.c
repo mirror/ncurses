@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.27 2014/02/01 22:10:42 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.28 2016/05/28 23:36:34 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -50,7 +50,6 @@ setcchar(cchar_t *wcval,
 	 NCURSES_PAIRS_T color_pair,
 	 const void *opts)
 {
-    unsigned i;
     unsigned len;
     int code = OK;
 
@@ -63,6 +62,8 @@ setcchar(cchar_t *wcval,
 	|| ((len = (unsigned) wcslen(wch)) > 1 && wcwidth(wch[0]) < 0)) {
 	code = ERR;
     } else {
+	unsigned i;
+
 	if (len > CCHARW_MAX)
 	    len = CCHARW_MAX;
 
@@ -99,8 +100,6 @@ getcchar(const cchar_t *wcval,
 	 NCURSES_PAIRS_T *color_pair,
 	 void *opts)
 {
-    wchar_t *wp;
-    int len;
     int code = ERR;
 
     TR(TRACE_CCALLS, (T_CALLED("getcchar(%p,%p,%p,%p,%p)"),
@@ -111,6 +110,9 @@ getcchar(const cchar_t *wcval,
 		      opts));
 
     if (opts == NULL && wcval != NULL) {
+	wchar_t *wp;
+	int len;
+
 	len = ((wp = wmemchr(wcval->chars, L'\0', (size_t) CCHARW_MAX))
 	       ? (int) (wp - wcval->chars)
 	       : CCHARW_MAX);

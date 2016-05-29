@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.97 2016/01/23 21:32:00 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.98 2016/05/28 21:58:45 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -123,11 +123,10 @@ NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 	if (SP_PARM->out_inuse) {
 	    char *buf = SP_PARM->out_buffer;
 	    size_t amount = SP->out_inuse;
-	    ssize_t res;
 
 	    SP->out_inuse = 0;
 	    while (amount) {
-		res = write(SP_PARM->_ofd, buf, amount);
+		ssize_t res = write(SP_PARM->_ofd, buf, amount);
 
 		if (res > 0) {
 		    /* if the write was incomplete, try again */
@@ -271,9 +270,9 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 #endif /* BSD_TPUTS */
 
 #ifdef TRACE
-    char addrbuf[32];
-
     if (USE_TRACEF(TRACE_TPUTS)) {
+	char addrbuf[32];
+
 	if (outc == NCURSES_SP_NAME(_nc_outch))
 	    _nc_STRCPY(addrbuf, "_nc_outch", sizeof(addrbuf));
 	else

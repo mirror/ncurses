@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.80 2016/05/04 00:46:06 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.83 2016/05/29 01:38:42 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -161,12 +161,12 @@ static char *
 read_txt(FILE *fp)
 {
     size_t limit = 1024;
-    size_t used = 0;
     char *result = malloc(limit);
     char *buffer;
 
     if (result != 0) {
 	int ch = 0;
+	size_t used = 0;
 
 	clearerr(fp);
 	result[used] = '\0';
@@ -365,9 +365,6 @@ static int
 read_win(WINDOW *win, FILE *fp)
 {
     int code = ERR;
-    char *txt;
-    char *name;
-    char *value;
     size_t n;
     int color;
 #if NCURSES_WIDECHAR
@@ -377,7 +374,10 @@ read_win(WINDOW *win, FILE *fp)
 
     memset(win, 0, sizeof(WINDOW));
     for (;;) {
-	txt = read_txt(fp);
+	char *name;
+	char *value;
+	char *txt = read_txt(fp);
+
 	if (txt == 0)
 	    break;
 	if (!strcmp(txt, "rows:")) {
@@ -435,10 +435,13 @@ read_row(char *source, NCURSES_CH_T * prior, NCURSES_CH_T * target, int length)
 {
     while (*source != '\0' && length > 0) {
 #if NCURSES_WIDECHAR
-	int n, len;
+	int len;
+
 	source = decode_cchar(source, prior, target);
 	len = wcwidth(target->chars[0]);
 	if (len > 1) {
+	    int n;
+
 	    SetWidecExt(CHDEREF(target), 0);
 	    for (n = 1; n < len; ++n) {
 		target[n] = target[0];
@@ -490,7 +493,6 @@ NCURSES_EXPORT(WINDOW *)
 NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 {
     WINDOW tmp, *nwin;
-    int n;
     bool old_format = FALSE;
 
     T((T_CALLED("getwin(%p)"), (void *) filep));
@@ -546,6 +548,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
      * made sense is probably gone.
      */
     if (nwin != 0) {
+	int n;
 	size_t linesize = sizeof(NCURSES_CH_T) * (size_t) (tmp._maxx + 1);
 
 	nwin->_curx = tmp._curx;
@@ -759,7 +762,6 @@ NCURSES_EXPORT(int)
 putwin(WINDOW *win, FILE *filep)
 {
     int code = ERR;
-    int y;
 
     T((T_CALLED("putwin(%p,%p)"), (void *) win, (void *) filep));
 
@@ -768,6 +770,7 @@ putwin(WINDOW *win, FILE *filep)
 	const char *version = curses_version();
 	char buffer[1024];
 	NCURSES_CH_T last_cell;
+	int y;
 
 	memset(&last_cell, 0, sizeof(last_cell));
 
@@ -869,6 +872,7 @@ putwin(WINDOW *win, FILE *filep)
      */
     if (win != 0) {
 	size_t len = (size_t) (win->_maxx + 1);
+	int y;
 
 	clearerr(filep);
 	if (fwrite(win, sizeof(WINDOW), (size_t) 1, filep) != 1
@@ -941,7 +945,6 @@ scr_dump(const char *file)
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(scr_init) (NCURSES_SP_DCLx const char *file)
 {
-    FILE *fp = 0;
     int code = ERR;
 
     T((T_CALLED("scr_init(%p,%s)"), (void *) SP_PARM, _nc_visbuf(file)));
@@ -953,6 +956,8 @@ NCURSES_SP_NAME(scr_init) (NCURSES_SP_DCLx const char *file)
 	!(exit_ca_mode && non_rev_rmcup)
 #endif
 	) {
+	FILE *fp = 0;
+
 	if (_nc_access(file, R_OK) >= 0
 	    && (fp = fopen(file, "rb")) != 0) {
 	    delwin(CurScreen(SP_PARM));

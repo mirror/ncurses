@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,12 +41,12 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_instr.c,v 1.21 2014/02/01 22:09:27 tom Exp $")
+MODULE_ID("$Id: lib_instr.c,v 1.22 2016/05/28 23:11:26 tom Exp $")
 
 NCURSES_EXPORT(int)
 winnstr(WINDOW *win, char *str, int n)
 {
-    int i = 0, row, col;
+    int i = 0;
 
     T((T_CALLED("winnstr(%p,%p,%d)"), (void *) win, str, n));
 
@@ -54,6 +54,8 @@ winnstr(WINDOW *win, char *str, int n)
 	returnCode(0);
 
     if (win) {
+	int row, col;
+
 	getyx(win, row, col);
 
 	if (n < 0)
@@ -62,20 +64,22 @@ winnstr(WINDOW *win, char *str, int n)
 	for (; i < n;) {
 #if USE_WIDEC_SUPPORT
 	    cchar_t *cell = &(win->_line[row].text[col]);
-	    wchar_t *wch;
 	    attr_t attrs;
 	    NCURSES_PAIRS_T pair;
-	    int n2;
-	    bool done = FALSE;
 	    mbstate_t state;
-	    size_t i3, n3;
 	    char *tmp;
 
 	    if (!isWidecExt(*cell)) {
+		wchar_t *wch;
+		int n2;
+
 		n2 = getcchar(cell, 0, 0, 0, 0);
 		if (n2 > 0
 		    && (wch = typeCalloc(wchar_t, (unsigned) n2 + 1)) != 0) {
+		    bool done = FALSE;
+
 		    if (getcchar(cell, wch, &attrs, &pair, 0) == OK) {
+			size_t n3;
 
 			init_mb(state);
 			n3 = wcstombs(0, wch, (size_t) 0);
@@ -89,6 +93,8 @@ winnstr(WINDOW *win, char *str, int n)
 			    } else if ((tmp = typeCalloc(char, need)) == 0) {
 				done = TRUE;
 			    } else {
+				size_t i3;
+
 				init_mb(state);
 				wcstombs(tmp, wch, n3);
 				for (i3 = 0; i3 < n3; ++i3)

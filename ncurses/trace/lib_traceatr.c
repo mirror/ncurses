@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.85 2016/01/16 21:23:43 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.86 2016/05/28 22:06:30 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -123,11 +123,10 @@ _traceattr2(int bufnum, chtype newmode)
 #endif /* !USE_TERMLIB */
     ;
 #undef DATA
-    size_t n;
-    char temp[80];
     char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
     if (result != 0) {
+	size_t n;
 	unsigned save_nc_tracing = _nc_tracing;
 
 	_nc_tracing = 0;
@@ -135,12 +134,14 @@ _traceattr2(int bufnum, chtype newmode)
 	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 
 	for (n = 0; n < SIZEOF(names); n++) {
+
 	    if ((newmode & names[n].val) != 0) {
 		if (result[1] != '\0')
 		    (void) _nc_trace_bufcat(bufnum, "|");
 		result = _nc_trace_bufcat(bufnum, names[n].name);
 
 		if (names[n].val == A_COLOR) {
+		    char temp[80];
 		    short pairnum = (short) PairNumber(newmode);
 #ifdef USE_TERMLIB
 		    /* pair_content lives in libncurses */
@@ -254,7 +255,6 @@ _nc_altcharset_name(attr_t attr, chtype ch)
     if (SP_PARM != 0 && (attr & A_ALTCHARSET) && (acs_chars != 0)) {
 	char *cp;
 	char *found = 0;
-	size_t n;
 
 	for (cp = acs_chars; cp[0] && cp[1]; cp += 2) {
 	    if (ChCharOf(UChar(cp[1])) == ChCharOf(ch)) {
@@ -264,6 +264,8 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 	}
 
 	if (found != 0) {
+	    size_t n;
+
 	    ch = ChCharOf(UChar(*found));
 	    for (n = 0; n < SIZEOF(names); ++n) {
 		if (names[n].val == ch) {
@@ -279,10 +281,11 @@ _nc_altcharset_name(attr_t attr, chtype ch)
 NCURSES_EXPORT(char *)
 _tracechtype2(int bufnum, chtype ch)
 {
-    const char *found;
     char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
     if (result != 0) {
+	const char *found;
+
 	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 	if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
@@ -321,13 +324,13 @@ NCURSES_EXPORT(char *)
 _tracecchar_t2(int bufnum, const cchar_t *ch)
 {
     char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
-    attr_t attr;
-    const char *found;
 
     if (result != 0) {
 	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
 	if (ch != 0) {
-	    attr = AttrOfD(ch);
+	    const char *found;
+	    attr_t attr = AttrOfD(ch);
+
 	    if ((found = _nc_altcharset_name(attr, (chtype) CharOfD(ch))) != 0) {
 		(void) _nc_trace_bufcat(bufnum, found);
 		attr &= ~A_ALTCHARSET;

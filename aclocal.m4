@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.789 2016/05/21 22:12:40 tom Exp $
+dnl $Id: aclocal.m4,v 1.790 2016/05/29 00:35:34 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5446,11 +5446,11 @@ fi
 AC_SUBST(LDCONFIG)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 2 updated: 2009/08/12 04:43:14
+dnl CF_PROG_LINT version: 3 updated: 2016/05/22 15:25:54
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
-AC_CHECK_PROGS(LINT, tdlint lint alint splint lclint)
+AC_CHECK_PROGS(LINT, lint cppcheck splint)
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -7178,7 +7178,7 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_GPM version: 8 updated: 2012/10/06 17:56:13
+dnl CF_WITH_GPM version: 9 updated: 2016/05/28 20:33:31
 dnl -----------
 dnl
 dnl The option parameter (if neither yes/no) is assumed to be the name of
@@ -7198,12 +7198,17 @@ if test "$with_gpm" != no ; then
 		if test "$with_gpm" != yes && test "$with_gpm" != maybe ; then
 			CF_VERBOSE(assuming we really have GPM library)
 			AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
+			with_gpm=yes
 		else
 			AC_CHECK_LIB(gpm,Gpm_Open,[:],[
-				AC_MSG_ERROR(Cannot link with GPM library)
+				if test "$with_gpm" = maybe; then
+					AC_MSG_WARN(Cannot link with GPM library)
+					with_gpm=no
+				else
+					AC_MSG_ERROR(Cannot link with GPM library)
+				fi
+			])
 		fi
-		with_gpm=yes
-		])
 	],[
 		test "$with_gpm" != maybe && AC_MSG_WARN(Cannot find GPM header)
 		with_gpm=no

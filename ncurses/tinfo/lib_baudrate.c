@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.37 2015/06/14 00:34:12 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.38 2016/05/28 23:22:52 tom Exp $")
 
 /*
  *	int
@@ -151,7 +151,6 @@ _nc_baudrate(int OSpeed)
 #endif
 
     int result = ERR;
-    unsigned i;
 
 #if !USE_REENTRANT
     if (OSpeed == last_OSpeed) {
@@ -160,6 +159,8 @@ _nc_baudrate(int OSpeed)
 #endif
     if (result == ERR) {
 	if (OSpeed >= 0) {
+	    unsigned i;
+
 	    for (i = 0; i < SIZEOF(speeds); i++) {
 		if ((int) speeds[i].s == OSpeed) {
 		    result = speeds[i].sp;
@@ -181,9 +182,10 @@ NCURSES_EXPORT(int)
 _nc_ospeed(int BaudRate)
 {
     int result = 1;
-    unsigned i;
 
     if (BaudRate >= 0) {
+	unsigned i;
+
 	for (i = 0; i < SIZEOF(speeds); i++) {
 	    if (speeds[i].sp == BaudRate) {
 		result = speeds[i].s;

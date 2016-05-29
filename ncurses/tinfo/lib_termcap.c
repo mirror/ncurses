@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.80 2013/06/08 16:48:47 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.81 2016/05/28 23:22:52 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -233,12 +233,12 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     int result = 0;		/* Solaris returns zero for missing flag */
-    int j = -1;
 
     T((T_CALLED("tgetflag(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
+	int j = -1;
 
 	entry_ptr = _nc_find_type_entry(id, BOOLEAN, TRUE);
 	if (entry_ptr != 0) {
@@ -285,12 +285,12 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 {
     int result = ABSENT_NUMERIC;
-    int j = -1;
 
     T((T_CALLED("tgetnum(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
+	int j = -1;
 
 	entry_ptr = _nc_find_type_entry(id, NUMBER, TRUE);
 	if (entry_ptr != 0) {
@@ -337,12 +337,12 @@ NCURSES_EXPORT(char *)
 NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 {
     char *result = NULL;
-    int j = -1;
 
     T((T_CALLED("tgetstr(%s,%p)"), id, (void *) area));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
 	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
 	struct name_table_entry const *entry_ptr;
+	int j = -1;
 
 	entry_ptr = _nc_find_type_entry(id, STRING, TRUE);
 	if (entry_ptr != 0) {

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2609 2016/05/21 23:21:18 tom Exp $
+-- $Id: NEWS,v 1.2611 2016/05/29 00:37:27 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160528
+	+ further workaround for PIE/PIC breakage which causes gpm to not link.
+	+ fix most cppcheck warnings, mostly style, in ncurses library.
 
 20160521
 	+ improved manual page description of tset/reset versus window-size.

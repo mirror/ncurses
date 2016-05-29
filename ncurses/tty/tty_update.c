@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.282 2015/12/20 00:59:09 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.283 2016/05/28 23:32:40 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -712,7 +712,6 @@ PutRange(NCURSES_SP_DCLx
 	 int row,
 	 int first, int last)
 {
-    int i, j, same;
     int rc;
 
     TR(TRACE_CHARPUT, ("PutRange(%p, %p, %p, %d, %d, %d)",
@@ -723,6 +722,8 @@ PutRange(NCURSES_SP_DCLx
 
     if (otext != ntext
 	&& (last - first + 1) > SP_PARM->_inline_cost) {
+	int i, j, same;
+
 	for (j = first, same = 0; j <= last; j++) {
 	    if (!same && isWidecExt(otext[j]))
 		continue;
@@ -1169,10 +1170,10 @@ ClrUpdate(NCURSES_SP_DCL0)
 static void
 ClrToEOL(NCURSES_SP_DCLx NCURSES_CH_T blank, int needclear)
 {
-    int j;
-
     if (CurScreen(SP_PARM) != 0
 	&& SP_PARM->_cursrow >= 0) {
+	int j;
+
 	for (j = SP_PARM->_curscol; j < screen_columns(SP_PARM); j++) {
 	    if (j >= 0) {
 		NCURSES_CH_T *cp =
@@ -1243,16 +1244,17 @@ ClrToEOS(NCURSES_SP_DCLx NCURSES_CH_T blank)
 static int
 ClrBottom(NCURSES_SP_DCLx int total)
 {
-    int row;
-    int col;
     int top = total;
     int last = min(screen_columns(SP_PARM), NewScreen(SP_PARM)->_maxx + 1);
     NCURSES_CH_T blank = NewScreen(SP_PARM)->_line[total - 1].text[last - 1];
-    bool ok;
 
     if (clr_eos && can_clear_with(NCURSES_SP_ARGx CHREF(blank))) {
+	int row;
 
 	for (row = total - 1; row >= 0; row--) {
+	    int col;
+	    bool ok;
+
 	    for (col = 0, ok = TRUE; ok && col < last; col++) {
 		ok = (CharEq(NewScreen(SP_PARM)->_line[row].text[col], blank));
 	    }
@@ -1778,8 +1780,6 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 static void
 DelChar(NCURSES_SP_DCLx int count)
 {
-    int n;
-
     TR(TRACE_UPDATE, ("DelChar(%p, %d) called, position = (%ld,%ld)",
 		      (void *) SP_PARM, count,
 		      (long) NewScreen(SP_PARM)->_cury,
@@ -1792,6 +1792,8 @@ DelChar(NCURSES_SP_DCLx int count)
 				count,
 				NCURSES_SP_NAME(_nc_outch));
     } else {
+	int n;
+
 	for (n = 0; n < count; n++) {
 	    NCURSES_PUTP2("delete_character", delete_character);
 	}

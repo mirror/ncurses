@@ -2363,7 +2363,7 @@ case $INSTALL in
 	;;
 esac
 
-for ac_prog in tdlint lint alint splint lclint
+for ac_prog in lint cppcheck splint
 do
   # Extract the first word of "$ac_prog", so it can be a program name with args.
 set dummy $ac_prog; ac_word=$2

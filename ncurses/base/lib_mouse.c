@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.168 2015/10/31 20:47:41 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.169 2016/05/28 23:11:26 tom Exp $")
 
 #include <tic.h>
 
@@ -728,10 +728,11 @@ _nc_mouse_init(SCREEN *sp)
 /* initialize the mouse */
 {
     bool result = FALSE;
-    int i;
 
     if (sp != 0) {
 	if (!sp->_mouse_initialized) {
+	    int i;
+
 	    sp->_mouse_initialized = TRUE;
 
 	    TR(MY_TRACE, ("_nc_mouse_init() called"));
@@ -897,7 +898,7 @@ _nc_mouse_event(SCREEN *sp)
 #else
 #define PRESS_POSITION(n) \
     do { \
-	    eventp->bstate = (mmask_t) (sp->_mouse_bstate & MASK_PRESS(n) \
+	    eventp->bstate = (mmask_t) ((sp->_mouse_bstate & MASK_PRESS(n)) \
 				    ? REPORT_MOUSE_POSITION \
 				    : MASK_PRESS(n)); \
 	    sp->_mouse_bstate |= MASK_PRESS(n); \
@@ -947,11 +948,11 @@ static bool
 decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 {
     bool result;
-    int b;
 
     eventp->bstate = 0;
 
     if (!handle_wheel(sp, eventp, (int) intro, (intro & 96) == 96)) {
+
 	/*
 	 * Release events aren't reported for individual buttons, just for
 	 * the button set as a whole.  However, because there are normally
@@ -960,6 +961,8 @@ decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 	 * the previous event.
 	 */
 	if (sp->_mouse_bstate & BUTTON_PRESSED) {
+	    int b;
+
 	    eventp->bstate = BUTTON_RELEASED;
 	    for (b = 1; b <= MAX_BUTTONS; ++b) {
 		if (!(sp->_mouse_bstate & MASK_PRESS(b)))
@@ -1075,7 +1078,6 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
     size_t grabbed;
     size_t limit = (sizeof(kbuf) - 1);
     unsigned coords[2];
-    int res;
     bool result;
 
     coords[0] = 0;
@@ -1088,6 +1090,7 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 	_nc_globals.read_thread = pthread_self();
 # endif
     for (grabbed = 0; grabbed < limit;) {
+	int res;
 
 	res = (int) read(
 #if USE_EMX_MOUSE
@@ -1102,8 +1105,10 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 	if (grabbed > 1) {
 	    size_t check = 1;
 	    int n;
-	    int rc;
+
 	    for (n = 0; n < 2; ++n) {
+		int rc;
+
 		if (check >= grabbed)
 		    break;
 		rc = _nc_conv_to_utf32(&coords[n], kbuf + check, (unsigned)
@@ -1157,7 +1162,6 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
 {
     char kbuf[80];		/* bigger than any possible mouse response */
     int grabbed = 0;
-    int res;
     int ch = 0;
     int now = -1;
     int marker = 1;
@@ -1169,7 +1173,10 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
 #  endif
 	_nc_globals.read_thread = pthread_self();
 # endif
+
     do {
+	int res;
+
 	res = (int) read(
 #if USE_EMX_MOUSE
 			    (M_FD(sp) >= 0) ? M_FD(sp) : sp->_ifd,
@@ -1824,7 +1831,6 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 /* set the mouse event mask */
 {
     mmask_t result = 0;
-    int b;
 
     T((T_CALLED("mousemask(%p,%#lx,%p)"),
        (void *) SP_PARM,
@@ -1837,7 +1843,10 @@ NCURSES_SP_NAME(mousemask) (NCURSES_SP_DCLx mmask_t newmask, mmask_t * oldmask)
 
 	if (newmask || SP_PARM->_mouse_initialized) {
 	    _nc_mouse_init(SP_PARM);
+
 	    if (SP_PARM->_mouse_type != M_NONE) {
+		int b;
+
 		result = newmask &
 		    (REPORT_MOUSE_POSITION
 		     | BUTTON_ALT
