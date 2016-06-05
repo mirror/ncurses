@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.40 2015/10/10 20:52:41 tom Exp $
+ * $Id: demo_terminfo.c,v 1.41 2016/06/04 23:19:32 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -90,7 +90,7 @@ static long total_n_values;
 static long total_s_values;
 
 #define FCOLS 8
-#define FNAME(type) "%s %-*s = ", #type, FCOLS
+#define FNAME(type) "%s %-*s = ", #type, f_opt ? 24 : FCOLS
 
 static char *
 make_dbitem(char *p, char *q)
@@ -166,7 +166,7 @@ free_dblist(void)
 #endif
 
 static void
-dumpit(NCURSES_CONST char *cap)
+dumpit(NCURSES_CONST char *cap, const char *show)
 {
     const char *str;
     int num;
@@ -175,7 +175,7 @@ dumpit(NCURSES_CONST char *cap)
 	total_values++;
 	total_s_values++;
 	if (!q_opt) {
-	    printf(FNAME(str), cap);
+	    printf(FNAME(str), show ? show : cap);
 	    while (*str != 0) {
 		int ch = UChar(*str++);
 		switch (ch) {
@@ -228,14 +228,14 @@ dumpit(NCURSES_CONST char *cap)
 	total_values++;
 	total_n_values++;
 	if (!q_opt) {
-	    printf(FNAME(num), cap);
+	    printf(FNAME(num), show ? show : cap);
 	    printf(" %d\n", num);
 	}
     } else if ((num = tigetflag(cap)) >= 0) {
 	total_values++;
 	total_b_values++;
 	if (!q_opt) {
-	    printf(FNAME(flg), cap);
+	    printf(FNAME(flg), show ? show : cap);
 	    printf("%s\n", num ? "true" : "false");
 	}
     }
@@ -286,7 +286,7 @@ abcdefghijklmnopqrstuvwxyz_";
 		cap[j] = legal[item[j]];
 	    }
 	    cap[length] = '\0';
-	    dumpit(cap);
+	    dumpit(cap, NULL);
 
 	    k = length - 1;
 	    do {
@@ -312,12 +312,6 @@ abcdefghijklmnopqrstuvwxyz_";
     del_curterm(cur_term);
 }
 
-#if USE_CODE_LISTS
-#define fullname(type,n) f_opt ? type##fnames[n] : my_##type##codes[n]
-#else
-#define fullname(type,n) my_##type##codes[n]
-#endif
-
 static void
 demo_terminfo(char *name)
 {
@@ -333,28 +327,28 @@ demo_terminfo(char *name)
 
     if (b_opt) {
 	for (n = 0;; ++n) {
-	    cap = fullname(bool, n);
+	    cap = my_boolcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap);
+	    dumpit(cap, f_opt ? boolfnames[n] : cap);
 	}
     }
 
     if (n_opt) {
 	for (n = 0;; ++n) {
-	    cap = fullname(num, n);
+	    cap = my_numcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap);
+	    dumpit(cap, f_opt ? numfnames[n] : cap);
 	}
     }
 
     if (s_opt) {
 	for (n = 0;; ++n) {
-	    cap = fullname(str, n);
+	    cap = my_strcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap);
+	    dumpit(cap, f_opt ? strfnames[n] : cap);
 	}
     }
 #ifdef NCURSES_VERSION
@@ -368,13 +362,13 @@ demo_terminfo(char *name)
 		    || (NUM_NUMBERS(term) != NUMCOUNT)
 		    || (NUM_STRINGS(term) != STRCOUNT))) {
 		for (n = BOOLCOUNT; n < NUM_BOOLEANS(term); ++n) {
-		    dumpit(ExtBoolname(term, (int) n, boolnames));
+		    dumpit(ExtBoolname(term, (int) n, boolnames), NULL);
 		}
 		for (n = NUMCOUNT; n < NUM_NUMBERS(term); ++n) {
-		    dumpit(ExtNumname(term, (int) n, numnames));
+		    dumpit(ExtNumname(term, (int) n, numnames), NULL);
 		}
 		for (n = STRCOUNT; n < NUM_STRINGS(term); ++n) {
-		    dumpit(ExtStrname(term, (int) n, strnames));
+		    dumpit(ExtStrname(term, (int) n, strnames), NULL);
 		}
 	    }
 #endif
@@ -400,7 +394,7 @@ demo_terminfo(char *name)
 		    } else {
 			sprintf(temp, "%.*s%d", 8, xterm_keys[n], mod);
 		    }
-		    dumpit(temp);
+		    dumpit(temp, NULL);
 		}
 	    }
 	}
@@ -894,8 +888,12 @@ main(int argc, char *argv[])
 	}
     }
 
-    printf("%ld values (%ld booleans, %ld numbers, %ld strings)\n",
-	   total_values, total_b_values, total_n_values, total_s_values);
+#define PLURAL(n) n, (n != 1) ? "s" : ""
+    printf("%ld value%s (%ld boolean%s, %ld number%s, %ld string%s)\n",
+	   PLURAL(total_values),
+	   PLURAL(total_b_values),
+	   PLURAL(total_n_values),
+	   PLURAL(total_s_values));
 
 #ifdef NO_LEAKS
     free_dblist();

@@ -1111,6 +1111,7 @@
 ./test/knight.c
 ./test/linedata.h
 ./test/linux-color.dat
+./test/list_keys.c
 ./test/listused.sh
 ./test/lrtest.c
 ./test/make-tar.sh

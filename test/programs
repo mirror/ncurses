@@ -1,6 +1,6 @@
-# $Id: programs,v 1.27 2015/11/21 16:06:12 tom Exp $
+# $Id: programs,v 1.28 2016/06/04 17:47:41 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2014,2015 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -67,6 +67,7 @@ inserts		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	inserts
 key_names	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	key_names
 keynames	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	keynames
 knight		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	knight
+list_keys	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	list_keys
 lrtest		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	lrtest
 movewindow	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	movewindow
 ncurses		$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	ncurses
