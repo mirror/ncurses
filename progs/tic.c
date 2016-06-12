@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.221 2016/01/02 20:04:37 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.222 2016/06/11 23:20:55 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2274,7 +2274,7 @@ check_conflict(TERMTYPE *tp)
 static void
 check_exit_attribute(const char *name, char *test, char *trimmed, char *untrimmed)
 {
-    if (VALID_STRING(test)) {
+    if (VALID_STRING(test) && (trimmed != 0)) {
 	if (similar_sgr(-1, trimmed, test) ||
 	    similar_sgr(-1, untrimmed, test)) {
 	    _nc_warning("%s matches exit_attribute_mode", name);

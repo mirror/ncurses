@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.437 2016/05/07 23:56:59 tom Exp $
+$Id: ncurses.c,v 1.438 2016/06/11 21:05:48 tom Exp $
 
 ***************************************************************************/
 
@@ -200,9 +200,9 @@ Repaint(void)
 }
 
 static bool
-isQuit(int c)
+isQuit(int c, bool escape)
 {
-    return ((c) == QUIT || (c) == ESCAPE);
+    return ((c) == QUIT || (escape && ((c) == ESCAPE)));
 }
 #define case_QUIT	QUIT: case ESCAPE
 
@@ -652,6 +652,8 @@ blocking_getch(GetchFlags flags, int delay)
     return ((delay < 0) && flags['t']);
 }
 
+#define ExitOnEscape() (flags[UChar('k')] && flags[UChar('t')])
+
 static void
 wgetch_help(WINDOW *win, GetchFlags flags)
 {
@@ -678,13 +680,16 @@ wgetch_help(WINDOW *win, GetchFlags flags)
     printw("Type any key to see its %s value.  Also:\n",
 	   flags['k'] ? "keypad" : "literal");
     for (n = 0; n < SIZEOF(help); ++n) {
+	const char *msg = help[n];
 	int row = 1 + (int) (n % chk);
 	int col = (n >= chk) ? COLS / 2 : 0;
-	int flg = ((strstr(help[n], "toggle") != 0)
-		   && (flags[UChar(*help[n])] != FALSE));
+	int flg = ((strstr(msg, "toggle") != 0)
+		   && (flags[UChar(*msg)] != FALSE));
+	if (*msg == '^' && ExitOnEscape())
+	    msg = "^[,^q -- quit";
 	if (flg)
 	    (void) standout();
-	MvPrintw(row, col, "%s", help[n]);
+	MvPrintw(row, col, "%s", msg);
 	if (col == 0)
 	    clrtoeol();
 	if (flg)
@@ -842,7 +847,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	if (c == ERR && blocking_getch(flags, delay)) {
 	    wprintw(win, "ERR");
 	    wgetch_wrap(win, first_y);
-	} else if (isQuit(c)) {
+	} else if (isQuit(c, ExitOnEscape())) {
 	    break;
 	} else if (c == 'e') {
 	    flags[UChar('e')] = !flags[UChar('e')];
@@ -1098,7 +1103,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	if (code == ERR && blocking_getch(flags, delay)) {
 	    wprintw(win, "ERR");
 	    wgetch_wrap(win, first_y);
-	} else if (isQuit((int) c)) {
+	} else if (isQuit((int) c, ExitOnEscape())) {
 	    break;
 	} else if (c == 'e') {
 	    flags[UChar('e')] = !flags[UChar('e')];
@@ -2962,7 +2967,7 @@ color_edit(void)
 	MvPrintw(LINES - 1, 0, "Number: %d", value);
 	clrtoeol();
     } while
-	(!isQuit(this_c));
+	(!isQuit(this_c, TRUE));
 
     erase();
 
@@ -3222,7 +3227,7 @@ slk_test(void)
 	    beep();
 	    break;
 	}
-    } while (!isQuit(c = Getchar()));
+    } while (!isQuit(c = Getchar(), TRUE));
 
   done:
     slk_clear();
@@ -3376,7 +3381,7 @@ wide_slk_test(void)
 	    beep();
 	    break;
 	}
-    } while (!isQuit(c = Getchar()));
+    } while (!isQuit(c = Getchar(), TRUE));
 
   done:
     slk_clear();
@@ -3716,7 +3721,7 @@ acs_display(void)
 		     my_list[at_code].name);
 	}
 	refresh();
-    } while (!isQuit(c = Getchar()));
+    } while (!isQuit(c = Getchar(), TRUE));
 
     Pause();
     erase();
@@ -4251,7 +4256,7 @@ wide_acs_display(void)
 		     my_list[at_code].name);
 	}
 	refresh();
-    } while (!isQuit(c = Getchar()));
+    } while (!isQuit(c = Getchar(), TRUE));
 
     Pause();
     erase();
@@ -4865,7 +4870,7 @@ acs_and_scroll(void)
 	usescr = frame_win(current);
 	wrefresh(usescr);
     } while
-	(!isQuit(c = wGetchar(usescr))
+	(!isQuit(c = wGetchar(usescr), TRUE)
 	 && (c != ERR));
 
   breakout:
@@ -6757,7 +6762,7 @@ overlap_test(void)
     memset(flavor, 0, sizeof(flavor));
     state = overlap_help(0, flavor);
 
-    while (!isQuit(ch = Getchar()))
+    while (!isQuit(ch = Getchar(), TRUE))
 	switch (ch) {
 	case 'a':		/* refresh window A first, then B */
 	    overlap_test_0(win1, win2);

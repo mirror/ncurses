@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.45 2016/05/15 01:05:18 tom Exp $
+.\" $Id: curs_getch.3x,v 1.47 2016/06/11 22:56:33 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -118,6 +118,13 @@ time, the character is passed through;
 otherwise, the function key value is returned.
 For this reason, many terminals experience a delay between the time
 a user presses the escape key and the escape is returned to the program.
+.PP
+In \fBncurses\fP, the timer normally expires after the value in \fBESCDELAY\fP (see \fBcurs_variables\fP(3X)).
+If \fBnotimeout\fP is \fBTRUE\fP, the timer does not expire;
+it is an infinite (or very large) value.
+Because function keys usually begin with an escape character,
+the terminal may appear to hang in notimeout mode after pressing the escape key
+until another key is pressed.
 .SS Ungetting characters
 .PP
 The \fBungetch\fR routine places \fIch\fR back onto the input queue to be
@@ -391,6 +398,7 @@ any code using it be conditionalized on the \fBNCURSES_VERSION\fR feature macro.
 \fBcurs_mouse\fR(3X),
 \fBcurs_move\fR(3X),
 \fBcurs_refresh\fR(3X),
+\fBcurs_variables\fR(3X),
 \fBresizeterm\fR(3X).
 .PP
 Comparable functions in the wide-character (ncursesw) library are

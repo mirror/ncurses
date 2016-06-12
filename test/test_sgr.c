@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.6 2016/02/13 22:08:16 tom Exp $
+ * $Id: test_sgr.c,v 1.7 2016/06/11 23:15:03 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -203,7 +203,7 @@ brute_force(const char *name)
     } else if (!VALID_STRING(my_sgr0)) {
 	fprintf(stderr, "no \"sgr0\" capability found\n");
     } else {
-	char *values[MAXSGR];
+	char *values[MAXSGR + MAXPAR];
 	unsigned j;
 	unsigned ignore = 0;
 	unsigned reason = 0;

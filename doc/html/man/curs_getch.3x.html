@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.45 2016/05/15 01:05:18 tom Exp @
+  * @Id: curs_getch.3x,v 1.47 2016/06/11 22:56:33 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -125,6 +125,14 @@
        experience a delay between the time a user presses the es-
        cape key and the escape is returned to the program.
 
+       In <STRONG>ncurses</STRONG>, the timer normally expires after the value  in
+       <STRONG>ESCDELAY</STRONG>  (see <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>).  If <STRONG>notimeout</STRONG> is <STRONG>TRUE</STRONG>,
+       the timer does not expire; it  is  an  infinite  (or  very
+       large) value.  Because function keys usually begin with an
+       escape character, the terminal may appear to hang  in  no-
+       timeout  mode  after pressing the escape key until another
+       key is pressed.
+
 
 </PRE><H3><a name="h3-Ungetting-characters">Ungetting characters</a></H3><PRE>
        The <STRONG>ungetch</STRONG> routine places <EM>ch</EM> back onto the input queue to
@@ -171,6 +179,7 @@
             KEY_SR          Scroll 1 line backward (reverse)
             KEY_NPAGE       Next page
             KEY_PPAGE       Previous page
+
             KEY_STAB        Set tab
             KEY_CTAB        Clear tab
             KEY_CATAB       Clear all tabs
@@ -179,7 +188,6 @@
             KEY_RESET       Reset or hard reset
             KEY_PRINT       Print or copy
             KEY_LL          Home down or bottom (lower left)
-
             KEY_A1          Upper left of keypad
             KEY_A3          Upper right of keypad
             KEY_B2          Center of keypad
@@ -237,6 +245,7 @@
             KEY_SREDO       Shifted redo key
             KEY_SREPLACE    Shifted replace key
             KEY_SRIGHT      Shifted right arrow
+
             KEY_SRSUME      Shifted resume key
             KEY_SSAVE       Shifted save key
             KEY_SSUSPEND    Shifted suspend key
@@ -392,8 +401,8 @@
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,       <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>,       <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>,   <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>,   <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,   <STRONG>re-</STRONG>
-       <STRONG><A HREF="resizeterm.3x.html">sizeterm(3x)</A></STRONG>.
+       <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>,      <STRONG><A HREF="curs_move.3x.html">curs_move(3x)</A></STRONG>,      <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>.
 
        Comparable  functions in the wide-character (ncursesw) li-
        brary are described in <STRONG><A HREF="curs_get_wch.3x.html">curs_get_wch(3x)</A></STRONG>.

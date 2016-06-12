@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.44 2016/04/16 23:20:09 tom Exp $
+ * $Id: blue.c,v 1.45 2016/06/12 00:17:37 tom Exp $
  */
 
 #include <test.priv.h>
@@ -209,7 +209,7 @@ printcard(int value)
 	addch(ranks[isuit][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 	addch(ranks[isuit][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 
-	attr_on(color, NULL);
+	attron(color);
 #if USE_WIDEC_SUPPORT
 	{
 	    wchar_t values[2];
@@ -220,7 +220,7 @@ printcard(int value)
 #else
 	addch((chtype) suits[which]);
 #endif
-	attr_off(color, NULL);
+	attroff(color);
     }
     (void) addch(' ');
 }

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.563 $
-#	$Date: 2016/05/15 00:30:28 $
+#	$Revision: 1.565 $
+#	$Date: 2016/06/11 18:59:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4019,8 +4019,8 @@ xterm-xfree86|xterm terminal emulator (XFree86),
 xterm-new|modern xterm terminal emulator,
 	npc,
 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
-	rin=\E[%p1%dT, use=xterm+pcfkeys, use=xterm+tmux,
-	use=xterm-basic,
+	rin=\E[%p1%dT, use=ansi+enq, use=xterm+pcfkeys,
+	use=xterm+tmux, use=xterm-basic,
 
 # This fragment is for people who cannot agree on what the backspace key
 # should send.
@@ -4230,7 +4230,8 @@ xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 xterm-16color|xterm with 16 colors like aixterm,
 	ccc,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*%{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
-	use=ibm+16color, use=xterm-new,
+	oc=\E]104\007, rs1=\Ec\E]104\007, use=ibm+16color,
+	use=xterm-new,
 
 # 256-colors is a compile-time feature of XFree86 xterm beginning with
 # patch #111 (1999/7/10) -TD
@@ -4273,9 +4274,10 @@ xterm+88color|xterm 88-color feature,
 
 # These variants of XFree86 3.9.16 xterm are built as a configure option.
 xterm-256color|xterm with 256 colors,
-	use=xterm+256color, use=xterm-new,
+	rs1=\Ec\E]104\007, use=xterm+256color, use=xterm-new,
 xterm-88color|xterm with 88 colors,
-	use=xterm+88color, use=xterm-256color,
+	rs1=\Ec\E]104\007, use=xterm+88color,
+	use=xterm-256color,
 
 # This chunk is based on suggestions by Ailin Nemui and Nicholas Marriott, who
 # asked for some of xterm's advanced features to be added to its terminfo
@@ -4878,9 +4880,13 @@ gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
 gnome|GNOME Terminal,
 	use=vte-2012,
 
-# relevant changes were made in January 2014
+# relevant changes were made in January 2014, and later.
 vte-2014|VTE 0.35.1,
-	use=xterm+pcfkeys, use=vte-2012,
+	ncv@,
+	cbt=\E[Z, el1=\E[1K, flash=\E[?5h$<100/>\E[?5l,
+	ich=\E[%p1%d@, indn=\E[%p1%dS, kent=\EOM, rin=\E[%p1%dT,
+	rmso=\E[27m, rmul=\E[24m, use=xterm+pcfkeys,
+	use=vte-2012,
 
 vte|VTE aka GNOME Terminal,
 	use=vte-2014,
@@ -23835,5 +23841,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2016-05-14
 #	+ modify linux2.6 entry to improve line-drawing -TD
 #	+ make linux3.0 entry the default linux entry (Debian #823658) -TD
+#
+# 2016-05-29
+#	+ modify rs1 for xterm-16color, xterm-88color and xterm-256color to
+#	  reset palette using "oc" string as in linux -TD
+#
+# 2016-06-11
+#	+ use ANSI reply for u8 in xterm-new, to reflect vt220-style responses
+#	  that could be returned -TD
+#	+ added a few capabilities fixed in recent vte -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

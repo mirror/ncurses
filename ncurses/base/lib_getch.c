@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.134 2016/01/23 21:32:00 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.135 2016/06/11 21:52:23 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -360,7 +360,7 @@ fifo_clear(SCREEN *sp)
     tail = peek = 0;
 }
 
-static int kgetch(SCREEN *EVENTLIST_2nd(_nc_eventlist * evl));
+static int kgetch(SCREEN *, bool EVENTLIST_2nd(_nc_eventlist *));
 
 static void
 recur_wrefresh(WINDOW *win)
@@ -497,8 +497,6 @@ _nc_wgetch(WINDOW *win,
 	    TR(TRACE_IEVENT, ("timed delay in wgetch()"));
 	    if (sp->_cbreak > 1)
 		delay = (sp->_cbreak - 1) * 100;
-	    else if (win->_notimeout)
-		delay = 0;
 	    else
 		delay = win->_delay;
 
@@ -539,7 +537,7 @@ _nc_wgetch(WINDOW *win,
 	int runcount = 0;
 
 	do {
-	    ch = kgetch(sp EVENTLIST_2nd(evl));
+	    ch = kgetch(sp, win->_notimeout EVENTLIST_2nd(evl));
 	    if (ch == KEY_MOUSE) {
 		++runcount;
 		if (sp->_mouse_inline(sp))
@@ -651,7 +649,7 @@ wgetch_events(WINDOW *win, _nc_eventlist * evl)
     int code;
     int value;
 
-    T((T_CALLED("wgetch_events(%p,%p)"), (void *) win, (void *)evl));
+    T((T_CALLED("wgetch_events(%p,%p)"), (void *) win, (void *) evl));
     code = _nc_wgetch(win,
 		      &value,
 		      _nc_use_meta(win)
@@ -694,11 +692,11 @@ wgetch(WINDOW *win)
 */
 
 static int
-kgetch(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
+kgetch(SCREEN *sp, bool forever EVENTLIST_2nd(_nc_eventlist * evl))
 {
     TRIES *ptr;
     int ch = 0;
-    int timeleft = GetEscdelay(sp);
+    int timeleft = forever ? 9999999 : GetEscdelay(sp);
 
     TR(TRACE_IEVENT, ("kgetch() called"));
 
