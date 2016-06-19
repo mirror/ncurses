@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.132 2016/04/09 23:55:01 tom Exp $ */
+/* $Id: test.priv.h,v 1.133 2016/06/19 00:04:02 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -160,6 +160,10 @@
 
 #ifndef HAVE_RESIZE_TERM
 #define HAVE_RESIZE_TERM 0
+#endif
+
+#ifndef HAVE_RESTARTTERM
+#define HAVE_RESTARTTERM 0
 #endif
 
 #ifndef HAVE_RIPOFFLINE
@@ -547,6 +551,10 @@ extern int optind;
 extern char *boolnames[], *boolcodes[], *boolfnames[];
 extern char *numnames[], *numcodes[], *numfnames[];
 extern char *strnames[], *strcodes[], *strfnames[];
+#endif
+
+#ifdef DECL_CURSES_DATA_TTYTYPE
+#define ttytype termname()
 #endif
 
 #define colored_chtype(ch, attr, pair) \

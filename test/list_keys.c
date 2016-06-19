@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.4 2016/06/04 22:39:47 tom Exp $
+ * $Id: list_keys.c,v 1.9 2016/06/18 22:18:30 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -51,6 +51,23 @@
 static bool f_opt = FALSE;
 static bool t_opt = FALSE;
 static bool x_opt = FALSE;
+
+typedef enum {
+    ktCursor
+    ,ktFunction
+    ,ktOther
+#if HAVE_USE_EXTENDED_NAMES
+    ,ktExtended
+#endif
+} KEYTYPE;
+
+typedef struct {
+    KEYTYPE type;
+    const char *name;
+} KEYNAMES;
+
+#define Type(n) list[n].type
+#define Name(n) list[n].name
 
 static const char *
 full_name(const char *name)
@@ -154,16 +171,49 @@ valid_key(const char *name, TERMINAL ** terms, int count)
     return result;
 }
 
+static int
+compare_keys(const void *a, const void *b)
+{
+    const KEYNAMES *p = (const KEYNAMES *) a;
+    const KEYNAMES *q = (const KEYNAMES *) b;
+    int result = (int) (p->type - q->type);
+    int pn, qn;
+    if (result == 0) {
+	if (p->type == ktFunction &&
+	    sscanf(p->name, "kf%d", &pn) == 1 &&
+	    sscanf(q->name, "kf%d", &qn) == 1) {
+	    result = (pn - qn);
+	} else {
+	    result = strcmp(p->name, q->name);
+	}
+    }
+    return result;
+}
+
+static void
+draw_line(int width)
+{
+    int j;
+    if (!t_opt) {
+	for (j = 0; j < width; ++j) {
+	    printf("-");
+	}
+	printf("\n");
+    }
+}
+
 static void
 list_keys(TERMINAL ** terms, int count)
 {
     int j, k;
     int widths0 = 0;
     int widths1 = 0;
+    int widthsx;
     int check;
-    int total = 0;
+    size_t total = 0;
+    size_t actual = 0;
     const char *name = f_opt ? "strfname" : "strname";
-    const char **list;
+    KEYNAMES *list;
 
     for (total = 0; strnames[total]; ++total) {
 	;
@@ -174,13 +224,19 @@ list_keys(TERMINAL ** terms, int count)
 	for (k = 0; k < count; ++k) {
 	    set_curterm(terms[k]);
 	    term = &(cur_term->type);
-	    total += NUM_STRINGS(term) - STRCOUNT;
+	    total += (size_t) (NUM_STRINGS(term) - STRCOUNT);
 	}
     }
 #endif
-    list = typeCalloc(const char *, total + 1);
+    list = typeCalloc(KEYNAMES, total + 1);
     for (j = 0; strnames[j]; ++j) {
-	list[j] = strnames[j];
+	Type(j) = ktOther;
+	if (sscanf(strnames[j], "kf%d", &k) == 1) {
+	    Type(j) = ktFunction;
+	} else if (!strncmp(strnames[j], "kcu", 3)) {
+	    Type(j) = ktCursor;
+	}
+	Name(j) = strnames[j];
     }
 #if NCURSES_XNAMES
     if (x_opt) {
@@ -193,35 +249,38 @@ list_keys(TERMINAL ** terms, int count)
 		bool found = FALSE;
 		const char *estr = ExtStrname(term, (int) n, strnames);
 		for (m = STRCOUNT; m < j; ++m) {
-		    if (!strcmp(estr, list[m])) {
+		    if (!strcmp(estr, Name(m))) {
 			found = TRUE;
 			break;
 		    }
 		}
 		if (!found) {
-		    list[j++] = estr;
+		    Type(j) = ktExtended;
+		    Name(j++) = estr;
 		}
 	    }
 	}
     }
 #endif
+    actual = (size_t) j;
+    qsort(list, actual, sizeof(KEYNAMES), compare_keys);
 
     widths0 = (int) strlen(name);
     for (k = 0; k < count; ++k) {
 	set_curterm(terms[k]);
-	check = (int) strlen(name);
+	check = (int) strlen(termname());
 	if (widths1 < check)
 	    widths1 = check;
     }
-    for (j = 0; list[j] != 0; ++j) {
-	if (valid_key(list[j], terms, count)) {
-	    const char *label = f_opt ? full_name(list[j]) : list[j];
+    for (j = 0; Name(j) != 0; ++j) {
+	if (valid_key(Name(j), terms, count)) {
+	    const char *label = f_opt ? full_name(Name(j)) : Name(j);
 	    check = (int) strlen(label);
 	    if (widths0 < check)
 		widths0 = check;
 	    for (k = 0; k < count; ++k) {
 		set_curterm(terms[k]);
-		check = show_key(list[j], FALSE);
+		check = show_key(Name(j), FALSE);
 		if (widths1 < check)
 		    widths1 = check;
 	    }
@@ -245,9 +304,13 @@ list_keys(TERMINAL ** terms, int count)
     }
     printf("\n");
 
-    for (j = 0; list[j] != 0; ++j) {
-	if (valid_key(list[j], terms, count)) {
-	    const char *label = f_opt ? full_name(list[j]) : list[j];
+    widthsx = widths0 + ((count + 1) * widths1);
+
+    for (j = 0; Name(j) != 0; ++j) {
+	if (j == 0 || (Type(j) != Type(j - 1)))
+	    draw_line(widthsx);
+	if (valid_key(Name(j), terms, count)) {
+	    const char *label = f_opt ? full_name(Name(j)) : Name(j);
 	    if (t_opt) {
 		printf("\"%s\"", label);
 	    } else {
@@ -256,10 +319,10 @@ list_keys(TERMINAL ** terms, int count)
 	    for (k = 0; k < count; ++k) {
 		printf(t_opt ? "," : " ");
 		set_curterm(terms[k]);
-		check = show_key(list[j], TRUE);
+		check = show_key(Name(j), TRUE);
 		if (!t_opt) {
 		    if (k + 1 < count) {
-			printf("%*s", widths1 + 1 - check, " ");
+			printf("%*s", widths1 - check, " ");
 		    }
 		}
 	    }

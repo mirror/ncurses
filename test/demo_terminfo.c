@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.41 2016/06/04 23:19:32 tom Exp $
+ * $Id: demo_terminfo.c,v 1.42 2016/06/18 23:57:33 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -312,6 +312,12 @@ abcdefghijklmnopqrstuvwxyz_";
     del_curterm(cur_term);
 }
 
+#if USE_CODE_LISTS
+#define fullname(type,n) f_opt ? type##fnames[n] : cap
+#else
+#define fullname(type,n) cap
+#endif
+
 static void
 demo_terminfo(char *name)
 {
@@ -330,7 +336,7 @@ demo_terminfo(char *name)
 	    cap = my_boolcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap, f_opt ? boolfnames[n] : cap);
+	    dumpit(cap, fullname(bool, n));
 	}
     }
 
@@ -339,7 +345,7 @@ demo_terminfo(char *name)
 	    cap = my_numcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap, f_opt ? numfnames[n] : cap);
+	    dumpit(cap, fullname(num, n));
 	}
     }
 
@@ -348,7 +354,7 @@ demo_terminfo(char *name)
 	    cap = my_strcodes[n];
 	    if (cap == 0)
 		break;
-	    dumpit(cap, f_opt ? strfnames[n] : cap);
+	    dumpit(cap, fullname(str, n));
 	}
     }
 #ifdef NCURSES_VERSION

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.126 2016/04/09 21:37:32 tom Exp $
+dnl $Id: configure.in,v 1.127 2016/06/18 23:50:44 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -218,6 +218,7 @@ napms \
 putwin \
 resize_term \
 resizeterm \
+restartterm \
 ripoffline \
 scr_dump \
 setupterm \
@@ -350,6 +351,7 @@ fi
 CF_CURSES_CHECK_DATA(ospeed)
 CF_CURSES_CHECK_DATA(boolnames)
 CF_CURSES_CHECK_DATA(boolfnames)
+CF_CURSES_CHECK_DATA(ttytype)
 
 dnl ---------------------------------------------------------------------------
 CF_HELP_MESSAGE(Testing/development Options:)
