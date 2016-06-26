@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.129 2016/05/29 00:38:29 tom Exp $
+dnl $Id: aclocal.m4,v 1.130 2016/06/25 20:29:33 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -376,11 +376,14 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CC_ENV_FLAGS version: 3 updated: 2016/05/21 18:10:17
+dnl CF_CC_ENV_FLAGS version: 4 updated: 2016/06/25 16:23:40
 dnl ---------------
 dnl Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
 dnl into CC.  This will not help with broken scripts that wrap the compiler with
 dnl options, but eliminates a more common category of user confusion.
+dnl
+dnl In particular, it addresses the problem of being able to run the C
+dnl preprocessor in a consistent manner.
 dnl
 dnl Caveat: this also disallows blanks in the pathname for the compiler, but
 dnl the nuisance of having inconsistent settings for compiler and preprocessor
@@ -397,7 +400,7 @@ case "$CC" in
 	AC_MSG_WARN(your environment misuses the CC variable to hold CFLAGS/CPPFLAGS options)
 	# humor him...
 	cf_flags=`echo "$CC" | sed -e 's/^[[^ 	]]*[[ 	]][[ 	]]*//'`
-	CC=`echo "$CC" | sed -e 's/[[ 	]].*//'`
+	CC=`echo "$CC " | sed -e 's/[[ 	]]-[[IUD]][[^ 	]][[^ 	]]*//g' -e 's/[[ 	]]*$//'`
 	CF_ADD_CFLAGS($cf_flags)
 	CF_VERBOSE(resulting CC: '$CC')
 	CF_VERBOSE(resulting CFLAGS: '$CFLAGS')

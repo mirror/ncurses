@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.137 2016/05/28 23:32:40 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.138 2016/06/25 20:49:00 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -1278,7 +1278,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 		}
 	    }
 	} else if (buf[0] == 'i') {
-	    dump_init(NULL, F_TERMINFO, S_TERMINFO, 70, 0, 0, FALSE, FALSE);
+	    dump_init(NULL, F_TERMINFO, S_TERMINFO, 70, 0, 0, FALSE, FALSE, 0);
 	    dump_entry(&cur_term->type, FALSE, TRUE, 0, 0);
 	    putchar('\n');
 	} else if (buf[0] == 'o') {

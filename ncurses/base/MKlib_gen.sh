@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.52 2015/10/10 19:36:47 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.53 2016/06/25 22:08:12 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -231,7 +231,7 @@ $0 !~ /^P_/ {
 	} else if ( $first == "bool" || $first == "NCURSES_BOOL" ) {
 		returnType = "Bool";
 	} else if ( $second == "*" ) {
-		returnType = "Ptr";
+		returnType = ($1 == "NCURSES_CONST") ? "CPtr" : "Ptr";
 	} else {
 		returnType = "Code";
 	}

@@ -1838,7 +1838,7 @@ echo "${ECHO_T}broken" >&6
 echo "$as_me: WARNING: your environment misuses the CC variable to hold CFLAGS/CPPFLAGS options" >&2;}
 	# humor him...
 	cf_flags=`echo "$CC" | sed -e 's/^[^ 	]*[ 	][ 	]*//'`
-	CC=`echo "$CC" | sed -e 's/[ 	].*//'`
+	CC=`echo "$CC " | sed -e 's/[ 	]-[IUD][^ 	][^ 	]*//g' -e 's/[ 	]*$//'`
 
 cf_fix_cppflags=no
 cf_new_cflags=

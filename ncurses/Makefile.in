@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.151 2016/05/21 21:28:51 tom Exp $
+# $Id: Makefile.in,v 1.152 2016/06/25 21:13:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -195,6 +195,8 @@ TEST_PROGS = \
 	link_test$x \
 	hashmap$x \
 	lib_mvcur$x
+
+LOCAL_LIBDIR	= @top_builddir@/lib
 
 base	 = $(srcdir)/base
 serial	 = $(srcdir)/tty
