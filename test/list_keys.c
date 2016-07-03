@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.9 2016/06/18 22:18:30 tom Exp $
+ * $Id: list_keys.c,v 1.12 2016/07/02 23:45:53 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -88,7 +88,7 @@ show_key(const char *name, bool show)
 {
     int width = 0;
     char buffer[10];
-    char *value = tigetstr(name);
+    NCURSES_CONST char *value = tigetstr(name);
 
     if (show && t_opt)
 	fputc('"', stdout);
@@ -329,6 +329,7 @@ list_keys(TERMINAL ** terms, int count)
 	    printf("\n");
 	}
     }
+    free(list);
 }
 
 static void
@@ -358,7 +359,7 @@ int
 main(int argc, char *argv[])
 {
     int n;
-    TERMINAL **terms = typeCalloc(TERMINAL *, argc);
+    TERMINAL **terms = typeCalloc(TERMINAL *, argc + 1);
 
     while ((n = getopt(argc, argv, "ftx")) != -1) {
 	switch (n) {
@@ -383,11 +384,22 @@ main(int argc, char *argv[])
     use_extended_names(x_opt);
 #endif
 
-    for (n = optind; n < argc; ++n) {
-	setupterm((NCURSES_CONST char *) argv[n], 1, (int *) 0);
-	terms[n - optind] = cur_term;
+    if (optind < argc) {
+	int found = 0;
+	int status;
+	for (n = optind; n < argc; ++n) {
+	    setupterm((NCURSES_CONST char *) argv[n], 1, &status);
+	    if (status > 0 && cur_term != 0) {
+		terms[found++] = cur_term;
+	    }
+	}
+	if (found)
+	    list_keys(terms, found);
+    } else {
+	setupterm(NULL, 1, (int *) 0);
+	terms[0] = cur_term;
+	list_keys(terms, 1);
     }
-    list_keys(terms, argc - optind);
 
     ExitProgram(EXIT_SUCCESS);
 }
