@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.12 2016/07/02 23:45:53 tom Exp $
+ * $Id: list_keys.c,v 1.15 2016/07/09 18:21:24 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -49,6 +49,7 @@
 #if defined(HAVE_CURSES_DATA_BOOLNAMES) || defined(DECL_CURSES_DATA_BOOLNAMES)
 
 static bool f_opt = FALSE;
+static bool m_opt = FALSE;
 static bool t_opt = FALSE;
 static bool x_opt = FALSE;
 
@@ -202,17 +203,75 @@ draw_line(int width)
     }
 }
 
+static const char *
+modified_key(const char *name)
+{
+    static char result[80];
+    char buffer[sizeof(result)];
+    int value;
+    char chr;
+    static const char *modifiers[][2] =
+    {
+	{"", ""},
+	{"s-", "shift-"},
+	{"a-", "alt-"},
+	{"as-", "alt-shift-"},
+	{"c-", "ctrl-"},
+	{"sc-", "ctrl-shift-"},
+	{"ac-", "alt-ctrl-"},
+	{"acs-" "alt-ctrl-shift-"},
+    };
+
+    if (strlen(name) > (sizeof(result) - 3)) {
+	*result = '\0';
+    } else if (sscanf(name, "kf%d%c", &value, &chr) == 1 &&
+	       value >= 1 &&
+	       value <= 63) {
+	/* map 1,2,3,4,5,6,7 to 1,2,5,... */
+	int map = ((value - 1) / 12);
+	int key = ((value - 1) % 12);
+	int bit1 = (map & 2);
+	int bit2 = (map & 4);
+	map &= ~6;
+	map |= (bit1 << 1) | (bit2 >> 1);
+	sprintf(result, "%sF%d", modifiers[map][f_opt], 1 + key);
+    } else if (sscanf(name, "k%[A-Z]%d%c", buffer, &value, &chr) == 2 &&
+	       (value > 1 &&
+		value <= 8) &&
+	       (!strcmp(buffer, "UP") ||
+		!strcmp(buffer, "DN") ||
+		!strcmp(buffer, "LFT") ||
+		!strcmp(buffer, "RIT") ||
+		!strcmp(buffer, "IC") ||
+		!strcmp(buffer, "DC") ||
+		!strcmp(buffer, "HOM") ||
+		!strcmp(buffer, "END") ||
+		!strcmp(buffer, "NXT") ||
+		!strcmp(buffer, "PRV"))) {
+	sprintf(result, "%sk%s", modifiers[value - 1][f_opt], buffer);
+    } else if (sscanf(name, "k%[A-Z]%c", buffer, &chr) == 1 &&
+	       (!strcmp(buffer, "UP") ||
+		!strcmp(buffer, "DN"))) {
+	sprintf(result, "%sk%s", modifiers[1][f_opt], buffer);
+    } else {
+	*result = '\0';
+    }
+    return result;
+}
+
 static void
 list_keys(TERMINAL ** terms, int count)
 {
     int j, k;
     int widths0 = 0;
     int widths1 = 0;
+    int widths2 = 0;
     int widthsx;
     int check;
     size_t total = 0;
     size_t actual = 0;
     const char *name = f_opt ? "strfname" : "strname";
+    const char *modifier = "extended";
     KEYNAMES *list;
 
     for (total = 0; strnames[total]; ++total) {
@@ -266,11 +325,14 @@ list_keys(TERMINAL ** terms, int count)
     qsort(list, actual, sizeof(KEYNAMES), compare_keys);
 
     widths0 = (int) strlen(name);
+    if (m_opt)
+	widths1 = (int) strlen(modifier);
+
     for (k = 0; k < count; ++k) {
 	set_curterm(terms[k]);
 	check = (int) strlen(termname());
-	if (widths1 < check)
-	    widths1 = check;
+	if (widths2 < check)
+	    widths2 = check;
     }
     for (j = 0; Name(j) != 0; ++j) {
 	if (valid_key(Name(j), terms, count)) {
@@ -280,17 +342,26 @@ list_keys(TERMINAL ** terms, int count)
 		widths0 = check;
 	    for (k = 0; k < count; ++k) {
 		set_curterm(terms[k]);
-		check = show_key(Name(j), FALSE);
-		if (widths1 < check)
-		    widths1 = check;
+		check = show_key(Name(j), FALSE) + 1;
+		if (widths2 < check)
+		    widths2 = check;
+		if (m_opt) {
+		    check = (int) strlen(modified_key(Name(j)));
+		    if (widths1 < check)
+			widths1 = check;
+		}
 	    }
 	}
     }
 
     if (t_opt) {
 	printf("\"%s\"", name);
+	if (m_opt)
+	    printf(",\"%s\"", modifier);
     } else {
 	printf("%-*s", widths0, name);
+	if (m_opt)
+	    printf(" %-*s", widths1, modifier);
     }
     for (k = 0; k < count; ++k) {
 	set_curterm(terms[k]);
@@ -299,12 +370,12 @@ list_keys(TERMINAL ** terms, int count)
 	} else if (k + 1 >= count) {
 	    printf(" %s", termname());
 	} else {
-	    printf(" %-*s", widths1, termname());
+	    printf(" %-*s", widths2, termname());
 	}
     }
     printf("\n");
 
-    widthsx = widths0 + ((count + 1) * widths1);
+    widthsx = widths0 + ((count + 1) * widths2);
 
     for (j = 0; Name(j) != 0; ++j) {
 	if (j == 0 || (Type(j) != Type(j - 1)))
@@ -313,8 +384,12 @@ list_keys(TERMINAL ** terms, int count)
 	    const char *label = f_opt ? full_name(Name(j)) : Name(j);
 	    if (t_opt) {
 		printf("\"%s\"", label);
+		if (m_opt)
+		    printf(",\"%s\"", modified_key(Name(j)));
 	    } else {
 		printf("%-*s", widths0, label);
+		if (m_opt)
+		    printf(" %-*s", widths1, modified_key(Name(j)));
 	    }
 	    for (k = 0; k < count; ++k) {
 		printf(t_opt ? "," : " ");
@@ -322,7 +397,7 @@ list_keys(TERMINAL ** terms, int count)
 		check = show_key(Name(j), TRUE);
 		if (!t_opt) {
 		    if (k + 1 < count) {
-			printf("%*s", widths1 - check, " ");
+			printf("%*s", widths2 - check, " ");
 		    }
 		}
 	    }
@@ -343,6 +418,7 @@ usage(void)
 	"",
 	"Options:",
 	" -f       print full names",
+	" -m       print modifier-column for shift/control keys",
 	" -t       print result as CSV table",
 #ifdef NCURSES_VERSION
 	" -x       print extended capabilities",
@@ -361,10 +437,13 @@ main(int argc, char *argv[])
     int n;
     TERMINAL **terms = typeCalloc(TERMINAL *, argc + 1);
 
-    while ((n = getopt(argc, argv, "ftx")) != -1) {
+    while ((n = getopt(argc, argv, "fmtx")) != -1) {
 	switch (n) {
 	case 'f':
 	    f_opt = TRUE;
+	    break;
+	case 'm':
+	    m_opt = TRUE;
 	    break;
 	case 't':
 	    t_opt = TRUE;

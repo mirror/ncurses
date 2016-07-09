@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.53 2016/06/25 22:08:12 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.54 2016/07/09 21:43:05 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
@@ -450,16 +450,16 @@ END		{
 			for (n = 1; n < start; ++n) {
 				value = calls[n];
 				if ( value !~ /P_POUNDC/ ) {
-					gsub(/[[:blank:]]+/," ",value);
-					sub(/^[[:alnum:]_]+ /,"",value);
+					gsub(/[ \t]+/," ",value);
+					sub(/^[0-9a-zA-Z_]+ /,"",value);
 					sub(/^\* /,"",value);
-					gsub(/[[:alnum:]_]+ \* /,"",value);
+					gsub(/[0-9a-zA-Z_]+ \* /,"",value);
 					gsub(/ (const) /," ",value);
 					gsub(/ (int|short|attr_t|chtype|wchar_t|NCURSES_BOOL|NCURSES_OUTC|NCURSES_OUTC_sp|va_list) /," ",value);
 					gsub(/ void /,"",value);
 					sub(/^/,"call_",value);
-					gsub(/ (a[[:digit:]]|z) /, " 0 ", value);
-					gsub(/ int[[:blank:]]*[(][^)]+[)][(][^)]+[)]/, "0", value);
+					gsub(/ (a[0-9]|z) /, " 0 ", value);
+					gsub(/ int[ \t]*[(][^)]+[)][(][^)]+[)]/, "0", value);
 					printf "\t%s;\n", value;
 				} else {
 					print value;

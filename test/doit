@@ -1,0 +1,3 @@
+#!/bin/sh
+make||exit
+./list_keys -m -x xterm rxvt
