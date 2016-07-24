@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,41 +27,65 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.44 2015/12/13 21:54:05 tom Exp $
+.\" $Id: curs_attr.3x,v 1.47 2016/07/23 23:48:49 tom Exp $
 .TH curs_attr 3X ""
+.de bP
+.IP \(bu 4
+..
 .na
 .hy 0
 .SH NAME
+.\" attr_get
+\fBattr_get\fR,
+\fBwattr_get\fR,
+\fBattr_set\fR,
+\fBwattr_set\fR,
+.\" .br
+\fBattr_off\fR,
+\fBwattr_off\fR,
+\fBattr_on\fR,
+\fBwattr_on\fR,
+.\" .br
 \fBattroff\fR,
 \fBwattroff\fR,
 \fBattron\fR,
 \fBwattron\fR,
 \fBattrset\fR,
 \fBwattrset\fR,
-\fBcolor_set\fR,
-\fBwcolor_set\fR,
-\fBstandend\fR,
-\fBwstandend\fR,
-\fBstandout\fR,
-\fBwstandout\fR,
-\fBattr_get\fR,
-\fBwattr_get\fR,
-\fBattr_off\fR,
-\fBwattr_off\fR,
-\fBattr_on\fR,
-\fBwattr_on\fR,
-\fBattr_set\fR,
-\fBwattr_set\fR,
+.\" .br
 \fBchgat\fR,
 \fBwchgat\fR,
 \fBmvchgat\fR,
 \fBmvwchgat\fR,
-\fBPAIR_NUMBER\fR \- \fBcurses\fR character and window attribute control routines
+.\" .br
+\fBcolor_set\fR,
+\fBwcolor_set\fR,
+.\" .br
+\fBstandend\fR,
+\fBwstandend\fR,
+\fBstandout\fR,
+\fBwstandout\fR \- \fBcurses\fR character and window attribute control routines
 .ad
 .hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
+.sp
+\fBint attr_get(attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
 .br
+\fBint wattr_get(WINDOW *\fP\fIwin\fP\fB, attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB,\fR \fBvoid *\fP\fIopts\fP\fB);\fR
+.br
+\fBint attr_set(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.br
+\fBint wattr_set(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.sp
+\fBint attr_off(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.br
+\fBint wattr_off(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.br
+\fBint attr_on(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.br
+\fBint wattr_on(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+.sp
 \fBint attroff(int \fP\fIattrs);\fR
 .br
 \fBint wattroff(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fR
@@ -73,12 +97,22 @@
 \fBint attrset(int \fP\fIattrs\fP\fB);\fR
 .br
 \fBint wattrset(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fR
+.sp
+\fBint chgat(int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB,\fR \fBconst void *\fP\fIopts\fP\fB);\fR
 .br
-\fBint color_set(short \fP\fIcolor_pair_number\fP\fB, void* \fP\fIopts\fP\fB);\fR
+\fBint wchgat(WINDOW *\fP\fIwin\fP\fB,\fP
+      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
 .br
-\fBint wcolor_set(WINDOW *\fP\fIwin\fP\fB, short \fP\fIcolor_pair_number\fP\fB,\fR
-      \fBvoid* \fP\fIopts);\fR
+\fBint mvchgat(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB,\fP
+      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
 .br
+\fBint mvwchgat(WINDOW *\fP\fIwin, int \fP\fIy, int \fP\fIx\fP\fB,\fP
+      \fBint \fP\fIn,\fR \fBattr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
+.sp
+\fBint color_set(short \fP\fIpair\fP\fB, void* \fP\fIopts\fP\fB);\fR
+.br
+\fBint wcolor_set(WINDOW *\fP\fIwin\fP\fB, short \fP\fIpair\fP\fB,\fR \fBvoid* \fP\fIopts);\fR
+.sp
 \fBint standend(void);\fR
 .br
 \fBint wstandend(WINDOW *\fP\fIwin\fP\fB);\fR
@@ -86,42 +120,10 @@
 \fBint standout(void);\fR
 .br
 \fBint wstandout(WINDOW *\fP\fIwin\fP\fB);\fR
-.br
-\fBint attr_get(attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint wattr_get(WINDOW *\fP\fIwin\fP\fB, attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB,\fR
-       \fBvoid *\fP\fIopts\fP\fB);\fR
-.br
-\fBint attr_off(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint wattr_off(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint attr_on(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint wattr_on(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint attr_set(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint wattr_set(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint chgat(int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB, short \fP\fIcolor\fP\fB,\fR
-      \fBconst void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint wchgat(WINDOW *\fP\fIwin\fP\fB, int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR
-      \fBshort \fP\fIcolor\fP\fB, const void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint mvchgat(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR
-      \fBshort \fP\fIcolor\fP\fB, const void *\fP\fIopts\fP\fB);\fR
-.br
-\fBint mvwchgat(WINDOW *\fP\fIwin, int \fP\fIy, int \fP\fIx, int \fP\fIn,\fR
-      \fBattr_t \fP\fIattr\fP\fB, short \fP\fIcolor\fP\fB, const void *\fP\fIopts\fP\fB);\fR
-.br
-\fBPAIR_NUMBER(\fR\fIattrs\fR\fB);\fP
-.br
 .SH DESCRIPTION
-These routines manipulate the current attributes of the named window.
-The
-current attributes of a window apply to all characters that are written into
+.PP
+These routines manipulate the current attributes of the named window,
+which then apply to all characters that are written into
 the window with \fBwaddch\fR, \fBwaddstr\fR and \fBwprintw\fR.
 Attributes are
 a property of the character, and move with the character through any scrolling
@@ -129,49 +131,48 @@ and insert/delete line/character operations.
 To the extent possible, they are
 displayed as appropriate modifications to the graphic rendition of characters
 put on the screen.
-.SS attrset
 .PP
-The routine \fBattrset\fR sets the current attributes of the given window to
-\fIattrs\fR.
-The routine \fBattroff\fR turns off the named attributes without
-turning any other attributes on or off.
-The routine \fBattron\fR turns on the
-named attributes without affecting any others.
-The routine \fBstandout\fR is
-the same as \fBattron(A_STANDOUT)\fR.
-The routine \fBstandend\fR is the same
-as \fBattrset(A_NORMAL)\fR or \fBattrset(0)\fR, that is, it turns off all
-attributes.
-.PP
-The \fBattrset\fR and related routines do not affect the attributes used
+These routines do not affect the attributes used
 when erasing portions of the window.
 See \fBcurs_bkgd\fR(3X) for functions which modify the attributes used for
 erasing and clearing.
-.SS attr_set
-The \fBattrset\fP routine is actually a legacy feature predating SVr4 curses
+.PP
+Routines which do not have a \fBWINDOW*\fP parameter apply to \fBstdscr\fP.
+.\" ---------------------------------------------------------------------------
+.SS Window attributes
+.PP
+The \fBattr_set\fP and \fBwattr_set\fP functions set the current attributes
+of the given window to \fIattrs\fP, with color specified by \fIpair\fP.
+X/Open specified an additional parameter \fIopts\fP which is unused in
+all implementations.
+.PP
+Use \fBattr_get\fP and \fBwattr_get\fP to retrieve attributes for
+the given window.
+.PP
+Use \fBattr_on\fP and \fBwattr_on\fP to turn on window attributes, i.e.,
+values OR'd together in \fIattr\fP,
+without affecting other attributes.
+Use \fBattr_off\fP and \fBwattr_off\fP to turn off window attributes,
+again values OR'd together in \fIattr\fP,
+without affecting other attributes.
+.\" ---------------------------------------------------------------------------
+.SS Legacy window attributes
+Most of the window attribute routines are extensions of older routines
+which assume that color pairs are OR'd into the attribute parameter.
+These older routines use the same name, omitting an underscore (\fB_\fP).
+
+The \fBattrset\fP routine is a legacy feature predating SVr4 curses
 but kept in X/Open Curses for the same reason that SVr4 curses kept it:
 compatibility.
-The routine \fBattr_set\fP provides for passing a color-pair parameter.
 .PP
-The remaining \fBattr_\fR* functions operate exactly like the corresponding
-\fBattr\fR* functions, except that they take arguments of type \fBattr_t\fR
-rather than \fBint\fR.
-.SS color_set
-.PP
-The routine \fBcolor_set\fR sets the current color of the given window to the
-foreground/background combination described by the color_pair_number.
-The
-parameter opts is reserved for future use, applications must supply a null
-pointer.
-.SS attr_get
-.PP
-The routine \fBwattr_get\fR returns the current attribute and color pair for
-the given window; \fBattr_get\fR returns the current attribute and color pair
-for \fBstdscr\fR.
+The remaining \fBattr\fR* functions operate exactly like the corresponding
+\fBattr_\fR* functions, except that they take arguments of type \fBint\fR
+rather than \fBattr_t\fR.
 .PP
 There is no corresponding \fBattrget\fP function as such in X/Open Curses,
 although ncurses provides \fBgetattrs\fP (see curs_legacy(3X)).
-.SS chgat
+.\" ---------------------------------------------------------------------------
+.SS Change character rendition
 .PP
 The routine \fBchgat\fR changes the attributes of a given number of characters
 starting at the current cursor location of \fBstdscr\fR.
@@ -180,14 +181,37 @@ the cursor and does not perform wrapping.
 A character count of \-1 or greater
 than the remaining window width means to change attributes all the way to the
 end of the current line.
-The \fBwchgat\fR function generalizes this to any
-window; the \fBmvwchgat\fR function does a cursor move before acting.
-In these
-functions, the color argument is a color-pair index (as in the first argument
-of \fIinit_pair\fR, see \fBcurs_color\fR(3X)).
+The \fBwchgat\fR function generalizes this to any window;
+the \fBmvwchgat\fR function does a cursor move before acting.
+.PP
+In these functions,
+the color \fIpair\fP argument is a color-pair index
+(as in the first argument of \fIinit_pair\fR, see \fBcurs_color\fR(3X)).
 The \fBopts\fR argument is not
 presently used, but is reserved for the future (leave it \fBNULL\fR).
-.SS Attributes
+.\" ---------------------------------------------------------------------------
+.SS Change window color
+The routine \fBcolor_set\fR sets the current color of the given window to the
+foreground/background combination described by the color \fIpair\fP parameter.
+The parameter \fIopts\fP is reserved for future use;
+applications must supply a null pointer.
+.\" ---------------------------------------------------------------------------
+.SS Standout
+.PP
+The routine \fBstandout\fR is
+the same as \fBattron(A_STANDOUT)\fR.
+The routine \fBstandend\fR is the same
+as \fBattrset(A_NORMAL)\fR or \fBattrset(0)\fR, that is, it turns off all
+attributes.
+.PP
+X/Open does not mark these "restricted", because
+.bP
+they have well established legacy use, and
+.bP
+there is no ambiguity about the way the attributes
+might be combined with a color pair.
+.\" ---------------------------------------------------------------------------
+.SH VIDEO ATTRIBUTES
 The following video attributes, defined in \fB<curses.h>\fR, can be passed to
 the routines \fBattron\fR, \fBattroff\fR, and \fBattrset\fR, or OR'd with the
 characters passed to \fBaddch\fR (see \fBcurs_addch\fR(3X)).
@@ -210,7 +234,6 @@ l l .
 \fBA_ALTCHARSET\fR	Alternate character set
 \fBA_ITALIC\fR	Italics (non-X/Open extension)
 \fBA_CHARTEXT\fR	Bit-mask to extract a character
-\fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR	Color-pair number \fIn\fR
 .TE
 .RE
 .PP
@@ -231,23 +254,15 @@ l l .
 .TE
 .RE
 .PP
-For consistency
-.PP
-The following macro is the reverse of \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR:
-.PP
-.br
-\fBPAIR_NUMBER(\fR\fIattrs\fR) Returns the pair number associated
-                   with the \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR attribute.
-.br
-.PP
 The return values of many of these routines are not meaningful (they are
 implemented as macro-expanded assignments and simply return their argument).
 The SVr4 manual page claims (falsely) that these routines always return \fB1\fR.
 .SH NOTES
-Note that \fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
-\fBattrset\fR, \fBwattrset\fR, \fBstandend\fR and \fBstandout\fR may be macros.
+These functions may be macros:
+\fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
+\fBattrset\fR, \fBwattrset\fR, \fBstandend\fR and \fBstandout\fR.
 .PP
-\fBCOLOR_PAIR\fP values can only be OR'd with attributes if the pair
+Color pair values can only be OR'd with attributes if the pair
 number is less than 256.
 The alternate functions such as \fBcolor_set\fP can pass a color pair
 value directly.
@@ -321,13 +336,12 @@ All routines return the integer \fBOK\fR on success, or \fBERR\fP on failure.
 .PP
 X/Open does not define any error conditions.
 .PP
-This implementation returns an error
-if the window pointer is null.
-The \fBwcolor_set\fP function returns an error if the color pair parameter
-is outside the range 0..COLOR_PAIRS\-1.
-This implementation also provides
-\fBgetattrs\fR
-for compatibility with older versions of curses.
+This implementation
+.bP
+returns an error if the window pointer is null.
+.bP
+returns an error if the color pair parameter
+for \fBwcolor_set\fP is outside the range 0..COLOR_PAIRS\-1.
 .PP
 Functions with a "mv" prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,

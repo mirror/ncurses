@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.98 2016/04/16 18:15:35 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.99 2016/07/24 00:07:16 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1276,8 +1276,13 @@ main(int argc, char **argv)
     if (!opt_c && !opt_w)
 	opt_c = opt_w = TRUE;
 
-    if (GET_TTY(STDERR_FILENO, &mode) < 0)
-	failed("standard error");
+    /*
+     * stderr is less likely to be redirected than stdout; try that first.
+     */
+    if (GET_TTY(STDERR_FILENO, &mode) < 0 &&
+	GET_TTY(STDOUT_FILENO, &mode) < 0) {
+	failed("terminal attributes");
+    }
     can_restore = TRUE;
     original = oldmode = mode;
 #ifdef TERMIOS
