@@ -27,10 +27,14 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.36 2016/04/02 23:41:08 tom Exp $
+.\" $Id: tput.1,v 1.42 2016/07/30 21:01:09 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .IP \(bu 4
 ..
@@ -38,6 +42,8 @@
 \fB@TPUT@\fR, \fBreset\fR \- initialize a terminal or query terminfo database
 .SH SYNOPSIS
 \fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fIcapname\fR [\fIparameters\fR]
+.br
+\fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fBclear\fR
 .br
 \fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fBinit\fR
 .br
@@ -197,7 +203,7 @@ terminal in the environmental variable \fBTERM\fR.
 .TP 5
 \fB@TPUT@ cup 0 0\fR
 Send the sequence to move the cursor to row \fB0\fR, column \fB0\fR
-(the upper left corner of the screen, usually known as the "home"
+(the upper left corner of the screen, usually known as the \*(lqhome\*(rq
 cursor position).
 .TP 5
 \fB@TPUT@ clear\fR
@@ -256,7 +262,8 @@ compiled terminal description database
 tab settings for some terminals, in a format
 appropriate to be output to the terminal (escape
 sequences that set margins and tabs); for more
-information, see the "Tabs and Initialization"
+information, see the
+.IR "Tabs and Initialization" ,
 section of \fBterminfo\fR(5)
 .SH EXIT CODES
 If the \fB\-S\fR option is used,
@@ -317,11 +324,54 @@ T}
 \fB>4\fR	error occurred in \-S
 =
 .TE
+.SH HISTORY
+The \fBtput\fP command was begun by Bill Joy in 1980.
+The initial version only cleared the screen.
+.PP
+Keith Bostic replaced this in 1989 with a new implementation
+based on the AT&T SystemV program \fBtput\fP.
+Like the AT&T program, Bostic's version
+accepted some parameters named for \fIterminfo capabilities\fP
+(\fBclear\fP, \fBinit\fP, \fBlongname\fP and \fBreset\fP).
+However (because he had only termcap available),
+it accepted \fItermcap names\fP for other capabilities.
+.PP
+At the same time, Bostic added a shell script named \*(lqclear\*(rq,
+which used \fBtput\fP to clear the screen.
+.PP
+Both of these appeared in 4.4BSD,
+becoming the \*(lqmodern\*(rq BSD implementation of \fBtput\fP.
 .SH PORTABILITY
 .PP
+This implementation of \fBtput\fP differs from AT&T \fBtput\fP in
+two important areas:
+.bP
+@TPUT@ writes to the standard output.
+That need not be a regular terminal.
+.IP
+The AT&T implementation's \fBinit\fP and \fBreset\fP commands
+use the \fBtset\fP source, which manipulates terminal modes.
+It successively tries standard output, standard error, standard input
+before falling back to \*(lq/dev/tty\*(rq and finally just assumes
+a 1200Bd terminal.
+When updating terminal modes, it ignores errors.
+.bP
+AT&T \fBtput\fP guesses the type of its \fIcapname\fP operands by seeing if
+all of the characters are numeric, or not.
+.IP
+Most implementations which provide support for \fIcapname\fR operands
+use the \fItparm\fP function to expand parameters in it.
+That function expects a mixture of numeric and string parameters,
+requiring \fB@TPUT@\fP to know which type to use.
+.IP
+This implementation uses a table to determine the parameter types for
+the standard \fIcapname\fR operands, and an internal library
+function to analyze nonstandard \fIcapname\fR operands.
+.PP
 The \fBlongname\fR and \fB\-S\fR options, and the parameter-substitution
-features used in the \fBcup\fR example, are not supported in BSD curses or in
-AT&T/USL curses before SVr4.
+features used in the \fBcup\fR example,
+were not supported in BSD curses before 4.3reno (1989) or in
+AT&T/USL curses before SVr4 (1988).
 .PP
 IEEE Std 1003.1/The Open Group  Base Specifications Issue 7 (POSIX.1-2008) 
 documents only the operands for \fBclear\fP, \fBinit\fP and \fBreset\fP.
@@ -331,13 +381,13 @@ In this implementation, \fBclear\fP is part of the \fIcapname\fR support.
 The others (\fBinit\fP and \fBlongname\fP) do not correspond to terminal
 capabilities.
 .bP
-Other implementations of \fB@TPUT@\fP on
+Other implementations of \fBtput\fP on
 SVr4-based systems such as Solaris, IRIX64 and HPUX
 as well as others such as AIX and Tru64
 provide support for \fIcapname\fR operands.
 .bP
 A few platforms such as FreeBSD recognize termcap names rather
-than terminfo capability names in their respective \fB@TPUT@\fP commands.
+than terminfo capability names in their respective \fBtput\fP commands.
 Since 2010, NetBSD's \fBtput\fP uses terminfo names.
 Before that, it (like FreeBSD) recognized termcap names.
 .PP
@@ -355,16 +405,6 @@ and the terminal capabilities database.
 While it is certainly possible to write a \fBtput\fP program without using curses,
 none of the systems which have a curses implementation provide
 a \fBtput\fP utility which does not provide the \fIcapname\fP feature.
-.PP
-Most implementations which provide support for \fIcapname\fR operands
-use the \fItparm\fP function to expand parameters in it.
-That function expects a mixture of numeric and string parameters,
-requiring \fB@TPUT@\fP to know which type to use.
-This implementation uses a table to determine that for
-the standard \fIcapname\fR operands, and an internal library
-function to analyze nonstandard \fIcapname\fR operands.
-Other implementations may simply guess that an operand containing only digits
-is intended to be a number.
 .SH SEE ALSO
 \fB@CLEAR@\fR(\*n),
 \fBstty\fR(1),

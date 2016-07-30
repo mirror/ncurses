@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.36 2016/04/02 23:41:08 tom Exp @
+  * @Id: tput.1,v 1.42 2016/07/30 21:01:09 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -53,6 +53,7 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <EM>capname</EM> [<EM>parameters</EM>]
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>clear</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>init</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>reset</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>longname</STRONG>
@@ -268,7 +269,7 @@
               tab settings for some terminals, in a format appro-
               priate   to  be  output  to  the  terminal  (escape
               sequences that set  margins  and  tabs);  for  more
-              information, see the "Tabs and Initialization" sec-
+              information,  see the <EM>Tabs</EM> <EM>and</EM> <EM>Initialization</EM>, sec-
               tion of <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 
@@ -324,10 +325,56 @@
        ---------------------------------------------------------------------
 
 
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+       The <STRONG>tput</STRONG> command was begun by Bill Joy in 1980.  The  ini-
+       tial version only cleared the screen.
+
+       Keith  Bostic replaced this in 1989 with a new implementa-
+       tion based on the AT&amp;T SystemV  program  <STRONG>tput</STRONG>.   Like  the
+       AT&amp;T  program,  Bostic's  version accepted some parameters
+       named for <EM>terminfo</EM> <EM>capabilities</EM> (<STRONG>clear</STRONG>, <STRONG>init</STRONG>, <STRONG>longname</STRONG> and
+       <STRONG>reset</STRONG>).   However (because he had only termcap available),
+       it accepted <EM>termcap</EM> <EM>names</EM> for other capabilities.
+
+       At the same  time,  Bostic  added  a  shell  script  named
+       "clear", which used <STRONG>tput</STRONG> to clear the screen.
+
+       Both  of  these  appeared in 4.4BSD, becoming the "modern"
+       BSD implementation of <STRONG>tput</STRONG>.
+
+
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The <STRONG>longname</STRONG> and <STRONG>-S</STRONG> options, and  the  parameter-substitu-
-       tion  features  used in the <STRONG>cup</STRONG> example, are not supported
-       in BSD curses or in AT&amp;T/USL curses before SVr4.
+       This implementation of <STRONG>tput</STRONG> differs from AT&amp;T <STRONG>tput</STRONG> in  two
+       important areas:
+
+       <STRONG>o</STRONG>   tput  writes to the standard output.  That need not be
+           a regular terminal.
+
+           The AT&amp;T implementation's <STRONG>init</STRONG> and <STRONG>reset</STRONG> commands  use
+           the <STRONG>tset</STRONG> source, which manipulates terminal modes.  It
+           successively tries standard  output,  standard  error,
+           standard  input  before falling back to "/dev/tty" and
+           finally just assumes a 1200Bd terminal.  When updating
+           terminal modes, it ignores errors.
+
+       <STRONG>o</STRONG>   AT&amp;T  <STRONG>tput</STRONG> guesses the type of its <EM>capname</EM> operands by
+           seeing if all of the characters are numeric, or not.
+
+           Most implementations which provide support for <EM>capname</EM>
+           operands  use  the <EM>tparm</EM> function to expand parameters
+           in it.  That function expects a mixture of numeric and
+           string  parameters,  requiring <STRONG>tput</STRONG> to know which type
+           to use.
+
+           This implementation uses  a  table  to  determine  the
+           parameter types for the standard <EM>capname</EM> operands, and
+           an internal library function  to  analyze  nonstandard
+           <EM>capname</EM> operands.
+
+       The  <STRONG>longname</STRONG>  and <STRONG>-S</STRONG> options, and the parameter-substitu-
+       tion features used in the <STRONG>cup</STRONG> example, were not  supported
+       in  BSD curses before 4.3reno (1989) or in AT&amp;T/USL curses
+       before SVr4 (1988).
 
        IEEE Std 1003.1/The Open Group  Base Specifications  Issue
        7  (POSIX.1-2008)  documents  only the operands for <STRONG>clear</STRONG>,
@@ -368,22 +415,12 @@
            curses implementation provide  a  <STRONG>tput</STRONG>  utility  which
            does not provide the <EM>capname</EM> feature.
 
-       Most implementations which provide support for <EM>capname</EM> op-
-       erands use the <EM>tparm</EM> function to expand parameters in  it.
-       That  function  expects  a  mixture  of numeric and string
-       parameters, requiring <STRONG>tput</STRONG> to  know  which  type  to  use.
-       This implementation uses a table to determine that for the
-       standard <EM>capname</EM> operands, and an internal  library  func-
-       tion  to  analyze  nonstandard  <EM>capname</EM>  operands.   Other
-       implementations may simply guess that an operand  contain-
-       ing only digits is intended to be a number.
-
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>,    <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>,   <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>,   <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>,
        <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160723).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160730).
 
 
 
@@ -404,6 +441,7 @@
 <li><a href="#h2-FILES">FILES</a></li>
 <li><a href="#h2-EXIT-CODES">EXIT CODES</a></li>
 <li><a href="#h2-DIAGNOSTICS">DIAGNOSTICS</a></li>
+<li><a href="#h2-HISTORY">HISTORY</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 </ul>

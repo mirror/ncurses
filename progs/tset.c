@@ -119,7 +119,7 @@ char *ttyname(int fd);
 #include <dump_entry.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tset.c,v 1.99 2016/07/24 00:07:16 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.100 2016/07/30 21:32:26 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -154,6 +154,7 @@ static void err(const char *,...) GCC_NORETURN;
 
 const char *_nc_progname = "tset";
 
+static int my_fd;
 static TTY mode, oldmode, original;
 
 static bool opt_c;		/* set control-chars */
@@ -187,7 +188,7 @@ static void
 exit_error(void)
 {
     if (can_restore)
-	SET_TTY(STDERR_FILENO, &original);
+	SET_TTY(my_fd, &original);
     (void) fprintf(stderr, "\n");
     fflush(stderr);
     ExitProgram(EXIT_FAILURE);
@@ -221,6 +222,17 @@ failed(const char *msg)
     perror(strncat(temp, msg, sizeof(temp) - strlen(temp) - 2));
     exit_error();
     /* NOTREACHED */
+}
+
+static bool
+get_mode(int fd)
+{
+    bool success = TRUE;
+    my_fd = fd;
+    if (GET_TTY(my_fd, &mode) < 0) {
+	success = FALSE;
+    }
+    return success;
 }
 
 static void
@@ -589,7 +601,7 @@ get_termcap_entry(char *userarg)
     if ((ttype = getenv("TERM")) != 0)
 	goto map;
 
-    if ((ttypath = ttyname(STDERR_FILENO)) != 0) {
+    if ((ttypath = ttyname(my_fd)) != 0) {
 	p = _nc_basename(ttypath);
 #if HAVE_GETTTYNAM
 	/*
@@ -759,9 +771,9 @@ static void
 reset_mode(void)
 {
 #ifdef TERMIOS
-    tcgetattr(STDERR_FILENO, &mode);
+    tcgetattr(my_fd, &mode);
 #else
-    stty(STDERR_FILENO, &mode);
+    stty(my_fd, &mode);
 #endif
 
 #ifdef TERMIOS
@@ -879,7 +891,7 @@ reset_mode(void)
 	);
 #endif
 
-    SET_TTY(STDERR_FILENO, &mode);
+    SET_TTY(my_fd, &mode);
 }
 
 /*
@@ -1018,7 +1030,7 @@ set_init(void)
 #ifdef TAB3
     if (oldmode.c_oflag & (TAB3 | ONLCR | OCRNL | ONLRET)) {
 	oldmode.c_oflag &= (TAB3 | ONLCR | OCRNL | ONLRET);
-	SET_TTY(STDERR_FILENO, &oldmode);
+	SET_TTY(my_fd, &oldmode);
     }
 #endif
     settle = set_tabs();
@@ -1208,6 +1220,7 @@ main(int argc, char **argv)
     const char *p;
     const char *ttype;
 
+    my_fd = STDERR_FILENO;
     obsolete(argv);
     noinit = noset = quiet = Sflag = sflag = showterm = 0;
     while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:p:qQSrsVw")) != -1) {
@@ -1279,8 +1292,10 @@ main(int argc, char **argv)
     /*
      * stderr is less likely to be redirected than stdout; try that first.
      */
-    if (GET_TTY(STDERR_FILENO, &mode) < 0 &&
-	GET_TTY(STDOUT_FILENO, &mode) < 0) {
+    if (!get_mode(STDERR_FILENO) &&
+	!get_mode(STDOUT_FILENO) &&
+	!get_mode(STDIN_FILENO) &&
+	!get_mode(open("/dev/tty", O_RDWR))) {
 	failed("terminal attributes");
     }
     can_restore = TRUE;
@@ -1306,13 +1321,13 @@ main(int argc, char **argv)
 	if (opt_w) {
 	    STRUCT_WINSIZE win;
 	    /* Set window size if not set already */
-	    (void) ioctl(STDERR_FILENO, IOCTL_GET_WINSIZE, &win);
+	    (void) ioctl(my_fd, IOCTL_GET_WINSIZE, &win);
 	    if (WINSIZE_ROWS(win) == 0 &&
 		WINSIZE_COLS(win) == 0 &&
 		tlines > 0 && tcolumns > 0) {
 		WINSIZE_ROWS(win) = (unsigned short) tlines;
 		WINSIZE_COLS(win) = (unsigned short) tcolumns;
-		(void) ioctl(STDERR_FILENO, IOCTL_SET_WINSIZE, &win);
+		(void) ioctl(my_fd, IOCTL_SET_WINSIZE, &win);
 	    }
 	}
 #endif
@@ -1325,7 +1340,7 @@ main(int argc, char **argv)
 
 	    /* Set the modes if they've changed. */
 	    if (memcmp(&mode, &oldmode, sizeof(mode))) {
-		SET_TTY(STDERR_FILENO, &mode);
+		SET_TTY(my_fd, &mode);
 	    }
 	}
     }

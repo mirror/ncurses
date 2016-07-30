@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.37 2016/05/21 23:36:51 tom Exp $
+.\" $Id: tset.1,v 1.42 2016/07/30 21:59:39 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,8 +43,25 @@
 \fB@RESET@\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
 .SH DESCRIPTION
 .SS tset - initialization
-\&\fBTset\fR initializes terminals.
-\fBTset\fR first determines the type of terminal that you are using.
+This program initializes terminals.
+.PP
+First, \fB@TSET@\fR retrieves the current terminal mode settings
+for your terminal.
+It does this by successively testing
+.bP
+the standard error,
+.bP
+standard output,
+.bP
+standard input and
+.bP
+ultimately \*(lq/dev/tty\*(rq
+.PP
+to obtain terminal settings.
+Having retrieved these settings, \fB@TSET@\fP remembers which
+file descriptor to use when updating settings.
+.PP
+Next, \fB@TSET@\fP determines the type of terminal that you are using.
 This determination is done as follows, using the first terminal type found.
 .PP
 1. The \fBterminal\fR argument specified on the command line.
@@ -85,7 +102,7 @@ doing the terminal initialization described above.  This is useful
 after a program dies leaving a terminal in an abnormal state.  Note,
 you may have to type
 .sp
-    \fB<LF>@RESET@<LF>\fR
+    \fI<LF>\fP\fB@RESET@\fP\fI<LF>\fP
 .sp
 (the line-feed character is normally control-J) to get the terminal
 to work, as carriage-return may no longer work in the abnormal state.
@@ -173,7 +190,7 @@ something generic like \fBnetwork\fR, \fBdialup\fR, or \fBunknown\fR.
 When \fB@TSET@\fR is used in a startup script it is often desirable to
 provide information about the type of terminal used on such ports.
 .PP
-The purpose of the \fB\-m\fR option is to map
+The \fB\-m\fR options maps
 from some set of conditions to a terminal type, that is, to
 tell \fB@TSET@\fR
 \*(``If I'm on this port at a particular speed,
@@ -224,7 +241,19 @@ entire \fB\-m\fR option argument be placed within single quote characters,
 and that \fBcsh\fR users insert a backslash character (\*(``\e\*('') before
 any exclamation marks (\*(``!\*('').
 .SH HISTORY
-The \fB@TSET@\fR command appeared in BSD 3.0.  The \fBncurses\fR implementation
+.PP
+A \fBreset\fP command appeared in 2BSD (1979), written by Kurt Shoens.
+.PP
+A separate \fBtset\fP command was provided in 2BSD by Eric Allman.
+While the oldest published source (from 1979) provides both programs,
+Allman's comments in the 2BSD source code indicate
+that he began work in October 1977,
+continuing development over the next few years.
+.PP
+In 1980, Eric Allman modified \fBtset\fP to provide a \*(lqreset\*(rq
+feature when the program was invoked as \fBreset\fP.
+.PP
+The \fBncurses\fR implementation
 was lightly adapted from the 4.4BSD sources for a terminfo environment by Eric
 S. Raymond <esr@snark.thyrsus.com>.
 .SH COMPATIBILITY
@@ -233,19 +262,27 @@ Neither IEEE Std 1003.1/The Open Group Base Specifications Issue 7
 (POSIX.1-2008) nor
 X/Open Curses Issue 7 documents \fB@TSET@\fP or \fB@RESET@\fP.
 .PP
-The \fB@TSET@\fR utility has been provided for backward-compatibility with BSD
+The AT&T \fBtput\fP utility (AIX, HPUX, Solaris)
+incorporated the terminal-mode manipulation from \fBtset\fP,
+presumably with the intention of making \fBtset\fP obsolete.
+However, each of those systems still provides \fBtset\fP.
+In fact, the commonly-used \fBreset\fP utility
+is always an alias for \fBtset\fP.
+.PP
+The \fB@TSET@\fR utility provides for backward-compatibility with BSD
 environments (under most modern UNIXes, \fB/etc/inittab\fR and \fIgetty\fR(1)
 can set \fBTERM\fR appropriately for each dial-up line; this obviates what was
 \fB@TSET@\fR's most important use).  This implementation behaves like 4.4BSD
-tset, with a few exceptions specified here.
+\fBtset\fP, with a few exceptions specified here.
 .PP
-The \fB\-S\fR option of BSD tset no longer works;
-it prints an error message to stderr and dies.
+A few options are different
+because the \fBTERMCAP\fR variable
+is no longer supported under terminfo-based \fBncurses\fR:
+.bP
+The \fB\-S\fR option of BSD \fBtset\fP no longer works;
+it prints an error message to the standard error and dies.
+.bP
 The \fB\-s\fR option only sets \fBTERM\fR, not \fBTERMCAP\fP.
-Both of these changes are because the \fBTERMCAP\fR variable
-is no longer supported under terminfo-based \fBncurses\fR,
-which makes \fB@TSET@ \-S\fR useless
-(we made it die noisily rather than silently induce lossage).
 .PP
 There was an undocumented 4.4BSD feature
 that invoking \fBtset\fP via a link named

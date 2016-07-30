@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.42 2016/07/24 00:02:15 tom Exp $
+.\" $Id: curs_color.3x,v 1.43 2016/07/30 15:22:11 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -165,7 +165,7 @@ initializes its internal table representing the
 red, green and blue components of the color palette.
 .IP
 The components depend on whether the terminal uses
-CGA (aka "ANSI") or
+CGA (aka \*(lqANSI\*(rq) or
 HLS (i.e., the \fBhls\fP (\fBhue_lightness_saturation\fP) capability is set).
 The table is initialized first for eight basic colors
 (black, red, green, yellow, blue, magenta, cyan, and white),
@@ -299,7 +299,7 @@ The routines \fBcan_change_color()\fR and \fBhas_colors()\fR return \fBTRUE\fR
 or \fBFALSE\fR.
 .PP
 All other routines return the integer \fBERR\fR upon failure and an \fBOK\fR
-(SVr4 specifies only "an integer value other than \fBERR\fR") upon successful
+(SVr4 specifies only \*(lqan integer value other than \fBERR\fR\*(rq) upon successful
 completion.
 .PP
 X/Open defines no error conditions.
@@ -345,7 +345,7 @@ The A_BLINK attribute should in theory cause the background to go bright.
 This often fails to work, and even some cards for which it mostly works
 (such as the
 Paradise and compatibles) do the wrong thing when you try to set a bright
-"yellow" background (you get a blinking yellow foreground instead).
+\*(lqyellow\*(rq background (you get a blinking yellow foreground instead).
 .bP
 Color RGB values are not settable.
 .SH PORTABILITY
