@@ -1051,6 +1051,8 @@
 ./progs/infocmp.c
 ./progs/modules
 ./progs/progs.priv.h
+./progs/reset_cmd.c
+./progs/reset_cmd.h
 ./progs/tabs.c
 ./progs/tic.c
 ./progs/toe.c

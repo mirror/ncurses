@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,6 +40,7 @@
  */
 
 #include <tparm_type.h>
+#include <reset_cmd.h>
 
 #if !PURE_TERMINFO
 #include <dump_entry.h>
@@ -47,11 +48,11 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.51 2015/05/23 23:42:55 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.56 2016/08/06 20:59:26 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
-#define PUTCHAR(c)	putchar(c)
-#define FLUSH		fflush(stdout)
+
+const char *_nc_progname = "tput";
 
 static char *prg_name;
 static bool is_init = FALSE;
@@ -78,10 +79,10 @@ usage(void)
 }
 
 static void
-check_aliases(const char *name)
+check_aliases(const char *name, bool program)
 {
-    is_init = same_program(name, PROG_INIT);
-    is_reset = same_program(name, PROG_RESET);
+    is_init = same_program(name, program ? PROG_INIT : "init");
+    is_reset = same_program(name, program ? PROG_RESET : "reset");
 }
 
 static int
@@ -104,120 +105,23 @@ exit_code(int token, int value)
 }
 
 static int
-tput(int argc, char *argv[])
+tput_cmd(int argc, char *argv[])
 {
     NCURSES_CONST char *name;
     char *s;
-    int i, j, c;
     int status;
-    FILE *f;
 #if !PURE_TERMINFO
     bool termcap = FALSE;
 #endif
 
     if ((name = argv[0]) == 0)
 	name = "";
-    check_aliases(name);
+    check_aliases(name, FALSE);
     if (is_reset || is_init) {
-	if (init_prog != 0) {
-	    IGNORE_RC(system(init_prog));
+	reset_start(stdout, is_reset, is_init);
+	if (send_init_strings((TTY *) 0)) {
+	    reset_flush();
 	}
-	FLUSH;
-
-	if (is_reset && reset_1string != 0) {
-	    PUTS(reset_1string);
-	} else if (init_1string != 0) {
-	    PUTS(init_1string);
-	}
-	FLUSH;
-
-	if (is_reset && reset_2string != 0) {
-	    PUTS(reset_2string);
-	} else if (init_2string != 0) {
-	    PUTS(init_2string);
-	}
-	FLUSH;
-
-#ifdef set_lr_margin
-	if (set_lr_margin != 0) {
-	    PUTS(TPARM_2(set_lr_margin, 0, columns - 1));
-	} else
-#endif
-#ifdef set_left_margin_parm
-	    if (set_left_margin_parm != 0
-		&& set_right_margin_parm != 0) {
-	    PUTS(TPARM_1(set_left_margin_parm, 0));
-	    PUTS(TPARM_1(set_right_margin_parm, columns - 1));
-	} else
-#endif
-	    if (clear_margins != 0
-		&& set_left_margin != 0
-		&& set_right_margin != 0) {
-	    PUTS(clear_margins);
-	    if (carriage_return != 0) {
-		PUTS(carriage_return);
-	    } else {
-		PUTCHAR('\r');
-	    }
-	    PUTS(set_left_margin);
-	    if (parm_right_cursor) {
-		PUTS(TPARM_1(parm_right_cursor, columns - 1));
-	    } else {
-		for (i = 0; i < columns - 1; i++) {
-		    PUTCHAR(' ');
-		}
-	    }
-	    PUTS(set_right_margin);
-	    if (carriage_return != 0) {
-		PUTS(carriage_return);
-	    } else {
-		PUTCHAR('\r');
-	    }
-	}
-	FLUSH;
-
-	if (init_tabs != 8) {
-	    if (clear_all_tabs != 0 && set_tab != 0) {
-		for (i = 0; i < columns - 1; i += 8) {
-		    if (parm_right_cursor) {
-			PUTS(TPARM_1(parm_right_cursor, 8));
-		    } else {
-			for (j = 0; j < 8; j++)
-			    PUTCHAR(' ');
-		    }
-		    PUTS(set_tab);
-		}
-		FLUSH;
-	    }
-	}
-
-	if (is_reset && reset_file != 0) {
-	    f = fopen(reset_file, "r");
-	    if (f == 0) {
-		quit(4 + errno, "Can't open reset_file: '%s'", reset_file);
-	    }
-	    while ((c = fgetc(f)) != EOF) {
-		PUTCHAR(c);
-	    }
-	    fclose(f);
-	} else if (init_file != 0) {
-	    f = fopen(init_file, "r");
-	    if (f == 0) {
-		quit(4 + errno, "Can't open init_file: '%s'", init_file);
-	    }
-	    while ((c = fgetc(f)) != EOF) {
-		PUTCHAR(c);
-	    }
-	    fclose(f);
-	}
-	FLUSH;
-
-	if (is_reset && reset_3string != 0) {
-	    PUTS(reset_3string);
-	} else if (init_3string != 0) {
-	    PUTS(init_3string);
-	}
-	FLUSH;
 	return 0;
     }
 
@@ -328,7 +232,7 @@ main(int argc, char **argv)
     char buf[BUFSIZ];
     int result = 0;
 
-    check_aliases(prg_name = _nc_rootname(argv[0]));
+    check_aliases(prg_name = _nc_rootname(argv[0]), TRUE);
 
     term = getenv("TERM");
 
@@ -373,7 +277,7 @@ main(int argc, char **argv)
     if (cmdline) {
 	if ((argc <= 0) && !is_reset && !is_init)
 	    usage();
-	ExitProgram(tput(argc, argv));
+	ExitProgram(tput_cmd(argc, argv));
     }
 
     while (fgets(buf, sizeof(buf), stdin) != 0) {
@@ -394,7 +298,7 @@ main(int argc, char **argv)
 	argvec[argnum] = 0;
 
 	if (argnum != 0
-	    && tput(argnum, argvec) != 0) {
+	    && tput_cmd(argnum, argvec) != 0) {
 	    if (result == 0)
 		result = 4;	/* will return value >4 */
 	    ++result;

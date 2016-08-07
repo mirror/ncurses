@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.791 2016/06/25 20:25:03 tom Exp $
+dnl $Id: aclocal.m4,v 1.792 2016/08/06 23:41:12 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2653,7 +2653,7 @@ case $cf_gnat_version in
 esac
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_GNU_SOURCE version: 6 updated: 2005/07/09 13:23:07
+dnl CF_GNU_SOURCE version: 7 updated: 2016/08/05 05:15:37
 dnl -------------
 dnl Check if we must define _GNU_SOURCE to get a reasonable value for
 dnl _XOPEN_SOURCE, upon which many POSIX definitions depend.  This is a defect
@@ -2680,7 +2680,20 @@ make an error
 	CPPFLAGS="$cf_save"
 	])
 ])
-test "$cf_cv_gnu_source" = yes && CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
+
+if test "$cf_cv_gnu_source" = yes
+then
+AC_CACHE_CHECK(if we should also define _DEFAULT_SOURCE,cf_cv_default_source,[
+CPPFLAGS="$CPPFLAGS -D_GNU_SOURCE"
+	AC_TRY_COMPILE([#include <sys/types.h>],[
+#ifdef _DEFAULT_SOURCE
+make an error
+#endif],
+		[cf_cv_default_source=no],
+		[cf_cv_default_source=yes])
+	])
+test "$cf_cv_default_source" = yes && CPPFLAGS="$CPPFLAGS -D_DEFAULT_SOURCE"
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GPP_LIBRARY version: 12 updated: 2015/04/17 21:13:04

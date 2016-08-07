@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.96 2016/05/21 23:30:50 tom Exp $
+# $Id: Makefile.in,v 1.97 2016/08/06 13:25:38 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -261,6 +261,7 @@ tabs$x: $(DEPS_TABS) $(DEPS_TABS)
 
 DEPS_TPUT = \
 	$(MODEL)/tput$o \
+	$(MODEL)/reset_cmd$o \
 	$(MODEL)/tparm_type$o \
 	$(MODEL)/transform$o
 
@@ -276,6 +277,7 @@ infocmp$x: $(DEPS_INFOCMP) $(DEPS_CURSES)
 
 DEPS_TSET = \
 	$(MODEL)/tset$o \
+	$(MODEL)/reset_cmd$o \
 	$(MODEL)/transform$o
 
 tset$x: $(DEPS_TSET) $(DEPS_CURSES) transform.h

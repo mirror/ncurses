@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.42 2016/07/30 21:59:39 tom Exp $
+.\" $Id: tset.1,v 1.43 2016/08/06 23:16:39 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -263,7 +263,8 @@ Neither IEEE Std 1003.1/The Open Group Base Specifications Issue 7
 X/Open Curses Issue 7 documents \fB@TSET@\fP or \fB@RESET@\fP.
 .PP
 The AT&T \fBtput\fP utility (AIX, HPUX, Solaris)
-incorporated the terminal-mode manipulation from \fBtset\fP,
+incorporated the terminal-mode manipulation as well as termcap-based features
+such as resetting tabstops from \fBtset\fP in BSD (4.1c),
 presumably with the intention of making \fBtset\fP obsolete.
 However, each of those systems still provides \fBtset\fP.
 In fact, the commonly-used \fBreset\fP utility

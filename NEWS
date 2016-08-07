@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2636 2016/07/30 21:38:22 tom Exp $
+-- $Id: NEWS,v 1.2639 2016/08/06 23:45:47 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160806
+	+ improve CF_GNU_SOURCE configure macro to optionally define
+	  _DEFAULT_SOURCE work around a nuisance in recent glibc releases.
+	+ move the terminfo-specific parts of tput's "reset" function into
+	  the shared reset_cmd.c, making the two forms of reset use the same
+	  strings.
+	+ split-out the terminal initialization functions from tset as
+	  progs/reset_cmd.c, as part of changes to merge the reset-feature
+	  with tput.
 
 20160730
 	+ change tset's initialization to allow it to get settings from the
