@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,13 +28,16 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.71 2015/08/05 23:15:41 tom Exp $
+#  $Id: Makefile.in,v 1.72 2016/08/13 18:04:27 tom Exp $
 #
 .SUFFIXES:
 
 SHELL		= @SHELL@
 VPATH		= @srcdir@
 THIS		= Makefile
+
+ADA_MFLAGS 	= @cf_cv_makeflags@
+@SET_MAKE@
 
 MODEL		= ../../@DFT_OBJ_SUBDIR@
 
@@ -179,7 +182,10 @@ $(LIBDIR) \
 $(BUILD_DIR_LIB) :
 	mkdir -p $@
 
-sources :
+$(GENERATED_SOURCES) :
+	cd ../gen; $(MAKE) $(ADA_MFLAGS)
+
+sources : $(GENERATED_SOURCES)
 	@echo made $@
 
 libs \

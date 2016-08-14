@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2639 2016/08/06 23:45:47 tom Exp $
+-- $Id: NEWS,v 1.2642 2016/08/13 18:03:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160813
+	+ add a dependency upon generated-sources in Ada95/src/Makefile.in to
+	  handle a case of "configure && make install".
+	+ trim trailing blanks from include/Caps*, to work around a problem
+	  in sed (Debian #818067).
 
 20160806
 	+ improve CF_GNU_SOURCE configure macro to optionally define
