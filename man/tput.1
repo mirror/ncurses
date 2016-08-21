@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.42 2016/07/30 21:01:09 tom Exp $
+.\" $Id: tput.1,v 1.44 2016/08/20 23:40:31 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -328,13 +328,23 @@ T}
 The \fBtput\fP command was begun by Bill Joy in 1980.
 The initial version only cleared the screen.
 .PP
-Keith Bostic replaced this in 1989 with a new implementation
-based on the AT&T SystemV program \fBtput\fP.
+AT&T System V provided a different \fBtput\fP command,
+whose \fBinit\fP and \fBreset\fP  subcommands
+(more than half the program) were incorporated from
+the \fBreset\fP feature of BSD \fBtset\fP written by Eric Allman.
+Later the corresponding source code for \fIreset\fP
+was removed from the BSD \fBtset\fP
+(in June 1993, released in 4.4BSD-Lite a year later).
+.PP
+Keith Bostic replaced the BSD \fBtput\fP command in 1989 with a new implementation
+based on the AT&T System V program \fBtput\fP.
 Like the AT&T program, Bostic's version
 accepted some parameters named for \fIterminfo capabilities\fP
 (\fBclear\fP, \fBinit\fP, \fBlongname\fP and \fBreset\fP).
 However (because he had only termcap available),
 it accepted \fItermcap names\fP for other capabilities.
+Also, Bostic's BSD \fBtput\fP did not modify the terminal I/O modes
+as the earlier BSD \fBtset\fP had done.
 .PP
 At the same time, Bostic added a shell script named \*(lqclear\*(rq,
 which used \fBtput\fP to clear the screen.
@@ -346,15 +356,23 @@ becoming the \*(lqmodern\*(rq BSD implementation of \fBtput\fP.
 This implementation of \fBtput\fP differs from AT&T \fBtput\fP in
 two important areas:
 .bP
-@TPUT@ writes to the standard output.
+@TPUT@ \fIcapname\fP writes to the standard output.
 That need not be a regular terminal.
+However, the subcommands which manipulate terminal modes
+may not use the standard output.
 .IP
 The AT&T implementation's \fBinit\fP and \fBreset\fP commands
-use the \fBtset\fP source, which manipulates terminal modes.
+use the BSD (4.1c) \fBtset\fP source, which manipulates terminal modes.
 It successively tries standard output, standard error, standard input
 before falling back to \*(lq/dev/tty\*(rq and finally just assumes
 a 1200Bd terminal.
 When updating terminal modes, it ignores errors.
+.IP
+Until changes made after ncurses 6.0, @TPUT@ did not modify terminal modes.
+@TPUT@ now uses a similar scheme, using functions shared with @TSET@
+(and ultimately based on the 4.4BSD \fBtset\fP).
+If it is not able to open a terminal, e.g., when running in \fBcron\fP,
+@TPUT@ will return an error.
 .bP
 AT&T \fBtput\fP guesses the type of its \fIcapname\fP operands by seeing if
 all of the characters are numeric, or not.

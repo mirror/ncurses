@@ -48,7 +48,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.56 2016/08/06 20:59:26 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.57 2016/08/20 21:46:31 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -118,10 +118,24 @@ tput_cmd(int argc, char *argv[])
 	name = "";
     check_aliases(name, FALSE);
     if (is_reset || is_init) {
+	TTY mode, oldmode;
+
+	int terasechar = -1;	/* new erase character */
+	int intrchar = -1;	/* new interrupt character */
+	int tkillchar = -1;	/* new kill character */
+
+	(void) save_tty_settings(&mode);
+
 	reset_start(stdout, is_reset, is_init);
-	if (send_init_strings((TTY *) 0)) {
+	reset_tty_settings(&mode);
+
+	set_control_chars(&mode, terasechar, intrchar, tkillchar);
+	set_conversions(&mode);
+	if (send_init_strings(&oldmode)) {
 	    reset_flush();
 	}
+
+	update_tty_settings(&oldmode, &mode);
 	return 0;
     }
 

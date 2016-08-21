@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2642 2016/08/13 18:03:28 tom Exp $
+-- $Id: NEWS,v 1.2647 2016/08/20 23:43:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160820
+	+ update tput manual page to reflect changes to manipulate terminal
+	  modes by sharing functions with tset.
+	+ add the terminal-mode parts of "reset" (aka tset) to the "tput reset"
+	  command, making the two almost the same except for window-size.
+	+ adapt logic used in dialog "--keep-tite" option for test/filter.c as
+	  "-a" option.  When set, test/filter attempts to suppress the
+	  alternate screen.
+	+ correct a typo in interix entry -TD
 
 20160813
 	+ add a dependency upon generated-sources in Ada95/src/Makefile.in to

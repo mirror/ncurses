@@ -96,7 +96,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.107 2016/08/06 20:54:22 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.108 2016/08/20 23:53:44 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -491,6 +491,8 @@ get_termcap_entry(int fd, char *userarg)
     FILE *fp;
 #endif
     char *ttypath;
+
+    (void) fd;
 
     if (userarg) {
 	ttype = userarg;

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.565 $
-#	$Date: 2016/06/11 18:59:38 $
+#	$Revision: 1.566 $
+#	$Date: 2016/08/17 08:17:26 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -7252,14 +7252,14 @@ interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with colo
 	kf46=\EFk, kf47=\EFm, kf48=\EFn, kf49=\EFo, kf5=\EF5,
 	kf50=\EFp, kf51=\EFq, kf52=\EFr, kf53=\EFs, kf54=\EFt,
 	kf55=\EFu, kf56=\EFv, kf57=\EFw, kf58=\EFx, kf59=\EFy,
-	kf6=\EF6, kf60=\EFz, kf61=\EF+, kf62=\EF-,
-	kf63=\EF\014 kf64=\EF$, kf7=\EF7, kf8=\EF8, kf9=\EF9,
-	kich1=\E[L, kll=\E[U, knp=\E[T, kpp=\E[S, ll=\E[U, nel=^M^J,
-	op=\E[m, rc=\E[u, rev=\E[7m, ri=\E[T, rin=\E[%p1%dT,
-	rmcup=\E[2b\E[u\r\E[K, rmso=\E[m, rmul=\E[m, rs1=\Ec,
-	sc=\E[s, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
-	setb=\E[%p1%{40}%+%dm, setf=\E[%p1%{30}%+%dm,
-	sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m, smul=\E[4m,
+	kf6=\EF6, kf60=\EFz, kf61=\EF+, kf62=\EF-, kf63=\EF^L,
+	kf7=\EF7, kf8=\EF8, kf9=\EF9, kich1=\E[L, kll=\E[U, knp=\E[T,
+	kpp=\E[S, ll=\E[U, nel=^M^J, op=\E[m, rc=\E[u, rev=\E[7m,
+	ri=\E[T, rin=\E[%p1%dT, rmcup=\E[2b\E[u\r\E[K, rmso=\E[m,
+	rmul=\E[m, rs1=\Ec, sc=\E[s, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm, setb=\E[%p1%{40}%+%dm,
+	setf=\E[%p1%{30}%+%dm, sgr0=\E[0m, smcup=\E[s\E[1b,
+	smso=\E[7m, smul=\E[4m, kf64=\EF$,
 
 opennt-35|ntconsole-35|OpenNT-term35 compatible with color,
 	lines#35, use=opennt,
@@ -23850,5 +23850,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ use ANSI reply for u8 in xterm-new, to reflect vt220-style responses
 #	  that could be returned -TD
 #	+ added a few capabilities fixed in recent vte -TD
+#
+# 20160817
+#	+ correct a typo in interix -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

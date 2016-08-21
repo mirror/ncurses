@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.63 2014/08/09 22:27:12 tom Exp $
+ * $Id: bs.c,v 1.64 2016/08/21 00:03:32 tom Exp $
  */
 
 #include <test.priv.h>
@@ -214,7 +214,7 @@ announceopts(void)
 static void
 intro(void)
 {
-    char *tmpname;
+    const char *tmpname;
 
     srand((unsigned) (time(0L) + getpid()));	/* Kick the random number generator */
 

@@ -51,7 +51,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.5 2016/08/06 21:04:54 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.6 2016/08/20 23:53:44 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -491,6 +491,7 @@ send_init_strings(TTY * old_settings)
     int i;
     bool need_flush = FALSE;
 
+    (void) old_settings;
 #ifdef TAB3
     if (old_settings != 0 &&
 	old_settings->c_oflag & (TAB3 | ONLCR | OCRNL | ONLRET)) {

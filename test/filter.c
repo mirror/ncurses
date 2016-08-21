@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey 1998
  *
- * $Id: filter.c,v 1.24 2016/04/16 22:11:03 tom Exp $
+ * $Id: filter.c,v 1.26 2016/08/20 20:38:56 tom Exp $
  *
  * An example of the 'filter()' function in ncurses, this program prompts
  * for commands and executes them (like a command shell).  It illustrates
@@ -258,6 +258,44 @@ new_command(char *buffer, int length, int underline, bool clocked, bool polled)
     return code;
 }
 
+#ifdef NCURSES_VERSION
+/*
+ * Cancel xterm's alternate-screen mode (from dialog -TD)
+ */
+#define isprivate(s) ((s) != 0 && strstr(s, "\033[?") != 0)
+static void
+cancel_altscreen(void)
+{
+    if (isatty(fileno(stdout))
+	&& key_mouse != 0	/* xterm and kindred */
+	&& isprivate(enter_ca_mode)
+	&& isprivate(exit_ca_mode)) {
+	/*
+	 * initscr() or newterm() already wrote enter_ca_mode as a side effect
+	 * of initializing the screen.  It would be nice to not even do that,
+	 * but we do not really have access to the correct copy of the
+	 * terminfo description until those functions have been invoked.
+	 */
+	(void) refresh();
+	(void) putp(exit_ca_mode);
+	(void) fflush(stdout);
+	/*
+	 * Prevent ncurses from switching "back" to the normal screen when
+	 * exiting from this program.  That would move the cursor to the
+	 * original location saved in xterm.  Normally curses sets the cursor
+	 * position to the first line after the display, but the alternate
+	 * screen switching is done after that point.
+	 *
+	 * Cancelling the strings altogether also works around the buggy
+	 * implementation of alternate-screen in rxvt, etc., which clear more
+	 * of the display than they should.
+	 */
+	enter_ca_mode = 0;
+	exit_ca_mode = 0;
+    }
+}
+#endif
+
 static void
 usage(void)
 {
@@ -266,6 +304,9 @@ usage(void)
 	"Usage: filter [options]"
 	,""
 	,"Options:"
+#ifdef NCURSES_VERSION
+	,"  -a   suppress xterm alternate-screen by amending smcup/rmcup"
+#endif
 	,"  -c   show current time on prompt line with \"Command\""
 	,"  -i   use initscr() rather than newterm()"
 	,"  -p   poll for individual characters rather than using getnstr"
@@ -282,14 +323,22 @@ main(int argc, char *argv[])
     int ch;
     char buffer[80];
     int underline;
+#ifdef NCURSES_VERSION
+    bool a_option = FALSE;
+#endif
     bool c_option = FALSE;
     bool i_option = FALSE;
     bool p_option = FALSE;
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "cip")) != -1) {
+    while ((ch = getopt(argc, argv, "acip")) != -1) {
 	switch (ch) {
+#ifdef NCURSES_VERSION
+	case 'a':
+	    a_option = TRUE;
+	    break;
+#endif
 	case 'c':
 	    c_option = TRUE;
 	    break;
@@ -312,6 +361,11 @@ main(int argc, char *argv[])
     } else {
 	(void) newterm((char *) 0, stdout, stdin);
     }
+#ifdef NCURSES_VERSION
+    if (a_option) {
+	cancel_altscreen();
+    }
+#endif
     cbreak();
     keypad(stdscr, TRUE);
 
@@ -342,7 +396,7 @@ main(int argc, char *argv[])
 	erase();
 	refresh();
     }
-    printw("done");
+    clear();
     refresh();
     endwin();
     ExitProgram(EXIT_SUCCESS);
