@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.438 2016/06/11 21:05:48 tom Exp $
+$Id: ncurses.c,v 1.441 2016/08/27 23:43:06 tom Exp $
 
 ***************************************************************************/
 
@@ -6835,6 +6835,88 @@ overlap_test(void)
     endwin();
 }
 
+static void
+show_setting_name(const char *name)
+{
+    printw("%-25s ", name);
+}
+
+static void
+show_string_setting(const char *name, const char *value)
+{
+    show_setting_name(name);
+    if (value) {
+	printw("\"%s\"", value);
+    } else {
+	attron(A_REVERSE);
+	addstr("<NULL>");
+	attroff(A_REVERSE);
+    }
+    addch('\n');
+}
+
+static void
+show_number_setting(const char *name, int value)
+{
+    show_setting_name(name);
+    if (value >= 0) {
+	printw("%d", value);
+    } else {
+	attron(A_REVERSE);
+	printw("%d", value);
+	attroff(A_REVERSE);
+    }
+    addch('\n');
+}
+
+static void
+show_boolean_setting(const char *name, int value)
+{
+    show_setting_name(name);
+    if (value >= 0) {
+	printw("%s", value ? "TRUE" : "FALSE");
+    } else {
+	attron(A_REVERSE);
+	printw("%d", value);
+	attroff(A_REVERSE);
+    }
+    addch('\n');
+}
+
+static void
+show_settings(void)
+{
+#if USE_WIDEC_SUPPORT
+    wchar_t ch;
+#endif
+
+    move(0, 0);
+    show_string_setting("termname", termname());
+    show_string_setting("longname", longname());
+    show_number_setting("baudrate", baudrate());
+    if (erasechar() > 0) {
+	show_string_setting("unctrl(erasechar)", unctrl(erasechar()));
+	show_string_setting("keyname(erasechar)", keyname(erasechar()));
+    }
+    if (killchar() > 0) {
+	show_string_setting("unctrl(killchar)", unctrl(killchar()));
+	show_string_setting("keyname(killchar)", keyname(killchar()));
+    }
+#if USE_WIDEC_SUPPORT
+    if (erasewchar(&ch) == OK) {
+	show_string_setting("key_name(erasewchar)", key_name(ch));
+    }
+    if (killwchar(&ch) == OK) {
+	show_string_setting("key_name(killwchar)", key_name(ch));
+    }
+#endif
+    show_boolean_setting("has_ic", has_ic());
+    show_boolean_setting("has_il", has_il());
+    Pause();
+    erase();
+    endwin();
+}
+
 /****************************************************************************
  *
  * Main sequence
@@ -6966,6 +7048,10 @@ do_single_test(const char c)
 	trace_set();
 	break;
 #endif
+
+    case 'v':
+	show_settings();
+	break;
 
     case '?':
 	break;
@@ -7114,6 +7200,7 @@ main_menu(bool top)
 #if USE_LIBMENU && defined(TRACE)
 	(void) puts("t = set trace level");
 #endif
+	(void) puts("v = show terminal name and settings");
 	(void) puts("? = repeat this command summary");
 
 	(void) fputs("> ", stdout);

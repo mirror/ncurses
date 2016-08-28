@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2647 2016/08/20 23:43:08 tom Exp $
+-- $Id: NEWS,v 1.2653 2016/08/27 23:27:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160827
+	+ add "v" menu entry to test/ncurses.c to show baudrate and other
+	  values.
+	+ add "newer" baudrate symbols from Linux and FreeBSD to progs/tset.c,
+	  lib_baudrate.c
+	+ modify CF_XOPEN_SOURCE macro:
+	  + add "uclinux" to case for "linux" (patch by Yann E. Morin)
+	  + modify _GNU_SOURCE for cygwin headers, tested with cygwin 2.3, 2.5
+	    (patch by Corinna Vinschen, from changes to tin).
+	+ improve CF_CC_ENV_FLAGS macro to allow for compiler wrappers such
+	  as "ccache" (report by Enrico Scholz).
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20160820
 	+ update tput manual page to reflect changes to manipulate terminal

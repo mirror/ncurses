@@ -96,7 +96,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.108 2016/08/20 23:53:44 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.110 2016/08/27 18:06:47 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -273,14 +273,56 @@ static const SPEEDS speeds[] =
 #ifdef B57600
     DATA("57600", B57600),
 #endif
+#ifdef B76800
+    DATA("76800", B57600),
+#endif
 #ifdef B115200
     DATA("115200", B115200),
+#endif
+#ifdef B153600
+    DATA("153600", B153600),
 #endif
 #ifdef B230400
     DATA("230400", B230400),
 #endif
+#ifdef B307200
+    DATA("307200", B307200),
+#endif
 #ifdef B460800
     DATA("460800", B460800),
+#endif
+#ifdef B500000
+    DATA("500000", B500000),
+#endif
+#ifdef B576000
+    DATA("576000", B576000),
+#endif
+#ifdef B921600
+    DATA("921600", B921600),
+#endif
+#ifdef B1000000
+    DATA("1000000", B1000000),
+#endif
+#ifdef B1152000
+    DATA("1152000", B1152000),
+#endif
+#ifdef B1500000
+    DATA("1500000", B1500000),
+#endif
+#ifdef B2000000
+    DATA("2000000", B2000000),
+#endif
+#ifdef B2500000
+    DATA("2500000", B2500000),
+#endif
+#ifdef B3000000
+    DATA("3000000", B3000000),
+#endif
+#ifdef B3500000
+    DATA("3500000", B3500000),
+#endif
+#ifdef B4000000
+    DATA("4000000", B4000000),
 #endif
 };
 #undef DATA
@@ -296,6 +338,10 @@ tbaudrate(char *rate)
 	++rate;
 
     for (n = 0; n < SIZEOF(speeds); ++n) {
+	if (n > 0 && (speeds[n].speed <= speeds[n - 1].speed)) {
+	    /* if the speeds are not increasing, likely a numeric overflow */
+	    break;
+	}
 	if (!CaselessCmp(rate, speeds[n].string)) {
 	    sp = speeds + n;
 	    break;

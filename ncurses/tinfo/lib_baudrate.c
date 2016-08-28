@@ -79,7 +79,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.38 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.41 2016/08/28 00:35:00 tom Exp $")
 
 /*
  *	int
@@ -90,8 +90,8 @@ MODULE_ID("$Id: lib_baudrate.c,v 1.38 2016/05/28 23:22:52 tom Exp $")
  */
 
 struct speed {
-    NCURSES_OSPEED s;		/* values for 'ospeed' */
-    int sp;			/* the actual speed */
+    int given_speed;		/* values for 'ospeed' */
+    int actual_speed;		/* the actual speed */
 };
 
 #define DATA(number) { B##number, number }
@@ -117,6 +117,9 @@ static struct speed const speeds[] =
 #elif defined(EXTA)
     {EXTA, 19200},
 #endif
+#ifdef B28800
+    DATA(28800),
+#endif
 #ifdef B38400
     DATA(38400),
 #elif defined(EXTB)
@@ -127,17 +130,56 @@ static struct speed const speeds[] =
 #endif
     /* ifdef to prevent overflow when OLD_TTY is not available */
 #if !(NCURSES_OSPEED_COMPAT && defined(__FreeBSD__) && (__FreeBSD_version > 700000))
+#ifdef B76800
+    DATA(76800),
+#endif
 #ifdef B115200
     DATA(115200),
+#endif
+#ifdef B153600
+    DATA(153600),
 #endif
 #ifdef B230400
     DATA(230400),
 #endif
+#ifdef B307200
+    DATA(307200),
+#endif
 #ifdef B460800
     DATA(460800),
 #endif
+#ifdef B500000
+    DATA(500000),
+#endif
+#ifdef B576000
+    DATA(576000),
+#endif
 #ifdef B921600
     DATA(921600),
+#endif
+#ifdef B1000000
+    DATA(1000000),
+#endif
+#ifdef B1152000
+    DATA(1152000),
+#endif
+#ifdef B1500000
+    DATA(1500000),
+#endif
+#ifdef B2000000
+    DATA(2000000),
+#endif
+#ifdef B2500000
+    DATA(2500000),
+#endif
+#ifdef B3000000
+    DATA(3000000),
+#endif
+#ifdef B3500000
+    DATA(3500000),
+#endif
+#ifdef B4000000
+    DATA(4000000),
 #endif
 #endif
 };
@@ -152,6 +194,10 @@ _nc_baudrate(int OSpeed)
 
     int result = ERR;
 
+    if (OSpeed < 0)
+	OSpeed = (NCURSES_OSPEED) OSpeed;
+    if (OSpeed < 0)
+	OSpeed = (unsigned short) OSpeed;
 #if !USE_REENTRANT
     if (OSpeed == last_OSpeed) {
 	result = last_baudrate;
@@ -162,8 +208,11 @@ _nc_baudrate(int OSpeed)
 	    unsigned i;
 
 	    for (i = 0; i < SIZEOF(speeds); i++) {
-		if ((int) speeds[i].s == OSpeed) {
-		    result = speeds[i].sp;
+		if (speeds[i].given_speed > OSpeed) {
+		    break;
+		}
+		if (speeds[i].given_speed == OSpeed) {
+		    result = speeds[i].actual_speed;
 		    break;
 		}
 	    }
@@ -187,8 +236,8 @@ _nc_ospeed(int BaudRate)
 	unsigned i;
 
 	for (i = 0; i < SIZEOF(speeds); i++) {
-	    if (speeds[i].sp == BaudRate) {
-		result = speeds[i].s;
+	    if (speeds[i].actual_speed == BaudRate) {
+		result = speeds[i].given_speed;
 		break;
 	    }
 	}
