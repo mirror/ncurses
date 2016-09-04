@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.66 2013/08/24 17:28:24 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.67 2016/09/04 00:15:54 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -371,7 +371,7 @@ _nc_sigprocmask(int how, const sigset_t * newmask, sigset_t * oldmask)
     if ((pthread_sigmask))
 	return pthread_sigmask(how, newmask, oldmask);
     else
-	return sigprocmask(how, newmask, oldmask);
+	return (sigprocmask)(how, newmask, oldmask);
 }
 #endif
 #endif /* USE_PTHREADS */

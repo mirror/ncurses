@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2653 2016/08/27 23:27:45 tom Exp $
+-- $Id: NEWS,v 1.2657 2016/09/04 00:21:14 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20160903
+	+ correct 20100515 change for weak signals versus sigprocmask (report
+	  by Rich Coe).
+	+ modify misc/Makefile.in to work around OpenBSD "make" which unlike
+	  all other versions of "make" does not recognize continuation lines
+	  of comments.
+	+ amend the last change to CF_C_ENV_FLAGS to move only the
+	  preprocessor, optimization and warning flags to CPPFLAGS and CFLAGS,
+	  leaving the residue in CC.  That happens to work for gcc's various
+	  "model" options, but may require tuning for other compilers (report
+	  by Sven Joachim).
 
 20160827
 	+ add "v" menu entry to test/ncurses.c to show baudrate and other

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.115 2016/08/27 16:25:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.116 2016/09/04 00:11:44 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -514,7 +514,7 @@ AC_SUBST(BUILD_EXEEXT)
 AC_SUBST(BUILD_OBJEXT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CC_ENV_FLAGS version: 5 updated: 2016/08/27 11:24:46
+dnl CF_CC_ENV_FLAGS version: 6 updated: 2016/08/29 20:57:00
 dnl ---------------
 dnl Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
 dnl into CC.  This will not help with broken scripts that wrap the compiler
@@ -539,7 +539,17 @@ case "$CC" in
 	# humor him...
 	cf_flags=`echo "$CC" | sed -e 's/^.*[[ 	]]\(-[[^ 	]]\)/\1/'`
 	CC=`echo "$CC " | sed -e 's/[[ 	]]-[[^ 	]].*$//' -e 's/[[ 	]]*$//'`
-	CF_ADD_CFLAGS($cf_flags)
+	for cf_arg in $cf_flags
+	do
+		case "x$cf_arg" in
+		(x-[[IUDfgOW]]*)
+			CF_ADD_CFLAGS($cf_flags)
+			;;
+		(*)
+			CC="$CC $cf_arg"
+			;;
+		esac
+	done
 	CF_VERBOSE(resulting CC: '$CC')
 	CF_VERBOSE(resulting CFLAGS: '$CFLAGS')
 	CF_VERBOSE(resulting CPPFLAGS: '$CPPFLAGS')
