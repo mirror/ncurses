@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.169 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.170 2016/09/10 18:36:08 tom Exp $")
 
 #include <tic.h>
 
@@ -225,7 +225,7 @@ write_event(SCREEN *sp, int down, int button, int x, int y)
     char buf[6];
     unsigned long ignore;
 
-    strcpy(buf, "\033[M");	/* should be the same as key_mouse */
+    _nc_STRCPY(buf, "\033[M", sizeof(buf));	/* should be the same as key_mouse */
     buf[3] = ' ' + (button - 1) + (down ? 0 : 0x40);
     buf[4] = ' ' + x - LEFT_COL + 1;
     buf[5] = ' ' + y - TOP_ROW + 1;

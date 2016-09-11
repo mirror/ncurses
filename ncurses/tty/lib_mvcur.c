@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.138 2016/06/25 20:49:00 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.139 2016/09/10 18:41:32 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -1181,7 +1181,7 @@ roll(int n)
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    strcpy(tname, getenv("TERM"));
+    _nc_STRCPY(tname, getenv("TERM"), sizeof(tname));
     load_term();
     _nc_setupscreen(lines, columns, stdout, FALSE, 0);
     baudrate();
@@ -1245,7 +1245,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 							     before.tv_sec)
 			   * 1000000));
 	} else if (buf[0] == 'r') {
-	    (void) strcpy(tname, termname());
+	    _nc_STRCPY(tname, termname(), sizeof(tname));
 	    load_term();
 	} else if (sscanf(buf, "l %s", tname) == 1) {
 	    load_term();

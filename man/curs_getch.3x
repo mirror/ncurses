@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.47 2016/06/11 22:56:33 tom Exp $
+.\" $Id: curs_getch.3x,v 1.48 2016/09/10 21:56:25 Leon.Winter Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -300,7 +300,9 @@ if there is no more room in the FIFO.
 \fBwgetch\fP
 returns ERR
 if the window pointer is null, or
-if its timeout expires without having any data.
+if its timeout expires without having any data, or
+if the execution was interrupted by a signal (\fBerrno\fR will be set to
+\fBEINTR\fR).
 .RE
 .PP
 Functions with a "mv" prefix first perform a cursor movement using
@@ -385,8 +387,6 @@ Programmers concerned about portability should be prepared for either of two
 cases: (a) signal receipt does not interrupt \fBgetch\fR; (b) signal receipt
 interrupts \fBgetch\fR and causes it to return ERR with \fBerrno\fR set to
 \fBEINTR\fR.
-Under the \fBncurses\fR implementation, handled signals never
-interrupt \fBgetch\fR.
 .PP
 The \fBhas_key\fR function is unique to \fBncurses\fR.
 We recommend that

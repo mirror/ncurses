@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.83 2016/05/29 01:38:42 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.85 2016/09/10 18:38:36 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -50,6 +50,15 @@ MODULE_ID("$Id: lib_screen.c,v 1.83 2016/05/29 01:38:42 tom Exp $")
 #define GUTTER '|'
 #define L_CURL '{'
 #define R_CURL '}'
+
+#if USE_STRING_HACKS && HAVE_SNPRINTF
+#define ARG_SLIMIT(name) size_t name,
+#else
+#define ARG_SLIMIT(name)	/* nothing */
+#endif
+
+#define CUR_SLIMIT _nc_SLIMIT(limit - (target - base))
+#define TOP_SLIMIT _nc_SLIMIT(sizeof(buffer))
 
 /*
  * Use 0x8888 as the magic number for new-format files, since it cannot be
@@ -644,8 +653,13 @@ getwin(FILE *filep)
 
 #if NCURSES_EXT_PUTWIN
 static void
-encode_attr(char *target, attr_t source, attr_t prior)
+encode_attr(char *target, ARG_SLIMIT(limit)
+	    attr_t source,
+	    attr_t prior)
 {
+#if USE_STRING_HACKS && HAVE_SNPRINTF
+    char *base = target;
+#endif
     source &= ~A_CHARTEXT;
     prior &= ~A_CHARTEXT;
 
@@ -666,14 +680,14 @@ encode_attr(char *target, attr_t source, attr_t prior)
 		} else {
 		    *target++ = '|';
 		}
-		strcpy(target, scr_attrs[n].name);
+		_nc_STRCPY(target, scr_attrs[n].name, limit);
 		target += strlen(target);
 	    }
 	}
 	if ((source & A_COLOR) != (prior & A_COLOR)) {
 	    if (!first)
 		*target++ = '|';
-	    sprintf(target, "C%d", PAIR_NUMBER((int) source));
+	    _nc_SPRINTF(target, CUR_SLIMIT "C%d", PAIR_NUMBER((int) source));
 	    target += strlen(target);
 	}
 
@@ -683,19 +697,23 @@ encode_attr(char *target, attr_t source, attr_t prior)
 }
 
 static void
-encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
+encode_cell(char *target, ARG_SLIMIT(limit) CARG_CH_T source, CARG_CH_T previous)
 {
+#if USE_STRING_HACKS && HAVE_SNPRINTF
+    char *base = target;
+#endif
 #if NCURSES_WIDECHAR
     size_t n;
 
     *target = '\0';
     if (previous->attr != source->attr) {
-	encode_attr(target, source->attr, previous->attr);
+	encode_attr(target, CUR_SLIMIT source->attr, previous->attr);
     }
     target += strlen(target);
 #if NCURSES_EXT_COLORS
     if (previous->ext_color != source->ext_color) {
-	sprintf(target, "%c%cC%d%c", MARKER, L_CURL, source->ext_color, R_CURL);
+	_nc_SPRINTF(target, CUR_SLIMIT
+		    "%c%cC%d%c", MARKER, L_CURL, source->ext_color, R_CURL);
     }
 #endif
     for (n = 0; n < SIZEOF(source->chars); ++n) {
@@ -708,22 +726,23 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 	}
 	*target++ = MARKER;
 	if (uch > 0xffff) {
-	    sprintf(target, "U%08x", uch);
+	    _nc_SPRINTF(target, CUR_SLIMIT "U%08x", uch);
 	} else if (uch > 0xff) {
-	    sprintf(target, "u%04x", uch);
+	    _nc_SPRINTF(target, CUR_SLIMIT "u%04x", uch);
 	} else if (uch < 32 || uch >= 127) {
-	    sprintf(target, "%03o", uch & 0xff);
+	    _nc_SPRINTF(target, CUR_SLIMIT "%03o", uch & 0xff);
 	} else {
 	    switch (uch) {
 	    case ' ':
-		strcpy(target, "s");
+		_nc_STRCPY(target, "s", limit);
 		break;
 	    case MARKER:
 		*target++ = MARKER;
 		*target = '\0';
 		break;
 	    default:
-		sprintf(--target, "%c", uch);
+		--target;
+		_nc_SPRINTF(target, CUR_SLIMIT "%c", uch);
 		break;
 	    }
 	}
@@ -734,23 +753,24 @@ encode_cell(char *target, CARG_CH_T source, CARG_CH_T previous)
 
     *target = '\0';
     if (AttrOfD(previous) != AttrOfD(source)) {
-	encode_attr(target, AttrOfD(source), AttrOfD(previous));
+	encode_attr(target, CUR_SLIMIT AttrOfD(source), AttrOfD(previous));
     }
     target += strlen(target);
     *target++ = MARKER;
     if (ch < 32 || ch >= 127) {
-	sprintf(target, "%03o", UChar(ch));
+	_nc_SPRINTF(target, CUR_SLIMIT "%03o", UChar(ch));
     } else {
 	switch (ch) {
 	case ' ':
-	    strcpy(target, "s");
+	    _nc_STRCPY(target, "s", limit);
 	    break;
 	case MARKER:
 	    *target++ = MARKER;
 	    *target = '\0';
 	    break;
 	default:
-	    sprintf(--target, "%c", UChar(ch));
+	    --target;
+	    _nc_SPRINTF(target, CUR_SLIMIT "%c", UChar(ch));
 	    break;
 	}
     }
@@ -795,36 +815,42 @@ putwin(WINDOW *win, FILE *filep)
 	    }
 	    switch (scr_params[y].type) {
 	    case pATTR:
-		encode_attr(buffer, (*(const attr_t *) dp) & ~A_CHARTEXT, A_NORMAL);
+		encode_attr(buffer, TOP_SLIMIT
+			    (*(const attr_t *) dp) & ~A_CHARTEXT, A_NORMAL);
 		break;
 	    case pBOOL:
 		if (!(*(const bool *) data)) {
 		    continue;
 		}
-		strcpy(buffer, name);
+		_nc_STRCPY(buffer, name, sizeof(buffer));
 		name = "flag";
 		break;
 	    case pCHAR:
-		encode_attr(buffer, *(const attr_t *) dp, A_NORMAL);
+		encode_attr(buffer, TOP_SLIMIT
+			    * (const attr_t *) dp, A_NORMAL);
 		break;
 	    case pINT:
 		if (!(*(const int *) dp))
 		    continue;
-		sprintf(buffer, "%d", *(const int *) dp);
+		_nc_SPRINTF(buffer, TOP_SLIMIT
+			    "%d", *(const int *) dp);
 		break;
 	    case pSHORT:
 		if (!(*(const short *) dp))
 		    continue;
-		sprintf(buffer, "%d", *(const short *) dp);
+		_nc_SPRINTF(buffer, TOP_SLIMIT
+			    "%d", *(const short *) dp);
 		break;
 	    case pSIZE:
 		if (!(*(const NCURSES_SIZE_T *) dp))
 		    continue;
-		sprintf(buffer, "%d", *(const NCURSES_SIZE_T *) dp);
+		_nc_SPRINTF(buffer, TOP_SLIMIT
+			    "%d", *(const NCURSES_SIZE_T *) dp);
 		break;
 #if NCURSES_WIDECHAR
 	    case pCCHAR:
-		encode_cell(buffer, (CARG_CH_T) dp, CHREF(last_cell));
+		encode_cell(buffer, TOP_SLIMIT
+			    (CARG_CH_T) dp, CHREF(last_cell));
 		break;
 #endif
 	    }
@@ -848,13 +874,13 @@ putwin(WINDOW *win, FILE *filep)
 	    for (x = 0; x <= win->_maxx; x++) {
 #if NCURSES_WIDECHAR
 		int len = wcwidth(data[x].chars[0]);
-		encode_cell(buffer, CHREF(data[x]), CHREF(last_cell));
+		encode_cell(buffer, TOP_SLIMIT CHREF(data[x]), CHREF(last_cell));
 		last_cell = data[x];
 		PUTS(buffer);
 		if (len > 1)
 		    x += (len - 1);
 #else
-		encode_cell(buffer, CHREF(data[x]), CHREF(last_cell));
+		encode_cell(buffer, TOP_SLIMIT CHREF(data[x]), CHREF(last_cell));
 		last_cell = data[x];
 		PUTS(buffer);
 #endif

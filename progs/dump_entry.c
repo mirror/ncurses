@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.124 2015/11/28 22:54:33 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.126 2016/09/10 20:41:23 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -121,7 +121,7 @@ strncpy_DYN(DYNBUF * dst, const char *src, size_t need)
 	if (dst->text == 0)
 	    failed("strncpy_DYN");
     }
-    (void) strncpy(dst->text + dst->used, src, need);
+    _nc_STRNCPY(dst->text + dst->used, src, need);
     dst->used += need;
     dst->text[dst->used] = 0;
 }
@@ -1177,7 +1177,8 @@ dump_entry(TERMTYPE *tterm,
 		    wrap_concat("\n");
 		wrap_concat("hex:");
 		for (n = 0; n < offset; ++n) {
-		    sprintf(numbuf, "%02X", UChar(bigbuf[n]));
+		    _nc_SPRINTF(numbuf, _nc_SLIMIT(sizeof(numbuf))
+				"%02X", UChar(bigbuf[n]));
 		    wrap_concat(numbuf);
 		}
 	    }

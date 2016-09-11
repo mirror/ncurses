@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.222 2016/06/11 23:20:55 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.223 2016/09/05 00:27:13 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1776,7 +1776,9 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
     *next++ = '\0';
     for (k = 1; k <= NUM_PARM; k++) {
 	numbers[k] = count;
-	sprintf(next, "XYZ%d", count);
+	_nc_SPRINTF(next,
+		    _nc_SLIMIT(sizeof(blob) - (next - blob))
+		    "XYZ%d", count);
 	strings[k] = next;
 	next += strlen(next) + 1;
     }

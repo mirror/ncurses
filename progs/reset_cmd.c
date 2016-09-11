@@ -51,7 +51,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.6 2016/08/20 23:53:44 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.7 2016/09/10 20:49:10 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -98,7 +98,8 @@ failed(const char *msg)
 
     _nc_STRCPY(temp, _nc_progname, sizeof(temp));
     _nc_STRCAT(temp, ": ", sizeof(temp));
-    perror(strncat(temp, msg, sizeof(temp) - strlen(temp) - 2));
+    _nc_STRNCAT(temp, msg, sizeof(temp), sizeof(temp) - strlen(temp) - 2);
+    perror(temp);
     exit_error();
     /* NOTREACHED */
 }

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.7 2016/06/11 23:15:03 tom Exp $
+ * $Id: test_sgr.c,v 1.8 2016/09/04 23:30:56 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -61,8 +61,9 @@ static long total_values;
 static char *
 make_dbitem(char *p, char *q)
 {
-    char *result = malloc(strlen(e_opt) + 2 + (size_t) (p - q));
-    sprintf(result, "%s=%.*s", e_opt, (int) (p - q), q);
+    size_t need = strlen(e_opt) + 2 + (size_t) (p - q);
+    char *result = malloc(need);
+    _nc_SPRINTF(result, _nc_SLIMIT(need) "%s=%.*s", e_opt, (int) (p - q), q);
     return result;
 }
 

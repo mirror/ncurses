@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.10 2014/08/02 23:13:29 tom Exp $
+ * $Id: clip_printw.c,v 1.12 2016/09/10 21:21:44 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -334,10 +334,10 @@ test_clipping(WINDOW *win)
 	    (void) wattrset(win, AttrArg(COLOR_PAIR(st.pair), st.attr));
 	    if (st.count > 0) {
 		need = (unsigned) st.count + 1;
-		sprintf(fmt, "%%c%%%ds%%c", st.count);
+		_nc_SPRINTF(fmt, _nc_SLIMIT(sizeof(fmt)) "%%c%%%ds%%c", st.count);
 	    } else {
 		need = (unsigned) getmaxx(win) - 1;
-		strcpy(fmt, "%c%s%c");
+		_nc_STRCPY(fmt, "%c%s%c", sizeof(fmt));
 	    }
 	    if ((buffer = typeMalloc(char, need + 1)) != 0) {
 		for (j = 0; j < need; ++j) {

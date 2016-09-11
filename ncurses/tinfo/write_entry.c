@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.93 2015/09/05 21:24:29 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.95 2016/09/10 20:22:42 tom Exp $")
 
 static int total_written;
 
@@ -438,13 +438,14 @@ _nc_write_entry(TERMTYPE *const tp)
 	{
 	    int code;
 #if USE_SYMLINKS
-	    if (first_name[0] == linkname[0])
-		strncpy(symlinkname, first_name, sizeof(symlinkname) - 1);
-	    else {
-		_nc_STRCPY(symlinkname, "../", sizeof(suymlinkname));
-		strncat(symlinkname, filename, sizeof(symlinkname) - 4);
+#define MY_SIZE sizeof(symlinkname) - 1
+	    if (first_name[0] == linkname[0]) {
+		_nc_STRNCPY(symlinkname, first_name, MY_SIZE);
+	    } else {
+		_nc_STRCPY(symlinkname, "../", sizeof(symlinkname));
+		_nc_STRNCPY(symlinkname + 3, first_name, MY_SIZE - 3);
 	    }
-	    symlinkname[sizeof(symlinkname) - 1] = '\0';
+	    symlinkname[MY_SIZE] = '\0';
 #endif /* USE_SYMLINKS */
 #if HAVE_REMOVE
 	    code = remove(linkname);

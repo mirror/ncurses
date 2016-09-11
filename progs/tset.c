@@ -96,7 +96,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.110 2016/08/27 18:06:47 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.112 2016/09/10 23:33:10 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -105,6 +105,8 @@ extern char **environ;
 const char *_nc_progname = "tset";
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
+
+static void exit_error(void) GCC_NORETURN;
 
 static int
 CaselessCmp(const char *a, const char *b)
@@ -152,7 +154,8 @@ failed(const char *msg)
     } else {
 	_nc_STRCPY(temp, "tset: ", sizeof(temp));
     }
-    perror(strncat(temp, msg, sizeof(temp) - strlen(temp) - 2));
+    _nc_STRNCAT(temp, msg, sizeof(temp), sizeof(temp) - strlen(temp) - 2);
+    perror(temp);
     exit_error();
     /* NOTREACHED */
 }

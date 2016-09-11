@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.441 2016/08/27 23:43:06 tom Exp $
+$Id: ncurses.c,v 1.445 2016/09/10 23:30:15 tom Exp $
 
 ***************************************************************************/
 
@@ -165,6 +165,7 @@ typedef struct {
 static RGB_DATA *all_colors;
 
 static void main_menu(bool);
+static void failed(const char *s) GCC_NORETURN;
 
 static void
 failed(const char *s)
@@ -515,10 +516,15 @@ mouse_decode(MEVENT const *ep)
 {
     static char buf[80 + (5 * 10) + (32 * 15)];
 
-    (void) sprintf(buf, "id %2d at (%2d, %2d, %d) state %4lx = {",
-		   ep->id, ep->x, ep->y, ep->z, (unsigned long) ep->bstate);
+    (void) _nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf))
+		       "id %2d at (%2d, %2d, %d) state %4lx = {",
+		       ep->id, ep->x, ep->y, ep->z, (unsigned long) ep->bstate);
 
-#define SHOW(m, s) if ((ep->bstate & m)==m) {strcat(buf,s); strcat(buf, ", ");}
+#define SHOW(m, s) \
+	if ((ep->bstate & m)==m) { \
+		_nc_STRCAT(buf, s, sizeof(buf)); \
+		_nc_STRCAT(buf, ", ", sizeof(buf)); \
+	}
 
     SHOW(BUTTON1_RELEASED, "release-1");
     SHOW(BUTTON1_PRESSED, "press-1");
@@ -574,7 +580,7 @@ mouse_decode(MEVENT const *ep)
 
     if (buf[strlen(buf) - 1] == ' ')
 	buf[strlen(buf) - 2] = '\0';
-    (void) strcat(buf, "}");
+    _nc_STRCAT(buf, "}", sizeof(buf));
     return (buf);
 }
 
@@ -2089,14 +2095,17 @@ show_color_name(int y, int x, int color, bool wide)
 	int width = 8;
 
 	if (wide) {
-	    sprintf(temp, "%02d", color);
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			"%02d", color);
 	    width = 4;
 	} else if (color >= 8) {
-	    sprintf(temp, "[%02d]", color);
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			"[%02d]", color);
 	} else if (color < 0) {
-	    strcpy(temp, "default");
+	    _nc_STRCPY(temp, "default", sizeof(temp));
 	} else {
-	    sprintf(temp, "%.*s", 16, the_color_names[color]);
+	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			"%.*s", 16, the_color_names[color]);
 	}
 	printw("%-*.*s", width, width, temp);
     }
@@ -2283,7 +2292,8 @@ color_test(void)
 		    attron(A_REVERSE);
 
 		if (opt_nums) {
-		    sprintf(numbered, "{%02X}", (int) i);
+		    _nc_SPRINTF(numbered, _nc_SLIMIT((size_t) (COLS + 1))
+				"{%02X}", (int) i);
 		    hello = numbered;
 		}
 		printw("%-*.*s", width, width, hello);
@@ -2507,7 +2517,9 @@ wide_color_test(void)
 		    attr_on(A_REVERSE, NULL);
 
 		if (opt_nums) {
-		    sprintf(numbered, "{%02X}", i);
+		    _nc_SPRINTF(numbered,
+				_nc_SLIMIT((size_t) (COLS + 1) * sizeof(wchar_t))
+				"{%02X}", i);
 		    if (opt_xchr) {
 			make_fullwidth_text(buffer, numbered);
 		    } else {
@@ -2791,7 +2803,7 @@ color_edit(void)
 	     && (i < max_colors); i++) {
 	    char numeric[80];
 
-	    sprintf(numeric, "[%d]", i);
+	    _nc_SPRINTF(numeric, _nc_SLIMIT(sizeof(numeric)) "[%d]", i);
 	    MvPrintw(2 + i - top_color, 0, "%c %-8s:",
 		     (i == current ? '>' : ' '),
 		     (i < (int) SIZEOF(the_color_names)
@@ -3187,9 +3199,9 @@ slk_test(void)
 	case '7':
 	case '8':
 	    MvAddStr(SLK_WORK, 0, "Please enter the label value: ");
-	    strcpy(buf, "");
+	    _nc_STRCPY(buf, "", sizeof(buf));
 	    if ((s = slk_label(c - '0')) != 0) {
-		strncpy(buf, s, (size_t) 8);
+		_nc_STRNCPY(buf, s, (size_t) 8);
 	    }
 	    wGetstring(stdscr, buf, 8);
 	    slk_set((c - '0'), buf, fmt);
@@ -3445,7 +3457,7 @@ show_upper_chars(int base, int pagesize, int repeat, attr_t attr, NCURSES_PAIRS_
 	int row = 2 + ((int) (code - first) % (pagesize / 2));
 	int col = ((int) (code - first) / (pagesize / 2)) * COLS / 2;
 	char tmp[80];
-	sprintf(tmp, "%3u (0x%x)", code, code);
+	_nc_SPRINTF(tmp, _nc_SLIMIT(sizeof(tmp)) "%3u (0x%x)", code, code);
 	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
 
 	do {
@@ -3814,7 +3826,8 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, NCURSES_PAIR
 	int count = repeat;
 	int y, x;
 
-	sprintf(tmp, "%3ld (0x%lx)", (long) code, (long) code);
+	_nc_SPRINTF(tmp, _nc_SLIMIT(sizeof(tmp))
+		    "%3ld (0x%lx)", (long) code, (long) code);
 	MvPrintw(row, col, "%*s: ", COLS / 4, tmp);
 
 	memset(&codes, 0, sizeof(codes));
@@ -4097,7 +4110,8 @@ show_2_wacs(int n, const char *name, const char *code, attr_t attr, NCURSES_PAIR
 
     MvPrintw(row, col, "%*s : ", COLS / 4, name);
     (void) attr_set(attr, pair, 0);
-    addstr(strncpy(temp, code, 20));
+    _nc_STRNCPY(temp, code, 20);
+    addstr(temp);
     (void) attr_set(A_NORMAL, 0, 0);
     return n + 1;
 }
@@ -4435,16 +4449,19 @@ newwin_legend(FRAME * curp)
     for (n = 0; n < SIZEOF(legend); n++) {
 	switch (legend[n].code) {
 	default:
-	    strcpy(buf, legend[n].msg);
+	    _nc_STRCPY(buf, legend[n].msg, sizeof(buf));
 	    break;
 	case 1:
-	    sprintf(buf, legend[n].msg, do_keypad ? "yes" : "no");
+	    _nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf))
+			legend[n].msg, do_keypad ? "yes" : "no");
 	    break;
 	case 2:
-	    sprintf(buf, legend[n].msg, do_scroll ? "yes" : "no");
+	    _nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf))
+			legend[n].msg, do_scroll ? "yes" : "no");
 	    break;
 	case 3:
-	    sprintf(buf, legend[n].msg, do_keypad ? "/ESC" : "");
+	    _nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf))
+			legend[n].msg, do_keypad ? "/ESC" : "");
 	    break;
 	}
 	x = getcurx(stdscr);
@@ -5938,29 +5955,31 @@ static char *
 tracetrace(unsigned tlevel)
 {
     static char *buf;
+    static size_t need = 12;
     int n;
 
     if (buf == 0) {
-	size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
 	buf = typeMalloc(char, need);
 	if (!buf)
 	    failed("tracetrace");
     }
-    sprintf(buf, "0x%02x = {", tlevel);
+    _nc_SPRINTF(buf, _nc_SLIMIT(need) "0x%02x = {", tlevel);
     if (tlevel == 0) {
-	sprintf(buf + strlen(buf), "%s, ", t_tbl[0].name);
+	_nc_STRCAT(buf, t_tbl[0].name, need);
+	_nc_STRCAT(buf, ", ", need);
     } else {
 	for (n = 1; t_tbl[n].name != 0; n++)
 	    if ((tlevel & t_tbl[n].mask) == t_tbl[n].mask) {
-		strcat(buf, t_tbl[n].name);
-		strcat(buf, ", ");
+		_nc_STRCAT(buf, t_tbl[n].name, need);
+		_nc_STRCAT(buf, ", ", need);
 	    }
     }
     if (buf[strlen(buf) - 2] == ',')
 	buf[strlen(buf) - 2] = '\0';
-    return (strcat(buf, "}"));
+    _nc_STRCAT(buf, "}", need);
+    return buf;
 }
 
 /* fake a dynamically reconfigurable menu using the 0th entry to deselect
@@ -6152,7 +6171,7 @@ edit_secure(FIELD * me, int c)
 	size_t len;
 
 	if (temp != 0) {
-	    strncpy(temp, source ? source : "", have + 1);
+	    _nc_STRNCPY(temp, source ? source : "", have + 1);
 	    len = (size_t) (char *) field_userptr(me);
 	    if (c <= KEY_MAX) {
 		if (isgraph(c) && (len + 1) < sizeof(temp)) {
@@ -6612,7 +6631,8 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 	switch (row) {
 	case 0:
 	    flavors[row] = 0;
-	    sprintf(msg, "refresh %s, then %s, then doupdate.", ths, tht);
+	    _nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			"refresh %s, then %s, then doupdate.", ths, tht);
 	    break;
 	case 1:
 	    if (use_colors) {
@@ -6621,7 +6641,8 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 		flavors[row] %= 2;
 	    }
 	    overlap_test_1_attr(stdscr, flavors[row], col);
-	    sprintf(msg, "fill window %s with letter %s.", ths, ths);
+	    _nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			"fill window %s with letter %s.", ths, ths);
 	    break;
 	case 2:
 	    if (use_colors) {
@@ -6631,37 +6652,46 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 	    }
 	    switch (flavors[row]) {
 	    case 0:
-		sprintf(msg, "cross pattern in window %s.", ths);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "cross pattern in window %s.", ths);
 		break;
 	    case 1:
-		sprintf(msg, "draw box in window %s.", ths);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "draw box in window %s.", ths);
 		break;
 	    case 2:
-		sprintf(msg, "set background of window %s.", ths);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "set background of window %s.", ths);
 		break;
 	    case 3:
-		sprintf(msg, "reset background of window %s.", ths);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "reset background of window %s.", ths);
 		break;
 	    }
 	    break;
 	case 3:
 	    flavors[row] = 0;
-	    sprintf(msg, "clear window %s.", ths);
+	    _nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			"clear window %s.", ths);
 	    break;
 	case 4:
 	    flavors[row] %= 4;
 	    switch (flavors[row]) {
 	    case 0:
-		sprintf(msg, "overwrite %s onto %s.", ths, tht);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "overwrite %s onto %s.", ths, tht);
 		break;
 	    case 1:
-		sprintf(msg, "copywin(FALSE) %s onto %s.", ths, tht);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "copywin(FALSE) %s onto %s.", ths, tht);
 		break;
 	    case 2:
-		sprintf(msg, "copywin(TRUE) %s onto %s.", ths, tht);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "copywin(TRUE) %s onto %s.", ths, tht);
 		break;
 	    case 3:
-		sprintf(msg, "overlay %s onto %s.", ths, tht);
+		_nc_SPRINTF(msg, _nc_SLIMIT(sizeof(msg))
+			    "overlay %s onto %s.", ths, tht);
 		break;
 	    }
 	    break;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.40 2015/06/27 01:20:41 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.41 2016/09/10 20:14:56 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -158,8 +158,9 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     }
     result = TRUE;
 #if !USE_REENTRANT
-    strncpy(ttytype, termp->type.term_names, (size_t) NAMESIZE - 1);
-    ttytype[NAMESIZE - 1] = '\0';
+#define MY_SIZE (size_t) NAMESIZE - 1
+    _nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
+    ttytype[MY_SIZE] = '\0';
 #endif
 
     if (command_character)

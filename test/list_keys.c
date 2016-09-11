@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.15 2016/07/09 18:21:24 tom Exp $
+ * $Id: list_keys.c,v 1.17 2016/09/10 21:24:44 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -99,47 +99,50 @@ show_key(const char *name, bool show)
 	    int ch = UChar(*value++);
 	    switch (ch) {
 	    case '\177':
-		strcpy(buffer, "^?");
+		_nc_STRCPY(buffer, "^?", sizeof(buffer));
 		break;
 	    case '\033':
-		strcpy(buffer, "\\E");
+		_nc_STRCPY(buffer, "\\E", sizeof(buffer));
 		break;
 	    case '\b':
-		strcpy(buffer, "\\b");
+		_nc_STRCPY(buffer, "\\b", sizeof(buffer));
 		break;
 	    case '\f':
-		strcpy(buffer, "\\f");
+		_nc_STRCPY(buffer, "\\f", sizeof(buffer));
 		break;
 	    case '\n':
-		strcpy(buffer, "\\n");
+		_nc_STRCPY(buffer, "\\n", sizeof(buffer));
 		break;
 	    case '\r':
-		strcpy(buffer, "\\r");
+		_nc_STRCPY(buffer, "\\r", sizeof(buffer));
 		break;
 	    case ' ':
-		strcpy(buffer, "\\s");
+		_nc_STRCPY(buffer, "\\s", sizeof(buffer));
 		break;
 	    case '\t':
-		strcpy(buffer, "\\t");
+		_nc_STRCPY(buffer, "\\t", sizeof(buffer));
 		break;
 	    case '^':
-		strcpy(buffer, "\\^");
+		_nc_STRCPY(buffer, "\\^", sizeof(buffer));
 		break;
 	    case ':':
-		strcpy(buffer, "\\072");
+		_nc_STRCPY(buffer, "\\072", sizeof(buffer));
 		break;
 	    case '\\':
-		strcpy(buffer, "\\\\");
+		_nc_STRCPY(buffer, "\\\\", sizeof(buffer));
 		break;
 	    default:
 		if (t_opt && ch == '"') {
-		    strcpy(buffer, "\"\"");
+		    _nc_STRCPY(buffer, "\"\"", sizeof(buffer));
 		} else if (isgraph(ch)) {
-		    sprintf(buffer, "%c", ch);
+		    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+				"%c", ch);
 		} else if (ch < 32) {
-		    sprintf(buffer, "^%c", ch + '@');
+		    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+				"^%c", ch + '@');
 		} else {
-		    sprintf(buffer, "\\%03o", ch);
+		    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
+				"\\%03o", ch);
 		}
 		break;
 	    }
@@ -234,7 +237,8 @@ modified_key(const char *name)
 	int bit2 = (map & 4);
 	map &= ~6;
 	map |= (bit1 << 1) | (bit2 >> 1);
-	sprintf(result, "%sF%d", modifiers[map][f_opt], 1 + key);
+	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
+		    "%sF%d", modifiers[map][f_opt], 1 + key);
     } else if (sscanf(name, "k%[A-Z]%d%c", buffer, &value, &chr) == 2 &&
 	       (value > 1 &&
 		value <= 8) &&
@@ -248,11 +252,13 @@ modified_key(const char *name)
 		!strcmp(buffer, "END") ||
 		!strcmp(buffer, "NXT") ||
 		!strcmp(buffer, "PRV"))) {
-	sprintf(result, "%sk%s", modifiers[value - 1][f_opt], buffer);
+	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
+		    "%sk%s", modifiers[value - 1][f_opt], buffer);
     } else if (sscanf(name, "k%[A-Z]%c", buffer, &chr) == 1 &&
 	       (!strcmp(buffer, "UP") ||
 		!strcmp(buffer, "DN"))) {
-	sprintf(result, "%sk%s", modifiers[1][f_opt], buffer);
+	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
+		    "%sk%s", modifiers[1][f_opt], buffer);
     } else {
 	*result = '\0';
     }

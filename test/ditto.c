@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.43 2016/02/06 21:19:28 tom Exp $
+ * $Id: ditto.c,v 1.44 2016/09/04 20:43:04 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -167,7 +167,8 @@ open_tty(char *path)
 	errno = EISDIR;
 	failed(slave_name);
     }
-    sprintf(s_option, "-S%s/%d", slave_name, aslave);
+    _nc_SPRINTF(s_option, _nc_SLIMIT(sizeof(s_option))
+		"-S%s/%d", slave_name, aslave);
     if (fork()) {
 	execlp(xterm_prog, xterm_prog, s_option, "-title", path, (char *) 0);
 	_exit(0);

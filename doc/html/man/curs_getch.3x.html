@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.47 2016/06/11 22:56:33 tom Exp @
+  * @Id: curs_getch.3x,v 1.48 2016/09/10 21:56:25 Leon.Winter Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -303,7 +303,9 @@
 
           <STRONG>wgetch</STRONG>
                returns  ERR  if the window pointer is null, or if
-               its timeout expires without having any data.
+               its timeout expires without having any data, or if
+               the  execution  was interrupted by a signal (<STRONG>errno</STRONG>
+               will be set to <STRONG>EINTR</STRONG>).
 
        Functions with a "mv" prefix first perform a cursor  move-
        ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
@@ -390,9 +392,7 @@
        Programmers concerned about portability should be prepared
        for  either  of two cases: (a) signal receipt does not in-
        terrupt <STRONG>getch</STRONG>; (b) signal  receipt  interrupts  <STRONG>getch</STRONG>  and
-       causes  it  to  return ERR with <STRONG>errno</STRONG> set to <STRONG>EINTR</STRONG>.  Under
-       the <STRONG>ncurses</STRONG> implementation, handled signals  never  inter-
-       rupt <STRONG>getch</STRONG>.
+       causes it to return ERR with <STRONG>errno</STRONG> set to <STRONG>EINTR</STRONG>.
 
        The  <STRONG>has_key</STRONG>  function is unique to <STRONG>ncurses</STRONG>.  We recommend
        that any code using it be conditionalized  on  the  <STRONG>NCURS-</STRONG>

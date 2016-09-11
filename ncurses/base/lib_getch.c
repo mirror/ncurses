@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.135 2016/06/11 21:52:23 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.136 2016/09/10 21:59:16 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -224,11 +224,6 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
     if (tail < 0)
 	return ERR;
 
-#ifdef HIDE_EINTR
-  again:
-    errno = 0;
-#endif
-
 #ifdef NCURSES_WGETCH_EVENTS
     if (evl
 #if USE_GPM_SUPPORT || USE_EMX_MOUSE || USE_SYSMOUSE
@@ -312,24 +307,6 @@ fifo_push(SCREEN *sp EVENTLIST_2nd(_nc_eventlist * evl))
 	ch = c2;
 #endif
     }
-
-#ifdef HIDE_EINTR
-    /*
-     * Under System V curses with non-restarting signals, getch() returns
-     * with value ERR when a handled signal keeps it from completing.
-     * If signals restart system calls, OTOH, the signal is invisible
-     * except to its handler.
-     *
-     * We don't want this difference to show.  This piece of code
-     * tries to make it look like we always have restarting signals.
-     */
-    if (n <= 0 && errno == EINTR
-# if USE_PTHREADS_EINTR
-	&& (_nc_globals.have_sigwinch == 0)
-# endif
-	)
-	goto again;
-#endif
 
     if ((n == -1) || (n == 0)) {
 	TR(TRACE_IEVENT, ("read(%d,&ch,1)=%d, errno=%d", sp->_ifd, n, errno));

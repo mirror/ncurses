@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.166 2016/05/28 21:55:30 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.167 2016/09/10 20:07:30 tom Exp $")
 
 /****************************************************************************
  *
@@ -735,8 +735,9 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	    }
 	}
 #if !USE_REENTRANT
-	strncpy(ttytype, termp->type.term_names, (size_t) (NAMESIZE - 1));
-	ttytype[NAMESIZE - 1] = '\0';
+#define MY_SIZE (size_t) (NAMESIZE - 1)
+	_nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
+	ttytype[MY_SIZE] = '\0';
 #endif
 
 	termp->Filedes = (short) Filedes;

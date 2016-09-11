@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.90 2013/08/31 15:22:31 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.92 2016/09/10 20:08:32 tom Exp $")
 
 static void sanity_check2(TERMTYPE *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE *, bool) = sanity_check2;
@@ -75,6 +75,8 @@ enqueue(ENTRY * ep)
 	newp->last->next = newp;
 }
 
+#define NAMEBUFFER_SIZE (MAX_NAME_SIZE + 2)
+
 static char *
 force_bar(char *dst, char *src)
 {
@@ -82,8 +84,8 @@ force_bar(char *dst, char *src)
 	size_t len = strlen(src);
 	if (len > MAX_NAME_SIZE)
 	    len = MAX_NAME_SIZE;
-	(void) strncpy(dst, src, len);
-	_nc_STRCPY(dst + len, "|", MAX_NAME_SIZE);
+	_nc_STRNCPY(dst, src, len);
+	_nc_STRCPY(dst + len, "|", NAMEBUFFER_SIZE - len);
 	src = dst;
     }
     return src;
@@ -107,8 +109,8 @@ static bool
 check_collisions(char *n1, char *n2, int counter)
 {
     char *pstart, *qstart, *pend, *qend;
-    char nc1[MAX_NAME_SIZE + 2];
-    char nc2[MAX_NAME_SIZE + 2];
+    char nc1[NAMEBUFFER_SIZE];
+    char nc2[NAMEBUFFER_SIZE];
 
     n1 = ForceBar(nc1, n1);
     n2 = ForceBar(nc2, n2);

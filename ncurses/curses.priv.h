@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.552 2016/02/13 16:37:24 tom Exp $
+ * $Id: curses.priv.h,v 1.553 2016/09/10 21:52:52 Rich.Coe Exp $
  *
  *	curses.priv.h
  *
@@ -561,7 +561,7 @@ weak_symbol(pthread_mutexattr_settype);
 weak_symbol(pthread_mutexattr_init);
 extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 #    undef  sigprocmask
-#    define sigprocmask _nc_sigprocmask
+#    define sigprocmask(a, b, c) _nc_sigprocmask(a, b, c)
 #  endif
 #endif
 
@@ -581,7 +581,7 @@ weak_symbol(pthread_self);
 weak_symbol(pthread_equal);
 extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 #    undef  sigprocmask
-#    define sigprocmask _nc_sigprocmask
+#    define sigprocmask(a, b, c) _nc_sigprocmask(a, b, c)
 #  endif
 #endif /* USE_PTHREADS_EINTR */
 

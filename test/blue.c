@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.45 2016/06/12 00:17:37 tom Exp $
+ * $Id: blue.c,v 1.46 2016/09/05 00:24:27 tom Exp $
  */
 
 #include <test.priv.h>
@@ -331,9 +331,9 @@ play_game(void)
 	    } else {
 		char buf[BUFSIZ];
 
-		(void) sprintf(buf,
-			       "Type [%s] to move, r to redraw, q or INTR to quit: ",
-			       live);
+		_nc_SPRINTF(buf, _nc_SLIMIT(sizeof(buf))
+			    "Type [%s] to move, r to redraw, q or INTR to quit: ",
+			    live);
 
 		do {
 		    move(PROMPTROW, 0);

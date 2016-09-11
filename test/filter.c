@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey 1998
  *
- * $Id: filter.c,v 1.26 2016/08/20 20:38:56 tom Exp $
+ * $Id: filter.c,v 1.28 2016/09/10 21:23:23 tom Exp $
  *
  * An example of the 'filter()' function in ncurses, this program prompts
  * for commands and executes them (like a command shell).  It illustrates
@@ -68,10 +68,10 @@ show_prompt(int underline, bool clocked)
 	    int skip, y, x;
 	    int margin;
 
-	    sprintf(buffer, "%02d:%02d:%02d",
-		    my->tm_hour,
-		    my->tm_min,
-		    my->tm_sec);
+	    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer)) "%02d:%02d:%02d",
+			my->tm_hour,
+			my->tm_min,
+			my->tm_sec);
 
 	    if (limit > 9) {
 		skip = 0;
@@ -242,11 +242,11 @@ new_command(char *buffer, int length, int underline, bool clocked, bool polled)
 	 */
 #ifdef KEY_EVENT
 	if (code == KEY_EVENT)
-	    strcpy(buffer, "# event!");
+	    _nc_STRCPY(buffer, "# event!", length);
 #endif
 #ifdef KEY_RESIZE
 	if (code == KEY_RESIZE) {
-	    strcpy(buffer, "# resize!");
+	    _nc_STRCPY(buffer, "# resize!", length);
 	    getch();
 	}
 #endif

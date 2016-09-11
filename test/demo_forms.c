@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2013,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.50 2014/10/10 00:38:00 tom Exp $
+ * $Id: demo_forms.c,v 1.52 2016/09/10 21:14:55 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -149,8 +149,8 @@ read_data(const char *filename)
 		    char *value = typeRealloc(char, need, prior);
 		    if (value == 0)
 			failed("realloc");
-		    strcat(value, "\n");
-		    strcat(value, buffer);
+		    _nc_STRCAT(value, "\n", need);
+		    _nc_STRCAT(value, buffer, need);
 		    my_data[more - 1].value = value;
 		} else {
 		    more = 0;
@@ -456,7 +456,8 @@ demo_forms(void)
     memset(f, 0, sizeof(f));
     for (pg = 0; pg < 4; ++pg) {
 	char label[80];
-	sprintf(label, "Sample Form Page %d", pg + 1);
+	_nc_SPRINTF(label, _nc_SLIMIT(sizeof(label))
+		    "Sample Form Page %d", pg + 1);
 	f[n++] = make_label(label, 0, 15);
 	set_new_page(f[n - 1], TRUE);
 

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.42 2016/06/18 23:57:33 tom Exp $
+ * $Id: demo_terminfo.c,v 1.44 2016/09/10 21:22:49 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -95,8 +95,9 @@ static long total_s_values;
 static char *
 make_dbitem(char *p, char *q)
 {
-    char *result = malloc(strlen(e_opt) + 2 + (size_t) (p - q));
-    sprintf(result, "%s=%.*s", e_opt, (int) (p - q), q);
+    size_t need = strlen(e_opt) + 2 + (size_t) (p - q);
+    char *result = malloc(need);
+    _nc_SPRINTF(result, _nc_SLIMIT(need) "%s=%.*s", e_opt, (int) (p - q), q);
     return result;
 }
 
@@ -396,9 +397,11 @@ demo_terminfo(char *name)
 			    !strcmp(xterm_keys[n], "kRIT")) {
 			    continue;
 			}
-			sprintf(temp, "%.*s", 8, xterm_keys[n]);
+			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+				    "%.*s", 8, xterm_keys[n]);
 		    } else {
-			sprintf(temp, "%.*s%d", 8, xterm_keys[n], mod);
+			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+				    "%.*s%d", 8, xterm_keys[n], mod);
 		    }
 		    dumpit(temp, NULL);
 		}
@@ -733,7 +736,7 @@ copy_code_list(NCURSES_CONST char *const *list)
 		length += chunk;
 	    } else {
 		result[count] = unused;
-		strcpy(unused, list[count]);
+		_nc_STRCPY(unused, list[count], length);
 		unused += chunk;
 	    }
 	}

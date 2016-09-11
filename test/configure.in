@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996, etc.
 dnl
-dnl $Id: configure.in,v 1.127 2016/06/18 23:50:44 tom Exp $
+dnl $Id: configure.in,v 1.128 2016/09/10 22:06:22 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -97,6 +97,7 @@ AC_EXEEXT
 AC_OBJEXT
 
 CF_GCC_ATTRIBUTES
+CF_ENABLE_STRING_HACKS
 CF_XOPEN_SOURCE
 CF_SIG_ATOMIC_T
 

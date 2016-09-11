@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.34 2014/08/02 16:37:03 tom Exp $ */
+/* $Id: tclock.c,v 1.35 2016/09/04 23:52:17 tom Exp $ */
 
 #include <test.priv.h>
 
@@ -175,7 +175,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	sangle = (i + 1) * (2.0 * PI) / 12.0;
 	sdx = A2X(sangle, sradius);
 	sdy = A2Y(sangle, sradius);
-	sprintf(szChar, "%d", i + 1);
+	_nc_SPRINTF(szChar, _nc_SLIMIT(sizeof(szChar)) "%d", i + 1);
 
 	MvAddStr(cy - sdy, cx + sdx, szChar);
     }
