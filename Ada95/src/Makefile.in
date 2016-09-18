@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.72 2016/08/13 18:04:27 tom Exp $
+#  $Id: Makefile.in,v 1.73 2016/09/18 00:25:32 tom Exp $
 #
 .SUFFIXES:
 
@@ -90,7 +90,7 @@ ADAFLAGS        = @ADAFLAGS@ -I. -I$(srcdir)
 LIB_NAME	= AdaCurses
 SONAME		= @ADA_SHAREDLIB@
 
-GNAT_PROJECT	= $(srcdir)/library.gpr
+GNAT_PROJECT	= AdaCurses.gpr
 
 # build/source are the Ada95 tree
 BUILD_DIR	= ..
@@ -270,8 +270,10 @@ STATIC_DIRS = \
 @USE_GNAT_PROJECTS@		$(ABASE)-trace.adb \
 @USE_GNAT_PROJECTS@		$(STATIC_C_OBJS) \
 @USE_GNAT_PROJECTS@		$(STATIC_DIRS)
+@USE_GNAT_PROJECTS@	$(SHELL) $(srcdir)/library-cfg.sh $(srcdir)/library.gpr $(CFLAGS_NORMAL) >$(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
 @USE_GNAT_PROJECTS@	$(AR) $(ARFLAGS) $@ $(STATIC_C_OBJS)
+@USE_GNAT_PROJECTS@	-rm -f $(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@
 @USE_GNAT_LIBRARIES@install \
 @USE_GNAT_LIBRARIES@install.libs :: \
@@ -302,7 +304,9 @@ SHARED_DIRS = \
 @MAKE_ADA_SHAREDLIB@		$(SHARED_DIRS) \
 @MAKE_ADA_SHAREDLIB@		$(SHARED_OBJS)
 @MAKE_ADA_SHAREDLIB@	cp $(SHARED_OBJS) $(BUILD_DIR)/dynamic-obj/
+@MAKE_ADA_SHAREDLIB@	$(SHELL) $(srcdir)/library-cfg.sh $(srcdir)/library.gpr $(CFLAGS_SHARED) >$(GNAT_PROJECT)
 @MAKE_ADA_SHAREDLIB@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
+@MAKE_ADA_SHAREDLIB@	-rm -f $(GNAT_PROJECT)
 
 install \
 install.libs :: $(ADA_INCLUDE)

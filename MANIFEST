@@ -132,6 +132,7 @@
 ./Ada95/src/c_threaded_variables.h
 ./Ada95/src/c_varargs_to_ada.c
 ./Ada95/src/c_varargs_to_ada.h
+./Ada95/src/library-cfg.sh
 ./Ada95/src/library.gpr
 ./Ada95/src/modules
 ./Ada95/src/ncurses_compat.c

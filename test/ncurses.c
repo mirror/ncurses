@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.445 2016/09/10 23:30:15 tom Exp $
+$Id: ncurses.c,v 1.446 2016/09/17 21:12:04 tom Exp $
 
 ***************************************************************************/
 
@@ -2704,7 +2704,8 @@ init_all_colors(bool xterm_colors, char *palette_file)
 	int n;
 	int got;
 	char result[BUFSIZ];
-	int check_n, check_r, check_g, check_b;
+	int check_n;
+	unsigned check_r, check_g, check_b;
 
 	raw();
 	noecho();
@@ -6925,11 +6926,11 @@ show_settings(void)
     show_string_setting("longname", longname());
     show_number_setting("baudrate", baudrate());
     if (erasechar() > 0) {
-	show_string_setting("unctrl(erasechar)", unctrl(erasechar()));
+	show_string_setting("unctrl(erasechar)", unctrl((chtype) erasechar()));
 	show_string_setting("keyname(erasechar)", keyname(erasechar()));
     }
     if (killchar() > 0) {
-	show_string_setting("unctrl(killchar)", unctrl(killchar()));
+	show_string_setting("unctrl(killchar)", unctrl((chtype) killchar()));
 	show_string_setting("keyname(killchar)", keyname(killchar()));
     }
 #if USE_WIDEC_SUPPORT

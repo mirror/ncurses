@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 
 #define CUR my_term.type.
 
-MODULE_ID("$Id: win_driver.c,v 1.55 2015/02/28 21:30:23 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.56 2016/09/17 22:02:44 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -2108,7 +2108,7 @@ _nc_mingw_console_read(
 	if (b && nRead > 0) {
 	    if (rc < 0)
 		rc = 0;
-	    rc += nRead;
+	    rc = rc + (int) nRead;
 	    if (inp_rec.EventType == KEY_EVENT) {
 		if (!inp_rec.Event.KeyEvent.bKeyDown)
 		    continue;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.65 2013/06/22 20:01:41 tom Exp $
+  $Id: worm.c,v 1.66 2016/09/17 21:12:30 tom Exp $
 */
 
 #include <test.priv.h>
@@ -324,9 +324,9 @@ draw_worm(WINDOW *win, void *data)
 static bool
 quit_worm(int bitnum)
 {
-    pending |= (1 << bitnum);
+    pending = (pending | (unsigned) (1 << bitnum));
     napms(10);			/* let the other thread(s) have a chance */
-    pending &= ~(1 << bitnum);
+    pending = (pending & (unsigned) ~(1 << bitnum));
     return quitting;
 }
 
@@ -335,7 +335,7 @@ start_worm(void *arg)
 {
     unsigned long compare = 0;
     Trace(("start_worm"));
-    while (!quit_worm(((struct worm *) arg) - worm)) {
+    while (!quit_worm((int) (((struct worm *) arg) - worm))) {
 	while (compare < sequence) {
 	    ++compare;
 #if HAVE_USE_WINDOW
