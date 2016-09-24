@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.566 $
-#	$Date: 2016/08/17 08:17:26 $
+#	$Revision: 1.569 $
+#	$Date: 2016/09/24 22:01:35 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -18709,64 +18709,186 @@ m2-nam|minitel|minitel-2|minitel-2-nam|France Telecom Minitel 2 mode te'le'infor
 	smacs=^N, smir=\E[4h, smso=\E[7m, smul=\E[4m, tsl=^_@A,
 	u6=\E[%i%d;%dR, u7=\E[6n,
 
-# From: Alexandre Montaron <canal@mygale.org>, 18 Jun 1998
+# From: Alexandre Montaron <canal@mygale.org>, 18 Jun 1998, updated 19 Sep 2016
 #
 minitel1|minitel 1,
-	am, bw, eslok, hs, hz, msgr,
-	colors#8, cols#40, lines#24, pairs#8,
-	bel=^G, blink=\EH, civis=^T, clear=^L, cnorm=^Q, cr=^M,
-	cub1=^H, cud1=^J, cuf1=^I,
-	cup=\037%p1%'A'%+%c%p2%'A'%+%c, cuu1=^K, el=^X,
+	am, bw, eslok, hs, hz, .msgr, G0,
+	colors#8, cols#40, lines#24, pairs#8, .ncv#16,
+	acsc=j+k+l+m+n+o~q`s_t+u+v+w+x|, bel=^G, blink=\EH,
+	civis=^T, clear=^L, cnorm=^Q, cr=^M, cub1=^H, cud1=^J, cuf1=^I,
+	cup=\037%p1%'A'%+%c%p2%'A'%+%c, cuu1=^K,
+	dsl=\037@A\030\n, el=^X,
 	flash=\037@A\EW \177\022\177\022P\r\030\n, fsl=^J,
-	home=^^, ind=^J, is2=\E;`ZQ\E\:iC\E\:iE\021, nel=^M^J,
-	op=\EG, rep=%p1%c\022%p2%'?'%+%c, rev=\E], ri=^K,
-	rmso=\E\\,
+	home=^^, ind=^J, is2=\E;`ZQ\E\:iC\E\:iE\021, kbs=^SG,
+	kcan=^SE, kend=^SI, kent=^SA, khlp=^SD, knp=^SH, kpp=^SB,
+	krfr=^SC, nel=^M^J, op=\EG, rep=%p1%c\022%p2%'?'%+%c,
+	rev=\E], ri=^K, rmso=\E\\,
+	rs2=\024\037XA\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\n\030\014\021,
+	setab=\0, setaf=\E%p1%'@'%+%c, setb=\0,
 	setf=\E%?%p1%{1}%=%tD%e%p1%{3}%=%tF%e%p1%{4}%=%tA%e%p1%{6}%=%tC%e%p1%'@'%+%c%;,
 	sgr=%?%p1%t\E]%;%?%p3%t\E]%;%?%p4%t\EH%;,
-	sgr0=\EI\E\\, smso=\E], tsl=\037@%p1%'A'%+%c,
-	u6=\037%c%'A'%-%c%'A'%-, u7=\Ea, .acsc=}#f0g1\,\,+../,
-	.enacs=^Y, .rs2=^L, .u8=\001Br4\004, .u9=\E9{,
-# is2=Fnct TE, Fnct ER, Fnct CM et pour finir: curseur ON.
+	sgr0=\EI\E\\\EG, smso=\E], tsl=\037@%p1%'A'%+%c,
+	u6=\037%c%'A'%-%c%'A'%-, u7=\Ea,
+	u8=\001%[BCDEFGHIJKLbcresdfg0123456789]\004, u9=\E9{,
+	.dim=\EB, .hup=\E9g, .rs2=^L, .u8=\001Br4\004,
+	C0=`>a9f!j%k4l<m-n=p#q\,rpt=u5v-w<x5yvzy|l~$, E0=^O,
+	S0=^N,
+	XC=B\031%\,\241!\,\242"\,\243#\,\244$\,\245%\,\246&\,\247'\,\250(\,\253+\,\257P\,\2600\,\2611\,\2622\,\2633\,\2655\,\2677\,\272k\,\273;\,\274<\,\275=\,\276>\,\277?\,\300AA\,\301BA\,\302CA\,\303DA\,\304HA\,\305JA\,\306a\,\307KC\,\310AE\,\311BE\,\312CE\,\313HE\,\314AI\,\315BI\,\316CI\,\317HI\,\320b\,\321DN\,\322AO\,\323BO\,\324CO\,\325DO\,\326HO\,\3274\,\330i\,\331AU\,\332BU\,\333CU\,\334HU\,\335BY\,\336l\,\337{\,\340Aa\,\341Ba\,\342Ca\,\343Da\,\344Ha\,\345Ja\,\346q\,\347Kc\,\350Ae\,\351Be\,\352Ce\,\353He\,\354Ai\,\355Bi\,\356Ci\,\357Hi\,\360r\,\361Dn\,\362Ao\,\363Bo\,\364Co\,\365Do\,\366Ho\,\3678\,\370y\,\371Au\,\372Bu\,\373Cu\,\374Hu\,\375By\,\376|\,\377Hy\,\252c\,\,0\017\031%\016\,}#\,f0\,g1\,\\\,\\\,\,+.\,./\,0\177\,--,
 minitel1b|minitel 1-bistandard (in 40cols mode),
 	mir,
 	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
 	cuu=\E[%p1%dA, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM,
 	dl1=\E[M, ed=\E[J, el1=\E[1K, il=\E[%p1%dL, il1=\E[L,
-	is1=\E;iYA\E;jYC, kclr=\E[2J, kctab=^I, kcub1=\E[D,
-	kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[P, kdl1=\E[M,
-	khome=\E[H, kich1=\E[4h, kil1=\E[L, rmir=\E[4l, smir=\E[4h,
-	.ich=\E[%p1%d@, .ich1=\E[@, .kel=^X, .rmkx=\E;jYA,
-	.smkx=\E;iYA\E;jYC, .u8=\001Cu<\004, use=minitel1,
+	is1=\E;iYA\E;jYC, kbs@, kcan@, kclr=\E[2J, kctab=^I,
+	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[P,
+	kdl1=\E[M, kent@, kf1=^SD, kf10=^Y0, kf11=^Y1, kf12=^Y/,
+	kf13=^Y{1, kf14=^Y{2, kf15=^Y{3, kf16=^Y{4, kf17=^Y{5,
+	kf18=^Y{6, kf19=^Y{7, kf2=^SC, kf20=^Y{8, kf21=^Y{9,
+	kf22=^Y{0, kf23=^Y{*, kf24=^Y{#, kf3=^SF, kf4=^SA, kf5=^SG,
+	kf6=^SE, kf7=^Y8, kf8=^Y\,, kf9=^Y., khlp@, khome=\E[H,
+	kich1=\E[4h, kil1=\E[L, krfr@, lf1=Guide, lf2=Repetition,
+	lf3=Sommaire, lf4=Envoi, lf5=Correction, lf6=Annulation,
+	rmir=\E[4l, smir=\E[4h,
+	u8=\001%[ABCPtuvwxyz0123456789\:;<=>?]\004,
+	.ich=\E[%p1%d@, .ich1=\E[@, .kLFT=\E[P, .kRIT=\E[4h,
+	.kb2=^Y{g, .kcbt=^Y{i, .kel=^X, .mc0=\E\:|k, .rmkx=\E;jYA,
+	.rs1=\E[4l\E[2l, .smkx=\E;iYA\E;jYC, .u8=\001Cu<\004,
+	use=minitel1,
 # rmkx posait des problemes (logout en sortant de vi).
 minitel1b-80|minitel 1-bistandard (standard teleinformatique),
-	am@, bw@, hz@,
+	am@, bw@, eslok@, hz@, msgr, G0,
 	colors@, cols#80, it#8, pairs@,
-	blink=\E[5m, bold=\E[1m, civis=\037@A\024\n,
+	acsc@, blink=\E[5m, bold=\E[1m, civis=\037@A\024\n,
 	clear=\E[H\E[J, cnorm=\037@A\021\n, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, el=\E[K, home=\E[H,
-	ht=^I, ind=\ED, is1@, is2@, kbs=\EOl, kcan=\EOQ, kent=\EOM,
-	kf0=\EOp, kf1=\EOq, kf2=\EOr, kf3=\EOs, kf4=\EOt, kf5=\EOu,
+	ht=^I, ind=\ED, is1@, is2@, kbs=\EOl, kcan=\EOQ, kend=\E)4\r,
+	kent=\EOM, kf1=\EOq, kf10=\EOp, kf11=\EOP1, kf12=\EOP2,
+	kf13=\EOP3, kf14=\EOP4, kf15=\EOP5, kf16=\EOP6, kf17=\EOP7,
+	kf18=\EOP8, kf19=\EOP9, kf2=\EOr, kf20=\EOP0, kf21=\EOP*,
+	kf22=\EOP#, kf23@, kf24@, kf3=\EOs, kf4=\EOt, kf5=\EOu,
 	kf6=\EOv, kf7=\EOw, kf8=\EOx, kf9=\EOy, khlp=\EOm, knp=\EOn,
-	kpp=\EOR, krfr=\EOS, nel=\EE, op@, rc=\E8, rep@, rev=\E[7m,
-	ri=\EM, rmkx@, rmso=\E[27m, rmul=\E[24m, rs2=\E[H\E[J\E[m,
-	sc=\E7, setf@, sgr@, sgr0=\E[m, smkx@, smso=\E[7m, smul=\E[4m,
-	u6@, u7@, .acsc=}#f[, .enacs=^O, .mc0=\E[i, .rmacs=^O,
-	.rs2=\Ec,
+	kpp=\EOR, krfr=\EOS, lf1@, lf2@, lf3@, lf4@, lf5@, lf6@, nel=\EE,
+	op@, rc=\E8, rep@, rev=\E[7m, ri=\EM, rmkx@, rmso=\E[27m,
+	rmul=\E[24m,
+	rs2=\036\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[L\E[12H\E[2M\E[H\E[J\E[m,
+	sc=\E7, setab@, setaf@, setb@, setf@, sgr@, sgr0=\E[m, smkx@,
+	smso=\E[7m, smul=\E[4m,
+	tsl=\037@%?%p1%{63}%<%t%p1%'A'%+%c%e\177%p1%{62}%-%Pa%?%ga%{1}%&%t\011%;%?%ga%{2}%&%t\011\011%;%?%ga%{4}%&%t\011\011\011\011%;%?%ga%{07}%>%t\011\011\011\011\011\011\011\011%;%?%ga%{15}%>%t\011\011\011\011\011\011\011\011%;%;,
+	u6@, u7@, u8@, u9@, .acsc=}#f[, .enacs=^O, .kb2=\EOPg,
+	.kcbt=\EOPi, .ll=\E[24H, .mc0=\E[i, .rmacs=^O, .rs2=\Ec,
 	.sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;%;m,
-	.smacs=^N, use=minitel1b,
+	.smacs=^N, C0=}#f[j+k+l+m+n+o~q=s_t+u+v+w+x!0\032,
+	E0=^O, S0=^N,
+	XC=B\016%\017\,\243#\,\247]\,\260[\,\340@\,\347\\\\\,\351{\,\350}\,\371|\,\300A\,\301A\,\302A\,\303A\,\304A\,\305A\,\306E\,\307C\,\310E\,\311E\,\312E\,\313E\,\314I\,\315I\,\316I\,\317I\,\320D\,\321N\,\322O\,\323O\,\324O\,\325O\,\326O\,\331U\,\332U\,\333U\,\334U\,\335Y\,\337s\,\341a\,\342a\,\343a\,\344a\,\345a\,\346e\,\352e\,\353e\,\354i\,\355i\,\356i\,\357i\,\360d\,\361n\,\362o\,\363o\,\364o\,\365o\,\366o\,\372u\,\373u\,\374u\,\375y\,\377y\,\267.\,\327x\,\367/\,\261\E7\E[4m+\E8\E[C\,\,0\017%\016\,x|\,y\E7\E[4m<\E8\E[C\,z\E7\E[4m>\E8\E[C\,g\E7\E[4m+\E8\E[C,
+	use=minitel1b,
+
+minitel1-nb|minitel 1 (40cols) noir & blanc sans couleurs avec bold et dim ...,
+	colors@, pairs@,
+	bold=\EG, clear=^L\EB,
+	cup=\037%p1%'A'%+%c%p2%'A'%+%c\EB, dim=\ED, home=^^\EB,
+	op@, rs2=^L\EB, setab@, setaf@, setb@, setf@,
+	sgr=%?%p1%p3%O%t\E]%;%?%p4%t\EH%;%?%p5%t\ED%;%?%p6%t\EG%;,
+	sgr0=\EI\E\\\EB, tsl=\037@%p1%'A'%+%c\EB, .invis=\E@,
+	use=minitel1,
+
 minitel1b-nb|minitel 1b (40cols) noir & blanc sans couleurs avec bold et dim ...,
+	msgr,
 	colors@, pairs@,
 	acsc=`>a9f!j%k4l<m-n=p#q\,rpt=u5v-w<x5yvzy|l~$,
 	bold=\EG, clear=^L\EB, cup=\E[%i%p1%d;%p2%dH, dim=\ED,
-	home=^^\EB, kend=\E)4\r, kf0=^Y0, kf1=\E$4\r, kf11=^Y1,
-	kf12=^Y/, kf2=\E#4\r, kf3=\E&4\r, kf4=\E!4\r, kf5=\E'4\r,
-	kf6=\E/4\r, kf7=^Y8, kf8=^Y\,, kf9=^Y., knp=\E(4\r,
-	kpp=\E"4\r, op@, rmacs=^O, setf@,
+	home=^^\EB, kend=\E)4\r, kf1=\E$4\r, kf2=\E#4\r,
+	kf3=\E&4\r, kf4=\E!4\r, kf5=\E'4\r, kf6=\E/4\r, knp=\E(4\r,
+	kpp=\E"4\r, op@, rmacs=^O, rs2=^L\EB, setab@, setaf@, setb@,
+	setf@,
 	sgr=%?%p1%p3%O%t\E]%;%?%p4%t\EH%;%?%p5%t\ED%;%?%p6%t\EG%;,
-	sgr0=\EI\E\\\EB, smacs=^N, .invis=\E@, .rs2=^L\EB,
-	.u8=\001Cu|\004, use=minitel1b,
+	sgr0=\EI\E\\\EB, smacs=^N, tsl=\037@%p1%'A'%+%c\EB,
+	u8=\001%[ABCPpqrstuvwxyz{|}~\177]\004\r, .invis=\E@,
+	.u8=\001Cu|\004r, use=minitel1b,
 
-# From: Alexandre Montaron, 19 Nov 2015
+### Note:
+#
+# Faire, Fnct T puis "/" (TS+"?") pour activer les touches en 40cols :
+#
+# TS+Connexion/Fin(Fin),Retour(Page Up),Suite(Page Down),Guide(F1),
+# Repetition(F2),Sommaire(F3),Envoi(F4),Correction(F5),Annulation(F6),
+# Ctrl+7(F7),Ctrl+8(F8),Ctrl+9(F9),Ctrl+0(F10),Ctrl+*(F11),Ctrl+#(F12).
+#
+# Ctrl+Suite-1(F13), Ctrl+Suite-2(F14), Ctrl+Suite-3(F15),
+# Ctrl+Suite-4(F16), Ctrl+Suite-5(F17), Ctrl+Suite-6(F18),
+# Ctrl+Suite-7(F19), Ctrl+Suite-8(F20), Ctrl+Suite-9(F21),
+# Ctrl+Suite-0(F22), Ctrl+Suite-*(F23), Ctrl+Suite-#(F24).
+#
+### Fonctionne par exemple avec Midnight Commander (mc).
+
+minitel2-80|minitel 2 (80cols) avec filets vt100 (DEC),
+	G0,
+	acsc=ffggjjkkllmmnnooqqssttuuvvwwxxyyzz||}},
+	enacs=\E)0, rmacs=^O, smacs=^N, u6=\E[%i%d;%dR,
+	C0=ffggjjkkllmmnnooqqssttuuvvwwxxyyzz||}}, E0=^O,
+	S0=\E)0\016,
+	XC=B%\E(B\,\243\E(3}\,\247\E(R[\,\257\E(3v\,\260\E(3f\,\261\E(3g\,\265\E(3Y\,\267\E(3~\,\274\E(3O\,\275\E(3P\,\276\E(3Q\,\277\E(3Z\,\300A\,\301A\,\302A\,\303A\,\304\E(3R\,\305A\,\306E\,\307C\,\310E\,\311\E(3S\,\312E\,\313E\,\314\E(3T\,\315I\,\316I\,\317I\,\320D\,\321\E(3W\,\322\E(3U\,\323O\,\324O\,\325O\,\326O\,\327x\,\331U\,\332U\,\333U\,\334\E(3V\,\335Y\,\337\E(3{\,\340\E(3A\,\341a\,\342\E(3B\,\343a\,\344\E(3C\,\345a\,\346e\,\347\E(R\\\\\,\350\E(3E\,\351\E(3D\,\352\E(3F\,\353\E(3G\,\354i\,\355i\,\356\E(3H\,\357\E(3I\,\360d\,\361\E(3X\,\362o\,\363o\,\364\E(3J\,\365o\,\366\E(3K\,\367\E(3h\,\371\E(3L\,\372u\,\373\E(3M\,\374\E(3N\,\375y\,\377y\,\,0\E)3%\E)0\,\\\,m\,+k\,.l\,0\177\,-j,
+	use=minitel12-80,
+
+minitel12-80|minitel 12 (80cols),
+	G0,
+	civis=\E[<1h, cnorm=\E[<1l, is2=\E[12h, u6=\E[%i%d;%dH,
+	u7=\E[6n,
+	.acsc=ffggj+k+l+m+n+ovq-swt+u+v+w+xx}}\,m+k.l-j0\177,
+	.enacs=\E)3, .rmacs=^O, .rs3=\E[?4l, .scs=\E(%p1%c,
+	.smacs=^N,
+	C0=ffggj+k+l+m+n+ovq-swt+u+v+w+xx}}\,m+k.l-j0\177,
+	E0=^O, S0=\E)3\016,
+	XC=B%\E(B\,\243\E(3}\,\247\E(R[\,\257\E(3v\,\260\E(3f\,\261\E(3g\,\267\E(3~\,\274\E(3O\,\275\E(3P\,\276\E(3Q\,\300A\,\301A\,\302A\,\303A\,\304A\,\305A\,\306E\,\307C\,\310E\,\311E\,\312E\,\313E\,\314I\,\315I\,\316I\,\317I\,\320D\,\321N\,\322O\,\323O\,\324O\,\325O\,\326O\,\327x\,\331U\,\332U\,\333U\,\334U\,\335Y\,\337\E(3{\,\340\E(3A\,\341a\,\342\E(3B\,\343a\,\344\E(3C\,\345a\,\346e\,\347\E(R\\\\\,\350\E(3E\,\351\E(3D\,\352\E(3F\,\353\E(3G\,\354i\,\355i\,\356\E(3H\,\357\E(3I\,\360d\,\361n\,\362o\,\363o\,\364\E(3J\,\365o\,\366\E(3K\,\367\E(3h\,\371\E(3L\,\372u\,\373\E(3M\,\374\E(3N\,\375y\,\377y\,\,0\E)3%\E)0\,\\\,m\,+k\,.l\,0\177\,-j,
+	use=minitel1b-80,
+
+#
+# Add these in your ~/.screenrc for inputting some special glyphs like french
+# accentuated chars in 40 cols mode:
+#
+# bindkey ^YA digraph '`'  # Saisi accent grave.
+# bindkey ^YB digraph "'"  # Saisi accent aigu.
+# bindkey ^YC digraph '^'  # Saisi accent circonflexe.
+# bindkey ^YH digraph '"'  # Saisi accent trema.
+#
+# bindkey ^Y#      stuff \243  # Livre.
+# bindkey "^Y\047" stuff \247  # Paragraphe.
+# bindkey ^Yj      stuff \306  # AE
+# bindkey ^Yz      stuff \346  # ae
+# bindkey ^YKc     stuff \347  # c cedille.
+#
+
+screen.minitel1|Screen specific for minitel1,
+	ncv@,
+	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz||}}~~,
+	bel=\007\E\^ \E\\, bold@, csr@, flash=\Eg\E\^ \E\\, kmous@,
+	rmul@, smul@, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\EZ,
+	use=screen,
+
+screen.minitel1b|Screen specific for minitel1b,
+	kclr=\E[2J, kdl1=\E[M, kf13=^Y{1, kf14=^Y{2, kf15=^Y{3,
+	kf16=^Y{4, kf17=^Y{5, kf18=^Y{6, kf19=^Y{7, kf20=^Y{8,
+	kf21=^Y{9, kf22=^Y{0, kf23=^Y{*, kf24=^Y{#, kil1=\E[L,
+	use=screen.minitel1,
+
+screen.minitel1b-80|screen.minitel2-80|screen.minitel12-80|Screen specific for minitel1b-80 minitel2-80 and minitel12-80,
+	colors@, ncv@, pairs@,
+	bold=\E[1m, kent=\EOM, kf13@, kf14@, kf15@, kf16@, kf17@, kf18@,
+	kf19@, kf20@, kf21@, kf22@, kf23@, kf24@, khlp=\EOm, op@,
+	rmul=\E[24m, setab@, setaf@, setb@, setf@, smul=\E[4m,
+	use=screen.minitel1b,
+
+screen.minitel1-nb|Screen specific for minitel1-nb,
+	colors@, ncv@, pairs@,
+	bold=\E[1m, dim=\E[2m, op@, setab@, setaf@, setb@, setf@,
+	use=screen.minitel1,
+
+screen.minitel1b-nb|Screen specific for minitel1b-nb,
+	colors@, ncv@, pairs@,
+	bold=\E[1m, dim=\E[2m, op@, setab@, setaf@, setb@, setf@,
+	use=screen.minitel1b,
+
+
+# From: Alexandre Montaron, 19 Nov 2015, updated 19 Sep 2016
 #
 # He comments:
 # viewdata lacks a true cup capabilitie,
@@ -18777,13 +18899,18 @@ viewdata|prestel/viewdata terminals,
 	bel=^G, civis=^T, clear=^L, cnorm=^Q, cr=^M, cub1=^H, cud1=^J,
 	cuf1=^I,
 	cup=\036%?%p1%{07}%>%t\n\n\n\n\n\n\n\n%;%?%p1%{15}%>%t\n\n\n\n\n\n\n\n%;%?%p1%{4}%&%t\n\n\n\n%;%?%p1%{2}%&%t\n\n%;%?%p1%{1}%&%t\n%;%?%p2%{07}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{15}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{23}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{31}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{4}%&%t\011\011\011\011%;%?%p2%{2}%&%t\011\011%;%?%p2%{1}%&%t\011%;,
-	cuu1=^K, home=^^, nel=^M^J, .el=^X, .ind=^J,
+	cuu1=^K, home=^^, nel=^M^J, rs2=^L, .el=^X, .ind=^J,
 	.rep=%p1%c\022%p2%'?'%+%c, .ri=^K,
-# Also:
-# viewdata-rv works with some applications (e.g. emacs, xemacs) but fails with vim.
+
+viewdata-o|optimized version of viewdata prestel/viewdata terminals,
+	cup=\036%p1%?%p2%{20}%>%t%?%p1%{23}%=%t%Pa%{1}%e%{1}%+%;%;%Pa%?%ga%{13}%<%t%?%ga%{07}%>%t\n\n\n\n\n\n\n\n%;%?%ga%{4}%&%t\n\n\n\n%;%?%ga%{2}%&%t\n\n%;%?%ga%{1}%&%t\n%;%e%{24}%ga%-%Pa%?%ga%{07}%>%t\013\013\013\013\013\013\013\013%;%?%ga%{4}%&%t\013\013\013\013%;%?%ga%{2}%&%t\013\013%;%?%ga%{1}%&%t\013%;%;%?%p2%{21}%<%t%?%p2%{07}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{15}%>%t\011\011\011\011\011\011\011\011%;%?%p2%{4}%&%t\011\011\011\011%;%?%p2%{2}%&%t\011\011%;%?%p2%{1}%&%t\011%;%e%{40}%p2%-%Pa%?%ga%{07}%>%t\010\010\010\010\010\010\010\010%;%?%ga%{15}%>%t\010\010\010\010\010\010\010\010%;%?%ga%{4}%&%t\010\010\010\010%;%?%ga%{2}%&%t\010\010%;%?%ga%{1}%&%t\010%;%?%p1%{23}%=%t\013%;%;,
+	.ll=^^^K, use=viewdata,
+
+# Samples with TERM=viewdata and TERM=viewdata-rv: http://canal.chez.com/blog/
+
 viewdata-rv|prestel/viewdata terminals with reverse capabilitie (as green),
 	xmc#1,
-	rmso=\EG, smso=\EB, use=viewdata,
+	rmso=\EG, smso=\EB, use=viewdata-o,
 
 ######## OBSOLETE VDT TYPES
 #
@@ -23853,5 +23980,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 20160817
 #	+ correct a typo in interix -TD
+#
+# 2016-09-24
+#	+ updated minitel entries to use status line with screen(1), as well as
+#	  printing special G2 videotex chars like french accentuated glyph
+#	  using special cap XC= (patch by Alexandre Montaron).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

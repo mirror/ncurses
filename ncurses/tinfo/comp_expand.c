@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_expand.c,v 1.25 2012/03/24 18:37:17 tom Exp $")
+MODULE_ID("$Id: comp_expand.c,v 1.26 2016/09/24 21:15:51 tom Exp $")
 
 static int
 trailing_spaces(const char *src)
@@ -46,10 +46,10 @@ trailing_spaces(const char *src)
 }
 
 /* this deals with differences over whether 0x7f and 0x80..0x9f are controls */
-#define REALCTL(s) (UChar(*(s)) < 127 && iscntrl(UChar(*(s))))
+#define REALCTL(s)   (UChar(*(s)) < 127 && iscntrl(UChar(*(s))))
 #define REALPRINT(s) (UChar(*(s)) < 127 && isprint(UChar(*(s))))
 
-#define P_LIMIT(p) (length - (size_t)(p))
+#define P_LIMIT(p)   (length - (size_t)(p))
 
 NCURSES_EXPORT(char *)
 _nc_tic_expand(const char *srcp, bool tic_format, int numbers)
@@ -133,6 +133,8 @@ _nc_tic_expand(const char *srcp, bool tic_format, int numbers)
 		}
 		break;
 	    default:
+		if (*str == ',')	/* minitel1 uses this */
+		    buffer[bufp++] = '\\';
 		buffer[bufp++] = *str;
 		break;
 	    }
