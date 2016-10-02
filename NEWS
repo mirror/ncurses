@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2670 2016/09/24 22:47:32 tom Exp $
+-- $Id: NEWS,v 1.2673 2016/10/02 01:30:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20161001
+	+ add -W option to tic/infocmp to force long strings to wrap.  This is
+	  in addition to the -w option which attempts to fit capabilities into
+	  a given line-length.
+	+ add linux-m1 minitel entries (patch by Alexandre Montaron).
+	+ correct rs2 string for vt100-nam -TD
 
 20160924
 	+ modify _nc_tic_expand to escape comma if it immediately follows a

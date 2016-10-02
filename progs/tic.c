@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.223 2016/09/05 00:27:13 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.224 2016/10/01 12:46:54 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -170,6 +170,7 @@ usage(void)
 #endif
 	DATA("  -U         suppress post-processing of entries")
 	DATA("  -V         print version")
+	DATA("  -W         wrap long strings according to -w[n] option")
 	DATA("  -v[n]      set verbosity level")
 	DATA("  -w[n]      set format width for translation output")
 #if NCURSES_XNAMES
@@ -700,6 +701,7 @@ main(int argc, char *argv[])
     bool suppress_untranslatable = FALSE;
     int quickdump = 0;
     bool quiet = FALSE;
+    bool wrap_strings = FALSE;
 
     log_fp = stderr;
 
@@ -725,7 +727,7 @@ main(int argc, char *argv[])
      * be optional.
      */
     while ((this_opt = getopt(argc, argv,
-			      "0123456789CDIKLNQR:TUVace:fGgo:qrstvwx")) != -1) {
+			      "0123456789CDIKLNQR:TUVWace:fGgo:qrstvwx")) != -1) {
 	if (isdigit(this_opt)) {
 	    switch (last_opt) {
 	    case 'Q':
@@ -801,6 +803,9 @@ main(int argc, char *argv[])
 	case 'V':
 	    puts(curses_version());
 	    ExitProgram(EXIT_SUCCESS);
+	case 'W':
+	    wrap_strings = TRUE;
+	    break;
 	case 'c':
 	    check_only = TRUE;
 	    break;
@@ -929,15 +934,18 @@ main(int argc, char *argv[])
 
     if (infodump || check_only) {
 	dump_init(tversion,
-		  smart_defaults
-		  ? outform
-		  : F_LITERAL,
-		  sortmode, width, height, debug_level, formatted ||
-		  check_only, check_only, quickdump);
+		  (smart_defaults
+		   ? outform
+		   : F_LITERAL),
+		  sortmode,
+		  wrap_strings, width, height,
+		  debug_level, formatted || check_only, check_only, quickdump);
     } else if (capdump) {
 	dump_init(tversion,
 		  outform,
-		  sortmode, width, height, debug_level, FALSE, FALSE, FALSE);
+		  sortmode,
+		  wrap_strings, width, height,
+		  debug_level, FALSE, FALSE, FALSE);
     }
 
     /* parse entries out of the source file */

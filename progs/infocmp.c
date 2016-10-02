@@ -42,10 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.137 2016/09/10 20:44:35 tom Exp $")
-
-#define L_CURL "{"
-#define R_CURL "}"
+MODULE_ID("$Id: infocmp.c,v 1.140 2016/10/01 19:09:22 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -989,8 +986,8 @@ file_comparison(int argc, char *argv[])
     int i, n;
 
     memset(heads, 0, sizeof(heads));
-    dump_init((char *) 0, F_LITERAL, S_TERMINFO, 0, 65535, itrace, FALSE,
-	      FALSE, FALSE);
+    dump_init((char *) 0, F_LITERAL, S_TERMINFO,
+	      FALSE, 0, 65535, itrace, FALSE, FALSE, FALSE);
 
     for (n = 0; n < argc && n < MAXCOMPARE; n++) {
 	if (freopen(argv[n], "r", stdin) == 0)
@@ -1186,6 +1183,7 @@ usage(void)
 	,"  -T    eliminate size limits (test)"
 	,"  -U    do not post-process entries"
 	,"  -V    print version"
+	,"  -W    wrap long strings per -w[n]"
 #if NCURSES_XNAMES
 	,"  -a    with -F, list commented-out caps"
 #endif
@@ -1509,6 +1507,7 @@ main(int argc, char *argv[])
     bool init_analyze = FALSE;
     bool suppress_untranslatable = FALSE;
     int quickdump = 0;
+    bool wrap_strings = FALSE;
 
     /* where is the terminfo database location going to default to? */
     restdir = firstdir = 0;
@@ -1530,7 +1529,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc,
 		       argv,
-		       "01A:aB:CcDdEeFfGgIiKLlnpQ:qR:rs:TtUuVv:w:x")) != -1) {
+		       "01A:aB:CcDdEeFfGgIiKLlnpQ:qR:rs:TtUuVv:Ww:x")) != -1) {
 	switch (c) {
 	case '0':
 	    mwidth = 65535;
@@ -1695,6 +1694,10 @@ main(int argc, char *argv[])
 	    set_trace_level(itrace);
 	    break;
 
+	case 'W':
+	    wrap_strings = TRUE;
+	    break;
+
 	case 'w':
 	    mwidth = optarg_to_number();
 	    break;
@@ -1757,7 +1760,8 @@ main(int argc, char *argv[])
     }
 
     /* set up for display */
-    dump_init(tversion, outform, sortmode, mwidth, mheight, itrace,
+    dump_init(tversion, outform, sortmode,
+	      wrap_strings, mwidth, mheight, itrace,
 	      formatted, FALSE, quickdump);
 
     if (!filecompare) {
