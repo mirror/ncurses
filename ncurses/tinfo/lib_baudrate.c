@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
-#if defined(__FreeBSD__)
+#if defined(__FreeBSD__) || defined(__OpenBSD__)
 #include <sys/param.h>
 #endif
 
@@ -49,7 +49,11 @@
  * of the indices up to B115200 fit nicely in a 'short', allowing us to retain
  * ospeed's type for compatibility.
  */
-#if NCURSES_OSPEED_COMPAT && ((defined(__FreeBSD__) && (__FreeBSD_version < 700000)) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__APPLE__))
+#if NCURSES_OSPEED_COMPAT && \
+ 	((defined(__FreeBSD__) && (__FreeBSD_version < 700000)) || \
+	defined(__NetBSD__) || \
+	((defined(__OpenBSD__) && OpenBSD < 201510)) || \
+	defined(__APPLE__))
 #undef B0
 #undef B50
 #undef B75
@@ -79,7 +83,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.41 2016/08/28 00:35:00 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.42 2016/10/03 00:29:21 tom Exp $")
 
 /*
  *	int

@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.141 2016/10/02 01:28:04 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.143 2016/10/09 01:30:14 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -123,7 +123,7 @@ strncpy_DYN(DYNBUF * dst, const char *src, size_t need)
 	if (dst->text == 0)
 	    failed("strncpy_DYN");
     }
-    _nc_STRNCPY(dst->text + dst->used, src, need);
+    _nc_STRNCPY(dst->text + dst->used, src, need + 1);
     dst->used += need;
     dst->text[dst->used] = 0;
 }
@@ -581,7 +581,7 @@ wrap_concat(const char *src)
 	    base = (int) (p + 1 - fill);
 	    if (base > 8)
 		base = 8;
-	    sprintf(align, "%*s", base, " ");
+	    _nc_SPRINTF(align, _nc_SLIMIT(align) "%*s", base, " ");
 	} else {
 	    align[base] = '\0';
 	}

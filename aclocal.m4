@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.800 2016/09/10 19:33:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.801 2016/10/08 21:35:33 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1592,7 +1592,7 @@ AC_ARG_ENABLE(rpath,
 AC_MSG_RESULT($cf_cv_enable_rpath)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_STRING_HACKS version: 4 updated: 2016/09/10 15:33:21
+dnl CF_ENABLE_STRING_HACKS version: 5 updated: 2016/10/08 17:34:11
 dnl ----------------------
 dnl On a few platforms, the compiler and/or loader nags with untruthful
 dnl comments stating that "most" uses of strcat/strcpy/sprintf are incorrect,
@@ -1619,7 +1619,9 @@ AC_MSG_RESULT($with_string_hacks)
 if test "x$with_string_hacks" = "xyes"; then
  	AC_DEFINE(USE_STRING_HACKS,1,[Define to 1 to work around bogus compiler/loader warnings])
 	AC_MSG_WARN(enabling string-hacks to work around bogus compiler/loader warnings)
-	AC_CHECK_FUNC(strlcat,,[
+	AC_CHECK_FUNC(strlcat,[
+		AC_DEFINE(HAVE_STRLCAT,1,[Define to 1 if we have strlcat function])
+		],[
 		AC_CHECK_LIB(bsd,strlcat,[
 			CF_ADD_LIB(bsd)
 			AC_CHECK_HEADERS(bsd/string.h)

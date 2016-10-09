@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.135 2016/09/10 22:09:38 tom Exp $
+dnl $Id: aclocal.m4,v 1.136 2016/10/08 21:36:55 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1118,7 +1118,7 @@ if test "$cf_disable_rpath_hack" = no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_STRING_HACKS version: 4 updated: 2016/09/10 15:33:21
+dnl CF_ENABLE_STRING_HACKS version: 5 updated: 2016/10/08 17:34:11
 dnl ----------------------
 dnl On a few platforms, the compiler and/or loader nags with untruthful
 dnl comments stating that "most" uses of strcat/strcpy/sprintf are incorrect,
@@ -1145,7 +1145,9 @@ AC_MSG_RESULT($with_string_hacks)
 if test "x$with_string_hacks" = "xyes"; then
  	AC_DEFINE(USE_STRING_HACKS,1,[Define to 1 to work around bogus compiler/loader warnings])
 	AC_MSG_WARN(enabling string-hacks to work around bogus compiler/loader warnings)
-	AC_CHECK_FUNC(strlcat,,[
+	AC_CHECK_FUNC(strlcat,[
+		AC_DEFINE(HAVE_STRLCAT,1,[Define to 1 if we have strlcat function])
+		],[
 		AC_CHECK_LIB(bsd,strlcat,[
 			CF_ADD_LIB(bsd)
 			AC_CHECK_HEADERS(bsd/string.h)
