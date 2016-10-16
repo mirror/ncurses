@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.16 2016/01/30 15:52:36 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.17 2016/10/15 16:45:45 tom Exp $
 .TH curs_refresh 3X ""
 .na
 .hy 0
@@ -105,7 +105,7 @@ exploiting this behavior.)
 The \fBwredrawln\fR routine indicates to \fBcurses\fR that some screen lines
 are corrupted and should be thrown away before anything is written over them.
 It touches the indicated lines (marking them changed).
-The routine \fBredrawwin\fR() touches the entire window.
+The routine \fBredrawwin\fR touches the entire window.
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fR upon failure, and \fBOK\fR
 (SVr4 only specifies "an integer value other than \fBERR\fR") upon successful
@@ -129,14 +129,14 @@ Note that \fBrefresh\fR and \fBredrawwin\fR may be macros.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.
 .PP
-Whether \fBwnoutrefresh()\fR copies to the virtual screen the entire contents
+Whether \fBwnoutrefresh\fR copies to the virtual screen the entire contents
 of a window or just its changed portions has never been well-documented in
 historic curses versions (including SVr4).
 It might be unwise to rely on
 either behavior in programs that might have to be linked with other curses
 implementations.
-Instead, you can do an explicit \fBtouchwin()\fR before the
-\fBwnoutrefresh()\fR call to guarantee an entire-contents copy anywhere.
+Instead, you can do an explicit \fBtouchwin\fR before the
+\fBwnoutrefresh\fR call to guarantee an entire-contents copy anywhere.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_outopts\fR(3X)

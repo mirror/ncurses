@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1999-on
-  * @Id: curs_extend.3x,v 1.20 2016/05/14 23:10:54 tom Exp @
+  * @Id: curs_extend.3x,v 1.21 2016/10/15 16:52:48 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -64,20 +64,20 @@
 
 
 </PRE><H3><a name="h3-curses_version">curses_version</a></H3><PRE>
-       Use  <EM>curses</EM><STRONG>_</STRONG><EM>version()</EM> to get the version number, including
+       Use  <STRONG>curses_version</STRONG>  to  get the version number, including
        patch level of the library, e.g., <STRONG>5.0.19991023</STRONG>
 
 
 </PRE><H3><a name="h3-use_extended_names">use_extended_names</a></H3><PRE>
-       The <EM>use</EM><STRONG>_</STRONG><EM>extended</EM><STRONG>_</STRONG><EM>names()</EM>  function  controls  whether  the
-       calling  application  is  able to use user-defined or non-
-       standard names which may be  compiled  into  the  terminfo
-       description, i.e., via the terminfo or termcap interfaces.
-       Normally these names are  available  for  use,  since  the
-       essential  decision  is made by using the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG>
-       to compile extended terminal definitions.  However you can
-       disable  this  feature  to ensure compatibility with other
-       implementations of curses.
+       The <STRONG>use_extended_names</STRONG> function controls whether the call-
+       ing application is able to use user-defined or nonstandard
+       names which may be compiled into the terminfo description,
+       i.e.,  via  the  terminfo or termcap interfaces.  Normally
+       these names are available for  use,  since  the  essential
+       decision  is made by using the <STRONG>-x</STRONG> option of <STRONG>tic</STRONG> to compile
+       extended terminal definitions.  However  you  can  disable
+       this  feature to ensure compatibility with other implemen-
+       tations of curses.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.61 2015/09/05 20:45:49 tom Exp @
+  * @Id: tic.1m,v 1.62 2016/10/01 17:14:50 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -50,7 +50,7 @@
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>tic</STRONG>  [<STRONG>-01CDGIKLNTUVacfgqrstx</STRONG>]  [<STRONG>-e</STRONG> <EM>names</EM>] [<STRONG>-o</STRONG> <EM>dir</EM>] [<STRONG>-Q</STRONG>[<EM>n</EM>]]
+       <STRONG>tic</STRONG>  [<STRONG>-01CDGIKLNTUVWacfgqrstx</STRONG>] [<STRONG>-e</STRONG> <EM>names</EM>] [<STRONG>-o</STRONG> <EM>dir</EM>] [<STRONG>-Q</STRONG>[<EM>n</EM>]]
        [<STRONG>-R</STRONG> <EM>subset</EM>] [<STRONG>-v</STRONG>[<EM>n</EM>]] [<STRONG>-w</STRONG>[<EM>n</EM>]] <EM>file</EM>
 
 
@@ -304,25 +304,28 @@
             If the debug level <EM>n</EM> is not given, it is taken to  be
             one.
 
-       <STRONG>-w</STRONG><EM>n</EM>  specifies  the width of the output.  The parameter is
+       <STRONG>-W</STRONG>   By  itself, the <STRONG>-w</STRONG> option will not force long strings
+            to be wrapped.  Use the <STRONG>-W</STRONG> option to do this.
+
+       <STRONG>-w</STRONG><EM>n</EM>  specifies the width of the output.  The parameter  is
             optional.  If it is omitted, it defaults to 60.
 
        <STRONG>-x</STRONG>   Treat unknown capabilities as user-defined.  That is,
-            if  you  supply  a capability name which <STRONG>tic</STRONG> does not
+            if you supply a capability name which  <STRONG>tic</STRONG>  does  not
             recognize, it will infer its type (boolean, number or
-            string)  from  the  syntax and make an extended table
+            string) from the syntax and make  an  extended  table
             entry  for  that.   User-defined  capability  strings
-            whose  name  begins  with "k" are treated as function
+            whose name begins with "k" are  treated  as  function
             keys.
 
 
 </PRE><H3><a name="h3-PARAMETERS">PARAMETERS</a></H3><PRE>
        <EM>file</EM>   contains one or more <STRONG>terminfo</STRONG> terminal descriptions
-              in  source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each descrip-
-              tion in the file describes the  capabilities  of  a
+              in source format [see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].  Each  descrip-
+              tion  in  the  file describes the capabilities of a
               particular terminal.
 
-              If  <EM>file</EM>  is  "-",  then  the data is read from the
+              If <EM>file</EM> is "-", then the  data  is  read  from  the
               standard input.  The <EM>file</EM> parameter may also be the
               path of a character-device.
 
@@ -332,60 +335,60 @@
        umented in <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  The exception is the <STRONG>use</STRONG> capabil-
        ity.
 
-       When  a  <STRONG>use</STRONG>=<EM>entry</EM>-<EM>name</EM>  field is discovered in a terminal
-       entry currently being compiled, <STRONG>tic</STRONG> reads  in  the  binary
-       from  <STRONG>/usr/share/terminfo</STRONG> to complete the entry.  (Entries
-       created from <EM>file</EM> will be used first.  <STRONG>tic</STRONG> duplicates  the
+       When a <STRONG>use</STRONG>=<EM>entry</EM>-<EM>name</EM> field is discovered  in  a  terminal
+       entry  currently  being  compiled, <STRONG>tic</STRONG> reads in the binary
+       from <STRONG>/usr/share/terminfo</STRONG> to complete the entry.   (Entries
+       created  from <EM>file</EM> will be used first.  <STRONG>tic</STRONG> duplicates the
        capabilities in <EM>entry</EM>-<EM>name</EM> for the current entry, with the
-       exception  of  those  capabilities  that  explicitly   are
+       exception   of  those  capabilities  that  explicitly  are
        defined in the current entry.
 
-       When    an   entry,   e.g.,   <STRONG>entry_name_1</STRONG>,   contains   a
-       <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  field,  any  canceled  capabilities   in
-       <EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  must also appear in <STRONG>entry_name_1</STRONG> before <STRONG>use=</STRONG>
+       When   an   entry,   e.g.,   <STRONG>entry_name_1</STRONG>,   contains    a
+       <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM>   field,  any  canceled  capabilities  in
+       <EM>entry</EM>_<EM>name</EM>_<EM>2</EM> must also appear in <STRONG>entry_name_1</STRONG> before  <STRONG>use=</STRONG>
        for these capabilities to be canceled in <STRONG>entry_name_1</STRONG>.
 
        Total compiled entries cannot exceed 4096 bytes.  The name
-       field  cannot  exceed 512 bytes.  Terminal names exceeding
-       the maximum alias length (32 characters  on  systems  with
+       field cannot exceed 512 bytes.  Terminal  names  exceeding
+       the  maximum  alias  length (32 characters on systems with
        long filenames, 14 characters otherwise) will be truncated
-       to the maximum alias length and a warning message will  be
+       to  the maximum alias length and a warning message will be
        printed.
 
 
 </PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
-       There  is  some evidence that historic <STRONG>tic</STRONG> implementations
-       treated description fields with no whitespace in  them  as
-       additional  aliases  or short names.  This <STRONG>tic</STRONG> does not do
-       that, but it does warn  when  description  fields  may  be
+       There is some evidence that historic  <STRONG>tic</STRONG>  implementations
+       treated  description  fields with no whitespace in them as
+       additional aliases or short names.  This <STRONG>tic</STRONG> does  not  do
+       that,  but  it  does  warn  when description fields may be
        treated that way and check them for dangerous characters.
 
 
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
        Unlike the SVr4 <STRONG>tic</STRONG> command, this implementation can actu-
-       ally compile termcap sources.  In fact,  entries  in  ter-
-       minfo  and  termcap syntax can be mixed in a single source
+       ally  compile  termcap  sources.  In fact, entries in ter-
+       minfo and termcap syntax can be mixed in a  single  source
        file.  See <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for the list of termcap names taken
        to be equivalent to terminfo names.
 
-       The  SVr4  manual  pages  are  not clear on the resolution
-       rules for <STRONG>use</STRONG> capabilities.  This  implementation  of  <STRONG>tic</STRONG>
+       The SVr4 manual pages are  not  clear  on  the  resolution
+       rules  for  <STRONG>use</STRONG>  capabilities.  This implementation of <STRONG>tic</STRONG>
        will find <STRONG>use</STRONG> targets anywhere in the source file, or any-
-       where in the file tree rooted at <STRONG>TERMINFO</STRONG> (if <STRONG>TERMINFO</STRONG>  is
+       where  in the file tree rooted at <STRONG>TERMINFO</STRONG> (if <STRONG>TERMINFO</STRONG> is
        defined), or in the user's <EM>$HOME/.terminfo</EM> database (if it
-       exists), or (finally) anywhere in the system's  file  tree
+       exists),  or  (finally) anywhere in the system's file tree
        of compiled entries.
 
-       The  error  messages from this <STRONG>tic</STRONG> have the same format as
-       GNU C error messages, and can be  parsed  by  GNU  Emacs's
+       The error messages from this <STRONG>tic</STRONG> have the same  format  as
+       GNU  C  error  messages,  and can be parsed by GNU Emacs's
        compile facility.
 
-       The  <STRONG>-0</STRONG>,  <STRONG>-1</STRONG>,  <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>,
-       <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>, <STRONG>-t</STRONG> and <STRONG>-x</STRONG>  options  are  not  supported  under
+       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>,  <STRONG>-e</STRONG>,  <STRONG>-f</STRONG>,  <STRONG>-g</STRONG>,
+       <STRONG>-o</STRONG>,  <STRONG>-r</STRONG>,  <STRONG>-s</STRONG>,  <STRONG>-t</STRONG>  and  <STRONG>-x</STRONG> options are not supported under
        SVr4.  The SVr4 <STRONG>-c</STRONG> mode does not report bad use links.
 
-       System  V does not compile entries to or read entries from
-       your <EM>$HOME/.terminfo</EM> database unless TERMINFO  is  explic-
+       System V does not compile entries to or read entries  from
+       your  <EM>$HOME/.terminfo</EM>  database unless TERMINFO is explic-
        itly set to it.
 
 
@@ -395,10 +398,10 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,    <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
+       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20160910).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161015).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

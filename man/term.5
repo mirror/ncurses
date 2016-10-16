@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.22 2015/04/26 14:50:23 tom Exp $
+.\" $Id: term.5,v 1.23 2016/10/15 17:02:31 tom Exp $
 .TH term 5
 .ds n 5
 .ds d @TERMINFO@
@@ -76,7 +76,7 @@ or sign extension are made.
 The compiled file is created with the
 .B @TIC@
 program, and read by the routine
-.IR setupterm .
+.BR setupterm .
 The file is divided into six parts:
 the header,
 terminal names,
@@ -197,18 +197,18 @@ finally strings.
 .
 .SH PORTABILITY
 Note that it is possible for
-.I setupterm
+.B setupterm
 to expect a different set of capabilities
 than are actually present in the file.
 Either the database may have been updated since
-.I setupterm
+.B setupterm
 has been recompiled
 (resulting in extra unrecognized entries in the file)
 or the program may have been recompiled more recently
 than the database was updated
 (resulting in missing entries).
 The routine
-.I setupterm
+.B setupterm
 must be prepared for both possibilities \-
 this is why the numbers and sizes are included.
 Also, new capabilities must always be added at the end of the lists

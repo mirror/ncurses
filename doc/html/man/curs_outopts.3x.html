@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_outopts.3x,v 1.26 2015/07/21 00:23:43 tom Exp @
+  * @Id: curs_outopts.3x,v 1.27 2016/10/15 17:02:31 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -193,8 +193,8 @@
        Issue 4.
 
        The XSI Curses standard is ambiguous on  the  question  of
-       whether  <STRONG>raw</STRONG>()  should  disable the CRLF translations con-
-       trolled by <STRONG>nl</STRONG>() and <STRONG>nonl</STRONG>().  BSD curses did turn off these
+       whether  <STRONG>raw</STRONG>  should  disable  the  CRLF translations con-
+       trolled by <STRONG>nl</STRONG> and <STRONG>nonl</STRONG>.  BSD curses  did  turn  off  these
        translations;  AT&amp;T  curses (at least as late as SVr1) did
        not.  We choose to do so, on the theory that a  programmer
        requesting  raw  input wants a clean (ideally 8-bit clean)

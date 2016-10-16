@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.44 2016/08/20 23:26:10 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.46 2016/10/15 17:27:48 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -149,14 +149,14 @@
             for curses applications.
 
             <STRONG>setupterm</STRONG>  determines if the entry is a hardcopy type
-            by checking the <EM>hc</EM> (<EM>hardcopy</EM>) capability.
+            by checking the <STRONG>hc</STRONG> (<STRONG>hardcopy</STRONG>) capability.
 
        <STRONG>0</STRONG>    means that the terminal could not be found,  or  that
             it  is  a generic type, having too little information
             for curses applications to run.
 
             <STRONG>setupterm</STRONG> determines if the entry is a  generic  type
-            by checking the <EM>gn</EM> (<EM>generic</EM>) capability.
+            by checking the <STRONG>gn</STRONG> (<STRONG>generic</STRONG>) capability.
 
        <STRONG>-1</STRONG>   means that the <STRONG>terminfo</STRONG> database could not be found.
 
@@ -226,44 +226,49 @@
 
 </PRE><H3><a name="h3-Output-Functions">Output Functions</a></H3><PRE>
        The <STRONG>tputs</STRONG>  routine  applies  padding  information  to  the
-       string  <EM>str</EM>  and  outputs  it.  The <EM>str</EM> must be a terminfo
-       string variable or the return value from  <STRONG>tparm</STRONG>,  <STRONG>tgetstr</STRONG>,
-       or <STRONG>tgoto</STRONG>.  <EM>affcnt</EM> is the number of lines affected, or 1 if
-       not applicable.  <EM>putc</EM> is a <STRONG>putchar</STRONG>-like routine  to  which
-       the characters are passed, one at a time.
+       string <EM>str</EM> and outputs it:
 
-       The  <STRONG>putp</STRONG> routine calls <STRONG>tputs(</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>1,</STRONG> <STRONG>putchar)</STRONG>.  Note that
-       the output of <STRONG>putp</STRONG> always  goes  to  <STRONG>stdout</STRONG>,  not  to  the
+       <STRONG>o</STRONG>   The  <EM>str</EM> must be a terminfo string variable or the re-
+           turn value from <STRONG>tparm</STRONG>, <STRONG>tgetstr</STRONG>, or <STRONG>tgoto</STRONG>.
+
+       <STRONG>o</STRONG>   <EM>affcnt</EM> is the number of lines affected, or  1  if  not
+           applicable.
+
+       <STRONG>o</STRONG>   <EM>putc</EM> is a <STRONG>putchar</STRONG>-like routine to which the characters
+           are passed, one at a time.
+
+       The <STRONG>putp</STRONG> routine calls <STRONG>tputs(</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>1,</STRONG> <STRONG>putchar)</STRONG>.  Note  that
+       the  output  of  <STRONG>putp</STRONG>  always  goes  to <STRONG>stdout</STRONG>, not to the
        <EM>fildes</EM> specified in <STRONG>setupterm</STRONG>.
 
        The <STRONG>vidputs</STRONG> routine displays the string on the terminal in
-       the video attribute mode <EM>attrs</EM>, which is  any  combination
-       of  the  attributes  listed in <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.  The characters
+       the  video  attribute mode <EM>attrs</EM>, which is any combination
+       of the attributes listed in  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.   The  characters
        are passed to the <STRONG>putchar</STRONG>-like routine <EM>putc</EM>.
 
-       The <STRONG>vidattr</STRONG> routine is like the  <STRONG>vidputs</STRONG>  routine,  except
+       The  <STRONG>vidattr</STRONG>  routine  is like the <STRONG>vidputs</STRONG> routine, except
        that it outputs through <STRONG>putchar</STRONG>.
 
-       The  <STRONG>vid_attr</STRONG>  and <STRONG>vid_puts</STRONG> routines correspond to vidattr
-       and vidputs, respectively.  They use a  set  of  arguments
-       for  representing  the  video attributes plus color, i.e.,
+       The <STRONG>vid_attr</STRONG> and <STRONG>vid_puts</STRONG> routines correspond  to  vidattr
+       and  vidputs,  respectively.   They use a set of arguments
+       for representing the video attributes  plus  color,  i.e.,
        one of type attr_t for the attributes and one of short for
        the color_pair number.  The <STRONG>vid_attr</STRONG> and <STRONG>vid_puts</STRONG> routines
-       are designed to use the attribute constants with  the  <EM>WA</EM><STRONG>_</STRONG>
-       prefix.   The  opts  argument  is reserved for future use.
-       Currently, applications must provide a  null  pointer  for
+       are  designed  to use the attribute constants with the <EM>WA</EM><STRONG>_</STRONG>
+       prefix.  The opts argument is  reserved  for  future  use.
+       Currently,  applications  must  provide a null pointer for
        that argument.
 
-       The  <STRONG>mvcur</STRONG>  routine  provides low-level cursor motion.  It
-       takes effect immediately (rather  than  at  the  next  re-
+       The <STRONG>mvcur</STRONG> routine provides low-level  cursor  motion.   It
+       takes  effect  immediately  (rather  than  at the next re-
        fresh).
 
 
 </PRE><H3><a name="h3-Terminal-Capability-Functions">Terminal Capability Functions</a></H3><PRE>
-       The  <STRONG>tigetflag</STRONG>,  <STRONG>tigetnum</STRONG> and <STRONG>tigetstr</STRONG> routines return the
+       The <STRONG>tigetflag</STRONG>, <STRONG>tigetnum</STRONG> and <STRONG>tigetstr</STRONG> routines  return  the
        value of the capability corresponding to the <STRONG>terminfo</STRONG> <EM>cap-</EM>
-       <EM>name</EM>  passed  to them, such as <STRONG>xenl</STRONG>.  The <EM>capname</EM> for each
-       capability is given in the table column  entitled  <EM>capname</EM>
+       <EM>name</EM> passed to them, such as <STRONG>xenl</STRONG>.  The <EM>capname</EM>  for  each
+       capability  is  given in the table column entitled <EM>capname</EM>
        code in the capabilities section of <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
        These routines return special values to denote errors.
@@ -272,14 +277,14 @@
 
        <STRONG>-1</STRONG>     if <EM>capname</EM> is not a boolean capability, or
 
-       <STRONG>0</STRONG>      if  it  is canceled or absent from the terminal de-
+       <STRONG>0</STRONG>      if it is canceled or absent from the  terminal  de-
               scription.
 
        The <STRONG>tigetnum</STRONG> routine returns
 
        <STRONG>-2</STRONG>     if <EM>capname</EM> is not a numeric capability, or
 
-       <STRONG>-1</STRONG>     if it is canceled or absent from the  terminal  de-
+       <STRONG>-1</STRONG>     if  it  is canceled or absent from the terminal de-
               scription.
 
        The <STRONG>tigetstr</STRONG> routine returns
@@ -287,13 +292,13 @@
        <STRONG>(char</STRONG> <STRONG>*)-1</STRONG>
               if <EM>capname</EM> is not a string capability, or
 
-       <STRONG>0</STRONG>      if  it  is canceled or absent from the terminal de-
+       <STRONG>0</STRONG>      if it is canceled or absent from the  terminal  de-
               scription.
 
 
 </PRE><H3><a name="h3-Terminal-Capability-Names">Terminal Capability Names</a></H3><PRE>
-       These null-terminated arrays contain  the  short  terminfo
-       names  ("codes"), the <STRONG>termcap</STRONG> names, and the long terminfo
+       These  null-terminated  arrays  contain the short terminfo
+       names ("codes"), the <STRONG>termcap</STRONG> names, and the long  terminfo
        names ("fnames") for each of the predefined <STRONG>terminfo</STRONG> vari-
        ables:
               <STRONG>char</STRONG> <STRONG>*boolnames[]</STRONG>, <STRONG>*boolcodes[]</STRONG>, <STRONG>*boolfnames[]</STRONG>
@@ -304,119 +309,119 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure
-       and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value  other  than
-       <STRONG>ERR</STRONG>")  upon  successful completion, unless otherwise noted
+       Routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure
+       and  <STRONG>OK</STRONG>  (SVr4 only specifies "an integer value other than
+       <STRONG>ERR</STRONG>") upon successful completion, unless  otherwise  noted
        in the preceding routine descriptions.
 
        Routines that return pointers always return <STRONG>NULL</STRONG> on error.
 
-       X/Open defines no error conditions.  In  this  implementa-
+       X/Open  defines  no error conditions.  In this implementa-
        tion
 
             <STRONG>del_curterm</STRONG>
-                 returns  an  error  if its terminal parameter is
+                 returns an error if its  terminal  parameter  is
                  null.
 
             <STRONG>putp</STRONG> calls <STRONG>tputs</STRONG>, returning the same error-codes.
 
             <STRONG>restartterm</STRONG>
-                 returns an error if the associated call  to  <STRONG>se-</STRONG>
+                 returns  an  error if the associated call to <STRONG>se-</STRONG>
                  <STRONG>tupterm</STRONG> returns an error.
 
             <STRONG>setupterm</STRONG>
-                 returns  an  error  if it cannot allocate enough
-                 memory, or create the initial  windows  (stdscr,
-                 curscr,  newscr).   Other  error  conditions are
+                 returns an error if it  cannot  allocate  enough
+                 memory,  or  create the initial windows (stdscr,
+                 curscr, newscr).   Other  error  conditions  are
                  documented above.
 
             <STRONG>tputs</STRONG>
-                 returns an error  if  the  string  parameter  is
-                 null.   It  does  not  detect I/O errors: X/Open
-                 states that <STRONG>tputs</STRONG> ignores the  return  value  of
+                 returns  an  error  if  the  string parameter is
+                 null.  It does not  detect  I/O  errors:  X/Open
+                 states  that  <STRONG>tputs</STRONG>  ignores the return value of
                  the output function <EM>putc</EM>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        X/Open notes that <STRONG>vidattr</STRONG> and <STRONG>vidputs</STRONG> may be macros.
 
-       The  function  <STRONG>setterm</STRONG> is not described by X/Open and must
-       be considered non-portable.  All other  functions  are  as
+       The function <STRONG>setterm</STRONG> is not described by X/Open  and  must
+       be  considered  non-portable.   All other functions are as
        described by X/Open.
 
-       <STRONG>setupterm</STRONG>  copies  the terminal name to the array <STRONG>ttytype</STRONG>.
-       This is not part of X/Open Curses, but is assumed by  some
+       <STRONG>setupterm</STRONG> copies the terminal name to the  array  <STRONG>ttytype</STRONG>.
+       This  is not part of X/Open Curses, but is assumed by some
        applications.
 
-       If  configured  to  use the terminal-driver, e.g., for the
+       If configured to use the terminal-driver,  e.g.,  for  the
        MinGW port,
 
-       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG> interprets a missing/empty TERM variable  as
+       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG>  interprets a missing/empty TERM variable as
            the special value "unknown".
 
-       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG>  allows explicit use of the the windows con-
+       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG> allows explicit use of the the windows  con-
            sole driver by checking if $TERM is set to "#win32con"
            or an abbreviation of that string.
 
        Older versions of <STRONG>ncurses</STRONG> assumed that the file descriptor
-       passed to <STRONG>setupterm</STRONG> from <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG> uses  buffered
-       I/O,  and would write to the corresponding stream.  In ad-
-       dition to the limitation that the  terminal  was  left  in
+       passed  to <STRONG>setupterm</STRONG> from <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG> uses buffered
+       I/O, and would write to the corresponding stream.  In  ad-
+       dition  to  the  limitation  that the terminal was left in
        block-buffered mode on exit (like System V curses), it was
-       problematic because <STRONG>ncurses</STRONG> did not allow a  reliable  way
+       problematic  because  <STRONG>ncurses</STRONG> did not allow a reliable way
        to cleanup on receiving SIGTSTP.  The current version uses
-       output buffers managed directly by <STRONG>ncurses</STRONG>.  Some  of  the
+       output  buffers  managed directly by <STRONG>ncurses</STRONG>.  Some of the
        low-level functions described in this manual page write to
        the standard output.  They are not signal-safe.  The high-
        level functions in <STRONG>ncurses</STRONG> use alternate versions of these
        functions using the more reliable buffering scheme.
 
-       In System V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return  type
-       and  returns  <STRONG>OK</STRONG>  or <STRONG>ERR</STRONG>.  We have chosen to implement the
+       In  System V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return type
+       and returns <STRONG>OK</STRONG> or <STRONG>ERR</STRONG>.  We have chosen  to  implement  the
        X/Open Curses semantics.
 
        In System V Release 4, the third argument of <STRONG>tputs</STRONG> has the
        type <STRONG>int</STRONG> <STRONG>(*putc)(char)</STRONG>.
 
        At least one implementation of X/Open Curses (Solaris) re-
-       turns a value other than OK/ERR from <STRONG>tputs</STRONG>.  That  returns
+       turns  a value other than OK/ERR from <STRONG>tputs</STRONG>.  That returns
        the length of the string, and does no error-checking.
 
-       X/Open  Curses prototypes <STRONG>tparm</STRONG> with a fixed number of pa-
-       rameters, rather than a variable argument list.  This  im-
-       plementation  uses  a  variable  argument list, but can be
-       configured to use the fixed-parameter list.  Portable  ap-
-       plications  should  provide 9 parameters after the format;
+       X/Open Curses prototypes <STRONG>tparm</STRONG> with a fixed number of  pa-
+       rameters,  rather than a variable argument list.  This im-
+       plementation uses a variable argument  list,  but  can  be
+       configured  to use the fixed-parameter list.  Portable ap-
+       plications should provide 9 parameters after  the  format;
        zeroes are fine for this purpose.
 
        In response to comments by Thomas E. Dickey, X/Open Curses
        Issue 7 proposed the <STRONG>tiparm</STRONG> function in mid-2009.
 
-       X/Open  notes  that  after calling <STRONG>mvcur</STRONG>, the curses state
-       may not match the actual terminal state, and that  an  ap-
-       plication  should  touch and refresh the window before re-
+       X/Open notes that after calling <STRONG>mvcur</STRONG>,  the  curses  state
+       may  not  match the actual terminal state, and that an ap-
+       plication should touch and refresh the window  before  re-
        suming normal curses calls.  Both <STRONG>ncurses</STRONG> and System V Re-
        lease 4 curses implement <STRONG>mvcur</STRONG> using the SCREEN data allo-
        cated in either <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  So though it is docu-
-       mented  as  a  terminfo function, <STRONG>mvcur</STRONG> is really a curses
+       mented as a terminfo function, <STRONG>mvcur</STRONG> is  really  a  curses
        function which is not well specified.
 
-       X/Open states that the old  location  must  be  given  for
-       <STRONG>mvcur</STRONG>.   This implementation allows the caller to use -1's
-       for the old ordinates.  In that case, the old location  is
+       X/Open  states  that  the  old  location must be given for
+       <STRONG>mvcur</STRONG>.  This implementation allows the caller to use  -1's
+       for  the old ordinates.  In that case, the old location is
        unknown.
 
-       Other  implementions  may  not declare the capability name
+       Other implementions may not declare  the  capability  name
        arrays.  Some provide them without declaring them.  X/Open
        does not specify them.
 
-       Extended  terminal  capability  names, e.g., as defined by
+       Extended terminal capability names, e.g.,  as  defined  by
        <STRONG>tic</STRONG> <STRONG>-x</STRONG>, are not stored in the arrays described here.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,  <STRONG>curs_term-</STRONG>
-       <STRONG><A HREF="curs_termcap.3x.html">cap(3x)</A></STRONG>,  <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG>curs_term-</STRONG>
+       <STRONG><A HREF="curs_termcap.3x.html">cap(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>,  <STRONG>putc(3)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 

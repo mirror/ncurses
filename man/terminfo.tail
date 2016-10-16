@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.69 2015/04/26 14:47:23 tom Exp $
+.\" $Id: terminfo.tail,v 1.72 2016/10/15 18:34:58 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -156,20 +156,23 @@ which would not work with other implementations.
 Finally, characters may be given as three octal digits after a \fB\e\fR.
 .PP
 A delay in milliseconds may appear anywhere in a string capability, enclosed in
-$<..> brackets, as in \fBel\fP=\eEK$<5>, and padding characters are supplied by
-.I tputs
+$<..> brackets, as in \fBel\fP=\eEK$<5>,
+and padding characters are supplied by \fBtputs\fP
 to provide this delay.
+.bP
 The delay must be a number with at most one decimal
 place of precision; it may be followed by suffixes \*(``*\*('' or \*(``/\*('' or both.
+.bP
 A \*(``*\*(''
 indicates that the padding required is proportional to the number of lines
 affected by the operation, and the amount given is the per-affected-unit
 padding required.
 (In the case of insert character, the factor is still the
-number of
-.IR lines
-affected.)  Normally, padding is advisory if the device has the \fBxon\fR
+number of \fIlines\fP affected.)
+.IP
+Normally, padding is advisory if the device has the \fBxon\fR
 capability; it is used for cost computation but does not trigger delays.
+.bP
 A \*(``/\*(''
 suffix indicates that the padding is mandatory and forces a delay of the given
 number of milliseconds even on devices for which \fBxon\fR is present to
@@ -409,16 +412,16 @@ Use a \*(``:\*('' to allow the next character to be a \*(``\-\*('' flag,
 avoiding interpreting "%\-" as an operator.
 .TP
 \f(CW%c\fP
-print pop() like %c in \fBprintf\fP
+print \fIpop()\fP like %c in \fBprintf\fP
 .TP
 \fB%s\fP
-print pop() like %s in \fBprintf\fP
+print \fIpop()\fP like %s in \fBprintf\fP
 .TP
 \fB%p\fP\fI[1\-9]\fP
 push \fIi\fP'th parameter
 .TP
 \fB%P\fP\fI[a\-z]\fP
-set dynamic variable \fI[a\-z]\fP to pop()
+set dynamic variable \fI[a\-z]\fP to \fIpop()\fP
 .TP
 \fB%g\fP\fI[a\-z]/\fP
 get dynamic variable \fI[a\-z]\fP and push it
@@ -445,7 +448,7 @@ integer constant \fInn\fP
 push strlen(pop)
 .TP
 \fB%+\fP, \fB%\-\fP, \fB%*\fP, \fB%/\fP, \fB%m\fP
-arithmetic (%m is mod): \fIpush(pop() op pop())\fP
+arithmetic (%m is \fImod\fP): \fIpush(pop() op pop())\fP
 .TP
 \fB%&\fP, \fB%|\fP, \fB%^\fP
 bit operations (AND, OR and exclusive-OR): \fIpush(pop() op pop())\fP
@@ -457,7 +460,7 @@ logical operations: \fIpush(pop() op pop())\fP
 logical AND and OR operations (for conditionals)
 .TP
 \fB%!\fP, \fB%~\fP
-unary operations (logical and bit complement): push(op pop())
+unary operations (logical and bit complement): \fIpush(op pop())\fP
 .TP
 \fB%i\fP
 add 1 to first two parameters (for ANSI terminals)
@@ -1156,9 +1159,8 @@ analogous to
 and
 .BR is3
 respectively.
-These strings are output by the
-.IR reset
-program, which is used when the terminal gets into a wedged state.
+These strings are output by the \fB@RESET@\fP program,
+which is used when the terminal gets into a wedged state.
 Commands are normally placed in
 .BR rs1 ,
 .BR rs2
@@ -1173,10 +1175,7 @@ normally be part of
 but it causes an annoying glitch of the screen and is not normally
 needed since the terminal is usually already in 80 column mode.
 .PP
-The
-.IR reset
-program writes strings
-including
+The \fB@RESET@\fP program writes strings including
 .BR iprog ,
 etc., in the same order as the
 .IR init
@@ -1191,8 +1190,7 @@ If any of
 .BR rs3 ,
 or
 .BR rf
-reset capability strings are missing, the
-.IR reset
+reset capability strings are missing, the \fB@RESET@\fP 
 program falls back upon the corresponding initialization capability string.
 .PP
 If there are commands to set and clear tab stops, they can be given as
@@ -1365,7 +1363,7 @@ be coded as \fBsetaf\fR and \fBsetab\fR, respectively.
 If the terminal
 supports other escape sequences to set background and foreground, they should
 be coded as \fBsetf\fR and \fBsetb\fR, respectively.
-The \fIvidputs()\fR
+The \fBvidputs\fR
 function and the refresh functions use \fBsetaf\fR and \fBsetab\fR if they are
 defined."
 .PP
@@ -1656,13 +1654,13 @@ Unfortunately, the termcap
 translations are much more strictly limited (to 1023 bytes), thus termcap translations
 of long terminfo entries can cause problems.
 .PP
-The man pages for 4.3BSD and older versions of \fBtgetent()\fP instruct the user to
+The man pages for 4.3BSD and older versions of \fBtgetent\fP instruct the user to
 allocate a 1024-byte buffer for the termcap entry.
 The entry gets null-terminated by
 the termcap library, so that makes the maximum safe length for a termcap entry
 1k\-1 (1023) bytes.
 Depending on what the application and the termcap library
-being used does, and where in the termcap file the terminal type that \fBtgetent()\fP
+being used does, and where in the termcap file the terminal type that \fBtgetent\fP
 is searching for is, several bad things can happen.
 .PP
 Some termcap libraries print a warning message or exit if they find an
@@ -1683,7 +1681,7 @@ The "before tc expansion" length is the most important one, because it
 affects more than just users of that particular terminal.
 This is the
 length of the entry as it exists in /etc/termcap, minus the
-backslash-newline pairs, which \fBtgetent()\fP strips out while reading it.
+backslash-newline pairs, which \fBtgetent\fP strips out while reading it.
 Some termcap libraries strip off the final newline, too (GNU termcap does not).
 Now suppose:
 .bP
@@ -1695,12 +1693,12 @@ and the termcap library (like the one in BSD/OS 1.1 and GNU) reads
 the whole entry into the buffer, no matter what its length, to see
 if it is the entry it wants,
 .bP
-and \fBtgetent()\fP is searching for a terminal type that either is the
+and \fBtgetent\fP is searching for a terminal type that either is the
 long entry, appears in the termcap file after the long entry, or
-does not appear in the file at all (so that \fBtgetent()\fP has to search
+does not appear in the file at all (so that \fBtgetent\fP has to search
 the whole termcap file).
 .PP
-Then \fBtgetent()\fP will overwrite memory, perhaps its stack, and probably core dump
+Then \fBtgetent\fP will overwrite memory, perhaps its stack, and probably core dump
 the program.
 Programs like telnet are particularly vulnerable; modern telnets
 pass along values like the terminal type automatically.
@@ -1713,7 +1711,7 @@ here but will return incorrect data for the terminal.
 .PP
 The "after tc expansion" length will have a similar effect to the
 above, but only for people who actually set TERM to that terminal
-type, since \fBtgetent()\fP only does "tc" expansion once it is found the
+type, since \fBtgetent\fP only does "tc" expansion once it is found the
 terminal type it was looking for, not while searching.
 .PP
 In summary, a termcap entry that is longer than 1023 bytes can cause,

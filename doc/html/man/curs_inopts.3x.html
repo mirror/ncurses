@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.20 2015/11/28 19:03:12 Benno.Schulenberg Exp @
+  * @Id: curs_inopts.3x,v 1.22 2016/10/15 17:13:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -193,8 +193,8 @@
        and  output queues associated with the <STRONG>INTR</STRONG>, <STRONG>QUIT</STRONG> and <STRONG>SUSP</STRONG>
        characters will not be done [see <STRONG>termio(7)</STRONG>].  When <STRONG>qiflush</STRONG>
        is  called,  the queues will be flushed when these control
-       characters are read.  You may want to call <STRONG>noqiflush()</STRONG>  in
-       a  signal handler if you want output to continue as though
+       characters are read.  You may want to call <STRONG>noqiflush</STRONG> in  a
+       signal  handler  if  you want output to continue as though
        the interrupt had not occurred, after the handler exits.
 
 
@@ -268,7 +268,7 @@
        curses  key-names).  On the other hand, an application can
        use <STRONG>define_key</STRONG> to establish a specific keycode for a given
        string.   This  makes  it  possible  for an application to
-       check for an extended capability's presence with <EM>tigetstr</EM>,
+       check for an extended capability's presence with <STRONG>tigetstr</STRONG>,
        and reassign the keycode to match its own needs.
 
        Low-level applications can use <STRONG>tigetstr</STRONG> to obtain the def-

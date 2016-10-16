@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.21 2013/03/09 22:11:36 tom Exp $
+.\" $Id: terminfo.head,v 1.22 2016/10/15 17:02:31 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@

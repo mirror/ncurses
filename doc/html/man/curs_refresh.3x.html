@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_refresh.3x,v 1.16 2016/01/30 15:52:36 tom Exp @
+  * @Id: curs_refresh.3x,v 1.17 2016/10/15 16:45:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -114,7 +114,7 @@
        The <STRONG>wredrawln</STRONG> routine indicates to <STRONG>curses</STRONG> that some screen
        lines are corrupted and should be thrown away before  any-
        thing  is  written  over  them.   It touches the indicated
-       lines (marking them  changed).   The  routine  <STRONG>redrawwin</STRONG>()
+       lines  (marking  them  changed).   The  routine  <STRONG>redrawwin</STRONG>
        touches the entire window.
 
 
@@ -143,14 +143,14 @@
        The XSI Curses standard, Issue  4  describes  these  func-
        tions.
 
-       Whether  <STRONG>wnoutrefresh()</STRONG>  copies  to the virtual screen the
-       entire contents of a window or just its  changed  portions
-       has never been well-documented in historic curses versions
+       Whether  <STRONG>wnoutrefresh</STRONG> copies to the virtual screen the en-
+       tire contents of a window or just its changed portions has
+       never  been  well-documented  in  historic curses versions
        (including SVr4).  It might be unwise to  rely  on  either
        behavior  in  programs  that  might have to be linked with
        other curses implementations.  Instead, you can do an  ex-
-       plicit  <STRONG>touchwin()</STRONG> before the <STRONG>wnoutrefresh()</STRONG> call to guar-
-       antee an entire-contents copy anywhere.
+       plicit  <STRONG>touchwin</STRONG> before the <STRONG>wnoutrefresh</STRONG> call to guarantee
+       an entire-contents copy anywhere.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

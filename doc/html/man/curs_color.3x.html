@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.43 2016/07/30 15:22:11 tom Exp @
+  * @Id: curs_color.3x,v 1.45 2016/10/15 17:10:19 tom Exp @
   * .br
   * .br
   * .br
@@ -302,8 +302,8 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The routines <STRONG>can_change_color()</STRONG>  and  <STRONG>has_colors()</STRONG>  return
-       <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>.
+       The routines <STRONG>can_change_color</STRONG> and <STRONG>has_colors</STRONG>  return  <STRONG>TRUE</STRONG>
+       or <STRONG>FALSE</STRONG>.
 
        All other routines return the integer <STRONG>ERR</STRONG> upon failure and
        an <STRONG>OK</STRONG> (SVr4 specifies only "an integer  value  other  than
@@ -321,7 +321,7 @@
 
           <STRONG>init_color</STRONG>
                returns  an error if the terminal does not support
-               this feature, e.g., if the <EM>initialize</EM><STRONG>_</STRONG><EM>color</EM>  capa-
+               this feature, e.g., if the <STRONG>initialize_color</STRONG>  capa-
                bility is absent from the terminal description.
 
           <STRONG>start_color</STRONG>

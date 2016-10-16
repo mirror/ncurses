@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term.5,v 1.22 2015/04/26 14:50:23 tom Exp @
+  * @Id: term.5,v 1.23 2016/10/15 17:02:31 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -95,7 +95,7 @@
        made.
 
        The  compiled  file  is  created with the <STRONG>tic</STRONG> program, and
-       read by the routine <EM>setupterm</EM>.  The file is  divided  into
+       read by the routine <STRONG>setupterm</STRONG>.  The file is  divided  into
        six parts: the header, terminal names, boolean flags, num-
        bers, strings, and string table.
 
@@ -207,13 +207,13 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       Note that it is possible for <EM>setupterm</EM> to expect a differ-
+       Note that it is possible for <STRONG>setupterm</STRONG> to expect a differ-
        ent  set  of capabilities than are actually present in the
        file.  Either the database may  have  been  updated  since
-       <EM>setupterm</EM> has been recompiled (resulting in extra unrecog-
+       <STRONG>setupterm</STRONG> has been recompiled (resulting in extra unrecog-
        nized entries in the file) or the program  may  have  been
        recompiled  more  recently  than  the database was updated
-       (resulting in missing  entries).   The  routine  <EM>setupterm</EM>
+       (resulting in missing  entries).   The  routine  <STRONG>setupterm</STRONG>
        must  be prepared for both possibilities - this is why the
        numbers and sizes are included.   Also,  new  capabilities
        must  always  be added at the end of the lists of boolean,

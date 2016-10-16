@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.47 2016/07/23 23:48:49 tom Exp @
+  * @Id: curs_attr.3x,v 1.48 2016/10/15 17:09:05 tom Exp @
   * attr_get
   * .br
   * .br
@@ -266,12 +266,12 @@
        <STRONG>A_ALTCHARSET</STRONG>, <STRONG>A_PROTECT</STRONG>, and <STRONG>A_INVIS</STRONG>).
 
        This implementation provides the  <STRONG>A_ITALIC</STRONG>  attribute  for
-       terminals which have the <EM>enter</EM><STRONG>_</STRONG><EM>italics</EM><STRONG>_</STRONG><EM>mode</EM> (sitm) and <EM>ex-</EM>
-       <EM>it</EM><STRONG>_</STRONG><EM>italics</EM><STRONG>_</STRONG><EM>mode</EM> (ritm) capabilities.  Italics are not men-
+       terminals which have the <STRONG>enter_italics_mode</STRONG> (<STRONG>sitm</STRONG>) and <STRONG>ex-</STRONG>
+       <STRONG>it_italics_mode</STRONG> (<STRONG>ritm</STRONG>) capabilities.  Italics are not men-
        tioned  in  X/Open  Curses.   Unlike  the  other video at-
-       tributes, <STRONG>I_ITALIC</STRONG> is unrelated to the <EM>set</EM><STRONG>_</STRONG><EM>attributes</EM>  ca-
+       tributes, <STRONG>A_ITALIC</STRONG> is unrelated to the <STRONG>set_attributes</STRONG>  ca-
        pabilities.  This implementation makes the assumption that
-       <EM>exit</EM><STRONG>_</STRONG><EM>attribute</EM><STRONG>_</STRONG><EM>mode</EM> may also reset italics.
+       <STRONG>exit_attribute_mode</STRONG> may also reset italics.
 
        XSI Curses added the new entry points, <STRONG>attr_get</STRONG>,  <STRONG>attr_on</STRONG>,
        <STRONG>attr_off</STRONG>,  <STRONG>attr_set</STRONG>,  <STRONG>wattr_on</STRONG>, <STRONG>wattr_off</STRONG>, <STRONG>wattr_get</STRONG>, <STRONG>wat-</STRONG>

@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1999-on
 .\"
-.\" $Id: curs_extend.3x,v 1.20 2016/05/14 23:10:54 tom Exp $
+.\" $Id: curs_extend.3x,v 1.21 2016/10/15 16:52:48 tom Exp $
 .TH curs_extend 3X ""
 .SH NAME
 \fBcurses_version\fP,
@@ -45,14 +45,12 @@ These functions are extensions to the curses library
 which do not fit easily into other categories.
 .SS curses_version
 .PP
-Use
-.I curses_version()
+Use \fBcurses_version\fP
 to get the version number, including patch level of the library, e.g.,
 .B 5.0.19991023
 .SS use_extended_names
 .PP
-The
-.I use_extended_names()
+The \fBuse_extended_names\fP
 function controls whether the calling application
 is able to use user-defined or nonstandard names
 which may be compiled into the terminfo

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.44 2016/08/20 23:26:10 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.46 2016/10/15 17:27:48 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -172,7 +172,7 @@ If \fBERR\fR is returned, examine \fIerrret\fR:
 means that the terminal is hardcopy, cannot be used for curses applications.
 .IP
 \fBsetupterm\fP determines if the entry is a hardcopy type by
-checking the \fIhc\fP (\fIhardcopy\fP) capability.
+checking the \fBhc\fP (\fBhardcopy\fP) capability.
 .TP 5
 .B 0
 means that the terminal could not be found,
@@ -180,7 +180,7 @@ or that it is a generic type,
 having too little information for curses applications to run.
 .IP
 \fBsetupterm\fP determines if the entry is a generic type by
-checking the \fIgn\fP (\fIgeneric\fP) capability.
+checking the \fBgn\fP (\fBgeneric\fP) capability.
 .TP 5
 .B \-1
 means that the \fBterminfo\fR database could not be found.
@@ -249,10 +249,16 @@ Its numeric parameters are integers (int) rather than longs.
 .SS Output Functions
 .PP
 The \fBtputs\fR routine applies padding information to the string
-\fIstr\fR and outputs it.  The \fIstr\fR must be a terminfo string
+\fIstr\fR and outputs it:
+.bP
+The \fIstr\fR must be a terminfo string
 variable or the return value from \fBtparm\fR, \fBtgetstr\fR, or
-\fBtgoto\fR.  \fIaffcnt\fR is the number of lines affected, or 1 if
-not applicable.  \fIputc\fR is a \fBputchar\fR-like routine to which
+\fBtgoto\fR.
+.bP
+\fIaffcnt\fR is the number of lines affected, or 1 if
+not applicable.
+.bP
+\fIputc\fR is a \fBputchar\fR-like routine to which
 the characters are passed, one at a time.
 .PP
 The \fBputp\fR routine calls \fBtputs(\fR\fIstr\fR\fB, 1, putchar)\fR.

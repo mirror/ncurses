@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.20 2015/11/28 19:03:12 Benno.Schulenberg Exp $
+.\" $Id: curs_inopts.3x,v 1.22 2016/10/15 17:13:45 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -229,7 +229,7 @@ output queues associated with the \fBINTR\fR, \fBQUIT\fR and
 When
 \fBqiflush\fR is called, the queues will be flushed when these control
 characters are read.
-You may want to call \fBnoqiflush()\fR in a signal
+You may want to call \fBnoqiflush\fR in a signal
 handler if you want output to continue as though the interrupt
 had not occurred, after the handler exits.
 .\"
@@ -308,7 +308,7 @@ terminfo capability name rather than "K", used for curses key-names).
 On the other hand, an application can use \fBdefine_key\fP to establish
 a specific keycode for a given string.
 This makes it possible for an application to check for an extended
-capability's presence with \fItigetstr\fP,
+capability's presence with \fBtigetstr\fP,
 and reassign the keycode to match its own needs.
 .PP
 Low-level applications can use \fBtigetstr\fP to obtain the definition

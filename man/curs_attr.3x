@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.47 2016/07/23 23:48:49 tom Exp $
+.\" $Id: curs_attr.3x,v 1.48 2016/10/15 17:09:05 tom Exp $
 .TH curs_attr 3X ""
 .de bP
 .IP \(bu 4
@@ -285,12 +285,13 @@ SVr4 curses, these functions correctly manipulate all other highlights
 (specifically, \fBA_ALTCHARSET\fR, \fBA_PROTECT\fR, and \fBA_INVIS\fR).
 .PP
 This implementation provides the \fBA_ITALIC\fP attribute for terminals
-which have the \fIenter_italics_mode\fP (sitm) and \fIexit_italics_mode\fP (ritm) capabilities.
+which have the \fBenter_italics_mode\fP (\fBsitm\fP)
+and \fBexit_italics_mode\fP (\fBritm\fP) capabilities.
 Italics are not mentioned in X/Open Curses.
-Unlike the other video attributes, \fBI_ITALIC\fP is unrelated
-to the \fIset_attributes\fP capabilities.
+Unlike the other video attributes, \fBA_ITALIC\fP is unrelated
+to the \fBset_attributes\fP capabilities.
 This implementation makes the assumption that
-\fIexit_attribute_mode\fP may also reset italics.
+\fBexit_attribute_mode\fP may also reset italics.
 .PP
 XSI Curses added the new entry points, \fBattr_get\fR, \fBattr_on\fR,
 \fBattr_off\fR, \fBattr_set\fR, \fBwattr_on\fR, \fBwattr_off\fR,

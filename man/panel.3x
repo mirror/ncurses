@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.19 2015/12/05 23:42:45 tom Exp $
+.\" $Id: panel.3x,v 1.20 2016/10/15 17:02:31 tom Exp $
 .TH panel 3X ""
 .ds n 5
 .ds d @TERMINFO@
@@ -90,14 +90,14 @@ allocates  a  \fBPANEL\fR structure, associates it with
 to  be  displayed above any other panel) and returns a
 pointer to the new panel.
 .TP
-.B update_panels()
+.B update_panels
 refreshes the virtual screen to reflect the relations between the
-panels in the stack, but does not call doupdate() to refresh the
+panels in the stack, but does not call \fBdoupdate\fP to refresh the
 physical screen.
 Use this function and not \fBwrefresh\fP or \fBwnoutrefresh\fP.
 .B update_panels
 may be called more than once before a call to
-doupdate(), but doupdate() is the function responsible for updating
+\fBdoupdate\fP, but \fBdoupdate\fP is the function responsible for updating
 the physical screen.
 .TP
 .B del_panel(pan)
@@ -127,7 +127,7 @@ puts panel at the bottom of all panels.
 .B move_panel(pan,starty,startx)
 moves the given panel window so that its upper-left corner is at
 \fBstarty\fR, \fBstartx\fR.  It does not change the position of the
-panel in the stack.  Be sure to use this function, not \fBmvwin()\fR,
+panel in the stack.  Be sure to use this function, not \fBmvwin\fR,
 to move a panel window.
 .TP
 .B replace_panel(pan,window)
@@ -163,11 +163,11 @@ the SVr4 manual pages suggests the programming interface is unchanged).
 The \fBPANEL\fR data structures are merely  similar. The  programmer
 is cautioned not to directly use \fBPANEL\fR fields.
 .P
-The functions \fBshow_panel()\fR and \fBtop_panel()\fR are identical
+The functions \fBshow_panel\fR and \fBtop_panel\fR are identical
 in this implementation, and work equally well with displayed or hidden
-panels.  In the native System V implementation, \fBshow_panel()\fR is
+panels.  In the native System V implementation, \fBshow_panel\fR is
 intended for making a hidden panel visible (at the top of the stack)
-and \fBtop_panel()\fR is intended for making an already-visible panel
+and \fBtop_panel\fR is intended for making an already-visible panel
 move to the top of the stack. You are cautioned to use the correct
 function to ensure compatibility with native panel libraries.
 .SH NOTE

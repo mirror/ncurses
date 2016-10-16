@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2013,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -3015,8 +3015,8 @@ void	_nc_init_acs(void)
 /* ./tinfo/lib_baudrate.c */
 
 struct speed {
-    short s; 
-    int sp; 
+    int given_speed; 
+    int actual_speed; 
 };
 
 #undef _nc_baudrate
@@ -4381,6 +4381,14 @@ void	_nc_set_writedir(
 void	_nc_write_entry(
 		TERMTYPE *const tp)
 		{ /* void */ }
+
+#undef _nc_write_object
+int	_nc_write_object(
+		TERMTYPE *tp, 
+		char	*buffer, 
+		unsigned *offset, 
+		unsigned limit)
+		{ return(*(int *)0); }
 
 #undef _nc_tic_written
 int	_nc_tic_written(void)

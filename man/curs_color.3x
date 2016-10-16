@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.43 2016/07/30 15:22:11 tom Exp $
+.\" $Id: curs_color.3x,v 1.45 2016/10/15 17:10:19 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -295,7 +295,7 @@ background color for all terminals.
       \fBCOLOR_WHITE\fR
 .fi
 .SH RETURN VALUE
-The routines \fBcan_change_color()\fR and \fBhas_colors()\fR return \fBTRUE\fR
+The routines \fBcan_change_color\fR and \fBhas_colors\fR return \fBTRUE\fR
 or \fBFALSE\fR.
 .PP
 All other routines return the integer \fBERR\fR upon failure and an \fBOK\fR
@@ -316,7 +316,7 @@ if \fBstart_color\fP was not called.
 .TP 5
 \fBinit_color\fP
 returns an error if the terminal does not support
-this feature, e.g., if the \fIinitialize_color\fP capability is absent
+this feature, e.g., if the \fBinitialize_color\fP capability is absent
 from the terminal description.
 .TP 5
 \fBstart_color\fP

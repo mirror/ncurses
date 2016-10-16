@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.283 2016/05/28 23:32:40 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.284 2016/10/15 23:00:29 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -676,7 +676,7 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 					TPARM_2(repeat_char,
 						CharOf(ntext0),
 						rep_count),
-					rep_count,
+					1,
 					NCURSES_SP_NAME(_nc_outch));
 		SP_PARM->_curscol += rep_count;
 
@@ -1736,7 +1736,7 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 	TPUTS_TRACE("parm_ich");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
 				TPARM_1(parm_ich, count),
-				count,
+				1,
 				NCURSES_SP_NAME(_nc_outch));
 	while (count) {
 	    PutAttrChar(NCURSES_SP_ARGx CHREF(*line));
@@ -1789,7 +1789,7 @@ DelChar(NCURSES_SP_DCLx int count)
 	TPUTS_TRACE("parm_dch");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
 				TPARM_1(parm_dch, count),
-				count,
+				1,
 				NCURSES_SP_NAME(_nc_outch));
     } else {
 	int n;
