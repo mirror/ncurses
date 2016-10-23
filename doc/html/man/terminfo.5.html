@@ -33,7 +33,7 @@
   ****************************************************************************
   * @Id: terminfo.head,v 1.22 2016/10/15 17:02:31 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.72 2016/10/15 18:34:58 tom Exp @
+  * @Id: terminfo.tail,v 1.73 2016/10/22 19:56:17 tom Exp @
   * Beginning of terminfo.tail file
   * This file is part of ncurses.
   * See "terminfo.head" for copyright.
@@ -75,7 +75,7 @@
        nals by giving a set of capabilities which they  have,  by
        specifying how to perform screen operations, and by speci-
        fying padding requirements and  initialization  sequences.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161015).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161022).
 
        Entries in <EM>terminfo</EM> consist of a sequence of `,' separated
        fields (embedded commas may be escaped with a backslash or
@@ -1886,7 +1886,7 @@
        initially  set every <EM>n</EM> spaces when the terminal is powered
        up, the numeric parameter <STRONG>it</STRONG> is given, showing the  number
        of  spaces  the tabs are set to.  This is normally used by
-       the <EM>tset</EM> command to determine whether to set the mode  for
+       the <STRONG>tset</STRONG> command to determine whether to set the mode  for
        hardware  tab expansion, and whether to set the tab stops.
        If the terminal has tab stops that can be  saved  in  non-
        volatile  memory, the terminfo description can assume that
@@ -1899,7 +1899,7 @@
        These strings are expected to set the terminal into  modes
        consistent  with  the  rest  of  the terminfo description.
        They are normally sent to the terminal, by the <EM>init</EM> option
-       of  the  <EM>tput</EM>  program,  each time the user logs in.  They
+       of  the  <STRONG>tput</STRONG>  program,  each time the user logs in.  They
        will be printed in the following order:
 
               run the program

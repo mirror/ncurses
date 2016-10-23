@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.97 2016/08/06 13:25:38 tom Exp $
+# $Id: Makefile.in,v 1.99 2016/10/22 00:13:20 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -179,6 +179,7 @@ actual_tset      = `echo tset$x|      $(TRANSFORM)`
 
 # transformed names for comparing at runtime
 define_captoinfo = `echo captoinfo|   $(TRANSFORM)`
+define_clear     = `echo clear|       $(TRANSFORM)`
 define_infotocap = `echo infotocap|   $(TRANSFORM)`
 define_init      = `echo init|        $(TRANSFORM)`
 define_reset     = `echo reset|       $(TRANSFORM)`
@@ -191,6 +192,7 @@ transform.h :
 	-$(SHELL) -c 'if test -n "$x" ; then echo "#define SUFFIX_IGNORED \"$x\"">>$@; fi'
 	echo "#define PROG_CAPTOINFO \"$(define_captoinfo)\""		>>$@
 	echo "#define PROG_INFOTOCAP \"$(define_infotocap)\""		>>$@
+	echo "#define PROG_CLEAR     \"$(define_clear)\""		>>$@
 	echo "#define PROG_RESET     \"$(define_reset)\""		>>$@
 	echo "#define PROG_INIT      \"$(define_init)\""		>>$@
 	echo "#endif /* __TRANSFORM_H */"				>>$@
@@ -248,7 +250,8 @@ toe$x: $(DEPS_TOE) $(DEPS_CURSES)
 	@ECHO_LD@ $(LINK) $(DEPS_TOE) $(LDFLAGS_TIC) -o $@
 
 DEPS_CLEAR = \
-	$(MODEL)/clear$o
+	$(MODEL)/clear$o \
+	$(MODEL)/clear_cmd$o
 
 clear$x: $(DEPS_CLEAR) $(DEPS_CURSES)
 	@ECHO_LD@ $(LINK) $(DEPS_CLEAR) $(LDFLAGS_TINFO) -o $@
@@ -261,6 +264,7 @@ tabs$x: $(DEPS_TABS) $(DEPS_TABS)
 
 DEPS_TPUT = \
 	$(MODEL)/tput$o \
+	$(MODEL)/clear_cmd$o \
 	$(MODEL)/reset_cmd$o \
 	$(MODEL)/tparm_type$o \
 	$(MODEL)/transform$o

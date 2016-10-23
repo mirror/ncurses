@@ -51,7 +51,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.7 2016/09/10 20:49:10 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.9 2016/10/23 01:08:11 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -661,18 +661,26 @@ update_tty_settings(TTY * old_settings, TTY * new_settings)
 }
 
 #if HAVE_SIZECHANGE
-/* Set window size if not set already */
+/*
+ * Set window size if not set already, but update our copy of the values if the
+ * size was set.
+ */
 void
-set_window_size(int fd, int high, int wide)
+set_window_size(int fd, short *high, short *wide)
 {
     STRUCT_WINSIZE win;
     (void) ioctl(fd, IOCTL_GET_WINSIZE, &win);
     if (WINSIZE_ROWS(win) == 0 &&
-	WINSIZE_COLS(win) == 0 &&
-	high > 0 && wide > 0) {
-	WINSIZE_ROWS(win) = (unsigned short) high;
-	WINSIZE_COLS(win) = (unsigned short) wide;
-	(void) ioctl(fd, IOCTL_SET_WINSIZE, &win);
+	WINSIZE_COLS(win) == 0) {
+	if (*high > 0 && *wide > 0) {
+	    WINSIZE_ROWS(win) = (unsigned short) *high;
+	    WINSIZE_COLS(win) = (unsigned short) *wide;
+	    (void) ioctl(fd, IOCTL_SET_WINSIZE, &win);
+	}
+    } else if (WINSIZE_ROWS(win) > 0 &&
+	       WINSIZE_COLS(win) > 0) {
+	*high = (short) WINSIZE_ROWS(win);
+	*wide = (short) WINSIZE_COLS(win);
     }
 }
 #endif

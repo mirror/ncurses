@@ -96,7 +96,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.112 2016/09/10 23:33:10 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.113 2016/10/22 23:34:47 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -844,7 +844,7 @@ main(int argc, char **argv)
     if (!noset) {
 #if HAVE_SIZECHANGE
 	if (opt_w) {
-	    set_window_size(my_fd, lines, columns);
+	    set_window_size(my_fd, &lines, &columns);
 	}
 #endif
 	if (opt_c) {

@@ -1,4 +1,4 @@
-# $Id: modules,v 1.19 2016/08/06 16:52:30 tom Exp $
+# $Id: modules,v 1.20 2016/10/21 23:15:41 tom Exp $
 # Program modules (some are in ncurses lib!)
 ##############################################################################
 # Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.                #
@@ -35,6 +35,7 @@
 clear		progs		$(srcdir)	$(HEADER_DEPS)
 tic		progs		$(srcdir)	$(HEADER_DEPS) transform.h $(srcdir)/dump_entry.h $(srcdir)/tparm_type.h
 toe		progs		$(srcdir)	$(HEADER_DEPS)             $(INCDIR)/hashed_db.h
+clear_cmd	progs		$(srcdir)	$(HEADER_DEPS) clear_cmd.h
 dump_entry	progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/dump_entry.h ../include/parametrized.h $(INCDIR)/capdefaults.c termsort.c
 infocmp		progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/dump_entry.h
 reset_cmd	progs		$(srcdir)	$(HEADER_DEPS) reset_cmd.h

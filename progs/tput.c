@@ -40,6 +40,7 @@
  */
 
 #include <tparm_type.h>
+#include <clear_cmd.h>
 #include <reset_cmd.h>
 
 #if !PURE_TERMINFO
@@ -48,7 +49,7 @@
 #endif
 #include <transform.h>
 
-MODULE_ID("$Id: tput.c,v 1.57 2016/08/20 21:46:31 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.63 2016/10/23 01:08:28 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -57,6 +58,7 @@ const char *_nc_progname = "tput";
 static char *prg_name;
 static bool is_init = FALSE;
 static bool is_reset = FALSE;
+static bool is_clear = FALSE;
 
 static void
 quit(int status, const char *fmt,...)
@@ -78,11 +80,21 @@ usage(void)
     ExitProgram(EXIT_FAILURE);
 }
 
-static void
-check_aliases(const char *name, bool program)
+static char *
+check_aliases(char *name, bool program)
 {
-    is_init = same_program(name, program ? PROG_INIT : "init");
-    is_reset = same_program(name, program ? PROG_RESET : "reset");
+    static char my_init[] = "init";
+    static char my_reset[] = "reset";
+    static char my_clear[] = "clear";
+
+    char *result = name;
+    if ((is_init = same_program(name, program ? PROG_INIT : my_init)))
+	result = my_init;
+    if ((is_reset = same_program(name, program ? PROG_RESET : my_reset)))
+	result = my_reset;
+    if ((is_clear = same_program(name, program ? PROG_CLEAR : my_clear)))
+	result = my_clear;
+    return result;
 }
 
 static int
@@ -114,9 +126,7 @@ tput_cmd(int argc, char *argv[])
     bool termcap = FALSE;
 #endif
 
-    if ((name = argv[0]) == 0)
-	name = "";
-    check_aliases(name, FALSE);
+    name = check_aliases(argv[0], FALSE);
     if (is_reset || is_init) {
 	TTY mode, oldmode;
 
@@ -124,11 +134,16 @@ tput_cmd(int argc, char *argv[])
 	int intrchar = -1;	/* new interrupt character */
 	int tkillchar = -1;	/* new kill character */
 
-	(void) save_tty_settings(&mode);
+	int my_fd = save_tty_settings(&mode);
 
 	reset_start(stdout, is_reset, is_init);
 	reset_tty_settings(&mode);
 
+#if HAVE_SIZECHANGE
+	set_window_size(my_fd, &lines, &columns);
+#else
+	(void) my_fd;
+#endif
 	set_control_chars(&mode, terasechar, intrchar, tkillchar);
 	set_conversions(&mode);
 	if (send_init_strings(&oldmode)) {
@@ -146,7 +161,9 @@ tput_cmd(int argc, char *argv[])
 #if !PURE_TERMINFO
   retry:
 #endif
-    if ((status = tigetflag(name)) != -1) {
+    if (strcmp(name, "clear") == 0) {
+	return clear_cmd();
+    } else if ((status = tigetflag(name)) != -1) {
 	return exit_code(BOOLEAN, status);
     } else if ((status = tigetnum(name)) != CANCELLED_NUMERIC) {
 	(void) printf("%d\n", status);
@@ -246,7 +263,7 @@ main(int argc, char **argv)
     char buf[BUFSIZ];
     int result = 0;
 
-    check_aliases(prg_name = _nc_rootname(argv[0]), TRUE);
+    prg_name = check_aliases(_nc_rootname(argv[0]), TRUE);
 
     term = getenv("TERM");
 
@@ -271,7 +288,7 @@ main(int argc, char **argv)
     /*
      * Modify the argument list to omit the options we processed.
      */
-    if (is_reset || is_init) {
+    if (is_clear || is_reset || is_init) {
 	if (optind-- < argc) {
 	    argc -= optind;
 	    argv += optind;
@@ -289,7 +306,7 @@ main(int argc, char **argv)
 	quit(3, "unknown terminal \"%s\"", term);
 
     if (cmdline) {
-	if ((argc <= 0) && !is_reset && !is_init)
+	if ((argc <= 0) && !(is_clear || is_reset || is_init))
 	    usage();
 	ExitProgram(tput_cmd(argc, argv));
     }

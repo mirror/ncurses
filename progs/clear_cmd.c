@@ -27,42 +27,33 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E Dickey                                                 *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 /*
- * $Id: reset_cmd.h,v 1.6 2016/10/22 23:34:37 tom Exp $
- *
- * Utility functions for resetting terminal.
+ * clear.c --  clears the terminal's screen
  */
-#ifndef RESET_CMD_H
-#define RESET_CMD_H 1
-/* *INDENT-OFF* */
 
 #define USE_LIBTINFO
-#define __INTERNAL_CAPS_VISIBLE	/* we need to see has_hardware_tabs */
-#include <progs.priv.h>
+#include <clear_cmd.h>
 
-#undef CTRL
-#define CTRL(x)	((x) & 0x1f)
+MODULE_ID("$Id: clear_cmd.c,v 1.1 2016/10/21 23:37:35 tom Exp $")
 
-extern bool send_init_strings(TTY * /* old_settings */);
-extern int save_tty_settings(TTY * /* tty_settings */);
-extern void print_tty_chars(TTY * /* old_settings */, TTY * /* new_settings */);
-extern void reset_flush(void);
-extern void reset_start(FILE * /* fp */, bool /* is_reset */, bool /* is_init */ );
-extern void reset_tty_settings(TTY * /* tty_settings */);
-extern void restore_tty_settings(void);
-extern void set_control_chars(TTY * /* tty_settings */, int /* erase */, int /* intr */, int /* kill */);
-extern void set_conversions(TTY * /* tty_settings */);
-extern void update_tty_settings(TTY * /* old_settings */, TTY * /* new_settings */);
+static int
+putch(int c)
+{
+    return putchar(c);
+}
 
-#if HAVE_SIZECHANGE
-extern void set_window_size(int /* fd */, short * /* high */, short * /* wide */);
-#endif
+int
+clear_cmd(void)
+{
+    char *E3;
 
-extern const char *_nc_progname;
+    /* Clear the scrollback buffer if possible. */
+    E3 = tigetstr("E3");
+    if (E3)
+	(void) tputs(E3, lines > 0 ? lines : 1, putch);
 
-/* *INDENT-ON* */
-
-#endif /* RESET_CMD_H */
+    return tputs(clear_screen, lines > 0 ? lines : 1, putch);
+}

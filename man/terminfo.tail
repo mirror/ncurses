@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.72 2016/10/15 18:34:58 tom Exp $
+.\" $Id: terminfo.tail,v 1.73 2016/10/22 19:56:17 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1082,8 +1082,7 @@ spaces when the terminal is powered up,
 the numeric parameter
 .B it
 is given, showing the number of spaces the tabs are set to.
-This is normally used by the
-.IR @TSET@
+This is normally used by the \fB@TSET@\fP
 command to determine whether to set the mode for hardware tab expansion,
 and whether to set the tab stops.
 If the terminal has tab stops that can be saved in non-volatile memory,
@@ -1103,9 +1102,7 @@ These strings are expected to set the terminal into modes consistent
 with the rest of the terminfo description.
 They are normally sent to the terminal, by the
 .I init
-option of the
-.IR @TPUT@
-program, each time the user logs in.
+option of the \fB@TPUT@\fP program, each time the user logs in.
 They will be printed in the following order:
 .RS
 .TP

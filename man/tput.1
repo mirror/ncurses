@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.44 2016/08/20 23:40:31 tom Exp $
+.\" $Id: tput.1,v 1.46 2016/10/22 19:57:25 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -168,21 +168,25 @@ of the terminal will be put out.  The long name is the last
 name in the first line of the terminal's description in the
 \fBterminfo\fR database [see \fBterm\fR(5)].
 .SS Aliases
-\fB@TPUT@\fR handles the \fBinit\fP and \fBreset\fP commands specially:
+\fB@TPUT@\fR handles the \fBclear\fP, \fBinit\fP and \fBreset\fP
+commands specially:
 it allows for the possibility that it is invoked by a link with those names.
 .PP
 If \fB@TPUT@\fR is invoked by a link named \fBreset\fR, this has the
 same effect as \fB@TPUT@ reset\fR.
-The \fB@TSET@\fR(\*n) utility also treats a link named \fBreset\fP specially:
+The \fB@TSET@\fR(\*n) utility also treats a link named \fBreset\fP specially.
+.PP
+Before ncurses 6.1, the two utilities were different from each other:
 .bP
-That utility resets the terminal modes and special characters (not done here).
+\fB@TSET@\fP utility reset the terminal modes and special characters
+(not done with \fB@TPUT@\fP).
 .bP
-On the other hand, @TSET@'s repertoire of terminal capabilities for
-resetting the terminal is more limited, i.e., only \fBreset_1string\fP, \fBreset_2string\fP and \fBreset_file\fP
+On the other hand, \fB@TSET@\fP's repertoire of terminal capabilities for
+resetting the terminal was more limited, i.e., only \fBreset_1string\fP, \fBreset_2string\fP and \fBreset_file\fP
 in contrast to the tab-stops and margins which are set by this utility.
 .bP
-The \fBreset\fP program is usually an alias for @TSET@,
-due to the resetting of terminal modes and special characters.
+The \fBreset\fP program is usually an alias for \fB@TSET@\fP,
+because of this difference with resetting terminal modes and special characters.
 .PP
 If \fB@TPUT@\fR is invoked by a link named \fBinit\fR, this has the
 same effect as \fB@TPUT@ init\fR.
@@ -356,7 +360,7 @@ becoming the \*(lqmodern\*(rq BSD implementation of \fBtput\fP.
 This implementation of \fBtput\fP differs from AT&T \fBtput\fP in
 two important areas:
 .bP
-@TPUT@ \fIcapname\fP writes to the standard output.
+\fB@TPUT@\fP \fIcapname\fP writes to the standard output.
 That need not be a regular terminal.
 However, the subcommands which manipulate terminal modes
 may not use the standard output.
@@ -368,11 +372,12 @@ before falling back to \*(lq/dev/tty\*(rq and finally just assumes
 a 1200Bd terminal.
 When updating terminal modes, it ignores errors.
 .IP
-Until changes made after ncurses 6.0, @TPUT@ did not modify terminal modes.
-@TPUT@ now uses a similar scheme, using functions shared with @TSET@
+Until changes made after ncurses 6.0, \fB@TPUT@\fP did not modify terminal modes.
+\fB@TPUT@\fP now uses a similar scheme,
+using functions shared with \fB@TSET@\fP
 (and ultimately based on the 4.4BSD \fBtset\fP).
 If it is not able to open a terminal, e.g., when running in \fBcron\fP,
-@TPUT@ will return an error.
+\fB@TPUT@\fP will return an error.
 .bP
 AT&T \fBtput\fP guesses the type of its \fIcapname\fP operands by seeing if
 all of the characters are numeric, or not.
