@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.h,v 0.25 2015/11/28 20:13:39 Leon.Winter Exp $ */
+/* $Id: form.h,v 0.26 2016/10/29 22:24:24 Leon.Winter Exp $ */
 
 #ifndef FORM_H
 #define FORM_H
@@ -387,6 +387,7 @@ extern NCURSES_EXPORT(int)	field_count (const FORM *);
 extern NCURSES_EXPORT(int)	set_form_win (FORM *,WINDOW *);
 extern NCURSES_EXPORT(int)	set_form_sub (FORM *,WINDOW *);
 extern NCURSES_EXPORT(int)	set_current_field (FORM *,FIELD *);
+extern NCURSES_EXPORT(int)	unfocus_current_field (FORM *);
 extern NCURSES_EXPORT(int)	field_index (const FIELD *);
 extern NCURSES_EXPORT(int)	set_form_page (FORM *,int);
 extern NCURSES_EXPORT(int)	form_page (const FORM *);

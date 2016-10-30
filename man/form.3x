@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form.3x,v 1.26 2015/08/02 18:14:50 tom Exp $
+.\" $Id: form.3x,v 1.28 2016/10/29 22:26:35 tom Exp $
 .TH form 3X ""
 .SH NAME
 \fBform\fR \- curses extension for programming forms
@@ -146,6 +146,7 @@ set_form_userptr	\fBform_userptr\fR(3X)
 set_form_win	\fBform_win\fR(3X)
 set_max_field	\fBform_field_buffer\fR(3X)
 set_new_page	\fBform_new_page\fR(3X)
+unfocus_current_field	\fBform_page\fR(3X)
 unpost_form	\fBform_post\fR(3X)
 .TE
 .SH RETURN VALUE
@@ -200,6 +201,10 @@ give you a link error using most linkers).
 .SH PORTABILITY
 These routines emulate the System V forms library.  They were not supported on
 Version 7 or BSD versions.
+.PP
+A few functions are extensions added for ncurses, e.g.,
+\fBform_driver_w\fP,
+\fBunfocus_current_field\fP.
 .SH AUTHORS
 Juergen Pfeifer.  Manual pages and adaptation for ncurses by Eric
 S. Raymond.

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.39 2015/11/28 20:13:39 Leon.Winter Exp $ */
+/* $Id: form.priv.h,v 0.41 2016/10/29 22:30:23 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -184,6 +184,7 @@ extern NCURSES_EXPORT(FIELD *) _nc_First_Active_Field (FORM*);
 extern NCURSES_EXPORT(bool) _nc_Internal_Validation (FORM*);
 extern NCURSES_EXPORT(int) _nc_Set_Current_Field (FORM*, FIELD*);
 extern NCURSES_EXPORT(int) _nc_Position_Form_Cursor (FORM*);
+extern NCURSES_EXPORT(void) _nc_Unset_Current_Field(FORM *form);
 
 #if NCURSES_INTEROP_FUNCS
 extern NCURSES_EXPORT(FIELDTYPE *) _nc_TYPE_INTEGER(void);
