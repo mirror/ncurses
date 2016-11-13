@@ -39,10 +39,11 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.143 2016/10/09 01:30:14 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.147 2016/11/13 00:28:46 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
+#define WRAPPED 32
 
 #define OkIndex(index,array) ((int)(index) >= 0 && (int)(index) < (int) SIZEOF(array))
 #define TcOutput() (outform == F_TERMCAP || outform == F_TCONVERR)
@@ -62,6 +63,7 @@ static int column;		/* current column, limited by 'width' */
 static int oldcol;		/* last value of column before wrap */
 static bool pretty;		/* true if we format if-then-else strings */
 static bool wrapped;		/* true if we wrap too-long strings */
+static bool did_wrap;		/* true if last wrap_concat did wrapping */
 static bool checking;		/* true if we are checking for tic */
 static int quickdump;		/* true if we are dumping compiled data */
 
@@ -207,6 +209,8 @@ dump_init(const char *version,
     wrapped = wrap_strings;
     checking = check;
     quickdump = (quick & 3);
+
+    did_wrap = (width <= 0);
 
     /* versions */
     if (version == 0)
@@ -556,6 +560,7 @@ wrap_concat(const char *src)
     int gaps = (int) strlen(separator);
     int want = gaps + need;
 
+    did_wrap = (width <= 0);
     if (column > indent
 	&& column + want > width) {
 	force_wrap();
@@ -565,14 +570,15 @@ wrap_concat(const char *src)
 	(column + want) > width &&
 	(!TcOutput() || strncmp(src, "..", 2))) {
 	int step = 0;
-	int used = width > 32 ? width : 32;
+	int used = width > WRAPPED ? width : WRAPPED;
 	int size = used;
 	int base = 0;
 	char *p, align[9];
 	const char *my_t = trailer;
 	char *fill = fill_spaces(src);
+	int last = (int) strlen(fill);
 
-	need = (int) strlen(fill);
+	need = last;
 
 	if (TcOutput())
 	    trailer = "\\\n\t ";
@@ -585,21 +591,26 @@ wrap_concat(const char *src)
 	} else {
 	    align[base] = '\0';
 	}
-	while ((column + (need + gaps)) > used) {
-	    size = used;
-	    if (size > ((int) strlen(fill) - step)) {
-		size = ((int) strlen(fill) - step);
+	/* "pretty" overrides wrapping if it already split the line */
+	if (!pretty || strchr(fill, '\n') == 0) {
+	    while ((column + (need + gaps)) > used) {
+		size = used;
+		if (step) {
+		    strcpy_DYN(&outbuf, align);
+		    size -= base;
+		}
+		if (size > (last - step)) {
+		    size = (last - step);
+		}
+		size = find_split(fill, step, size);
+		strncpy_DYN(&outbuf, fill + step, (size_t) size);
+		step += size;
+		need -= size;
+		if (need > 0) {
+		    force_wrap();
+		    did_wrap = TRUE;
+		}
 	    }
-	    if (step) {
-		strcpy_DYN(&outbuf, align);
-		size -= base;
-	    }
-	    size = find_split(fill, step, size);
-	    strncpy_DYN(&outbuf, fill + step, (size_t) size);
-	    step += size;
-	    need -= size;
-	    if (need > 0)
-		force_wrap();
 	}
 	if (need > 0) {
 	    if (step)
@@ -1138,9 +1149,11 @@ fmt_entry(TERMTYPE *tterm,
     if (outcount) {
 	bool trimmed = FALSE;
 	j = (PredIdx) outbuf.used;
-	if (j >= 2
-	    && outbuf.text[j - 1] == '\t'
-	    && outbuf.text[j - 2] == '\n') {
+	if (wrapped && did_wrap) {
+	    /* EMPTY */ ;
+	} else if (j >= 2
+		   && outbuf.text[j - 1] == '\t'
+		   && outbuf.text[j - 2] == '\n') {
 	    outbuf.used -= 2;
 	    trimmed = TRUE;
 	} else if (j >= 4
