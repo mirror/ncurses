@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.224 2016/10/01 12:46:54 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.225 2016/11/20 00:34:58 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1769,6 +1769,104 @@ check_params(TERMTYPE *tp, const char *name, char *value)
     }
 }
 
+static bool
+line_capability(const char *name)
+{
+    bool result = FALSE;
+    static const char *table[] =
+    {
+	"csr",			/* change_scroll_region          */
+	"clear",		/* clear_screen                  */
+	"ed",			/* clr_eos                       */
+	"cwin",			/* create_window                 */
+	"cup",			/* cursor_address                */
+	"cud1",			/* cursor_down                   */
+	"home",			/* cursor_home                   */
+	"mrcup",		/* cursor_mem_address            */
+	"ll",			/* cursor_to_ll                  */
+	"cuu1",			/* cursor_up                     */
+	"dl1",			/* delete_line                   */
+	"hd",			/* down_half_line                */
+	"flash",		/* flash_screen                  */
+	"ff",			/* form_feed                     */
+	"il1",			/* insert_line                   */
+	"nel",			/* newline                       */
+	"dl",			/* parm_delete_line              */
+	"cud",			/* parm_down_cursor              */
+	"indn",			/* parm_index                    */
+	"il",			/* parm_insert_line              */
+	"rin",			/* parm_rindex                   */
+	"cuu",			/* parm_up_cursor                */
+	"mc0",			/* print_screen                  */
+	"vpa",			/* row_address                   */
+	"ind",			/* scroll_forward                */
+	"ri",			/* scroll_reverse                */
+	"hu",			/* up_half_line                  */
+    };
+    size_t n;
+    for (n = 0; n < SIZEOF(table); ++n) {
+	if (!strcmp(name, table[n])) {
+	    result = TRUE;
+	    break;
+	}
+    }
+    return result;
+}
+
+static void
+check_delays(const char *name, const char *value)
+{
+    const char *p, *q;
+    const char *mark = 0;
+
+    for (p = value; *p != '\0'; ++p) {
+	if (p[0] == '$' && p[1] == '<') {
+	    const char *base = p + 2;
+	    bool maybe = TRUE;
+	    bool mixed = FALSE;
+	    int proportional = 0;
+	    int mandatory = 0;
+
+	    for (q = base; *q != '\0'; ++q) {
+		if (*q == '>') {
+		    if (mark == 0)
+			mark = q;
+		    break;
+		} else if (*q == '*' || *q == '/') {
+		    if (*q == '*')
+			++proportional;
+		    if (*q == '/')
+			++mandatory;
+		    if (mark == 0)
+			mark = q;
+		} else if (!(isalnum(UChar(*q)) || strchr("+-.", *q) != 0)) {
+		    maybe = FALSE;
+		    break;
+		} else if (proportional || mandatory) {
+		    mixed = TRUE;
+		}
+	    }
+	    if (*q == '\0') {
+		maybe = FALSE;	/* just an isolated "$<" */
+	    } else if (maybe) {
+		float check_f;
+		char check_c;
+		int rc = sscanf(base, "%f%c", &check_f, &check_c);
+		if ((rc != 2) || (check_c != *mark) || mixed) {
+		    _nc_warning("syntax error in %s delay '%.*s'", name,
+				(int) (q - base), base);
+		} else if (*name == 'k') {
+		    _nc_warning("function-key %s has delay", name);
+		} else if (proportional && !line_capability(name)) {
+		    _nc_warning("non-line capability using proportional delay: %s", name);
+		}
+	    } else {
+		p = q - 1;	/* restart scan */
+	    }
+	}
+    }
+}
+
 static char *
 check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 {
@@ -2388,6 +2486,7 @@ check_termtype(TERMTYPE *tp, bool literal)
 	char *a = tp->Strings[j];
 	if (VALID_STRING(a)) {
 	    check_params(tp, ExtStrname(tp, (int) j, strnames), a);
+	    check_delays(ExtStrname(tp, (int) j, strnames), a);
 	    if (capdump) {
 		check_infotocap(tp, (int) j, a);
 	    }
