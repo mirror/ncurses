@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2698 2016/11/20 00:36:25 tom Exp $
+-- $Id: NEWS,v 1.2703 2016/11/27 01:41:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20161126
+	+ modify linux-16color to not mask dim, standout or reverse with the
+	  ncv capability -TD
+	+ add 0.1sec mandatory delay to flash capabilities using the VT100
+	  reverse-video control -TD
+	+ omit selection of ISO-8859-1 for G0 in enacs capability from linux2.6
+	  entry, to avoid conflict with the user-defined mapping.  The reset
+	  feature will use ISO-8859-1 in any case (Mikulas Patocka).
+	+ improve check in tic for delays by also warning about beep/flash
+	  when a delay is not embedded, or if those use the VT100 reverse
+	  video escape without using a delay.
+	+ minor fix for syntax-check of delays from 20161119 changes.
+	+ modify trace() to avoid overwriting existing file (report by Maor
+	  Shwartz).
 
 20161119
 	+ add check in tic for some syntax errors of delays, as well as use of

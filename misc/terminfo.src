@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.573 $
-#	$Date: 2016/11/13 00:17:12 $
+#	$Revision: 1.578 $
+#	$Date: 2016/11/27 01:39:42 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1753,7 +1753,7 @@ linux2.2|linux 2.2.x console,
 linux2.6|linux 2.6.x console,
 	acsc=++\,\,--..00__``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwx
 	     xyyzz{{||}c~~,
-	enacs=\E(B\E)0, rmacs=^O,
+	enacs=\E)0, rmacs=^O,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5
 	    %t;2%;%?%p6%t;1%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, use=linux2.2,
@@ -1830,7 +1830,7 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 # you use a 512-character console font. This uses bold for bright
 # foreground colors and blink for bright background colors.
 linux-16color|linux console with 16 colors,
-	colors#16, ncv#63, pairs#256,
+	colors#16, ncv#42, pairs#256,
 	setab=\E[4%p1%{8}%m%d%?%p1%{7}%>%t;5%e;25%;m,
 	setaf=\E[3%p1%{8}%m%d%?%p1%{7}%>%t;1%e;21%;m,
 	use=linux,
@@ -2225,7 +2225,7 @@ scoansi|SCO Extended ANSI standard crt,
 #
 # F1-F12 generate different codes when shift or control modifiers are used.
 # For example:
-#	F1      	\E[001q
+#	F1		\E[001q
 #	shift F1	\E[013q
 #	control-F1	\E[025q
 #
@@ -2301,8 +2301,8 @@ iris-color|xwsh|IRIX ANSI with color,
 #	identifies as vt200 with selective erase, but does not implement DECSCA
 #	no vt52 mode
 #	also lacks these:
-# 		ESC # 8   DEC Screen Alignment Test (DECALN).
-# 		CSI ? 5 h Reverse Video (DECSCNM).
+#		ESC # 8	  DEC Screen Alignment Test (DECALN).
+#		CSI ? 5 h Reverse Video (DECSCNM).
 #
 pccon+keys|OpenBSD PC keyboard keys,
 	kbs=\177, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
@@ -2545,14 +2545,14 @@ wsvt25m|NetBSD wscons in 25 line DEC VT220 mode with Meta,
 # Attributes do not work with color
 # Failed: vpa/hpa
 # Failed: kf1-kf4, kf13-kf48, khome, kend
-# 	(effectively xterm-r6 for function-keys)
+#	(effectively xterm-r6 for function-keys)
 # None of the function or cursor key-modifiers are encoded.
 # Console hangs in the smm/rmm test if TERM=xterm, does not show test
 #
 # Testing with vttest:
 # -------------------
 # Identifies as vt220 with selective erase
-# 	(however, selective erase refers to DECSCA, SPA)
+#	(however, selective erase refers to DECSCA, SPA)
 # Does not implement vt52
 # Uses spaces to simulate double-size characters
 # Does not support 8-bit controls
@@ -2562,7 +2562,7 @@ wsvt25m|NetBSD wscons in 25 line DEC VT220 mode with Meta,
 # Does not support DECSCA
 # Does not support any of the ISO-6429 cursor-movement
 # Does not support any of the ISO-6429 miscellaneous tests
-# 	(SL/SR also leave unexpected char on screen too)
+#	(SL/SR also leave unexpected char on screen too)
 # Background does not change in menu 11.6.9 (SGR 22-27)
 # None of the xterm special features tests work
 netbsd6|NetBSD wscons in 25 line DEC VT100 mode,
@@ -3083,7 +3083,7 @@ vt100nam|vt100-nam|vt100 no automargins,
 	am@, xenl@,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7l\E[?8h, use=vt100-am,
 vt100-vb|dec vt100 (w/advanced video) & no beep,
-	bel@, flash=\E[?5h\E[?5l, use=vt100,
+	bel@, flash=\E[?5h$<100/>\E[?5l, use=vt100,
 
 # Ordinary vt100 in 132 column ("wide") mode.
 vt100-w|vt100-w-am|dec vt100 132 cols (w/advanced video),
@@ -3692,9 +3692,9 @@ putty|PuTTY terminal emulator,
 	      %e%p1%{27}%=%t\E%%G\342\206\220\E%%@%e%p1%{155}%=%t\E
 	      %%G\340\202\242\E%%@%e%p1%c%;,
 	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
-	el1=\E[1K, enacs=\E(B\E)0, flash=\E[?5h\E[?5l, home=\E[H,
-	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L,
-	ind=^J, indn=\E[%p1%dS,
+	el1=\E[1K, enacs=\E(B\E)0, flash=\E[?5h$<100/>\E[?5l,
+	home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL,
+	il1=\E[L, ind=^J, indn=\E[%p1%dS,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/
 	      %02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
@@ -5277,9 +5277,9 @@ rxvt-basic|rxvt terminal base (X Window System),
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
-	enacs=\E(B\E)0, flash=\E[?5h\E[?5l, home=\E[H, ht=^I,
-	hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L,
-	ind=^J, is1=\E[?47l\E=\E[?1l,
+	enacs=\E(B\E)0, flash=\E[?5h$<100/>\E[?5l, home=\E[H,
+	ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL,
+	il1=\E[L, ind=^J, is1=\E[?47l\E=\E[?1l,
 	is2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l, kbs=^H,
 	kcbt=\E[Z, kmous=\E[M, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
 	rmcup=\E[2J\E[?47l\E8, rmir=\E[4l, rmkx=\E>, rmso=\E[27m,
@@ -5838,7 +5838,7 @@ st|stterm| simpleterm 0.4.1,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	cvvis=\E[?25h, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM,
 	dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
-	enacs=\E)0, flash=\E[?5h\E[?5l, fsl=^G, home=\E[H,
+	enacs=\E)0, flash=\E[?5h$<100/>\E[?5l, fsl=^G, home=\E[H,
 	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@,
 	il=\E[%p1%dL, il1=\E[L, ind=^J, indn=\E[%p1%dS,
 	is2=\E[4l\E>\E[?1034l, kDC=\E[3;2~, kEND=\E[1;2F,
@@ -6463,7 +6463,7 @@ tmux-256color|tmux with 256 colors,
 #
 # Other special mappings:
 #	Apple		VT220
-#	HELP 		Find
+#	HELP		Find
 #	HOME		Insert here
 #	PAGEUP		Remove
 #	DEL		Select
@@ -6485,10 +6485,10 @@ ncsa-m|ncsa-vt220-8|NCSA Telnet 2.6 for Macintosh in vt220-8 mode,
 	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J,
-	el=\E[K, el1=\E[1K, enacs=\E)0, flash=\E[?5h\E[?5l,
-	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
-	if=/usr/share/tabset/vt100, il=\E[%p1%dL, il1=\E[L,
-	ind=\n$<150*>,
+	el=\E[K, el1=\E[1K, enacs=\E)0,
+	flash=\E[?5h$<100/>\E[?5l, home=\E[H, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, if=/usr/share/tabset/vt100,
+	il=\E[%p1%dL, il1=\E[L, ind=\n$<150*>,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>, kbs=^H,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kdch1=\E[4~, kend=\E[5~, kf1=\E[17~, kf10=\E[28~,
@@ -6999,15 +6999,15 @@ ansi-emx|ANSI.SYS color,
 	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
 	clear=\E[1;33;44m\E[H\E[J, cnorm=\E[?25h, cr=^M, cub1=^H,
 	cud1=^J, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A,
-	dch=\E[%p1%dp, ed=\E[J, el=\E[K, flash=\E[?5h\E[?5l,
-	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, ind=^J,
-	kb2=\E[G, kbs=^H, kf0=\0D, kll=\0O, kspd=^Z, nel=^M^J,
-	rev=\E[5;37;41m, rmir=\E[4l, rmpch=\E[10m,
-	rmso=\E[0;44m\E[1;33m, rmul=\E[0;44m\E[1;33m, rs1=\Ec,
-	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
-	sgr0=\E[0m\E[1;33;44m, smir=\E[4h, smpch=\E[11m,
-	smso=\E[0;31;47m, smul=\E[1;31;44m, tbc=\E[3g, u8=\E[?6c,
-	u9=\E[c, use=emx-base,
+	dch=\E[%p1%dp, ed=\E[J, el=\E[K,
+	flash=\E[?5h$<100/>\E[?5l, home=\E[H, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, ich1=\E[@, ind=^J, kb2=\E[G, kbs=^H, kf0=\0D,
+	kll=\0O, kspd=^Z, nel=^M^J, rev=\E[5;37;41m, rmir=\E[4l,
+	rmpch=\E[10m, rmso=\E[0;44m\E[1;33m,
+	rmul=\E[0;44m\E[1;33m, rs1=\Ec, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm, sgr0=\E[0m\E[1;33;44m, smir=\E[4h,
+	smpch=\E[11m, smso=\E[0;31;47m, smul=\E[1;31;44m,
+	tbc=\E[3g, u8=\E[?6c, u9=\E[c, use=emx-base,
 # nice colors for Emacs (white on blue, mode line white on cyan)
 ansi-color-2-emx|ANSI.SYS color 2,
 	clear=\E[0;37;44m\E[H\E[J, rev=\E[1;37;46m,
@@ -7728,15 +7728,15 @@ hp2621-nt|hp 2621 w/no tabs,
 # NOT set up by the initialization strings.
 #
 # Port Configuration
-# 	RecvPace=Xon/Xoff
-# 	XmitPace=Xon/Xoff
-# 	StripNulDel=Yes
+#	RecvPace=Xon/Xoff
+#	XmitPace=Xon/Xoff
+#	StripNulDel=Yes
 #
 # Terminal Configuration
-# 	InhHndShk=Yes
-# 	InhDC2=Yes
-# 	XmitFnctn(A)=No
-# 	InhEolWrp=No
+#	InhHndShk=Yes
+#	InhDC2=Yes
+#	XmitFnctn(A)=No
+#	InhEolWrp=No
 #
 # Note: the 2624 DOES have a true <home>, believe it or not!
 #
@@ -8031,10 +8031,10 @@ hp2397a|hp2397|hewlett packard 2397A color terminal,
 # PC Character Set	YES
 # Twenty-Five Line Mode	YES
 # XON/XOFF		@128 or 64 (sc)
-# Keycode Mode 		NO   or YES (sc)
+# Keycode Mode		NO   or YES (sc)
 # Backspace Key		BS or BS/DEL
 #
-# <is2> 	sets pcterm; autowrap; 25 lines; pc char set; prog DEL key;
+# <is2>		sets pcterm; autowrap; 25 lines; pc char set; prog DEL key;
 # \E\\? does not turn off keycode mode
 # <smsc>	sets alternate start/stop; keycode on
 hpansi|hp700|hewlett packard 700/44 in HP-PCterm mode,
@@ -8082,7 +8082,7 @@ hpsub|hp terminals -- capability subset,
 # but has no padding added, so may allow runover in some terminals at high
 # baud rates.  Will not work for hp2640a or hp2640b terminals, hp98x6 and
 # hp98x5 terminal emulators or hp98x6 consoles.
-# 	Adds xy-cursor addressing, vertical cursor addressing, home,
+#	Adds xy-cursor addressing, vertical cursor addressing, home,
 # last line, and underline capabilities.
 #
 # (hpex: removed memory-lock capabilities ":ml=\El:mu=\Em:",
@@ -9080,7 +9080,7 @@ tvi912cc|tvi912 at cowell college,
 # 10: 110
 #
 # S2 UART/Terminal options:
-# 		Up			Down
+#		Up			Down
 # 1:		Not used		Not allowed
 # 2:	Alternate character set	  Standard character set
 # 3:	    Full duplex		    Half duplex
@@ -9091,10 +9091,10 @@ tvi912cc|tvi912 at cowell college,
 # 8:		Not used		Not allowed on Rev E or lower
 # 9:	     Even parity	     Odd parity
 # 10:	    Steady cursor	    Blinking cursor
-# 	(On Rev E or lower, use W25 instead of switch 10.)
+#	(On Rev E or lower, use W25 instead of switch 10.)
 #
 # S5 UART/Terminal options:
-# 		Open			Closed
+#		Open			Closed
 # 1:	P3-6 Not connected	DSR received on P3-6
 # 2:	P3-8 Not connected	DCD received on P3-8
 #
@@ -9104,8 +9104,8 @@ tvi912cc|tvi912 at cowell college,
 # 3 Closed, 4 Closed:	Not allowed
 #
 # 5 Closed:	HDX printer (hardware control) Rev. K with extension port off,
-# 		all data transmitted out of the modem port (P3) will also be
-# 		transmitted out of the printer port (P4).
+#		all data transmitted out of the modem port (P3) will also be
+#		transmitted out of the printer port (P4).
 #
 # 6 Open, 7 Open:		Not allowed
 # 6 Open, 7 Closed:	20ma current loop input
@@ -9117,12 +9117,12 @@ tvi912cc|tvi912 at cowell college,
 # is switched on).
 #
 # S4/W31:	Enables automatic LF upon receipt of CR from
-# 		remote or keyboard.
+#		remote or keyboard.
 # S4/W32:	Enables transmission of EOT at the end of Send.  If not
-# 		installed, a carriage return is sent.
+#		installed, a carriage return is sent.
 # S4/W33:	Disables automatic carriage return in column 80.
 # S4/W34:	Selects Page Print Mode as initial condition.  If not
-# 		installed, Extension Mode is selected.
+#		installed, Extension Mode is selected.
 #
 # NON-STANDARD CAPABILITIES
 #
@@ -9446,10 +9446,10 @@ tvi924|televideo tvi924,
 # Position	Up	Dn	Description
 # --------------------------------------------
 # 1		X		Local edit
-# 			X	Duplex edit (transmit editing keys)
+#			X	Duplex edit (transmit editing keys)
 # --------------------------------------------
 # 2		X		912/920 emulation
-# 			X	925
+#			X	925
 # --------------------------------------------
 # 3			X
 # 4			X	No parity
@@ -9472,7 +9472,7 @@ tvi924|televideo tvi924,
 # 5		X
 # --------------------------------------------
 # 6		X		White on black display
-# 			X	Black on white display
+#			X	Black on white display
 # --------------------------------------------
 # 7			X	Half Duplex
 # 8			X
@@ -9484,17 +9484,17 @@ tvi924|televideo tvi924,
 # 8		X
 # --------------------------------------------
 # 9			X	50 Hz
-# 		X		60 Hz
+#		X		60 Hz
 # --------------------------------------------
 # 10		X		CR/LF (Auto LF)
-# 			X	CR only
+#			X	CR only
 #
 # S3 (internal switch) settings:
 #
 # Position	Up	Dn	Description
 # --------------------------------------------
 # 1		X		Keyclick off
-# 			X	Keyclick on
+#			X	Keyclick on
 # --------------------------------------------
 # 2			X	English
 # 3			X
@@ -9521,19 +9521,19 @@ tvi924|televideo tvi924,
 # 5		X
 # --------------------------------------------
 # 6		X		Screen blanking timer (ON)
-# 			X	Screen blanking timer (OFF)
+#			X	Screen blanking timer (OFF)
 # --------------------------------------------
 # 7		X		Page attributes
-# 			X	Line attributes
+#			X	Line attributes
 # --------------------------------------------
 # 8		X		DCD disconnected
-# 			X	DCD connected
+#			X	DCD connected
 # --------------------------------------------
 # 9		X		DSR disconnected
-# 			X	DSR connected
+#			X	DSR connected
 # --------------------------------------------
 # 10		X		DTR Disconnected
-# 			X	DTR connected
+#			X	DTR connected
 # --------------------------------------------
 #
 # (tvi925: BSD has <clear=\E*>.  I got <is2> and <ri> from there -- esr)
@@ -11427,7 +11427,8 @@ vt320-k3|MS-Kermit 3.00's vt320 emulation,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
 	dsl=\E[0$~, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
-	flash=\E[?5h\E[?5l\E[?5h\E[?5l\E[?5h\E[?5l,
+	flash=\E[?5h$<100/>\E[?5l\E[?5h$<100/>\E[?5l\E[?5h$<100/>\E[
+	      ?5l,
 	fsl=\E[0$}, home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH,
 	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=^J,
 	is2=\E>\E F\E[?1h\E[?7h\E[r\E[2$~, kbs=^H, kcub1=\EOD,
@@ -11456,8 +11457,9 @@ vt320-k311|dec vt320 series as defined by kermit 3.11,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
 	dsl=\E[2$~\r\E[1$}\E[K\E[$}, ed=\E[J, el=\E[K,
-	flash=\E[?5h\E[?5l, fsl=\E[$}, home=\E[H, ht=^I, hts=\EH,
-	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L$<3/>, ind=\ED,
+	flash=\E[?5h$<100/>\E[?5l, fsl=\E[$}, home=\E[H, ht=^I,
+	hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L$<3/>,
+	ind=\ED,
 	is2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;24r\E[24;1H,
 	kbs=^H, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
 	kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS, kf6=\E[17~,
@@ -11509,7 +11511,7 @@ vt320-k311|dec vt320 series as defined by kermit 3.11,
 # (^V^L and ^V^M set the current attribute as a side-effect.)
 # ^V ^Y <a> [...] <c>	-- repeat pattern. <a> specifies the number of bytes
 #			   in the pattern, <c> the number of times the pattern
-#		  	   should be repeated. If either value is 0, no-op.
+#			   should be repeated. If either value is 0, no-op.
 #			   The pattern can contain Avatar console codes,
 #			   including other ^V ^Y patterns.
 #				level 1:
@@ -11662,8 +11664,8 @@ att2350|AT&T 2350 Video Information Terminal 80 column mode,
 # Seems upward compatible with vt100, plus ins/del line/char.
 # On sgr, the protection parameter is ignored.
 # No check is made to make sure that only 3 parameters are output.
-# 	standout= reverse + half-intensity = 3 | 5.
-# 	bold= reverse + underline = 2 | 3.
+#	standout= reverse + half-intensity = 3 | 5.
+#	bold= reverse + underline = 2 | 3.
 # note that half-bright blinking doesn't look different from normal blinking.
 # NOTE:you must program the function keys first, label second!
 # (att4410: a BSD entry has been seen with the following capabilities:
@@ -11921,14 +11923,14 @@ att4420|tty4420|teletype 4420,
 #  asynchronous keyboard-display terminal.  It supports
 #  the vi editor.  The terminal must be set up as follows,
 #
-# 	HIGHLIGHT DEFINITION	3-TONE
-# 	DISPLAY FUNCTION	GROUP III
+#	HIGHLIGHT DEFINITION	3-TONE
+#	DISPLAY FUNCTION	GROUP III
 #
 #  The second entry below provides limited (a la adm3a)
 #  operation under GROUP II.
 #
 #  This must be used with DISPLAY FUNCTION GROUP I or III
-# 	and HIGHLIGHT DEFINITION 3-TONE
+#	and HIGHLIGHT DEFINITION 3-TONE
 # The terminal has either bold or blink, depending on options
 #
 # (att4424: commented out <smcup>=\E[1m, we don't need bright locked on -- esr)
@@ -12506,7 +12508,7 @@ att630-24|5630-24|5630DMD-24|630MTG-24|AT&T 630 windowing terminal 24 lines,
 #
 # Here is what's going onm in the init string:
 #	ESC [ 50;4|	set 700 native mode (really is 605)
-# x	ESC [ 56;ps| 	set lines to 24: ps=0; 40: ps=1 (plus status line)
+# x	ESC [ 56;ps|	set lines to 24: ps=0; 40: ps=1 (plus status line)
 #	ESC [ 53;0|	set GenFlow to Xon/Xoff
 #	ESC [ 8 ;0|	set CR on NL
 # x	ESC [ ? 3 l/h	set workspace: 80 col(l); 132 col(h)
@@ -13790,9 +13792,9 @@ visa50|geveke visa 50 terminal in ansi 80 character mode,
 	cud=\E[%p1%dB, cud1=\E[B, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dX, dch1=\E[X, dim=\E[2m, dl=\E[%p1%dM,
-	dl1=\E[M, ed=\E[J, el=\E[K, flash=\E[?5h\E[?5l, home=\E[H,
-	hpa=\E[%i%p1%dG, ht=^I, ich=\E[%p1%d@, ich1=\E[@,
-	il=\E[%p1%dL, il1=\E[L, ind=^J, invis=\E[8m,
+	dl1=\E[M, ed=\E[J, el=\E[K, flash=\E[?5h$<100/>\E[?5l,
+	home=\E[H, hpa=\E[%i%p1%dG, ht=^I, ich=\E[%p1%d@,
+	ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=^J, invis=\E[8m,
 	is2=\E0;2m\E[1;25r\E[25;1H\E[?3l\E[?7h\E[?8h,
 	ka1=\E[f, ka3=\EOQ, kb2=\EOP, kbs=^H, kc1=\EOR, kc3=\EOS,
 	kcub1=\E[D, kcud1=\E[A, kcuf1=\E[C, kcuu1=\E[A, kdch1=\177,
@@ -13954,7 +13956,7 @@ oc100|oconcept|c100-1p|old 1 page concept 100,
 # From: Walter Skorski <walt@genetics1.JMP.TJU.EDU>, 16-oct-1996.
 # Lots of notes, originally inline, but ncurses doesn't grok that.
 #
-# am: 	not available in power on mode, but turned on with \E[=107;207h in
+# am:	not available in power on mode, but turned on with \E[=107;207h in
 #	is2=.  Also, \E=124l in is2= could have been used to prevent needing
 #	to specify xenl:, but that would have rendered the last space on the
 #	last line useless.
@@ -14143,7 +14145,7 @@ oc100|oconcept|c100-1p|old 1 page concept 100,
 #		%p1%{30}%>		 ((key; 30) >;
 #		%p1%{54}%<		  (key; 54) <
 #		%A			 ) AND
-#		%O		  	) OR
+#		%O			) OR
 #	 [that is, "IF key < 24 OR (key > 30 AND key < 54)",]
 #		%t\E[		THEN	OUTPUT	\E[
 #		%p1%d			OUTPUT	(key) as decimal
@@ -15171,34 +15173,34 @@ dm3045|datamedia 3045a,
 	use=dm3025,
 # Datamedia DT80 soft switches:
 # 1	0=Jump  1=Smooth
-# 	Autorepeat 	0=off  1=on
-# 	Screen		0=Dark 1=light
-# 	Cursor		0=u/l  1=block
+#	Autorepeat	0=off  1=on
+#	Screen		0=Dark 1=light
+#	Cursor		0=u/l  1=block
 #
 # 2	Margin Bell	0=off  1=on
-# 	Keyclick	0=off  1=on
-# 	Ansi/VT52	0=VT52 1=Ansi
-# 	Xon/Xoff	0=Off  1=On
+#	Keyclick	0=off  1=on
+#	Ansi/VT52	0=VT52 1=Ansi
+#	Xon/Xoff	0=Off  1=On
 #
 # 3	Shift3		0=Hash 1=UK Pound
-# 	Wrap		0=Off  1=On
-# 	Newline		0=Off  1=On
-# 	Interlace	0=Off  1=On
+#	Wrap		0=Off  1=On
+#	Newline		0=Off  1=On
+#	Interlace	0=Off  1=On
 #
 # 4	Parity		0=Odd  1=Even
-# 	Parity		0=Off  1=On
-# 	Bits/Char	0=7    1=8
-# 	Power		0=60Hz 1=50Hz
+#	Parity		0=Off  1=On
+#	Bits/Char	0=7    1=8
+#	Power		0=60Hz 1=50Hz
 #
 # 5	Line Interface  0=EIA  1=Loop
-# 	Aux Interface   0=EIA  1=Loop
-# 	Local Copy    	0=Off  1=On
-# 	Spare
+#	Aux Interface	0=EIA  1=Loop
+#	Local Copy	0=Off  1=On
+#	Spare
 #
 # 6	Aux Parity	0=Odd  1=Even
-# 	Aux Parity	0=Off  1=On
-# 	Aux Bits/Char   0=7    1=8
-# 	CRT Saver	0=Off  1=On
+#	Aux Parity	0=Off  1=On
+#	Aux Bits/Char	0=7    1=8
+#	CRT Saver	0=Off  1=On
 # dm80/1 is a vt100 lookalike, but it doesn't seem to need any padding.
 dm80|dmdt80|dt80|datamedia dt80/1,
 	clear=\E[2J\E[H, cud1=^J, cuf1=\E[C,
@@ -17343,7 +17345,7 @@ NCR260VT300WPP|ncr260vt300wpp|NCR 2900_260 vt300 wide mode pc+  kybd,
 # The capablitiy 'op' sets colors to green on black (default combination).
 #
 # NOTE:  The NCR Unix System Administrator's Shell will not function properly
-# 	    if the 'pairs' capability is defined. Un-Comment the 'pairs'
+#	    if the 'pairs' capability is defined. Un-Comment the 'pairs'
 #	    capability and recompile if you wish to have it included.
 #
 ncr260wy325pp|NCR 2900_260 wyse 325,
@@ -17405,7 +17407,7 @@ ncr260wy325wpp|NCR 2900_260 wyse 325 wide mode,
 # are numbered 0 through 15.
 #
 # NOTE:  The NCR Unix System Administrator's Shell does not function properly
-# 	    with the 'pairs' capability defined as below.  If you wish to
+#	    with the 'pairs' capability defined as below.  If you wish to
 #	    have it included, Un-comment it and recompile (using 'tic').
 #
 ncr260wy350pp|NCR 2900_260 wyse 350,
@@ -17826,7 +17828,7 @@ pe1251|pe6300|pe6312|perkin elmer 1251,
 	kf0=\ERA, kf1=\ERB, kf10=\ERK, kf2=\ERC, kf3=\ERD, kf4=\ERE,
 	kf5=\ERF, kf6=\ERG, kf7=\ERH, kf8=\ERI, kf9=\ERJ, tbc=\E3,
 # (pe7000m: this had
-# 	rmul=\E!\0, smul=\E!\040,
+#	rmul=\E!\0, smul=\E!\040,
 # which is probably wrong, it collides with kf0
 pe7000m|perkin elmer 7000 series monochrome monitor,
 	am,
@@ -19009,15 +19011,15 @@ morphos,
 	ri=\215, rin@, use=amiga-h,
 
 # Commodore B-128 microcomputer from Doug Tyrol <det@HEL-ACE.ARPA>
-# 	I'm trying to write a termcap for a commodore b-128, and I'm
+#	I'm trying to write a termcap for a commodore b-128, and I'm
 # having a little trouble. I've had to map most of my control characters
 # to something that unix will accept (my delete-char is a ctrl-t, etc),
 # and create some functions (like cm), but thats life.
-# 	The problem is with the arrow keys - right, and up work fine, but
+#	The problem is with the arrow keys - right, and up work fine, but
 # left deletes the previous character and down I just can't figure out.
 # Jove knows what I want, but I don't know what it's sending to me (it
 # isn't thats bound to next-line in jove).
-# 	Anybody got any ideas? Here's my termcap.
+#	Anybody got any ideas? Here's my termcap.
 # DAG -- I changed his "^n" entries to "\n"; see if that works.
 #
 commodore|b-128|Commodore B-128 micro,
@@ -19537,8 +19539,8 @@ linux-m1|Linux Minitel 1 "like" Couleurs,
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, dch=\E[%p1%dP,
 	dch1=\E[P, dim=\E[2m, dl=\E[%p1%dM, dl1=\E[M,
 	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E)U,
-	flash=\E[?5h\E[?5l, home=\E[H, hpa=\E[%i%p1%d`, ht=^I,
-	hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J,
+	flash=\E[?5h$<100/>\E[?5l, home=\E[H, hpa=\E[%i%p1%d`,
+	ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=^J,
 	initc=\E]P%p1%{15}%&%X%p2%{255}%&%02X%p3%{255}%&%02X%p4
 	      %{255}%&%02X,
 	is2=\E]R\E]P3FFFF80\E[?8c, ka1=\EOw, ka3=\EOy, kb2=\E[G,
@@ -20273,34 +20275,34 @@ bq300-8-pc-w-rv|Questar 303 with PC keyboard full 8 bits reverse 132 columns,
 #	CLR clear			^[`
 #	KBU keyboard unlock (set)	^[[W
 #	KBL keyboard lock (reset)	^[[X
-#	CM  character mode (async.) 	^[k
+#	CM  character mode (async.)	^[k
 #	NEP non echoplex mode (by host)	^[l
-#	EP  echoplex mode (by host) 	^[m
+#	EP  echoplex mode (by host)	^[m
 #	IM  insert mode set		^[[I
-#	IM  insert mode reset 		^[[J
-#	RMS roll mode set 		^[r
-#	RMR roll mode reset 		^[q
-#	SM78 set mode vip7800	 	^[[1q
-#	SD  scroll up  	(72 lines) 	^[[0s
-#	SD  scroll down	(72 lines) 	^[[1s
+#	IM  insert mode reset		^[[J
+#	RMS roll mode set		^[r
+#	RMR roll mode reset		^[q
+#	SM78 set mode vip7800		^[[1q
+#	SD  scroll up	(72 lines)	^[[0s
+#	SD  scroll down (72 lines)	^[[1s
 #	RBM block mode reset		^[[E
-#	SLS status line set 		^[w
-#	SLR status line reset 		^[v
-#	SLL status line lock 		^[O
-#	LGS Line-graphic mode set 	^[G
-#	LGR Line-graphic mode reset 	^[F
+#	SLS status line set		^[w
+#	SLR status line reset		^[v
+#	SLL status line lock		^[O
+#	LGS Line-graphic mode set	^[G
+#	LGR Line-graphic mode reset	^[F
 #	TBC tab clear (at cursor pos.)	^[[g
-#	TBI tab initialize 		^[[N
+#	TBI tab initialize		^[[N
 #	TBS tab set (at cursor pos.)	^[p
 #	PDS  print data space		^[[0p
-#	PHD  print host data 		^[[3p
+#	PHD  print host data		^[[3p
 #	PDT  print data terminator	^[[<p
 #	PRES print adapter reset	^[[2p
 #	SSPR multi-part. reset		^[[<>u
 #	SSP0 partition 0 set		^[[00u
-#	SSP1 partition n format 1 	^[[PnPnSTRINGu
-#	SSP2 partition n format 2 	^[[PnPnSTRINGu
-#	SSP3 partition n format 3 	^[[PnPnu
+#	SSP1 partition n format 1	^[[PnPnSTRINGu
+#	SSP2 partition n format 2	^[[PnPnSTRINGu
+#	SSP3 partition n format 3	^[[PnPnu
 #	ATR attribute (visual)
 #	    blink :			^[sB
 #	    dim :			^[sL
@@ -20541,7 +20543,7 @@ dw2|decwriter|dw|decwriter II,
 	bel=^G, cr=^M, cub1=^H, cud1=^J, ind=^J, kbs=^H,
 # \E(B		Use U.S. character set (otherwise # => british pound !)
 # \E[20l	Disable "linefeed newline" mode (else puts \r after \n,\f,\v)
-# \E[w   	10 char/in pitch
+# \E[w		10 char/in pitch
 # \E[1;132	full width horizontal margins
 # \E[2g		clear all tab stops
 # \E[z		6 lines/in
@@ -21766,7 +21768,7 @@ pc6300plus|AT&T 6300 plus,
 #	*     cfont(1) in the PC 7300 documentation.
 #	*/
 #
-#	struct altfdata 	/* structure for alt font data */
+#	struct altfdata		/* structure for alt font data */
 #	{
 #	short	altf_slot;		/* memory slot number */
 #	char	altf_name[FNSIZE];	/* font name (file name) */
@@ -22872,10 +22874,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # terminfo entry are followed with the corresponding capability in parens:
 #
 #	CSI <n>k		disable (n=0) or enable (n=1) keyclick
-#	CSI 2h   		lock keyboard
-#	CSI 2i  		send screen as input
-#	CSI 2l  		unlock keyboard
-#	CSI 6m  		enable background color intensity
+#	CSI 2h			lock keyboard
+#	CSI 2i			send screen as input
+#	CSI 2l			unlock keyboard
+#	CSI 6m			enable background color intensity
 #	CSI <0-2>c		reserved
 #	CSI <0-59>m		select graphic rendition
 #	CSI <n>;<m>H	(cup)	cursor to line n and column m
@@ -22902,10 +22904,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	CSI <n>e		cursor down n lines and in first column
 #	CSI <n>g	(cbt)	clear all tabs
 #	CSI <n>z		make virtual terminal n active
-#	CSI ?7h 	(smam)	turn automargin on
-#	CSI ?7l 	(rmam)	turn automargin off
-#	CSI s     		save cursor position
-#	CSI u   		restore cursor position to saved value
+#	CSI ?7h		(smam)	turn automargin on
+#	CSI ?7l		(rmam)	turn automargin off
+#	CSI s			save cursor position
+#	CSI u			restore cursor position to saved value
 #	CSI =<c>A		set overscan color
 #	CSI =<c>F		set normal foreground color
 #	CSI =<c>G		set normal background color
@@ -22918,12 +22920,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	CSI =<s>;<e>C		set cursor parameters
 #	CSI =<x>D		enable/disable intensity of background color
 #	CSI =<x>E		set/clear blink vs. bold background
-#	CSI 7     	(sc)	(sc) save cursor position
-#	CSI 8   	(rc)	(rc) restore cursor position to saved value
+#	CSI 7		(sc)	(sc) save cursor position
+#	CSI 8		(rc)	(rc) restore cursor position to saved value
 #	CSI H		(hts)	(hts) set tab stop
 #	CSI Q<n><string>	define function key string
 #				(string must begin and end with delimiter char)
-#	CSI c   	(clear) clear screen
+#	CSI c		(clear) clear screen
 #
 # The lack of any specification for attributes in SGR (among other things)
 # makes this a wretchedly weak standard. The table above is literally
@@ -22949,22 +22951,22 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	CL	key_char_left
 #	CR	key_char_right
 #	CW	key_change_window			create_window
-#	EN	key_end          	kend
+#	EN	key_end			kend
 #	HM	key_home		khome
 #	HP	??
-#	LD	key_delete_line  	kdl1
-#	LF	key_linefeed     			label_off
+#	LD	key_delete_line		kdl1
+#	LF	key_linefeed				label_off
 #	NU	key_next_unlocked_cell
-#	PD	key_page_down   	knp
+#	PD	key_page_down		knp
 #	PL	??
 #	PN	start_print		mc5
 #	PR	??
 #	PS	stop_print		mc4
-#	PU	key_page_up     	kpp		pulse
+#	PU	key_page_up		kpp		pulse
 #	RC	key_recalc				remove_clock
 #	RF	key_toggle_ref				req_for_input
-#	RT	key_return      	kent
-#	UP	key_up_arrow           	kcuu1   	parm_up_cursor
+#	RT	key_return		kent
+#	UP	key_up_arrow		kcuu1		parm_up_cursor
 #	WL	key_word_left
 #	WR	key_word_right
 #
@@ -23534,7 +23536,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 9.13.0 (Sun Mar 10 00:13:08 EST 1996):
 #	* Another sweep through the Shuford archive looking for new info.
 #	* Added dg100 alias to dg6053 based on a comp.terminals posting.
-# 	* Added st52 from Per Persson.
+#	* Added st52 from Per Persson.
 #	* Added eterm from the GNU Emacs 19.30 distribution.
 #	* Freeze for 1.9.9.
 # 9.13.1 (Fri Mar 29 14:06:46 EST 1996):
@@ -24854,5 +24856,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2016-10-01
 #	+ add linux-m1 minitel entries (patch by Alexandre Montaron).
 #	+ correct rs2 string for vt100-nam -TD
+#
+# 2016-11-26
+#	+ modify linux-16color to not mask dim, standout or reverse with the
+#	  ncv capability -TD
+#	+ add 0.1sec mandatory delay to flash capabilities using the VT100
+#	  reverse-video control -TD
+#	+ omit selection of ISO-8859-1 for G0 in enacs capability from linux2.6
+#	  entry, to avoid conflict with the user-defined mapping.  The reset
+#	  feature will use ISO-8859-1 in any case (Mikulas Patocka).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

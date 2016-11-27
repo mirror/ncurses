@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.553 2016/09/10 21:52:52 Rich.Coe Exp $
+ * $Id: curses.priv.h,v 1.554 2016/11/21 23:28:54 tom Exp $
  *
  *	curses.priv.h
  *
@@ -901,10 +901,10 @@ typedef struct {
 #endif
 
 #ifdef TRACE
-	bool		init_trace;
 	char		trace_fname[PATH_MAX];
 	int		trace_level;
 	FILE		*trace_fp;
+	int		trace_fd;
 
 	char		*tracearg_buf;
 	size_t		tracearg_used;
