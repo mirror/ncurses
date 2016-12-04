@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2703 2016/11/27 01:41:10 tom Exp $
+-- $Id: NEWS,v 1.2705 2016/12/04 01:02:15 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20161203
+	+ improve discussion of field validation in form_driver.3x manual page.
+	+ update curs_trace.3x manual page.
 
 20161126
 	+ modify linux-16color to not mask dim, standout or reverse with the
