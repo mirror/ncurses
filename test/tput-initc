@@ -1,5 +1,6 @@
+#!/bin/sh
 ##############################################################################
-# Copyright (c) 2004-2006,2016 Free Software Foundation, Inc.                #
+# Copyright (c) 2016 Free Software Foundation, Inc.                          #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -25,29 +26,62 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: xterm-16color.dat,v 1.3 2016/12/10 22:34:58 tom Exp $
-# This illustrates the predefined colors for XFree86 xterm's "xterm-16color". 
-# If you set $TERM to "xterm-88color" (and have xterm compiled to support the
-# 88-color or 256-color feature), you can use the ncurses 'd' screen to
-# manipulate the colors shown in the screen.  The 'd' screen is limited to
-# the first 16 colors, and xterm happens to use the same first 16 colors in
-# the extended color models that support initc.
-#
-# The colors shown are for xterm patch #192.
-scale:255
-0:	  0   0   0		black
-1:	205   0	  0		red3
-2:	  0 205	  0		green3
-3:	205 205	  0		yellow3
-4:	  0   0 238		blue2
-5:	205   0 205		magenta3
-6:	  0 205 205		cyan3
-7:	229 229 229 		gray90
-8:	127 127 127 		gray50
-9:	255   0   0		red
-10:	  0 255   0		green
-11:	255 255   0		yellow
-12:	 92  92 255		customblue
-13:	255   0 255		magenta
-14:	  0 255 255		cyan
-15:	255 255 255		white
+# $Id: tput-initc,v 1.1 2016/12/10 23:35:46 tom Exp $
+# Some of the ".dat" files in ncurses' test-directory give r/g/b numbers for
+# default palettes of xterm and Linux console.  This script reads the numbers
+# and (assuming the same or compatible terminal) uses tput to (re)initialize
+# the palette using those numbers.
+
+failed() {
+	printf "?? $*\n" >&2
+	exit 1
+}
+
+if [ $# = 1 ]
+then
+	file=$1
+elif [ $# = 0 ]
+then
+	file=$TERM.dat
+else
+	failed "expected one parameter or none"
+fi
+
+if [ ! -f "$file" ]
+then
+	if [ -f "$file.dat" ]
+	then
+		file="$file.dat"
+	else
+		failed "no such file: $file"
+	fi
+fi
+
+myterm=${file%%.dat}
+colors=$(tput -T $myterm colors 2>/dev/null)
+if [ ${colors:-0} -le 0 ]
+then
+	myterm=${myterm%%-color}
+	colors=$(tput -T $myterm colors 2>/dev/null)
+fi
+if [ ${colors:-0} -le 0 ]
+then
+	failed "terminal $myterm does not support color"
+fi
+
+cat $file |\
+awk -v myterm=$myterm '
+BEGIN { limit=1000; }
+function scaled(n) {
+	return (n * 1000)/limit;
+}
+
+/^scale:[0-9]+/{
+	sub("^scale:","",$0);
+	limit = $0;
+}
+
+/^[0-9]+:/{
+	sub(":","",$1);
+	printf "tput -T%s initc %d %d %d %d\n", myterm, $1,scaled($2),scaled($3),scaled($4);
+}' |sh -

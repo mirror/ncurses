@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2705 2016/12/04 01:02:15 tom Exp $
+-- $Id: NEWS,v 1.2708 2016/12/11 00:24:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20161210
+	+ add configure script option --disable-wattr-macros for use in cases
+	  where one wants to use the same headers for ncurses5/ncurses6
+	  development, by suppressing the wattr* macros which differ due to
+	  the introduction of extended colors (prompted by comments in
+	  Debian #230990, Redhat #1270534).
+	+ add test/tput-initc to demonstrate tput used to initialize palette
+	  from a data file.
+	+ modify test/xterm*.dat to use the newer color4/color12 values.
 
 20161203
 	+ improve discussion of field validation in form_driver.3x manual page.

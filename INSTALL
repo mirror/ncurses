@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.194 2015/10/24 19:03:42 Tomas.Cech Exp $
+-- $Id: INSTALL,v 1.195 2016/12/11 00:41:03 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -469,6 +469,26 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Portable programs should call tparm() using the fixed-length parameter
 	list documented in X/Open.  ncurses provides varargs support for this
 	function.  Use --disable-tparm-varargs to disable this support.
+
+    --disable-wattr-macros
+	The 6.0 ABI adds support for extended colors and for extended mouse.
+	The former is a noticeable problem when developers inadvertantly
+	compile using the ncurses6 header files and link with an ncurses5
+	library, because the wattr* macros use a new field in the WINDOW
+	structure.  These macros are used in several applications.
+
+	Since ncurses provides an actual function for each of these macros,
+	suppressing them from the curses.h header allows the ncurses5 libraries
+	to be used in most applications.
+
+	NOTE: The extended colors also are used in the cchar_t structure, but
+	fewer applications use that.
+
+	NOTE: This workaround does not help with mismatches in the ncurses
+	mouse version.  The extended mouse feature uses one less fewer bit for
+	each button, so that only the first button will work as expected with
+	a mismatch between header and library.  Again, most applications will
+	work, since most use only the first button.
 
     --enable-assertions
 	For testing, compile-in assertion code.  This is used only for a few

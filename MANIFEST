@@ -1174,6 +1174,7 @@
 ./test/testaddch.c
 ./test/testcurs.c
 ./test/testscanw.c
+./test/tput-initc
 ./test/tracemunch
 ./test/view.c
 ./test/widechars-utf8.txt

@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.54 2016/07/09 21:43:05 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.55 2016/12/11 00:07:14 tom Exp $)
 #
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
@@ -62,7 +62,7 @@ if test "${LC_MESSAGES+set}" = set; then LC_MESSAGES=C; export LC_MESSAGES; fi
 if test "${LC_CTYPE+set}"    = set; then LC_CTYPE=C;    export LC_CTYPE;    fi
 if test "${LC_COLLATE+set}"  = set; then LC_COLLATE=C;  export LC_COLLATE;  fi
 
-preprocessor="$1 -DNCURSES_INTERNALS -I../include"
+preprocessor="$1 -DNCURSES_WATTR_MACROS -DNCURSES_INTERNALS -I../include"
 AWK="$2"
 USE="$3"
 

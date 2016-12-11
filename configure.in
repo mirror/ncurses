@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.631 2016/06/04 22:47:54 tom Exp $
+dnl $Id: configure.in,v 1.633 2016/12/11 02:17:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.631 $)
+AC_REVISION($Revision: 1.633 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -925,6 +925,21 @@ AC_MSG_RESULT($with_tic_depends)
 else
 	with_tic_depends=no
 fi
+
+###   use option --disable-wattr-macros to suppress wattr* macros from curses.h
+AC_MSG_CHECKING(if you want to suppress wattr* macros to help with ncurses5/ncurses6 transition)
+AC_ARG_ENABLE(wattr-macros,
+	[  --disable-wattr-macros  suppress wattr* macros to help with ncurses5/ncurses6 transition],
+	[with_wattr_macros=$enableval],
+	[with_wattr_macros=yes])
+if [[ "x$with_wattr_macros" != xyes ]]; then
+	NCURSES_WATTR_MACROS=0
+	AC_MSG_RESULT(yes)
+else
+	NCURSES_WATTR_MACROS=1
+	AC_MSG_RESULT(no)
+fi
+AC_SUBST(NCURSES_WATTR_MACROS)
 
 ###   use option --with-bool to override bool's type
 AC_MSG_CHECKING(for type of bool)

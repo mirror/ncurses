@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.243 2016/01/23 22:20:31 tom Exp $ */
+/* $Id: curses.h.in,v 1.244 2016/12/10 23:56:23 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -108,6 +108,15 @@
  */
 #ifndef @cf_cv_enable_opaque@
 #define NCURSES_OPAQUE @NCURSES_OPAQUE@
+#endif
+
+/*
+ * Definition used to optionally suppress wattr* macros to help with the
+ * transition from ncurses5 to ncurses6 by allowing the header files to
+ * be shared across development packages for ncursesw in both ABIs.
+ */
+#ifndef NCURSES_WATTR_MACROS
+#define NCURSES_WATTR_MACROS @NCURSES_WATTR_MACROS@
 #endif
 
 /*
@@ -1153,6 +1162,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define wattroff(win,at)	wattr_off(win, NCURSES_CAST(attr_t, at), NULL)
 
 #if !NCURSES_OPAQUE
+#if NCURSES_WATTR_MACROS
 #if NCURSES_WIDECHAR && @NCURSES_EXT_COLORS@
 #define wattrset(win,at)	((win) \
 				  ? ((win)->_color = NCURSES_CAST(int, PAIR_NUMBER(at)), \
@@ -1165,6 +1175,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 				     OK) \
 				  : ERR)
 #endif
+#endif /* NCURSES_WATTR_MACROS */
 #endif /* NCURSES_OPAQUE */
 
 #define scroll(win)		wscrl(win,1)
@@ -1301,6 +1312,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 #define slk_attr_on(a,v)		((v) ? ERR : slk_attron(a))
 
 #if !NCURSES_OPAQUE
+#if NCURSES_WATTR_MACROS
 #if NCURSES_WIDECHAR && @NCURSES_EXT_COLORS@
 #define wattr_set(win,a,p,opts)		(((win) \
 					  ? ((win)->_attrs = ((a) & ~A_COLOR), \
@@ -1319,6 +1331,7 @@ extern NCURSES_EXPORT(int) NCURSES_SP_NAME(use_legacy_coding) (SCREEN*, int);	/*
 					 (void)(((p) != (void *)0) ? (*(p) = (NCURSES_PAIRS_T) ((win) ? PAIR_NUMBER((win)->_attrs) : 0)) : OK), \
 					 OK)
 #endif
+#endif /* NCURSES_WATTR_MACROS */
 #endif /* NCURSES_OPAQUE */
 
 /*
