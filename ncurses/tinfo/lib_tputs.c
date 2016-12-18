@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.98 2016/05/28 21:58:45 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.99 2016/12/17 20:47:21 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -141,6 +141,8 @@ NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 		}
 	    }
 	}
+    } else {
+	fflush(stdout);
     }
 }
 
