@@ -31,6 +31,7 @@
  ****************************************************************************/
 
 #include <reset_cmd.h>
+#include <tty_settings.h>
 
 #include <errno.h>
 #include <stdio.h>
@@ -51,7 +52,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.9 2016/10/23 01:08:11 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.11 2016/12/24 23:20:57 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -73,11 +74,8 @@ MODULE_ID("$Id: reset_cmd.c,v 1.9 2016/10/23 01:08:11 tom Exp $")
 # endif
 #endif
 
-static int my_fd;
 static FILE *my_file;
-static TTY original_settings;
 
-static bool can_restore = FALSE;
 static bool use_reset = FALSE;	/* invoked as reset */
 static bool use_init = FALSE;	/* invoked as init */
 
@@ -102,17 +100,6 @@ failed(const char *msg)
     perror(temp);
     exit_error();
     /* NOTREACHED */
-}
-
-static bool
-get_tty_settings(int fd, TTY * tty_settings)
-{
-    bool success = TRUE;
-    my_fd = fd;
-    if (fd < 0 || GET_TTY(my_fd, tty_settings) < 0) {
-	success = FALSE;
-    }
-    return success;
 }
 
 static bool
@@ -215,13 +202,9 @@ out_char(int c)
  * a child program dies in raw mode.
  */
 void
-reset_tty_settings(TTY * tty_settings)
+reset_tty_settings(int fd, TTY * tty_settings)
 {
-#ifdef TERMIOS
-    tcgetattr(my_fd, tty_settings);
-#else
-    stty(my_fd, tty_settings);
-#endif
+    GET_TTY(fd, tty_settings);
 
 #ifdef TERMIOS
 #if defined(VDISCARD) && defined(CDISCARD)
@@ -355,7 +338,7 @@ reset_tty_settings(TTY * tty_settings)
 	);
 #endif
 
-    SET_TTY(my_fd, tty_settings);
+    SET_TTY(fd, tty_settings);
 }
 
 /*
@@ -487,7 +470,7 @@ sent_string(const char *s)
 
 /* Output startup string. */
 bool
-send_init_strings(TTY * old_settings)
+send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 {
     int i;
     bool need_flush = FALSE;
@@ -497,7 +480,7 @@ send_init_strings(TTY * old_settings)
     if (old_settings != 0 &&
 	old_settings->c_oflag & (TAB3 | ONLCR | OCRNL | ONLRET)) {
 	old_settings->c_oflag &= (TAB3 | ONLCR | OCRNL | ONLRET);
-	SET_TTY(my_fd, old_settings);
+	SET_TTY(fd, old_settings);
     }
 #endif
     if (use_reset || use_init) {
@@ -624,40 +607,6 @@ print_tty_chars(TTY * old_settings, TTY * new_settings)
     show_tty_change(old_settings, new_settings, "Erase", VERASE, CERASE);
     show_tty_change(old_settings, new_settings, "Kill", VKILL, CKILL);
     show_tty_change(old_settings, new_settings, "Interrupt", VINTR, CINTR);
-}
-
-/*
- * Open a file descriptor on the current terminal, to obtain its settings.
- * stderr is less likely to be redirected than stdout; try that first.
- */
-int
-save_tty_settings(TTY * tty_settings)
-{
-    if (!get_tty_settings(STDERR_FILENO, tty_settings) &&
-	!get_tty_settings(STDOUT_FILENO, tty_settings) &&
-	!get_tty_settings(STDIN_FILENO, tty_settings) &&
-	!get_tty_settings(open("/dev/tty", O_RDWR), tty_settings)) {
-	failed("terminal attributes");
-    }
-    can_restore = TRUE;
-    original_settings = *tty_settings;
-    return my_fd;
-}
-
-void
-restore_tty_settings(void)
-{
-    if (can_restore)
-	SET_TTY(my_fd, &original_settings);
-}
-
-/* Set the modes if they've changed. */
-void
-update_tty_settings(TTY * old_settings, TTY * new_settings)
-{
-    if (memcmp(new_settings, old_settings, sizeof(TTY))) {
-	SET_TTY(my_fd, new_settings);
-    }
 }
 
 #if HAVE_SIZECHANGE

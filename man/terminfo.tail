@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.74 2016/11/05 21:15:43 Alain.Williams Exp $
+.\" $Id: terminfo.tail,v 1.75 2016/12/24 22:54:11 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1324,16 +1324,24 @@ character pairs right to left in sequence; these become the ACSC string.
 .PP
 .SS Color Handling
 .PP
-Most color terminals are either \*(``Tektronix-like\*('' or \*(``HP-like\*(''.
+The curses library functions \fBinit_pair\fP and \fBinit_color\fP
+manipulate the \fIcolor pairs\fP and \fIcolor values\fP discussed in this
+section
+(see \fBcurs_color\fP(3X) for details on these and related functions).
+.PP
+Most color terminals are either \*(``Tektronix-like\*('' or \*(``HP-like\*('':
+.bP
 Tektronix-like
-terminals have a predefined set of N colors (where N usually 8), and can set
+terminals have a predefined set of \fIN\fP colors
+(where \fIN\fP is usually 8),
+and can set
 character-cell foreground and background characters independently, mixing them
-into N\ *\ N color-pairs.
-On HP-like terminals, the use must set each color
+into \fIN\fP\ *\ \fIN\fP color-pairs.
+.bP
+On HP-like terminals, the user must set each color
 pair up separately (foreground and background are not independently settable).
-Up to M color-pairs may be set up from 2*M different colors.
-ANSI-compatible
-terminals are Tektronix-like.
+Up to \fIM\fP color-pairs may be set up from 2*\fIM\fP different colors.
+ANSI-compatible terminals are Tektronix-like.
 .PP
 Some basic color capabilities are independent of the color method.
 The numeric
@@ -1349,6 +1357,11 @@ terminal emulators) erase screen areas with the current background color rather
 than the power-up default background; these should have the boolean capability
 \fBbce\fR.
 .PP
+While the curses library works with \fIcolor pairs\fP
+(reflecting the inability of some devices to set foreground
+and background colors independently),
+there are separate capabilities for setting these features:
+.bP
 To change the current foreground or background color on a Tektronix-type
 terminal, use \fBsetaf\fR (set ANSI foreground) and \fBsetab\fR (set ANSI
 background) or \fBsetf\fR (set foreground) and \fBsetb\fR (set background).
@@ -1357,12 +1370,12 @@ The SVr4 documentation describes
 only \fBsetaf\fR/\fBsetab\fR; the XPG4 draft says that "If the terminal
 supports ANSI escape sequences to set background and foreground, they should
 be coded as \fBsetaf\fR and \fBsetab\fR, respectively.
+.bP
 If the terminal
 supports other escape sequences to set background and foreground, they should
 be coded as \fBsetf\fR and \fBsetb\fR, respectively.
-The \fBvidputs\fR
-function and the refresh functions use \fBsetaf\fR and \fBsetab\fR if they are
-defined."
+The \fBvidputs\fR and the \fBrefresh\fP functions
+use the \fBsetaf\fR and \fBsetab\fR capabilities if they are defined.
 .PP
 The \fBsetaf\fR/\fBsetab\fR and \fBsetf\fR/\fBsetb\fR capabilities take a
 single numeric argument each.
@@ -1411,6 +1424,8 @@ otherwise red/blue will be interchanged on the display.
 On an HP-like terminal, use \fBscp\fR with a color-pair number parameter to set
 which color pair is current.
 .PP
+Some terminals allow the \fIcolor values\fP to be modified:
+.bP
 On a Tektronix-like terminal, the capability \fBccc\fR may be present to
 indicate that colors can be modified.
 If so, the \fBinitc\fR capability will
@@ -1422,7 +1437,7 @@ If the boolean capability \fBhls\fR is present,
 they are instead as HLS (Hue, Lightness, Saturation) indices.
 The ranges are
 terminal-dependent.
-.PP
+.bP
 On an HP-like terminal, \fBinitp\fR may give a capability for changing a
 color-pair value.
 It will take seven parameters; a color-pair number (0 to
@@ -1811,6 +1826,7 @@ files containing terminal descriptions
 \fB@TIC@\fR(1M),
 \fB@INFOCMP@\fR(1M),
 \fBcurses\fR(3X),
+\fBcurs_color\fR(3X),
 \fBprintf\fR(3),
 \fBterm\fR(\*n).
 \fBterm_variables\fR(3X).

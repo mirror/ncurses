@@ -33,7 +33,7 @@
   ****************************************************************************
   * @Id: terminfo.head,v 1.22 2016/10/15 17:02:31 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.74 2016/11/05 21:15:43 Alain.Williams Exp @
+  * @Id: terminfo.tail,v 1.75 2016/12/24 22:54:11 tom Exp @
   * Beginning of terminfo.tail file
   * This file is part of ncurses.
   * See "terminfo.head" for copyright.
@@ -75,7 +75,7 @@
        nals by giving a set of capabilities which they  have,  by
        specifying how to perform screen operations, and by speci-
        fying padding requirements and  initialization  sequences.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161203).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161224).
 
        Entries in <EM>terminfo</EM> consist of a sequence of `,' separated
        fields (embedded commas may be escaped with a backslash or
@@ -2067,41 +2067,57 @@
 
 
 </PRE><H3><a name="h3-Color-Handling">Color Handling</a></H3><PRE>
-       Most  color  terminals are either "Tektronix-like" or "HP-
-       like".  Tektronix-like terminals have a predefined set  of
-       N  colors  (where N usually 8), and can set character-cell
-       foreground and background characters independently, mixing
-       them  into  N * N  color-pairs.  On HP-like terminals, the
-       use must set each color pair up separately (foreground and
-       background  are  not  independently  settable).   Up  to M
-       color-pairs may be  set  up  from  2*M  different  colors.
-       ANSI-compatible terminals are Tektronix-like.
+       The  curses  library  functions  <STRONG>init_pair</STRONG>  and <STRONG>init_color</STRONG>
+       manipulate the <EM>color</EM> <EM>pairs</EM> and <EM>color</EM> <EM>values</EM>  discussed  in
+       this  section (see <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG> for details on these and
+       related functions).
+
+       Most color terminals are either "Tektronix-like"  or  "HP-
+       like":
+
+       <STRONG>o</STRONG>   Tektronix-like  terminals  have  a predefined set of <EM>N</EM>
+           colors (where <EM>N</EM> is usually 8), and can set  character-
+           cell  foreground  and  background  characters indepen-
+           dently, mixing them into <EM>N</EM> * <EM>N</EM> color-pairs.
+
+       <STRONG>o</STRONG>   On HP-like terminals, the user  must  set  each  color
+           pair  up separately (foreground and background are not
+           independently settable).  Up to <EM>M</EM> color-pairs  may  be
+           set  up  from  2*<EM>M</EM>  different colors.  ANSI-compatible
+           terminals are Tektronix-like.
 
        Some basic color capabilities are independent of the color
        method.  The numeric capabilities <STRONG>colors</STRONG> and <STRONG>pairs</STRONG> specify
-       the  maximum numbers of colors and color-pairs that can be
-       displayed simultaneously.  The <STRONG>op</STRONG> (original  pair)  string
-       resets  foreground  and background colors to their default
-       values for the terminal.  The <STRONG>oc</STRONG> string resets all  colors
-       or  color-pairs  to their default values for the terminal.
-       Some terminals  (including  many  PC  terminal  emulators)
-       erase  screen  areas  with  the  current  background color
-       rather than the power-up default background; these  should
+       the maximum numbers of colors and color-pairs that can  be
+       displayed  simultaneously.   The <STRONG>op</STRONG> (original pair) string
+       resets foreground and background colors to  their  default
+       values  for the terminal.  The <STRONG>oc</STRONG> string resets all colors
+       or color-pairs to their default values for  the  terminal.
+       Some  terminals  (including  many  PC  terminal emulators)
+       erase screen  areas  with  the  current  background  color
+       rather  than the power-up default background; these should
        have the boolean capability <STRONG>bce</STRONG>.
 
-       To  change the current foreground or background color on a
-       Tektronix-type terminal, use <STRONG>setaf</STRONG> (set  ANSI  foreground)
-       and  <STRONG>setab</STRONG>  (set ANSI background) or <STRONG>setf</STRONG> (set foreground)
-       and <STRONG>setb</STRONG> (set background).  These take one parameter,  the
-       color  number.   The  SVr4  documentation  describes  only
-       <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>; the XPG4 draft says  that  "If  the  terminal
-       supports ANSI escape sequences to set background and fore-
-       ground, they should be coded as <STRONG>setaf</STRONG> and  <STRONG>setab</STRONG>,  respec-
-       tively.   If  the terminal supports other escape sequences
-       to set background and foreground, they should be coded  as
-       <STRONG>setf</STRONG> and <STRONG>setb</STRONG>, respectively.  The <STRONG>vidputs</STRONG> function and the
-       refresh  functions  use  <STRONG>setaf</STRONG>  and  <STRONG>setab</STRONG>  if  they   are
-       defined."
+       While the curses library works with <EM>color</EM> <EM>pairs</EM>  (reflect-
+       ing  the  inability  of some devices to set foreground and
+       background colors independently), there are separate capa-
+       bilities for setting these features:
+
+       <STRONG>o</STRONG>   To  change  the current foreground or background color
+           on a Tektronix-type  terminal,  use  <STRONG>setaf</STRONG>  (set  ANSI
+           foreground)  and  <STRONG>setab</STRONG>  (set ANSI background) or <STRONG>setf</STRONG>
+           (set foreground) and  <STRONG>setb</STRONG>  (set  background).   These
+           take  one parameter, the color number.  The SVr4 docu-
+           mentation describes only <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>; the  XPG4  draft
+           says  that  "If  the  terminal  supports  ANSI  escape
+           sequences  to  set  background  and  foreground,  they
+           should be coded as <STRONG>setaf</STRONG> and <STRONG>setab</STRONG>, respectively.
+
+       <STRONG>o</STRONG>   If the terminal supports other escape sequences to set
+           background and foreground, they  should  be  coded  as
+           <STRONG>setf</STRONG>  and  <STRONG>setb</STRONG>,  respectively.   The  <STRONG>vidputs</STRONG> and the
+           <STRONG>refresh</STRONG> functions use the <STRONG>setaf</STRONG> and <STRONG>setab</STRONG> capabilities
+           if they are defined.
 
        The  <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>  and <STRONG>setf</STRONG>/<STRONG>setb</STRONG> capabilities take a single
        numeric argument each.  Argument values 0-7 of <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>
@@ -2141,21 +2157,25 @@
        On an HP-like terminal, use <STRONG>scp</STRONG> with a  color-pair  number
        parameter to set which color pair is current.
 
-       On  a  Tektronix-like  terminal, the capability <STRONG>ccc</STRONG> may be
-       present to indicate that colors can be modified.   If  so,
-       the <STRONG>initc</STRONG> capability will take a color number (0 to <STRONG>colors</STRONG>
-       - 1)and three more parameters which  describe  the  color.
-       These three parameters default to being interpreted as RGB
-       (Red, Green, Blue) values.  If the boolean capability  <STRONG>hls</STRONG>
-       is present, they are instead as HLS (Hue, Lightness, Satu-
-       ration) indices.  The ranges are terminal-dependent.
+       Some terminals allow the <EM>color</EM> <EM>values</EM> to be modified:
 
-       On an HP-like terminal, <STRONG>initp</STRONG> may give  a  capability  for
-       changing  a  color-pair value.  It will take seven parame-
-       ters; a color-pair number (0 to <STRONG>max_pairs</STRONG> -  1),  and  two
-       triples  describing  first  background and then foreground
-       colors.  These parameters must be (Red,  Green,  Blue)  or
-       (Hue, Lightness, Saturation) depending on <STRONG>hls</STRONG>.
+       <STRONG>o</STRONG>   On  a  Tektronix-like terminal, the capability <STRONG>ccc</STRONG> may
+           be present to indicate that colors  can  be  modified.
+           If  so,  the <STRONG>initc</STRONG> capability will take a color number
+           (0 to <STRONG>colors</STRONG>  -  1)and  three  more  parameters  which
+           describe the color.  These three parameters default to
+           being interpreted as RGB (Red,  Green,  Blue)  values.
+           If  the  boolean  capability  <STRONG>hls</STRONG> is present, they are
+           instead as HLS (Hue, Lightness,  Saturation)  indices.
+           The ranges are terminal-dependent.
+
+       <STRONG>o</STRONG>   On  an  HP-like  terminal, <STRONG>initp</STRONG> may give a capability
+           for changing a color-pair value.  It will  take  seven
+           parameters;  a color-pair number (0 to <STRONG>max_pairs</STRONG> - 1),
+           and two triples describing first background  and  then
+           foreground  colors.   These  parameters  must be (Red,
+           Green, Blue) or (Hue, Lightness, Saturation) depending
+           on <STRONG>hls</STRONG>.
 
        On  some  color terminals, colors collide with highlights.
        You can register these collisions with the <STRONG>ncv</STRONG> capability.
@@ -2493,8 +2513,8 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,   <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG>printf(3)</STRONG>,  <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
-       <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.
+       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,    <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,    <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,
+       <STRONG>printf(3)</STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>

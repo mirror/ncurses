@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.99 2016/10/22 00:13:20 tom Exp $
+# $Id: Makefile.in,v 1.100 2016/12/24 17:35:01 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -251,7 +251,8 @@ toe$x: $(DEPS_TOE) $(DEPS_CURSES)
 
 DEPS_CLEAR = \
 	$(MODEL)/clear$o \
-	$(MODEL)/clear_cmd$o
+	$(MODEL)/clear_cmd$o \
+	$(MODEL)/tty_settings$o
 
 clear$x: $(DEPS_CLEAR) $(DEPS_CURSES)
 	@ECHO_LD@ $(LINK) $(DEPS_CLEAR) $(LDFLAGS_TINFO) -o $@
@@ -267,7 +268,8 @@ DEPS_TPUT = \
 	$(MODEL)/clear_cmd$o \
 	$(MODEL)/reset_cmd$o \
 	$(MODEL)/tparm_type$o \
-	$(MODEL)/transform$o
+	$(MODEL)/transform$o \
+	$(MODEL)/tty_settings$o
 
 tput$x: $(DEPS_TPUT) $(DEPS_CURSES) transform.h
 	@ECHO_LD@ $(LINK) $(DEPS_TPUT) $(LDFLAGS_TINFO) -o $@
@@ -282,7 +284,8 @@ infocmp$x: $(DEPS_INFOCMP) $(DEPS_CURSES)
 DEPS_TSET = \
 	$(MODEL)/tset$o \
 	$(MODEL)/reset_cmd$o \
-	$(MODEL)/transform$o
+	$(MODEL)/transform$o \
+	$(MODEL)/tty_settings$o
 
 tset$x: $(DEPS_TSET) $(DEPS_CURSES) transform.h
 	@ECHO_LD@ $(LINK) $(DEPS_TSET) $(LDFLAGS_TINFO) -o $@

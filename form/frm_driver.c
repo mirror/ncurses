@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.119 2016/10/29 22:30:10 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.120 2016/12/24 22:28:28 Leon.Winter Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -1275,7 +1275,8 @@ _nc_Synchronize_Attributes(FIELD *field)
 	      copywin(form->w, formwin,
 		      0, 0,
 		      field->frow, field->fcol,
-		      field->rows - 1, field->cols - 1, 0);
+		      field->frow + field->rows - 1,
+		      field->fcol + field->cols - 1, 0);
 	      wsyncup(formwin);
 	      Buffer_To_Window(field, form->w);
 	      SetStatus(field, _NEWTOP);	/* fake refresh to paint all */

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2016 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,38 +27,83 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-on                 *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
-/*
- * clear.c --  clears the terminal's screen
- */
-
 #define USE_LIBTINFO
-#include <clear_cmd.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: clear.c,v 1.17 2016/12/24 19:33:39 tom Exp $")
+#include <fcntl.h>
 
-const char *_nc_progname = "clear";
+MODULE_ID("$Id: tty_settings.c,v 1.2 2016/12/24 19:31:11 tom Exp $")
 
-int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+static int my_fd;
+static TTY original_settings;
+static bool can_restore = FALSE;
+
+static void
+exit_error(void)
 {
-    TTY tty_settings;
-    int fd;
+    restore_tty_settings();
+    (void) fprintf(stderr, "\n");
+    ExitProgram(EXIT_FAILURE);
+    /* NOTREACHED */
+}
 
-    _nc_progname = _nc_rootname(argv[0]);
+static void
+failed(const char *msg)
+{
+    char temp[BUFSIZ];
 
-    fd = save_tty_settings(&tty_settings);
+    _nc_STRCPY(temp, _nc_progname, sizeof(temp));
+    _nc_STRCAT(temp, ": ", sizeof(temp));
+    _nc_STRNCAT(temp, msg, sizeof(temp), sizeof(temp) - strlen(temp) - 2);
+    perror(temp);
+    exit_error();
+    /* NOTREACHED */
+}
 
-    setupterm((char *) 0, fd, (int *) 0);
+static bool
+get_tty_settings(int fd, TTY * tty_settings)
+{
+    bool success = TRUE;
+    my_fd = fd;
+    if (fd < 0 || GET_TTY(my_fd, tty_settings) < 0) {
+	success = FALSE;
+    }
+    return success;
+}
 
-    ExitProgram((clear_cmd() == ERR)
-		? EXIT_FAILURE
-		: EXIT_SUCCESS);
+/*
+ * Open a file descriptor on the current terminal, to obtain its settings.
+ * stderr is less likely to be redirected than stdout; try that first.
+ */
+int
+save_tty_settings(TTY * tty_settings)
+{
+    if (!get_tty_settings(STDERR_FILENO, tty_settings) &&
+	!get_tty_settings(STDOUT_FILENO, tty_settings) &&
+	!get_tty_settings(STDIN_FILENO, tty_settings) &&
+	!get_tty_settings(open("/dev/tty", O_RDWR), tty_settings)) {
+	failed("terminal attributes");
+    }
+    can_restore = TRUE;
+    original_settings = *tty_settings;
+    return my_fd;
+}
+
+void
+restore_tty_settings(void)
+{
+    if (can_restore)
+	SET_TTY(my_fd, &original_settings);
+}
+
+/* Set the modes if they've changed. */
+void
+update_tty_settings(TTY * old_settings, TTY * new_settings)
+{
+    if (memcmp(new_settings, old_settings, sizeof(TTY))) {
+	SET_TTY(my_fd, new_settings);
+    }
 }

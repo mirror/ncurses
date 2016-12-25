@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2016 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,38 +27,24 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
- *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-on                 *
+ *  Author: Thomas E Dickey                                                 *
  ****************************************************************************/
 
 /*
- * clear.c --  clears the terminal's screen
+ * $Id: tty_settings.h,v 1.1 2016/12/24 18:17:44 tom Exp $
+ *
+ * Utility functions for saving/restoring terminal settings.
  */
+#ifndef TTY_SETTINGS_H
+#define TTY_SETTINGS_H 1
+/* *INDENT-OFF* */
 
-#define USE_LIBTINFO
-#include <clear_cmd.h>
-#include <tty_settings.h>
+#include <progs.priv.h>
 
-MODULE_ID("$Id: clear.c,v 1.17 2016/12/24 19:33:39 tom Exp $")
+extern int save_tty_settings(TTY * /* tty_settings */ );
+extern void restore_tty_settings(void);
+extern void update_tty_settings(TTY * /* old_settings */, TTY * /* new_settings */ );
 
-const char *_nc_progname = "clear";
+/* *INDENT-ON* */
 
-int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
-{
-    TTY tty_settings;
-    int fd;
-
-    _nc_progname = _nc_rootname(argv[0]);
-
-    fd = save_tty_settings(&tty_settings);
-
-    setupterm((char *) 0, fd, (int *) 0);
-
-    ExitProgram((clear_cmd() == ERR)
-		? EXIT_FAILURE
-		: EXIT_SUCCESS);
-}
+#endif /* TTY_SETTINGS_H */

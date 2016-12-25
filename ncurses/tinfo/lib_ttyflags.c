@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,42 +41,42 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.30 2014/04/26 18:47:20 juergen Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.31 2016/12/24 21:41:24 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
 {
+    TERMINAL *termp = TerminalOf(SP_PARM);
     int result = OK;
 
-    if (buf == 0 || SP_PARM == 0) {
+    if (buf == 0 || termp == 0) {
 	result = ERR;
     } else {
-	TERMINAL *termp = TerminalOf(SP_PARM);
 
-	if (0 == termp) {
-	    result = ERR;
-	} else {
 #ifdef USE_TERM_DRIVER
+	if (SP_PARM != 0) {
 	    result = CallDriver_2(SP_PARM, td_sgmode, FALSE, buf);
-#else
-	    for (;;) {
-		if (GET_TTY(termp->Filedes, buf) != 0) {
-		    if (errno == EINTR)
-			continue;
-		    result = ERR;
-		}
-		break;
-	    }
-#endif
+	} else {
+	    result = ERR;
 	}
-
-	if (result == ERR)
-	    memset(buf, 0, sizeof(*buf));
+#else
+	for (;;) {
+	    if (GET_TTY(termp->Filedes, buf) != 0) {
+		if (errno == EINTR)
+		    continue;
+		result = ERR;
+	    }
+	    break;
+	}
+#endif
 
 	TR(TRACE_BITS, ("_nc_get_tty_mode(%d): %s",
 			termp ? termp->Filedes : -1,
 			_nc_trace_ttymode(buf)));
     }
+    if (result == ERR && buf != 0)
+	memset(buf, 0, sizeof(*buf));
+
     return (result);
 }
 

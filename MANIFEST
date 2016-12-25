@@ -1064,6 +1064,8 @@
 ./progs/tput.c
 ./progs/transform.c
 ./progs/tset.c
+./progs/tty_settings.c
+./progs/tty_settings.h
 ./test/Makefile.in
 ./test/README
 ./test/aclocal.m4

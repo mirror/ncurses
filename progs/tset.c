@@ -88,6 +88,7 @@
 #include <reset_cmd.h>
 #include <termcap.h>
 #include <transform.h>
+#include <tty_settings.h>
 
 #if HAVE_GETTTYNAM && HAVE_TTYENT_H
 #include <ttyent.h>
@@ -96,7 +97,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.113 2016/10/22 23:34:47 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.115 2016/12/24 18:46:42 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -627,7 +628,7 @@ get_termcap_entry(int fd, char *userarg)
 	    ttype = askuser(0);
     }
     /* Find the terminfo entry.  If it doesn't exist, ask the user. */
-    while (setupterm((NCURSES_CONST char *) ttype, STDOUT_FILENO, &errret)
+    while (setupterm((NCURSES_CONST char *) ttype, fd, &errret)
 	   != OK) {
 	if (errret == 0) {
 	    (void) fprintf(stderr, "%s: unknown terminal type %s\n",
@@ -834,7 +835,7 @@ main(int argc, char **argv)
 
     if (same_program(_nc_progname, PROG_RESET)) {
 	reset_start(stderr, TRUE, FALSE);
-	reset_tty_settings(&mode);
+	reset_tty_settings(my_fd, &mode);
     } else {
 	reset_start(stderr, FALSE, FALSE);
     }
@@ -852,7 +853,7 @@ main(int argc, char **argv)
 	    set_conversions(&mode);
 
 	    if (!noinit) {
-		if (send_init_strings(&oldmode)) {
+		if (send_init_strings(my_fd, &oldmode)) {
 		    (void) putc('\r', stderr);
 		    (void) fflush(stderr);
 		    (void) napms(1000);		/* Settle the terminal. */

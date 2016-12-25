@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: reset_cmd.h,v 1.6 2016/10/22 23:34:37 tom Exp $
+ * $Id: reset_cmd.h,v 1.7 2016/12/24 18:08:48 tom Exp $
  *
  * Utility functions for resetting terminal.
  */
@@ -46,16 +46,13 @@
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
 
-extern bool send_init_strings(TTY * /* old_settings */);
-extern int save_tty_settings(TTY * /* tty_settings */);
+extern bool send_init_strings(int /* fd */, TTY * /* old_settings */);
 extern void print_tty_chars(TTY * /* old_settings */, TTY * /* new_settings */);
 extern void reset_flush(void);
 extern void reset_start(FILE * /* fp */, bool /* is_reset */, bool /* is_init */ );
-extern void reset_tty_settings(TTY * /* tty_settings */);
-extern void restore_tty_settings(void);
+extern void reset_tty_settings(int /* fd */, TTY * /* tty_settings */);
 extern void set_control_chars(TTY * /* tty_settings */, int /* erase */, int /* intr */, int /* kill */);
 extern void set_conversions(TTY * /* tty_settings */);
-extern void update_tty_settings(TTY * /* old_settings */, TTY * /* new_settings */);
 
 #if HAVE_SIZECHANGE
 extern void set_window_size(int /* fd */, short * /* high */, short * /* wide */);
