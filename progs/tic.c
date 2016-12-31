@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.229 2016/12/04 02:12:38 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.230 2016/12/31 12:24:00 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1826,7 +1826,6 @@ skip_DECSCNM(const char *value, int *flag)
     *flag = -1;
     if (value != 0) {
 	int skip = csi_length(value);
-	fprintf(stderr, "test %d:%s\n", skip, value);
 	if (skip > 0 &&
 	    value[skip++] == '?' &&
 	    value[skip++] == '5') {

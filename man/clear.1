@@ -26,13 +26,15 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: clear.1,v 1.14 2016/11/19 21:30:46 tom Exp $
+.\" $Id: clear.1,v 1.16 2016/12/31 16:09:34 tom Exp $
 .TH @CLEAR@ 1 ""
 .\" these would be fallbacks for DS/DE,
 .\" but groff changed the meaning of the macros.
 .de NS
-.sp .5
-.in +4
+.ie \n(.sp
+.el    .sp .5
+.ie \n(.in +4
+.el    .in +2
 .nf
 .ft C			\" Courier
 ..
@@ -57,10 +59,19 @@
 .SH DESCRIPTION
 \fB@CLEAR@\fR clears your screen if this is possible,
 including its scrollback buffer (if the extended \*(``E3\*('' capability is defined).
-\fB@CLEAR@\fR looks in the environment for the terminal type and then in the
+\fB@CLEAR@\fR looks in the environment for the terminal type
+given by the environment variable \fBTERM\fP,
+and then in the
 \fBterminfo\fR database to determine how to clear the screen.
 .PP
+\fB@CLEAR@\fR writes to the standard output.
+You can redirect the standard output to a file (which prevents
+\fB@CLEAR@\fR from actually clearing the screen),
+and later \fBcat\fP the file to the screen, clearing it at that point.
+.PP
 \fB@CLEAR@\fR ignores any command-line parameters that may be present.
+The analogous \*(``\fB@TPUT@\fP clear\*('' has command-line parameters
+including \fB\-T\fP for overriding the \fBTERM\fP environment variable.
 .SH HISTORY
 A \fBclear\fP command appeared in 2.79BSD dated February 24, 1979.
 Later that was provided in Unix 8th edition (1985).

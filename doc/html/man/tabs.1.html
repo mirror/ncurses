@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.14 2016/10/22 19:54:35 tom Exp @
+  * @Id: tabs.1,v 1.15 2016/12/31 16:07:39 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,12 @@
        clear/set tab-stops.  The terminal should be configured to
        use hard tabs, e.g.,
 
-              stty tab0
+         stty tab0
+
+       Like  <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>,  <STRONG>tabs</STRONG>  writes to the standard output.  You
+       can redirect the standard output to a file (which prevents
+       <STRONG>tabs</STRONG>  from  actually changing the tabstops), and later <STRONG>cat</STRONG>
+       the file to the screen, setting tabstops at that point.
 
 
 </PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
@@ -68,32 +73,32 @@
 </PRE><H3><a name="h3-General-Options">General Options</a></H3><PRE>
        <STRONG>-T</STRONG><EM>name</EM>
             Tell <STRONG>tabs</STRONG> which terminal type to use.  If this option
-            is not given, <STRONG>tabs</STRONG> will  use  the  <STRONG>$TERM</STRONG>  environment
-            variable.   If  that  is  not  set,  it  will use the
+            is  not  given,  <STRONG>tabs</STRONG>  will use the <STRONG>$TERM</STRONG> environment
+            variable.  If that  is  not  set,  it  will  use  the
             <EM>ansi+tabs</EM> entry.
 
-       <STRONG>-d</STRONG>   The debugging option shows a ruler line, followed  by
-            two  data  lines.   The  first  data  line  shows the
+       <STRONG>-d</STRONG>   The  debugging option shows a ruler line, followed by
+            two data  lines.   The  first  data  line  shows  the
             expected tab-stops marked with asterisks.  The second
-            data  line  shows  the  actual tab-stops, marked with
+            data line shows the  actual  tab-stops,  marked  with
             asterisks.
 
-       <STRONG>-n</STRONG>   This option tells <STRONG>tabs</STRONG> to check the options  and  run
-            any  debugging option, but not to modify the terminal
+       <STRONG>-n</STRONG>   This  option  tells <STRONG>tabs</STRONG> to check the options and run
+            any debugging option, but not to modify the  terminal
             settings.
 
        <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
-       The  <STRONG>tabs</STRONG>  program  processes  a single list of tab stops.
-       The last option to be processed which defines  a  list  is
+       The <STRONG>tabs</STRONG> program processes a single  list  of  tab  stops.
+       The  last  option  to be processed which defines a list is
        the one that determines the list to be processed.
 
 
 </PRE><H3><a name="h3-Implicit-Lists">Implicit Lists</a></H3><PRE>
-       Use  a  single number as an option, e.g., "<STRONG>-5</STRONG>" to set tabs
-       at the given interval (in this case  1,  6,  11,  16,  21,
-       etc.).   Tabs  are  repeated up to the right margin of the
+       Use a single number as an option, e.g., "<STRONG>-5</STRONG>" to  set  tabs
+       at  the  given  interval  (in  this case 1, 6, 11, 16, 21,
+       etc.).  Tabs are repeated up to the right  margin  of  the
        screen.
 
        Use "<STRONG>-0</STRONG>" to clear all tabs.
@@ -102,17 +107,18 @@
 
 
 </PRE><H3><a name="h3-Explicit-Lists">Explicit Lists</a></H3><PRE>
-       An explicit list can be defined after  the  options  (this
-       does  not  use  a "-").  The values in the list must be in
+       An  explicit  list  can be defined after the options (this
+       does not use a "-").  The values in the list  must  be  in
        increasing numeric order, and greater than zero.  They are
        separated by a comma or a blank, for example,
 
-              tabs 1,6,11,16,21
-              tabs 1 6 11 16 21
-       Use  a  '+'  to treat a number as an increment relative to
+         tabs 1,6,11,16,21
+         tabs 1 6 11 16 21
+
+       Use a "+" to treat a number as an  increment  relative  to
        the previous value, e.g.,
 
-              tabs 1,+5,+5,+5,+5
+         tabs 1,+5,+5,+5,+5
 
        which is equivalent to the 1,6,11,16,21 example.
 
@@ -140,31 +146,31 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       IEEE Std 1003.1/The Open Group  Base Specifications  Issue
+       IEEE  Std 1003.1/The Open Group  Base Specifications Issue
        7 (POSIX.1-2008) describes a <STRONG>tabs</STRONG> utility.  However
 
-       <STRONG>o</STRONG>   This  standard  describes a <STRONG>+m</STRONG> option, to set a termi-
-           nal's left-margin.  Very few of  the  entries  in  the
+       <STRONG>o</STRONG>   This standard describes a <STRONG>+m</STRONG> option, to set  a  termi-
+           nal's  left-margin.   Very  few  of the entries in the
            terminal database provide this capability.
 
-       <STRONG>o</STRONG>   There  is  no counterpart in X/Open Curses Issue 7 for
+       <STRONG>o</STRONG>   There is no counterpart in X/Open Curses Issue  7  for
            this utility, unlike <STRONG>tput(1)</STRONG>.
 
-       The <STRONG>-d</STRONG> (debug) and <STRONG>-n</STRONG> (no-op) options are  extensions  not
+       The  <STRONG>-d</STRONG>  (debug) and <STRONG>-n</STRONG> (no-op) options are extensions not
        provided by other implementations.
 
-       Documentation  for other implementations states that there
-       is a limit on the number of tab stops.  While some  termi-
+       Documentation for other implementations states that  there
+       is  a limit on the number of tab stops.  While some termi-
        nals may not accept an arbitrary number of tab stops, this
-       implementation will attempt to set tab  stops  up  to  the
-       right  margin  of the screen, if the given list happens to
+       implementation  will  attempt  to  set tab stops up to the
+       right margin of the screen, if the given list  happens  to
        be that long.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161224).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161231).
 
 
 

@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.98 2014/12/20 23:54:22 tom Exp $
+# $Id: mk-1st.awk,v 1.99 2016/12/31 17:04:34 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -448,7 +448,7 @@ END	{
 				}
 				printf "\tcd ../lib && $(LIBTOOL_LINK) $(%s) $(%s) \\\n", CC_NAME, CC_FLAG;
 				printf "\t\t-o %s $(%s_OBJS:$o=.lo) \\\n", lib_name, OBJS;
-				printf "\t\t-rpath $(DESTDIR)$(libdir) \\\n";
+				printf "\t\t-rpath $(libdir) \\\n";
 				printf "\t\t%s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(%s) $(LDFLAGS)\n", libtool_version, which_list;
 				print  ""
 				print  "install \\"

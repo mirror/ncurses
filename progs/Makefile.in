@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.100 2016/12/24 17:35:01 tom Exp $
+# $Id: Makefile.in,v 1.101 2016/12/31 15:05:18 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -258,7 +258,8 @@ clear$x: $(DEPS_CLEAR) $(DEPS_CURSES)
 	@ECHO_LD@ $(LINK) $(DEPS_CLEAR) $(LDFLAGS_TINFO) -o $@
 
 DEPS_TABS = \
-	$(MODEL)/tabs$o
+	$(MODEL)/tabs$o \
+	$(MODEL)/tty_settings$o
 
 tabs$x: $(DEPS_TABS) $(DEPS_TABS)
 	@ECHO_LD@ $(LINK) $(DEPS_TABS) $(LDFLAGS_TINFO) -o $@

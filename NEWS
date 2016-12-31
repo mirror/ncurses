@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2715 2016/12/24 23:45:38 tom Exp $
+-- $Id: NEWS,v 1.2722 2016/12/31 21:35:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,24 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20161231
+	+ fix errata for ncurses-howto (report by Damien Ruscoe).
+	+ fix a few places in configure/build scripts where DESTDIR and rpath
+	  were combined (report by Thomas Klausner).
+	+ merge current st description (report by Harry Gindi) -TD
+	+ modify flash capability for linux and wyse entries to put the delay
+	  between the reverse/normal escapes rather than after -TD
+	+ modify program tabs to pass the actual tty file descriptor to
+	  setupterm rather than the standard output, making padding work
+	  consistently.
+	+ explain in clear's manual page that it writes to stdout.
+	+ add special case for verbose debugging traces of command-line
+	  utilities which write to stderr (cf: 20161126).
+	+ remove a trace with literal escapes from skip_DECSCNM(), added in
+	  20161203.
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20161224
 	+ correct parmeters for copywin call in _nc_Synchronize_Attributes()
