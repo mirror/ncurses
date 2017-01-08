@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.43 2016/08/06 23:16:39 tom Exp $
+.\" $Id: tset.1,v 1.47 2017/01/07 22:59:51 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -83,29 +83,61 @@ for more information).
 Then, if the terminal type begins with a question mark (\*(``?\*(''), the
 user is prompted for confirmation of the terminal type.  An empty
 response confirms the type, or, another type can be entered to specify
-a new type.  Once the terminal type has been determined, the terminfo
-entry for the terminal is retrieved.  If no terminfo entry is found
+a new type.
+Once the terminal type has been determined,
+the terminal description for the terminal is retrieved.
+If no terminal description is found
 for the type, the user is prompted for another terminal type.
 .PP
-Once the terminfo entry is retrieved, the window size, backspace, interrupt
-and line kill characters (among many other things) are set and the terminal
-and tab initialization strings are sent to the standard error output.
+Once the terminal description is retrieved,
+.bP
+if the \*(``\fB\-w\fP\*('' option is enabled, \fB@TSET@\fP may update
+the terminal's window size.
+.IP
+If the window size cannot be obtained from the operating system,
+but the terminal description (or environment, e.g., \fBLINES\fP
+and \fBCOLUMNS\fP variables specify this),
+use this to set the operating system's notion of the window size.
+.bP
+if the \*(``\fB\-c\fP\*('' option is enabled,
+the backspace, interrupt and line kill characters (among many other things) are set
+.bP
+unless the \*(``\fB\-I\fP\*('' option is enabled,
+the terminal
+and tab \fIinitialization\fP strings are sent to the standard error output,
+and \fB@TSET@\fP waits one second (in case a hardware reset was issued).
+.bP
 Finally, if the erase, interrupt and line kill characters have changed,
 or are not set to their default values, their values are displayed to the
 standard error output.
 .SS reset - reinitialization
 .PP
-When invoked as \fB@RESET@\fR, \fB@TSET@\fR sets cooked and echo modes,
-turns off cbreak and raw modes, turns on newline translation and
-resets any unset special characters to their default values before
-doing the terminal initialization described above.  This is useful
-after a program dies leaving a terminal in an abnormal state.  Note,
+When invoked as \fB@RESET@\fR, \fB@TSET@\fR sets the terminal
+modes to \*(``sane\*('' values:
+.bP
+sets cooked and echo modes,
+.bP
+turns off cbreak and raw modes,
+.bP
+turns on newline translation and
+.bP
+resets any unset special characters to their default values
+.PP
+before
+doing the terminal initialization described above.
+Also, rather than using the terminal \fIinitialization\fP strings,
+it uses the terminal \fIreset\fP strings.
+.PP
+The \fB@RESET@\fP command is useful
+after a program dies leaving a terminal in an abnormal state:
+.bP
 you may have to type
 .sp
     \fI<LF>\fP\fB@RESET@\fP\fI<LF>\fP
 .sp
 (the line-feed character is normally control-J) to get the terminal
 to work, as carriage-return may no longer work in the abnormal state.
+.bP
 Also, the terminal will often not echo the command.
 .SH OPTIONS 
 .PP
@@ -156,7 +188,7 @@ for details.
 reports the version of ncurses which was used in this program, and exits.
 .TP
 .B \-w
-Resize the window to match the size deduced via \fBsetupterm\fP.
+Resize the window to match the size deduced via \fBsetupterm\fP(3X).
 Normally this has no effect,
 unless \fBsetupterm\fP is not able to detect the window size.
 .PP
@@ -250,8 +282,9 @@ Allman's comments in the 2BSD source code indicate
 that he began work in October 1977,
 continuing development over the next few years.
 .PP
-In 1980, Eric Allman modified \fBtset\fP to provide a \*(lqreset\*(rq
+In September 1980, Eric Allman modified \fBtset\fP to provide a \*(lqreset\*(rq
 feature when the program was invoked as \fBreset\fP.
+This version appeared in 4.1cBSD, late in 1982.
 .PP
 The \fBncurses\fR implementation
 was lightly adapted from the 4.4BSD sources for a terminfo environment by Eric

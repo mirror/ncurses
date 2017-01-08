@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -97,7 +97,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.115 2016/12/24 18:46:42 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.116 2017/01/07 22:48:20 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -837,7 +837,7 @@ main(int argc, char **argv)
 	reset_start(stderr, TRUE, FALSE);
 	reset_tty_settings(my_fd, &mode);
     } else {
-	reset_start(stderr, FALSE, FALSE);
+	reset_start(stderr, FALSE, TRUE);
     }
 
     ttype = get_termcap_entry(my_fd, *argv);

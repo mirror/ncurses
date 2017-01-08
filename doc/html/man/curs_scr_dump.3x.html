@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scr_dump.3x,v 1.9 2010/12/04 18:40:45 tom Exp @
+  * @Id: curs_scr_dump.3x,v 1.10 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -75,10 +75,10 @@
        of the screen on this information rather than clearing the
        screen  and starting from scratch.  <STRONG>scr_init</STRONG> is used after
        <STRONG>initscr</STRONG> or a <STRONG>system</STRONG> call to share the screen with  another
-       process  which  has done a <STRONG>scr_dump</STRONG> after its <STRONG>endwin</STRONG> call.
-       The data is declared invalid if the terminfo  capabilities
-       <STRONG>rmcup</STRONG> and <STRONG>nrrmc</STRONG> exist; also if the terminal has been writ-
-       ten to since the preceding <STRONG>scr_dump</STRONG> call.
+       process  which  has  done  a <STRONG>scr_dump</STRONG> after its <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG>
+       call.  The data is declared invalid if the terminfo  capa-
+       bilities  <STRONG>rmcup</STRONG>  and <STRONG>nrrmc</STRONG> exist; also if the terminal has
+       been written to since the preceding <STRONG>scr_dump</STRONG> call.
 
        The <STRONG>scr_set</STRONG> routine is a combination  of  <STRONG>scr_restore</STRONG>  and
        <STRONG>scr_init</STRONG>.   It  tells  the program that the information in

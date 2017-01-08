@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.21 2015/09/26 19:55:32 tom Exp $
+.\" $Id: resizeterm.3x,v 1.22 2017/01/07 19:25:15 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .IP \(bu 4
@@ -87,7 +87,7 @@ If ncurses is configured to supply its own SIGWINCH handler,
 .bP
 on receipt of a SIGWINCH, the handler sets a flag
 .bP
-which is tested in \fBwgetch\fP and \fBdoupdate\fP,
+which is tested in \fBwgetch\fP(3X) and \fBdoupdate\fP,
 .bP
 in turn, calling the \fBresizeterm\fR function,
 .bP

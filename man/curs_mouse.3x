@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.42 2015/07/21 09:27:39 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.43 2017/01/07 19:25:15 tom Exp $
 .de bP
 .IP \(bu 4
 ..
@@ -77,7 +77,7 @@
 These functions provide an interface to mouse events from
 \fBncurses\fR(3X).
 Mouse events are represented by \fBKEY_MOUSE\fR
-pseudo-key values in the \fBwgetch\fR input stream.
+pseudo-key values in the \fBwgetch\fR(3X) input stream.
 .SS mousemask
 .PP
 To make mouse events visible, use the \fBmousemask\fR function.
@@ -177,7 +177,7 @@ to coordinates relative to the given window or vice versa.
 The resulting stdscr-relative coordinates are not always identical
 to window-relative coordinates due to the mechanism to reserve lines on top
 or bottom of the screen for other purposes
-(see the \fBripoffline\fP and \fBslk_init\fR calls, for example).
+(see the \fBripoffline\fP and \fBslk_init\fR(3X) calls, for example).
 .bP
 If the parameter \fBto_screen\fR is \fBTRUE\fR, the pointers
 \fBpY, pX\fR must reference the coordinates of a location

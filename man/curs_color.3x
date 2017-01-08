@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.45 2016/10/15 17:10:19 tom Exp $
+.\" $Id: curs_color.3x,v 1.46 2017/01/07 19:57:48 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -323,7 +323,7 @@ from the terminal description.
 returns an error if the color table cannot be allocated.
 .RE
 .SH NOTES
-In the \fIncurses\fR implementation, there is a separate color activation flag,
+In the \fBncurses\fR implementation, there is a separate color activation flag,
 color palette, color pairs table, and associated COLORS and COLOR_PAIRS counts
 for each screen; the \fBstart_color\fR function only affects the current
 screen.

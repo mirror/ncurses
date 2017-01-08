@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.25 2016/10/15 17:02:31 tom Exp @
+  * @Id: curs_initscr.3x,v 1.26 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -66,16 +66,16 @@
 </PRE><H3><a name="h3-initscr">initscr</a></H3><PRE>
        <STRONG>initscr</STRONG> is normally the first <STRONG>curses</STRONG> routine to call  when
        initializing  a program.  A few special routines sometimes
-       need to be called before it; these are  <STRONG>slk_init</STRONG>,  <STRONG>filter</STRONG>,
-       <STRONG>ripoffline</STRONG>,  <STRONG>use_env</STRONG>.  For multiple-terminal applications,
-       <STRONG>newterm</STRONG> may be called before <STRONG>initscr</STRONG>.
+       need to be called before it; these are <STRONG><A HREF="curs_slk.3x.html">slk_init(3x)</A></STRONG>,  <STRONG>fil-</STRONG>
+       <STRONG>ter</STRONG>,  <STRONG>ripoffline</STRONG>, <STRONG>use_env</STRONG>.  For multiple-terminal applica-
+       tions, <STRONG>newterm</STRONG> may be called before <STRONG>initscr</STRONG>.
 
        The initscr code determines the terminal type and initial-
        izes  all <STRONG>curses</STRONG> data structures.  <STRONG>initscr</STRONG> also causes the
-       first call to <STRONG>refresh</STRONG> to clear the screen.  If errors  oc-
-       cur,  <STRONG>initscr</STRONG> writes an appropriate error message to stan-
-       dard error and exits; otherwise, a pointer is returned  to
-       <STRONG>stdscr</STRONG>.
+       first call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> to clear the screen.  If  errors
+       occur,  <STRONG>initscr</STRONG>  writes  an  appropriate  error message to
+       standard error and exits; otherwise, a pointer is returned
+       to <STRONG>stdscr</STRONG>.
 
 
 </PRE><H3><a name="h3-newterm">newterm</a></H3><PRE>
@@ -115,8 +115,8 @@
 
        <STRONG>o</STRONG>   resets the terminal into the proper non-visual mode.
 
-       Calling <STRONG>refresh</STRONG> or <STRONG>doupdate</STRONG> after a temporary escape caus-
-       es the program to resume visual mode.
+       Calling  <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>  or <STRONG>doupdate</STRONG> after a temporary escape
+       causes the program to resume visual mode.
 
 
 </PRE><H3><a name="h3-isendwin">isendwin</a></H3><PRE>

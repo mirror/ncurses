@@ -4,11 +4,11 @@ Current ncurses maintainer: Thomas Dickey <dickey@invisible-island.net>
 
 -------------------------------------------------------------------------------
 Files: *
-Copyright: 1998-2015,2016 Free Software Foundation, Inc.
+Copyright: 1998-2016,2017 Free Software Foundation, Inc.
 Licence: X11
 
 Files: aclocal.m4 package
-Copyright: 2003-2015,2016 by Thomas E. Dickey
+Copyright: 2003-2016,2017 by Thomas E. Dickey
 Licence: X11
 
     Permission is hereby granted, free of charge, to any person obtaining a

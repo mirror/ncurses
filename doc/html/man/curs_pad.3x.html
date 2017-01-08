@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_pad.3x,v 1.18 2015/07/21 08:58:44 tom Exp @
+  * @Id: curs_pad.3x,v 1.19 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -114,9 +114,9 @@
 
 </PRE><H3><a name="h3-pechochar">pechochar</a></H3><PRE>
        The <STRONG>pechochar</STRONG> routine is functionally equivalent to a call
-       to  <STRONG>addch</STRONG>  followed by a call to <STRONG>refresh</STRONG>, a call to <STRONG>waddch</STRONG>
-       followed by a call to <STRONG>wrefresh</STRONG>, or a call to  <STRONG>waddch</STRONG>  fol-
-       lowed  by  a  call to <STRONG>prefresh</STRONG>.  The knowledge that only a
+       to <STRONG>addch</STRONG> followed by a call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>, a call to <STRONG>wad-</STRONG>
+       <STRONG>dch</STRONG> followed by a call to <STRONG>wrefresh</STRONG>, or a  call  to  <STRONG>waddch</STRONG>
+       followed by a call to <STRONG>prefresh</STRONG>.  The knowledge that only a
        single character is being output is taken into  considera-
        tion  and, for non-control characters, a considerable per-
        formance gain might be seen by using  these  routines  in-

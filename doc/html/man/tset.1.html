@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tset.1,v 1.43 2016/08/06 23:16:39 tom Exp @
+  * @Id: tset.1,v 1.47 2017/01/07 22:59:51 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -99,35 +99,66 @@
        ("?"), the user is prompted for confirmation of the termi-
        nal  type.   An  empty  response  confirms  the  type, or,
        another type can be entered to specify a new  type.   Once
-       the  terminal type has been determined, the terminfo entry
-       for the terminal is retrieved.  If no  terminfo  entry  is
-       found  for the type, the user is prompted for another ter-
-       minal type.
+       the  terminal  type  has  been  determined,  the  terminal
+       description for the terminal is retrieved.  If no terminal
+       description  is  found  for the type, the user is prompted
+       for another terminal type.
 
-       Once the terminfo entry is  retrieved,  the  window  size,
-       backspace,  interrupt and line kill characters (among many
-       other things) are set and the terminal and tab initializa-
-       tion  strings  are  sent  to  the  standard  error output.
-       Finally, if the erase, interrupt and line kill  characters
-       have  changed,  or  are  not  set to their default values,
-       their values are displayed to the standard error output.
+       Once the terminal description is retrieved,
+
+       <STRONG>o</STRONG>   if the "<STRONG>-w</STRONG>" option is enabled,  <STRONG>tset</STRONG>  may  update  the
+           terminal's window size.
+
+           If the window size cannot be obtained from the operat-
+           ing system, but the terminal description (or  environ-
+           ment, e.g., <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> variables specify this),
+           use this to set the operating system's notion  of  the
+           window size.
+
+       <STRONG>o</STRONG>   if  the  "<STRONG>-c</STRONG>" option is enabled, the backspace, inter-
+           rupt  and  line  kill  characters  (among  many  other
+           things) are set
+
+       <STRONG>o</STRONG>   unless  the  "<STRONG>-I</STRONG>"  option is enabled, the terminal and
+           tab <EM>initialization</EM> strings are sent  to  the  standard
+           error  output,  and  <STRONG>tset</STRONG>  waits one second (in case a
+           hardware reset was issued).
+
+       <STRONG>o</STRONG>   Finally, if the erase, interrupt and line kill charac-
+           ters  have  changed,  or  are not set to their default
+           values, their values are  displayed  to  the  standard
+           error output.
 
 
 </PRE><H3><a name="h3-reset---reinitialization">reset - reinitialization</a></H3><PRE>
-       When invoked as <STRONG>reset</STRONG>, <STRONG>tset</STRONG> sets cooked  and  echo  modes,
-       turns  off cbreak and raw modes, turns on newline transla-
-       tion and resets any  unset  special  characters  to  their
-       default  values  before  doing the terminal initialization
-       described above.  This is  useful  after  a  program  dies
-       leaving  a  terminal  in an abnormal state.  Note, you may
-       have to type
+       When  invoked  as  <STRONG>reset</STRONG>,  <STRONG>tset</STRONG> sets the terminal modes to
+       "sane" values:
 
-           <EM>&lt;LF&gt;</EM><STRONG>reset</STRONG><EM>&lt;LF&gt;</EM>
+       <STRONG>o</STRONG>   sets cooked and echo modes,
 
-       (the line-feed character is normally control-J) to get the
-       terminal to work, as carriage-return may no longer work in
-       the abnormal state.  Also, the  terminal  will  often  not
-       echo the command.
+       <STRONG>o</STRONG>   turns off cbreak and raw modes,
+
+       <STRONG>o</STRONG>   turns on newline translation and
+
+       <STRONG>o</STRONG>   resets any unset special characters to  their  default
+           values
+
+       before  doing the terminal initialization described above.
+       Also,  rather  than  using  the  terminal   <EM>initialization</EM>
+       strings, it uses the terminal <EM>reset</EM> strings.
+
+       The <STRONG>reset</STRONG> command is useful after a program dies leaving a
+       terminal in an abnormal state:
+
+       <STRONG>o</STRONG>   you may have to type
+
+               <EM>&lt;LF&gt;</EM><STRONG>reset</STRONG><EM>&lt;LF&gt;</EM>
+
+           (the line-feed character is normally control-J) to get
+           the terminal to work, as carriage-return may no longer
+           work in the abnormal state.
+
+       <STRONG>o</STRONG>   Also, the terminal will often not echo the command.
 
 
 </PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
@@ -144,51 +175,51 @@
 
        <STRONG>-k</STRONG>   Set the line kill character to <EM>ch</EM>.
 
-       <STRONG>-m</STRONG>   Specify a mapping from a port  type  to  a  terminal.
+       <STRONG>-m</STRONG>   Specify  a  mapping  from  a port type to a terminal.
             See the section <STRONG>TERMINAL</STRONG> <STRONG>TYPE</STRONG> <STRONG>MAPPING</STRONG> for more infor-
             mation.
 
-       <STRONG>-Q</STRONG>   Do not display any values for  the  erase,  interrupt
+       <STRONG>-Q</STRONG>   Do  not  display  any values for the erase, interrupt
             and line kill characters.  Normally <STRONG>tset</STRONG> displays the
-            values for control characters which differ  from  the
+            values  for  control characters which differ from the
             system's default values.
 
-       <STRONG>-q</STRONG>   The  terminal  type is displayed to the standard out-
-            put, and the terminal is not initialized in any  way.
+       <STRONG>-q</STRONG>   The terminal type is displayed to the  standard  out-
+            put,  and the terminal is not initialized in any way.
             The option "-" by itself is equivalent but archaic.
 
        <STRONG>-r</STRONG>   Print the terminal type to the standard error output.
 
-       <STRONG>-s</STRONG>   Print  the  sequence  of shell commands to initialize
+       <STRONG>-s</STRONG>   Print the sequence of shell  commands  to  initialize
             the environment variable <STRONG>TERM</STRONG> to the standard output.
             See the section <STRONG>SETTING</STRONG> <STRONG>THE</STRONG> <STRONG>ENVIRONMENT</STRONG> for details.
 
        <STRONG>-V</STRONG>   reports the version of ncurses which was used in this
             program, and exits.
 
-       <STRONG>-w</STRONG>   Resize the window  to  match  the  size  deduced  via
-            <STRONG>setupterm</STRONG>.   Normally  this  has  no  effect,  unless
+       <STRONG>-w</STRONG>   Resize  the  window  to  match  the  size deduced via
+            <STRONG><A HREF="curs_terminfo.3x.html">setupterm(3x)</A></STRONG>.  Normally this has no  effect,  unless
             <STRONG>setupterm</STRONG> is not able to detect the window size.
 
        The arguments for the <STRONG>-e</STRONG>, <STRONG>-i</STRONG>, and <STRONG>-k</STRONG> options may either be
-       entered  as  actual characters or by using the "hat" nota-
+       entered as actual characters or by using the  "hat"  nota-
        tion, i.e., control-h may be specified as "^H" or "^h".
 
        If neither <STRONG>-c</STRONG> or <STRONG>-w</STRONG> is given, both options are assumed.
 
 
 </PRE><H2><a name="h2-SETTING-THE-ENVIRONMENT">SETTING THE ENVIRONMENT</a></H2><PRE>
-       It is often desirable  to  enter  the  terminal  type  and
-       information  about  the  terminal's  capabilities into the
+       It  is  often  desirable  to  enter  the terminal type and
+       information about the  terminal's  capabilities  into  the
        shell's environment.  This is done using the <STRONG>-s</STRONG> option.
 
        When the <STRONG>-s</STRONG> option is specified, the commands to enter the
-       information  into  the  shell's environment are written to
-       the standard output.  If the <STRONG>SHELL</STRONG> environmental  variable
-       ends  in  "csh", the commands are for <STRONG>csh</STRONG>, otherwise, they
-       are for <STRONG>sh</STRONG>.  Note, the <STRONG>csh</STRONG>  commands  set  and  unset  the
-       shell  variable  <STRONG>noglob</STRONG>,  leaving it unset.  The following
-       line in the <STRONG>.login</STRONG> or <STRONG>.profile</STRONG> files will  initialize  the
+       information into the shell's environment  are  written  to
+       the  standard output.  If the <STRONG>SHELL</STRONG> environmental variable
+       ends in "csh", the commands are for <STRONG>csh</STRONG>,  otherwise,  they
+       are  for  <STRONG>sh</STRONG>.   Note,  the  <STRONG>csh</STRONG> commands set and unset the
+       shell variable <STRONG>noglob</STRONG>, leaving it  unset.   The  following
+       line  in  the <STRONG>.login</STRONG> or <STRONG>.profile</STRONG> files will initialize the
        environment correctly:
 
            eval `tset -s options ... `
@@ -197,74 +228,75 @@
 </PRE><H2><a name="h2-TERMINAL-TYPE-MAPPING">TERMINAL TYPE MAPPING</a></H2><PRE>
        When the terminal is not hardwired into the system (or the
        current system information is incorrect) the terminal type
-       derived  from the <EM>/etc/ttys</EM> file or the <STRONG>TERM</STRONG> environmental
-       variable is often something generic like <STRONG>network</STRONG>,  <STRONG>dialup</STRONG>,
-       or  <STRONG>unknown</STRONG>.   When <STRONG>tset</STRONG> is used in a startup script it is
-       often desirable to provide information about the  type  of
+       derived from the <EM>/etc/ttys</EM> file or the <STRONG>TERM</STRONG>  environmental
+       variable  is often something generic like <STRONG>network</STRONG>, <STRONG>dialup</STRONG>,
+       or <STRONG>unknown</STRONG>.  When <STRONG>tset</STRONG> is used in a startup script  it  is
+       often  desirable  to provide information about the type of
        terminal used on such ports.
 
-       The  <STRONG>-m</STRONG> options maps from some set of conditions to a ter-
-       minal type, that is, to tell <STRONG>tset</STRONG> "If I'm on this port  at
-       a  particular speed, guess that I'm on that kind of termi-
+       The <STRONG>-m</STRONG> options maps from some set of conditions to a  ter-
+       minal  type, that is, to tell <STRONG>tset</STRONG> "If I'm on this port at
+       a particular speed, guess that I'm on that kind of  termi-
        nal".
 
        The argument to the <STRONG>-m</STRONG> option consists of an optional port
        type, an optional operator, an optional baud rate specifi-
-       cation, an optional colon (":") character and  a  terminal
-       type.   The port type is a string (delimited by either the
+       cation,  an  optional colon (":") character and a terminal
+       type.  The port type is a string (delimited by either  the
        operator or the colon character).  The operator may be any
-       combination  of  "&gt;", "&lt;", "@", and "!"; "&gt;" means greater
-       than, "&lt;" means less than, "@"  means  equal  to  and  "!"
+       combination of "&gt;", "&lt;", "@", and "!"; "&gt;"  means  greater
+       than,  "&lt;"  means  less  than,  "@" means equal to and "!"
        inverts the sense of the test.  The baud rate is specified
        as a number and is compared with the speed of the standard
-       error  output (which should be the control terminal).  The
+       error output (which should be the control terminal).   The
        terminal type is a string.
 
        If the terminal type is not specified on the command line,
-       the  <STRONG>-m</STRONG> mappings are applied to the terminal type.  If the
-       port type and baud rate match the  mapping,  the  terminal
-       type  specified  in the mapping replaces the current type.
-       If more than one mapping is specified, the first  applica-
+       the <STRONG>-m</STRONG> mappings are applied to the terminal type.  If  the
+       port  type  and  baud rate match the mapping, the terminal
+       type specified in the mapping replaces the  current  type.
+       If  more than one mapping is specified, the first applica-
        ble mapping is used.
 
-       For    example,    consider    the    following   mapping:
+       For   example,    consider    the    following    mapping:
        <STRONG>dialup&gt;9600:vt100</STRONG>.  The port type is dialup , the operator
-       is  &gt;, the baud rate specification is 9600, and the termi-
+       is &gt;, the baud rate specification is 9600, and the  termi-
        nal type is vt100.  The result of this mapping is to spec-
        ify that if the terminal type is <STRONG>dialup</STRONG>, and the baud rate
-       is greater than 9600 baud, a terminal type of  <STRONG>vt100</STRONG>  will
+       is  greater  than 9600 baud, a terminal type of <STRONG>vt100</STRONG> will
        be used.
 
        If no baud rate is specified, the terminal type will match
        any baud rate.  If no port type is specified, the terminal
-       type   will   match   any  port  type.   For  example,  <STRONG>-m</STRONG>
+       type  will  match  any  port  type.    For   example,   <STRONG>-m</STRONG>
        <STRONG>dialup:vt100</STRONG>  <STRONG>-m</STRONG>  <STRONG>:?xterm</STRONG>  will  cause  any  dialup  port,
        regardless of baud rate, to match the terminal type vt100,
-       and any non-dialup port type to match  the  terminal  type
-       ?xterm.   Note,  because of the leading question mark, the
-       user will be queried on a default port as to whether  they
+       and  any  non-dialup  port type to match the terminal type
+       ?xterm.  Note, because of the leading question  mark,  the
+       user  will be queried on a default port as to whether they
        are actually using an xterm terminal.
 
-       No  whitespace  characters  are permitted in the <STRONG>-m</STRONG> option
-       argument.  Also, to avoid problems  with  meta-characters,
-       it  is  suggested  that  the  entire <STRONG>-m</STRONG> option argument be
-       placed within single quote characters, and that <STRONG>csh</STRONG>  users
-       insert  a backslash character ("\") before any exclamation
+       No whitespace characters are permitted in  the  <STRONG>-m</STRONG>  option
+       argument.   Also,  to avoid problems with meta-characters,
+       it is suggested that the  entire  <STRONG>-m</STRONG>  option  argument  be
+       placed  within single quote characters, and that <STRONG>csh</STRONG> users
+       insert a backslash character ("\") before any  exclamation
        marks ("!").
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
-       A <STRONG>reset</STRONG> command appeared in 2BSD (1979), written  by  Kurt
+       A  <STRONG>reset</STRONG>  command appeared in 2BSD (1979), written by Kurt
        Shoens.
 
-       A  separate <STRONG>tset</STRONG> command was provided in 2BSD by Eric All-
-       man.  While the oldest published source (from  1979)  pro-
-       vides  both programs, Allman's comments in the 2BSD source
+       A separate <STRONG>tset</STRONG> command was provided in 2BSD by Eric  All-
+       man.   While  the oldest published source (from 1979) pro-
+       vides both programs, Allman's comments in the 2BSD  source
        code indicate that he began work in October 1977, continu-
        ing development over the next few years.
 
-       In  1980,  Eric  Allman modified <STRONG>tset</STRONG> to provide a "reset"
-       feature when the program was invoked as <STRONG>reset</STRONG>.
+       In September 1980, Eric Allman modified <STRONG>tset</STRONG> to provide  a
+       "reset"  feature  when  the  program was invoked as <STRONG>reset</STRONG>.
+       This version appeared in 4.1cBSD, late in 1982.
 
        The <STRONG>ncurses</STRONG> implementation was lightly  adapted  from  the
        4.4BSD  sources for a terminfo environment by Eric S. Ray-
@@ -387,7 +419,7 @@
        <STRONG>csh(1)</STRONG>,   <STRONG>sh(1)</STRONG>,   <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,   <STRONG>tty(4)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG>ttys(5)</STRONG>, <STRONG>environ(7)</STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20161231).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
 
 
 

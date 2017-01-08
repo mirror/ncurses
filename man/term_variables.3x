@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2011-2013,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2011-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.7 2015/12/05 18:43:25 tom Exp $
+.\" $Id: term_variables.3x,v 1.8 2017/01/07 19:25:15 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
 .na
@@ -110,7 +110,7 @@ and \fBdelscreen\fP(3X).
 It is possible to save a value of \fBcur_term\fP for subsequent
 use as a parameter to \fBset_term\fP, for switching between screens.
 Alternatively, one can save the return value from \fBnewterm\fP
-or \fBsetupterm\fP to reuse in \fBset_term\fP.
+or \fBsetupterm\fP(3X) to reuse in \fBset_term\fP.
 .SS Terminfo Names
 The \fB@TIC@\fP(1) and \fB@INFOCMP@\fP(1) programs use lookup tables for
 the long and short names of terminfo capabilities,
@@ -136,7 +136,7 @@ These are the corresponding names used for termcap descriptions:
 .\"
 .SS Terminal Type
 On initialization of the curses or terminfo interfaces,
-\fBsetupterm\fP copies the terminal name to the array \fBttytype\fP.
+\fBsetupterm\fP(3X) copies the terminal name to the array \fBttytype\fP.
 .\"
 .SS Terminfo Names
 .PP

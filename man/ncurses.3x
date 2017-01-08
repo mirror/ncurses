@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.124 2015/08/08 14:57:51 tom Exp $
+.\" $Id: ncurses.3x,v 1.125 2017/01/07 19:25:15 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -99,7 +99,7 @@ The function \fBinitscr\fR or \fBnewterm\fR
 must be called to initialize the library
 before any of the other routines that deal with windows
 and screens are used.
-The routine \fBendwin\fR must be called before exiting.
+The routine \fBendwin\fR(3X) must be called before exiting.
 .PP
 To get character-at-a-time input without echoing (most
 interactive, screen oriented programs want this), the following
@@ -146,7 +146,7 @@ allowing the user to specify a window.
 The routines not beginning
 with \fBw\fR affect \fBstdscr\fR.
 .PP
-After using routines to manipulate a window, \fBrefresh\fR is called,
+After using routines to manipulate a window, \fBrefresh\fR(3X) is called,
 telling \fBcurses\fR to make the user's CRT screen look like
 \fBstdscr\fR.
 The characters in a window are actually of type

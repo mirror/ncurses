@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.37 2015/09/05 21:13:25 tom Exp $
+.\" $Id: curs_addch.3x,v 1.38 2017/01/07 19:25:15 tom Exp $
 .TH curs_addch 3X ""
 .de bP
 .IP \(bu 4
@@ -95,13 +95,13 @@ the ^-representation of the control character.
 Video attributes can be combined with a character argument passed to
 \fBaddch\fR or related functions by logical-ORing them into the character.
 (Thus, text, including attributes, can be copied from one place to another
-using \fBinch\fR and \fBaddch\fR.)  See the \fBcurs_attr\fR(3X) page for
+using \fBinch\fR(3X) and \fBaddch\fR.)  See the \fBcurs_attr\fR(3X) page for
 values of predefined video attribute constants that can be usefully OR'ed
 into characters.
 .SS Echoing characters
 .PP
 The \fBechochar\fR and \fBwechochar\fR routines are equivalent to a call to
-\fBaddch\fR followed by a call to \fBrefresh\fR, or a call to \fBwaddch\fR
+\fBaddch\fR followed by a call to \fBrefresh\fR(3X), or a call to \fBwaddch\fR
 followed by a call to \fBwrefresh\fR.  The knowledge that only a single
 character is being output is used and, for non-control characters, a
 considerable performance gain may be seen by using these routines instead of

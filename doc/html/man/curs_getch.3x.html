@@ -266,13 +266,13 @@
        real key:
 
        <STRONG>o</STRONG>   <STRONG>KEY_RESIZE</STRONG> is returned when the  <STRONG>SIGWINCH</STRONG>  signal  has
-           been  detected  (see  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG> and <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>).
+           been  detected  (see  <STRONG><A HREF="curs_initscr.3x.html">initscr(3x)</A></STRONG> and <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>).
            This code is returned whether or not <STRONG>keypad</STRONG>  has  been
            enabled.
 
        <STRONG>o</STRONG>   <STRONG>KEY_MOUSE</STRONG>    is   returned   for   mouse-events   (see
            <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>).  This code relies upon whether or not
-           <STRONG><A HREF="keypad.3x.html">keypad(3x)</A></STRONG> has been enabled, because (e.g., with <EM>xterm</EM>
+           <STRONG><A HREF="curs_inopts.3x.html">keypad(3x)</A></STRONG> has been enabled, because (e.g., with <EM>xterm</EM>
            mouse prototocol) ncurses must read escape  sequences,
            just like a function key.
 

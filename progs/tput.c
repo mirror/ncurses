@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.65 2016/12/24 18:44:32 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.68 2017/01/07 23:08:24 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -135,8 +135,12 @@ tput_cmd(int fd, TTY * saved_settings, int argc, char *argv[])
 	int intrchar = -1;	/* new interrupt character */
 	int tkillchar = -1;	/* new kill character */
 
-	reset_start(stdout, is_reset, is_init);
-	reset_tty_settings(fd, saved_settings);
+	if (is_reset) {
+	    reset_start(stdout, TRUE, FALSE);
+	    reset_tty_settings(fd, saved_settings);
+	} else {
+	    reset_start(stdout, FALSE, TRUE);
+	}
 
 #if HAVE_SIZECHANGE
 	set_window_size(fd, &lines, &columns);

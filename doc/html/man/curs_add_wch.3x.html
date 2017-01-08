@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2012,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.16 2015/07/20 23:44:56 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.17 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -91,20 +91,20 @@
 
 </PRE><H3><a name="h3-echo_wchar">echo_wchar</a></H3><PRE>
        The <STRONG>echo_wchar</STRONG> function is functionally  equivalent  to  a
-       call to <STRONG>add_wch</STRONG> followed by a call to <STRONG>refresh</STRONG>.  Similarly,
-       the <STRONG>wecho_wchar</STRONG> is functionally equivalent to  a  call  to
-       <STRONG>wadd_wch</STRONG>  followed  by  a call to <STRONG>wrefresh</STRONG>.  The knowledge
-       that only a single character is being output is taken into
-       consideration and, for non-control characters, a consider-
-       able performance gain might be seen by  using  the  *<STRONG>echo</STRONG>*
-       functions instead of their equivalents.
+       call  to <STRONG>add_wch</STRONG> followed by a call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  Simi-
+       larly, the <STRONG>wecho_wchar</STRONG> is  functionally  equivalent  to  a
+       call  to  <STRONG>wadd_wch</STRONG>  followed  by  a call to <STRONG>wrefresh</STRONG>.  The
+       knowledge that only a single character is being output  is
+       taken  into consideration and, for non-control characters,
+       a considerable performance gain might be seen by using the
+       *<STRONG>echo</STRONG>* functions instead of their equivalents.
 
 
 </PRE><H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
-       Like  <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>,  <STRONG>addch_wch</STRONG>  accepts symbols which make it
+       Like  <STRONG><A HREF="curs_addch.3x.html">addch(3x)</A></STRONG>,  <STRONG>addch_wch</STRONG>  accepts symbols which make it
        simple to draw lines and  other  frequently  used  special
        characters.   These  symbols  correspond to the same VT100
-       line-drawing set as <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>.
+       line-drawing set as <STRONG><A HREF="curs_addch.3x.html">addch(3x)</A></STRONG>.
 
        <EM>Name</EM>              <EM>Unicode</EM>    <EM>Default</EM>   <EM>Description</EM>
        ----------------------------------------------------------------

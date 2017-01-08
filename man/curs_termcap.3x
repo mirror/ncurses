@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.32 2016/03/19 22:52:25 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.33 2017/01/07 19:25:15 tom Exp $
 .TH curs_termcap 3X ""
 .de bP
 .IP \(bu 4
@@ -165,7 +165,7 @@ It does this also for calls requiring only a single parameter.
 In that case, the first parameter is merely a placeholder.
 .bP
 Normally the ncurses library is compiled with terminfo support.
-In that case, \fBtgoto\fP uses \fBtparm\fP (a more capable formatter).
+In that case, \fBtgoto\fP uses \fBtparm\fP(3X) (a more capable formatter).
 .PP
 The \fBtputs\fR routine is described on the \fBcurs_terminfo\fR(3X) manual
 page.  It can retrieve capabilities by either termcap or terminfo name.

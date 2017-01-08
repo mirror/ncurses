@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2001-2012,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2001-2015,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wch.3x,v 1.16 2015/07/20 23:44:56 tom Exp $
+.\" $Id: curs_add_wch.3x,v 1.17 2017/01/07 19:25:15 tom Exp $
 .TH curs_add_wch 3X ""
 .de bP
 .IP \(bu 4
@@ -90,7 +90,7 @@ The \fBecho_wchar\fP
 function is functionally equivalent to a call to
 \fBadd_wch\fP
 followed by a call to
-\fBrefresh\fP.
+\fBrefresh\fP(3X).
 Similarly, the
 \fBwecho_wchar\fP
 is functionally equivalent to a call to

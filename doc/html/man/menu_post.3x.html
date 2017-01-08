@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: menu_post.3x,v 1.13 2016/10/15 17:02:31 tom Exp @
+  * @Id: menu_post.3x,v 1.14 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The function <STRONG>post_menu</STRONG> displays a menu to  its  associated
        subwindow.   To trigger physical display of the subwindow,
-       use  <STRONG>refresh</STRONG>  or  some  equivalent  <STRONG>curses</STRONG>  routine   (the
+       use <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or some  equivalent  <STRONG>curses</STRONG>  routine  (the
        implicit  <STRONG>doupdate</STRONG>  triggered  by  an <STRONG>curses</STRONG> input request
        will do). <STRONG>post_menu</STRONG> resets the  selection  status  of  all
        items.

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2013,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.21 2015/09/26 19:55:32 tom Exp @
+  * @Id: resizeterm.3x,v 1.22 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -112,7 +112,7 @@
 
        <STRONG>o</STRONG>   on receipt of a SIGWINCH, the handler sets a flag
 
-       <STRONG>o</STRONG>   which is tested in <STRONG>wgetch</STRONG> and <STRONG>doupdate</STRONG>,
+       <STRONG>o</STRONG>   which is tested in <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> and <STRONG>doupdate</STRONG>,
 
        <STRONG>o</STRONG>   in turn, calling the <STRONG>resizeterm</STRONG> function,
 
@@ -138,9 +138,9 @@
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        It is possible to resize the screen with SVr4 curses, by
 
-       <STRONG>o</STRONG>   exiting curses with <STRONG><A HREF="endwin.3x.html">endwin(3x)</A></STRONG> and
+       <STRONG>o</STRONG>   exiting curses with <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> and
 
-       <STRONG>o</STRONG>   resuming using <STRONG><A HREF="refresh.3x.html">refresh(3x)</A></STRONG>.
+       <STRONG>o</STRONG>   resuming using <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.
 
        Doing that clears the screen and is visually distracting.
 

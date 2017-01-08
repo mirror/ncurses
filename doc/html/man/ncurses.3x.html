@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.124 2015/08/08 14:57:51 tom Exp @
+  * @Id: ncurses.3x,v 1.125 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        sonable optimization.  This implementation is "new curses"
        (ncurses) and is the approved replacement for 4.4BSD clas-
        sic  curses,  which has been discontinued.  This describes
-       <STRONG>ncurses</STRONG> version 6.0 (patch 20161231).
+       <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -108,7 +108,7 @@
 
        The function <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG> must be called to initial-
        ize the library before any of the other routines that deal
-       with windows and screens are  used.   The  routine  <STRONG>endwin</STRONG>
+       with windows and screens are used.  The routine <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG>
        must be called before exiting.
 
        To  get  character-at-a-time  input  without echoing (most
@@ -153,12 +153,12 @@
        names beginning with <STRONG>w</STRONG>, allowing the  user  to  specify  a
        window.  The routines not beginning with <STRONG>w</STRONG> affect <STRONG>stdscr</STRONG>.
 
-       After  using  routines  to manipulate a window, <STRONG>refresh</STRONG> is
-       called, telling <STRONG>curses</STRONG> to make the user's CRT screen  look
-       like  <STRONG>stdscr</STRONG>.   The characters in a window are actually of
-       type <STRONG>chtype</STRONG>, (character and attribute data) so that  other
-       information  about  the  character may also be stored with
-       each character.
+       After  using  routines to manipulate a window, <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>
+       is called, telling <STRONG>curses</STRONG> to make the  user's  CRT  screen
+       look like <STRONG>stdscr</STRONG>.  The characters in a window are actually
+       of type <STRONG>chtype</STRONG>, (character and  attribute  data)  so  that
+       other  information  about the character may also be stored
+       with each character.
 
        Special windows  called  <EM>pads</EM>  may  also  be  manipulated.
        These are windows which are not constrained to the size of

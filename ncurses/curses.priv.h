@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.554 2016/11/21 23:28:54 tom Exp $
+ * $Id: curses.priv.h,v 1.557 2017/01/07 19:45:37 tom Exp $
  *
  *	curses.priv.h
  *
@@ -939,6 +939,9 @@ typedef struct {
 #if USE_PTHREADS_EINTR
 	pthread_t	read_thread;		/* The reading thread */
 #endif
+#if USE_WIDEC_SUPPORT
+	char		key_name[MB_LEN_MAX + 1];
+#endif
 } NCURSES_GLOBALS;
 
 extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
@@ -1248,6 +1251,10 @@ struct screen {
 	ripoff_t	rippedoff[N_RIPS];
 	ripoff_t	*rsp;
 
+#if NCURSES_SP_FUNCS
+	bool		use_tioctl;
+#endif
+
 	/*
 	 * ncurses/ncursesw are the same up to this point.
 	 */
@@ -1258,8 +1265,6 @@ struct screen {
 	bool		_screen_acs_fix;
 	bool		_screen_unicode;
 #endif
-
-	bool		_use_tioctl;
 };
 
 extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.46 2016/10/22 19:57:25 tom Exp $
+.\" $Id: tput.1,v 1.50 2017/01/07 23:03:28 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -133,21 +133,51 @@ occur:
 .RS
 .TP 5
 (1)
+first, \fB@TPUT@\fR retrieves the current terminal mode settings
+for your terminal.
+It does this by successively testing
+.RS
+.bP
+the standard error,
+.bP
+standard output,
+.bP
+standard input and
+.bP
+ultimately \*(lq/dev/tty\*(rq
+.RE
+.IP
+to obtain terminal settings.
+Having retrieved these settings, \fB@TPUT@\fP remembers which
+file descriptor to use when updating settings.
+.TP
+(2)
+if the window size cannot be obtained from the operating system,
+but the terminal description (or environment, e.g., \fBLINES\fP
+and \fBCOLUMNS\fP variables specify this),
+update the operating system's notion of the window size.
+.TP
+(3)
+the terminal modes will be updated:
+.RS
+.bP
+any delays (e.g., newline) specified in the entry will
+be set in the tty driver,
+.bP
+tabs expansion will be turned on or off according to
+the specification in the entry, and
+.bP
+if tabs are not expanded,
+standard tabs will be set (every 8 spaces).
+.RE
+.TP
+(4)
 if present, the terminal's initialization strings will be
 output as detailed in the \fBterminfo\fR(5) section on
 .IR "Tabs and Initialization" ,
 .TP
-(2)
-any delays (e.g., newline) specified in the entry will
-be set in the tty driver,
-.TP
-(3)
-tabs expansion will be turned on or off according to
-the specification in the entry, and
-.TP
-(4)
-if tabs are not expanded,
-standard tabs will be set (every 8 spaces).
+(5)
+output is flushed.
 .RE
 .IP
 If an entry does not
@@ -155,10 +185,31 @@ contain the information needed for any of these activities,
 that activity will silently be skipped.
 .TP
 \fBreset\fR
-Instead of putting out initialization strings, the terminal's
-reset strings will be output if present (\fBrs1\fR, \fBrs2\fR, \fBrs3\fR, \fBrf\fR).
-If the reset strings are not present, but initialization
-strings are, the initialization strings will be output.
+This is similar to \fBinit\fP, with two differences:
+.RS
+.TP 5
+(1)
+before any other initialization,
+the terminal modes will be reset to a \*(``sane\*('' state:
+.RS
+.bP
+set cooked and echo modes,
+.bP
+turn off cbreak and raw modes,
+.bP
+turn on newline translation and
+.bP
+reset any unset special characters to their default values
+.RE
+.TP 5
+(2)
+Instead of putting out \fIinitialization\fP strings, the terminal's
+\fIreset\fP strings will be output if present
+(\fBrs1\fR, \fBrs2\fR, \fBrs3\fR, \fBrf\fR).
+If the \fIreset\fP strings are not present, but \fIinitialization\fP
+strings are, the \fIinitialization\fP strings will be output.
+.RE
+.IP
 Otherwise, \fBreset\fR acts identically to \fBinit\fR.
 .TP
 \fBlongname\fR
@@ -187,6 +238,20 @@ in contrast to the tab-stops and margins which are set by this utility.
 .bP
 The \fBreset\fP program is usually an alias for \fB@TSET@\fP,
 because of this difference with resetting terminal modes and special characters.
+.PP
+With the changes made for ncurses 6.1, the \fIreset\fP feature of the
+two programs is (mostly) the same.  A few differences remain:
+.bP
+The \fB@TSET@\fP program waits one second when resetting,
+in case it happens to be a hardware terminal.
+.bP
+The two programs write the terminal initialization strings
+to different streams (i.e.,. the standard error for \fB@TSET@\fP and the
+standard output for \fB@TPUT@\fP).
+.IP
+\fBNote:\fP although these programs write to different streams,
+redirecting their output to a file will capture only part of their actions.
+The changes to the terminal modes are not affected by redirecting the output.
 .PP
 If \fB@TPUT@\fR is invoked by a link named \fBinit\fR, this has the
 same effect as \fB@TPUT@ init\fR.

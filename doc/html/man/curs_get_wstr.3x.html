@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2002-2010,2012 Free Software Foundation, Inc.              *
+  * Copyright (c) 2002-2012,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wstr.3x,v 1.9 2012/11/03 23:03:59 tom Exp @
+  * @Id: curs_get_wstr.3x,v 1.10 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -66,13 +66,13 @@
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  effect  of <STRONG>get_wstr</STRONG> is as though a series of calls to
-       <STRONG>get_wch</STRONG> were made, until a newline, other end-of-line,  or
-       end-of-file condition is processed.  An end-of-file condi-
-       tion is represented by <STRONG>WEOF</STRONG>, as defined in <STRONG>&lt;wchar.h&gt;</STRONG>.  The
-       newline  and end-of-line conditions are represented by the
-       <STRONG>\n</STRONG> <STRONG>wchar_t</STRONG> value.  In all instances, the end of the string
-       is  terminated  by a null <STRONG>wchar_t</STRONG>.  The routine places re-
-       sulting values in the area pointed to by <EM>wstr</EM>.
+       <STRONG><A HREF="curs_get_wch.3x.html">get_wch(3x)</A></STRONG> were made, until a newline, other end-of-line,
+       or  end-of-file  condition  is  processed.  An end-of-file
+       condition is represented by <STRONG>WEOF</STRONG>, as defined in <STRONG>&lt;wchar.h&gt;</STRONG>.
+       The  newline and end-of-line conditions are represented by
+       the <STRONG>\n</STRONG> <STRONG>wchar_t</STRONG> value.  In all instances, the  end  of  the
+       string  is  terminated  by  a  null  <STRONG>wchar_t</STRONG>.  The routine
+       places resulting values in the area pointed to by <EM>wstr</EM>.
 
        The user's erase and kill characters are interpreted.   If
        keypad   mode   is   on   for  the  window,  <STRONG>KEY_LEFT</STRONG>  and

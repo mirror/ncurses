@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.37 2015/09/05 21:13:25 tom Exp @
+  * @Id: curs_addch.3x,v 1.38 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -109,7 +109,7 @@
        Video attributes can be combined with a character argument
        passed to <STRONG>addch</STRONG> or related functions by logical-ORing them
        into  the  character.   (Thus, text, including attributes,
-       can be copied from one place to  another  using  <STRONG>inch</STRONG>  and
+       can be copied from one place to another using <STRONG><A HREF="curs_inch.3x.html">inch(3x)</A></STRONG> and
        <STRONG>addch</STRONG>.)   See  the <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG> page for values of prede-
        fined video attribute constants that can be usefully OR'ed
        into characters.
@@ -117,11 +117,11 @@
 
 </PRE><H3><a name="h3-Echoing-characters">Echoing characters</a></H3><PRE>
        The  <STRONG>echochar</STRONG>  and  <STRONG>wechochar</STRONG> routines are equivalent to a
-       call to <STRONG>addch</STRONG> followed by a call to <STRONG>refresh</STRONG>, or a call  to
-       <STRONG>waddch</STRONG> followed by a call to <STRONG>wrefresh</STRONG>.  The knowledge that
-       only a single character is being output is used  and,  for
-       non-control  characters,  a  considerable performance gain
-       may be seen by  using  these  routines  instead  of  their
+       call to <STRONG>addch</STRONG> followed by a call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>, or a call
+       to  <STRONG>waddch</STRONG>  followed by a call to <STRONG>wrefresh</STRONG>.  The knowledge
+       that only a single character is being output is used  and,
+       for  non-control  characters,  a  considerable performance
+       gain may be seen by using these routines instead of  their
        equivalents.
 
 

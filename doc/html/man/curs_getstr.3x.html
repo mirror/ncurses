@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2005,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.19 2010/12/04 18:36:44 tom Exp @
+  * @Id: curs_getstr.3x,v 1.20 2017/01/07 19:25:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -117,7 +117,7 @@
        Issue 4.  They  read  single-byte  characters  only.   The
        standard  does  not define any error conditions.  This im-
        plementation returns ERR if the window pointer is null, or
-       if the lower-level <STRONG>wgetch</STRONG> call returns an ERR.
+       if the lower-level <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> call returns an ERR.
 
        SVr3  and early SVr4 curses implementations did not reject
        function keys; the SVr4.0 documentation claimed that "spe-

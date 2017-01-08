@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.75 2016/12/24 22:54:11 tom Exp $
+.\" $Id: terminfo.tail,v 1.76 2017/01/07 18:32:49 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -157,7 +157,7 @@ Finally, characters may be given as three octal digits after a \fB\e\fR.
 .PP
 A delay in milliseconds may appear anywhere in a string capability, enclosed in
 $<..> brackets, as in \fBel\fP=\eEK$<5>,
-and padding characters are supplied by \fBtputs\fP
+and padding characters are supplied by \fBtputs\fP(3X)
 to provide this delay.
 .bP
 The delay must be a number with at most one decimal
@@ -434,7 +434,7 @@ get static variable \fI[a\-z]\fP and push it
 .IP
 The terms "static" and "dynamic" are misleading.
 Historically, these are simply two different sets of variables,
-whose values are not reset between calls to \fBtparm\fP.
+whose values are not reset between calls to \fBtparm\fP(3X).
 However, that fact is not documented in other implementations.
 Relying on it will adversely impact portability to other implementations.
 .TP
@@ -1374,7 +1374,7 @@ be coded as \fBsetaf\fR and \fBsetab\fR, respectively.
 If the terminal
 supports other escape sequences to set background and foreground, they should
 be coded as \fBsetf\fR and \fBsetb\fR, respectively.
-The \fBvidputs\fR and the \fBrefresh\fP functions
+The \fBvidputs\fR and the \fBrefresh\fP(3X) functions
 use the \fBsetaf\fR and \fBsetab\fR capabilities if they are defined.
 .PP
 The \fBsetaf\fR/\fBsetab\fR and \fBsetf\fR/\fBsetb\fR capabilities take a

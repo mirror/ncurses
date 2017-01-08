@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.43 2016/12/24 23:20:08 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.44 2017/01/07 16:34:52 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -397,7 +397,7 @@ drv_size(TERMINAL_CONTROL_BLOCK * TCB, int *linep, int *colp)
 
     if (sp) {
 	useEnv = sp->_use_env;
-	useTioctl = sp->_use_tioctl;
+	useTioctl = sp->use_tioctl;
     } else {
 	useEnv = _nc_prescreen.use_env;
 	useTioctl = _nc_prescreen.use_tioctl;
