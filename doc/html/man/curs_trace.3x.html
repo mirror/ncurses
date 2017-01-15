@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_trace.3x,v 1.17 2017/01/07 18:45:42 tom Exp @
+  * @Id: curs_trace.3x,v 1.18 2017/01/14 19:46:40 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -182,6 +182,30 @@
            use_env, use_extended_names, use_tioctl
 
 
+</PRE><H3><a name="h3-Command-line-Utilities">Command-line Utilities</a></H3><PRE>
+       The command-line utilities such as <STRONG><A HREF="tic.1m.html">tic(1)</A></STRONG> provide  a  ver-
+       bose  option which extends the set of messages written us-
+       ing the <STRONG>trace</STRONG> function.  Both of these (<STRONG>-v</STRONG> and <STRONG>trace</STRONG>)  use
+       the same variable (<STRONG>_nc_tracing</STRONG>), which determines the mes-
+       sages which are written.
+
+       Because the command-line utilities may call initialization
+       functions   such  as  <STRONG>setupterm</STRONG>,  <STRONG>tgetent</STRONG>  or  <STRONG>use_extend-</STRONG>
+       <STRONG>ed_names</STRONG>, some of their debugging output may  be  directed
+       to  the  <EM>trace</EM> file if the <STRONG>NCURSES_TRACE</STRONG> environment vari-
+       able is set:
+
+       <STRONG>o</STRONG>   messages produced in the utility are  written  to  the
+           standard error.
+
+       <STRONG>o</STRONG>   messages  produced by the underlying library are writ-
+           ten to <EM>trace</EM>.
+
+       If ncurses is built without tracing, none  of  the  latter
+       are  produced,  and  fewer diagnostics are provided by the
+       command-line utilities.
+
+
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines which return a value are designed to be  used  as
        parameters to the <STRONG>_tracef</STRONG> routine.
@@ -215,6 +239,7 @@
 <li><a href="#h3-Functions">Functions</a></li>
 <li><a href="#h3-Trace-Parameter">Trace Parameter</a></li>
 <li><a href="#h3-Initialization">Initialization</a></li>
+<li><a href="#h3-Command-line-Utilities">Command-line Utilities</a></li>
 </ul>
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>

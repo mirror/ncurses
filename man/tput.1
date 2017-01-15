@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.50 2017/01/07 23:03:28 tom Exp $
+.\" $Id: tput.1,v 1.51 2017/01/14 20:49:40 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -401,9 +401,6 @@ AT&T System V provided a different \fBtput\fP command,
 whose \fBinit\fP and \fBreset\fP  subcommands
 (more than half the program) were incorporated from
 the \fBreset\fP feature of BSD \fBtset\fP written by Eric Allman.
-Later the corresponding source code for \fIreset\fP
-was removed from the BSD \fBtset\fP
-(in June 1993, released in 4.4BSD-Lite a year later).
 .PP
 Keith Bostic replaced the BSD \fBtput\fP command in 1989 with a new implementation
 based on the AT&T System V program \fBtput\fP.

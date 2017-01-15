@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2011,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: toe.1m,v 1.27 2015/08/29 22:04:48 tom Exp @
+  * @Id: toe.1m,v 1.28 2017/01/14 19:55:36 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -100,11 +100,14 @@
               depend on it, followed by a newline.
 
        <STRONG>-v</STRONG><EM>n</EM>    specifies that (verbose) output be written to stan-
-              dard  error,  showing <STRONG>toe</STRONG>'s progress.  The optional
-              parameter <EM>n</EM> is a number from 1 to  10,  interpreted
-              as for <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>.
+              dard error, showing <STRONG>toe</STRONG>'s progress.
 
-       <STRONG>-V</STRONG>     reports  the  version  of ncurses which was used in
+              The  optional parameter <EM>n</EM> is a number from 1 to 10,
+              interpreted as for <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>.  If  ncurses  is  built
+              without  tracing support, the optional parameter is
+              ignored.
+
+       <STRONG>-V</STRONG>     reports the version of ncurses which  was  used  in
               this program, and exits.
 
 
@@ -114,10 +117,10 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,   <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,    <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,
+       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,    <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170114).
 
 
 

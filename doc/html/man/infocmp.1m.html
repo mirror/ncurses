@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.59 2016/10/22 19:54:35 tom Exp @
+  * @Id: infocmp.1m,v 1.60 2017/01/14 19:55:27 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -438,8 +438,12 @@
             program, and exits.
 
        <STRONG>-v</STRONG> <EM>n</EM> prints out tracing information on standard  error  as
-            the  program runs.  Higher values of n induce greater
-            verbosity.
+            the program runs.
+
+            The  optional  parameter  <EM>n</EM> is a number from 1 to 10,
+            inclusive, indicating the desired level of detail  of
+            information.   If  ncurses  is  built without tracing
+            support, the optional parameter is ignored.
 
        <STRONG>-W</STRONG>   By itself, the <STRONG>-w</STRONG> option will not force long  strings
             to be wrapped.  Use the <STRONG>-W</STRONG> option to do this.
@@ -478,7 +482,7 @@
 
        http://invisible-island.net/ncurses/tctest.html
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170114).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

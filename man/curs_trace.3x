@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.17 2017/01/07 18:45:42 tom Exp $
+.\" $Id: curs_trace.3x,v 1.18 2017/01/14 19:46:40 tom Exp $
 .de bP
 .IP \(bu 4
 ..
@@ -190,6 +190,25 @@ use_tioctl
 .hy
 .ad
 .RE
+.SS Command-line Utilities
+.PP
+The command-line utilities such as \fBtic\fP(1) provide a verbose option
+which extends the set of messages written using the \fBtrace\fP function.
+Both of these (\fB\-v\fP and \fBtrace\fP)
+use the same variable (\fB_nc_tracing\fP),
+which determines the messages which are written.
+.PP
+Because the command-line utilities may call initialization functions
+such as \fBsetupterm\fP, \fBtgetent\fP or \fBuse_extended_names\fP,
+some of their debugging output may be directed to the \fItrace\fP file
+if the \fBNCURSES_TRACE\fP environment variable is set:
+.bP
+messages produced in the utility are written to the standard error.
+.bP
+messages produced by the underlying library are written to \fItrace\fP.
+.PP
+If ncurses is built without tracing, none of the latter are produced,
+and fewer diagnostics are provided by the command-line utilities.
 .SH RETURN VALUE
 Routines which return a value are designed to be used as parameters
 to the \fB_tracef\fR routine.

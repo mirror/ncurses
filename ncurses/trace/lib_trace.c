@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.85 2016/12/31 13:50:06 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.86 2017/01/14 17:53:42 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -87,6 +87,7 @@ NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 
 #define MyFP		_nc_globals.trace_fp
 #define MyFD		_nc_globals.trace_fd
+#define MyInit		_nc_globals.trace_opened
 #define MyPath		_nc_globals.trace_fname
 #define MyLevel		_nc_globals.trace_level
 #define MyNested	_nc_globals.nested_tracef
@@ -95,6 +96,7 @@ NCURSES_EXPORT(void)
 trace(const unsigned int tracelevel)
 {
     if ((MyFP == 0) && tracelevel) {
+	MyInit = TRUE;
 	if (MyFD >= 0) {
 	    MyFP = fdopen(MyFD, "wb");
 	} else {
@@ -160,7 +162,7 @@ _nc_va_tracef(const char *fmt, va_list ap)
 
 #ifdef TRACE
     /* verbose-trace in the command-line utilities relies on this */
-    if (fp == 0 && _nc_tracing >= DEBUG_LEVEL(1))
+    if (fp == 0 && !MyInit && _nc_tracing >= DEBUG_LEVEL(1))
 	fp = stderr;
 #endif
 

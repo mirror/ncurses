@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tset.1,v 1.47 2017/01/07 22:59:51 tom Exp @
+  * @Id: tset.1,v 1.48 2017/01/14 20:55:07 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -285,18 +285,34 @@
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
-       A  <STRONG>reset</STRONG>  command appeared in 2BSD (1979), written by Kurt
-       Shoens.
+       A  <STRONG>reset</STRONG> command appeared in 2BSD (April 1979), written by
+       Kurt Shoens.  This program set the <EM>erase</EM> and <EM>kill</EM>  charac-
+       ters  to  <STRONG>^H</STRONG>  (backspace) and <STRONG>@</STRONG> respectively.  Mark Horton
+       improved that in 3BSD (October 1979), adding  <EM>intr</EM>,  <EM>quit</EM>,
+       <EM>start</EM>/<EM>stop</EM> and <EM>eof</EM> characters as well as changing the pro-
+       gram to avoid modifying any user settings.
+
+       Later in 4.1BSD (December 1980), Mark Horton added a  call
+       to  the  <STRONG>tset</STRONG>  program  using the <STRONG>-I</STRONG> and <STRONG>-Q</STRONG> options, i.e.,
+       using that to improve  the  terminal  modes.   With  those
+       options,  that  version  of  <STRONG>reset</STRONG> did not use the termcap
+       database.
 
        A separate <STRONG>tset</STRONG> command was provided in 2BSD by Eric  All-
        man.   While  the oldest published source (from 1979) pro-
-       vides both programs, Allman's comments in the 2BSD  source
-       code indicate that he began work in October 1977, continu-
-       ing development over the next few years.
+       vides both <STRONG>tset</STRONG> and <STRONG>reset</STRONG>, Allman's comments in  the  2BSD
+       source  code  indicate that he began work in October 1977,
+       continuing development over the next few years.
 
-       In September 1980, Eric Allman modified <STRONG>tset</STRONG> to provide  a
-       "reset"  feature  when  the  program was invoked as <STRONG>reset</STRONG>.
-       This version appeared in 4.1cBSD, late in 1982.
+       In September 1980, Eric Allman modified <STRONG>tset</STRONG>,  adding  the
+       code  from  the  existing  "reset"  feature  when <STRONG>tset</STRONG> was
+       invoked as <STRONG>reset</STRONG>.  Rather than simply copying the existing
+       program,  in  this  merged  version, <STRONG>tset</STRONG> used the termcap
+       database to do additional (re)initialization of the termi-
+       nal.  This version appeared in 4.1cBSD, late in 1982.
+
+       Other  developers  (e.g., Keith Bostic and Jim Bloom) con-
+       tinued to modify <STRONG>tset</STRONG> until 4.4BSD was released in 1993.
 
        The <STRONG>ncurses</STRONG> implementation was lightly  adapted  from  the
        4.4BSD  sources for a terminfo environment by Eric S. Ray-
@@ -419,7 +435,7 @@
        <STRONG>csh(1)</STRONG>,   <STRONG>sh(1)</STRONG>,   <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,   <STRONG>tty(4)</STRONG>,
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG>ttys(5)</STRONG>, <STRONG>environ(7)</STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170114).
 
 
 

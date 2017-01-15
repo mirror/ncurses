@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.59 2016/10/22 19:54:35 tom Exp $
+.\" $Id: infocmp.1m,v 1.60 2017/01/14 19:55:27 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ds n 5
 .de bP
@@ -476,7 +476,10 @@ reports the version of ncurses which was used in this program, and exits.
 .TP 5
 \fB\-v\fR \fIn\fR
 prints out tracing information on standard error as the program runs.
-Higher values of n induce greater verbosity.
+.IP
+The optional parameter \fIn\fR is a number from 1 to 10, inclusive,
+indicating the desired level of detail of information.
+If ncurses is built without tracing support, the optional parameter is ignored.
 .TP
 \fB\-W\fR
 By itself, the \fB\-w\fP option will not force long strings to be wrapped.

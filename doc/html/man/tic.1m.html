@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.62 2016/10/01 17:14:50 tom Exp @
+  * @Id: tic.1m,v 1.63 2017/01/14 19:50:09 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -277,12 +277,14 @@
             program, and exits.
 
        <STRONG>-v</STRONG><EM>n</EM>  specifies  that  (verbose) output be written to stan-
-            dard error trace information showing <STRONG>tic</STRONG>'s  progress.
-            The  optional  parameter  <EM>n</EM> is a number from 1 to 10,
-            inclusive, indicating the desired level of detail  of
-            information.   If  <EM>n</EM> is omitted, the default level is
-            1.  If <EM>n</EM> is specified and greater than 1,  the  level
-            of detail is increased.
+            dard error trace information showing <STRONG>tic</STRONG>'s progress.
+
+            The optional parameter <EM>n</EM> is a number from  1  to  10,
+            inclusive,  indicating the desired level of detail of
+            information.  If ncurses  is  built  without  tracing
+            support,  the optional parameter is ignored.  If <EM>n</EM> is
+            omitted, the default level is 1.  If <EM>n</EM>  is  specified
+            and greater than 1, the level of detail is increased.
 
             The debug flag levels are as follows:
 
@@ -401,7 +403,7 @@
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,    <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170107).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170114).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
