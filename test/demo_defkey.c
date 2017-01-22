@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.25 2016/09/10 21:22:01 tom Exp $
+ * $Id: demo_defkey.c,v 1.26 2017/01/21 22:07:43 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -108,7 +108,7 @@ visible(const char *string)
 		char temp[80];
 		_nc_STRNCPY(temp, visichar(string[n]), sizeof(temp) - 2);
 		if (pass) {
-		    _nc_STRCAT(result, temp, sizeof(temp));
+		    _nc_STRCAT(result, temp, need);
 		} else {
 		    need += strlen(temp);
 		}

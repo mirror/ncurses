@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.46 2016/09/05 00:24:27 tom Exp $
+ * $Id: blue.c,v 1.48 2017/01/22 00:39:52 tom Exp $
  */
 
 #include <test.priv.h>
@@ -209,7 +209,11 @@ printcard(int value)
 	addch(ranks[isuit][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 	addch(ranks[isuit][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 
-	attron(color);
+#ifdef NCURSES_VERSION
+	(attron) ((int) color);	/* quieter compiler warnings */
+#else
+	attron(color);		/* PDCurses, etc., either no macro or wrong */
+#endif
 #if USE_WIDEC_SUPPORT
 	{
 	    wchar_t values[2];
@@ -220,7 +224,11 @@ printcard(int value)
 #else
 	addch((chtype) suits[which]);
 #endif
+#ifdef NCURSES_VERSION
+	(attroff) ((int) color);
+#else
 	attroff(color);
+#endif
     }
     (void) addch(' ');
 }

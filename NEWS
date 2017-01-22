@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2735 2017/01/14 20:59:06 tom Exp $
+-- $Id: NEWS,v 1.2741 2017/01/21 23:40:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170121
+	+ incorporate A_COLOR mask into COLOR_PAIR(), in case user application
+	  provides an out-of-range pair number (report by Elijah Stone).
+	+ clarify description in tput manual page regarding support for
+	  termcap names (prompted by FreeBSD #214709).
+	+ remove a restriction in tput's support for termcap names which
+	  omitted capabilities normally not shown in termcap translations
+	  (cf: 990123).
+	+ modify configure script for clang as used on FreeBSD, to work around
+	  clang's differences in exit codes vs gcc.
 
 20170114
 	+ improve discussion of early history of tset/reset programs.

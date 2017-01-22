@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2015,2016 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2016,2017 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.116 2016/09/04 00:11:44 tom Exp $
+dnl $Id: aclocal.m4,v 1.117 2017/01/21 22:20:17 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1627,7 +1627,7 @@ cf_save_CFLAGS="$cf_save_CFLAGS -we147"
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LARGEFILE version: 9 updated: 2015/04/18 08:56:57
+dnl CF_LARGEFILE version: 10 updated: 2017/01/21 11:06:25
 dnl ------------
 dnl Add checks for large file support.
 AC_DEFUN([CF_LARGEFILE],[
@@ -1649,6 +1649,7 @@ ifdef([AC_FUNC_FSEEKO],[
 
 	AC_CACHE_CHECK(whether to use struct dirent64, cf_cv_struct_dirent64,[
 		AC_TRY_COMPILE([
+#pragma GCC diagnostic error "-Wincompatible-pointer-types"
 #include <sys/types.h>
 #include <dirent.h>
 		],[
@@ -1854,7 +1855,7 @@ AC_DEFUN([CF_LIB_TYPE],
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_DATAONLY version: 10 updated: 2012/10/06 17:41:51
+dnl CF_LINK_DATAONLY version: 11 updated: 2017/01/21 11:06:25
 dnl ----------------
 dnl Some systems have a non-ANSI linker that doesn't pull in modules that have
 dnl only data (i.e., no functions), for example NeXT.  On those systems we'll
@@ -1897,7 +1898,7 @@ EOF
 	cf_saveLIBS="$LIBS"
 	LIBS="conftest.a $LIBS"
 	AC_TRY_RUN([
-	int main()
+	int main(void)
 	{
 		extern int testfunc();
 		${cf_cv_main_return:-return} (!testfunc());
@@ -2024,20 +2025,26 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES,1,[Define to 1 if filesystem supports mixed-case filenames.])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 9 updated: 2012/10/03 04:34:49
+dnl CF_MKSTEMP version: 10 updated: 2017/01/21 11:12:16
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
 AC_DEFUN([CF_MKSTEMP],[
+AC_CHECK_HEADERS( \
+unistd.h \
+)
 AC_CACHE_CHECK(for working mkstemp, cf_cv_func_mkstemp,[
 rm -rf conftest*
 AC_TRY_RUN([
 #include <sys/types.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
-int main()
+int main(void)
 {
 	char *tmpl = "conftestXXXXXX";
 	char name[2][80];
@@ -2758,7 +2765,7 @@ CF_ACVERSION_CHECK(2.52,
 CF_CC_ENV_FLAGS
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_CC_C_O version: 4 updated: 2016/05/21 18:08:09
+dnl CF_PROG_CC_C_O version: 5 updated: 2017/01/21 11:06:25
 dnl --------------
 dnl Analogous to AC_PROG_CC_C_O, but more useful: tests only $CC, ensures that
 dnl the output file can be renamed, and allows for a shell variable that can
@@ -2775,7 +2782,7 @@ AC_MSG_CHECKING([whether [$]$1 understands -c and -o together])
 AC_CACHE_VAL(cf_cv_prog_$1_c_o,
 [
 cat > conftest.$ac_ext <<CF_EOF
-int main()
+int main(void)
 {
 	${cf_cv_main_return:-return}(0);
 }

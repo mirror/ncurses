@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.803 2016/12/31 17:09:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.804 2017/01/21 16:13:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -551,7 +551,7 @@ else	AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_BOOL_SIZE version: 14 updated: 2015/04/17 21:13:04
+dnl CF_BOOL_SIZE version: 15 updated: 2017/01/21 11:06:25
 dnl ------------
 dnl Test for the size of 'bool' in the configured C++ compiler (e.g., a type).
 dnl Don't bother looking for bool.h, since it's been deprecated.
@@ -585,7 +585,7 @@ AC_CACHE_VAL(cf_cv_type_of_bool,[
 
 #endif
 
-int main()
+int main(void)
 {
 	FILE *fp = fopen("cf_test.out", "w");
 	if (fp != 0) {
@@ -811,7 +811,7 @@ AC_MSG_RESULT($includedir)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CGETENT version: 5 updated: 2012/10/06 17:56:13
+dnl CF_CGETENT version: 6 updated: 2017/01/21 11:06:25
 dnl ----------
 dnl Check if the terminal-capability database functions are available.  If not,
 dnl ncurses has a much-reduced version.
@@ -835,6 +835,7 @@ then
 	AC_DEFINE(HAVE_BSD_CGETENT,1,[Define to 1 if we have BSD cgetent])
 AC_CACHE_CHECK(if cgetent uses const parameter,cf_cv_cgetent_const,[
 AC_TRY_LINK([
+#pragma GCC diagnostic error "-Wincompatible-pointer-types-discards-qualifiers"
 #include <stdlib.h>],[
 	char temp[128];
 	char *buf = temp;
@@ -947,7 +948,7 @@ fi
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_GPM_WGETCH version: 2 updated: 2010/08/14 18:25:37
+dnl CF_CHECK_GPM_WGETCH version: 3 updated: 2017/01/21 11:06:25
 dnl -------------------
 dnl Check if GPM is already linked with curses.  If so - and if the linkage
 dnl is not "weak" - warn about this because it can create problems linking
@@ -961,7 +962,7 @@ if test "$cross_compiling" != yes ; then
 
 cat >conftest.$ac_ext <<CF_EOF
 #include <gpm.h>
-int main()
+int main(void)
 {
 	Gpm_Wgetch();
 	${cf_cv_main_return:-return}(0);
@@ -1012,15 +1013,24 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_WCHAR_H version: 1 updated: 2011/10/29 15:01:05
+dnl CF_CHECK_WCHAR_H version: 2 updated: 2017/01/21 11:06:25
 dnl ----------------
 dnl Check if wchar.h can be used, i.e., without defining _XOPEN_SOURCE_EXTENDED
 AC_DEFUN([CF_CHECK_WCHAR_H],[
+AC_CHECK_HEADERS( \
+wchar.h \
+wctype.h \
+)
 AC_CACHE_CHECK(if wchar.h can be used as is,cf_cv_wchar_h_okay,[
 AC_TRY_COMPILE(
 [
 #include <stdlib.h>
+#ifdef HAVE_WCHAR_H
 #include <wchar.h>
+#endif
+#ifdef HAVE_WCTYPE_H
+#include <wctype.h>
+#endif
 ],[
 	wint_t foo = 0;
 	int bar = iswpunct(foo)],
@@ -1209,7 +1219,7 @@ cf_save_CFLAGS="$cf_save_CFLAGS -Qunused-arguments"
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_CPP_PARAM_INIT version: 6 updated: 2012/10/06 17:56:13
+dnl CF_CPP_PARAM_INIT version: 7 updated: 2017/01/21 11:06:25
 dnl -----------------
 dnl Check if the C++ compiler accepts duplicate parameter initialization.  This
 dnl is a late feature for the standard and is not in some recent compilers
@@ -1233,7 +1243,7 @@ TEST::TEST(int x = 1)	// some compilers do not like second initializer
 {
 	value = x;
 }
-int main() { }
+int main(void) { }
 ],
 	[cf_cv_cpp_param_init=yes],
 	[cf_cv_cpp_param_init=no],
@@ -1903,7 +1913,7 @@ else
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_MEMMOVE version: 8 updated: 2012/10/04 20:12:20
+dnl CF_FUNC_MEMMOVE version: 9 updated: 2017/01/21 11:06:25
 dnl ---------------
 dnl Check for memmove, or a bcopy that can handle overlapping copy.  If neither
 dnl is found, add our own version of memmove to the list of objects.
@@ -1913,7 +1923,7 @@ AC_CHECK_FUNC(memmove,,[
 AC_CHECK_FUNC(bcopy,[
 	AC_CACHE_CHECK(if bcopy does overlapping moves,cf_cv_good_bcopy,[
 		AC_TRY_RUN([
-int main() {
+int main(void) {
 	static char data[] = "abcdefghijklmnopqrstuwwxyz";
 	char temp[40];
 	bcopy(data, temp, sizeof(data));
@@ -1934,7 +1944,7 @@ int main() {
 	fi
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_NANOSLEEP version: 4 updated: 2012/10/06 17:56:13
+dnl CF_FUNC_NANOSLEEP version: 5 updated: 2017/01/21 11:06:25
 dnl -----------------
 dnl Check for existence of workable nanosleep() function.  Some systems, e.g.,
 dnl AIX 4.x, provide a non-working version.
@@ -1949,7 +1959,7 @@ AC_TRY_RUN([
 #include <sys/time.h>
 #endif
 
-int main() {
+int main(void) {
 	struct timespec ts1, ts2;
 	int code;
 	ts1.tv_sec  = 0;
@@ -3169,7 +3179,7 @@ AC_MSG_RESULT($cf_cv_have_isascii)
 test "$cf_cv_have_isascii" = yes && AC_DEFINE(HAVE_ISASCII,1,[Define to 1 if we have isascii()])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LARGEFILE version: 9 updated: 2015/04/18 08:56:57
+dnl CF_LARGEFILE version: 10 updated: 2017/01/21 11:06:25
 dnl ------------
 dnl Add checks for large file support.
 AC_DEFUN([CF_LARGEFILE],[
@@ -3191,6 +3201,7 @@ ifdef([AC_FUNC_FSEEKO],[
 
 	AC_CACHE_CHECK(whether to use struct dirent64, cf_cv_struct_dirent64,[
 		AC_TRY_COMPILE([
+#pragma GCC diagnostic error "-Wincompatible-pointer-types"
 #include <sys/types.h>
 #include <dirent.h>
 		],[
@@ -4009,7 +4020,7 @@ done
 AC_SUBST(Libs_To_Make)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SONAME version: 5 updated: 2010/08/14 18:25:37
+dnl CF_LIB_SONAME version: 6 updated: 2017/01/21 11:06:25
 dnl -------------
 dnl Find the and soname for the given shared library.  Set the cache variable
 dnl cf_cv_$3_soname to this, unless it is not found.  Then set the cache
@@ -4026,7 +4037,7 @@ cf_cv_$3_soname=unknown
 if test "$cross_compiling" != yes ; then
 cat >conftest.$ac_ext <<CF_EOF
 $1
-int main()
+int main(void)
 {
 $2
 	${cf_cv_main_return:-return}(0);
@@ -4130,7 +4141,7 @@ AC_DEFUN([CF_LIB_TYPE],
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_DATAONLY version: 10 updated: 2012/10/06 17:41:51
+dnl CF_LINK_DATAONLY version: 11 updated: 2017/01/21 11:06:25
 dnl ----------------
 dnl Some systems have a non-ANSI linker that doesn't pull in modules that have
 dnl only data (i.e., no functions), for example NeXT.  On those systems we'll
@@ -4173,7 +4184,7 @@ EOF
 	cf_saveLIBS="$LIBS"
 	LIBS="conftest.a $LIBS"
 	AC_TRY_RUN([
-	int main()
+	int main(void)
 	{
 		extern int testfunc();
 		${cf_cv_main_return:-return} (!testfunc());
@@ -4193,13 +4204,16 @@ fi
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_FUNCS version: 8 updated: 2012/10/06 17:56:13
+dnl CF_LINK_FUNCS version: 9 updated: 2017/01/21 11:11:02
 dnl -------------
 dnl Most Unix systems have both link and symlink, a few don't have symlink.
 dnl A few non-Unix systems implement symlink, but not link.
 dnl A few non-systems implement neither (or have nonfunctional versions).
 AC_DEFUN([CF_LINK_FUNCS],
 [
+AC_CHECK_HEADERS( \
+unistd.h \
+)
 AC_CHECK_FUNCS( \
 	remove \
 	unlink )
@@ -4218,7 +4232,7 @@ else
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-int main()
+int main(void)
 {
 	int fail = 0;
 	char *src = "config.log";
@@ -4887,7 +4901,7 @@ chmod 755 $cf_edit_man
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MATH_LIB version: 8 updated: 2010/05/29 16:31:02
+dnl CF_MATH_LIB version: 9 updated: 2017/01/21 11:06:25
 dnl -----------
 dnl Checks for libraries.  At least one UNIX system, Apple Macintosh
 dnl Rhapsody 5.5, does not have -lm.  We cannot use the simpler
@@ -4898,6 +4912,7 @@ AC_CACHE_CHECK(if -lm needed for math functions,
 	cf_cv_need_libm,[
 	AC_TRY_LINK([
 	#include <stdio.h>
+	#include <stdlib.h>
 	#include <math.h>
 	],
 	[double x = rand(); printf("result = %g\n", ]ifelse([$2],,sin(x),$2)[)],
@@ -4941,20 +4956,26 @@ fi
 test "$cf_cv_mixedcase" = yes && AC_DEFINE(MIXEDCASE_FILENAMES,1,[Define to 1 if filesystem supports mixed-case filenames.])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MKSTEMP version: 9 updated: 2012/10/03 04:34:49
+dnl CF_MKSTEMP version: 10 updated: 2017/01/21 11:12:16
 dnl ----------
 dnl Check for a working mkstemp.  This creates two files, checks that they are
 dnl successfully created and distinct (AmigaOS apparently fails on the last).
 AC_DEFUN([CF_MKSTEMP],[
+AC_CHECK_HEADERS( \
+unistd.h \
+)
 AC_CACHE_CHECK(for working mkstemp, cf_cv_func_mkstemp,[
 rm -rf conftest*
 AC_TRY_RUN([
 #include <sys/types.h>
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <sys/stat.h>
-int main()
+int main(void)
 {
 	char *tmpl = "conftestXXXXXX";
 	char name[2][80];
@@ -5353,7 +5374,7 @@ CF_ACVERSION_CHECK(2.52,
 CF_CC_ENV_FLAGS
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_CC_C_O version: 4 updated: 2016/05/21 18:08:09
+dnl CF_PROG_CC_C_O version: 5 updated: 2017/01/21 11:06:25
 dnl --------------
 dnl Analogous to AC_PROG_CC_C_O, but more useful: tests only $CC, ensures that
 dnl the output file can be renamed, and allows for a shell variable that can
@@ -5370,7 +5391,7 @@ AC_MSG_CHECKING([whether [$]$1 understands -c and -o together])
 AC_CACHE_VAL(cf_cv_prog_$1_c_o,
 [
 cat > conftest.$ac_ext <<CF_EOF
-int main()
+int main(void)
 {
 	${cf_cv_main_return:-return}(0);
 }
@@ -6737,7 +6758,7 @@ if test "$cf_cv_xopen_source" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_TYPEOF_CHTYPE version: 9 updated: 2012/10/06 17:56:13
+dnl CF_TYPEOF_CHTYPE version: 10 updated: 2017/01/21 11:06:25
 dnl ----------------
 dnl Determine the type we should use for chtype (and attr_t, which is treated
 dnl as the same thing).  We want around 32 bits, so on most machines want a
@@ -6750,7 +6771,7 @@ AC_CACHE_VAL(cf_cv_typeof_chtype,[
 		AC_TRY_RUN([
 #define WANT_BITS 31
 #include <stdio.h>
-int main()
+int main(void)
 {
 	FILE *fp = fopen("cf_test.out", "w");
 	if (fp != 0) {

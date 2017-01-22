@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.68 2017/01/07 23:08:24 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.69 2017/01/21 17:40:51 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -180,18 +180,15 @@ tput_cmd(int fd, TTY * saved_settings, int argc, char *argv[])
 	    if ((np = _nc_find_entry(name, _nc_get_hash_table(termcap))) != 0) {
 		switch (np->nte_type) {
 		case BOOLEAN:
-		    if (bool_from_termcap[np->nte_index])
-			name = boolnames[np->nte_index];
+		    name = boolnames[np->nte_index];
 		    break;
 
 		case NUMBER:
-		    if (num_from_termcap[np->nte_index])
-			name = numnames[np->nte_index];
+		    name = numnames[np->nte_index];
 		    break;
 
 		case STRING:
-		    if (str_from_termcap[np->nte_index])
-			name = strnames[np->nte_index];
+		    name = strnames[np->nte_index];
 		    break;
 		}
 		goto retry;

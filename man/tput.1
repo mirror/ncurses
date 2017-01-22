@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.51 2017/01/14 20:49:40 tom Exp $
+.\" $Id: tput.1,v 1.52 2017/01/21 17:38:30 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -112,22 +112,20 @@ reports the version of ncurses which was used in this program, and exits.
 .SS Commands
 .TP
 \fIcapname\fR
-indicates the capability from the \fBterminfo\fR database.  When
-\fBtermcap\fR support is compiled in, the \fBtermcap\fR name for
-the capability is also accepted.
+indicates the capability from the terminal database.
 .IP
 If the capability is a string that takes parameters, the arguments
 following the capability will be used as parameters for the string.
 .IP
 Most parameters are numbers.
-Only a few terminfo capabilities require string parameters;
+Only a few terminal capabilities require string parameters;
 \fB@TPUT@\fR uses a table to decide which to pass as strings.
 Normally \fB@TPUT@\fR uses \fBtparm\fR(3X) to perform the substitution.
 If no parameters are given for the capability,
 \fB@TPUT@\fR writes the string without performing the substitution.
 .TP
 \fBinit\fR
-If the \fBterminfo\fR database is present and an entry for the user's
+If the terminal database is present and an entry for the user's
 terminal exists (see \fB\-T\fR\fItype\fR, above), the following will
 occur:
 .RS
@@ -213,7 +211,7 @@ strings are, the \fIinitialization\fP strings will be output.
 Otherwise, \fBreset\fR acts identically to \fBinit\fR.
 .TP
 \fBlongname\fR
-If the \fBterminfo\fR database is present and an entry for the
+If the terminal database is present and an entry for the
 user's terminal exists (see \fB\-T\fR\fItype\fR above), then the long name
 of the terminal will be put out.  The long name is the last
 name in the first line of the terminal's description in the
@@ -452,6 +450,25 @@ requiring \fB@TPUT@\fP to know which type to use.
 This implementation uses a table to determine the parameter types for
 the standard \fIcapname\fR operands, and an internal library
 function to analyze nonstandard \fIcapname\fR operands.
+.PP
+This implementation (unlike others) can accept both \fItermcap\fP
+and \fIterminfo\fP names for the \fIcapname\fP feature,
+if
+\fItermcap\fR support is compiled in.
+However, the predefined \fItermcap\fP and \fIterminfo\fP names have two
+ambiguities in this case (and the \fIterminfo\fP name is assumed):
+.bP
+The \fItermcap\fP name \fBdl\fP corresponds to
+the \fIterminfo\fP name \fBdl1\fP (delete one line).
+.br
+The \fIterminfo\fP name \fBdl\fP corresponds to
+the \fItermcap\fP name \fBDL\fP (delete a given number of lines).
+.bP
+The \fItermcap\fP name \fBed\fP corresponds to
+the \fIterminfo\fP name \fBrmdc\fP (end delete mode).
+.br
+The \fIterminfo\fP name \fBed\fP corresponds to
+the \fItermcap\fP name \fBcd\fP (clear to end of screen).
 .PP
 The \fBlongname\fR and \fB\-S\fR options, and the parameter-substitution
 features used in the \fBcup\fR example,

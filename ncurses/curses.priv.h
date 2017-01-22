@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.558 2017/01/14 17:52:49 tom Exp $
+ * $Id: curses.priv.h,v 1.559 2017/01/21 23:02:04 tom Exp $
  *
  *	curses.priv.h
  *
@@ -406,7 +406,7 @@ color_t;
  * option for compiling the tracing into the library.
  */
 #if 1
-#define ColorPair(n)		NCURSES_BITS(n, 0)
+#define ColorPair(n)		(NCURSES_BITS(n, 0) & A_COLOR)
 #define PairNumber(a)		(NCURSES_CAST(int,(((unsigned long)(a) & A_COLOR) >> NCURSES_ATTR_SHIFT)))
 #else
 #define ColorPair(pair)		COLOR_PAIR(pair)
@@ -426,7 +426,7 @@ color_t;
 #define if_EXT_COLORS(stmt)	stmt
 #define SetPair(value,p)	SetPair2((value).ext_color, AttrOf(value), p)
 #define SetPair2(c,a,p)		c = (p), \
-				a = (unColor2(a) | (A_COLOR & (unsigned) ColorPair(oldColor(c))))
+				a = (unColor2(a) | ColorPair(oldColor(c)))
 #define GetPair(value)		GetPair2((value).ext_color, AttrOf(value))
 #define GetPair2(c,a)		((c) ? (c) : PairNumber(a))
 #define oldColor(p)		(((p) > 255) ? 255 : (p))
@@ -440,11 +440,11 @@ color_t;
 
 #define if_EXT_COLORS(stmt)	/* nothing */
 #define SetPair(value,p)	RemAttr(value, A_COLOR), \
-				SetAttr(value, AttrOf(value) | (A_COLOR & (attr_t) ColorPair(p)))
+				SetAttr(value, AttrOf(value) | ColorPair(p))
 #define GetPair(value)		PairNumber(AttrOf(value))
 #define GET_WINDOW_PAIR(w)	PairNumber(WINDOW_ATTRS(w))
 #define SET_WINDOW_PAIR(w,p)	WINDOW_ATTRS(w) &= ALL_BUT_COLOR, \
-				WINDOW_ATTRS(w) |= (A_COLOR & (attr_t) ColorPair(p))
+				WINDOW_ATTRS(w) |= ColorPair(p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b))
 
 #define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vidputs)(NCURSES_SP_ARGx attr, NCURSES_OUTC_FUNC)
