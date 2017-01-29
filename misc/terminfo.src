@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.581 $
-#	$Date: 2016/12/31 22:04:20 $
+#	$Revision: 1.586 $
+#	$Date: 2017/01/28 23:50:28 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4181,8 +4181,8 @@ xterm+app|fragment with cursor keys in application mode,
 	khome=\EOH,
 #
 # The "PC-style" modifier scheme was introduced in xterm patch #94 (1999/3/27)
-# and revised in patch #167 (2002/8/24).  Some other terminal emulators copied
-# the earlier scheme, as noted in the "use=" clauses in this file.
+# and revised in xterm patch #167 (2002/8/24).  Some other terminal emulators
+# copied the earlier scheme, as noted in the "use=" clauses in this file.
 #
 # The original assignments from patch #94 for cursor-keys had some technical
 # issues:
@@ -4353,7 +4353,9 @@ xterm-basic|modern xterm terminal emulator - common,
 xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 	rmso=\E[m, rmul=\E[m, use=xterm-xf86-v33,
 
-# 16-colors is one of the variants of XFree86 3.3 xterm, updated for 4.0 (T.Dickey)
+# 16-colors is one of the variants of XFree86 3.3 xterm, updated for 4.0
+# (T.Dickey)
+#
 # If configured to support 88- or 256-colors (which is fairly common in 2009),
 # xterm also recognizes the control sequences for initc -TD
 xterm-16color|xterm with 16 colors like aixterm,
@@ -4364,7 +4366,7 @@ xterm-16color|xterm with 16 colors like aixterm,
 	use=xterm-new,
 
 # 256-colors is a compile-time feature of XFree86 xterm beginning with
-# patch #111 (1999/7/10) -TD
+# xterm patch #111 (1999/7/10) -TD
 xterm+256color|xterm 256-color feature,
 	ccc,
 	colors#256, pairs#32767,
@@ -4389,7 +4391,7 @@ xterm+256setaf|xterm 256-color (set-only),
 	setb@, setf@,
 
 # 88-colors is a compile-time feature of XFree86 xterm beginning with
-# patch #115 (1999/9/18) -TD
+# xterm patch #115 (1999/9/18) -TD
 #
 # Note that the escape sequences used are the same as for 256-colors - xterm
 # has a different table of default color resource values.  If built for
@@ -5404,8 +5406,8 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 # dates, nor give developer's names.  Initial color support was added for rxvt
 # "2.0", which was sometime in 1994.
 #
-# rxvt had usable color support with 2.16 (April 2, 1996), with some help by my work on
-# vttest, as well as bug reports to Mark Olesen.  For instance, the fix
+# rxvt had usable color support with 2.16 (April 2, 1996), with some help by my
+# work on vttest, as well as bug reports to Mark Olesen.  For instance, the fix
 # mentioned here
 #	http://web.archiveorange.com/archive/v/6ETvLb5wHtbbzCaS4S9J
 # was from one of my bug-reports -TD
@@ -5960,7 +5962,8 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 #    a line.
 # b) has xterm-style shifted function-key strings
 #    meta also is used, but control is ignored.
-# c) has xterm-style modifiers for cursor keys (shift, control, shift+control, meta)
+# c) has xterm-style modifiers for cursor keys (shift, control, shift+control,
+#    meta)
 # d) some combinations of shift/control send xterm-style sequences for
 #    insert/delete/home/end.
 # e) numeric keypad sends only numbers (compare with vttest).
@@ -6103,6 +6106,9 @@ pty|4bsd pseudo teletype,
 
 #### Emacs
 
+# https://www.emacswiki.org/emacs/AnsiTerm
+# https://github.com/emacs-mirror/emacs/blob/master/lisp/term.el
+#
 # The codes supported by the term.el terminal emulation in GNU Emacs 19.30
 eterm|gnu emacs term.el terminal emulation,
 	am, mir, xenl,
@@ -6138,6 +6144,26 @@ eterm-color|Emacs term.el terminal emulator term-protocol-version 0.96,
 	    %p7%t;8%;m,
 	sgr0=\E[m, smir=\E[4h, smso=\E[7m, smul=\E[4m,
 	u6=\E[%i%d;%dR, u7=\E[6n,
+
+# shell.el can "do" color, though not nearly as well.
+#
+# seen here:
+# http://unix.stackexchange.com/questions/237943/changing-colors-used-by-ls-does-not-work-in-emacs-shell-mode
+#
+# and
+# https://lists.gnu.org/archive/html/bug-gnu-emacs/2012-08/msg00481.html
+# https://github.com/emacs-mirror/emacs/blob/master/lisp/shell.el
+# https://github.com/emacs-mirror/emacs/blob/master/lisp/ansi-color.el
+#
+# however, as tested with Emacs 24.5.1, the result is buggy, losing overlays
+# frequently.  The contemporaneous term.el aka ansi-term does not "support"
+# italics but does not lose the color information -TD 2017/01/28.
+dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
+	am, hc,
+	colors#8, it#8, ncv#13, pairs#64,
+	bold=\E[1m, cud1=^J, ht=^I, ind=^J, op=\E[39;49m,
+	ritm=\E[23m, rmul=\E[24m, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm, sgr0=\E[m, sitm=\E[3m, smul=\E[4m,
 
 #### Screen
 
@@ -6442,14 +6468,86 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 	sc=\E7, sgr0=\E[m, smir=\E[4h, smkx=\E=, smso=\E[3m,
 	smul=\E[4m, tbc=\E[3g,
 
+#### Tmux
+
 # tmux is compatible with screen, but has support for italics, and some of the
 # xterm cursor bits.
 tmux|tmux terminal multiplexer,
-	ritm=\E[23m, rmso=\E[27m, sitm=\E[3m, smso=\E[7m, Ms@,
-	use=xterm+sl, use=xterm+tmux, use=screen,
+	ritm=\E[23m, rmso=\E[27m, sitm=\E[3m, smso=\E[7m,
+	use=xterm+edit, use=xterm+pcfkeys, use=xterm+sl,
+	use=xterm+tmux, use=screen,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
+
+#### Dvtm
+
+# dvtwm 0.15
+# http://www.brain-dump.org/projects/dvtm/
+#
+# + This uses ncurses to manage the display, including support for italics and
+#   default-colors.
+# + However, default-colors are incomplete: do not set bce.
+# + It does not implement flash (since no \e[?5h)
+# + Do not set XT: dvtm knows about OSC 0 and 2, but not 1.
+#   Oddly enough, if $TERM contains "linux", it attempts to set the title.
+# + Some of the program is cut/paste from rxvt-unicode, e.g., the ACS table.
+# + The built-in table of function-keys (based on rxvt) is incomplete (ends
+#   with kf22).
+# + It also omits the shifted cursor- and editing-keypad keys.
+#   However, it is confused by xterm's shifted cursor- and editing-keypad keys
+#   (and passes those through without interpretation)
+#   and may simply pass-through rxvt's, making it appear to work.
+#   In other cases such as kf23 and up, no pass-through is done.
+# + Most of the mode-settings in the initialization/reset strings are not
+#   implemented; dvtm copies its description from rxvt.
+dvtm|dynamic virtual terminal manager,
+	am, eo, mir, msgr, xenl, AX,
+	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
+	clear=\E[H\E[2J, cnorm=\E[?25h, cr=^M,
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
+	cud=\E[%p1%dB, cud1=^J, cuf=\E[%p1%dC, cuf1=\E[C,
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
+	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
+	enacs=\E(B\E)0, home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=^J,
+	is1=\E[?47l\E=\E[?1l,
+	is2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l,
+	kDC=\E[3$, kEND=\E[8$, kHOM=\E[7$, kIC=\E[2$, kLFT=\E[d,
+	kNXT=\E[6$, kPRV=\E[5$, kRIT=\E[c, ka1=\EOw, ka3=\EOy,
+	kb2=\EOu, kbs=\177, kc1=\EOq, kc3=\EOs, kcbt=\E[Z,
+	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
+	kdch1=\E[3~, kel=\E[8\^, kend=\E[8~, kent=\EOM, kf0=\E[21~,
+	kf1=\E[11~, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
+	kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, kf16=\E[29~,
+	kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, kf2=\E[12~,
+	kf20=\E[34~, kf21=\E[23$, kf22=\E[24$, kf3=\E[13~,
+	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
+	kf9=\E[20~, kfnd=\E[1~, khome=\E[7~, kich1=\E[2~,
+	kind=\E[a, kmous=\E[M, knp=\E[6~, kpp=\E[5~, kri=\E[b,
+	kslt=\E[4~, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
+	ritm=\E[23m, rmacs=^O, rmcup=\E[2J\E[?47l\E8, rmir=\E[4l,
+	rmso=\E[27m, rmul=\E[24m,
+	rs1=\E>\E[1;3;4;5;6l\E[?7h\E[m\E[r\E[2J\E[H,
+	rs2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E>\E[?1000l\E[?
+	    25h,
+	s0ds=\E(B, s1ds=\E(0, sc=\E7, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?
+	    %p9%t\016%e\017%;,
+	sgr0=\E[m\017, sitm=\E[3m, smacs=^N, smcup=\E7\E[?47h,
+	smir=\E[4h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%i%p1%dd,
+
+dvtm-256color|dynamic virtual terminal manager with 256 colors,
+	colors#256, pairs#32767,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
+	      5;%p1%d%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
+	      ;%p1%d%;m,
+	use=dvtm,
 
 #### NCSA Telnet
 
@@ -19430,7 +19528,7 @@ minitel1b-nb|minitel 1b (40cols) noir & blanc sans couleurs avec bold et dim ...
 	u8=\001%[ABCPpqrstuvwxyz{|}~\177]\004\r, .invis=\E@,
 	.u8=\001Cu|\004r, use=minitel1b,
 
-### Note:
+# Note:
 #
 # Faire, Fnct T puis "/" (TS+"?") pour activer les touches en 40cols :
 #
@@ -19443,7 +19541,7 @@ minitel1b-nb|minitel 1b (40cols) noir & blanc sans couleurs avec bold et dim ...
 # Ctrl+Suite-7(F19), Ctrl+Suite-8(F20), Ctrl+Suite-9(F21),
 # Ctrl+Suite-0(F22), Ctrl+Suite-*(F23), Ctrl+Suite-#(F24).
 #
-### Fonctionne par exemple avec Midnight Commander (mc).
+# Fonctionne par exemple avec Midnight Commander (mc).
 
 minitel2-80|minitel 2 (80cols) avec filets vt100 (DEC),
 	G0,
@@ -23139,10 +23237,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 #### XTERM Extensions:
 #
-# Most of the xterm extensions are for function-keys.  Since patch #94 (in
+# Most of the xterm extensions are for function-keys.  Since xterm patch #94 (in
 # 1999), xterm has supported shift/control/alt/meta modifiers which produce
 # additional function-key strings.  Some other developers copied the feature,
-# though they did not follow xterm's lead in patch #167 (in 2002), to make
+# though they did not follow xterm's lead in xterm patch #167 (in 2002), to make
 # these key definitions less ambiguous.
 #
 # A few terminals provide similar functionality (sending distinct keys when
@@ -23844,12 +23942,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* merge Data General terminfo from Hasufin <hasufin@vidnet.net> - TD
 #
 # 1998/10/10
-#	* update xterm-xfree86 to current (patch 84), for is2/rs2 changes - TD
+#	* update xterm-xfree86 to current (xterm patch #84), for is2/rs2 changes - TD
 #	* correct initialization string in xterm-r5, add misc other features
-#	  to correspond with xterm patch 84 - TD
+#	  to correspond with xterm patch #84 - TD
 #
 # 1998/12/19
-#	* update xterm-xfree86 to current (patch 90), smcur/rmcur changes - TD
+#	* update xterm-xfree86 to current (xterm patch #90), smcur/rmcur changes - TD
 #	* add Mathew Vernon's mach console entries
 #	* corrections for ncsa function-keys (report by Larry Virden)
 #
@@ -23886,7 +23984,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  (Jeffrey C Honig)
 #
 # 1999/3/27
-#	* adjust xterm-xfree86 miscellaneous keypad keys, as per patch #94 - TD.
+#	* adjust xterm-xfree86 miscellaneous keypad keys, as per xterm patch #94 - TD.
 #
 # 1999/4/10
 #	* add linux-lat, from RedHat patches to ncurses 4.2
@@ -24121,7 +24219,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* add entries for mterm (mterm, mterm-ansi, decansi) -TD
 #	* ncr260wy350pp has only 16 color pairs -TD
 #	* add sun-type4 from NetBSD -TD
-#	* update xterm-xfree86 to current (patch 170) -TD
+#	* update xterm-xfree86 to current (xterm patch #170) -TD
 #	* add screen-bce, screen-s entries -TD
 #	* add xterm-1002, xterm-1003 entries -TD
 #
@@ -24181,7 +24279,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* similar fixups for cvvis/cnorm various entries -TD
 #
 # 2004-05-22
-#	* remove 'ncv' from xterm-256color (patch 188) -TD
+#	* remove 'ncv' from xterm-256color (xterm patch #188) -TD
 #
 # 2004-06-26
 #	* add mlterm -TD
@@ -24397,7 +24495,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2007-11-11
 #	* use xterm-xf86-v44 for "xterm-xfree86", reflecting changes to
-#	  xterm starting with patch #216 -TD
+#	  xterm starting with xterm patch #216 -TD
 #	* make legacy xterm entries such as xterm-24 inherit from xterm-old,
 #	  to match xterm #230 -TD
 #	* extend xterm+pccX entries to match xterm #230 -TD
@@ -24748,7 +24846,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	* correct padding in sbi entry -TD
 #
 # 2014-06-07
-#	* update xterm-new to patch #305 -TD
+#	* update xterm-new to xterm patch #305 -TD
 #	+ change screen's smso to use SGR 7 (ECMA-80 reverse) rather than SGR 3
 #	  (italic).  This was a long-ago typo in screen 3.1.1 which was
 #	  overlooked until a few terminal emulators implemented the feature -TD
@@ -24883,5 +24981,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2016-12-31
 #	+ modify flash capability for linux and wyse entries to put the delay
 #	  between the reverse/normal escapes rather than after -TD
+#
+# 2017-01-28
+#	+ minor comment-fixes to help automate links to bug-urls -TD
+#	+ add dvtm, dvtm-256color -TD
+#	+ add settings corresponding to xterm-keys option to tmux entry to
+#	  reflect upcoming change to make that option "on" by default
+#	  (patch by Nicholas Marriott).
+#	+ uncancel Ms in tmux entry (Harry Gindi, Nicholas Marriott).
+#	+ add dumb-emacs-ansi -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

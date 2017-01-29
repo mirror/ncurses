@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.52 2017/01/21 17:38:30 tom Exp $
+.\" $Id: tput.1,v 1.54 2017/01/29 00:51:08 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -110,6 +110,12 @@ and how to interpret the parameters.
 \fB\-V\fR
 reports the version of ncurses which was used in this program, and exits.
 .SS Commands
+A few commands (\fBinit\fP, \fBreset\fP and \fBlongname\fP) are
+special; they are defined by the \fB@TPUT@\fP program.
+The others are the names of \fIcapabilities\fP from the terminal database
+(see \fBterminfo\fR(5) for a list).
+Although \fBinit\fP and \fBreset\fP resemble capability names,
+\fB@TPUT@\fP uses several capabilities to perform these special functions.
 .TP
 \fIcapname\fR
 indicates the capability from the terminal database.
@@ -415,6 +421,18 @@ which used \fBtput\fP to clear the screen.
 .PP
 Both of these appeared in 4.4BSD,
 becoming the \*(lqmodern\*(rq BSD implementation of \fBtput\fP.
+.PP
+This implementation of \fBtput\fP began from a different source than
+AT&T or BSD: Ross Ridge's \fImytinfo\fP package, published on
+\fIcomp.sources.unix\fP in December 1992.
+Ridge's program made more sophisticated use of the terminal capabilities
+than the BSD program.
+Eric Raymond used the \fBtput\fP program
+(and other parts of \fImytinfo\fP) in ncurses in June 1995.
+Using the portions dealing with terminal capabilities
+almost without change,
+Raymond made improvements to the way the command-line parameters
+were handled.
 .SH PORTABILITY
 .PP
 This implementation of \fBtput\fP differs from AT&T \fBtput\fP in
