@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,9 +47,11 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.96 2016/09/17 19:06:26 Sven.Joachim Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.98 2017/02/05 01:47:34 tom Exp $")
 
 static int total_written;
+static int total_parts;
+static int total_size;
 
 static int make_db_root(const char *);
 
@@ -342,6 +344,8 @@ _nc_write_entry(TERMTYPE *const tp)
 		       sizeof(buffer) - 1);
 	    data.size = name_size + 1;
 
+	    total_size += data.size;
+	    total_parts++;
 	    _nc_db_put(capdb, &key, &data);
 
 	    while (*other_names != '\0') {
@@ -356,6 +360,8 @@ _nc_write_entry(TERMTYPE *const tp)
 		key.data = ptr;
 		key.size = strlen(ptr);
 
+		total_size += data.size;
+		total_parts++;
 		_nc_db_put(capdb, &key, &data);
 	    }
 	}
@@ -802,6 +808,8 @@ _nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 #endif /* NCURSES_XNAMES */
 
     total_written++;
+    total_parts++;
+    total_size = total_size + (int) (*offset + 1);
     return (OK);
 }
 
@@ -811,5 +819,7 @@ _nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 NCURSES_EXPORT(int)
 _nc_tic_written(void)
 {
+    TR(TRACE_DATABASE, ("_nc_tic_written %d entries, %d parts, %d size",
+			total_written, total_parts, total_size));
     return total_written;
 }

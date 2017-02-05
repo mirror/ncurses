@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2012,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.69 2012/03/17 18:22:10 tom Exp $
+ * $Id: tic.h,v 1.70 2017/02/04 01:48:53 tom Exp $
  *	tic.h - Global variables and structures for the terminfo
  *			compiler.
  */
@@ -85,6 +85,8 @@ extern "C" {
 #define LOW_MSB(p)	(BYTE(p,0) + 256*BYTE(p,1))
 
 #define IS_TIC_MAGIC(p)	(LOW_MSB(p) == MAGIC)
+
+#define quick_prefix(s) (!strncmp((s), "b64:", 4) || !strncmp((s), "hex:", 4))
 
 /*
  * The "maximum" here is misleading; XSI guarantees minimum values, which a

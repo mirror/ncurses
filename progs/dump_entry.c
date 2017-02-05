@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.147 2016/11/13 00:28:46 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.148 2017/02/04 16:55:42 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1328,16 +1328,16 @@ encode_b64(char *target, char *source, unsigned state, int *saved)
 
     switch (state % 3) {
     case 0:
-	*target++ = data[ch & 077];
-	*saved = (ch >> 6) & 3;
+	*target++ = data[(ch >> 2) & 077];
+	*saved = (ch << 4);
 	break;
     case 1:
-	*target++ = data[((ch << 2) | *saved) & 077];
-	*saved = (ch >> 4) & 017;
+	*target++ = data[((ch >> 4) | *saved) & 077];
+	*saved = (ch << 2);
 	break;
     case 2:
-	*target++ = data[((ch << 4) | *saved) & 077];
-	*target++ = data[(ch >> 2) & 077];
+	*target++ = data[((ch >> 6) | *saved) & 077];
+	*target++ = data[ch & 077];
 	*saved = 0;
 	break;
     }
@@ -1379,6 +1379,8 @@ dump_entry(TERMTYPE *tterm,
 		}
 	    }
 	    if (quickdump & 2) {
+		static char padding[] =
+		{0, 0};
 		int value = 0;
 		if (outbuf.used)
 		    wrap_concat("\n");
@@ -1391,10 +1393,14 @@ dump_entry(TERMTYPE *tterm,
 		case 0:
 		    break;
 		case 1:
-		    wrap_concat("===");
+		    encode_b64(numbuf, padding, 1, &value);
+		    wrap_concat(numbuf);
+		    wrap_concat("==");
 		    break;
 		case 2:
-		    wrap_concat("==");
+		    encode_b64(numbuf, padding, 1, &value);
+		    wrap_concat(numbuf);
+		    wrap_concat("=");
 		    break;
 		}
 	    }

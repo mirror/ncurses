@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.559 2017/01/21 23:02:04 tom Exp $
+ * $Id: curses.priv.h,v 1.560 2017/02/04 23:21:09 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1657,6 +1657,8 @@ typedef void VoidFunc(void);
 #define returnVoidPtr(code)	TRACE_RETURN1(code,void_ptr)
 #define returnWin(code)		TRACE_RETURN1(code,win)
 
+#define returnDB(code)		do { TR(TRACE_DATABASE,(T_RETURN("code %d"), (code))); return (code); } while (0)
+
 extern NCURSES_EXPORT(NCURSES_BOOL)     _nc_retrace_bool (int);
 extern NCURSES_EXPORT(NCURSES_CONST void *) _nc_retrace_cvoid_ptr (NCURSES_CONST void *);
 extern NCURSES_EXPORT(SCREEN *)         _nc_retrace_sp (SCREEN *);
@@ -1725,6 +1727,8 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnVoid		return
 #define returnVoidPtr(code)	return code
 #define returnWin(code)		return code
+
+#define returnDB(code)		return code
 
 #endif /* TRACE/!TRACE */
 

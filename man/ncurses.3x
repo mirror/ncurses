@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.125 2017/01/07 19:25:15 tom Exp $
+.\" $Id: ncurses.3x,v 1.128 2017/02/05 00:33:02 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -36,6 +36,19 @@
 .el       .ds '' ''
 .de bP
 .IP \(bu 4
+..
+.de NS
+.ie \n(.sp
+.el    .sp .5
+.ie \n(.in +4
+.el    .in +2
+.nf
+.ft C			\" Courier
+..
+.de NE
+.fi
+.ft R
+.in -4
 ..
 .ds n 5
 .ds d @TERMINFO@
@@ -86,9 +99,9 @@ and access to low-level terminal-manipulation routines.
 .PP
 The library uses the locale which the calling program has initialized.
 That is normally done with \fBsetlocale\fP:
-.sp
+.NS
       \fBsetlocale(LC_ALL, "");\fP
-.sp
+.NE
 If the locale is not initialized,
 the library assumes that characters are printable as in ISO\-8859\-1,
 to work with certain legacy programs.
@@ -104,15 +117,15 @@ The routine \fBendwin\fR(3X) must be called before exiting.
 To get character-at-a-time input without echoing (most
 interactive, screen oriented programs want this), the following
 sequence should be used:
-.sp
+.NS
       \fBinitscr(); cbreak(); noecho();\fR
-.sp
+.NE
 Most programs would additionally use the sequence:
-.sp
+.NS
       \fBnonl();\fR
       \fBintrflush(stdscr, FALSE);\fR
       \fBkeypad(stdscr, TRUE);\fR
-.sp
+.NE
 Before a \fBcurses\fR program is run, the tab stops of the terminal
 should be set and its initialization strings, if defined, must be output.
 This can be done by executing the \fB@TPUT@ init\fR command
@@ -183,19 +196,19 @@ If the environment variable \fBTERMINFO\fR is defined, any program using
 standard place.
 For example, if \fBTERM\fR is set to \fBatt4424\fR, then the
 compiled terminal definition is found in
-.sp
+.NS
       \fB\*d/a/att4424\fR.
-.sp
+.NE
 (The \fBa\fR is copied from the first letter of \fBatt4424\fR to avoid
 creation of huge directories.)  However, if \fBTERMINFO\fR is set to
 \fB$HOME/myterms\fR, \fBcurses\fR first checks
-.sp
+.NS
       \fB$HOME/myterms/a/att4424\fR,
-.sp
+.NE
 and if that fails, it then checks
-.sp
+.NS
       \fB\*d/a/att4424\fR.
-.sp
+.NE
 This is useful for developing experimental definitions or when write
 permission in \fB\*d\fR is not available.
 .PP
@@ -884,12 +897,12 @@ This applies only to ncurses configured to use the GPM interface.
 .PP
 If present,
 the environment variable is a list of one or more terminal names
-against which the TERM environment variable is matched.
+against which the \fBTERM\fP environment variable is matched.
 Setting it to an empty value disables the GPM interface;
 using the built-in support for xterm, etc.
 .PP
 If the environment variable is absent,
-ncurses will attempt to open GPM if TERM contains "linux".
+ncurses will attempt to open GPM if \fBTERM\fP contains "linux".
 .SS NCURSES_NO_HARD_TABS
 \fBNcurses\fP may use tabs as part of the cursor movement optimization.
 In some cases,
@@ -967,7 +980,7 @@ alternate character set capabilities) described in the terminfo are known
 to be missing.
 Specifically, when running in a UTF\-8 locale,
 the Linux console emulator and the GNU screen program ignore these.
-Ncurses checks the TERM environment variable for these.
+Ncurses checks the \fBTERM\fP environment variable for these.
 For other special cases, you should set this environment variable.
 Doing this tells ncurses to use Unicode values which correspond to
 the VT100 line-drawing glyphs.
@@ -1036,28 +1049,73 @@ If the \fBncurses\fR library has been configured with \fItermcap\fR
 support, \fBncurses\fR will check for a terminal's description in
 termcap form if it is not available in the terminfo database.
 .PP
-The TERMCAP environment variable contains either a terminal description (with
+The \fBTERMCAP\fP environment variable contains either a terminal description (with
 newlines stripped out),
 or a file name telling where the information denoted by
-the TERM environment variable exists.
+the \fBTERM\fP environment variable exists.
 In either case, setting it directs \fBncurses\fR to ignore
 the usual place for this information, e.g., /etc/termcap.
 .SS TERMINFO
-Overrides the directory in which \fBncurses\fR searches for your terminal
+\fBncurses\fP can be configured to read from multiple terminal databases.
+The \fBTERMINFO\fP variable overrides the location for the default terminal database.
+Terminal descriptions (in terminal format) are stored in terminal databases:
+.bP
+Normally these are stored in a directory tree,
+using subdirectories named by the first letter of the terminal names therein.
+.IP
+This is the scheme used in System V, which legacy Unix systems use,
+and the \fBTERMINFO\fP variable is used by \fIcurses\fP applications on those
+systems to override the default location of the terminal database.
+.bP
+If \fBncurses\fP is built to use hashed databases,
+then each entry in this list may be the path of a hashed database file, e.g.,
+.NS
+/usr/share/terminfo.db
+.NE
+.IP
+rather than
+.NS
+/usr/share/terminfo/
+.NE
+.IP
+The hashed database uses less disk-space and is a little faster than the
+directory tree.
+However,
+some applications assume the existence of the directory tree,
+reading it directly
+rather than using the terminfo library calls.
+.bP
+If \fBncurses\fP is built with a support for reading termcap files
+directly, then an entry in this list may be the path of a termcap file.
+.bP
+If the \fBTERMINFO\fP variable begins with
+\*(``hex:\*('' or \*(``b64:\*('',
+\fBncurses\fP uses the remainder of that variable as a compiled terminal
 description.
-This is the simplest, but not the only way to change the list of directories.
-The complete list of directories in order follows:
+You might produce the base64 format using \fBinfocmp\fP(1M):
+.NS
+TERMINFO="$(infocmp -0 -Q2 -q)"
+export TERMINFO
+.NE
+.IP
+The compiled description is used if it corresponds to the terminal identified
+by the \fBTERM\fP variable.
+.PP
+Setting \fBTERMINFO\fP is the simplest,
+but not the only way to set location of the default terminal database.
+The complete list of database locations in order follows:
 .RS 3
 .bP
-the last directory to which \fBncurses\fR wrote, if any, is searched first
+the last terminal database to which \fBncurses\fR wrote,
+if any, is searched first
 .bP
-the directory specified by the TERMINFO environment variable
+the location specified by the TERMINFO environment variable
 .bP
 $HOME/.terminfo
 .bP
-directories listed in the TERMINFO_DIRS environment variable
+locations listed in the TERMINFO_DIRS environment variable
 .bP
-one or more directories whose names are configured and compiled into the
+one or more locations whose names are configured and compiled into the
 ncurses library, i.e.,
 .RS 3
 .bP
@@ -1066,35 +1124,35 @@ ncurses library, i.e.,
 @TERMINFO@ (corresponding to the TERMINFO variable)
 .RE
 .RE
+.PP
 .SS TERMINFO_DIRS
-Specifies a list of directories to search for terminal descriptions.
+Specifies a list of locations to search for terminal descriptions.
+Each location in the list is a terminal database as described in
+the section on the \fBTERMINFO\fP variable.
 The list is separated by colons (i.e., ":") on Unix, semicolons on OS/2 EMX.
 .PP
-All of the terminal descriptions are in terminfo form.
-Normally these are stored in a directory tree,
-using subdirectories named by the first letter of the terminal names therein.
-.PP
-If \fBncurses\fP is built with a hashed database,
-then each entry in this list can also be the path of the corresponding
-database file.
-.PP
-If \fBncurses\fP is built with a support for reading termcap files
-directly, then an entry in this list may be the path of a termcap file.
+There is no corresponding feature in System V terminfo;
+it is an extension developed for \fBncurses\fP.
 .SS TERMPATH
-If TERMCAP does not hold a file name then \fBncurses\fR checks
-the TERMPATH environment variable.
+If \fBTERMCAP\fP does not hold a file name then \fBncurses\fR checks
+the \fBTERMPATH\fP environment variable.
 This is a list of filenames separated by spaces or colons (i.e., ":") on Unix,
 semicolons on OS/2 EMX.
 .PP
-If the TERMPATH environment variable is not set,
+If the \fBTERMPATH\fP environment variable is not set,
 \fBncurses\fR looks in the files
-/etc/termcap, /usr/share/misc/termcap and $HOME/.termcap, in that order.
+.NS
+/etc/termcap, /usr/share/misc/termcap and $HOME/.termcap,
+.NE
+.PP
+in that order.
 .PP
 The library may be configured to disregard the following variables when the
 current user is the superuser (root), or if the application uses setuid or
 setgid permissions:
-.PP
+.NS
 $TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
+.NE
 .SH ALTERNATE CONFIGURATIONS
 Several different configurations are possible,
 depending on the configure script options used when building \fBncurses\fP.
