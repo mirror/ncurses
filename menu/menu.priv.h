@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: menu.priv.h,v 1.26 2016/03/26 21:50:56 tom Exp $ */
+/* $Id: menu.priv.h,v 1.27 2017/02/11 16:50:12 tom Exp $ */
 
 /***************************************************************************
 * Module menu.priv.h                                                       *
@@ -42,6 +42,9 @@
 /* *INDENT-OFF* */
 
 #include "curses.priv.h"
+
+#define NCURSES_OPAQUE_MENU 0
+
 #include "mf_common.h"
 #include "menu.h"
 

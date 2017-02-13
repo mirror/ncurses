@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.245 2017/01/21 23:06:27 tom Exp $ */
+/* $Id: curses.h.in,v 1.246 2017/02/11 16:00:56 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -95,7 +95,7 @@
  * total foreground and background colors.
  *
  * X/Open uses "short" for both of these types, ultimately because they are
- * numbers from the terminal database, which uses 16-bit signed values.
+ * numbers from the SVr4 terminal database, which uses 16-bit signed values.
  */
 #undef	NCURSES_COLOR_T
 #define	NCURSES_COLOR_T short
@@ -104,10 +104,13 @@
 #define	NCURSES_PAIRS_T short
 
 /*
- * Definition used to make WINDOW and similar structs opaque.
+ * Definitions used to make WINDOW and similar structs opaque.
  */
-#ifndef @cf_cv_enable_opaque@
-#define NCURSES_OPAQUE @NCURSES_OPAQUE@
+#ifndef NCURSES_INTERNALS
+#define NCURSES_OPAQUE       @NCURSES_OPAQUE@
+#define NCURSES_OPAQUE_FORM  @NCURSES_OPAQUE_FORM@
+#define NCURSES_OPAQUE_MENU  @NCURSES_OPAQUE_MENU@
+#define NCURSES_OPAQUE_PANEL @NCURSES_OPAQUE_PANEL@
 #endif
 
 /*

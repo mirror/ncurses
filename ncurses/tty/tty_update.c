@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -82,7 +82,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.284 2016/10/15 23:00:29 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.286 2017/02/12 17:15:15 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1738,14 +1738,14 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 				TPARM_1(parm_ich, count),
 				1,
 				NCURSES_SP_NAME(_nc_outch));
-	while (count) {
+	while (count > 0) {
 	    PutAttrChar(NCURSES_SP_ARGx CHREF(*line));
 	    line++;
 	    count--;
 	}
     } else if (enter_insert_mode && exit_insert_mode) {
 	NCURSES_PUTP2("enter_insert_mode", enter_insert_mode);
-	while (count) {
+	while (count > 0) {
 	    PutAttrChar(NCURSES_SP_ARGx CHREF(*line));
 	    if (insert_padding) {
 		NCURSES_PUTP2("insert_padding", insert_padding);
@@ -1755,7 +1755,7 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
 	}
 	NCURSES_PUTP2("exit_insert_mode", exit_insert_mode);
     } else {
-	while (count) {
+	while (count > 0) {
 	    NCURSES_PUTP2("insert_character", insert_character);
 	    PutAttrChar(NCURSES_SP_ARGx CHREF(*line));
 	    if (insert_padding) {

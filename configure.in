@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.633 2016/12/11 02:17:55 tom Exp $
+dnl $Id: configure.in,v 1.636 2017/02/12 15:51:08 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.633 $)
+AC_REVISION($Revision: 1.636 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1039,6 +1039,7 @@ if test "x$with_ext_funcs" = xyes ; then
 	AC_DEFINE(HAVE_WRESIZE,1,[Define to 1 to enable wresize() function])
 	AC_DEFINE(NCURSES_EXT_FUNCS,1,[Define to 1 to enable ncurses extended functions])
 	GENERATED_EXT_FUNCS=generated
+	test "x$with_ext_funcs" = xyes || cf_dft_ext_spfuncs=no
 else
 	NCURSES_EXT_FUNCS=0
 	GENERATED_EXT_FUNCS=
@@ -1180,6 +1181,152 @@ NCURSES_XNAMES=0
 test "x$with_tcap_names" = xyes && NCURSES_XNAMES=1
 AC_SUBST(NCURSES_XNAMES)
 
+##############################################################################
+CF_WITH_PTHREAD
+
+if test "x$with_pthread" != xno; then
+	AC_CHECK_FUNC(pthread_kill,[
+		AC_MSG_CHECKING(if you want to allow EINTR in wgetch with pthreads)
+		AC_ARG_ENABLE(pthreads-eintr,
+			[  --enable-pthreads-eintr enable EINTR in wgetch with pthreads],
+			[use_pthreads_eintr=$enableval],
+			[use_pthreads_eintr=no])
+		AC_MSG_RESULT($use_pthreads_eintr)
+		if test "x$use_pthreads_eintr" = xyes ; then
+			AC_DEFINE(USE_PTHREADS_EINTR,1,[Define to 1 to enable EINTR in wgetch with pthreads])
+		fi])
+
+	AC_MSG_CHECKING(if you want to use weak-symbols for pthreads)
+	AC_ARG_ENABLE(weak-symbols,
+		[  --enable-weak-symbols   enable weak-symbols for pthreads],
+		[use_weak_symbols=$enableval],
+		[use_weak_symbols=no])
+	AC_MSG_RESULT($use_weak_symbols)
+	if test "x$use_weak_symbols" = xyes ; then
+		CF_WEAK_SYMBOLS
+	else
+		cf_cv_weak_symbols=no
+	fi
+
+	if test "x$cf_cv_weak_symbols" = xyes ; then
+		AC_DEFINE(USE_WEAK_SYMBOLS,1,[Define to 1 to enable weak-symbols for pthreads])
+	fi
+fi
+
+PTHREAD=
+if test "x$with_pthread" = "xyes" ; then
+	AC_DEFINE(USE_PTHREADS,1,[Define to 1 to use pthreads feature])
+	enable_reentrant=yes
+	if test "x$cf_cv_weak_symbols" = xyes ; then
+		PTHREAD=-lpthread
+	fi
+fi
+AC_SUBST(PTHREAD)
+
+# Reentrant code has to be opaque; there's little advantage to making ncurses
+# opaque outside of that, so there is no --enable-opaque option.  We can use
+# this option without --with-pthreads, but this will be always set for
+# pthreads.
+AC_MSG_CHECKING(if you want reentrant code)
+AC_ARG_ENABLE(reentrant,
+	[  --enable-reentrant      compile with reentrant code],
+	[with_reentrant=$enableval],
+	[with_reentrant=no])
+AC_MSG_RESULT($with_reentrant)
+if test "x$with_reentrant" = xyes ; then
+	cf_cv_enable_reentrant=1
+	cf_cv_enable_opaque="NCURSES_INTERNALS"
+	NCURSES_SIZE_T=int
+	if test "x$cf_cv_weak_symbols" = xyes ; then
+		CF_REMOVE_LIB(LIBS,$LIBS,pthread)
+		CF_ADD_LIB(pthread,TEST_LIBS)
+		CF_ADD_LIB(pthread,TEST_LIBS2)
+	else
+		# when not using weak symbols but with_reentrant,
+		# add 't' to the library suffix on all platforms
+		# except cygwin, where we only do that if ALSO
+		# compiling with full thread support.
+		case "$host" in
+		(*cygwin* | *msys*)
+			if test "$with_pthread" = "yes" ; then
+				if test "x$disable_lib_suffixes" = "xno" ; then
+					LIB_SUFFIX="t${LIB_SUFFIX}"
+				fi
+			fi ;;
+		(*)
+			if test "x$disable_lib_suffixes" = "xno" ; then
+				LIB_SUFFIX="t${LIB_SUFFIX}"
+			fi
+			;;
+		esac
+	fi
+	AC_DEFINE(USE_REENTRANT,1,[Define to 1 to use reentrant feature])
+	CF_NCURSES_ABI_6
+else
+	cf_cv_enable_reentrant=0
+	cf_cv_enable_opaque="NCURSES_OPAQUE"
+	NCURSES_SIZE_T=short
+fi
+AC_SUBST(cf_cv_enable_reentrant)
+AC_SUBST(cf_cv_enable_opaque)
+
+AC_SUBST(NCURSES_SIZE_T)
+
+AC_MSG_CHECKING(if you want opaque curses-library structures)
+CF_ARG_ENABLE(opaque-curses,
+	[  --enable-opaque-curses  make curses WINDOW, etc., "opaque"],
+	[enable_opaque_curses=yes],[
+	 test "$cf_cv_enable_reentrant" = 1 && enable_opaque_curses=yes
+	 test "$cf_cv_enable_reentrant" = 1 || enable_opaque_curses=no
+	])
+AC_MSG_RESULT($enable_opaque_curses)
+
+test "$cf_cv_enable_reentrant" = 1 && \
+test "$enable_opaque_curses" = no && \
+AC_MSG_ERROR(reentrant configuration requires opaque library)
+
+AC_MSG_CHECKING(if you want opaque form-library structures)
+AC_ARG_ENABLE(opaque-form,
+	[  --enable-opaque-form    make form-library structures "opaque"],
+	[enable_opaque_form=yes],[enable_opaque_form=no])
+AC_MSG_RESULT($enable_opaque_form)
+
+AC_MSG_CHECKING(if you want opaque menu-library structures)
+AC_ARG_ENABLE(opaque-menu,
+	[  --enable-opaque-menu    make menu-library structures "opaque"],
+	[enable_opaque_menu=yes],[enable_opaque_menu=no])
+AC_MSG_RESULT($enable_opaque_menu)
+
+AC_MSG_CHECKING(if you want opaque panel-library structures)
+AC_ARG_ENABLE(opaque-panel,
+	[  --enable-opaque-panel   make panel-library structures "opaque"],
+	[enable_opaque_panel=yes],[enable_opaque_panel=no])
+AC_MSG_RESULT($enable_opaque_panel)
+
+NCURSES_OPAQUE=0;		test "$enable_opaque_curses" = yes && NCURSES_OPAQUE=1
+NCURSES_OPAQUE_FORM=0;	test "$enable_opaque_form"   = yes && NCURSES_OPAQUE_FORM=1
+NCURSES_OPAQUE_MENU=0;	test "$enable_opaque_menu"   = yes && NCURSES_OPAQUE_MENU=1
+NCURSES_OPAQUE_PANEL=0;	test "$enable_opaque_panel"  = yes && NCURSES_OPAQUE_PANEL=1
+
+AC_SUBST(NCURSES_OPAQUE)
+AC_SUBST(NCURSES_OPAQUE_FORM)
+AC_SUBST(NCURSES_OPAQUE_MENU)
+AC_SUBST(NCURSES_OPAQUE_PANEL)
+
+### Allow using a different wrap-prefix
+if test "$cf_cv_enable_reentrant" != 0 || test "$BROKEN_LINKER" = 1 ; then
+	AC_MSG_CHECKING(for prefix used to wrap public variables)
+	AC_ARG_WITH(wrap-prefix,
+		[  --with-wrap-prefix=XXX  override prefix used for public variables],
+		[NCURSES_WRAP_PREFIX=$withval],
+		[NCURSES_WRAP_PREFIX=_nc_])
+	AC_MSG_RESULT($NCURSES_WRAP_PREFIX)
+else
+	NCURSES_WRAP_PREFIX=_nc_
+fi
+AC_SUBST(NCURSES_WRAP_PREFIX)
+AC_DEFINE_UNQUOTED(NCURSES_WRAP_PREFIX,"$NCURSES_WRAP_PREFIX",[Define to override _nc_ prefix])
+
 ###############################################################################
 # These options are relatively safe to experiment with.
 CF_HELP_MESSAGE(Development Code:)
@@ -1248,113 +1395,6 @@ NCURSES_INTEROP_FUNCS=0
 test "x$with_exp_interop" = xyes && NCURSES_INTEROP_FUNCS=1
 AC_SUBST(NCURSES_INTEROP_FUNCS)
 
-# This is still experimental (20080329), but should ultimately be moved to
-# the script-block --with-normal, etc.
-CF_WITH_PTHREAD
-
-if test "x$with_pthread" != xno; then
-	AC_CHECK_FUNC(pthread_kill,[
-		AC_MSG_CHECKING(if you want to allow EINTR in wgetch with pthreads)
-		AC_ARG_ENABLE(pthreads-eintr,
-			[  --enable-pthreads-eintr enable EINTR in wgetch with pthreads],
-			[use_pthreads_eintr=$enableval],
-			[use_pthreads_eintr=no])
-		AC_MSG_RESULT($use_pthreads_eintr)
-		if test "x$use_pthreads_eintr" = xyes ; then
-			AC_DEFINE(USE_PTHREADS_EINTR,1,[Define to 1 to enable EINTR in wgetch with pthreads])
-		fi])
-
-	AC_MSG_CHECKING(if you want to use weak-symbols for pthreads)
-	AC_ARG_ENABLE(weak-symbols,
-		[  --enable-weak-symbols   enable weak-symbols for pthreads],
-		[use_weak_symbols=$enableval],
-		[use_weak_symbols=no])
-	AC_MSG_RESULT($use_weak_symbols)
-	if test "x$use_weak_symbols" = xyes ; then
-		CF_WEAK_SYMBOLS
-	else
-		cf_cv_weak_symbols=no
-	fi
-
-	if test "x$cf_cv_weak_symbols" = xyes ; then
-		AC_DEFINE(USE_WEAK_SYMBOLS,1,[Define to 1 to enable weak-symbols for pthreads])
-	fi
-fi
-
-PTHREAD=
-if test "x$with_pthread" = "xyes" ; then
-	AC_DEFINE(USE_PTHREADS,1,[Define to 1 to use pthreads feature])
-	enable_reentrant=yes
-	if test "x$cf_cv_weak_symbols" = xyes ; then
-		PTHREAD=-lpthread
-	fi
-fi
-AC_SUBST(PTHREAD)
-
-# Reentrant code has to be opaque; there's little advantage to making ncurses
-# opaque outside of that, so there is no --enable-opaque option.  We can use
-# this option without --with-pthreads, but this will be always set for
-# pthreads.
-AC_MSG_CHECKING(if you want reentrant code)
-AC_ARG_ENABLE(reentrant,
-	[  --enable-reentrant      compile with reentrant code],
-	[with_reentrant=$enableval],
-	[with_reentrant=no])
-AC_MSG_RESULT($with_reentrant)
-if test "x$with_reentrant" = xyes ; then
-	cf_cv_enable_reentrant=1
-	cf_cv_enable_opaque="NCURSES_INTERNALS"
-	NCURSES_OPAQUE=1
-	NCURSES_SIZE_T=int
-	if test "x$cf_cv_weak_symbols" = xyes ; then
-		CF_REMOVE_LIB(LIBS,$LIBS,pthread)
-		CF_ADD_LIB(pthread,TEST_LIBS)
-		CF_ADD_LIB(pthread,TEST_LIBS2)
-	else
-		# when not using weak symbols but with_reentrant,
-		# add 't' to the library suffix on all platforms
-		# except cygwin, where we only do that if ALSO
-		# compiling with full thread support.
-		case "$host" in
-		(*cygwin* | *msys*)
-			if test "$with_pthread" = "yes" ; then
-				if test "x$disable_lib_suffixes" = "xno" ; then
-					LIB_SUFFIX="t${LIB_SUFFIX}"
-				fi
-			fi ;;
-		(*)
-			if test "x$disable_lib_suffixes" = "xno" ; then
-				LIB_SUFFIX="t${LIB_SUFFIX}"
-			fi
-			;;
-		esac
-	fi
-	AC_DEFINE(USE_REENTRANT,1,[Define to 1 to use reentrant feature])
-	CF_NCURSES_ABI_6
-else
-	cf_cv_enable_reentrant=0
-	cf_cv_enable_opaque="NCURSES_OPAQUE"
-	NCURSES_OPAQUE=0
-	NCURSES_SIZE_T=short
-fi
-AC_SUBST(cf_cv_enable_reentrant)
-AC_SUBST(cf_cv_enable_opaque)
-AC_SUBST(NCURSES_OPAQUE)
-AC_SUBST(NCURSES_SIZE_T)
-
-### Allow using a different wrap-prefix
-if test "$cf_cv_enable_reentrant" != 0 || test "$BROKEN_LINKER" = 1 ; then
-	AC_MSG_CHECKING(for prefix used to wrap public variables)
-	AC_ARG_WITH(wrap-prefix,
-		[  --with-wrap-prefix=XXX  override prefix used for public variables],
-		[NCURSES_WRAP_PREFIX=$withval],
-		[NCURSES_WRAP_PREFIX=_nc_])
-	AC_MSG_RESULT($NCURSES_WRAP_PREFIX)
-else
-	NCURSES_WRAP_PREFIX=_nc_
-fi
-AC_SUBST(NCURSES_WRAP_PREFIX)
-AC_DEFINE_UNQUOTED(NCURSES_WRAP_PREFIX,"$NCURSES_WRAP_PREFIX",[Define to override _nc_ prefix])
 
 AC_MSG_CHECKING(if you want experimental safe-sprintf code)
 AC_ARG_ENABLE(safe-sprintf,

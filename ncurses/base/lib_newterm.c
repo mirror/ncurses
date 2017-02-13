@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.93 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.94 2017/02/11 17:28:07 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -266,7 +266,11 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 
 	    /* allow user to set maximum escape delay from the environment */
 	    if ((value = _nc_getenv_num("ESCDELAY")) >= 0) {
+#if NCURSES_EXT_FUNCS
 		NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_ARGx value);
+#else
+		ESCDELAY = value;
+#endif
 	    }
 
 	    /* if the terminal type has real soft labels, set those up */

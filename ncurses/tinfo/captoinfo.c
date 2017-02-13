@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -93,7 +93,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.78 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.79 2017/02/11 20:08:49 tom Exp $")
 
 #define MAX_PUSHED	16	/* max # args we can push onto the stack */
 
@@ -239,7 +239,7 @@ getparm(int parm, int n)
 	    parm = 1;
     }
 
-    while (n--) {
+    while (n-- > 0) {
 	dp = save_string(dp, "%p");
 	dp = save_char(dp, '0' + parm);
     }
@@ -248,7 +248,7 @@ getparm(int parm, int n)
 	if (n > 1) {
 	    _nc_warning("string may not be optimal");
 	    dp = save_string(dp, "%Pa");
-	    while (n--) {
+	    while (n-- > 0) {
 		dp = save_string(dp, "%ga");
 	    }
 	}

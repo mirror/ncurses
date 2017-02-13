@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.195 2016/12/11 00:41:03 tom Exp $
+-- $Id: INSTALL,v 1.197 2017/02/12 19:49:52 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -617,6 +617,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 	terminfo entries.  This is the default, unless you have disabled the
 	extended functions.
 
+    --enable-opaque-curses
+    --enable-opaque-form
+    --enable-opaque-menu
+    --enable-opaque-panel
+	Define symbol in curses.h which controls whether some library
+	structures are treated as "opaque".  The --enable-opaque-curses option
+	is overridden by the --enable-reentrant option.
+
     --enable-pc-files
 	If pkg-config is found (see --with-pkg-config), generate ".pc" files
 	for each of the libraries, and install them in pkg-config's library
@@ -627,9 +635,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	call can be interrupted for SIGWINCH.
 
     --enable-reentrant
-	Compile experimental configuration which improves reentrant use of the
-	library by reducing global and static variables.  This option is also
-	set if --with-pthread is used.
+	Compile configuration which improves reentrant use of the library by
+	reducing global and static variables.  This option is also set if
+	--with-pthread is used.
 
 	Enabling this option adds a "t" to the library names, except for the
 	special case when --enable-weak-symbols is also used.

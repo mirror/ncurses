@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.138 2016/09/10 23:42:33 tom Exp $ */
+/* $Id: test.priv.h,v 1.139 2017/02/11 16:33:09 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -457,10 +457,6 @@ extern int optind;
 
 #ifndef NCURSES_PAIRS_T
 #define NCURSES_PAIRS_T short
-#endif
-
-#ifndef NCURSES_OPAQUE
-#define NCURSES_OPAQUE 0
 #endif
 
 #ifndef CCHARW_MAX

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2751 2017/02/04 21:42:06 tom Exp $
+-- $Id: NEWS,v 1.2758 2017/02/12 15:37:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170212
+	+ build-fixes for PGI compilers (report by Adam J. Stewart)
+	  + accept whitespace in sed expression for generating expanded.c
+	  + modify configure check that g++ compiler warnings are not used.
+	  + add configure check for -fPIC option needed for shared libraries.
+	+ let configure --disable-ext-funcs override the default for the
+	  --enable-sp-funcs option.
+	+ mark some structs in form/menu/panel libraries as potentially opaque
+	  without modifying API/ABI.
+	+ add configure option --enable-opaque-curses for ncurses library and
+	  similar options for the other libraries.
 
 20170204
 	+ trim newlines, tabs and escaped newlines from terminfo "paths" passed

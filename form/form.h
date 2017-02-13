@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.h,v 0.26 2016/10/29 22:24:24 Leon.Winter Exp $ */
+/* $Id: form.h,v 0.27 2017/02/11 16:35:42 tom Exp $ */
 
 #ifndef FORM_H
 #define FORM_H
@@ -58,18 +58,24 @@ typedef int Field_Options;
 	*  _PAGE  *
 	**********/
 
-typedef struct {
+typedef struct pagenode
+#if !NCURSES_OPAQUE_FORM
+{
   short pmin;		/* index of first field on page			*/
   short pmax;		/* index of last field on page			*/
   short smin;		/* index of top leftmost field on page		*/
   short smax;		/* index of bottom rightmost field on page	*/
-} _PAGE;
+}
+#endif /* !NCURSES_OPAQUE_FORM */
+_PAGE;
 
 	/**********
 	*  FIELD  *
 	**********/
 
-typedef struct fieldnode {
+typedef struct fieldnode
+#if 1			/* not yet: !NCURSES_OPAQUE_FORM */
+{
   unsigned short	status;		/* flags			*/
   short			rows;		/* size in rows			*/
   short			cols;		/* size in cols			*/
@@ -98,20 +104,24 @@ typedef struct fieldnode {
   /*
    * The wide-character configuration requires extra information.  Because
    * there are existing applications that manipulate the members of FIELD
-   * directly, we cannot make the struct opaque.  Offsets of members up to
-   * this point are the same in the narrow- and wide-character configuration.
-   * But note that the type of buf depends on the configuration, and is made
-   * opaque for that reason.
+   * directly, we cannot make the struct opaque, except by changing the ABI. 
+   * Offsets of members up to this point are the same in the narrow- and
+   * wide-character configuration.  But note that the type of buf depends on
+   * the configuration, and is made opaque for that reason.
    */
   NCURSES_FIELD_INTERNALS
-} FIELD;
+}
+#endif /* NCURSES_OPAQUE_FORM */
+FIELD;
 
 
 	/*********
 	*  FORM  *
 	*********/
 
-typedef struct formnode {
+typedef struct formnode
+#if 1			/* not yet: !NCURSES_OPAQUE_FORM */
+{
   unsigned short	status;	  	/* flags			*/
   short			rows;		/* size in rows			*/
   short			cols;		/* size in cols			*/
@@ -136,14 +146,18 @@ typedef struct formnode {
   void			(*fieldinit)(struct formnode *);
   void			(*fieldterm)(struct formnode *);
 
-} FORM;
+}
+#endif /* !NCURSES_OPAQUE_FORM */
+FORM;
 
 
 	/**************
 	*  FIELDTYPE  *
 	**************/
 
-typedef struct typenode {
+typedef struct typenode
+#if !NCURSES_OPAQUE_FORM
+{
   unsigned short	status;			/* flags		    */
   long			ref;			/* reference count	    */
   struct typenode *	left;			/* ptr to operand for |     */
@@ -179,7 +193,9 @@ typedef struct typenode {
   bool	(*next)(FIELD *,const void *);		/* enumerate next value */
   bool	(*prev)(FIELD *,const void *);		/* enumerate prev value */
 #endif
-} FIELDTYPE;
+}
+#endif /* !NCURSES_OPAQUE_FORM */
+FIELDTYPE;
 
 typedef void (*Form_Hook)(FORM *);
 

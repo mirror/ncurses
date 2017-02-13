@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,12 +30,15 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.41 2016/10/29 22:30:23 tom Exp $ */
+/* $Id: form.priv.h,v 0.42 2017/02/11 16:12:19 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
 /* *INDENT-OFF*/
 #include "curses.priv.h"
+
+#define NCURSES_OPAQUE_FORM  0
+
 #include "mf_common.h"
 
 #if USE_WIDEC_SUPPORT

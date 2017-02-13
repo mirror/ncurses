@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.804 2017/01/21 16:13:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.807 2017/02/11 19:48:57 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -399,6 +399,35 @@ dnl --------------
 dnl Allow user to disable a normally-on option.
 AC_DEFUN([CF_ARG_DISABLE],
 [CF_ARG_OPTION($1,[$2],[$3],[$4],yes)])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ARG_ENABLE version: 3 updated: 1999/03/30 17:24:31
+dnl -------------
+dnl Allow user to enable a normally-off option.
+AC_DEFUN([CF_ARG_ENABLE],
+[CF_ARG_OPTION($1,[$2],[$3],[$4],no)])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_ARG_OPTION version: 5 updated: 2015/05/10 19:52:14
+dnl -------------
+dnl Restricted form of AC_ARG_ENABLE that ensures user doesn't give bogus
+dnl values.
+dnl
+dnl Parameters:
+dnl $1 = option name
+dnl $2 = help-string
+dnl $3 = action to perform if option is not default
+dnl $4 = action if perform if option is default
+dnl $5 = default option value (either 'yes' or 'no')
+AC_DEFUN([CF_ARG_OPTION],
+[AC_ARG_ENABLE([$1],[$2],[test "$enableval" != ifelse([$5],no,yes,no) && enableval=ifelse([$5],no,no,yes)
+	if test "$enableval" != "$5" ; then
+ifelse([$3],,[    :]dnl
+,[    $3]) ifelse([$4],,,[
+	else
+		$4])
+	fi],[enableval=$5 ifelse([$4],,,[
+	$4
+])dnl
+])])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_ARG_OPTION version: 5 updated: 2015/05/10 19:52:14
 dnl -------------
@@ -2778,7 +2807,11 @@ GXX_VERSION=none
 if test "$GXX" = yes; then
 	AC_MSG_CHECKING(version of ${CXX:-g++})
 	GXX_VERSION="`${CXX:-g++} --version| sed -e '2,$d' -e 's/^.*(GCC) //' -e 's/^[[^0-9.]]*//' -e 's/[[^0-9.]].*//'`"
-	test -z "$GXX_VERSION" && GXX_VERSION=unknown
+	if test -z "$GXX_VERSION"
+	then
+		GXX_VERSION=unknown
+		GXX=no
+	fi
 	AC_MSG_RESULT($GXX_VERSION)
 fi
 ])dnl
@@ -5828,7 +5861,20 @@ AC_DEFUN([CF_SHARED_OPTS],
 
 	# Some less-capable ports of gcc support only -fpic
 	CC_SHARED_OPTS=
+
+	cf_try_fPIC=no
 	if test "$GCC" = yes
+	then
+		cf_try_fPIC=yes
+	else
+		case $cf_cv_system_name in
+		(*linux*)	# e.g., PGI compiler
+			cf_try_fPIC=yes
+			;;
+		esac
+	fi
+
+	if test "$cf_try_fPIC" = yes
 	then
 		AC_MSG_CHECKING(which $CC option to use)
 		cf_save_CFLAGS="$CFLAGS"
