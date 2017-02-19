@@ -5,7 +5,7 @@
   * Note: this must be run through tbl before nroff.
   * The magic cookie on the first line triggers this under some man programs.
   ****************************************************************************
-  * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.head,v 1.22 2016/10/15 17:02:31 tom Exp @
+  * @Id: terminfo.head,v 1.23 2017/02/18 17:04:53 tom Exp @
   * Head of terminfo man page ends here
   * @Id: terminfo.tail,v 1.76 2017/01/07 18:32:49 tom Exp @
   * Beginning of terminfo.tail file
@@ -75,13 +75,13 @@
        nals by giving a set of capabilities which they  have,  by
        specifying how to perform screen operations, and by speci-
        fying padding requirements and  initialization  sequences.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170204).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170218).
 
-       Entries in <EM>terminfo</EM> consist of a sequence of `,' separated
+       Entries in <EM>terminfo</EM> consist of a sequence of "," separated
        fields (embedded commas may be escaped with a backslash or
-       notated  as \054).  White space after the `,' separator is
+       notated  as \054).  White space after the "," separator is
        ignored.  The first entry  for  each  terminal  gives  the
-       names  which  are known for the terminal, separated by `|'
+       names  which  are known for the terminal, separated by "|"
        characters.  The first  name  given  is  the  most  common
        abbreviation  for the terminal, the last name given should
        be a long name fully identifying  the  terminal,  and  all
@@ -90,7 +90,7 @@
        no  blanks;  the last name may well contain upper case and
        blanks for readability.
 
-       Lines beginning with a `#' in the first column are treated
+       Lines beginning with a "#" in the first column are treated
        as  comments.  While comment lines are legal at any point,
        the output of <STRONG>captoinfo</STRONG> and <STRONG>infotocap</STRONG>  (aliases  for  <STRONG>tic</STRONG>)
        will move comments so they occur only between entries.

@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.46 2017/01/07 19:35:54 tom Exp @
+  * @Id: curs_util.3x,v 1.47 2017/02/18 16:43:03 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -346,9 +346,9 @@
 
        The  strings returned by <STRONG>unctrl</STRONG> in this implementation are
        determined at compile time, showing C1 controls  from  the
-       upper-128  codes with a `~' prefix rather than `^'.  Other
+       upper-128  codes with a "~" prefix rather than "^".  Other
        implementations have different conventions.  For  example,
-       they  may  show  both sets of control characters with `^',
+       they  may  show  both sets of control characters with "^",
        and strip the parameter to 7 bits.  Or they may ignore  C1
        controls  and  treat  all of the upper-128 codes as print-
        able.  This implementation uses 8 bits but does not modify
@@ -357,7 +357,7 @@
 
        Likewise, the  <STRONG><A HREF="curs_inopts.3x.html">meta(3x)</A></STRONG>  function  allows  the  caller  to
        change  the output of <STRONG>keyname</STRONG>, i.e., it determines whether
-       to use the `M-' prefix for "meta" keys (codes in the range
+       to use the "M-" prefix for "meta" keys (codes in the range
        128 to 255).  Both <STRONG>use_legacy_coding</STRONG> and <STRONG>meta</STRONG> succeed only
        after curses is initialized.  X/Open Curses does not docu-
        ment  the  treatment  of  codes 128 to 159.  When treating

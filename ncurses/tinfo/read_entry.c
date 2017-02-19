@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.140 2017/02/05 01:49:55 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.141 2017/02/18 23:39:22 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -212,17 +212,10 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
     }
 
     want = (unsigned) (str_size + name_size + 1);
-    if (str_size) {
-	/* try to allocate space for the string table */
-	if (str_count * 2 >= MAX_ENTRY_SIZE
-	    || (string_table = typeMalloc(char, want)) == 0) {
-	    returnDB(TGETENT_NO);
-	}
-    } else {
-	str_count = 0;
-	if ((string_table = typeMalloc(char, want)) == 0) {
-	    returnDB(TGETENT_NO);
-	}
+    /* try to allocate space for the string table */
+    if (str_count * 2 >= MAX_ENTRY_SIZE
+	|| (string_table = typeMalloc(char, want)) == 0) {
+	returnDB(TGETENT_NO);
     }
 
     /* grab the name (a null-terminated string) */

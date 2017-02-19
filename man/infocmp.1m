@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.61 2017/02/05 00:27:46 tom Exp $
+.\" $Id: infocmp.1m,v 1.65 2017/02/18 19:21:05 tom Exp $
 .TH @INFOCMP@ 1M ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .ds n 5
 .de bP
 .IP \(bu 4
@@ -89,27 +93,46 @@ the \fB\-d\fR option will be assumed.
 \fItermname\fR with each of the descriptions given by the entries for the other
 terminal's \fItermnames\fR.
 If a capability is defined for only one of the
-terminals, the value returned will depend on the type of the capability:
-\fBF\fR for boolean variables, \fB\-1\fR for integer variables, and \fBNULL\fR
-for string variables.
+terminals, the value returned depends on the type of the capability:
+.bP
+\fBF\fR for missing boolean variables
+.bP
+\fBNULL\fR for missing integer or string variables
 .PP
-The \fB\-d\fR option produces a list of each capability that is different
+Use the \fB\-q\fP option to show the distinction between
+\fIabsent\fP and \fIcancelled\fP capabilities.
+.PP
+These options produce a list which you can use to compare two
+or more terminal descriptions:
+.TP 5
+\fB\-d\fR
+produces a list of each capability that is \fIdifferent\fP
 between two entries.
-This option is useful to show the difference between two
-entries, created by different people, for the same or similar terminals.
-.PP
-The \fB\-c\fR option produces a list of each capability that is common between
+Each item in the list shows \*(``:\*('' after the capability name,
+followed by the capability values, separated by a comma.
+.TP
+\fB\-c\fR
+produces a list of each capability that is \fIcommon\fP between
 two or more entries.
-Capabilities that are not set are ignored.
-This option can be
-used as a quick check to see if the \fB\-u\fR option is worth using.
-.PP
-The \fB\-n\fR option produces a list of each capability that is in none of
-the given entries.
-If no \fItermnames\fR are given, the environment variable \fBTERM\fR
-will be used for both of the \fItermnames\fR.
-This can be used as a quick
-check to see if anything was left out of a description.
+Missing capabilities are ignored.
+Each item in the list shows \*(``=\*('' after the capability name,
+followed by the capability value.
+.IP
+The \fB\-u\fR option provides a related output,
+showing the first terminal description rewritten to use the second
+as a building block via the \*(``use=\*('' clause. 
+.TP
+\fB\-n\fR
+produces a list of each capability that is in \fInone\fP of the given entries.
+Each item in the list shows \*(``!\*('' before the capability name.
+.IP
+Normally only the conventional capabilities are shown.
+Use the \fB\-x\fP option to add the BSD-compatibility
+capabilities (names prefixed with \*(``OT\*('').
+.IP
+If no \fItermnames\fR are given,
+\fB@INFOCMP@\fR uses the environment variable \fBTERM\fR
+for each of the \fItermnames\fR.
 .SS Source Listing Options [\-I] [\-L] [\-C] [\-r]
 The \fB\-I\fR, \fB\-L\fR, and \fB\-C\fR options will produce a source listing for
 each terminal named.
@@ -148,7 +171,7 @@ and trim excess whitespace (use the \fB\-0\fP option for that).
 All padding information for strings will be collected together and placed
 at the beginning of the string where \fBtermcap\fR expects it.
 Mandatory
-padding (padding information with a trailing '/') will become optional.
+padding (padding information with a trailing \*(``/\*('') will become optional.
 .PP
 All \fBtermcap\fR variables no longer supported by \fBterminfo\fR, but which
 are derivable from other \fBterminfo\fR variables, will be output.
@@ -381,7 +404,13 @@ DEC[+\-]ARM/auto-repeat mode
 It also recognizes a SGR action corresponding to ANSI/ISO 6429/ECMA Set
 Graphics Rendition, with the values NORMAL, BOLD, UNDERLINE, BLINK, and
 REVERSE.
-All but NORMAL may be prefixed with `+' (turn on) or `\-' (turn off).
+All but NORMAL may be prefixed with
+.RS
+.bP
+\*(``+\*('' (turn on) or
+.bP
+\*(``\-\*('' (turn off).
+.RE
 .IP
 An SGR0 designates an empty highlight sequence (equivalent to {SGR:NORMAL}).
 .TP 5
@@ -412,9 +441,11 @@ This makes the output a little shorter:
 .RS
 .bP
 Make the comparison listing shorter by omitting subheadings, and using
-"\-" for absent capabilities, "@" for canceled rather than "NULL".
+\*(``\-\*('' for absent capabilities, \*(``@\*('' for canceled rather than \*(``NULL\*(''.
 .bP
-Omit the "Reconstructed from" comment for source listings.
+However, show differences between absent and cancelled capabilities.
+.bP
+Omit the \*(``Reconstructed from\*('' comment for source listings.
 .RE
 .TP 5
 \fB\-R\fR\fIsubset\fR
@@ -425,9 +456,9 @@ the full set of SVR4/XSI Curses terminfo; and variants such as AIX
 that have their own extensions incompatible with SVr4/XSI.
 .IP
 Available terminfo
-subsets are "SVr1", "Ultrix", "HP", and "AIX"; see \fBterminfo\fR(\*n) for
+subsets are \*(``SVr1\*('', \*(``Ultrix\*('', \*(``HP\*('', and \*(``AIX\*(''; see \fBterminfo\fR(\*n) for
 details.
-You can also choose the subset "BSD" which selects only capabilities
+You can also choose the subset \*(``BSD\*('' which selects only capabilities
 with termcap equivalents recognized by 4.4BSD.
 .TP
 \fB\-s \fR\fI[d|i|l|c]\fR
@@ -518,7 +549,13 @@ The
 \fB\-t\fR
 options are not supported in SVr4 curses.
 .PP
-The \fB\-r\fR option's notion of `termcap' capabilities is System V Release 4's.
+SVr4 infocmp does not distinguish between absent and cancelled capabilities.
+Also, it shows missing integer capabilities as \fB\-1\fP
+(the internal value used to represent missing integers).
+This implementation shows those as \*(``NULL\*('',
+for consistency with missing strings.
+.PP
+The \fB\-r\fR option's notion of \*(``termcap\*('' capabilities is System V Release 4's.
 Actual BSD curses versions will have a more restricted set.
 To see only the
 4.4BSD set, use \fB\-r\fR \fB\-RBSD\fR.

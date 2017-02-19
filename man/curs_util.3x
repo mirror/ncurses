@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.46 2017/01/07 19:35:54 tom Exp $
+.\" $Id: curs_util.3x,v 1.47 2017/02/18 16:43:03 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -341,9 +341,9 @@ parameter values outside the 0 to 255 range.
 .PP
 The strings returned by \fBunctrl\fR in this implementation are determined
 at compile time,
-showing C1 controls from the upper-128 codes with a `~' prefix rather than `^'.
+showing C1 controls from the upper-128 codes with a \*(``~\*('' prefix rather than \*(``^\*(''.
 Other implementations have different conventions.
-For example, they may show both sets of control characters with `^',
+For example, they may show both sets of control characters with \*(``^\*('',
 and strip the parameter to 7 bits.
 Or they may ignore C1 controls and treat all of the upper-128 codes as
 printable.
@@ -354,7 +354,7 @@ change the output of \fBunctrl\fP.
 .PP
 Likewise, the \fBmeta\fP(3X) function allows the caller to change the
 output of \fBkeyname\fP, i.e.,
-it determines whether to use the `M\-' prefix
+it determines whether to use the \*(``M\-\*('' prefix
 for \*(``meta\*('' keys (codes in the range 128 to 255).
 Both \fBuse_legacy_coding\fP and \fBmeta\fP succeed only after
 curses is initialized.

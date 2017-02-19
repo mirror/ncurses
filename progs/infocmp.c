@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.140 2016/10/01 19:09:22 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.142 2017/02/18 18:40:18 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -134,6 +134,33 @@ canonical_name(char *ptr, char *buf)
 	*bp = '\0';
 
     return (buf);
+}
+
+static bool
+no_boolean(int value)
+{
+    bool result = (value == ABSENT_BOOLEAN);
+    if (!strcmp(s_absent, s_cancel))
+	result = !VALID_BOOLEAN(value);
+    return result;
+}
+
+static bool
+no_numeric(int value)
+{
+    bool result = (value == ABSENT_NUMERIC);
+    if (!strcmp(s_absent, s_cancel))
+	result = !VALID_NUMERIC(value);
+    return result;
+}
+
+static bool
+no_string(char *value)
+{
+    bool result = (value == ABSENT_STRING);
+    if (!strcmp(s_absent, s_cancel))
+	result = !VALID_STRING(value);
+    return result;
 }
 
 /***************************************************************************
@@ -326,7 +353,7 @@ dump_boolean(int val)
 
 static void
 dump_numeric(int val, char *buf)
-/* display the value of a boolean capability */
+/* display the value of a numeric capability */
 {
     switch (val) {
     case ABSENT_NUMERIC:
@@ -434,7 +461,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	switch (compare) {
 	case C_DIFFERENCE:
 	    b2 = next_entry->Booleans[idx];
-	    if (!(b1 == ABSENT_BOOLEAN && b2 == ABSENT_BOOLEAN) && b1 != b2)
+	    if (!(no_boolean(b1) && no_boolean(b2)) && (b1 != b2))
 		(void) printf("\t%s: %s%s%s.\n",
 			      name,
 			      dump_boolean(b1),
@@ -482,7 +509,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	switch (compare) {
 	case C_DIFFERENCE:
 	    n2 = next_entry->Numbers[idx];
-	    if (!((n1 == ABSENT_NUMERIC && n2 == ABSENT_NUMERIC)) && n1 != n2) {
+	    if (!(no_numeric(n1) && no_numeric(n2)) && n1 != n2) {
 		dump_numeric(n1, buf1);
 		dump_numeric(n2, buf2);
 		(void) printf("\t%s: %s, %s.\n", name, buf1, buf2);
@@ -530,7 +557,7 @@ compare_predicate(PredType type, PredIdx idx, const char *name)
 	switch (compare) {
 	case C_DIFFERENCE:
 	    s2 = next_entry->Strings[idx];
-	    if (capcmp(idx, s1, s2)) {
+	    if (!(no_string(s1) && no_string(s2)) && capcmp(idx, s1, s2)) {
 		dump_string(s1, buf1);
 		dump_string(s2, buf2);
 		if (strcmp(buf1, buf2))

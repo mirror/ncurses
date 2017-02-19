@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.24 2017/01/07 19:25:15 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.25 2017/02/18 16:39:44 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -267,7 +267,7 @@ If \fIfd\fR is
 .\"
 .SH RETURN VALUE
 All routines that return an integer return \fBERR\fR upon failure and OK (SVr4
-specifies only "an integer value other than \fBERR\fR") upon successful
+specifies only \*(``an integer value other than \fBERR\fR\*('') upon successful
 completion, unless otherwise noted in the preceding routine descriptions.
 .PP
 X/Open does not define any error conditions.
@@ -298,13 +298,13 @@ ncurses loads the key-definitions for the current terminal description.
 If the terminal description includes extended string capabilities,
 e.g., from using the \fB\-x\fP option of \fB@TIC@\fP,
 then ncurses also defines keys for the capabilities whose names
-begin with "k".
+begin with \*(``k\*(''.
 The corresponding keycodes are generated and (depending on previous
 loads of terminal descriptions) may differ from one execution of a
 program to the next.
 The generated keycodes are recognized by the \fBkeyname\fP function
-(which will then return a name beginning with "k" denoting the
-terminfo capability name rather than "K", used for curses key-names).
+(which will then return a name beginning with \*(``k\*('' denoting the
+terminfo capability name rather than \*(``K\*('', used for curses key-names).
 On the other hand, an application can use \fBdefine_key\fP to establish
 a specific keycode for a given string.
 This makes it possible for an application to check for an extended
@@ -334,7 +334,7 @@ Note that \fBecho\fR, \fBnoecho\fR, \fBhalfdelay\fR, \fBintrflush\fR,
 \fBqiflush\fR, \fBtimeout\fR, and \fBwtimeout\fR may be macros.
 .PP
 The \fBnoraw\fR and \fBnocbreak\fR calls follow historical practice in that
-they attempt to restore to normal (`cooked') mode from raw and cbreak modes
+they attempt to restore to normal (\*(``cooked\*('') mode from raw and cbreak modes
 respectively.
 Mixing raw/noraw and cbreak/nocbreak calls leads to tty driver
 control states that are hard to predict or understand; it is not recommended.

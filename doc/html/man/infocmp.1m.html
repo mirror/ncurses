@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.61 2017/02/05 00:27:46 tom Exp @
+  * @Id: infocmp.1m,v 1.65 2017/02/18 19:21:05 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -78,25 +78,43 @@
        terminal <EM>termname</EM> with each of the descriptions  given  by
        the  entries  for  the  other  terminal's <EM>termnames</EM>.  If a
        capability is defined for only one of the  terminals,  the
-       value  returned will depend on the type of the capability:
-       <STRONG>F</STRONG> for boolean variables, <STRONG>-1</STRONG>  for  integer  variables,  and
-       <STRONG>NULL</STRONG> for string variables.
+       value returned depends on the type of the capability:
 
-       The  <STRONG>-d</STRONG>  option produces a list of each capability that is
-       different between two entries.  This option is  useful  to
-       show  the  difference between two entries, created by dif-
-       ferent people, for the same or similar terminals.
+       <STRONG>o</STRONG>   <STRONG>F</STRONG> for missing boolean variables
 
-       The <STRONG>-c</STRONG> option produces a list of each capability  that  is
-       common between two or more entries.  Capabilities that are
-       not set are ignored.  This option can be used as  a  quick
-       check to see if the <STRONG>-u</STRONG> option is worth using.
+       <STRONG>o</STRONG>   <STRONG>NULL</STRONG> for missing integer or string variables
 
-       The  <STRONG>-n</STRONG>  option produces a list of each capability that is
-       in none of the given entries.  If no <EM>termnames</EM> are  given,
-       the environment variable <STRONG>TERM</STRONG> will be used for both of the
-       <EM>termnames</EM>.  This can be used as a quick check  to  see  if
-       anything was left out of a description.
+       Use  the  <STRONG>-q</STRONG> option to show the distinction between <EM>absent</EM>
+       and <EM>cancelled</EM> capabilities.
+
+       These options produce a list which you can use to  compare
+       two or more terminal descriptions:
+
+       <STRONG>-d</STRONG>   produces  a list of each capability that is <EM>different</EM>
+            between two entries.  Each item in the list shows ":"
+            after the capability name, followed by the capability
+            values, separated by a comma.
+
+       <STRONG>-c</STRONG>   produces a list of each  capability  that  is  <EM>common</EM>
+            between  two  or  more entries.  Missing capabilities
+            are ignored.  Each item in the list shows  "="  after
+            the  capability  name,  followed  by  the  capability
+            value.
+
+            The <STRONG>-u</STRONG> option provides a related output, showing  the
+            first  terminal description rewritten to use the sec-
+            ond as a building block via the "use=" clause.
+
+       <STRONG>-n</STRONG>   produces a list of each capability that is in <EM>none</EM> of
+            the  given  entries.  Each item in the list shows "!"
+            before the capability name.
+
+            Normally  only  the  conventional  capabilities   are
+            shown.   Use the <STRONG>-x</STRONG> option to add the BSD-compatibil-
+            ity capabilities (names prefixed with "OT").
+
+            If no <EM>termnames</EM> are given, <STRONG>infocmp</STRONG> uses the  environ-
+            ment variable <STRONG>TERM</STRONG> for each of the <EM>termnames</EM>.
 
 
 </PRE><H3><a name="h3-Source-Listing-Options-_-I_-_-L_-_-C_-_-r_">Source Listing Options [-I] [-L] [-C] [-r]</a></H3><PRE>
@@ -132,7 +150,7 @@
        All padding information  for  strings  will  be  collected
        together  and  placed at the beginning of the string where
        <STRONG>termcap</STRONG> expects it.  Mandatory padding  (padding  informa-
-       tion with a trailing '/') will become optional.
+       tion with a trailing "/") will become optional.
 
        All <STRONG>termcap</STRONG> variables no longer supported by <STRONG>terminfo</STRONG>, but
        which are derivable from other <STRONG>terminfo</STRONG> variables, will be
@@ -158,6 +176,8 @@
        Some common <STRONG>terminfo</STRONG> parameter  sequences,  their  <STRONG>termcap</STRONG>
        equivalents,  and  some terminal types which commonly have
        such sequences, are:
+
+
 
      <STRONG>terminfo</STRONG>                    <STRONG>termcap</STRONG>   Representative Terminals
      ---------------------------------------------------------------
@@ -356,18 +376,21 @@
             It also recognizes  a  SGR  action  corresponding  to
             ANSI/ISO  6429/ECMA  Set Graphics Rendition, with the
             values NORMAL, BOLD, UNDERLINE, BLINK,  and  REVERSE.
-            All  but NORMAL may be prefixed with `+' (turn on) or
-            `-' (turn off).
+            All but NORMAL may be prefixed with
 
-            An  SGR0  designates  an  empty  highlight   sequence
+            <STRONG>o</STRONG>   "+" (turn on) or
+
+            <STRONG>o</STRONG>   "-" (turn off).
+
+            An   SGR0  designates  an  empty  highlight  sequence
             (equivalent to {SGR:NORMAL}).
 
        <STRONG>-l</STRONG>   Set output format to terminfo.
 
        <STRONG>-p</STRONG>   Ignore padding specifications when comparing strings.
 
-       <STRONG>-Q</STRONG> <EM>n</EM> Rather  than  show  source in terminfo (text) format,
-            print the compiled (binary) format in hexadecimal  or
+       <STRONG>-Q</STRONG> <EM>n</EM> Rather than show source in  terminfo  (text)  format,
+            print  the compiled (binary) format in hexadecimal or
             base64 form, depending on the option's value:
 
                1  hexadecimal
@@ -378,9 +401,12 @@
 
        <STRONG>-q</STRONG>   This makes the output a little shorter:
 
-            <STRONG>o</STRONG>   Make  the  comparison listing shorter by omitting
-                subheadings, and using "-" for  absent  capabili-
+            <STRONG>o</STRONG>   Make the comparison listing shorter  by  omitting
+                subheadings,  and  using "-" for absent capabili-
                 ties, "@" for canceled rather than "NULL".
+
+            <STRONG>o</STRONG>   However, show differences between absent and can-
+                celled capabilities.
 
             <STRONG>o</STRONG>   Omit  the "Reconstructed from" comment for source
                 listings.
@@ -466,7 +492,13 @@
        <STRONG>-i</STRONG>,  <STRONG>-l</STRONG>,  <STRONG>-p</STRONG>,  <STRONG>-q</STRONG> and <STRONG>-t</STRONG> options are not supported in SVr4
        curses.
 
-       The <STRONG>-r</STRONG> option's notion of `termcap' capabilities is System
+       SVr4 infocmp does not distinguish between absent and  can-
+       celled capabilities.  Also, it shows missing integer capa-
+       bilities as <STRONG>-1</STRONG> (the internal value used to represent miss-
+       ing integers).  This implementation shows those as "NULL",
+       for consistency with missing strings.
+
+       The <STRONG>-r</STRONG> option's notion of "termcap" capabilities is System
        V  Release  4's.   Actual  BSD curses versions will have a
        more restricted set.  To see only the 4.4BSD set,  use  <STRONG>-r</STRONG>
        <STRONG>-RBSD</STRONG>.
@@ -482,7 +514,7 @@
 
        http://invisible-island.net/ncurses/tctest.html
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170204).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170218).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
