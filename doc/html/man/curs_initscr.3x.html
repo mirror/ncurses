@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.26 2017/01/07 19:25:15 tom Exp @
+  * @Id: curs_initscr.3x,v 1.27 2017/03/04 20:59:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -108,15 +108,25 @@
        A  program should always call <STRONG>endwin</STRONG> before exiting or es-
        caping from <STRONG>curses</STRONG> mode temporarily.  This routine
 
-       <STRONG>o</STRONG>   restores tty modes,
+       <STRONG>o</STRONG>   resets colors to correspond  with  the  default  color
+           pair 0,
 
-       <STRONG>o</STRONG>   moves the cursor to the lower left-hand corner of  the
-           screen and
+       <STRONG>o</STRONG>   moves  the cursor to the lower left-hand corner of the
+           screen,
 
-       <STRONG>o</STRONG>   resets the terminal into the proper non-visual mode.
+       <STRONG>o</STRONG>   clears the remainder of the line so that it  uses  the
+           default colors,
 
-       Calling  <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>  or <STRONG>doupdate</STRONG> after a temporary escape
-       causes the program to resume visual mode.
+       <STRONG>o</STRONG>   sets    the   cursor   to   normal   visibility   (see
+           <STRONG><A HREF="curs_kernel.3x.html">curs_set(3x)</A></STRONG>),
+
+       <STRONG>o</STRONG>   stops cursor-addressing mode  using  the  <EM>exit</EM><STRONG>_</STRONG><EM>ca</EM><STRONG>_</STRONG><EM>mode</EM>
+           terminal capability,
+
+       <STRONG>o</STRONG>   restores tty modes (see <STRONG><A HREF="curs_kernel.3x.html">reset_shell_mode(3x)</A></STRONG>).
+
+       Calling  <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or <STRONG><A HREF="curs_refresh.3x.html">doupdate(3x)</A></STRONG> after a temporary es-
+       cape causes the program to resume visual mode.
 
 
 </PRE><H3><a name="h3-isendwin">isendwin</a></H3><PRE>
@@ -159,10 +169,6 @@
            <STRONG>stdscr</STRONG>.
 
        <STRONG>o</STRONG>   <STRONG>set_term</STRONG> returns no error.
-
-
-</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <STRONG>initscr</STRONG> and <STRONG>newterm</STRONG> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -283,7 +289,6 @@
 </ul>
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
-<li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a>
 <ul>
 <li><a href="#h3-Differences">Differences</a></li>

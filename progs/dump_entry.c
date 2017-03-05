@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.148 2017/02/04 16:55:42 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.149 2017/03/04 20:18:20 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -571,7 +571,7 @@ wrap_concat(const char *src)
 	(!TcOutput() || strncmp(src, "..", 2))) {
 	int step = 0;
 	int used = width > WRAPPED ? width : WRAPPED;
-	int size = used;
+	int size;
 	int base = 0;
 	char *p, align[9];
 	const char *my_t = trailer;

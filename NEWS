@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2762 2017/02/26 00:35:38 tom Exp $
+-- $Id: NEWS,v 1.2767 2017/03/05 00:05:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170304
+	+ improve terminfo manual description of terminfo syntax.
+	+ clarify the use of wint_t vs wchar_t in curs_get_wstr.3x
+	+ improve description of endwin() in manual.
+	+ modify setcchar() and getcchar() to treat negative color-pair as an
+	  error.
+	+ fix a typo in include/hashed_db.h (Andre Sa).
 
 20170225
 	+ fixes for CF_CC_ENV_FLAGS (report by Ross Burton).

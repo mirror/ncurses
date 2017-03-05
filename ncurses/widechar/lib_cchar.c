@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.28 2016/05/28 23:36:34 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.29 2017/03/04 19:56:00 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -59,7 +59,8 @@ setcchar(cchar_t *wcval,
 
     if (opts != NULL
 	|| wch == NULL
-	|| ((len = (unsigned) wcslen(wch)) > 1 && wcwidth(wch[0]) < 0)) {
+	|| ((len = (unsigned) wcslen(wch)) > 1 && wcwidth(wch[0]) < 0)
+	|| color_pair < 0) {
 	code = ERR;
     } else {
 	unsigned i;
@@ -130,7 +131,8 @@ getcchar(const cchar_t *wcval,
 	    *color_pair = (NCURSES_PAIRS_T) GetPair(*wcval);
 	    wmemcpy(wch, wcval->chars, (size_t) len);
 	    wch[len] = L'\0';
-	    code = OK;
+	    if (*color_pair >= 0)
+		code = OK;
 	}
     }
 

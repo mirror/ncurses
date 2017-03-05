@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.76 2017/01/07 18:32:49 tom Exp $
+.\" $Id: terminfo.tail,v 1.78 2017/03/04 23:52:35 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1628,36 +1628,6 @@ Note that in older terminfo versions, this capability was called
 Other specific terminal problems may be corrected by adding more
 capabilities of the form \fBx\fR\fIx\fR.
 .PP
-.SS Similar Terminals
-.PP
-If there are two very similar terminals, one (the variant) can be defined as
-being just like the other (the base) with certain exceptions.
-In the
-definition of the variant, the string capability \fBuse\fR can be given with
-the name of the base terminal.
-The capabilities given before
-.B use
-override those in the base type named by
-.BR use .
-If there are multiple \fBuse\fR capabilities, they are merged in reverse order.
-That is, the rightmost \fBuse\fR reference is processed first, then the one to
-its left, and so forth.
-Capabilities given explicitly in the entry override
-those brought in by \fBuse\fR references.
-.PP
-A capability can be canceled by placing \fBxx@\fR to the left of the
-use reference that imports it, where \fIxx\fP is the capability.
-For example, the entry
-.RS
-.PP
-2621\-nl, smkx@, rmkx@, use=2621,
-.RE
-.PP
-defines a 2621\-nl that does not have the \fBsmkx\fR or \fBrmkx\fR capabilities,
-and hence does not turn on the function key labels when in visual mode.
-This is useful for different modes for a terminal, or for different
-user preferences.
-.PP
 .SS Pitfalls of Long Entries
 .PP
 Long terminfo entries are unlikely to be a problem; to date, no entry has even
@@ -1775,8 +1745,8 @@ They are deduced from the
 documentation for the AT&T 505 terminal.
 .PP
 Be careful assigning the \fBkmous\fR capability.
-The \fBncurses\fR wants to
-interpret it as \fBKEY_MOUSE\fR, for use by terminals and emulators like xterm
+The \fBncurses\fR library wants to interpret it as \fBKEY_MOUSE\fR,
+for use by terminals and emulators like xterm
 that can return mouse-tracking information in the keyboard-input stream.
 .PP
 X/Open Curses does not mention italics.
@@ -1792,30 +1762,30 @@ Different commercial ports of terminfo and curses support different subsets of
 the XSI Curses standard and (in some cases) different extension sets.
 Here
 is a summary, accurate as of October 1995:
-.PP
+.bP
 \fBSVR4, Solaris, ncurses\fR \-\-
 These support all SVr4 capabilities.
-.PP
+.bP
 \fBSGI\fR \-\-
 Supports the SVr4 set, adds one undocumented extended string
 capability (\fBset_pglen\fR).
-.PP
+.bP
 \fBSVr1, Ultrix\fR \-\-
 These support a restricted subset of terminfo capabilities.
 The booleans end with \fBxon_xoff\fR;
 the numerics with \fBwidth_status_line\fR;
 and the strings with \fBprtr_non\fR.
-.PP
+.bP
 \fBHP/UX\fR \-\-
 Supports the SVr1 subset, plus the SVr[234] numerics \fBnum_labels\fR,
 \fBlabel_height\fR, \fBlabel_width\fR, plus function keys 11 through 63, plus
 \fBplab_norm\fR, \fBlabel_on\fR, and \fBlabel_off\fR, plus some incompatible
 extensions in the string table.
-.PP
+.bP
 \fBAIX\fR \-\-
 Supports the SVr1 subset, plus function keys 11 through 63, plus a number
 of incompatible string table extensions.
-.PP
+.bP
 \fBOSF\fR \-\-
 Supports both the SVr4 set and the AIX extensions.
 .SH FILES

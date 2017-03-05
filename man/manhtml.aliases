@@ -1,4 +1,4 @@
-# $Id: manhtml.aliases,v 1.6 2017/01/14 19:57:16 tom Exp $
+# $Id: manhtml.aliases,v 1.9 2017/03/05 00:55:53 tom Exp $
 #***************************************************************************
 # Copyright (c) 2013-2016,2017 Free Software Foundation, Inc.              *
 #                                                                          *
@@ -28,10 +28,11 @@
 #***************************************************************************
 # Items in this list will be linked to the corresponding manpages by man2html
 addch(3X)		curs_addch(3X)
+curs_set(3X)		curs_kernel(3X)
 delscreen(3X)		curs_initscr(3X)
+doupdate(3X)		curs_refresh(3X)
 endwin(3X)		curs_initscr(3X)
 filter(3X)		curs_util(3X)
-form_fieldtype(3X)	form_fieldtype(3X)
 get_wch(3X)		curs_get_wch(3X)
 getch(3X)		curs_getch(3X)
 inch(3X)		curs_inch(3X)
@@ -42,6 +43,7 @@ keypad(3X)		curs_inopts(3X)
 meta(3X)		curs_inopts(3X)
 newterm(3X)		curs_initscr(3X)
 refresh(3X)		curs_refresh(3X)
+reset_shell_mode(3X)	curs_kernel(3X)
 set_fieldtype(3X)	form_fieldtype(3X)
 set_term(3X)		curs_initscr(3X)
 setupterm(3X)		curs_terminfo(3X)

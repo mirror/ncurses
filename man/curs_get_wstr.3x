@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wstr.3x,v 1.10 2017/01/07 19:25:15 tom Exp $
+.\" $Id: curs_get_wstr.3x,v 1.11 2017/03/04 21:24:04 tom Exp $
 .TH curs_get_wstr 3X ""
 .na
 .hy 0
@@ -167,8 +167,18 @@ In the latter case,
 an ERR return without other data is treated as an end-of-file condition,
 and the returned array contains a \fBWEOF\fR followed by a null \fBwchar_t\fR.
 .PP
-X/Open curses documents these functions to pass an array of \fBwchar_t\fR,
-but all of the vendors implement this using \fBwint_t\fR.
+X/Open curses documented these functions to pass an array of \fBwchar_t\fR
+in 1997, but that was an error because of this part of the description:
+.RS
+.PP
+The effect of \fIget_wstr()\fP is as though a series of calls to
+\fIget_wch()\fP were made, until a newline character, end-of-line character, or
+end-of-file character is processed.
+.RE
+.PP
+The latter function \fIget_wch()\fP can return a negative value,
+while \fBwchar_t\fP is a unsigned type.
+All of the vendors implement this using \fBwint_t\fR, following the standard.
 .SH SEE ALSO
 Functions:
 \fBcurses\fR(3X),
