@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.446 2016/09/17 21:12:04 tom Exp $
+$Id: ncurses.c,v 1.447 2017/03/11 23:20:12 Petr.Vanek Exp $
 
 ***************************************************************************/
 
@@ -1312,7 +1312,7 @@ attr_legend(WINDOW *helpwin)
 	      "Toggles:");
     if (use_colors) {
 	MvWPrintw(helpwin, row++, col,
-		  "  f/F/b/F toggle foreground/background background color");
+		  "  f/F/b/B toggle foreground/background background color");
 	MvWPrintw(helpwin, row++, col,
 		  "  t/T     toggle text/background color attribute");
     }

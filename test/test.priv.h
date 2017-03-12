@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.139 2017/02/11 16:33:09 tom Exp $ */
+/* $Id: test.priv.h,v 1.140 2017/03/06 09:43:51 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -58,6 +58,10 @@
 /*
  * Fallback definitions to accommodate broken compilers.
  */
+#ifndef HAVE_ALLOC_PAIR
+#define HAVE_ALLOC_PAIR 0
+#endif
+
 #ifndef HAVE_ASSUME_DEFAULT_COLORS
 #define HAVE_ASSUME_DEFAULT_COLORS 0
 #endif

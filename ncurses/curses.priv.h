@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.560 2017/02/04 23:21:09 tom Exp $
+ * $Id: curses.priv.h,v 1.563 2017/03/10 09:21:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -416,6 +416,9 @@ color_t;
 #define unColor(n)		unColor2(AttrOf(n))
 #define unColor2(a)		((a) & ALL_BUT_COLOR)
 
+#define XCURSES_PAIR_T		short
+#define MAX_XCURSES_PAIR	(int) ((1U << 15) - 1)
+
 /*
  * Extended-colors stores the color pair in a separate struct-member than the
  * attributes.  But for compatibility, we handle most cases where a program
@@ -434,7 +437,7 @@ color_t;
 #define SET_WINDOW_PAIR(w,p)	(w)->_color = (p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b) && GetPair(a) == GetPair(b))
 
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_puts)(NCURSES_SP_ARGx attr, (short) pair, 0, NCURSES_OUTC_FUNC)
+#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_puts)(NCURSES_SP_ARGx attr, (NCURSES_PAIRS_T) pair, 0, NCURSES_OUTC_FUNC)
 
 #else /* !NCURSES_EXT_COLORS */
 
@@ -635,15 +638,10 @@ extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 /*
  * Definitions for color pairs
  */
-typedef unsigned colorpair_t;	/* type big enough to store PAIR_OF() */
-#define C_SHIFT 9		/* we need more bits than there are colors */
-#define C_MASK			((1 << C_SHIFT) - 1)
-#define PAIR_OF(fg, bg)		(colorpair_t) ((((fg) & C_MASK) << C_SHIFT) | ((bg) & C_MASK))
-#define FORE_OF(c)		(((c) >> C_SHIFT) & C_MASK)
-#define BACK_OF(c)		((c) & C_MASK)
-#define isDefaultColor(c)	((c) >= COLOR_DEFAULT || (c) < 0)
+#include <new_pair.h>
 
-#define COLOR_DEFAULT		C_MASK
+#define isDefaultColor(c)	((c) < 0)
+#define COLOR_DEFAULT		-1
 
 #if defined(USE_BUILD_CC) || (defined(USE_TERMLIB) && !defined(NEED_NCURSES_CH_T))
 
@@ -1103,9 +1101,14 @@ struct screen {
 	color_t		*_color_table;	/* screen's color palette	     */
 	int		_color_count;	/* count of colors in palette	     */
 	colorpair_t	*_color_pairs;	/* screen's color pair list	     */
-	int		_pair_count;	/* count of color pairs		     */
+	int		_pair_count;	/* same as COLOR_PAIRS               */
 	int		_pair_limit;	/* actual limit of color-pairs       */
 #if NCURSES_EXT_FUNCS
+#if USE_NEW_PAIR
+	void		*_ordered_pairs; /* index used by alloc_pair()	     */
+	int		_pairs_used;	/* actual number of color-pairs used */
+	int		_recent_pair;	/* number for most recent free-pair  */
+#endif
 	bool		_assumed_color; /* use assumed colors		     */
 	bool		_default_color; /* use default colors		     */
 	bool		_has_sgr_39_49; /* has ECMA default color support    */
@@ -1924,6 +1927,7 @@ extern NCURSES_EXPORT(int) _nc_wchstrlen(const cchar_t *);
 
 /* lib_color.c */
 extern NCURSES_EXPORT(bool) _nc_reset_colors(void);
+extern NCURSES_EXPORT(void) _nc_change_pair(SCREEN *, int);
 
 /* lib_getch.c */
 extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, int *, int EVENTLIST_2nd(_nc_eventlist *));

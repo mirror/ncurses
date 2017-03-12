@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,14 +38,17 @@
  * Handles color emulation of SYS V curses
  */
 
+#define NEW_PAIR_INTERNAL 1
+
 #include <curses.priv.h>
+#include <new_pair.h>
 #include <tic.h>
 
 #ifndef CUR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.113 2016/05/07 23:50:54 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.115 2017/03/09 00:35:14 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -136,13 +139,6 @@ NCURSES_EXPORT_VAR(const color_t*) _nc_hls_palette = hls_palette;
 #endif
 
 /* *INDENT-ON* */
-
-/*
- * Ensure that we use color pairs only when colors have been started, and also
- * that the index is within the limits of the table which we allocated.
- */
-#define ValidPair(pair) \
-    ((SP_PARM != 0) && (pair >= 0) && (pair < SP_PARM->_pair_limit) && SP_PARM->_coloron)
 
 #if NCURSES_EXT_FUNCS
 /*
@@ -346,6 +342,8 @@ NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
 	     * allow for default-color as a component of a color-pair.
 	     */
 	    SP_PARM->_pair_limit += (1 + (2 * maxcolors));
+	    if ((NCURSES_PAIRS_T) SP_PARM->_pair_limit < 0)
+		SP_PARM->_pair_limit = MAX_XCURSES_PAIR;
 #endif
 	    SP_PARM->_pair_count = maxpairs;
 	    SP_PARM->_color_count = maxcolors;
@@ -358,8 +356,9 @@ NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
 	    if (SP_PARM->_color_pairs != 0) {
 		SP_PARM->_color_table = TYPE_CALLOC(color_t, maxcolors);
 		if (SP_PARM->_color_table != 0) {
-		    SP_PARM->_color_pairs[0] = PAIR_OF(default_fg(NCURSES_SP_ARG),
-						       default_bg(NCURSES_SP_ARG));
+		    MakeColorPair(SP_PARM->_color_pairs[0],
+				  default_fg(NCURSES_SP_ARG),
+				  default_bg(NCURSES_SP_ARG));
 		    init_color_table(NCURSES_SP_ARG);
 
 		    T(("started color: COLORS = %d, COLOR_PAIRS = %d",
@@ -425,6 +424,31 @@ rgb2hls(int r, int g, int b, NCURSES_COLOR_T *h, NCURSES_COLOR_T *l, NCURSES_COL
 }
 
 /*
+ * Change all cells which use(d) a given color pair to force a repaint.
+ */
+NCURSES_EXPORT(void)
+_nc_change_pair(SCREEN *sp, int pair)
+{
+    int y, x;
+
+    for (y = 0; y <= CurScreen(sp)->_maxy; y++) {
+	struct ldat *ptr = &(CurScreen(sp)->_line[y]);
+	bool changed = FALSE;
+	for (x = 0; x <= CurScreen(sp)->_maxx; x++) {
+	    if (GetPair(ptr->text[x]) == pair) {
+		/* Set the old cell to zero to ensure it will be
+		   updated on the next doupdate() */
+		SetChar(ptr->text[x], 0, 0);
+		CHANGED_CELL(ptr, x);
+		changed = TRUE;
+	    }
+	}
+	if (changed)
+	    NCURSES_SP_NAME(_nc_make_oldhash) (NCURSES_SP_ARGx y);
+    }
+}
+
+/*
  * Extension (1997/1/18) - Allow negative f/b values to set default color
  * values.
  */
@@ -434,7 +458,8 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
 			    NCURSES_COLOR_T f,
 			    NCURSES_COLOR_T b)
 {
-    colorpair_t result;
+    static colorpair_t null_pair;
+    colorpair_t result = null_pair;
     colorpair_t previous;
     int maxcolors;
 
@@ -444,7 +469,7 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
        (int) f,
        (int) b));
 
-    if (!ValidPair(pair))
+    if (!ValidPair(SP_PARM, pair))
 	returnCode(ERR);
 
     maxcolors = MaxColors;
@@ -479,8 +504,8 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
 	 * Check if the table entry that we are going to init/update used
 	 * default colors.
 	 */
-	if ((FORE_OF(previous) == COLOR_DEFAULT)
-	    || (BACK_OF(previous) == COLOR_DEFAULT))
+	if (isDefaultColor(FORE_OF(previous))
+	    || isDefaultColor(BACK_OF(previous)))
 	    wasDefault = TRUE;
 
 	/*
@@ -520,29 +545,17 @@ NCURSES_SP_NAME(init_pair) (NCURSES_SP_DCLx
      * initialized before a screen update is performed replacing original
      * pair colors with the new ones).
      */
-    result = PAIR_OF(f, b);
-    if (previous != 0
-	&& previous != result) {
-	int y, x;
-
-	for (y = 0; y <= CurScreen(SP_PARM)->_maxy; y++) {
-	    struct ldat *ptr = &(CurScreen(SP_PARM)->_line[y]);
-	    bool changed = FALSE;
-	    for (x = 0; x <= CurScreen(SP_PARM)->_maxx; x++) {
-		if (GetPair(ptr->text[x]) == pair) {
-		    /* Set the old cell to zero to ensure it will be
-		       updated on the next doupdate() */
-		    SetChar(ptr->text[x], 0, 0);
-		    CHANGED_CELL(ptr, x);
-		    changed = TRUE;
-		}
-	    }
-	    if (changed)
-		NCURSES_SP_NAME(_nc_make_oldhash) (NCURSES_SP_ARGx y);
-	}
+    MakeColorPair(result, f, b);
+    if (FORE_OF(previous) != 0
+	&& BACK_OF(previous) != 0
+	&& !isSamePair(previous, result)) {
+	_nc_change_pair(SP_PARM, pair);
     }
 
+    _nc_reset_color_pair(SP_PARM, pair, &result);
     SP_PARM->_color_pairs[pair] = result;
+    _nc_set_color_pair(SP_PARM, pair, cpINIT);
+
     if (GET_SCREEN_PAIR(SP_PARM) == pair)
 	SET_SCREEN_PAIR(SP_PARM, (int) (~0));	/* force attribute update */
 
@@ -768,16 +781,16 @@ NCURSES_SP_NAME(pair_content) (NCURSES_SP_DCLx
        (void *) f,
        (void *) b));
 
-    if (!ValidPair(pair)) {
+    if (!ValidPair(SP_PARM, pair)) {
 	result = ERR;
     } else {
 	NCURSES_COLOR_T fg = (NCURSES_COLOR_T) FORE_OF(SP_PARM->_color_pairs[pair]);
 	NCURSES_COLOR_T bg = (NCURSES_COLOR_T) BACK_OF(SP_PARM->_color_pairs[pair]);
 
 #if NCURSES_EXT_FUNCS
-	if (fg == COLOR_DEFAULT)
+	if (isDefaultColor(fg))
 	    fg = -1;
-	if (bg == COLOR_DEFAULT)
+	if (isDefaultColor(bg))
 	    bg = -1;
 #endif
 
@@ -818,7 +831,7 @@ NCURSES_SP_NAME(_nc_do_color) (NCURSES_SP_DCLx
     NCURSES_COLOR_T old_fg = -1;
     NCURSES_COLOR_T old_bg = -1;
 
-    if (!ValidPair(pair)) {
+    if (!ValidPair(SP_PARM, pair)) {
 	return;
     } else if (pair != 0) {
 	if (set_color_pair) {

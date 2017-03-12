@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -26,9 +26,9 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl Author: Thomas E. Dickey 1996, etc.
+dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.128 2016/09/10 22:06:22 tom Exp $
+dnl $Id: configure.in,v 1.129 2017/03/06 09:48:09 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -36,7 +36,9 @@ dnl
 dnl If you're configuring ncurses, you shouldn't need to use this script.
 dnl It's only for testing purposes.
 dnl
-dnl See http://invisible-island.net/autoconf/ for additional information.
+dnl For additional information, see
+dnl		http://invisible-island.net/autoconf/
+dnl		http://invisible-island.net/ncurses/ncurses-examples.html
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
 AC_INIT(ncurses.c)
@@ -203,6 +205,7 @@ wcstombs \
 fi
 
 CF_CURSES_FUNCS( \
+alloc_pair \
 assume_default_colors \
 chgat \
 color_set \

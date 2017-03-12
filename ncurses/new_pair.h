@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2017 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,74 +27,72 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey          1998-on                               *
- *          Juergen Pfeifer           2009                                  *
+ *  Author: Thomas E. Dickey                                                *
  ****************************************************************************/
 
-#include <curses.priv.h>
+/*
+ * Common type definitions and macros for new_pair.c, lib_color.c
+ *
+ * $Id: new_pair.h,v 1.2 2017/03/10 09:20:43 tom Exp $
+ */
 
-#ifndef CUR
-#define CUR SP_TERMTYPE
+#ifndef NEW_PAIR_H
+#define NEW_PAIR_H 1
+/* *INDENT-OFF* */
+
+#define USE_NEW_PAIR NCURSES_EXT_COLORS
+
+#ifdef NEW_PAIR_INTERNAL
+
+typedef enum {
+    cpKEEP = -1,		/* color pair 0 */
+    cpFREE = 0,			/* free for use */
+    cpINIT = 1,			/* init_pair() */
+    cpAUTO = 1			/* alloc_pair() */
+} CPMODE;
+
+typedef struct _color_pairs
+{
+    int fg;
+    int bg;
+#if USE_NEW_PAIR
+    int mode;			/* FIXME - needed? */
+    int prev;			/* index of previous item */
+    int next;			/* index of next item */
 #endif
+}
+colorpair_t;
 
-MODULE_ID("$Id: lib_dft_fgbg.c,v 1.28 2017/03/01 00:09:42 tom Exp $")
+#define MakeColorPair(target,f,b) target.fg = f, target.bg = b
+#define isSamePair(a,b)		((a).fg == (b).fg && (a).bg == (b).bg)
+#define FORE_OF(c)		(c).fg
+#define BACK_OF(c)		(c).bg
 
 /*
- * Modify the behavior of color-pair 0 so that the library doesn't assume that
- * it is white on black.  This is an extension to XSI curses.
+ * Ensure that we use color pairs only when colors have been started, and also
+ * that the index is within the limits of the table which we allocated.
  */
-NCURSES_EXPORT(int)
-NCURSES_SP_NAME(use_default_colors) (NCURSES_SP_DCL0)
-{
-    T((T_CALLED("use_default_colors(%p)"), (void *) SP_PARM));
-    returnCode(NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_ARGx -1, -1));
-}
+#define ValidPair(sp,pair) \
+    ((sp != 0) && (pair >= 0) && (pair < sp->_pair_limit) && sp->_coloron)
 
-#if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-use_default_colors(void)
-{
-    return NCURSES_SP_NAME(use_default_colors) (CURRENT_SCREEN);
-}
-#endif
-
-/*
- * Modify the behavior of color-pair 0 so that the library assumes that it
- * is something specific, possibly not white on black.
- */
-NCURSES_EXPORT(int)
-NCURSES_SP_NAME(assume_default_colors) (NCURSES_SP_DCLx int fg, int bg)
-{
-    int code = ERR;
-
-    T((T_CALLED("assume_default_colors(%p,%d,%d)"), (void *) SP_PARM, fg, bg));
-#ifdef USE_TERM_DRIVER
-    if (sp != 0)
-	code = CallDriver_2(sp, td_defaultcolors, fg, bg);
+#if USE_NEW_PAIR
+extern NCURSES_EXPORT(void)     _nc_set_color_pair(SCREEN*, int, int);
+extern NCURSES_EXPORT(void)     _nc_reset_color_pair(SCREEN*, int, colorpair_t*);
 #else
-    if ((orig_pair || orig_colors) && !initialize_pair) {
-
-	SP_PARM->_default_color = isDefaultColor(fg) || isDefaultColor(bg);
-	SP_PARM->_has_sgr_39_49 = (tigetflag("AX") == TRUE);
-	SP_PARM->_default_fg = isDefaultColor(fg) ? COLOR_DEFAULT : fg;
-	SP_PARM->_default_bg = isDefaultColor(bg) ? COLOR_DEFAULT : bg;
-	if (SP_PARM->_color_pairs != 0) {
-	    bool save = SP_PARM->_default_color;
-	    SP_PARM->_assumed_color = TRUE;
-	    SP_PARM->_default_color = TRUE;
-	    init_pair(0, (short) fg, (short) bg);
-	    SP_PARM->_default_color = save;
-	}
-	code = OK;
-    }
+#define _nc_set_color_pair(sp, pair, mode) /* nothing */
+#define _nc_reset_color_pair(sp, pair, data) /* nothing */
 #endif
-    returnCode(code);
-}
 
-#if NCURSES_SP_FUNCS
-NCURSES_EXPORT(int)
-assume_default_colors(int fg, int bg)
-{
-    return NCURSES_SP_NAME(assume_default_colors) (CURRENT_SCREEN, fg, bg);
-}
+#else
+
+typedef struct _color_pairs colorpair_t;
+
+#endif /* NEW_PAIR_INTERNAL */
+
+#if NO_LEAKS
+extern NCURSES_EXPORT(void)     _nc_new_pair_leaks(SCREEN*);
 #endif
+
+/* *INDENT-ON* */
+
+#endif /* NEW_PAIR_H */

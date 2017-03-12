@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.30 2017/03/05 00:24:35 tom Exp $
+.\" $Id: terminfo.head,v 1.31 2017/03/06 09:58:14 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -72,7 +72,7 @@ Newlines and leading whitespace (spaces or tabs)
 may be used for formatting entries for readability.
 These are removed from parsed entries.
 .IP
-The \fB@INFOCMP@\fP \fB\-f\fP and \fB\-W\fP options relies on this to
+The \fB@INFOCMP@\fP \fB\-f\fP and \fB\-W\fP options rely on this to
 format if-then-else expressions,
 or to enforce maximum line-width.
 The resulting formatted terminal description can be read by \fB@TIC@\fP.

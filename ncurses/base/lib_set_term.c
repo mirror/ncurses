@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.155 2016/05/28 21:33:38 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.156 2017/03/01 00:10:41 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -420,8 +420,8 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     sp->_default_fg = COLOR_WHITE;
     sp->_default_bg = COLOR_BLACK;
 #else
-    sp->_default_fg = C_MASK;
-    sp->_default_bg = C_MASK;
+    sp->_default_fg = COLOR_DEFAULT;
+    sp->_default_bg = COLOR_DEFAULT;
 #endif
 
     /*
@@ -433,9 +433,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	char sep1, sep2;
 	int count = sscanf(env, "%d%c%d%c", &fg, &sep1, &bg, &sep2);
 	if (count >= 1) {
-	    sp->_default_fg = ((fg >= 0 && fg < MaxColors) ? fg : C_MASK);
+	    sp->_default_fg = ((fg >= 0 && fg < MaxColors) ? fg : COLOR_DEFAULT);
 	    if (count >= 3) {
-		sp->_default_bg = ((bg >= 0 && bg < MaxColors) ? bg : C_MASK);
+		sp->_default_bg = ((bg >= 0 && bg < MaxColors) ? bg : COLOR_DEFAULT);
 	    }
 	    TR(TRACE_CHARPUT | TRACE_MOVE,
 	       ("from environment assumed fg=%d, bg=%d",

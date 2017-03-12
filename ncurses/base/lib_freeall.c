@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.64 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.65 2017/03/04 00:12:23 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -59,6 +59,9 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 	if (SP_PARM->_panelHook.destroy != 0) {
 	    SP_PARM->_panelHook.destroy(SP_PARM->_panelHook.stdscr_pseudo_panel);
 	}
+#if USE_NEW_PAIR
+	_nc_new_pair_leaks(SP_PARM);
+#endif
     }
 #endif
     if (SP_PARM != 0) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -279,6 +279,12 @@ int	start_color_sp(
 #undef start_color
 int	start_color(void)
 		{ return(*(int *)0); }
+
+#undef _nc_change_pair
+void	_nc_change_pair(
+		SCREEN	*sp, 
+		int	pair)
+		{ /* void */ }
 
 #undef init_pair_sp
 int	init_pair_sp(
@@ -3429,6 +3435,59 @@ int	mcprint_sp(
 int	mcprint(
 		char	*data, 
 		int	len)
+		{ return(*(int *)0); }
+
+/* ./base/new_pair.c */
+
+#undef _nc_reset_color_pair
+void	_nc_reset_color_pair(
+		SCREEN	*sp, 
+		int	pair, 
+		colorpair_t *next)
+		{ /* void */ }
+
+#undef _nc_set_color_pair
+void	_nc_set_color_pair(
+		SCREEN	*sp, 
+		int	pair, 
+		int	mode)
+		{ /* void */ }
+
+#undef alloc_pair_sp
+int	alloc_pair_sp(
+		SCREEN	*sp, 
+		int	fg, 
+		int	bg)
+		{ return(*(int *)0); }
+
+#undef find_pair_sp
+int	find_pair_sp(
+		SCREEN	*sp, 
+		int	fg, 
+		int	bg)
+		{ return(*(int *)0); }
+
+#undef free_pair_sp
+int	free_pair_sp(
+		SCREEN	*sp, 
+		int	pair)
+		{ return(*(int *)0); }
+
+#undef alloc_pair
+int	alloc_pair(
+		int	f, 
+		int	b)
+		{ return(*(int *)0); }
+
+#undef find_pair
+int	find_pair(
+		int	f, 
+		int	b)
+		{ return(*(int *)0); }
+
+#undef free_pair
+int	free_pair(
+		int	pair)
 		{ return(*(int *)0); }
 
 /* ./base/resizeterm.c */

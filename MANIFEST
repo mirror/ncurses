@@ -691,6 +691,7 @@
 ./man/mitem_value.3x
 ./man/mitem_visible.3x
 ./man/ncurses.3x
+./man/new_pair.3x
 ./man/panel.3x
 ./man/resizeterm.3x
 ./man/tabs.1
@@ -861,6 +862,7 @@
 ./ncurses/base/lib_winch.c
 ./ncurses/base/lib_window.c
 ./ncurses/base/nc_panel.c
+./ncurses/base/new_pair.c
 ./ncurses/base/resizeterm.c
 ./ncurses/base/safe_sprintf.c
 ./ncurses/base/sigaction.c
@@ -885,6 +887,7 @@
 ./ncurses/llib-ltinfotw
 ./ncurses/llib-ltinfow
 ./ncurses/modules
+./ncurses/new_pair.h
 ./ncurses/tinfo/MKcaptab.awk
 ./ncurses/tinfo/MKcaptab.sh
 ./ncurses/tinfo/MKcodes.awk
@@ -1088,6 +1091,7 @@
 ./test/demo_forms.txt
 ./test/demo_keyok.c
 ./test/demo_menus.c
+./test/demo_new_pair.c
 ./test/demo_panels.c
 ./test/demo_termcap.c
 ./test/demo_terminfo.c

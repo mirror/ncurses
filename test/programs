@@ -1,6 +1,6 @@
-# $Id: programs,v 1.28 2016/06/04 17:47:41 tom Exp $
+# $Id: programs,v 1.29 2017/02/27 01:28:01 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2015,2016 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -42,6 +42,7 @@ demo_defkey	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_defkey
 demo_forms	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_forms edit_field
 demo_keyok	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_keyok
 demo_menus	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_menus
+demo_new_pair	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_new_pair
 demo_panels	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_panels
 demo_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_termcap
 demo_terminfo	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_terminfo

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.87 2016/09/05 00:44:51 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.88 2017/03/01 00:04:04 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -67,7 +67,7 @@ color_of(int c)
     if (c != my_cached) {
 	my_cached = c;
 	my_select = !my_select;
-	if (c == COLOR_DEFAULT)
+	if (isDefaultColor(c))
 	    _nc_STRCPY(my_buffer[my_select], "default",
 		       COLOR_BUF_SIZE(my_select));
 	else

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.636 2017/02/12 15:51:08 tom Exp $
+dnl $Id: configure.in,v 1.638 2017/03/10 02:01:39 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.636 $)
+AC_REVISION($Revision: 1.638 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1109,6 +1109,7 @@ if test "x$with_ext_colors" = xyes ; then
 		CF_NCURSES_ABI_6
 		NCURSES_EXT_COLORS=1
 		AC_DEFINE(NCURSES_EXT_COLORS,1,[Define to 1 to compile for 256-color support])
+		AC_DEFINE(HAVE_ALLOC_PAIR,1,[Define to 1 to enable alloc_pair() function])
 	fi
 fi
 AC_SUBST(NCURSES_EXT_COLORS)

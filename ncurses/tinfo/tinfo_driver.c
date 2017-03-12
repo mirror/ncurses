@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.44 2017/01/07 16:34:52 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.45 2017/02/28 22:10:05 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -300,8 +300,8 @@ drv_defaultcolors(TERMINAL_CONTROL_BLOCK * TCB, int fg, int bg)
 	sp->_has_sgr_39_49 = (NCURSES_SP_NAME(tigetflag) (NCURSES_SP_ARGx
 							  "AX")
 			      == TRUE);
-	sp->_default_fg = isDefaultColor(fg) ? COLOR_DEFAULT : (fg & C_MASK);
-	sp->_default_bg = isDefaultColor(bg) ? COLOR_DEFAULT : (bg & C_MASK);
+	sp->_default_fg = isDefaultColor(fg) ? COLOR_DEFAULT : fg;
+	sp->_default_bg = isDefaultColor(bg) ? COLOR_DEFAULT : bg;
 	if (sp->_color_pairs != 0) {
 	    bool save = sp->_default_color;
 	    sp->_default_color = TRUE;

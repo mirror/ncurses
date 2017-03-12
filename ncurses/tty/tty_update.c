@@ -43,6 +43,8 @@
  *
  *-----------------------------------------------------------------*/
 
+#define NEW_PAIR_INTERNAL 1
+
 #include <curses.priv.h>
 
 #ifndef CUR
@@ -82,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.286 2017/02/12 17:15:15 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.287 2017/02/28 22:13:45 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -578,14 +580,15 @@ can_clear_with(NCURSES_SP_DCLx ARG_CH_T ch)
 
 	if (!SP_PARM->_default_color)
 	    return FALSE;
-	if (SP_PARM->_default_fg != C_MASK || SP_PARM->_default_bg != C_MASK)
+	if (!(isDefaultColor(SP_PARM->_default_fg) &&
+	      isDefaultColor(SP_PARM->_default_bg)))
 	    return FALSE;
 	if ((pair = GetPair(CHDEREF(ch))) != 0) {
 	    NCURSES_COLOR_T fg, bg;
 	    if (NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
 					       (short) pair,
 					       &fg, &bg) == ERR
-		|| (fg != C_MASK || bg != C_MASK)) {
+		|| !(isDefaultColor(fg) && isDefaultColor(bg))) {
 		return FALSE;
 	    }
 	}
@@ -1345,8 +1348,8 @@ TransformLine(NCURSES_SP_DCLx int const lineno)
 		    && unColor(oldLine[n]) == unColor(newLine[n])) {
 		    if (oldPair < SP_PARM->_pair_limit
 			&& newPair < SP_PARM->_pair_limit
-			&& (SP_PARM->_color_pairs[oldPair] ==
-			    SP_PARM->_color_pairs[newPair])) {
+			&& (isSamePair(SP_PARM->_color_pairs[oldPair],
+				       SP_PARM->_color_pairs[newPair]))) {
 			SetPair(oldLine[n], GetPair(newLine[n]));
 		    }
 		}
