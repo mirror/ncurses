@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey
 .\"
-.\" $Id: new_pair.3x,v 1.8 2017/03/09 09:59:11 tom Exp $
+.\" $Id: new_pair.3x,v 1.9 2017/03/13 21:21:34 tom Exp $
 .TH new_pair 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -52,11 +52,14 @@
 ..
 .SH NAME
 \fBalloc_pair\fP,
+\fBfind_pair\fP,
 \fBfree_pair\fP \- new curses color-pair functions
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
 \fBint alloc_pair(int fg, int bg);\fP
+.br
+\fBint find_pair(int fg, int bg);\fP
 .br
 \fBint free_pair(int pair);\fP
 .SH DESCRIPTION

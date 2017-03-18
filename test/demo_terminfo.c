@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.44 2016/09/10 21:22:49 tom Exp $
+ * $Id: demo_terminfo.c,v 1.45 2017/03/18 22:03:07 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -363,7 +363,7 @@ demo_terminfo(char *name)
 	int mod;
 	if (y_opt) {
 #if NCURSES_XNAMES
-	    TERMTYPE *term = &(cur_term->type);
+	    TERMTYPE *term = (TERMTYPE *) cur_term;
 	    if (term != 0
 		&& ((NUM_BOOLEANS(term) != BOOLCOUNT)
 		    || (NUM_NUMBERS(term) != NUMCOUNT)

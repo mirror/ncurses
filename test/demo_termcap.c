@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.51 2016/09/10 21:22:39 tom Exp $
+ * $Id: demo_termcap.c,v 1.52 2017/03/18 22:03:07 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -359,7 +359,7 @@ demo_termcap(NCURSES_CONST char *name)
 #ifdef NCURSES_VERSION
 	if (x_opt && (my_blob == 0) && y_opt) {
 #if NCURSES_XNAMES
-	    TERMTYPE *term = &(cur_term->type);
+	    TERMTYPE *term = (TERMTYPE *) cur_term;
 	    if (term != 0
 		&& ((NUM_BOOLEANS(term) != BOOLCOUNT)
 		    || (NUM_NUMBERS(term) != NUMCOUNT)

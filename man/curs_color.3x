@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.46 2017/01/07 19:57:48 tom Exp $
+.\" $Id: curs_color.3x,v 1.47 2017/03/13 21:49:37 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,11 +43,11 @@
 \fBinit_pair\fR,
 \fBinit_color\fR,
 .\" .br
-\fBhas_colors\fR,
-\fBcan_change_color\fR,
-.\" .br
 \fBcolor_content\fR,
 \fBpair_content\fR,
+.\" .br
+\fBhas_colors\fR,
+\fBcan_change_color\fR,
 .\" .br
 \fBCOLOR_PAIR\fR,
 \fBPAIR_NUMBER\fR \- \fBcurses\fR color manipulation routines
@@ -57,18 +57,18 @@
 \fB#include <curses.h>\fR
 .sp
 \fBint start_color(void);\fR
-.br
+.sp
 \fBint init_pair(short pair, short f, short b);\fR
 .br
 \fBint init_color(short color, short r, short g, short b);\fR
 .sp
-\fBbool has_colors(void);\fR
-.br
-\fBbool can_change_color(void);\fR
-.sp
 \fBint color_content(short color, short *r, short *g, short *b);\fR
 .br
 \fBint pair_content(short pair, short *f, short *b);\fR
+.sp
+\fBbool has_colors(void);\fR
+.br
+\fBbool can_change_color(void);\fR
 .sp
 \fBint COLOR_PAIR(int n);\fR
 .br

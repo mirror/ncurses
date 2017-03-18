@@ -1,4 +1,4 @@
-# $Id: manhtml.aliases,v 1.9 2017/03/05 00:55:53 tom Exp $
+# $Id: manhtml.aliases,v 1.11 2017/03/17 23:51:03 tom Exp $
 #***************************************************************************
 # Copyright (c) 2013-2016,2017 Free Software Foundation, Inc.              *
 #                                                                          *
@@ -27,6 +27,7 @@
 # authorization.                                                           *
 #***************************************************************************
 # Items in this list will be linked to the corresponding manpages by man2html
+assume_default_colors(3X)	default_colors(3X)
 addch(3X)		curs_addch(3X)
 curs_set(3X)		curs_kernel(3X)
 delscreen(3X)		curs_initscr(3X)
@@ -40,6 +41,7 @@ infocmp(1)		infocmp(1M)
 initscr(3X)		curs_initscr(3X)
 is_scrollok(3X)		curs_opaque(3X)
 keypad(3X)		curs_inopts(3X)
+longname(3X)		curs_termattrs(3X)
 meta(3X)		curs_inopts(3X)
 newterm(3X)		curs_initscr(3X)
 refresh(3X)		curs_refresh(3X)
@@ -53,5 +55,6 @@ tigetstr(3X)		curs_terminfo(3X)
 tparm(3X)		curs_terminfo(3X)
 tputs(3X)		curs_terminfo(3X)
 use_env(3X)		curs_util(3X)
+use_default_colors(3X)	default_colors(3X)
 vidputs(3X)		curs_terminfo(3X)
 wgetch(3X)		curs_getch(3X)

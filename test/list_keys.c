@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.17 2016/09/10 21:24:44 tom Exp $
+ * $Id: list_keys.c,v 1.18 2017/03/18 22:03:07 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -288,7 +288,7 @@ list_keys(TERMINAL ** terms, int count)
 	TERMTYPE *term;
 	for (k = 0; k < count; ++k) {
 	    set_curterm(terms[k]);
-	    term = &(cur_term->type);
+	    term = (TERMTYPE *) cur_term;
 	    total += (size_t) (NUM_STRINGS(term) - STRCOUNT);
 	}
     }
@@ -309,7 +309,7 @@ list_keys(TERMINAL ** terms, int count)
 	int m, n;
 	for (k = 0; k < count; ++k) {
 	    set_curterm(terms[k]);
-	    term = &(cur_term->type);
+	    term = (TERMTYPE *) cur_term;
 	    for (n = STRCOUNT; n < NUM_STRINGS(term); ++n) {
 		bool found = FALSE;
 		const char *estr = ExtStrname(term, (int) n, strnames);

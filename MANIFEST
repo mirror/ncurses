@@ -464,6 +464,7 @@
 ./doc/html/man/mitem_visible.3x.html
 ./doc/html/man/ncurses.3x.html
 ./doc/html/man/ncurses6-config.1.html
+./doc/html/man/new_pair.3x.html
 ./doc/html/man/panel.3x.html
 ./doc/html/man/resizeterm.3x.html
 ./doc/html/man/tabs.1.html

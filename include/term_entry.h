@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.47 2015/08/30 00:41:20 tom Exp $ */
+/* $Id: term_entry.h,v 1.49 2017/03/18 18:52:12 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -141,6 +141,11 @@ extern NCURSES_EXPORT_VAR(ENTRY *) _nc_tail;
 			_nc_warning(#p " but no " #q); \
 		}
 
+/*
+ * These entrypoints are used only by the ncurses utilities such as tic.
+ */
+#ifdef NCURSES_INTERNALS
+
 /* alloc_entry.c: elementary allocation code */
 extern NCURSES_EXPORT(ENTRY *) _nc_copy_entry (ENTRY *oldp);
 extern NCURSES_EXPORT(char *) _nc_save_str (const char *const);
@@ -150,13 +155,6 @@ extern NCURSES_EXPORT(void) _nc_wrap_entry (ENTRY *const, bool);
 
 /* alloc_ttype.c: elementary allocation code */
 extern NCURSES_EXPORT(void) _nc_align_termtype (TERMTYPE *, TERMTYPE *);
-extern NCURSES_EXPORT(void) _nc_copy_termtype (TERMTYPE *, const TERMTYPE *);
-
-/* free_ttype.c: elementary allocation code */
-extern NCURSES_EXPORT(void) _nc_free_termtype (TERMTYPE *);
-
-/* lib_acs.c */
-extern NCURSES_EXPORT(void) _nc_init_acs (void);	/* corresponds to traditional 'init_acs()' */
 
 /* lib_termcap.c: trim sgr0 string for termcap users */
 extern NCURSES_EXPORT(char *) _nc_trim_sgr0 (TERMTYPE *);
@@ -185,6 +183,22 @@ extern NCURSES_IMPEXP void NCURSES_API (*_nc_check_termtype2)(TERMTYPE *, bool);
 
 /* trace_xnames.c */
 extern NCURSES_EXPORT(void) _nc_trace_xnames (TERMTYPE *);
+
+#endif /* NCURSES_INTERNALS */
+
+/*
+ * These entrypoints are used by tack.
+ */
+
+/* alloc_ttype.c: elementary allocation code */
+extern NCURSES_EXPORT(void) _nc_copy_termtype (TERMTYPE *, const TERMTYPE *);
+
+/* lib_acs.c */
+extern NCURSES_EXPORT(void) _nc_init_acs (void);	/* corresponds to traditional 'init_acs()' */
+
+/* free_ttype.c: elementary allocation code */
+extern NCURSES_EXPORT(void) _nc_free_termtype (TERMTYPE *);
+
 /* *INDENT-ON* */
 
 #ifdef __cplusplus

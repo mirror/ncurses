@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.129 2017/02/18 16:50:46 tom Exp @
+  * @Id: ncurses.3x,v 1.130 2017/03/09 10:21:11 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        sonable optimization.  This implementation is "new curses"
        (ncurses) and is the approved replacement for 4.4BSD clas-
        sic  curses,  which has been discontinued.  This describes
-       <STRONG>ncurses</STRONG> version 6.0 (patch 20170304).
+       <STRONG>ncurses</STRONG> version 6.0 (patch 20170318).
 
        The <STRONG>ncurses</STRONG> library emulates the curses library of  System
        V  Release  4  UNIX,  and  XPG4 (X/Open Portability Guide)
@@ -324,6 +324,7 @@
               addnwstr                <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
               addstr                  <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>
               addwstr                 <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
+              alloc_pair              <STRONG><A HREF="new_pair.3x.html">new_pair(3x)</A></STRONG>*
               assume_default_colors   <STRONG><A HREF="default_colors.3x.html">default_colors(3x)</A></STRONG>*
               attr_get                <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
               attr_off                <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
@@ -374,11 +375,13 @@
               erasechar               <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
               erasewchar              <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
               filter                  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+              find_pair               <STRONG><A HREF="new_pair.3x.html">new_pair(3x)</A></STRONG>*
               flash                   <STRONG><A HREF="curs_beep.3x.html">curs_beep(3x)</A></STRONG>
               flushinp                <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+
+              free_pair               <STRONG><A HREF="new_pair.3x.html">new_pair(3x)</A></STRONG>*
               get_wch                 <STRONG><A HREF="curs_get_wch.3x.html">curs_get_wch(3x)</A></STRONG>
               get_wstr                <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
-
               getattrs                <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>
               getbegx                 <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>*
               getbegy                 <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>*
@@ -441,10 +444,10 @@
               is_keypad               <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_leaveok              <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_linetouched          <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
+
               is_nodelay              <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_notimeout            <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_pad                  <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
-
               is_scrollok             <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_subwin               <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               is_syncok               <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
@@ -507,10 +510,10 @@
               mvinwstr                <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
               mvprintw                <STRONG><A HREF="curs_printw.3x.html">curs_printw(3x)</A></STRONG>
               mvscanw                 <STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3x)</A></STRONG>
+
               mvvline                 <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
               mvvline_set             <STRONG><A HREF="curs_border_set.3x.html">curs_border_set(3x)</A></STRONG>
               mvwadd_wch              <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>
-
               mvwadd_wchnstr          <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
               mvwadd_wchstr           <STRONG><A HREF="curs_add_wchstr.3x.html">curs_add_wchstr(3x)</A></STRONG>
               mvwaddch                <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>
@@ -573,10 +576,10 @@
               printw                  <STRONG><A HREF="curs_printw.3x.html">curs_printw(3x)</A></STRONG>
               putp                    <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
               putwin                  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
+
               qiflush                 <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
               raw                     <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
               redrawwin               <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
-
               refresh                 <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
               reset_prog_mode         <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
               reset_shell_mode        <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
@@ -639,10 +642,10 @@
               touchline               <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
               touchwin                <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
               tparm                   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
+
               tputs                   <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>
               tputs                   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
               trace                   <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>*
-
               typeahead               <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
               unctrl                  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
               unget_wch               <STRONG><A HREF="curs_get_wch.3x.html">curs_get_wch(3x)</A></STRONG>
@@ -705,10 +708,10 @@
               wgetch                  <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
               wgetdelay               <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               wgetn_wstr              <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
+
               wgetnstr                <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
               wgetparent              <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
               wgetscrreg              <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>*
-
               wgetstr                 <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
               whline                  <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
               whline_set              <STRONG><A HREF="curs_border_set.3x.html">curs_border_set(3x)</A></STRONG>

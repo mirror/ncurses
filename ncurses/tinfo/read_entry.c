@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.141 2017/02/18 23:39:22 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.142 2017/03/16 08:19:06 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -180,7 +180,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 
     TR(TRACE_DATABASE,
        (T_CALLED("_nc_read_termtype(ptr=%p, buffer=%p, limit=%d)"),
-	ptr, buffer, limit));
+	(void *) ptr, buffer, limit));
 
     TR(TRACE_DATABASE, ("READ termtype header @%d", offset));
 
