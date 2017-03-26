@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.563 2017/03/10 09:21:46 tom Exp $
+ * $Id: curses.priv.h,v 1.564 2017/03/25 23:26:05 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1288,6 +1288,12 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 
 #define WINDOW_EXT(w,m) (((WINDOWLIST *)((void *)((char *)(w) - offsetof(WINDOWLIST, win))))->m)
 
+#ifdef USE_SP_WINDOWLIST
+#define SP_INIT_WINDOWLIST(sp)	WindowList(sp) = 0
+#else
+#define SP_INIT_WINDOWLIST(sp)	/* nothing */
+#endif
+
 #define SP_PRE_INIT(sp)                         \
     sp->_cursrow = -1;                          \
     sp->_curscol = -1;                          \
@@ -1298,7 +1304,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
     sp->_fifohead = -1;                         \
     sp->_endwin = TRUE;                         \
     sp->_cursor = -1;                           \
-    WindowList(sp) = 0;                         \
+    SP_INIT_WINDOWLIST(sp);                     \
     sp->_outch = NCURSES_OUTC_FUNC;             \
     sp->jump = 0                                \
 

@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.65 2017/03/04 00:12:23 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.66 2017/03/25 22:59:38 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -76,8 +76,19 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 		WINDOW *p_win = &(p->win);
 		bool found = FALSE;
 
+#ifndef USE_SP_WINDOWLIST
+		if (p->screen != SP_PARM)
+		    continue;
+#endif
+
 		for (each_window(SP_PARM, q)) {
 		    WINDOW *q_win = &(q->win);
+
+#ifndef USE_SP_WINDOWLIST
+		    if (q->screen != SP_PARM)
+			continue;
+#endif
+
 		    if ((p != q)
 			&& (q_win->_flags & _SUBWIN)
 			&& (p_win == q_win->_parent)) {

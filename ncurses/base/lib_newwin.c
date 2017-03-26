@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2011,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <curses.priv.h>
 #include <stddef.h>
 
-MODULE_ID("$Id: lib_newwin.c,v 1.72 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_newwin.c,v 1.73 2017/03/25 23:33:03 tom Exp $")
 
 #define window_is(name) ((sp)->_##name == win)
 
@@ -104,12 +104,12 @@ _nc_freewin(WINDOW *win)
 	    WINDOWLIST *p, *q;
 
 	    q = 0;
-	    for (each_window(SP_PARM, p)) {
+	    for (each_window(sp, p)) {
 
 		if (&(p->win) == win) {
 		    remove_window_from_screen(win);
 		    if (q == 0)
-			WindowList(SP_PARM) = p->next;
+			WindowList(sp) = p->next;
 		    else
 			q->next = p->next;
 

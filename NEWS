@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2779 2017/03/18 19:17:44 tom Exp $
+-- $Id: NEWS,v 1.2782 2017/03/25 23:37:12 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170325
+	+ fix a memory leak in the window-list when creating multiple screens
+	  (reports by Andres Martinelli, Debian #783486).
+	+ reviewed calls from link_test.c, added a few more null-pointer
+	  checks.
+	+ add a null-pointer check in ungetmouse, in case mousemask was not
+	  called (report by "Kau").
+	+ updated curs_sp_funcs.3x for new functions.
 
 20170318
 	+ change TERMINAL structure in term.h to make it opaque.  Some

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.170 2016/09/10 18:36:08 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.171 2017/03/25 21:20:35 tom Exp $")
 
 #include <tic.h>
 
@@ -1746,11 +1746,14 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(getmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 {
     int result = ERR;
+    MEVENT *eventp;
 
     T((T_CALLED("getmouse(%p,%p)"), (void *) SP_PARM, (void *) aevent));
 
-    if ((aevent != 0) && (SP_PARM != 0) && (SP_PARM->_mouse_type != M_NONE)) {
-	MEVENT *eventp = SP_PARM->_mouse_eventp;
+    if ((aevent != 0) &&
+	(SP_PARM != 0) &&
+	(SP_PARM->_mouse_type != M_NONE) &&
+	(eventp = SP_PARM->_mouse_eventp) != 0) {
 	/* compute the current-event pointer */
 	MEVENT *prev = PREV(eventp);
 
@@ -1799,11 +1802,13 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(ungetmouse) (NCURSES_SP_DCLx MEVENT * aevent)
 {
     int result = ERR;
+    MEVENT *eventp;
 
     T((T_CALLED("ungetmouse(%p,%p)"), (void *) SP_PARM, (void *) aevent));
 
-    if (aevent != 0 && SP_PARM != 0) {
-	MEVENT *eventp = SP_PARM->_mouse_eventp;
+    if (aevent != 0 &&
+	SP_PARM != 0 &&
+	(eventp = SP_PARM->_mouse_eventp) != 0) {
 
 	/* stick the given event in the next-free slot */
 	*eventp = *aevent;
