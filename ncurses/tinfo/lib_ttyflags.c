@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.31 2016/12/24 21:41:24 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.32 2017/04/01 11:48:03 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -141,7 +141,7 @@ NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_shell_mode(%p)"), (void *) SP_PARM));
+    T((T_CALLED("def_shell_mode(%p) ->term %p"), (void *) SP_PARM, termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -179,7 +179,7 @@ NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_prog_mode(%p)"), (void *) SP_PARM));
+    T((T_CALLED("def_prog_mode(%p) ->term %p"), (void *) SP_PARM, termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -215,7 +215,7 @@ NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_prog_mode(%p)"), (void *) SP_PARM));
+    T((T_CALLED("reset_prog_mode(%p) ->term %p"), (void *) SP_PARM, termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -247,7 +247,7 @@ NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_shell_mode(%p)"), (void *) SP_PARM));
+    T((T_CALLED("reset_shell_mode(%p) ->term %p"), (void *) SP_PARM, termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.130 2017/03/09 10:21:11 tom Exp $
+.\" $Id: ncurses.3x,v 1.131 2017/03/25 20:45:48 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -389,6 +389,9 @@ endwin/\fBcurs_initscr\fR(3X)
 erase/\fBcurs_clear\fR(3X)
 erasechar/\fBcurs_termattrs\fR(3X)
 erasewchar/\fBcurs_termattrs\fR(3X)
+extended_color_content/\fBcurs_color\fR(3X)*
+extended_pair_content/\fBcurs_color\fR(3X)*
+extended_slk_color/\fBcurs_slk\fR(3X)*
 filter/\fBcurs_util\fR(3X)
 find_pair/\fBnew_pair\fR(3X)*
 flash/\fBcurs_beep\fR(3X)
@@ -436,6 +439,8 @@ inch/\fBcurs_inch\fR(3X)
 inchnstr/\fBcurs_inchstr\fR(3X)
 inchstr/\fBcurs_inchstr\fR(3X)
 init_color/\fBcurs_color\fR(3X)
+init_extended_color/\fBcurs_color\fR(3X)*
+init_extended_pair/\fBcurs_color\fR(3X)*
 init_pair/\fBcurs_color\fR(3X)
 initscr/\fBcurs_initscr\fR(3X)
 innstr/\fBcurs_instr\fR(3X)
@@ -648,8 +653,8 @@ tgoto/\fBcurs_termcap\fR(3X)
 tigetflag/\fBcurs_terminfo\fR(3X)
 tigetnum/\fBcurs_terminfo\fR(3X)
 tigetstr/\fBcurs_terminfo\fR(3X)
-tiparm/\fBcurs_terminfo\fR(3X)*
 timeout/\fBcurs_inopts\fR(3X)
+tiparm/\fBcurs_terminfo\fR(3X)*
 touchline/\fBcurs_touch\fR(3X)
 touchwin/\fBcurs_touch\fR(3X)
 tparm/\fBcurs_terminfo\fR(3X)

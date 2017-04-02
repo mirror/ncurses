@@ -33,7 +33,7 @@
 /*
  * Common type definitions and macros for new_pair.c, lib_color.c
  *
- * $Id: new_pair.h,v 1.2 2017/03/10 09:20:43 tom Exp $
+ * $Id: new_pair.h,v 1.4 2017/03/31 11:32:07 tom Exp $
  */
 
 #ifndef NEW_PAIR_H
@@ -41,6 +41,35 @@
 /* *INDENT-OFF* */
 
 #define USE_NEW_PAIR NCURSES_EXT_COLORS
+
+#define MAX_OF_TYPE(t)   (int)(((unsigned t)(~0))>>1)
+#define LIMIT_TYPED(n,t) (t)(((t)(n) < 0) ? MAX_OF_TYPE(t) : (n))
+
+#define limit_COLOR(n) LIMIT_TYPED(n,NCURSES_COLOR_T)
+#define limit_PAIRS(n) LIMIT_TYPED(n,NCURSES_PAIRS_T)
+
+#define MAX_XCURSES_PAIR MAX_OF_TYPE(NCURSES_PAIRS_T)
+
+#if USE_NEW_PAIR
+#define OPTIONAL_PAIR	GCC_UNUSED
+#define USE_NEW_PAIR NCURSES_EXT_COLORS
+#define get_extended_pair(opts, color_pair) \
+	if ((opts) != NULL) { \
+	    *(int*)(opts) = color_pair; \
+	}
+#define set_extended_pair(opts, color_pair) \
+	if ((opts) != NULL) { \
+	    color_pair = *(const int*)(opts); \
+	}
+#else
+#define OPTIONAL_PAIR	/* nothing */
+#define USE_NEW_PAIR NCURSES_EXT_COLORS
+#define get_extended_pair(opts, color_pair) /* nothing */
+#define set_extended_pair(opts, color_pair) \
+	if ((opts) != NULL) { \
+	    color_pair = -1; \
+	}
+#endif
 
 #ifdef NEW_PAIR_INTERNAL
 
@@ -56,7 +85,7 @@ typedef struct _color_pairs
     int fg;
     int bg;
 #if USE_NEW_PAIR
-    int mode;			/* FIXME - needed? */
+    int mode;			/* tells if the entry is allocated or free */
     int prev;			/* index of previous item */
     int next;			/* index of next item */
 #endif

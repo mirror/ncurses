@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.140 2017/03/06 09:43:51 tom Exp $ */
+/* $Id: test.priv.h,v 1.141 2017/03/31 13:09:31 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -111,6 +111,10 @@
 
 #ifndef HAVE_GETWIN
 #define HAVE_GETWIN 0
+#endif
+
+#ifndef HAVE_INIT_EXTENDED_COLOR
+#define HAVE_INIT_EXTENDED_COLOR 0
 #endif
 
 #ifndef HAVE_LIBFORM
@@ -227,6 +231,10 @@
 
 #ifndef HAVE_TIGETSTR
 #define HAVE_TIGETSTR 0
+#endif
+
+#ifndef HAVE_TPUTS_SP
+#define HAVE_TPUTS_SP 0
 #endif
 
 #ifndef HAVE_TYPEAHEAD

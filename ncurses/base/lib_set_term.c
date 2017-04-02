@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.156 2017/03/01 00:10:41 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.158 2017/04/01 13:51:59 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -286,6 +286,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 				     int filtered,
 				     int slk_format)
 {
+#ifndef USE_TERM_DRIVER
+    static const TTY null_TTY;	/* all zeros iff uninitialized */
+#endif
     char *env;
     int bottom_stolen = 0;
     SCREEN *sp;
@@ -304,6 +307,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 
     if (!sp) {
 	sp = _nc_alloc_screen_sp();
+	T(("_nc_alloc_screen_sp %p", sp));
 	*spp = sp;
     }
     if (!sp
@@ -628,8 +632,18 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     NewScreen(sp)->_clear = TRUE;
     CurScreen(sp)->_clear = FALSE;
 
-    NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_ARG);
-    NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
+    /*
+     * Get the current tty-modes. setupterm() may already have done this,
+     * unless we use the term-driver.
+     */
+#ifndef USE_TERM_DRIVER
+    if (cur_term != 0 &&
+	!memcmp(&cur_term->Ottyb, &null_TTY, sizeof(TTY)))
+#endif
+    {
+	NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_ARG);
+	NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
+    }
 
     if (safe_ripoff_sp && safe_ripoff_sp != safe_ripoff_stack) {
 	ripoff_t *rop;

@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.70 2017/01/14 17:52:32 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.71 2017/03/31 17:06:34 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -94,7 +94,9 @@ _nc_screen(void)
 NCURSES_EXPORT(int)
 _nc_alloc_screen(void)
 {
-    return ((my_screen = _nc_alloc_screen_sp()) != 0);
+    my_screen = _nc_alloc_screen_sp();
+    T(("_nc_alloc_screen_sp %p", my_screen));
+    return (my_screen != 0);
 }
 
 NCURSES_EXPORT(void)

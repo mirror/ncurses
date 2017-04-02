@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.8 2017/03/25 18:08:33 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.9 2017/03/27 08:35:44 tom Exp $
 .TH curs_sp_funcs 3X ""
 .na
 .hy 0
@@ -70,6 +70,12 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint erasechar_sp(SCREEN*);\fR
 .br
+\fBint extended_color_content_sp(SCREEN *, int, int *, int *, int *);\fR
+.br
+\fBint extended_pair_content_sp(SCREEN*, int, int *, int *);\fR
+.br
+\fBint extended_slk_color_sp(SCREEN*, int);\fR
+.br
 \fBint filter_sp(SCREEN*);\fR
 .br
 \fBint find_pair_sp(SCREEN*, int, int);\fR
@@ -99,6 +105,10 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 \fBbool has_mouse_sp(SCREEN*);\fR
 .br
 \fBint init_color_sp(SCREEN*, short, short, short, short);\fR
+.br
+\fBint init_extended_color_sp(SCREEN*, int, int, int, int);\fR
+.br
+\fBint init_extended_pair_sp(SCREEN*, int, int, int);\fR
 .br
 \fBint init_pair_sp(SCREEN*, short, short, short);\fR
 .br

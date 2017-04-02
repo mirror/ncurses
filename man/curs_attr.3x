@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.49 2017/01/07 19:25:15 tom Exp $
+.\" $Id: curs_attr.3x,v 1.53 2017/03/28 23:31:39 tom Exp $
 .TH curs_attr 3X ""
 .de bP
 .IP \(bu 4
@@ -138,16 +138,23 @@ See \fBcurs_bkgd\fR(3X) for functions which modify the attributes used for
 erasing and clearing.
 .PP
 Routines which do not have a \fBWINDOW*\fP parameter apply to \fBstdscr\fP.
+For example,
+\fBattr_set\fP is the \fBstdscr\fP variant of \fBwattr_set\fP.
 .\" ---------------------------------------------------------------------------
 .SS Window attributes
 .PP
-The \fBattr_set\fP and \fBwattr_set\fP functions set the current attributes
-of the given window to \fIattrs\fP, with color specified by \fIpair\fP.
-X/Open specified an additional parameter \fIopts\fP which is unused in
-all implementations.
+There are two sets of functions:
+.bP
+functions for manipulating the window attributes and color:
+\fBwattr_set\fP and \fBwattr_get\fP.
+.bP
+functions for manipulating only the window attributes (not color):
+\fBwattr_on\fP and \fBwattr_off\fP.
 .PP
-Use \fBattr_get\fP and \fBwattr_get\fP to retrieve attributes for
-the given window.
+The \fBwattr_set\fP function sets the current attributes
+of the given window to \fIattrs\fP, with color specified by \fIpair\fP.
+.PP
+Use \fBwattr_get\fP to retrieve attributes for the given window.
 .PP
 Use \fBattr_on\fP and \fBwattr_on\fP to turn on window attributes, i.e.,
 values OR'd together in \fIattr\fP,
@@ -187,14 +194,10 @@ the \fBmvwchgat\fR function does a cursor move before acting.
 In these functions,
 the color \fIpair\fP argument is a color-pair index
 (as in the first argument of \fBinit_pair\fR, see \fBcurs_color\fR(3X)).
-The \fBopts\fR argument is not
-presently used, but is reserved for the future (leave it \fBNULL\fR).
 .\" ---------------------------------------------------------------------------
 .SS Change window color
 The routine \fBcolor_set\fR sets the current color of the given window to the
 foreground/background combination described by the color \fIpair\fP parameter.
-The parameter \fIopts\fP is reserved for future use;
-applications must supply a null pointer.
 .\" ---------------------------------------------------------------------------
 .SS Standout
 .PP
@@ -259,8 +262,11 @@ implemented as macro-expanded assignments and simply return their argument).
 The SVr4 manual page claims (falsely) that these routines always return \fB1\fR.
 .SH NOTES
 These functions may be macros:
+.sp
+.RS
 \fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
 \fBattrset\fR, \fBwattrset\fR, \fBstandend\fR and \fBstandout\fR.
+.RE
 .PP
 Color pair values can only be OR'd with attributes if the pair
 number is less than 256.
@@ -268,21 +274,7 @@ The alternate functions such as \fBcolor_set\fP can pass a color pair
 value directly.
 However, ncurses ABI 4 and 5 simply OR this value within the alternate functions.
 You must use ncurses ABI 6 to support more than 256 color pairs.
-.SH PORTABILITY
-These functions are supported in the XSI Curses standard, Issue 4.
-The
-standard defined the dedicated type for highlights, \fBattr_t\fR, which is not
-defined in SVr4 curses.
-The functions taking \fBattr_t\fR arguments are
-not supported under SVr4.
-.PP
-The XSI Curses standard states that whether the traditional functions
-\fBattron\fR/\fBattroff\fR/\fBattrset\fR can manipulate attributes other than
-\fBA_BLINK\fR, \fBA_BOLD\fR, \fBA_DIM\fR, \fBA_REVERSE\fR, \fBA_STANDOUT\fR, or
-\fBA_UNDERLINE\fR is "unspecified".
-Under this implementation as well as
-SVr4 curses, these functions correctly manipulate all other highlights
-(specifically, \fBA_ALTCHARSET\fR, \fBA_PROTECT\fR, and \fBA_INVIS\fR).
+.SH EXTENSIONS
 .PP
 This implementation provides the \fBA_ITALIC\fP attribute for terminals
 which have the \fBenter_italics_mode\fP (\fBsitm\fP)
@@ -293,10 +285,55 @@ to the \fBset_attributes\fP capabilities.
 This implementation makes the assumption that
 \fBexit_attribute_mode\fP may also reset italics.
 .PP
-XSI Curses added the new entry points, \fBattr_get\fR, \fBattr_on\fR,
+Each of the functions added by XSI Curses has a parameter \fIopts\fP,
+which X/Open Curses still (after more than twenty years) documents
+as reserved for future use, saying that it should be \fBNULL\fP.
+This implementation uses that parameter in ABI 6 for the functions which
+have a color-pair parameter to support \fIextended color pairs\fP:
+.bP
+For functions which modify the color, e.g.,
+\fBwattr_set\fP,
+if \fIopts\fP is set it is treated as a pointer to \fBint\fP,
+and used to set the color pair instead of the \fBshort\fP \fIpair\fP parameter.
+.bP
+For functions which retrieve the color, e.g.,
+\fBwattr_get\fP,
+if \fIopts\fP is set it is treated as a pointer to \fBint\fP,
+and used to retrieve the color pair as an \fBint\fP value,
+in addition
+retrieving it via the standard pointer to \fBshort\fP parameter.
+.PP
+The remaining functions which have \fIopts\fP,
+but do not manipulate color,
+e.g., \fBwattr_on\fP and \fBwattr_off\fP
+are not used by this implementation except to check that they are \fBNULL\fP.
+.SH PORTABILITY
+These functions are supported in the XSI Curses standard, Issue 4.
+The standard defined the dedicated type for highlights,
+\fBattr_t\fR, which was not defined in SVr4 curses.
+The functions taking \fBattr_t\fR arguments were not supported under SVr4.
+.PP
+Very old versions of this library did not force an update of the screen
+when changing the attributes.
+Use \fBtouchwin\fR to force the screen to match the updated attributes.
+.PP
+The XSI Curses standard states that whether the traditional functions
+\fBattron\fR/\fBattroff\fR/\fBattrset\fR can manipulate attributes other than
+\fBA_BLINK\fR, \fBA_BOLD\fR, \fBA_DIM\fR, \fBA_REVERSE\fR, \fBA_STANDOUT\fR, or
+\fBA_UNDERLINE\fR is "unspecified".
+Under this implementation as well as
+SVr4 curses, these functions correctly manipulate all other highlights
+(specifically, \fBA_ALTCHARSET\fR, \fBA_PROTECT\fR, and \fBA_INVIS\fR).
+.PP
+XSI Curses added these entry points:
+.sp
+.RS
+\fBattr_get\fR, \fBattr_on\fR,
 \fBattr_off\fR, \fBattr_set\fR, \fBwattr_on\fR, \fBwattr_off\fR,
-\fBwattr_get\fR, \fBwattr_set\fR.
-These are intended to work with
+\fBwattr_get\fR, \fBwattr_set\fR
+.RE
+.PP
+The new functions are intended to work with
 a new series of highlight macros prefixed with \fBWA_\fR.
 The older macros have direct counterparts in the newer set of names:
 .PP
@@ -317,10 +354,6 @@ l l .
 \fBWA_ALTCHARSET\fR	Alternate character set
 .TE
 .RE
-.PP
-Very old versions of this library did not force an update of the screen
-when changing the attributes.
-Use \fBtouchwin\fR to force the screen to match the updated attributes.
 .PP
 The XSI curses standard specifies that each pair of corresponding \fBA_\fR
 and \fBWA_\fR-using functions operates on the same current-highlight
@@ -343,6 +376,9 @@ returns an error if the window pointer is null.
 .bP
 returns an error if the color pair parameter
 for \fBwcolor_set\fP is outside the range 0..COLOR_PAIRS\-1.
+.bP
+does not return an error if either of the parameters of \fBwattr_get\fP
+used for retrieving attribute or color-pair values is \fBNULL\fP.
 .PP
 Functions with a "mv" prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,

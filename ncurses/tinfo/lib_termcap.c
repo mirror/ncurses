@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.81 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.82 2017/04/01 17:24:07 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -391,13 +391,34 @@ tgetstr(NCURSES_CONST char *id, char **area)
 #endif
 
 #if NO_LEAKS
+#undef CacheInx
+#define CacheInx num
+NCURSES_EXPORT(void)
+_nc_tgetent_leak(TERMINAL * termp)
+{
+    if (termp != 0) {
+	int num;
+	for (CacheInx = 0; CacheInx < TGETENT_MAX; ++CacheInx) {
+	    if (LAST_TRM == termp) {
+		FreeIfNeeded(FIX_SGR0);
+		if (LAST_TRM != 0) {
+		    LAST_TRM = 0;
+		}
+		break;
+	    }
+	}
+    }
+}
+
 NCURSES_EXPORT(void)
 _nc_tgetent_leaks(void)
 {
+    int num;
     for (CacheInx = 0; CacheInx < TGETENT_MAX; ++CacheInx) {
-	FreeIfNeeded(FIX_SGR0);
-	if (LAST_TRM != 0)
+	if (LAST_TRM != 0) {
 	    del_curterm(LAST_TRM);
+	    _nc_tgetent_leak(LAST_TRM);
+	}
     }
 }
 #endif

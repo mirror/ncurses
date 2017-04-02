@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2002-2012,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 2002-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_bkgrnd.3x,v 1.6 2015/07/21 00:18:42 tom Exp @
+  * @Id: curs_bkgrnd.3x,v 1.7 2017/03/25 21:49:00 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -96,7 +96,9 @@
 
 </PRE><H3><a name="h3-getbkgrnd">getbkgrnd</a></H3><PRE>
        The  <STRONG>getbkgrnd</STRONG> function returns the given window's current
-       background character/attribute pair via the <STRONG>wch</STRONG> pointer.
+       background character/attribute pair via the  <STRONG>wch</STRONG>  pointer.
+       If  the given window pointer is null, the character is not
+       updated (but no error returned).
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -108,8 +110,11 @@
        value.
 
        Upon successful completion, the other functions return <STRONG>OK</STRONG>.
-       Otherwise, they return <STRONG>ERR</STRONG>.   A  null  window  pointer  is
-       treated as an error.
+       Otherwise, they return <STRONG>ERR</STRONG>:
+
+       <STRONG>o</STRONG>   A null window pointer is treated as an error.
+
+       <STRONG>o</STRONG>   A null character pointer is treated as an error.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

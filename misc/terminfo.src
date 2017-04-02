@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.595 $
-#	$Date: 2017/03/11 23:17:18 $
+#	$Revision: 1.598 $
+#	$Date: 2017/04/01 20:40:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -464,6 +464,9 @@ ecma+color|color control for ECMA-48-compatible terminals,
 # Attribute control for ECMA-48-compatible terminals
 ecma+sgr|attribute capabilities for true ECMA-48 terminals,
 	rmso=\E[27m, rmul=\E[24m, use=klone+sgr8,
+
+ecma+strikeout|ECMA-48 strikeout/crossed-out,
+	rmxx=\E[29m, smxx=\E[9m,
 
 # For comparison, here are all the capabilities implied by the Intel
 # Binary Compatibility Standard (level 2) that fit within terminfo.
@@ -1844,10 +1847,9 @@ fbterm|FbTerm for Linux with framebuffer,
 	     \316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u
 	     \264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
 	initc=\E[3;%p1%d;%p2%d;%p3%d;%p4%d}, rmacs=\E[10m,
-	setab=\E[2;%p1%d}, setaf=\E[1;%p1%d}, setb=\E[2;%p1%d},
-	setf=\E[1;%p1%d},
+	setab=\E[2;%p1%d}, setaf=\E[1;%p1%d},
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5
-	    %t;2%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
+	    %t;2%;%?%p6%t;1%;%?%p9%t;11%;m,
 	sgr0=\E[0;10m, smacs=\E[11m, use=linux,
 
 # 16-color linux console entry; this works with a 256-character
@@ -3109,7 +3111,7 @@ vt100+4bsd|dec vt100 from 4.0BSD,
 	rev=\E[7m$<2>, ri=\EM$<5>, rmacs=^O, rmso=\E[m$<2>,
 	rmul=\E[m$<2>, rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5
-	    %;m%?%p9%t\016%e\017%;,
+	    %;m%?%p9%t\016%e\017%;$<2>,
 	sgr0=\E[m\017$<2>, smacs=^N, smso=\E[1;7m$<2>,
 	smul=\E[4m$<2>, tbc=\E[3g,
 vt100nam|vt100-nam|vt100 no automargins,
@@ -4179,7 +4181,7 @@ xterm-new|modern xterm terminal emulator,
 	npc,
 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
 	rin=\E[%p1%dT, use=ansi+enq, use=xterm+pcfkeys,
-	use=xterm+tmux, use=xterm-basic,
+	use=xterm+tmux, use=ecma+strikeout, use=xterm-basic,
 
 # This fragment is for people who cannot agree on what the backspace key
 # should send.
@@ -4848,8 +4850,8 @@ xtermc|xterm terminal emulator (color),
 xterm-pcolor|xterm with color used for highlights and status line,
 	wsl#40,
 	bold=\E[1;43m, rev=\E[7;34m,
-	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1;43%;%?%p2%t;4;42%;%?%p1
-	    %t;7;31%;%?%p3%t;7;34%;%?%p4%t;5%;%?%p7%t;8%;m,
+	sgr=%?%p9%t\016%e\017%;\E[0%?%p6%t;1;43%;%?%p2%t;4;42%;%?%p1
+	    %t;7;31%;%?%p3%t;7;34%;m,
 	smso=\E[7;31m, smul=\E[4;42m, use=xterm+sl, use=xterm-r6,
 
 # This describes the capabilities of color_xterm, an xterm variant from
@@ -6507,8 +6509,8 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 # xterm cursor bits.
 tmux|tmux terminal multiplexer,
 	ritm=\E[23m, rmso=\E[27m, sitm=\E[3m, smso=\E[7m,
-	use=xterm+edit, use=xterm+pcfkeys, use=xterm+sl,
-	use=xterm+tmux, use=screen,
+	use=ecma+strikeout, use=xterm+edit, use=xterm+pcfkeys,
+	use=xterm+sl, use=xterm+tmux, use=screen,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
@@ -22418,7 +22420,7 @@ env230|envision230|envision 230 graphics terminal,
 	enacs@, mc0=\E[0i, mc4=\E[4i, mc5=\E[5i, rmacs@,
 	sgr=\E[0%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;
 	    1%;m$<2>,
-	sgr0=\E[0m$<2>, smacs@, use=vt100+4bsd,
+	sgr0=\E[0m$<2>, smacs@, smso=\E[7m, use=vt100+4bsd,
 # These execuports were impact-printer ttys with a 30- or maybe 15-cps acoustic
 # coupler attached, the whole rig fitting in a suitcase and more or less
 # portable.  Hot stuff for c.1977 :-) -- esr
@@ -23386,6 +23388,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # gsbom/grbom are used to enable/disable real bold (not intensity bright) mode.
 #    This was implemented for the Hurd.
+# rmxx/smxx describes the ECMA-48 strikeout/crossed-out attributes, as an
+#    experimental feature of tmux.
 # E3 clears the terminal's scrollback buffer.  This was implemented in the
 #    Linux 3.0 kernel as a security feature.  It matches a feature which was
 #    added in xterm patch #107.
@@ -25101,5 +25105,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  terminal emulators -TD
 #	+ modify vt100 rs2 string to reset vt52 mode and scrolling regions
 #	  (report/analysis by Robert King) -TD
+#
+# 2017-04-01
+#	+ minor fixes for vt100+4bsd, e.g., delay in sgr for consistency -TD
+#	+ add smso for env230, to match sgr -TD
+#	+ remove p7/protect from sgr in fbterm -TD
+#	+ drop setf/setb from fbterm; setaf/setab are enough -TD
+#	+ make xterm-pcolor sgr consistent with other capabilities -TD
+#	+ add rmxx/smxx ECMA-48 strikeout extension to tmux and xterm-basic
+#	  (discussion with Nicholas Marriott)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

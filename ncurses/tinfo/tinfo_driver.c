@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.45 2017/02/28 22:10:05 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.47 2017/03/28 09:15:24 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -153,7 +153,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     SCREEN *sp;
 
     START_TRACE();
-    T((T_CALLED("tinfo::drv_CanHandle(%p)"), TCB));
+    T((T_CALLED("tinfo::drv_CanHandle(%p)"), (void *) TCB));
 
     assert(TCB != 0 && tname != 0);
     termp = (TERMINAL *) TCB;
@@ -788,9 +788,9 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 	     NCURSES_SP_OUTC outc)
 {
     SCREEN *sp = TCB->csp;
-    NCURSES_COLOR_T fg = COLOR_DEFAULT;
-    NCURSES_COLOR_T bg = COLOR_DEFAULT;
-    NCURSES_COLOR_T old_fg, old_bg;
+    int fg = COLOR_DEFAULT;
+    int bg = COLOR_DEFAULT;
+    int old_fg, old_bg;
 
     AssertTCB();
     if (sp == 0)
@@ -805,19 +805,13 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 				    TPARM_1(set_color_pair, pair), 1, outc);
 	    return;
 	} else if (sp != 0) {
-	    NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
-					   (short) pair,
-					   &fg,
-					   &bg);
+	    _nc_pair_content(SP_PARM, pair, &fg, &bg);
 	}
     }
 
     if (old_pair >= 0
 	&& sp != 0
-	&& NCURSES_SP_NAME(pair_content) (NCURSES_SP_ARGx
-					  (short) old_pair,
-					  &old_fg,
-					  &old_bg) !=ERR) {
+	&& _nc_pair_content(SP_PARM, old_pair, &old_fg, &old_bg) != ERR) {
 	if ((isDefaultColor(fg) && !isDefaultColor(old_fg))
 	    || (isDefaultColor(bg) && !isDefaultColor(old_bg))) {
 #if NCURSES_EXT_FUNCS
@@ -846,13 +840,13 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 
 #if NCURSES_EXT_FUNCS
     if (isDefaultColor(fg))
-	fg = (NCURSES_COLOR_T) default_fg(sp);
+	fg = default_fg(sp);
     if (isDefaultColor(bg))
-	bg = (NCURSES_COLOR_T) default_bg(sp);
+	bg = default_bg(sp);
 #endif
 
     if (reverse) {
-	NCURSES_COLOR_T xx = fg;
+	int xx = fg;
 	fg = bg;
 	bg = xx;
     }

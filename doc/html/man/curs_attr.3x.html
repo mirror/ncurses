@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.49 2017/01/07 19:25:15 tom Exp @
+  * @Id: curs_attr.3x,v 1.53 2017/03/28 23:31:39 tom Exp @
   * attr_get
   * .br
   * .br
@@ -123,17 +123,23 @@
        clearing.
 
        Routines  which  do  not have a <STRONG>WINDOW*</STRONG> parameter apply to
-       <STRONG>stdscr</STRONG>.
+       <STRONG>stdscr</STRONG>.  For example, <STRONG>attr_set</STRONG> is the  <STRONG>stdscr</STRONG>  variant  of
+       <STRONG>wattr_set</STRONG>.
 
 
 </PRE><H3><a name="h3-Window-attributes">Window attributes</a></H3><PRE>
-       The <STRONG>attr_set</STRONG> and <STRONG>wattr_set</STRONG> functions set the  current  at-
-       tributes  of  the given window to <EM>attrs</EM>, with color speci-
-       fied by <EM>pair</EM>.  X/Open specified  an  additional  parameter
-       <EM>opts</EM> which is unused in all implementations.
+       There are two sets of functions:
 
-       Use  <STRONG>attr_get</STRONG> and <STRONG>wattr_get</STRONG> to retrieve attributes for the
-       given window.
+       <STRONG>o</STRONG>   functions  for  manipulating the window attributes and
+           color: <STRONG>wattr_set</STRONG> and <STRONG>wattr_get</STRONG>.
+
+       <STRONG>o</STRONG>   functions for manipulating only the window  attributes
+           (not color): <STRONG>wattr_on</STRONG> and <STRONG>wattr_off</STRONG>.
+
+       The  <STRONG>wattr_set</STRONG> function sets the current attributes of the
+       given window to <EM>attrs</EM>, with color specified by <EM>pair</EM>.
+
+       Use <STRONG>wattr_get</STRONG> to retrieve attributes for the given window.
 
        Use <STRONG>attr_on</STRONG> and <STRONG>wattr_on</STRONG> to  turn  on  window  attributes,
        i.e., values OR'd together in <EM>attr</EM>, without affecting oth-
@@ -173,35 +179,32 @@
 
        In these functions, the color <EM>pair</EM> argument  is  a  color-
        pair  index  (as  in  the first argument of <STRONG>init_pair</STRONG>, see
-       <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>).  The <STRONG>opts</STRONG> argument is not presently used,
-       but is reserved for the future (leave it <STRONG>NULL</STRONG>).
+       <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>).
 
 
 </PRE><H3><a name="h3-Change-window-color">Change window color</a></H3><PRE>
-       The  routine <STRONG>color_set</STRONG> sets the current color of the given
-       window to the foreground/background combination  described
-       by  the  color  <EM>pair</EM> parameter.  The parameter <EM>opts</EM> is re-
-       served for future use; applications  must  supply  a  null
-       pointer.
+       The routine <STRONG>color_set</STRONG> sets the current color of the  given
+       window  to the foreground/background combination described
+       by the color <EM>pair</EM> parameter.
 
 
 </PRE><H3><a name="h3-Standout">Standout</a></H3><PRE>
-       The  routine  <STRONG>standout</STRONG>  is the same as <STRONG>attron(A_STANDOUT)</STRONG>.
-       The routine <STRONG>standend</STRONG> is the same as  <STRONG>attrset(A_NORMAL)</STRONG>  or
+       The routine <STRONG>standout</STRONG> is the  same  as  <STRONG>attron(A_STANDOUT)</STRONG>.
+       The  routine  <STRONG>standend</STRONG> is the same as <STRONG>attrset(A_NORMAL)</STRONG> or
        <STRONG>attrset(0)</STRONG>, that is, it turns off all attributes.
 
        X/Open does not mark these "restricted", because
 
        <STRONG>o</STRONG>   they have well established legacy use, and
 
-       <STRONG>o</STRONG>   there  is  no  ambiguity  about the way the attributes
+       <STRONG>o</STRONG>   there is no ambiguity about  the  way  the  attributes
            might be combined with a color pair.
 
 
 </PRE><H2><a name="h2-VIDEO-ATTRIBUTES">VIDEO ATTRIBUTES</a></H2><PRE>
        The following video attributes, defined in <STRONG>&lt;curses.h&gt;</STRONG>, can
        be passed to the routines <STRONG>attron</STRONG>, <STRONG>attroff</STRONG>, and <STRONG>attrset</STRONG>, or
-       OR'd with the characters passed to  <STRONG>addch</STRONG>  (see  <STRONG>curs_add-</STRONG>
+       OR'd  with  the  characters passed to <STRONG>addch</STRONG> (see <STRONG>curs_add-</STRONG>
        <STRONG><A HREF="curs_addch.3x.html">ch(3x)</A></STRONG>).
 
               <EM>Name</EM>           <EM>Description</EM>
@@ -232,52 +235,85 @@
               <STRONG>WA_TOP</STRONG>          Top highlight
               <STRONG>WA_VERTICAL</STRONG>     Vertical highlight
 
-       The  return values of many of these routines are not mean-
+       The return values of many of these routines are not  mean-
        ingful (they are implemented as macro-expanded assignments
-       and  simply  return their argument).  The SVr4 manual page
+       and simply return their argument).  The SVr4  manual  page
        claims (falsely) that these routines always return <STRONG>1</STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       These functions may be macros: <STRONG>attroff</STRONG>, <STRONG>wattroff</STRONG>,  <STRONG>attron</STRONG>,
-       <STRONG>wattron</STRONG>, <STRONG>attrset</STRONG>, <STRONG>wattrset</STRONG>, <STRONG>standend</STRONG> and <STRONG>standout</STRONG>.
+       These functions may be macros:
 
-       Color  pair values can only be OR'd with attributes if the
-       pair number is less than  256.   The  alternate  functions
-       such  as  <STRONG>color_set</STRONG>  can pass a color pair value directly.
-       However, ncurses ABI 4 and 5 simply OR this  value  within
-       the  alternate  functions.   You must use ncurses ABI 6 to
+              <STRONG>attroff</STRONG>,  <STRONG>wattroff</STRONG>,  <STRONG>attron</STRONG>, <STRONG>wattron</STRONG>, <STRONG>attrset</STRONG>, <STRONG>wat-</STRONG>
+              <STRONG>trset</STRONG>, <STRONG>standend</STRONG> and <STRONG>standout</STRONG>.
+
+       Color pair values can only be OR'd with attributes if  the
+       pair  number  is  less  than 256.  The alternate functions
+       such as <STRONG>color_set</STRONG> can pass a color  pair  value  directly.
+       However,  ncurses  ABI 4 and 5 simply OR this value within
+       the alternate functions.  You must use ncurses  ABI  6  to
        support more than 256 color pairs.
 
 
-</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These functions are supported in the XSI Curses  standard,
-       Issue  4.   The  standard  defined  the dedicated type for
-       highlights, <STRONG>attr_t</STRONG>, which is not defined in  SVr4  curses.
-       The  functions  taking  <STRONG>attr_t</STRONG> arguments are not supported
-       under SVr4.
-
-       The XSI Curses standard states that whether the tradition-
-       al  functions  <STRONG>attron</STRONG>/<STRONG>attroff</STRONG>/<STRONG>attrset</STRONG>  can  manipulate at-
-       tributes other than  <STRONG>A_BLINK</STRONG>,  <STRONG>A_BOLD</STRONG>,  <STRONG>A_DIM</STRONG>,  <STRONG>A_REVERSE</STRONG>,
-       <STRONG>A_STANDOUT</STRONG>,  or  <STRONG>A_UNDERLINE</STRONG> is "unspecified".  Under this
-       implementation as well as  SVr4  curses,  these  functions
-       correctly  manipulate  all other highlights (specifically,
-       <STRONG>A_ALTCHARSET</STRONG>, <STRONG>A_PROTECT</STRONG>, and <STRONG>A_INVIS</STRONG>).
-
-       This implementation provides the  <STRONG>A_ITALIC</STRONG>  attribute  for
+</PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
+       This  implementation  provides  the <STRONG>A_ITALIC</STRONG> attribute for
        terminals which have the <STRONG>enter_italics_mode</STRONG> (<STRONG>sitm</STRONG>) and <STRONG>ex-</STRONG>
        <STRONG>it_italics_mode</STRONG> (<STRONG>ritm</STRONG>) capabilities.  Italics are not men-
-       tioned  in  X/Open  Curses.   Unlike  the  other video at-
-       tributes, <STRONG>A_ITALIC</STRONG> is unrelated to the <STRONG>set_attributes</STRONG>  ca-
+       tioned in X/Open  Curses.   Unlike  the  other  video  at-
+       tributes,  <STRONG>A_ITALIC</STRONG> is unrelated to the <STRONG>set_attributes</STRONG> ca-
        pabilities.  This implementation makes the assumption that
        <STRONG>exit_attribute_mode</STRONG> may also reset italics.
 
-       XSI Curses added the new entry points, <STRONG>attr_get</STRONG>,  <STRONG>attr_on</STRONG>,
-       <STRONG>attr_off</STRONG>,  <STRONG>attr_set</STRONG>,  <STRONG>wattr_on</STRONG>, <STRONG>wattr_off</STRONG>, <STRONG>wattr_get</STRONG>, <STRONG>wat-</STRONG>
-       <STRONG>tr_set</STRONG>.  These are intended to work with a new  series  of
-       highlight macros prefixed with <STRONG>WA_</STRONG>.  The older macros have
-       direct counterparts in the newer set of names:
+       Each  of the functions added by XSI Curses has a parameter
+       <EM>opts</EM>, which X/Open Curses still (after  more  than  twenty
+       years)  documents  as reserved for future use, saying that
+       it should be <STRONG>NULL</STRONG>.  This implementation uses that  parame-
+       ter in ABI 6 for the functions which have a color-pair pa-
+       rameter to support <EM>extended</EM> <EM>color</EM> <EM>pairs</EM>:
+
+       <STRONG>o</STRONG>   For functions which modify the color, e.g., <STRONG>wattr_set</STRONG>,
+           if  <EM>opts</EM> is set it is treated as a pointer to <STRONG>int</STRONG>, and
+           used to set the color pair instead of the  <STRONG>short</STRONG>  <EM>pair</EM>
+           parameter.
+
+       <STRONG>o</STRONG>   For  functions  which  retrieve  the color, e.g., <STRONG>wat-</STRONG>
+           <STRONG>tr_get</STRONG>, if <EM>opts</EM> is set it is treated as a  pointer  to
+           <STRONG>int</STRONG>,  and  used  to  retrieve the color pair as an <STRONG>int</STRONG>
+           value, in addition  retrieving  it  via  the  standard
+           pointer to <STRONG>short</STRONG> parameter.
+
+       The remaining functions which have <EM>opts</EM>, but do not manip-
+       ulate color, e.g., <STRONG>wattr_on</STRONG> and <STRONG>wattr_off</STRONG> are not used  by
+       this implementation except to check that they are <STRONG>NULL</STRONG>.
+
+
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       These  functions are supported in the XSI Curses standard,
+       Issue 4.  The standard  defined  the  dedicated  type  for
+       highlights,  <STRONG>attr_t</STRONG>, which was not defined in SVr4 curses.
+       The functions taking <STRONG>attr_t</STRONG> arguments were  not  supported
+       under SVr4.
+
+       Very  old versions of this library did not force an update
+       of the screen when changing the attributes.  Use  <STRONG>touchwin</STRONG>
+       to force the screen to match the updated attributes.
+
+       The XSI Curses standard states that whether the tradition-
+       al functions  <STRONG>attron</STRONG>/<STRONG>attroff</STRONG>/<STRONG>attrset</STRONG>  can  manipulate  at-
+       tributes  other  than  <STRONG>A_BLINK</STRONG>,  <STRONG>A_BOLD</STRONG>, <STRONG>A_DIM</STRONG>, <STRONG>A_REVERSE</STRONG>,
+       <STRONG>A_STANDOUT</STRONG>, or <STRONG>A_UNDERLINE</STRONG> is "unspecified".   Under  this
+       implementation  as  well  as  SVr4 curses, these functions
+       correctly manipulate all other  highlights  (specifically,
+       <STRONG>A_ALTCHARSET</STRONG>, <STRONG>A_PROTECT</STRONG>, and <STRONG>A_INVIS</STRONG>).
+
+       XSI Curses added these entry points:
+
+              <STRONG>attr_get</STRONG>,  <STRONG>attr_on</STRONG>,  <STRONG>attr_off</STRONG>,  <STRONG>attr_set</STRONG>, <STRONG>wattr_on</STRONG>,
+              <STRONG>wattr_off</STRONG>, <STRONG>wattr_get</STRONG>, <STRONG>wattr_set</STRONG>
+
+       The new functions are intended to work with a  new  series
+       of  highlight  macros prefixed with <STRONG>WA_</STRONG>.  The older macros
+       have direct counterparts in the newer set of names:
 
               <EM>Name</EM>            <EM>Description</EM>
               ------------------------------------------------------------
@@ -289,10 +325,6 @@
               <STRONG>WA_DIM</STRONG>          Half bright
               <STRONG>WA_BOLD</STRONG>         Extra bright or bold
               <STRONG>WA_ALTCHARSET</STRONG>   Alternate character set
-
-       Very old versions of this library did not force an  update
-       of  the screen when changing the attributes.  Use <STRONG>touchwin</STRONG>
-       to force the screen to match the updated attributes.
 
        The XSI curses standard specifies that each pair of corre-
        sponding  <STRONG>A_</STRONG>  and <STRONG>WA_</STRONG>-using functions operates on the same
@@ -317,6 +349,10 @@
 
        <STRONG>o</STRONG>   returns an error if the color pair parameter for <STRONG>wcol-</STRONG>
            <STRONG>or_set</STRONG> is outside the range 0..COLOR_PAIRS-1.
+
+       <STRONG>o</STRONG>   does not return an error if either of  the  parameters
+           of  <STRONG>wattr_get</STRONG>  used for retrieving attribute or color-
+           pair values is <STRONG>NULL</STRONG>.
 
        Functions with a "mv" prefix first perform a cursor  move-
        ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
@@ -346,6 +382,7 @@
 </li>
 <li><a href="#h2-VIDEO-ATTRIBUTES">VIDEO ATTRIBUTES</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

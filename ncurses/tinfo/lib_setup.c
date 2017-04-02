@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.170 2017/01/07 16:50:16 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.173 2017/04/01 13:48:38 tom Exp $")
 
 /****************************************************************************
  *
@@ -761,10 +761,11 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	 * If an application calls setupterm() rather than initscr() or
 	 * newterm(), we will not have the def_prog_mode() call in
 	 * _nc_setupscreen().  Do it now anyway, so we can initialize the
-	 * baudrate.
+	 * baudrate.  Also get the shell-mode so that erasechar() works.
 	 */
 	if (NC_ISATTY(Filedes)) {
-	    def_prog_mode();
+	    NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_ARG);
+	    NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
 	    baudrate();
 	}
 	code = OK;
@@ -811,9 +812,9 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 #if NCURSES_SP_FUNCS
 /*
  * In case of handling multiple screens, we need to have a screen before
- * initialization in setupscreen takes place.  This is to extend the substitute
- * for some of the stuff in _nc_prescreen, especially for slk and ripoff
- * handling which should be done per screen.
+ * initialization in _nc_setupscreen takes place.  This is to extend the
+ * substitute for some of the stuff in _nc_prescreen, especially for slk and
+ * ripoff handling which should be done per screen.
  */
 NCURSES_EXPORT(SCREEN *)
 new_prescr(void)
@@ -824,6 +825,7 @@ new_prescr(void)
     T((T_CALLED("new_prescr()")));
 
     sp = _nc_alloc_screen_sp();
+    T(("_nc_alloc_screen_sp %p", sp));
     if (sp != 0) {
 	sp->rsp = sp->rippedoff;
 	sp->_filtered = _nc_prescreen.filter_mode;

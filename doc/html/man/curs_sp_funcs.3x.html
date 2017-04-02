@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2010-2013,2015 Free Software Foundation, Inc.              *
+  * Copyright (c) 2010-2015,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_sp_funcs.3x,v 1.7 2015/12/05 20:33:14 tom Exp @
+  * @Id: curs_sp_funcs.3x,v 1.9 2017/03/27 08:35:44 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -55,6 +55,7 @@
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
+       <STRONG>int</STRONG> <STRONG>alloc_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>assume_default_colors_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>baudrate_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>beep_sp(SCREEN*);</STRONG>
@@ -70,7 +71,12 @@
        <STRONG>int</STRONG> <STRONG>echo_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>endwin_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>erasechar_sp(SCREEN*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>extended_color_content_sp(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>int,</STRONG> <STRONG>int</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>extended_pair_content_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int</STRONG> <STRONG>*,</STRONG> <STRONG>int</STRONG> <STRONG>*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>extended_slk_color_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>filter_sp(SCREEN*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>find_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
+       <STRONG>int</STRONG> <STRONG>free_pair_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>flash_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>flushinp_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>get_escdelay_sp(SCREEN*);</STRONG>
@@ -83,6 +89,8 @@
        <STRONG>int</STRONG> <STRONG>has_key_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>bool</STRONG> <STRONG>has_mouse_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>init_color_sp(SCREEN*,</STRONG> <STRONG>short,</STRONG> <STRONG>short,</STRONG> <STRONG>short,</STRONG> <STRONG>short);</STRONG>
+       <STRONG>int</STRONG> <STRONG>init_extended_color_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
+       <STRONG>int</STRONG> <STRONG>init_extended_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>init_pair_sp(SCREEN*,</STRONG> <STRONG>short,</STRONG> <STRONG>short,</STRONG> <STRONG>short);</STRONG>
        <STRONG>int</STRONG> <STRONG>intrflush_sp(SCREEN*,</STRONG> <STRONG>WINDOW*,</STRONG> <STRONG>bool);</STRONG>
        <STRONG>bool</STRONG> <STRONG>isendwin_sp(SCREEN*);</STRONG>
@@ -92,6 +100,7 @@
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>keyname_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>keyok_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>bool);</STRONG>
        <STRONG>char</STRONG> <STRONG>killchar_sp(SCREEN*);</STRONG>
+       <STRONG>char*</STRONG> <STRONG>longname_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>mcprint_sp(SCREEN*,</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>mouseinterval_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>mmask_t</STRONG> <STRONG>mousemask_sp(SCREEN*,</STRONG> <STRONG>mmask_t,</STRONG> <STRONG>mmask_t</STRONG> <STRONG>*);</STRONG>
@@ -150,6 +159,7 @@
        <STRONG>int</STRONG> <STRONG>unget_wch_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t);</STRONG>
        <STRONG>int</STRONG> <STRONG>use_default_colors_sp(SCREEN*);</STRONG>
        <STRONG>void</STRONG> <STRONG>use_env_sp(SCREEN*,</STRONG> <STRONG>bool);</STRONG>
+       <STRONG>void</STRONG> <STRONG>use_tioctl_sp</STRONG> <STRONG>(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>bool)</STRONG>
        <STRONG>int</STRONG> <STRONG>use_legacy_coding_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>vid_attr_sp(SCREEN*,</STRONG> <STRONG>attr_t,</STRONG> <STRONG>short,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>vidattr_sp(SCREEN*,</STRONG> <STRONG>chtype);</STRONG>

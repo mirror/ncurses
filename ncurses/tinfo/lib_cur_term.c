@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.34 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.36 2017/04/01 17:19:03 tom Exp $")
 
 #undef CUR
 #define CUR termp->type.
@@ -105,6 +105,11 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}
 #endif
+#if !USE_REENTRANT
+#define MY_SIZE (size_t) (NAMESIZE - 1)
+	_nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
+	ttytype[MY_SIZE] = '\0';
+#endif
     }
     _nc_unlock_global(curses);
 
@@ -154,6 +159,10 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 	    TCB->drv->td_release(TCB);
 #endif
 	free(termp);
+#if NO_LEAKS
+	/* discard memory used in tgetent's cache for this terminal */
+	_nc_tgetent_leak(termp);
+#endif
 
 	rc = OK;
     }

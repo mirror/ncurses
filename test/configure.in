@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.129 2017/03/06 09:48:09 tom Exp $
+dnl $Id: configure.in,v 1.130 2017/03/31 12:15:36 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -216,6 +216,7 @@ getmaxx \
 getnstr \
 getparx \
 getwin \
+init_extended_color \
 mvvline \
 mvwvline \
 napms \
@@ -232,6 +233,7 @@ termattrs \
 tgetent \
 tigetnum \
 tigetstr \
+tputs_sp \
 typeahead \
 use_default_colors \
 use_env \

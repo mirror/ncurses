@@ -1,4 +1,4 @@
-# $Id: programs,v 1.29 2017/02/27 01:28:01 tom Exp $
+# $Id: programs,v 1.30 2017/03/31 13:01:52 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -52,6 +52,7 @@ dots_curses	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_curses
 dots_mvcur	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_mvcur
 dots_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots_termcap
 echochar	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	echochar
+extended_color	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	extended_color
 filter		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	filter
 firework	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	firework
 firstlast	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	firstlast
@@ -77,6 +78,7 @@ railroad	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	railroad
 rain		$(LDFLAGS_THREADS)	$(LOCAL_LIBS)	rain
 redraw		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	redraw
 savescreen	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	savescreen
+sp_tinfo	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	sp_tinfo
 tclock		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	tclock
 test_add_wchstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_add_wchstr
 test_addchstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addchstr

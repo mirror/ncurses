@@ -1,6 +1,6 @@
-# $Id: modules,v 1.55 2017/02/27 01:28:28 tom Exp $
+# $Id: modules,v 1.57 2017/03/31 13:01:31 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -55,6 +55,7 @@ dots_mvcur	progs		$(srcdir)	$(HEADER_DEPS)
 dots_termcap	progs		$(srcdir)	$(HEADER_DEPS)
 echochar	progs		$(srcdir)	$(HEADER_DEPS)
 edit_field	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/edit_field.h
+extended_color	progs		$(srcdir)	$(HEADER_DEPS)
 filter		progs		$(srcdir)	$(HEADER_DEPS)
 firework	progs		$(srcdir)	$(HEADER_DEPS)
 firstlast	progs		$(srcdir)	$(HEADER_DEPS)
@@ -80,6 +81,7 @@ railroad	progs		$(srcdir)	$(HEADER_DEPS)
 rain		progs		$(srcdir)	$(HEADER_DEPS)
 redraw		progs		$(srcdir)	$(HEADER_DEPS)
 savescreen	progs		$(srcdir)	$(HEADER_DEPS)
+sp_tinfo	progs		$(srcdir)	$(HEADER_DEPS)
 tclock		progs		$(srcdir)	$(HEADER_DEPS)
 test_add_wchstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h
 test_addchstr	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/linedata.h

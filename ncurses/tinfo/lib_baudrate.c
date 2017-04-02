@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -83,7 +83,7 @@
 #undef USE_OLD_TTY
 #endif /* USE_OLD_TTY */
 
-MODULE_ID("$Id: lib_baudrate.c,v 1.42 2016/10/03 00:29:21 tom Exp $")
+MODULE_ID("$Id: lib_baudrate.c,v 1.43 2017/03/31 17:19:30 tom Exp $")
 
 /*
  *	int
@@ -263,7 +263,7 @@ NCURSES_SP_NAME(baudrate) (NCURSES_SP_DCL0)
      */
 #ifdef TRACE
     if (IsValidTIScreen(SP_PARM)
-	&& !NC_ISATTY(fileno(SP_PARM ? SP_PARM->_ofp : stdout))
+	&& !NC_ISATTY(fileno((SP_PARM && SP_PARM->_ofp) ? SP_PARM->_ofp : stdout))
 	&& getenv("BAUDRATE") != 0) {
 	int ret;
 	if ((ret = _nc_getenv_num("BAUDRATE")) <= 0)

@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.287 2017/02/28 22:13:45 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.288 2017/03/16 08:24:12 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -2180,11 +2180,11 @@ NCURSES_SP_NAME(_nc_screen_resume) (NCURSES_SP_DCL0)
 	SP_PARM->_color_defs = -(SP_PARM->_color_defs);
 	for (n = 0; n < SP_PARM->_color_defs; ++n) {
 	    if (SP_PARM->_color_table[n].init) {
-		NCURSES_SP_NAME(init_color) (NCURSES_SP_ARGx
-					     (short) n,
-					     SP_PARM->_color_table[n].r,
-					     SP_PARM->_color_table[n].g,
-					     SP_PARM->_color_table[n].b);
+		_nc_init_color(SP_PARM,
+			       n,
+			       SP_PARM->_color_table[n].r,
+			       SP_PARM->_color_table[n].g,
+			       SP_PARM->_color_table[n].b);
 	    }
 	}
     }

@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_slk.3x,v 1.29 2017/03/18 01:00:30 tom Exp @
+  * @Id: curs_slk.3x,v 1.31 2017/03/31 11:09:28 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -49,19 +49,19 @@
        <STRONG>slk_init</STRONG>, <STRONG>slk_set</STRONG>, <STRONG>slk_wset</STRONG>, <STRONG>slk_refresh</STRONG>, <STRONG>slk_noutrefresh</STRONG>,
        <STRONG>slk_label</STRONG>, <STRONG>slk_clear</STRONG>, <STRONG>slk_restore</STRONG>, <STRONG>slk_touch</STRONG>, <STRONG>slk_attron</STRONG>,
        <STRONG>slk_attrset</STRONG>, <STRONG>slk_attroff</STRONG>, <STRONG>slk_attr_on</STRONG>, <STRONG>slk_attr_set</STRONG>,
-       <STRONG>slk_attr_off</STRONG>, <STRONG>slk_attr</STRONG>, <STRONG>slk_color</STRONG> - <STRONG>curses</STRONG> soft label
-       routines
+       <STRONG>slk_attr_off</STRONG>, <STRONG>slk_attr</STRONG>, <STRONG>slk_color</STRONG>, <STRONG>extended_slk_color</STRONG> -
+       <STRONG>curses</STRONG> soft label routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>slk_init(int</STRONG> <STRONG>fmt);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_init(int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>slk_set(int</STRONG> <STRONG>labnum,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*label,</STRONG> <STRONG>int</STRONG> <STRONG>fmt);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_wset(int</STRONG> <STRONG>labnum,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*label,</STRONG> <STRONG>int</STRONG> <STRONG>fmt);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_set(int</STRONG> <EM>labnum</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>label</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_wset(int</STRONG> <EM>labnum</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>label</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
 
-       <STRONG>char</STRONG> <STRONG>*slk_label(int</STRONG> <STRONG>labnum);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*slk_label(int</STRONG> <EM>labnum</EM><STRONG>);</STRONG>
 
        <STRONG>int</STRONG> <STRONG>slk_refresh(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_noutrefresh(void);</STRONG>
@@ -69,17 +69,19 @@
        <STRONG>int</STRONG> <STRONG>slk_restore(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_touch(void);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>slk_attron(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attroff(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attrset(const</STRONG> <STRONG>chtype</STRONG> <STRONG>attrs);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attr_on(attr_t</STRONG> <STRONG>attrs,</STRONG> <STRONG>void*</STRONG> <STRONG>opts);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attr_off(const</STRONG> <STRONG>attr_t</STRONG> <STRONG>attrs,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <STRONG>opts);</STRONG>
-       <STRONG>int</STRONG>  <STRONG>slk_attr_set(const</STRONG>  <STRONG>attr_t</STRONG>  <STRONG>attrs,</STRONG>  <STRONG>short</STRONG> <STRONG>pair,</STRONG> <STRONG>void*</STRONG>
-       <STRONG>opts);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attron(const</STRONG> <STRONG>chtype</STRONG> <EM>attrs</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attroff(const</STRONG> <STRONG>chtype</STRONG> <EM>attrs</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attrset(const</STRONG> <STRONG>chtype</STRONG> <EM>attrs</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attr_on(attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>void*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attr_off(const</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG>  <STRONG>slk_attr_set(const</STRONG>  <STRONG>attr_t</STRONG>  <EM>attrs</EM><STRONG>,</STRONG>  <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>void*</STRONG>
+       <EM>opts</EM><STRONG>);</STRONG>
 
        <STRONG>attr_t</STRONG> <STRONG>slk_attr(void);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>slk_color(short</STRONG> <STRONG>pair);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_color(short</STRONG> <EM>pair</EM><STRONG>);</STRONG>
+       /* extension */
+       <STRONG>int</STRONG> <STRONG>extended_slk_color(int</STRONG> <EM>pair</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -163,13 +165,18 @@
        effect  only  if  soft  labels are simulated on the bottom
        line of the screen.
 
+       Because <STRONG>slk_color</STRONG> accepts only <STRONG>short</STRONG> (signed 16-bit  inte-
+       ger)   values,   this   implementation   provides  <STRONG>extend-</STRONG>
+       <STRONG>ed_slk_color</STRONG>  which  accepts  an  integer   value,   e.g.,
+       32-bits.
+
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return <STRONG>ERR</STRONG> upon failure and OK (SVr4 speci-
        fies only "an integer value other than <STRONG>ERR</STRONG>") upon success-
        ful completion.
 
-       X/Open defines no error conditions.  In  this  implementa-
+       X/Open  defines  no error conditions.  In this implementa-
        tion
 
           <STRONG>slk_attr</STRONG>
@@ -177,36 +184,49 @@
 
           <STRONG>slk_attroff</STRONG>, <STRONG>slk_attron</STRONG>, <STRONG>slk_clear</STRONG>, <STRONG>slk_noutrefresh</STRONG>,
           <STRONG>slk_refresh</STRONG>, <STRONG>slk_touch</STRONG>
-               return an error if the terminal  or  the  softkeys
+               return  an  error  if the terminal or the softkeys
                were not initialized.
 
           <STRONG>slk_attrset</STRONG>
-               returns  an  error if the terminal or the softkeys
+               returns an error if the terminal or  the  softkeys
                were not initialized.
 
           <STRONG>slk_attr_set</STRONG>
-               returns an error if the terminal or  the  softkeys
+               returns  an  error if the terminal or the softkeys
                were not initialized, or the color pair is outside
-               the range 0..COLOR_PAIRS-1, or opts is not null.
+               the range 0..COLOR_PAIRS-1.
 
           <STRONG>slk_color</STRONG>
-               returns an error if the terminal or  the  softkeys
+               returns  an  error if the terminal or the softkeys
                were not initialized, or the color pair is outside
                the range 0..COLOR_PAIRS-1.
 
           <STRONG>slk_init</STRONG>
-               returns an error if the format parameter  is  out-
+               returns  an  error if the format parameter is out-
                side the range 0..3.
 
           <STRONG>slk_label</STRONG>
                returns <STRONG>NULL</STRONG> on error.
 
           <STRONG>slk_set</STRONG>
-               returns  an  error if the terminal or the softkeys
-               were not initialized, or the <EM>labnum</EM>  parameter  is
-               outside  the range of label counts, or if the for-
-               mat parameter is outside the  range  0..2,  or  if
+               returns an error if the terminal or  the  softkeys
+               were  not  initialized, or the <EM>labnum</EM> parameter is
+               outside the range of label counts, or if the  for-
+               mat  parameter  is  outside  the range 0..2, or if
                memory for the labels cannot be allocated.
+
+
+</PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
+       X/Open Curses documents the <EM>opts</EM> argument as reserved  for
+       future use, saying that it must be null.  This implementa-
+       tion uses that parameter in ABI 6 for the functions  which
+       have  a  color-pair  parameter  to  support extended color
+       pairs.
+
+       For  functions  which  modify  the  color,  e.g.,  <STRONG>slk_at-</STRONG>
+       <STRONG>tr_set</STRONG>,  if <EM>opts</EM> is set it is treated as a pointer to <STRONG>int</STRONG>,
+       and used to  set  the  color pair  instead  of  the  <STRONG>short</STRONG>
+       pair parameter.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -218,13 +238,17 @@
        The XSI Curses standard, Issue 4, described  the  soft-key
        functions, with some differences from SVr4 curses:
 
-       <STRONG>o</STRONG>   It added functions like the SVr4 the attribute-manipu-
-           lation functions <STRONG>slk_attron</STRONG>, <STRONG>slk_attroff</STRONG>,  <STRONG>slk_attrset</STRONG>
-           which  use  <STRONG>attr_t</STRONG>  parameters,  along with a reserved
-           <EM>opts</EM> parameter.
+       <STRONG>o</STRONG>   It  added  functions like the SVr4 attribute-manipula-
+           tion functions <STRONG>slk_attron</STRONG>,  <STRONG>slk_attroff</STRONG>,  <STRONG>slk_attrset</STRONG>,
+           but  which use <STRONG>attr_t</STRONG> parameters (rather than <STRONG>chtype</STRONG>),
+           along with a reserved <EM>opts</EM> parameter.
 
-           One of these new functions (<STRONG>slk_attr_set</STRONG>) also  has  a
-           color-pair parameter.
+           Two of these new functions (unlike the SVr4 functions)
+           have  no  provision for color: <STRONG>slk_attr_on</STRONG> and <STRONG>slk_at-</STRONG>
+           <STRONG>tr_off</STRONG>.
+
+           The third function (<STRONG>slk_attr_set</STRONG>) has a color-pair pa-
+           rameter.
 
        <STRONG>o</STRONG>   It  added <STRONG>const</STRONG> qualifiers to parameters (unnecessari-
            ly), and
@@ -234,9 +258,18 @@
        The format codes <STRONG>2</STRONG> and <STRONG>3</STRONG> for  <STRONG>slk_init</STRONG>  and  the  function
        <STRONG>slk_attr</STRONG> are specific to ncurses.
 
+       X/Open  Curses  does not specify a limit for the number of
+       colors and color pairs which a terminal can support.  How-
+       ever,  in  its use of <STRONG>short</STRONG> for the parameters, it carries
+       over SVr4's implementation detail for the compiled termin-
+       fo  database,  which uses signed 16-bit numbers.  This im-
+       plementation provides extended versions of those functions
+       which  use  <STRONG>short</STRONG> parameters, allowing applications to use
+       larger color- and pair-numbers.
+
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,  <STRONG>curs_re-</STRONG>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,   <STRONG>curs_re-</STRONG>
        <STRONG><A HREF="curs_refresh.3x.html">fresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 
@@ -257,6 +290,7 @@
 </ul>
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
+<li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

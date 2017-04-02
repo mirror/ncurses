@@ -60,7 +60,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.8 2017/03/10 09:22:50 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.10 2017/03/28 09:14:15 tom Exp $")
 
 #if USE_NEW_PAIR
 
@@ -144,7 +144,8 @@ _nc_find_color_pair(SCREEN *sp, int fg, int bg)
 
     find.fg = fg;
     find.bg = bg;
-    if ((pp = tfind(&find, &sp->_ordered_pairs, compare_data)) != 0) {
+    if (sp != 0 &&
+	(pp = tfind(&find, &sp->_ordered_pairs, compare_data)) != 0) {
 	colorpair_t *temp = *(colorpair_t **) pp;
 	result = (int) (temp - sp->_color_pairs);
     } else {
@@ -221,7 +222,9 @@ NCURSES_SP_NAME(alloc_pair) (NCURSES_SP_DCLx int fg, int bg)
     int pair;
 
     T((T_CALLED("alloc_pair(%d,%d)"), fg, bg));
-    if ((pair = _nc_find_color_pair(SP_PARM, fg, bg)) < 0) {
+    if (SP_PARM == 0) {
+	pair = -1;
+    } else if ((pair = _nc_find_color_pair(SP_PARM, fg, bg)) < 0) {
 	/*
 	 * Check if all of the slots have been used.  If not, find one and
 	 * use that.
@@ -261,11 +264,8 @@ NCURSES_SP_NAME(alloc_pair) (NCURSES_SP_DCLx int fg, int bg)
 	    T(("reusing %d", pair));
 	}
 
-	if (pair > 0 && pair <= MAX_XCURSES_PAIR) {
-	    IGNORE_RC(init_pair((short)pair, (short)fg, (short)bg));
-	} else {
+	if (_nc_init_pair(SP_PARM, pair, fg, bg) == ERR)
 	    pair = ERR;
-	}
     }
     returnCode(pair);
 }
@@ -336,5 +336,5 @@ void _nc_new_pair(void);
 void
 _nc_new_pair(void)
 {
-};
+}
 #endif /* USE_NEW_PAIR */

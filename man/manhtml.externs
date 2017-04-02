@@ -1,4 +1,4 @@
-# $Id: manhtml.externs,v 1.4 2017/03/12 09:36:37 tom Exp $
+# $Id: manhtml.externs,v 1.5 2017/04/01 19:58:38 tom Exp $
 # Items in this list will not be linked by man2html
 #***************************************************************************
 # Copyright (c) 2013,2017 Free Software Foundation, Inc.                   *
@@ -49,4 +49,5 @@ system(3)
 termio(7)
 tty(4)
 ttys(5)
+vprintf(3)
 wcwidth(3)
