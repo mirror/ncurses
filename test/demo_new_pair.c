@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.10 2017/03/10 09:47:15 tom Exp $
+ * $Id: demo_new_pair.c,v 1.11 2017/04/08 21:48:53 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -35,6 +35,10 @@
 #include <time.h>
 
 #if HAVE_ALLOC_PAIR && USE_WIDEC_SUPPORT
+
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define MAX_BITS 8		/* all but A_ALTCHARSET */
 #define MAX_ATTR ((1<<MAX_BITS)-1)
@@ -210,6 +214,7 @@ main(int argc, char *argv[])
     wchar_t wch[2];
     time_t start = now();
     long total_cells = 0;
+    FILE *output = 0;
 
     setlocale(LC_ALL, "");
 
@@ -233,7 +238,15 @@ main(int argc, char *argv[])
 	}
     }
 
-    if (newterm(NULL, stderr, stdin) == 0)
+    if (isatty(fileno(stderr))) {
+	output = stderr;
+    } else if ((ch = open("/dev/tty", O_WRONLY)) != 0) {
+	output = fdopen(ch, "w");
+    } else {
+	fprintf(stderr, "cannot open terminal for output\n");
+	ExitProgram(EXIT_FAILURE);
+    }
+    if (newterm(NULL, output, stdin) == 0)
 	usage();
     (void) cbreak();		/* read chars without wait for \n */
     (void) noecho();		/* don't echo input */

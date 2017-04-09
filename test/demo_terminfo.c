@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.45 2017/03/18 22:03:07 tom Exp $
+ * $Id: demo_terminfo.c,v 1.47 2017/04/09 00:27:42 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -152,7 +152,7 @@ next_dbitem(void)
     return result;
 }
 
-#ifdef NO_LEAKS
+#if NO_LEAKS
 static void
 free_dblist(void)
 {
@@ -751,7 +751,18 @@ copy_code_list(NCURSES_CONST char *const *list)
 
     return result;
 }
+
+#if NO_LEAKS
+static void
+free_code_list(char **list)
+{
+    if (list) {
+	free(list[0]);
+	free(list);
+    }
+}
 #endif
+#endif /* USE_CODE_LISTS */
 
 static void
 usage(void)
@@ -904,17 +915,26 @@ main(int argc, char *argv[])
 	   PLURAL(total_n_values),
 	   PLURAL(total_s_values));
 
-#ifdef NO_LEAKS
+#if NO_LEAKS
     free_dblist();
-    if (my_blob != 0) {
-	free(my_blob);
-	free(my_boolcodes);
-	free(my_numcodes);
-	free(my_numvalues);
-	free(my_strcodes);
-	free(my_strvalues);
+    if (input_name != 0) {
+	if (my_blob != 0) {
+	    free(my_blob);
+	    free(my_boolcodes);
+	    free(my_numcodes);
+	    free(my_numvalues);
+	    free(my_strcodes);
+	    free(my_strvalues);
+	}
+    }
+#if USE_CODE_LISTS
+    else {
+	free_code_list(my_boolcodes);
+	free_code_list(my_numcodes);
+	free_code_list(my_strcodes);
     }
 #endif
+#endif /* NO_LEAKS */
 
     ExitProgram(EXIT_SUCCESS);
 }

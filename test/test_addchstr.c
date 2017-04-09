@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.19 2016/09/10 21:29:04 tom Exp $
+ * $Id: test_addchstr.c,v 1.20 2017/04/08 23:11:55 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -515,5 +515,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     test_adds(0);
     endwin();
+#if NO_LEAKS
+    free(temp_buffer);
+#endif
     ExitProgram(EXIT_SUCCESS);
 }

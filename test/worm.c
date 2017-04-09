@@ -61,7 +61,7 @@ Options:
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.66 2016/09/17 21:12:30 tom Exp $
+  $Id: worm.c,v 1.67 2017/04/09 00:27:42 tom Exp $
 */
 
 #include <test.priv.h>
@@ -608,7 +608,7 @@ main(int argc, char *argv[])
 
     Trace(("Cleanup"));
     cleanup();
-#ifdef NO_LEAKS
+#if NO_LEAKS
     for (y = 0; y < max_refs; y++) {
 	free(refs[y]);
     }

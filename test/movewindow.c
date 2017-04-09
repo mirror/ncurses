@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.39 2013/05/04 19:41:02 tom Exp $
+ * $Id: movewindow.c,v 1.40 2017/04/08 23:01:47 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -762,5 +762,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	wmove(current_win, 0, 0);
     }
     endwin();
+#if NO_LEAKS
+    free(all_windows);
+#endif
     ExitProgram(EXIT_SUCCESS);
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2011,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_ins_wch.c,v 1.21 2016/05/28 22:32:11 tom Exp $")
+MODULE_ID("$Id: lib_ins_wch.c,v 1.22 2017/04/08 22:52:26 tom Exp $")
 
 /*
  * Insert the given character, updating the current location to simplify
@@ -119,7 +119,7 @@ wins_nwstr(WINDOW *win, const wchar_t *wstr, int n)
 	    NCURSES_SIZE_T oy = win->_cury;
 	    NCURSES_SIZE_T ox = win->_curx;
 
-	    for (cp = wstr; *cp && ((cp - wstr) < n); cp++) {
+	    for (cp = wstr; ((cp - wstr) < n) && *cp; cp++) {
 		int len = wcwidth(*cp);
 
 		if ((len >= 0 && len != 1) || !is7bits(*cp)) {

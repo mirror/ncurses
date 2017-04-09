@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2794 2017/04/01 20:42:24 tom Exp $
+-- $Id: NEWS,v 1.2799 2017/04/08 22:54:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170408
+	+ change logic in wins_nwstr() to avoid addressing data past the output
+	  of mbstowcs().
+	+ correct a call to setcchar() in Data_Entry_w() from 20131207 changes.
+	+ fix minor memory-leaks in test-programs.
+	+ further improve ifdef in term_entry.h for internal definitions not
+	  used by tack.
 
 20170401
 	+ minor fixes for vt100+4bsd, e.g., delay in sgr for consistency -TD

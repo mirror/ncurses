@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.81 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.82 2017/04/03 09:00:45 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -206,7 +206,7 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 #define MAX_NUMBER 0x7fff	/* positive shorts only */
 
 NCURSES_EXPORT(int)
-_nc_parse_entry(struct entry *entryp, int literal, bool silent)
+_nc_parse_entry(ENTRY *entryp, int literal, bool silent)
 {
     int token_type;
     struct name_table_entry const *entry_ptr;

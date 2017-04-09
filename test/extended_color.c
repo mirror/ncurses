@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.8 2017/04/01 19:35:18 tom Exp $
+ * $Id: extended_color.c,v 1.9 2017/04/02 14:30:26 tom Exp $
  */
 
 #include <test.priv.h>
@@ -102,7 +102,7 @@ do_init_color(SCREEN *sp, int color, int adjust)
 static void
 do_color_set(const char *expected, int pair)
 {
-    int i = color_set(pair, NULL);
+    int i = color_set((short) pair, (void *) &pair);
     printw("%s (%s)\n", expected, SHOW(i));
     if (i != OK)
 	failed("color_set");

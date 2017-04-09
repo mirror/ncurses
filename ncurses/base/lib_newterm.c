@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.95 2017/04/01 12:53:35 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.96 2017/04/02 14:26:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -76,7 +76,7 @@ _nc_initscr(NCURSES_SP_DCL0)
 
     /* for extended XPG4 conformance requires cbreak() at this point */
     /* (SVr4 curses does this anyway) */
-    T((T_CALLED("_nc_initscr(%p) ->term %p"), (void *) SP_PARM, term));
+    T((T_CALLED("_nc_initscr(%p) ->term %p"), (void *) SP_PARM, (void *) term));
     if (NCURSES_SP_NAME(cbreak) (NCURSES_SP_ARG) == OK) {
 	TTY buf;
 

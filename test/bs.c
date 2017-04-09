@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.64 2016/08/21 00:03:32 tom Exp $
+ * $Id: bs.c,v 1.65 2017/04/08 21:06:16 tom Exp $
  */
 
 #include <test.priv.h>
@@ -185,6 +185,7 @@ uninitgame(int sig GCC_UNUSED)
     (void) reset_shell_mode();
     (void) echo();
     (void) endwin();
+    free(your_name);
     ExitProgram(sig ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
@@ -224,7 +225,7 @@ intro(void)
 	(your_name = strdup(tmpname)) != 0) {
 	your_name[0] = (char) toupper(UChar(your_name[0]));
     } else {
-	your_name = dftname;
+	your_name = strdup(dftname);
     }
 
     (void) initscr();

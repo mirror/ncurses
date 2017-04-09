@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2015,2016 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2015-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.8 2016/09/04 23:30:56 tom Exp $
+ * $Id: test_sgr.c,v 1.10 2017/04/09 00:27:42 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -118,7 +118,7 @@ next_dbitem(void)
     return result;
 }
 
-#ifdef NO_LEAKS
+#if NO_LEAKS
 static void
 free_dblist(void)
 {
@@ -286,6 +286,9 @@ brute_force(const char *name)
 		}
 	    }
 	}
+	for (count = 0; count < MAXSGR; ++count) {
+	    free(values[count]);
+	}
     }
     del_curterm(cur_term);
 }
@@ -349,7 +352,7 @@ main(int argc, char *argv[])
 
     printf("%ld distinct values\n", total_values);
 
-#ifdef NO_LEAKS
+#if NO_LEAKS
     free_dblist();
 #endif
 

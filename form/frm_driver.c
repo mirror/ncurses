@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.120 2016/12/24 22:28:28 Leon.Winter Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.121 2017/04/08 22:02:15 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4045,7 +4045,7 @@ Data_Entry_w(FORM *form, wchar_t c)
       cchar_t temp_ch;
 
       given[0] = c;
-      given[1] = 1;
+      given[1] = 0;
       setcchar(&temp_ch, given, 0, 0, (void *)0);
       if ((Field_Has_Option(field, O_BLANK)) &&
 	  First_Position_In_Current_Field(form) &&

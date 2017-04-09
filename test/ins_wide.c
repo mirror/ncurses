@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.22 2016/09/10 21:35:02 tom Exp $
+ * $Id: ins_wide.c,v 1.23 2017/04/08 22:14:03 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -391,6 +391,8 @@ test_inserts(int level)
 	    }
 	    break;
 	default:
+	    if (length >= BUFSIZ - 2)
+		break;
 	    buffer[length++] = (wchar_t) ch;
 	    buffer[length] = '\0';
 

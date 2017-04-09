@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010-2014,2016 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2009-2016,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.22 2016/09/10 21:28:40 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.23 2017/04/08 23:10:35 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -585,6 +585,9 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     test_add_wchstr(0);
     endwin();
+#if NO_LEAKS
+    free(temp_buffer);
+#endif
     ExitProgram(EXIT_SUCCESS);
 }
 #else

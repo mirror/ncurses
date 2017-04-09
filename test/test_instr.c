@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2010 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2010,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_instr.c,v 1.5 2010/05/01 19:13:46 tom Exp $
+ * $Id: test_instr.c,v 1.6 2017/04/08 23:21:53 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -85,6 +85,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	return FALSE;
     }
 
+    *buffer = '\0';
     if (level > 1) {
 	txtbox = newwin(LINES - BASE_Y, COLS - level, BASE_Y, level);
 	box(txtbox, 0, 0);

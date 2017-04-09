@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.173 2017/04/01 13:48:38 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.174 2017/04/02 14:26:18 tom Exp $")
 
 /****************************************************************************
  *
@@ -825,7 +825,7 @@ new_prescr(void)
     T((T_CALLED("new_prescr()")));
 
     sp = _nc_alloc_screen_sp();
-    T(("_nc_alloc_screen_sp %p", sp));
+    T(("_nc_alloc_screen_sp %p", (void *) sp));
     if (sp != 0) {
 	sp->rsp = sp->rippedoff;
 	sp->_filtered = _nc_prescreen.filter_mode;

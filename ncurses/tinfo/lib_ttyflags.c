@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_ttyflags.c,v 1.32 2017/04/01 11:48:03 tom Exp $")
+MODULE_ID("$Id: lib_ttyflags.c,v 1.33 2017/04/02 14:30:26 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(_nc_get_tty_mode) (NCURSES_SP_DCLx TTY * buf)
@@ -141,7 +141,8 @@ NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_shell_mode(%p) ->term %p"), (void *) SP_PARM, termp));
+    T((T_CALLED("def_shell_mode(%p) ->term %p"),
+       (void *) SP_PARM, (void *) termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -179,7 +180,7 @@ NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("def_prog_mode(%p) ->term %p"), (void *) SP_PARM, termp));
+    T((T_CALLED("def_prog_mode(%p) ->term %p"), (void *) SP_PARM, (void *) termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -215,7 +216,7 @@ NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_prog_mode(%p) ->term %p"), (void *) SP_PARM, termp));
+    T((T_CALLED("reset_prog_mode(%p) ->term %p"), (void *) SP_PARM, (void *) termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER
@@ -247,7 +248,8 @@ NCURSES_SP_NAME(reset_shell_mode) (NCURSES_SP_DCL0)
     int rc = ERR;
     TERMINAL *termp = TerminalOf(SP_PARM);
 
-    T((T_CALLED("reset_shell_mode(%p) ->term %p"), (void *) SP_PARM, termp));
+    T((T_CALLED("reset_shell_mode(%p) ->term %p"),
+       (void *) SP_PARM, (void *) termp));
 
     if (termp != 0) {
 #ifdef USE_TERM_DRIVER

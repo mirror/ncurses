@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.52 2017/03/18 22:03:07 tom Exp $
+ * $Id: demo_termcap.c,v 1.53 2017/04/08 19:08:42 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -157,6 +157,7 @@ next_dbitem(void)
     return result;
 }
 
+#if NO_LEAKS
 static void
 free_dblist(void)
 {
@@ -168,6 +169,7 @@ free_dblist(void)
 	db_list = 0;
     }
 }
+#endif /* NO_LEAKS */
 
 static void
 show_string(const char *name, const char *value)
@@ -715,7 +717,18 @@ copy_code_list(NCURSES_CONST char *const *list)
 
     return result;
 }
-#endif
+
+#if NO_LEAKS
+static void
+free_code_list(char **list)
+{
+    if (list) {
+	free(list[0]);
+	free(list);
+    }
+}
+#endif /* NO_LEAKS */
+#endif /* USE_CODE_LISTS */
 
 static void
 usage(void)
@@ -875,7 +888,14 @@ main(int argc, char *argv[])
     }
 #endif
 
+#if NO_LEAKS
     free_dblist();
+#if USE_CODE_LISTS
+    free_code_list(my_boolcodes);
+    free_code_list(my_numcodes);
+    free_code_list(my_strcodes);
+#endif
+#endif /* NO_LEAKS */
 
     ExitProgram(EXIT_SUCCESS);
 }

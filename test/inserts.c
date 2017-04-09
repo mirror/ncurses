@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inserts.c,v 1.28 2016/09/10 21:34:42 tom Exp $
+ * $Id: inserts.c,v 1.29 2017/04/08 22:20:46 tom Exp $
  *
  * Demonstrate the winsstr() and winsch functions.
  * Thomas Dickey - 2002/10/19
@@ -320,6 +320,8 @@ test_inserts(int level)
 		beep();
 		break;
 	    }
+	    if (length >= BUFSIZ - 2)
+		break;
 	    buffer[length++] = (char) ch;
 	    buffer[length] = '\0';
 

@@ -1104,6 +1104,7 @@
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h
+./test/extended_color.c
 ./test/filter.c
 ./test/firework.c
 ./test/firstlast.c
@@ -1162,6 +1163,7 @@
 ./test/redraw.c
 ./test/savescreen.c
 ./test/savescreen.sh
+./test/sp_tinfo.c
 ./test/tclock.c
 ./test/test.priv.h
 ./test/test_add_wchstr.c

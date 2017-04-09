@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.18 2017/03/18 22:03:07 tom Exp $
+ * $Id: list_keys.c,v 1.19 2017/04/08 22:57:26 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -159,7 +159,7 @@ show_key(const char *name, bool show)
 }
 
 static bool
-valid_key(const char *name, TERMINAL ** terms, int count)
+valid_key(const char *name, TERMINAL **terms, int count)
 {
     bool result = FALSE;
     if (*name == 'k') {
@@ -266,7 +266,7 @@ modified_key(const char *name)
 }
 
 static void
-list_keys(TERMINAL ** terms, int count)
+list_keys(TERMINAL **terms, int count)
 {
     int j, k;
     int widths0 = 0;
@@ -485,6 +485,8 @@ main(int argc, char *argv[])
 	terms[0] = cur_term;
 	list_keys(terms, 1);
     }
+
+    free(terms);
 
     ExitProgram(EXIT_SUCCESS);
 }

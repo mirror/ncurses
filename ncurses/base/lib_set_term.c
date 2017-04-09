@@ -47,7 +47,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.158 2017/04/01 13:51:59 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.159 2017/04/02 14:26:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -307,7 +307,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 
     if (!sp) {
 	sp = _nc_alloc_screen_sp();
-	T(("_nc_alloc_screen_sp %p", sp));
+	T(("_nc_alloc_screen_sp %p", (void *) sp));
 	*spp = sp;
     }
     if (!sp
