@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.65 2017/04/08 21:06:16 tom Exp $
+ * $Id: bs.c,v 1.66 2017/04/15 13:38:13 tom Exp $
  */
 
 #include <test.priv.h>
@@ -307,7 +307,7 @@ placeship(int b, ship_t * ss, int vis)
 	board[b][newx][newy] = ss->symbol;
 	if (vis) {
 	    pgoto(newy, newx);
-	    (void) addch((chtype) ss->symbol);
+	    AddCh(ss->symbol);
 	}
     }
     ss->hits = 0;
@@ -372,14 +372,14 @@ initgame(void)
 	if (has_colors())
 	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
-	(void) addch(' ');
+	AddCh(' ');
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
 	(void) attrset(0);
 #endif /* A_COLOR */
-	(void) addch(' ');
-	(void) addch((chtype) (i + 'A'));
+	AddCh(' ');
+	AddCh(i + 'A');
     }
     MvAddStr(PYBASE + BDEPTH, PXBASE - 3, numbers);
     MvAddStr(CYBASE - 2, CXBASE + 7, "Hit/Miss Board");
@@ -390,14 +390,14 @@ initgame(void)
 	if (has_colors())
 	    attron(COLOR_PAIR(COLOR_BLUE));
 #endif /* A_COLOR */
-	(void) addch(' ');
+	AddCh(' ');
 	for (j = 0; j < BWIDTH; j++)
 	    (void) addstr(" . ");
 #ifdef A_COLOR
 	(void) attrset(0);
 #endif /* A_COLOR */
-	(void) addch(' ');
-	(void) addch((chtype) (i + 'A'));
+	AddCh(' ');
+	AddCh(i + 'A');
     }
 
     MvAddStr(CYBASE + BDEPTH, CXBASE - 3, numbers);
@@ -774,13 +774,13 @@ hitship(int x, int y)
 				    if (has_colors())
 					attron(COLOR_PAIR(COLOR_GREEN));
 #endif /* A_COLOR */
-				    (void) addch(MARK_MISS);
+				    AddCh(MARK_MISS);
 #ifdef A_COLOR
 				    (void) attrset(0);
 #endif /* A_COLOR */
 				} else {
 				    pgoto(y1, x1);
-				    (void) addch(SHOWSPLASH);
+				    AddCh(SHOWSPLASH);
 				}
 			    }
 			}
@@ -793,14 +793,14 @@ hitship(int x, int y)
 		    hits[turn][x1][y1] = ss->symbol;
 		    if (turn % 2 == PLAYER) {
 			cgoto(y1, x1);
-			(void) addch((chtype) (ss->symbol));
+			AddCh(ss->symbol);
 		    } else {
 			pgoto(y1, x1);
 #ifdef A_COLOR
 			if (has_colors())
 			    attron(COLOR_PAIR(COLOR_RED));
 #endif /* A_COLOR */
-			(void) addch(SHOWHIT);
+			AddCh(SHOWHIT);
 #ifdef A_COLOR
 			(void) attrset(0);
 #endif /* A_COLOR */
@@ -842,7 +842,7 @@ plyturn(void)
 	    attron(COLOR_PAIR(COLOR_GREEN));
     }
 #endif /* A_COLOR */
-    (void) addch((chtype) hits[PLAYER][curx][cury]);
+    AddCh(hits[PLAYER][curx][cury]);
 #ifdef A_COLOR
     (void) attrset(0);
 #endif /* A_COLOR */
@@ -890,7 +890,7 @@ sgetc(const char *s)
 	for (s1 = s; *s1 && ch != *s1; ++s1)
 	    continue;
 	if (*s1) {
-	    (void) addch((chtype) ch);
+	    AddCh(ch);
 	    (void) refresh();
 	    return (ch);
 	}
@@ -975,7 +975,7 @@ cpufire(int x, int y)
 	    attron(COLOR_PAIR(COLOR_GREEN));
     }
 #endif /* A_COLOR */
-    (void) addch((chtype) (hit ? SHOWHIT : SHOWSPLASH));
+    AddCh((hit ? SHOWHIT : SHOWSPLASH));
 #ifdef A_COLOR
     (void) attrset(0);
 #endif /* A_COLOR */
@@ -1128,7 +1128,7 @@ playagain(void)
     for (ss = cpuship; ss < cpuship + SHIPTYPES; ss++)
 	for (j = 0; j < ss->length; j++) {
 	    cgoto(ss->y + j * yincr[ss->dir], ss->x + j * xincr[ss->dir]);
-	    (void) addch((chtype) ss->symbol);
+	    AddCh(ss->symbol);
 	}
 
     if (awinna())

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.26 2017/01/21 22:07:43 tom Exp $
+ * $Id: demo_defkey.c,v 1.27 2017/04/09 23:57:56 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -272,7 +272,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    break;
     }
     endwin();
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(EXIT_SUCCESS);
 }
 #else
 int

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2013,2014 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.8 2014/09/25 09:00:56 tom Exp $
+ * $Id: dots_termcap.c,v 1.9 2014/09/25 09:00:56 tom Exp $
  *
  * A simple demo of the termcap interface.
  */

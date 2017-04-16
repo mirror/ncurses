@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.74 2013/12/15 01:08:28 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.75 2017/04/05 23:19:24 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -252,10 +252,10 @@ make_db_name(char *dst, const char *src, unsigned limit)
 typedef void (DescHook) (int /* db_index */ ,
 			 int /* db_limit */ ,
 			 const char * /* term_name */ ,
-			 TERMTYPE * /* term */ );
+			 TERMTYPE2 * /* term */ );
 
 static const char *
-term_description(TERMTYPE *tp)
+term_description(TERMTYPE2 *tp)
 {
     const char *desc;
 
@@ -270,7 +270,7 @@ term_description(TERMTYPE *tp)
 
 /* display a description for the type */
 static void
-deschook(int db_index, int db_limit, const char *term_name, TERMTYPE *tp)
+deschook(int db_index, int db_limit, const char *term_name, TERMTYPE2 *tp)
 {
     (void) db_index;
     (void) db_limit;
@@ -294,7 +294,7 @@ string_sum(const char *value)
 }
 
 static unsigned long
-checksum_of(TERMTYPE *tp)
+checksum_of(TERMTYPE2 *tp)
 {
     unsigned long result = string_sum(tp->term_names);
     unsigned i;
@@ -313,7 +313,7 @@ checksum_of(TERMTYPE *tp)
 
 /* collect data, to sort before display */
 static void
-sorthook(int db_index, int db_limit, const char *term_name, TERMTYPE *tp)
+sorthook(int db_index, int db_limit, const char *term_name, TERMTYPE2 *tp)
 {
     TERMDATA *data = new_termdata();
 
@@ -327,7 +327,7 @@ sorthook(int db_index, int db_limit, const char *term_name, TERMTYPE *tp)
 static void
 show_termcap(int db_index, int db_limit, char *buffer, DescHook hook)
 {
-    TERMTYPE data;
+    TERMTYPE2 data;
     char *next = strchr(buffer, ':');
     char *last;
     char *list = buffer;
@@ -424,7 +424,7 @@ typelist(int eargc, char *eargv[],
 		}
 		while ((entry = readdir(entrydir)) != 0) {
 		    char *name_2;
-		    TERMTYPE lterm;
+		    TERMTYPE2 lterm;
 		    char *cn;
 		    int status;
 
@@ -453,7 +453,7 @@ typelist(int eargc, char *eargv[],
 			/* apply the selected hook function */
 			hook(i, eargc, cn, &lterm);
 		    }
-		    _nc_free_termtype(&lterm);
+		    _nc_free_termtype2(&lterm);
 		    free(name_2);
 		}
 		closedir(entrydir);
@@ -478,7 +478,7 @@ typelist(int eargc, char *eargv[],
 
 		    code = _nc_db_first(capdbp, &key, &data);
 		    while (code == 0) {
-			TERMTYPE lterm;
+			TERMTYPE2 lterm;
 			int used;
 			char *have;
 			char *cn;

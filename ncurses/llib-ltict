@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #undef _nc_init_entry
 void	_nc_init_entry(
-		TERMTYPE *const tp)
+		ENTRY	*const tp)
 		{ /* void */ }
 
 #undef _nc_copy_entry
@@ -58,8 +58,8 @@ void	_nc_wrap_entry(
 
 #undef _nc_merge_entry
 void	_nc_merge_entry(
-		TERMTYPE *const to, 
-		TERMTYPE *const from)
+		ENTRY	*const target, 
+		ENTRY	*const source)
 		{ /* void */ }
 
 /* ./tinfo/captoinfo.c */
@@ -91,7 +91,7 @@ char	*_nc_tic_expand(
 
 #undef _nc_check_termtype2
 void	(*_nc_check_termtype2)(
-		TERMTYPE *p1, 
+		TERMTYPE2 *p1, 
 		NCURSES_BOOL p2);
 #undef _nc_check_termtype
 void	(*_nc_check_termtype)(
@@ -174,7 +174,7 @@ void	_nc_panic_mode(
 
 #undef _nc_parse_entry
 int	_nc_parse_entry(
-		struct entry *entryp, 
+		ENTRY	*entryp, 
 		int	literal, 
 		NCURSES_BOOL silent)
 		{ return(*(int *)0); }
@@ -194,12 +194,12 @@ void	_nc_set_writedir(
 
 #undef _nc_write_entry
 void	_nc_write_entry(
-		TERMTYPE *const tp)
+		TERMTYPE2 *const tp)
 		{ /* void */ }
 
 #undef _nc_write_object
 int	_nc_write_object(
-		TERMTYPE *tp, 
+		TERMTYPE2 *tp, 
 		char	*buffer, 
 		unsigned *offset, 
 		unsigned limit)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.39 2016/09/04 20:38:33 tom Exp $
+ * $Id: demo_panels.c,v 1.41 2017/04/15 18:39:29 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -479,7 +479,7 @@ show_panels(PANEL * px[MAX_PANELS + 1])
 	"  m - move the panel (M for continuous move)",
 	"  r - resize the panel",
 	"  s - show the panel",
-	"  b - put the panel on the top of the stack"
+	"  t - put the panel on the top of the stack"
     };
 
     struct {
@@ -655,7 +655,7 @@ get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
 		wrefresh(curscr);
 	    } else if (ch == '\n' || ch == KEY_ENTER) {
 		break;
-	    } else if (ch == '?') {
+	    } else if (ch == HELP_KEY_1) {
 		show_panels(px);
 	    } else if (length + 3 < limit) {
 		if (ch >= KEY_MIN) {

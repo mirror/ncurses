@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2014 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2014,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.3 2014/08/09 22:28:42 tom Exp $
+ * $Id: dots_curses.c,v 1.4 2017/04/15 14:13:30 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -142,7 +142,7 @@ main(int argc GCC_UNUSED,
 		napms(1);
 	    }
 	}
-	addch((chtype) p);
+	AddCh(p);
 	refresh();
 	++total_chars;
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2012,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,12 +26,13 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.12 2012/11/18 01:55:35 tom Exp $
+ * $Id: chgat.c,v 1.15 2017/04/16 00:47:55 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
 
 #include <test.priv.h>
+#include <popup_msg.h>
 
 #if HAVE_CHGAT
 
@@ -200,7 +201,7 @@ init_status(WINDOW *win, STATUS * sp)
 static void
 show_help(WINDOW *win)
 {
-    static const char *table[] =
+    static const char *msgs[] =
     {
 	"Basic commands:"
 	,"Use h/j/k/l or arrow keys to move the cursor."
@@ -214,19 +215,10 @@ show_help(WINDOW *win)
 	,"=     resets count to zero."
 	,"-     negates count."
 	,"?     shows this help-window"
-	,""
-	,""
+	,0
     };
 
-    int y_max, x_max;
-    int row;
-
-    getmaxyx(win, y_max, x_max);
-    for (row = 0; row < (int) SIZEOF(table) && row < y_max; ++row) {
-	MvWPrintw(win, row, 0, "%.*s", x_max, table[row]);
-    }
-    while (wgetch(win) != 'q')
-	beep();
+    popup_msg(win, msgs);
 }
 
 static void
@@ -280,8 +272,8 @@ update_status(WINDOW *win, STATUS * sp)
 	sp->count = -(sp->count);
 	show_status(win, sp);
 	break;
-    case '?':
-	do_subwindow(win, sp, show_help);
+    case HELP_KEY_1:
+	show_help(win);
 	break;
     default:
 	if (isdigit(sp->ch)) {

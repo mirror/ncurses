@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_ti.c,v 1.31 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: lib_ti.c,v 1.32 2017/04/11 01:15:42 tom Exp $")
 
 #if 0
 static bool
@@ -57,7 +57,7 @@ NCURSES_SP_NAME(tigetflag) (NCURSES_SP_DCLx NCURSES_CONST char *str)
     T((T_CALLED("tigetflag(%p, %s)"), (void *) SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 
@@ -102,7 +102,7 @@ NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx NCURSES_CONST char *str)
     T((T_CALLED("tigetnum(%p, %s)"), (void *) SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 
@@ -149,7 +149,7 @@ NCURSES_SP_NAME(tigetstr) (NCURSES_SP_DCLx NCURSES_CONST char *str)
     T((T_CALLED("tigetstr(%p, %s)"), (void *) SP_PARM, str));
 
     if (HasTInfoTerminal(SP_PARM)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 

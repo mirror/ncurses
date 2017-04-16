@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2010 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2010,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inch_wide.c,v 1.7 2010/05/01 19:13:46 tom Exp $
+ * $Id: inch_wide.c,v 1.8 2017/04/15 18:52:39 tom Exp $
  */
 /*
        int in_wch(cchar_t *wcval);
@@ -44,6 +44,7 @@
 */
 
 #include <test.priv.h>
+#include <popup_msg.h>
 
 #if USE_WIDEC_SUPPORT
 
@@ -59,6 +60,17 @@ Quit(int ch)
 static int
 test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 {
+    static const char *help[] =
+    {
+	"Test input from screen using inch(), etc., in a moveable viewport.",
+	"",
+	"Commands:",
+	" ESC/^Q                   - quit",
+	" h,j,k,l (and arrow-keys) - move viewport",
+	" w                        - recur to new window",
+	0
+    };
+
     WINDOW *txtbox = 0;
     WINDOW *txtwin = 0;
     FILE *fp;
@@ -147,6 +159,9 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 		touchwin(txtwin);
 		wnoutrefresh(txtwin);
 	    }
+	    break;
+	case HELP_KEY_1:
+	    popup_msg(txtwin, help);
 	    break;
 	default:
 	    beep();

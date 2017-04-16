@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.82 2017/04/03 09:00:45 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.83 2017/04/06 22:15:54 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -56,8 +56,8 @@ static short const parametrized[] =
 #include <parametrized.h>
 #endif
 
-static void postprocess_termcap(TERMTYPE *, bool);
-static void postprocess_terminfo(TERMTYPE *);
+static void postprocess_termcap(TERMTYPE2 *, bool);
+static void postprocess_terminfo(TERMTYPE2 *);
 static struct name_table_entry const *lookup_fullname(const char *name);
 
 #if NCURSES_XNAMES
@@ -66,7 +66,7 @@ static struct name_table_entry const *
 _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 {
     static struct name_table_entry temp;
-    TERMTYPE *tp = &(entryp->tterm);
+    TERMTYPE2 *tp = &(entryp->tterm);
     unsigned offset = 0;
     unsigned actual;
     unsigned tindex;
@@ -152,7 +152,7 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 	case NUMBER:
 	    tp->ext_Numbers++;
 	    tp->num_Numbers++;
-	    TYPE_REALLOC(short, tp->num_Numbers, tp->Numbers);
+	    TYPE_REALLOC(NCURSES_INT2, tp->num_Numbers, tp->Numbers);
 	    for_each_value(tp->num_Numbers)
 		tp->Numbers[last] = tp->Numbers[last - 1];
 	    break;
@@ -206,7 +206,7 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 #define MAX_NUMBER 0x7fff	/* positive shorts only */
 
 NCURSES_EXPORT(int)
-_nc_parse_entry(ENTRY *entryp, int literal, bool silent)
+_nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 {
     int token_type;
     struct name_table_entry const *entry_ptr;
@@ -220,7 +220,7 @@ _nc_parse_entry(ENTRY *entryp, int literal, bool silent)
     if (token_type != NAMES)
 	_nc_err_abort("Entry does not start with terminal names in column one");
 
-    _nc_init_entry(&entryp->tterm);
+    _nc_init_entry(entryp);
 
     entryp->cstart = _nc_comment_start;
     entryp->cend = _nc_comment_end;
@@ -638,7 +638,7 @@ static const char C_HT[] = "\t";
 #define CUR tp->
 
 static void
-postprocess_termcap(TERMTYPE *tp, bool has_base)
+postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 {
     char buf[MAX_LINE * 2 + 2];
     string_desc result;
@@ -928,7 +928,7 @@ postprocess_termcap(TERMTYPE *tp, bool has_base)
 }
 
 static void
-postprocess_terminfo(TERMTYPE *tp)
+postprocess_terminfo(TERMTYPE2 *tp)
 {
     /*
      * TERMINFO-TO-TERMINFO MAPPINGS FOR SOURCE TRANSLATION

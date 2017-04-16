@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.142 2017/03/16 08:19:06 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.143 2017/04/06 22:19:06 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -49,7 +49,7 @@ MODULE_ID("$Id: read_entry.c,v 1.142 2017/03/16 08:19:06 tom Exp $")
 
 #if NCURSES_USE_DATABASE
 static void
-convert_shorts(char *buf, short *Numbers, int count)
+convert_numbers(char *buf, NCURSES_INT2 *Numbers, int count)
 {
     int i;
     for (i = 0; i < count; i++) {
@@ -119,7 +119,7 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
 #endif
 
 NCURSES_EXPORT(void)
-_nc_init_termtype(TERMTYPE *const tp)
+_nc_init_termtype(TERMTYPE2 *const tp)
 {
     unsigned i;
 
@@ -134,7 +134,7 @@ _nc_init_termtype(TERMTYPE *const tp)
     if (tp->Booleans == 0)
 	TYPE_MALLOC(NCURSES_SBOOL, BOOLCOUNT, tp->Booleans);
     if (tp->Numbers == 0)
-	TYPE_MALLOC(short, NUMCOUNT, tp->Numbers);
+	TYPE_MALLOC(NCURSES_INT2, NUMCOUNT, tp->Numbers);
     if (tp->Strings == 0)
 	TYPE_MALLOC(char *, STRCOUNT, tp->Strings);
 
@@ -169,7 +169,7 @@ valid_shorts(char *buffer, int limit)
  * Return TGETENT_YES if read, TGETENT_NO if not found or garbled.
  */
 NCURSES_EXPORT(int)
-_nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
+_nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 {
     int offset = 0;
     int name_size, bool_count, num_count, str_count, str_size;
@@ -247,11 +247,11 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
     even_boundary(name_size + bool_count);
 
     /* grab the numbers */
-    if ((ptr->Numbers = TYPE_CALLOC(short, max(NUMCOUNT, num_count))) == 0
+    if (!(ptr->Numbers = TYPE_CALLOC(NCURSES_INT2, max(NUMCOUNT, num_count)))
 	|| !read_shorts(buf, num_count)) {
 	returnDB(TGETENT_NO);
     }
-    convert_shorts(buf, ptr->Numbers, num_count);
+    convert_numbers(buf, ptr->Numbers, num_count);
 
     if ((ptr->Strings = TYPE_CALLOC(char *, max(STRCOUNT, str_count))) == 0) {
 	returnDB(TGETENT_NO);
@@ -304,7 +304,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 	ptr->num_Strings = UShort(STRCOUNT + ext_str_count);
 
 	TYPE_REALLOC(NCURSES_SBOOL, ptr->num_Booleans, ptr->Booleans);
-	TYPE_REALLOC(short, ptr->num_Numbers, ptr->Numbers);
+	TYPE_REALLOC(NCURSES_INT2, ptr->num_Numbers, ptr->Numbers);
 	TYPE_REALLOC(char *, ptr->num_Strings, ptr->Strings);
 
 	TR(TRACE_DATABASE, ("extended header is %d/%d/%d(%d:%d)",
@@ -328,7 +328,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
 		returnDB(TGETENT_NO);
 	    }
 	    TR(TRACE_DATABASE, ("Before converting extended-numbers"));
-	    convert_shorts(buf, ptr->Numbers + NUMCOUNT, ext_num_count);
+	    convert_numbers(buf, ptr->Numbers + NUMCOUNT, ext_num_count);
 	}
 
 	TR(TRACE_DATABASE, ("READ extended-offsets @%d", offset));
@@ -425,7 +425,7 @@ _nc_read_termtype(TERMTYPE *ptr, char *buffer, int limit)
  *	table.
  */
 NCURSES_EXPORT(int)
-_nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
+_nc_read_file_entry(const char *const filename, TERMTYPE2 *ptr)
 /* return 1 if read, 0 if not found or garbled */
 {
     FILE *fp = 0;
@@ -444,7 +444,7 @@ _nc_read_file_entry(const char *const filename, TERMTYPE *ptr)
 
 	    TR(TRACE_DATABASE, ("read terminfo %s", filename));
 	    if ((code = _nc_read_termtype(ptr, buffer, limit)) == TGETENT_NO) {
-		_nc_free_termtype(ptr);
+		_nc_free_termtype2(ptr);
 	    }
 	} else {
 	    code = TGETENT_NO;
@@ -616,7 +616,7 @@ _nc_read_tic_entry(char *filename,
 		   unsigned limit,
 		   const char *const path,
 		   const char *name,
-		   TERMTYPE *const tp)
+		   TERMTYPE2 *const tp)
 {
     int code = TGETENT_NO;
 #if USE_HASHED_DB
@@ -708,16 +708,12 @@ _nc_read_tic_entry(char *filename,
 #endif /* NCURSES_USE_DATABASE */
 
 /*
- *	_nc_read_entry(char *name, char *filename, TERMTYPE *tp)
- *
- *	Find and read the compiled entry for a given terminal type,
- *	if it exists.  We take pains here to make sure no combination
- *	of environment variables and terminal type name can be used to
- *	overrun the file buffer.
+ * Find and read the compiled entry for a given terminal type, if it exists. 
+ * We take pains here to make sure no combination of environment variables and
+ * terminal type name can be used to overrun the file buffer.
  */
-
 NCURSES_EXPORT(int)
-_nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
+_nc_read_entry2(const char *const name, char *const filename, TERMTYPE2 *const tp)
 {
     int code = TGETENT_NO;
 
@@ -755,3 +751,19 @@ _nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
     }
     return code;
 }
+
+#if NCURSES_EXT_NUMBERS
+/*
+ * This entrypoint is used by tack.
+ */
+NCURSES_EXPORT(int)
+_nc_read_entry(const char *const name, char *const filename, TERMTYPE *const tp)
+{
+    TERMTYPE2 dummy;
+    int rc;
+    rc = _nc_read_entry2(name, filename, &dummy);
+    if (rc == TGETENT_YES)
+	_nc_export_termtype2(tp, &dummy);
+    return rc;
+}
+#endif

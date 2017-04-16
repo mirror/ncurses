@@ -42,7 +42,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.142 2017/02/18 18:40:18 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.143 2017/04/05 09:27:51 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -295,7 +295,7 @@ useeq(ENTRY * e1, ENTRY * e2)
 }
 
 static bool
-entryeq(TERMTYPE *t1, TERMTYPE *t2)
+entryeq(TERMTYPE2 *t1, TERMTYPE2 *t2)
 /* are two entries equivalent? */
 {
     unsigned i;
@@ -810,7 +810,7 @@ lookup_params(const assoc * table, char *dst, char *src)
 }
 
 static void
-analyze_string(const char *name, const char *cap, TERMTYPE *tp)
+analyze_string(const char *name, const char *cap, TERMTYPE2 *tp)
 {
     char buf2[MAX_TERMINFO_LENGTH];
     const char *sp;
@@ -1294,7 +1294,7 @@ string_variable(const char *type)
 
 /* dump C initializers for the terminal type */
 static void
-dump_initializers(TERMTYPE *term)
+dump_initializers(TERMTYPE2 *term)
 {
     unsigned n;
     const char *str = 0;
@@ -1418,7 +1418,7 @@ dump_initializers(TERMTYPE *term)
 
 /* dump C initializers for the terminal type */
 static void
-dump_termtype(TERMTYPE *term)
+dump_termtype(TERMTYPE2 *term)
 {
     (void) printf("\t%s\n\t\t%s,\n", L_CURL, name_initializer("alias"));
     (void) printf("\t\t(char *)0,\t/* pointer to string table */\n");
@@ -1833,7 +1833,7 @@ main(int argc, char *argv[])
 				   _nc_progname,
 				   tname[termcount]);
 
-		status = _nc_read_entry(tname[termcount],
+		status = _nc_read_entry2(tname[termcount],
 					tfile[termcount],
 					&entries[termcount].tterm);
 	    }

@@ -1,6 +1,6 @@
-# $Id: MKkeyname.awk,v 1.49 2016/05/28 23:11:26 tom Exp $
+# $Id: MKkeyname.awk,v 1.50 2017/04/11 01:18:08 tom Exp $
 ##############################################################################
-# Copyright (c) 1999-2013,2016 Free Software Foundation, Inc.                #
+# Copyright (c) 1999-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -134,7 +134,7 @@ END {
 	print "		} else if (result == 0 && HasTerminal(sp)) {"
 	print "			int j, k;"
 	print "			char * bound;"
-	print "			TERMTYPE *tp = &(TerminalOf(sp)->type);"
+	print "			TERMTYPE2 *tp = &TerminalType(TerminalOf(sp));"
 	print "			unsigned save_trace = _nc_tracing;"
 	print ""
 	print "			_nc_tracing = 0;	/* prevent recursion via keybound() */"

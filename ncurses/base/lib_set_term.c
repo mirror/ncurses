@@ -43,11 +43,10 @@
 #include <curses.priv.h>
 #include <tic.h>
 
-#ifndef CUR
+#undef CUR
 #define CUR SP_TERMTYPE
-#endif
 
-MODULE_ID("$Id: lib_set_term.c,v 1.159 2017/04/02 14:26:18 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.162 2017/04/15 21:44:03 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -193,6 +192,8 @@ delscreen(SCREEN *sp)
 	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
 	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx sp->_term);
 	FreeIfNeeded(sp->out_buffer);
+	if (_nc_prescreen.allocated == sp)
+	    _nc_prescreen.allocated = 0;
 	free(sp);
 
 	/*
@@ -261,7 +262,7 @@ extract_fgbg(const char *src, int *result)
     if ((dst = tmp) == 0) {
 	dst = src;
     } else if (value >= 0) {
-	*result = value;
+	*result = (int) value;
     }
     while (*dst != 0 && *dst != ';')
 	dst++;

@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.54 2017/04/03 21:36:00 tom Exp $ */
+/* $Id: term_entry.h,v 1.55 2017/04/06 22:45:34 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -118,8 +118,7 @@ typedef struct {
 } ENTRY_USES;
 
 struct entry {
-	TERMTYPE tterm;
-	int *XNumbers;		/* array of integer values */
+	TERMTYPE2 tterm;
 	unsigned nuses;
 	ENTRY_USES uses[MAX_USES];
 	int ncrosslinks;
@@ -167,15 +166,18 @@ extern NCURSES_EXPORT_VAR(ENTRY *) _nc_tail;
 /* alloc_entry.c: elementary allocation code */
 extern NCURSES_EXPORT(ENTRY *) _nc_copy_entry (ENTRY *oldp);
 extern NCURSES_EXPORT(char *) _nc_save_str (const char *const);
-extern NCURSES_EXPORT(void) _nc_init_entry (TERMTYPE *const);
-extern NCURSES_EXPORT(void) _nc_merge_entry (TERMTYPE *const, TERMTYPE *const);
+extern NCURSES_EXPORT(void) _nc_init_entry (ENTRY *const);
+extern NCURSES_EXPORT(void) _nc_merge_entry (ENTRY *const, ENTRY *const);
 extern NCURSES_EXPORT(void) _nc_wrap_entry (ENTRY *const, bool);
 
 /* alloc_ttype.c: elementary allocation code */
-extern NCURSES_EXPORT(void) _nc_align_termtype (TERMTYPE *, TERMTYPE *);
+extern NCURSES_EXPORT(void) _nc_align_termtype (TERMTYPE2 *, TERMTYPE2 *);
+
+/* free_ttype.c: elementary allocation code */
+extern NCURSES_EXPORT(void) _nc_free_termtype2 (TERMTYPE2 *);
 
 /* lib_termcap.c: trim sgr0 string for termcap users */
-extern NCURSES_EXPORT(char *) _nc_trim_sgr0 (TERMTYPE *);
+extern NCURSES_EXPORT(char *) _nc_trim_sgr0 (TERMTYPE2 *);
 
 /* parse_entry.c: entry-parsing code */
 #if NCURSES_XNAMES
@@ -187,8 +189,8 @@ extern NCURSES_EXPORT(int) _nc_capcmp (const char *, const char *);
 
 /* write_entry.c: writing an entry to the file system */
 extern NCURSES_EXPORT(void) _nc_set_writedir (const char *);
-extern NCURSES_EXPORT(void) _nc_write_entry (TERMTYPE *const);
-extern NCURSES_EXPORT(int) _nc_write_object(TERMTYPE *, char *, unsigned *, unsigned);
+extern NCURSES_EXPORT(void) _nc_write_entry (TERMTYPE2 *const);
+extern NCURSES_EXPORT(int) _nc_write_object (TERMTYPE2 *, char *, unsigned *, unsigned);
 
 /* comp_parse.c: entry list handling */
 extern NCURSES_EXPORT(void) _nc_read_entry_source (FILE*, char*, int, bool, bool (*)(ENTRY*));
@@ -197,7 +199,7 @@ extern NCURSES_EXPORT(int) _nc_resolve_uses (bool); /* obs 20040705 */
 extern NCURSES_EXPORT(int) _nc_resolve_uses2 (bool, bool);
 extern NCURSES_EXPORT(void) _nc_free_entries (ENTRY *);
 extern NCURSES_IMPEXP void NCURSES_API (*_nc_check_termtype)(TERMTYPE *); /* obs 20040705 */
-extern NCURSES_IMPEXP void NCURSES_API (*_nc_check_termtype2)(TERMTYPE *, bool);
+extern NCURSES_IMPEXP void NCURSES_API (*_nc_check_termtype2)(TERMTYPE2 *, bool);
 
 /* trace_xnames.c */
 extern NCURSES_EXPORT(void) _nc_trace_xnames (TERMTYPE *);

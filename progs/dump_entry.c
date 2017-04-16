@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.149 2017/03/04 20:18:20 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.150 2017/04/05 09:27:40 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -299,7 +299,7 @@ dump_init(const char *version,
 		       _nc_progname, width, tversion, outform);
 }
 
-static TERMTYPE *cur_type;
+static TERMTYPE2 *cur_type;
 
 static int
 dump_predicate(PredType type, PredIdx idx)
@@ -322,7 +322,7 @@ dump_predicate(PredType type, PredIdx idx)
     return (FALSE);		/* pacify compiler */
 }
 
-static void set_obsolete_termcaps(TERMTYPE *tp);
+static void set_obsolete_termcaps(TERMTYPE2 *tp);
 
 /* is this the index of a function key string? */
 #define FNKEY(i) \
@@ -697,7 +697,7 @@ has_params(const char *src)
 }
 
 static char *
-fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
+fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
 {
     bool percent = FALSE;
     bool params = has_params(src);
@@ -800,7 +800,7 @@ fmt_complex(TERMTYPE *tterm, const char *capability, char *src, int level)
 #define EXTRA_CAP 20
 
 int
-fmt_entry(TERMTYPE *tterm,
+fmt_entry(TERMTYPE2 *tterm,
 	  PredFunc pred,
 	  int content_only,
 	  int suppress_untranslatable,
@@ -1188,7 +1188,7 @@ fmt_entry(TERMTYPE *tterm,
 }
 
 static bool
-kill_string(TERMTYPE *tterm, char *cap)
+kill_string(TERMTYPE2 *tterm, char *cap)
 {
     unsigned n;
     for (n = 0; n < NUM_STRINGS(tterm); ++n) {
@@ -1201,7 +1201,7 @@ kill_string(TERMTYPE *tterm, char *cap)
 }
 
 static char *
-find_string(TERMTYPE *tterm, char *name)
+find_string(TERMTYPE2 *tterm, char *name)
 {
     PredIdx n;
     for (n = 0; n < NUM_STRINGS(tterm); ++n) {
@@ -1222,7 +1222,7 @@ find_string(TERMTYPE *tterm, char *name)
  * make it smaller.
  */
 static int
-kill_labels(TERMTYPE *tterm, int target)
+kill_labels(TERMTYPE2 *tterm, int target)
 {
     int n;
     int result = 0;
@@ -1247,7 +1247,7 @@ kill_labels(TERMTYPE *tterm, int target)
  * make it smaller.
  */
 static int
-kill_fkeys(TERMTYPE *tterm, int target)
+kill_fkeys(TERMTYPE2 *tterm, int target)
 {
     int n;
     int result = 0;
@@ -1301,7 +1301,7 @@ one_one_mapping(const char *mapping)
 #define SHOW_WHY PRINTF
 
 static bool
-purged_acs(TERMTYPE *tterm)
+purged_acs(TERMTYPE2 *tterm)
 {
     bool result = FALSE;
 
@@ -1348,13 +1348,13 @@ encode_b64(char *target, char *source, unsigned state, int *saved)
  * Dump a single entry.
  */
 void
-dump_entry(TERMTYPE *tterm,
+dump_entry(TERMTYPE2 *tterm,
 	   int suppress_untranslatable,
 	   int limited,
 	   int numbers,
 	   PredFunc pred)
 {
-    TERMTYPE save_tterm;
+    TERMTYPE2 save_tterm;
     int len, critlen;
     const char *legend;
     bool infodump;
@@ -1566,7 +1566,7 @@ show_entry(void)
 
 void
 compare_entry(PredHook hook,
-	      TERMTYPE *tp GCC_UNUSED,
+	      TERMTYPE2 *tp GCC_UNUSED,
 	      bool quiet)
 /* compare two entries */
 {
@@ -1625,7 +1625,7 @@ compare_entry(PredHook hook,
 #define CUR tp->
 
 static void
-set_obsolete_termcaps(TERMTYPE *tp)
+set_obsolete_termcaps(TERMTYPE2 *tp)
 {
 #include "capdefaults.c"
 }
@@ -1635,7 +1635,7 @@ set_obsolete_termcaps(TERMTYPE *tp)
  * unique.
  */
 void
-repair_acsc(TERMTYPE *tp)
+repair_acsc(TERMTYPE2 *tp)
 {
     if (VALID_STRING(acs_chars)) {
 	size_t n, m;

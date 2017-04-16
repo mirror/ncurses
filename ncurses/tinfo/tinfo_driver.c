@@ -28,11 +28,11 @@
 
 /****************************************************************************
  *  Author: Juergen Pfeifer                                                 *
- *                                                                          *
+ *     and: Thomas E. Dickey                                                *
  ****************************************************************************/
 
 #include <curses.priv.h>
-#define CUR ((TERMINAL*)TCB)->type.
+#define CUR TerminalType((TERMINAL*)TCB).
 #include <tic.h>
 #include <termcap.h>		/* ospeed */
 
@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.47 2017/03/28 09:15:24 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.51 2017/04/14 08:19:49 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -115,7 +115,7 @@ drv_Name(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static void
-get_baudrate(TERMINAL * termp)
+get_baudrate(TERMINAL *termp)
 {
     int my_ospeed;
     int result;
@@ -161,17 +161,17 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     TCB->magic = TCBMAGIC;
 
 #if (NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP)
-    status = _nc_setup_tinfo(tname, &termp->type);
+    status = _nc_setup_tinfo(tname, &TerminalType(termp));
 #else
     status = TGETENT_NO;
 #endif
 
     /* try fallback list if entry on disk */
     if (status != TGETENT_YES) {
-	const TERMTYPE *fallback = _nc_fallback(tname);
+	const TERMTYPE2 *fallback = _nc_fallback2(tname);
 
 	if (fallback) {
-	    termp->type = *fallback;
+	    TerminalType(termp) = *fallback;
 	    status = TGETENT_YES;
 	}
     }
@@ -185,6 +185,9 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	}
     }
     result = TRUE;
+#if NCURSES_EXT_NUMBERS
+    _nc_export_termtype2(&termp->type, &TerminalType(termp));
+#endif
 #if !USE_REENTRANT
 #define MY_SIZE (size_t) NAMESIZE - 1
     _nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);

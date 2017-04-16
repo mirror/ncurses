@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.32 2013/04/27 19:50:17 tom Exp $
+ * $Id: hashtest.c,v 1.33 2017/04/15 14:13:40 tom Exp $
  */
 
 #include <test.priv.h>
@@ -82,7 +82,7 @@ genlines(int base)
     move(0, 0);
     for (i = 0; i < head_lines; i++)
 	for (j = 0; j < COLS; j++)
-	    addch(UChar((j % 8 == 0) ? ('A' + j / 8) : '-'));
+	    AddCh(UChar((j % 8 == 0) ? ('A' + j / 8) : '-'));
 
     move(head_lines, 0);
     for (i = head_lines; i < LINES - foot_lines; i++) {
@@ -90,13 +90,13 @@ genlines(int base)
 			     + LO_CHAR);
 	int hi = (extend_corner || (i < LINES - 1)) ? COLS : COLS - 1;
 	for (j = 0; j < hi; j++)
-	    addch(c);
+	    AddCh(c);
     }
 
     for (i = LINES - foot_lines; i < LINES; i++) {
 	move(i, 0);
 	for (j = 0; j < (extend_corner ? COLS : COLS - 1); j++)
-	    addch(UChar((j % 8 == 0) ? ('A' + j / 8) : '-'));
+	    AddCh(UChar((j % 8 == 0) ? ('A' + j / 8) : '-'));
     }
 
     scrollok(stdscr, TRUE);

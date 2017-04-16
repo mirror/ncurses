@@ -1,4 +1,27 @@
 # vile:awkmode
+function declare_termtype(number,suffix) {
+	printf "typedef struct termtype%s {	/* in-core form of terminfo data */\n", suffix;
+	print  "    char  *term_names;		/* str_table offset of term names */"
+	print  "    char  *str_table;		/* pointer to string table */"
+	print  "    NCURSES_SBOOL  *Booleans;	/* array of boolean values */"
+	printf "    %-5s *Numbers;		/* array of integer values */\n", number;
+	print  "    char  **Strings;		/* array of string offsets */"
+	print  ""
+	print  "#if NCURSES_XNAMES"
+	print  "    char  *ext_str_table;	/* pointer to extended string table */"
+	print  "    char  **ext_Names;		/* corresponding names */"
+	print  ""
+	print  "    unsigned short num_Booleans;/* count total Booleans */";
+	print  "    unsigned short num_Numbers;	/* count total Numbers */";
+	print  "    unsigned short num_Strings;	/* count total Strings */";
+	print  ""
+	print  "    unsigned short ext_Booleans;/* count extensions to Booleans */";
+	print  "    unsigned short ext_Numbers;	/* count extensions to Numbers */";
+	print  "    unsigned short ext_Strings;	/* count extensions to Strings */";
+	print  "#endif /* NCURSES_XNAMES */"
+	print  ""
+	printf "} TERMTYPE%s;\n", suffix;
+}
 BEGIN {
 	lcurl = "{";
 	rcurl = "}";
@@ -36,7 +59,7 @@ BEGIN {
 	print  "/*    and: Thomas E. Dickey                        1995-on                  */"
 	print  "/****************************************************************************/"
 	print  ""
-	print  "/* $Id: MKterm.h.awk.in,v 1.66 2017/04/03 08:16:54 tom Exp $ */"
+	print  "/* $Id: MKterm.h.awk.in,v 1.67 2017/04/06 00:19:26 tom Exp $ */"
 	print  ""
 	print  "/*"
 	print  "**	term.h -- Definition of struct term"
@@ -179,27 +202,7 @@ END {
 	print  "/* used by code for comparing entries */"
 	print  "#define acs_chars_index	", acsindex
 	print  ""
-	print  "typedef struct termtype {	/* in-core form of terminfo data */"
-	print  "    char  *term_names;		/* str_table offset of term names */"
-	print  "    char  *str_table;		/* pointer to string table */"
-	print  "    NCURSES_SBOOL  *Booleans;	/* array of boolean values */"
-	print  "    short *Numbers;		/* array of integer values */"
-	print  "    char  **Strings;		/* array of string offsets */"
-	print  ""
-	print  "#if NCURSES_XNAMES"
-	print  "    char  *ext_str_table;	/* pointer to extended string table */"
-	print  "    char  **ext_Names;		/* corresponding names */"
-	print  ""
-	print  "    unsigned short num_Booleans;/* count total Booleans */"
-	print  "    unsigned short num_Numbers;	/* count total Numbers */"
-	print  "    unsigned short num_Strings;	/* count total Strings */"
-	print  ""
-	print  "    unsigned short ext_Booleans;/* count extensions to Booleans */"
-	print  "    unsigned short ext_Numbers;	/* count extensions to Numbers */"
-	print  "    unsigned short ext_Strings;	/* count extensions to Strings */"
-	print  "#endif /* NCURSES_XNAMES */"
-	print  ""
-	print  "} TERMTYPE;"
+	declare_termtype("short","");
 	print  ""
 	print  "/*"
 	print  " * The only reason these structures are visible is for read-only use."
@@ -207,6 +210,13 @@ END {
 	print  " * curses implementations."
 	print  " */"
 	print  "#ifdef NCURSES_INTERNALS"
+	print  ""
+	if (@NCURSES_EXT_COLORS@) {
+	declare_termtype("int","2");
+	} else {
+	print  "typedef TERMTYPE TERMTYPE2;"
+	}
+	print  ""
 	print  "typedef struct term {		/* describe an actual terminal */"
 	print  "    TERMTYPE	type;		/* terminal type description */"
 	print  "    short	Filedes;	/* file description being written to */"
@@ -214,6 +224,9 @@ END {
 	print  "    TTY		Nttyb;		/* current state of the terminal */"
 	print  "    int		_baudrate;	/* used to compute padding */"
 	print  "    char *	_termname;	/* used for termname() */"
+	if (@NCURSES_EXT_COLORS@) {
+	print  "    TERMTYPE2	type2;		/* extended terminal type description */"
+	}
 	print  "} TERMINAL;"
 	print  "#else"
 	print  "typedef struct term TERMINAL;"
@@ -270,9 +283,9 @@ END {
 	print  "#ifdef NCURSES_INTERNALS"
 	print  ""
 	print  "extern NCURSES_EXPORT(int) _nc_set_tty_mode (TTY *buf);"
-	print  "extern NCURSES_EXPORT(int) _nc_read_file_entry (const char *const, TERMTYPE *);"
-	print  "extern NCURSES_EXPORT(void) _nc_init_termtype (TERMTYPE *const);"
-	print  "extern NCURSES_EXPORT(int) _nc_read_termtype (TERMTYPE *, char *, int);"
+	print  "extern NCURSES_EXPORT(int) _nc_read_entry2 (const char * const, char * const, TERMTYPE2 *const);"
+	print  "extern NCURSES_EXPORT(int) _nc_read_file_entry (const char *const, TERMTYPE2 *);"
+	print  "extern NCURSES_EXPORT(int) _nc_read_termtype (TERMTYPE2 *, char *, int);"
 	print  "extern NCURSES_EXPORT(char *) _nc_first_name (const char *const);"
 	print  "extern NCURSES_EXPORT(int) _nc_name_match (const char *const, const char *const, const char *const);"
 	print  ""

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2011,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2015,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,13 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.28 2015/08/22 22:40:22 tom Exp $
+ * $Id: savescreen.c,v 1.32 2017/04/15 17:33:50 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
  */
 
 #include <test.priv.h>
+#include <popup_msg.h>
 
 #if HAVE_SCR_DUMP
 
@@ -50,8 +51,27 @@
 # endif
 #endif
 
+#if defined(__hpux)
+#define MyMarker 'X'
+#else
+#define MyMarker ACS_DIAMOND
+#endif
+
 static bool use_init = FALSE;
 static bool keep_dumps = FALSE;
+
+#if USE_WIDEC_SUPPORT
+/* In HPUX curses, cchar_t is opaque; other implementations are not */
+static wchar_t
+BaseChar(cchar_t data)
+{
+    wchar_t my_wchar[sizeof(cchar_t)];
+    attr_t my_attr;
+    short my_pair;
+    getcchar(&data, my_wchar, &my_attr, &my_pair, NULL);
+    return my_wchar[0];
+}
+#endif
 
 static int
 fexists(const char *name)
@@ -149,24 +169,6 @@ get_command(int which, int last)
 }
 
 static void
-show_help(const char **help)
-{
-    WINDOW *mywin = newwin(LINES, COLS, 0, 0);
-    int n;
-
-    box(mywin, 0, 0);
-    wmove(mywin, 1, 1);
-    for (n = 0; help[n] != 0; ++n) {
-	wmove(mywin, 1 + n, 2);
-	wprintw(mywin, "%.*s", COLS - 4, help[n]);
-    }
-    wgetch(mywin);
-    delwin(mywin);
-    touchwin(stdscr);
-    refresh();
-}
-
-static void
 editor_help(void)
 {
     static const char *msgs[] =
@@ -183,8 +185,9 @@ editor_help(void)
 	"   a           toggle between '#' and graphic symbol for drawing",
 	"   c           change color drawn by line to next in palette",
 	"   h,j,k,l or arrows to move around the screen, drawing",
+	0
     };
-    show_help(msgs);
+    popup_msg(stdscr, msgs);
 }
 
 static void
@@ -199,8 +202,9 @@ replay_help(void)
 	"   q           quit",
 	"   <space>     load the next screen",
 	"   <backspace> load the previous screen",
+	0
     };
-    show_help(msgs);
+    popup_msg(stdscr, msgs);
 }
 
 static void
@@ -358,7 +362,7 @@ main(int argc, char *argv[])
 		if (++which > last)
 		    which = 0;
 		break;
-	    case '?':
+	    case HELP_KEY_1:
 		replay_help();
 		break;
 	    default:
@@ -421,7 +425,7 @@ main(int argc, char *argv[])
 				wmove(stdscr, cy, cx);
 #if USE_WIDEC_SUPPORT
 				if (win_wch(curscr, &mycc) != ERR) {
-				    myxx = wcwidth(mycc.chars[0]);
+				    myxx = wcwidth(BaseChar(mycc));
 				    if (myxx > 0) {
 					wadd_wchnstr(stdscr, &mycc, 1);
 					cx += (myxx - 1);
@@ -463,7 +467,7 @@ main(int argc, char *argv[])
 	    case 'c':
 		color = (color + 1) % COLORS;
 		break;
-	    case '?':
+	    case HELP_KEY_1:
 		editor_help();
 		break;
 	    default:
@@ -472,9 +476,9 @@ main(int argc, char *argv[])
 	    }
 	    if (!done) {
 		attr_t attr = (A_REVERSE | (attr_t) COLOR_PAIR(color * COLORS));
-		chtype ch2 = (altchars ? ACS_DIAMOND : '#');
+		chtype ch2 = (altchars ? MyMarker : '#');
 		move(y, x);
-		addch(ch2 | attr);
+		AddCh(ch2 | attr);
 		move(y, x);
 	    }
 	}

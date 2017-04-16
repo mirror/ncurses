@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.17 2017/04/02 01:03:30 tom Exp $
+ * $Id: sp_tinfo.c,v 1.18 2017/04/13 21:35:31 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -267,7 +267,9 @@ cleanup(MYDATA * data)
 {
     set_curterm(data->term);
     del_curterm(data->term);
+#if !NO_LEAKS
     free(data->sp);		/* cannot use delscreen in tinfo */
+#endif
     free(data);
 }
 

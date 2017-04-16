@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.48 2017/01/22 00:39:52 tom Exp $
+ * $Id: blue.c,v 1.49 2017/04/15 13:36:36 tom Exp $
  */
 
 #include <test.priv.h>
@@ -196,7 +196,7 @@ deal_cards(void)
 static void
 printcard(int value)
 {
-    (void) addch(' ');
+    AddCh(' ');
     if (value == NOCARD) {
 	(void) addstr("   ");
     } else {
@@ -206,8 +206,8 @@ printcard(int value)
 					   ? RED_ON_WHITE
 					   : BLACK_ON_WHITE);
 
-	addch(ranks[isuit][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
-	addch(ranks[isuit][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
+	AddCh(ranks[isuit][0] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
+	AddCh(ranks[isuit][1] | (chtype) COLOR_PAIR(BLUE_ON_WHITE));
 
 #ifdef NCURSES_VERSION
 	(attron) ((int) color);	/* quieter compiler warnings */
@@ -222,7 +222,7 @@ printcard(int value)
 	    addwstr(values);
 	}
 #else
-	addch((chtype) suits[which]);
+	AddCh(suits[which]);
 #endif
 #ifdef NCURSES_VERSION
 	(attroff) ((int) color);
@@ -230,7 +230,7 @@ printcard(int value)
 	attroff(color);
 #endif
     }
-    (void) addch(' ');
+    AddCh(' ');
 }
 
 static void
@@ -348,7 +348,7 @@ play_game(void)
 		    (void) addstr(buf);
 		    move(PROMPTROW, (int) strlen(buf));
 		    clrtoeol();
-		    (void) addch(' ');
+		    AddCh(' ');
 		} while
 		    (((c = (char) getch()) < 'a' || c > 'd')
 		     && (c != 'r')

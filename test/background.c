@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2014,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.15 2014/08/09 22:31:23 tom Exp $
+ * $Id: background.c,v 1.16 2017/04/15 14:13:30 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -80,19 +80,19 @@ test_background(void)
     row = 7;
     mvprintw(row++, 10, "l");
     for (chr = 0; chr < 32; ++chr)
-	addch(' ');
+	AddCh(' ');
     printw("x\n");
     chr = 32;
     while (chr < 128) {
 	if ((chr % 32) == 0)
 	    mvprintw(row++, 10, "x");
-	addch((chtype) ((chr == 127) ? ' ' : chr));
+	AddCh((chr == 127) ? ' ' : chr);
 	if ((++chr % 32) == 0)
 	    printw("x\n");
     }
     mvprintw(row++, 10, "m");
     for (chr = 0; chr < 32; ++chr)
-	addch(' ');
+	AddCh(' ');
     printw("j\n");
     getch();
 

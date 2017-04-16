@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.9 2017/04/02 14:30:26 tom Exp $
+ * $Id: extended_color.c,v 1.10 2017/04/15 21:40:50 tom Exp $
  */
 
 #include <test.priv.h>
@@ -85,6 +85,8 @@ do_init_color(SCREEN *sp, int color, int adjust)
     } else {
 	i = extended_color_content(color, &r, &g, &b);
     }
+    if (i != OK)
+	failed("color_content");
 
     r = (adjust + 1000 + r) % 1000;
     g = (adjust + 1000 + g) % 1000;

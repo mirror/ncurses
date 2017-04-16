@@ -26,13 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.11 2017/04/08 21:48:53 tom Exp $
+ * $Id: demo_new_pair.c,v 1.13 2017/04/15 17:36:00 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
 
 #include <test.priv.h>
 #include <time.h>
+#include <popup_msg.h>
 
 #if HAVE_ALLOC_PAIR && USE_WIDEC_SUPPORT
 
@@ -116,24 +117,6 @@ next_color(int now)
 	result = now;
     }
     return result;
-}
-
-static void
-show_help(const char **help)
-{
-    WINDOW *mywin = newwin(LINES, COLS, 0, 0);
-    int n;
-
-    wmove(mywin, 1, 1);
-    for (n = 0; help[n] != 0; ++n) {
-	wmove(mywin, 1 + n, 2);
-	wprintw(mywin, "%.*s\n", COLS - 4, help[n]);
-    }
-    box(mywin, 0, 0);
-    wgetch(mywin);
-    delwin(mywin);
-    touchwin(stdscr);
-    refresh();
 }
 
 static time_t
@@ -272,8 +255,8 @@ main(int argc, char *argv[])
 	int my_pair;
 
 	switch (getch()) {
-	case '?':
-	    show_help(help);
+	case HELP_KEY_1:
+	    popup_msg(stdscr, help);
 	    break;
 	case 'p':
 	    /* step-by-page */
@@ -349,6 +332,7 @@ main(int argc, char *argv[])
 	++current;
     }
     endwin();
+    fclose(output);
 
     printf("%.1f cells/second\n",
 	   (double) (total_cells) / (double) (now() - start));

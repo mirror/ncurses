@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_termcap.c,v 1.82 2017/04/01 17:24:07 tom Exp $")
+MODULE_ID("$Id: lib_termcap.c,v 1.84 2017/04/11 01:15:11 tom Exp $")
 
 NCURSES_EXPORT_VAR(char *) UP = 0;
 NCURSES_EXPORT_VAR(char *) BC = 0;
@@ -175,7 +175,8 @@ NCURSES_SP_NAME(tgetent) (NCURSES_SP_DCLx char *bufp, const char *name)
 	if (backspace_if_not_bs != NULL)
 	    BC = backspace_if_not_bs;
 
-	if ((FIX_SGR0 = _nc_trim_sgr0(&(TerminalOf(SP_PARM)->type))) != 0) {
+	if ((FIX_SGR0 = _nc_trim_sgr0(&TerminalType(TerminalOf(SP_PARM))))
+	    != 0) {
 	    if (!strcmp(FIX_SGR0, exit_attribute_mode)) {
 		if (FIX_SGR0 != exit_attribute_mode) {
 		    free(FIX_SGR0);
@@ -236,7 +237,7 @@ NCURSES_SP_NAME(tgetflag) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 
     T((T_CALLED("tgetflag(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 
@@ -288,7 +289,7 @@ NCURSES_SP_NAME(tgetnum) (NCURSES_SP_DCLx NCURSES_CONST char *id)
 
     T((T_CALLED("tgetnum(%p, %s)"), (void *) SP_PARM, id));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 
@@ -340,7 +341,7 @@ NCURSES_SP_NAME(tgetstr) (NCURSES_SP_DCLx NCURSES_CONST char *id, char **area)
 
     T((T_CALLED("tgetstr(%s,%p)"), id, (void *) area));
     if (HasTInfoTerminal(SP_PARM) && ValidCap(id)) {
-	TERMTYPE *tp = &(TerminalOf(SP_PARM)->type);
+	TERMTYPE2 *tp = &TerminalType(TerminalOf(SP_PARM));
 	struct name_table_entry const *entry_ptr;
 	int j = -1;
 
@@ -394,7 +395,7 @@ tgetstr(NCURSES_CONST char *id, char **area)
 #undef CacheInx
 #define CacheInx num
 NCURSES_EXPORT(void)
-_nc_tgetent_leak(TERMINAL * termp)
+_nc_tgetent_leak(TERMINAL *termp)
 {
     if (termp != 0) {
 	int num;

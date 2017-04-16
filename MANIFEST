@@ -1157,6 +1157,8 @@
 ./test/package/debian/watch
 ./test/package/mingw-ncurses-examples.spec
 ./test/package/ncurses-examples.spec
+./test/popup_msg.c
+./test/popup_msg.h
 ./test/programs
 ./test/railroad.c
 ./test/rain.c

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,12 +26,13 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.12 2016/09/10 21:21:44 tom Exp $
+ * $Id: clip_printw.c,v 1.14 2017/04/15 17:28:10 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
 
 #include <test.priv.h>
+#include <popup_msg.h>
 
 #ifdef HAVE_VW_PRINTW
 
@@ -231,7 +232,7 @@ init_status(WINDOW *win, STATUS * sp)
 static void
 show_help(WINDOW *win)
 {
-    static const char *table[] =
+    static const char *msgs[] =
     {
 	"Basic commands:"
 	,"Use h/j/k/l or arrow keys to move the cursor."
@@ -240,21 +241,13 @@ show_help(WINDOW *win)
 	,"Other commands:"
 	,"space toggles through the set of video attributes and colors."
 	,"t     touches (forces repaint) of the current line."
-	,".     calls clip_wprintw at the current position with the given count."
+	,".     calls vw_printw at the current position with the given count."
 	,"=     resets count to zero."
 	,"?     shows this help-window"
-	,""
+	,0
     };
 
-    int y_max, x_max;
-    int row;
-
-    getmaxyx(win, y_max, x_max);
-    for (row = 0; row < (int) SIZEOF(table) && row < y_max; ++row) {
-	MvWPrintw(win, row, 0, "%.*s", x_max, table[row]);
-    }
-    while (wgetch(win) != 'q')
-	beep();
+    popup_msg(win, msgs);
 }
 
 static void
@@ -304,8 +297,8 @@ update_status(WINDOW *win, STATUS * sp)
 	sp->count = 0;
 	show_status(win, sp);
 	break;
-    case '?':
-	do_subwindow(win, sp, show_help);
+    case HELP_KEY_1:
+	show_help(win);
 	break;
     default:
 	if (isdigit(sp->ch)) {

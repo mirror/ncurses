@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_instr.c,v 1.6 2017/04/08 23:21:53 tom Exp $
+ * $Id: test_instr.c,v 1.7 2017/04/15 14:08:40 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -68,7 +68,7 @@ showmore(WINDOW *win, int line, char *buffer)
 }
 
 static int
-test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
+recursive_test(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 {
     WINDOW *txtbox = 0;
     WINDOW *txtwin = 0;
@@ -151,7 +151,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 		beep();
 	    break;
 	case 'w':
-	    test_inchs(level + 1, argv, chrwin, strwin);
+	    recursive_test(level + 1, argv, chrwin, strwin);
 	    if (txtbox != 0) {
 		touchwin(txtbox);
 		wnoutrefresh(txtbox);
@@ -254,7 +254,7 @@ main(int argc, char *argv[])
     chrwin = derwin(chrbox, 2, COLS - 2, 1, 1);
     strwin = derwin(chrbox, 2, COLS - 2, 3, 1);
 
-    test_inchs(1, argv, chrwin, strwin);
+    recursive_test(1, argv, chrwin, strwin);
 
     endwin();
     ExitProgram(EXIT_SUCCESS);

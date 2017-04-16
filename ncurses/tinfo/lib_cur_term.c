@@ -39,10 +39,10 @@
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.36 2017/04/01 17:19:03 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.40 2017/04/15 21:35:08 tom Exp $")
 
 #undef CUR
-#define CUR termp->type.
+#define CUR TerminalType(termp).
 
 #if USE_REENTRANT
 
@@ -76,7 +76,7 @@ NCURSES_EXPORT_VAR(TERMINAL *) cur_term = 0;
 #endif
 
 NCURSES_EXPORT(TERMINAL *)
-NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
+NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL *termp)
 {
     TERMINAL *oldterm;
 
@@ -95,19 +95,21 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 #ifdef USE_TERM_DRIVER
 	TERMINAL_CONTROL_BLOCK *TCB = (TERMINAL_CONTROL_BLOCK *) termp;
 	ospeed = (NCURSES_OSPEED) _nc_ospeed(termp->_baudrate);
-	if (TCB->drv->isTerminfo && termp->type.Strings) {
+	if (TCB->drv &&
+	    TCB->drv->isTerminfo &&
+	    TerminalType(termp).Strings) {
 	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}
 	TCB->csp = SP_PARM;
 #else
 	ospeed = (NCURSES_OSPEED) _nc_ospeed(termp->_baudrate);
-	if (termp->type.Strings) {
+	if (TerminalType(termp).Strings) {
 	    PC = (char) ((pad_char != NULL) ? pad_char[0] : 0);
 	}
 #endif
 #if !USE_REENTRANT
 #define MY_SIZE (size_t) (NAMESIZE - 1)
-	_nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
+	_nc_STRNCPY(ttytype, TerminalType(termp).term_names, MY_SIZE);
 	ttytype[MY_SIZE] = '\0';
 #endif
     }
@@ -119,14 +121,14 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(TERMINAL *)
-set_curterm(TERMINAL * termp)
+set_curterm(TERMINAL *termp)
 {
     return NCURSES_SP_NAME(set_curterm) (CURRENT_SCREEN, termp);
 }
 #endif
 
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
+NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL *termp)
 {
     int rc = ERR;
 
@@ -144,7 +146,10 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 #endif
 	);
 
-	_nc_free_termtype(&(termp->type));
+#if NCURSES_EXT_NUMBERS
+	_nc_free_termtype(&termp->type);
+#endif
+	_nc_free_termtype2(&TerminalType(termp));
 	if (termp == cur)
 	    NCURSES_SP_NAME(set_curterm) (NCURSES_SP_ARGx 0);
 
@@ -158,11 +163,11 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 	if (TCB->drv)
 	    TCB->drv->td_release(TCB);
 #endif
-	free(termp);
 #if NO_LEAKS
 	/* discard memory used in tgetent's cache for this terminal */
 	_nc_tgetent_leak(termp);
 #endif
+	free(termp);
 
 	rc = OK;
     }
@@ -171,7 +176,7 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL * termp)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-del_curterm(TERMINAL * termp)
+del_curterm(TERMINAL *termp)
 {
     int rc;
 

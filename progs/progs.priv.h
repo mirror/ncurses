@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.42 2017/03/18 18:08:25 tom Exp $
+ * $Id: progs.priv.h,v 1.43 2017/04/06 23:02:26 tom Exp $
  *
  *	progs.priv.h
  *
@@ -212,5 +212,12 @@ extern int optind;
 #define UChar(c)    ((unsigned char)(c))
 
 #define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
+
+#define NCURSES_EXT_NUMBERS (NCURSES_EXT_COLORS && HAVE_INIT_EXTENDED_COLOR)
+
+#if NCURSES_EXT_NUMBERS
+#else
+#define _nc_free_termtype2(t) _nc_free_termtype(t)
+#endif
 
 #endif /* PROGS_PRIV_H */

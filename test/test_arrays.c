@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007,2008 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2007-2008,2010 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_arrays.c,v 1.5 2010/11/13 19:57:57 tom Exp $
+ * $Id: test_arrays.c,v 1.6 2010/11/13 19:57:57 tom Exp $
  *
  * Author: Thomas E Dickey
  *

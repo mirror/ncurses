@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2011,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_get_wstr.c,v 1.8 2011/01/15 18:15:11 tom Exp $
+ * $Id: test_get_wstr.c,v 1.9 2017/04/15 14:14:25 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -134,7 +134,7 @@ ShowFlavor(WINDOW *strwin, WINDOW *txtwin, int flavor, int limit)
 }
 
 static int
-test_get_wstr(int level, char **argv, WINDOW *strwin)
+recursive_test(int level, char **argv, WINDOW *strwin)
 {
     WINDOW *txtbox = 0;
     WINDOW *txtwin = 0;
@@ -225,7 +225,7 @@ test_get_wstr(int level, char **argv, WINDOW *strwin)
 	    break;
 
 	case 'w':
-	    test_get_wstr(level + 1, argv, strwin);
+	    recursive_test(level + 1, argv, strwin);
 	    if (txtbox != 0) {
 		touchwin(txtbox);
 		wnoutrefresh(txtbox);
@@ -349,7 +349,7 @@ main(int argc, char *argv[])
 
     strwin = derwin(chrbox, 4, COLS - 2, 1, 1);
 
-    test_get_wstr(1, argv, strwin);
+    recursive_test(1, argv, strwin);
 
     endwin();
     ExitProgram(EXIT_SUCCESS);

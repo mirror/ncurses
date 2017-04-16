@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.98 2017/02/05 01:47:34 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.99 2017/04/09 23:35:01 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -57,7 +57,7 @@ static int make_db_root(const char *);
 
 #if !USE_HASHED_DB
 static void
-write_file(char *filename, TERMTYPE *tp)
+write_file(char *filename, TERMTYPE2 *tp)
 {
     char buffer[MAX_ENTRY_SIZE];
     unsigned limit = sizeof(buffer);
@@ -248,7 +248,7 @@ _nc_set_writedir(const char *dir)
  */
 
 NCURSES_EXPORT(void)
-_nc_write_entry(TERMTYPE *const tp)
+_nc_write_entry(TERMTYPE2 *const tp)
 {
 #if USE_HASHED_DB
 
@@ -565,12 +565,34 @@ convert_shorts(unsigned char *buf, short *Numbers, size_t count)
     }
 }
 
+#if NCURSES_EXT_NUMBERS
+static void
+convert_numbers(unsigned char *buf, NCURSES_INT2 *Numbers, size_t count)
+{
+    size_t i;
+    for (i = 0; i < count; i++) {
+	if (Numbers[i] == ABSENT_NUMERIC) {	/* HI/LO won't work */
+	    buf[2 * i] = buf[2 * i + 1] = 0377;
+	} else if (Numbers[i] == CANCELLED_NUMERIC) {	/* HI/LO won't work */
+	    buf[2 * i] = 0376;
+	    buf[2 * i + 1] = 0377;
+	} else {
+	    LITTLE_ENDIAN(buf + 2 * i, Numbers[i]);
+	    TRACE_OUT(("put Numbers[%u]=%d", (unsigned) i, Numbers[i]));
+	}
+    }
+}
+
+#else
+#define convert_numbers(buf,vec,len) convert_shorts(buf,vec,len)
+#endif
+
 #define even_boundary(value) \
 	    ((value) % 2 != 0 && Write(&zero, sizeof(char), 1) != 1)
 
 #if NCURSES_XNAMES
 static unsigned
-extended_Booleans(TERMTYPE *tp)
+extended_Booleans(TERMTYPE2 *tp)
 {
     unsigned result = 0;
     unsigned i;
@@ -583,7 +605,7 @@ extended_Booleans(TERMTYPE *tp)
 }
 
 static unsigned
-extended_Numbers(TERMTYPE *tp)
+extended_Numbers(TERMTYPE2 *tp)
 {
     unsigned result = 0;
     unsigned i;
@@ -596,7 +618,7 @@ extended_Numbers(TERMTYPE *tp)
 }
 
 static unsigned
-extended_Strings(TERMTYPE *tp)
+extended_Strings(TERMTYPE2 *tp)
 {
     unsigned short result = 0;
     unsigned short i;
@@ -613,7 +635,7 @@ extended_Strings(TERMTYPE *tp)
  * clause - discard the unneeded data.
  */
 static bool
-extended_object(TERMTYPE *tp)
+extended_object(TERMTYPE2 *tp)
 {
     bool result = FALSE;
 
@@ -627,7 +649,7 @@ extended_object(TERMTYPE *tp)
 #endif
 
 NCURSES_EXPORT(int)
-_nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
+_nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
 {
     char *namelist;
     size_t namelen, boolmax, nummax, strmax;
@@ -705,7 +727,7 @@ _nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
     TRACE_OUT(("Numerics begin at %04x", *offset));
 
     /* the numerics */
-    convert_shorts(buf, tp->Numbers, nummax);
+    convert_numbers(buf, tp->Numbers, nummax);
     if (Write(buf, 2, nummax) != nummax)
 	return (ERR);
 
@@ -768,7 +790,7 @@ _nc_write_object(TERMTYPE *tp, char *buffer, unsigned *offset, unsigned limit)
 
 	TRACE_OUT(("WRITE %d numbers @%d", tp->ext_Numbers, *offset));
 	if (tp->ext_Numbers) {
-	    convert_shorts(buf, tp->Numbers + NUMCOUNT, (size_t) tp->ext_Numbers);
+	    convert_numbers(buf, tp->Numbers + NUMCOUNT, (size_t) tp->ext_Numbers);
 	    if (Write(buf, 2, tp->ext_Numbers) != tp->ext_Numbers)
 		return (ERR);
 	}

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.11 2017/04/08 21:53:51 tom Exp $
+ * $Id: echochar.c,v 1.13 2017/04/15 13:38:37 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -149,7 +149,7 @@ main(int argc GCC_UNUSED,
 	    }
 	}
 	if (opt_r) {
-	    addch(UChar(p));
+	    AddCh(UChar(p));
 	    refresh();
 	} else {
 	    echochar(UChar(p));
@@ -157,5 +157,6 @@ main(int argc GCC_UNUSED,
 	++total_chars;
     }
     cleanup();
+    free(my_pairs);
     ExitProgram(EXIT_SUCCESS);
 }

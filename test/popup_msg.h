@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2011,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -25,74 +25,18 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-
-/****************************************************************************
- *  Author: Thomas E. Dickey                    1999-on                     *
- ****************************************************************************/
-
 /*
- * free_ttype.c -- allocation functions for TERMTYPE
+ * $Id: popup_msg.h,v 1.3 2017/04/15 19:16:35 tom Exp $
  *
- *	_nc_free_termtype()
- *	use_extended_names()
- *
+ * Interface of edit_field.c
  */
 
-#include <curses.priv.h>
+#ifndef POPUP_MSG_H_incl
+#define POPUP_MSG_H_incl 1
 
-#include <tic.h>
+#include <test.priv.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.17 2017/04/13 01:06:04 tom Exp $")
+extern void popup_msg(WINDOW *parent, const char *const *msg);
+extern void popup_msg2(WINDOW *parent, char **msg);
 
-static void
-really_free_termtype(TERMTYPE2 *ptr, bool freeStrings)
-{
-    T(("_nc_free_termtype(%s)", ptr->term_names));
-
-    if (freeStrings) {
-	FreeIfNeeded(ptr->str_table);
-    }
-    FreeIfNeeded(ptr->Booleans);
-    FreeIfNeeded(ptr->Numbers);
-    FreeIfNeeded(ptr->Strings);
-#if NCURSES_XNAMES
-    if (freeStrings) {
-	FreeIfNeeded(ptr->ext_str_table);
-    }
-    FreeIfNeeded(ptr->ext_Names);
-#endif
-    memset(ptr, 0, sizeof(TERMTYPE));
-    _nc_free_entry(_nc_head, ptr);
-}
-
-/*
- * This entrypoint is used by tack.
- */
-NCURSES_EXPORT(void)
-_nc_free_termtype(TERMTYPE *ptr)
-{
-    really_free_termtype((TERMTYPE2 *) ptr, !NCURSES_EXT_NUMBERS);
-}
-
-#if NCURSES_EXT_NUMBERS
-NCURSES_EXPORT(void)
-_nc_free_termtype2(TERMTYPE2 *ptr)
-{
-    really_free_termtype(ptr, TRUE);
-}
-#endif
-
-#if NCURSES_XNAMES
-NCURSES_EXPORT_VAR(bool) _nc_user_definable = TRUE;
-
-NCURSES_EXPORT(int)
-use_extended_names(bool flag)
-{
-    int oldflag = _nc_user_definable;
-
-    START_TRACE();
-    T((T_CALLED("use_extended_names(%d)"), flag));
-    _nc_user_definable = flag;
-    returnBool(oldflag);
-}
-#endif
+#endif /* POPUP_MSG_H_incl */

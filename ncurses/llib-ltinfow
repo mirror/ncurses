@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2012-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2012-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -88,13 +88,31 @@ int	_nc_add_to_try(
 
 #undef _nc_align_termtype
 void	_nc_align_termtype(
-		TERMTYPE *to, 
-		TERMTYPE *from)
+		TERMTYPE2 *to, 
+		TERMTYPE2 *from)
 		{ /* void */ }
 
 #undef _nc_copy_termtype
 void	_nc_copy_termtype(
 		TERMTYPE *dst, 
+		const TERMTYPE *src)
+		{ /* void */ }
+
+#undef _nc_copy_termtype2
+void	_nc_copy_termtype2(
+		TERMTYPE2 *dst, 
+		const TERMTYPE2 *src)
+		{ /* void */ }
+
+#undef _nc_export_termtype2
+void	_nc_export_termtype2(
+		TERMTYPE *dst, 
+		const TERMTYPE2 *src)
+		{ /* void */ }
+
+#undef _nc_import_termtype2
+void	_nc_import_termtype2(
+		TERMTYPE2 *dst, 
 		const TERMTYPE *src)
 		{ /* void */ }
 
@@ -236,7 +254,7 @@ ENTRY	*_nc_tail;
 #undef _nc_free_entry
 void	_nc_free_entry(
 		ENTRY	*headp, 
-		TERMTYPE *tterm)
+		TERMTYPE2 *tterm)
 		{ /* void */ }
 
 #undef _nc_free_entries
@@ -244,17 +262,16 @@ void	_nc_free_entries(
 		ENTRY	*headp)
 		{ /* void */ }
 
-#undef _nc_delink_entry
-ENTRY	*_nc_delink_entry(
-		ENTRY	*headp, 
-		TERMTYPE *tterm)
-		{ return(*(ENTRY **)0); }
-
 #undef _nc_leaks_tinfo
 void	_nc_leaks_tinfo(void)
 		{ /* void */ }
 
 /* ./fallback.c */
+
+#undef _nc_fallback2
+const TERMTYPE2 *_nc_fallback2(
+		const char *name)
+		{ return(*(const TERMTYPE2 **)0); }
 
 #undef _nc_fallback
 const TERMTYPE *_nc_fallback(
@@ -266,6 +283,11 @@ const TERMTYPE *_nc_fallback(
 #undef _nc_free_termtype
 void	_nc_free_termtype(
 		TERMTYPE *ptr)
+		{ /* void */ }
+
+#undef _nc_free_termtype2
+void	_nc_free_termtype2(
+		TERMTYPE2 *ptr)
 		{ /* void */ }
 
 #undef _nc_user_definable
@@ -713,7 +735,7 @@ void	_nc_update_screensize(
 #undef _nc_setup_tinfo
 int	_nc_setup_tinfo(
 		const char *const tn, 
-		TERMTYPE *const tp)
+		TERMTYPE2 *const tp)
 		{ return(*(int *)0); }
 
 #undef _nc_tinfo_cmdch
@@ -1276,12 +1298,12 @@ void	_nc_set_buffer(
 
 #undef _nc_init_termtype
 void	_nc_init_termtype(
-		TERMTYPE *const tp)
+		TERMTYPE2 *const tp)
 		{ /* void */ }
 
 #undef _nc_read_termtype
 int	_nc_read_termtype(
-		TERMTYPE *ptr, 
+		TERMTYPE2 *ptr, 
 		char	*buffer, 
 		int	limit)
 		{ return(*(int *)0); }
@@ -1289,7 +1311,14 @@ int	_nc_read_termtype(
 #undef _nc_read_file_entry
 int	_nc_read_file_entry(
 		const char *const filename, 
-		TERMTYPE *ptr)
+		TERMTYPE2 *ptr)
+		{ return(*(int *)0); }
+
+#undef _nc_read_entry2
+int	_nc_read_entry2(
+		const char *const name, 
+		char	*const filename, 
+		TERMTYPE2 *const tp)
 		{ return(*(int *)0); }
 
 #undef _nc_read_entry
@@ -1385,7 +1414,7 @@ int	_nc_remove_string(
 
 #undef _nc_trim_sgr0
 char	*_nc_trim_sgr0(
-		TERMTYPE *tp)
+		TERMTYPE2 *tp)
 		{ return(*(char **)0); }
 
 /* ./unctrl.c */

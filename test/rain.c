@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,9 +26,10 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.41 2014/08/02 17:24:07 tom Exp $
+ * $Id: rain.c,v 1.42 2017/04/15 19:32:33 tom Exp $
  */
 #include <test.priv.h>
+#include <popup_msg.h>
 
 /* rain 11/3/1980 EPS/CITHEP */
 
@@ -292,6 +293,16 @@ int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
+    static const char *help[] =
+    {
+	"Commands:",
+	" q/Q        exit the program",
+	" s          do single-step",
+	" <space>    undo single-step",
+	"",
+	0
+    };
+
     bool done = FALSE;
     DATA drop;
 #ifndef USE_PTHREADS
@@ -373,6 +384,11 @@ main(int argc GCC_UNUSED,
 	case (KEY_RESIZE):
 	    break;
 #endif
+	case HELP_KEY_1:
+	    popup_msg(stdscr, help);
+	    break;
+	default:
+	    beep();
 	}
 	napms(50);
     }

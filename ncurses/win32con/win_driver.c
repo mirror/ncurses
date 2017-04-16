@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -52,9 +52,9 @@
 #define PSAPI_VERSION 2
 #include <psapi.h>
 
-#define CUR my_term.type.
+#define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.56 2016/09/17 22:02:44 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.58 2017/04/14 09:11:00 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -648,8 +648,11 @@ wcon_CanHandle(TERMINAL_CONTROL_BLOCK * TCB,
      * This is intentional, to avoid unnecessary breakage of applications
      * using <term.h> symbols.
      */
-    if (code && (TCB->term.type.Booleans == 0)) {
-	_nc_init_termtype(&(TCB->term.type));
+    if (code && (TerminalType(&TCB->term).Booleans == 0)) {
+	_nc_init_termtype(&TerminalType(&TCB->term));
+#if NCURSES_EXT_NUMBERS
+	_nc_export_termtype2(&TCB->term.type, &TerminalType(&TCB->term));
+#endif
     }
 
     if (!code) {

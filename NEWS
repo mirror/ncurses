@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2799 2017/04/08 22:54:04 tom Exp $
+-- $Id: NEWS,v 1.2806 2017/04/15 18:00:38 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170415
+	+ modify several test programs to use new popup_msgs, adapted from
+	  help-screen used in test/edit_field.c
+	+ drop two symbols obsoleted in 2004: _nc_check_termtype, and
+	  _nc_resolve_uses
+	+ fix some old copyright dates (cf: 20031025).
+	+ build-fixes for test/savescreen.c to work with AIX and HPUX.
+	+ minor fix to configure script, adding a backslash/continuation.
+	+ extend TERMINAL structure for ABI 6 to store numbers internally as
+	  integers rather than short, by adding new data for this purpose.
+	+ more fixes for minor memory-leaks in test-programs.
 
 20170408
 	+ change logic in wins_nwstr() to avoid addressing data past the output

@@ -33,7 +33,7 @@
 /*
  * Common type definitions and macros for new_pair.c, lib_color.c
  *
- * $Id: new_pair.h,v 1.4 2017/03/31 11:32:07 tom Exp $
+ * $Id: new_pair.h,v 1.5 2017/04/02 14:46:34 tom Exp $
  */
 
 #ifndef NEW_PAIR_H
@@ -42,7 +42,6 @@
 
 #define USE_NEW_PAIR NCURSES_EXT_COLORS
 
-#define MAX_OF_TYPE(t)   (int)(((unsigned t)(~0))>>1)
 #define LIMIT_TYPED(n,t) (t)(((t)(n) < 0) ? MAX_OF_TYPE(t) : (n))
 
 #define limit_COLOR(n) LIMIT_TYPED(n,NCURSES_COLOR_T)

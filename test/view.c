@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,11 +50,12 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.97 2016/09/10 21:05:46 tom Exp $
+ * $Id: view.c,v 1.101 2017/04/15 20:14:01 tom Exp $
  */
 
 #include <test.priv.h>
 #include <widechars.h>
+#include <popup_msg.h>
 
 #include <time.h>
 
@@ -227,6 +228,28 @@ ch_dup(char *src)
 int
 main(int argc, char *argv[])
 {
+    static const char *help[] =
+    {
+	"Commands:",
+	"  q,^Q,ESC       - quit this program",
+	"",
+	"  p,<Up>         - scroll the viewport up by one row",
+	"  n,<Down>       - scroll the viewport down by one row",
+	"  l,<Left>       - scroll the viewport left by one column",
+	"  r,<Right>      - scroll the viewport right by one column",
+	"",
+	"  h,<Home>       - scroll the viewport to top of file",
+	"  e,<End>        - scroll the viewport to end of file",
+	"",
+	"  ^L             - repaint using redrawwin()",
+	"",
+	"  0 through 9    - enter digits for count",
+	"  s              - use entered count for halfdelay() parameter",
+	"                 - if no entered count, stop nodelay()",
+	"  <space>        - begin nodelay()",
+	0
+    };
+
     int MAXLINES = 1000;
     FILE *fp;
     char buf[BUFSIZ];
@@ -473,6 +496,8 @@ main(int argc, char *argv[])
 	    break;
 
 	case 'q':
+	case QUIT:
+	case ESCAPE:
 	    done = TRUE;
 	    break;
 
@@ -498,6 +523,9 @@ main(int argc, char *argv[])
 	case ERR:
 	    if (!my_delay)
 		napms(50);
+	    break;
+	case HELP_KEY_1:
+	    popup_msg(stdscr, help);
 	    break;
 	default:
 	    beep();
@@ -571,7 +599,7 @@ show_all(const char *tag)
 		"%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
     i = (int) strlen(temp);
     if ((i + 7) < (int) sizeof(temp)) {
-	_nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - i)
+	_nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
 		    "view %.*s",
 		    (int) (sizeof(temp) - 7 - (size_t) i),
 		    fname);

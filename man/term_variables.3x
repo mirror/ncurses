@@ -26,9 +26,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.8 2017/01/07 19:25:15 tom Exp $
+.\" $Id: term_variables.3x,v 1.9 2017/04/14 08:33:25 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .na
 .hy 0
 .SH NAME
@@ -135,8 +139,10 @@ These are the corresponding names used for termcap descriptions:
 \fBstrcodes\fP.
 .\"
 .SS Terminal Type
+A terminal description begins with one or more terminal names
+separated by \*(``|\*('' (vertical bars).
 On initialization of the curses or terminfo interfaces,
-\fBsetupterm\fP(3X) copies the terminal name to the array \fBttytype\fP.
+\fBsetupterm\fP(3X) copies the terminal names to the array \fBttytype\fP.
 .\"
 .SS Terminfo Names
 .PP
@@ -147,12 +153,16 @@ which is defined
 .PP
 .nf
 .ft CW
-#define CUR cur_term->type.
+#define CUR ((TERMTYPE *)(cur_term))->
 .fi
 .ft R
 .PP
 These symbols provide a faster method of accessing terminfo capabilities
 than using \fBtigetstr\fR(3X), etc.
+.PP
+The actual definition of \fBCUR\fP depends upon the implementation,
+but each terminfo library provides these long names defined to point
+into the current terminal description loaded into memory.
 .\"
 .SH NOTES
 The low-level terminfo interface is initialized using

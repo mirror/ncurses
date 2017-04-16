@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.40 2017/04/08 23:01:47 tom Exp $
+ * $Id: movewindow.c,v 1.42 2017/04/15 18:37:42 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -46,6 +46,7 @@ TODO:
 
 #include <test.priv.h>
 #include <stdarg.h>
+#include <popup_msg.h>
 
 #ifdef HAVE_XCURSES
 #undef derwin
@@ -637,7 +638,7 @@ show_help(WINDOW *current)
 	int	key;
 	CONST_FMT char * msg;
     } help[] = {
-	{ '?',		"Show this screen" },
+	{ HELP_KEY_1,	"Show this screen" },
 	{ 'b',		"Draw a box inside the current window" },
 	{ 'c',		"Create a new window" },
 	{ 'd',		"Create a new derived window" },
@@ -654,20 +655,18 @@ show_help(WINDOW *current)
     };
     /* *INDENT-ON* */
 
-    WINDOW *mywin = newwin(LINES, COLS, 0, 0);
-    int row;
+    char **msgs = typeCalloc(char *, SIZEOF(help) + 1);
+    size_t n;
 
-    for (row = 0; row < LINES - 2 && row < (int) SIZEOF(help); ++row) {
-	wmove(mywin, row + 1, 1);
-	wprintw(mywin, "%s", keyname(help[row].key));
-	wmove(mywin, row + 1, 20);
-	wprintw(mywin, "%s", help[row].msg);
+    for (n = 0; n < SIZEOF(help); ++n) {
+	msgs[n] = typeMalloc(char, 21 + strlen(help[n].msg));
+	sprintf(msgs[n], "%-20s%s", keyname(help[n].key), help[n].msg);
     }
-    box_inside(mywin);
-    wmove(mywin, 1, 1);
-    wgetch(mywin);
-    delwin(mywin);
-    refresh_all(current);
+    popup_msg2(current, msgs);
+    for (n = 0; n < SIZEOF(help); ++n) {
+	free(msgs[n]);
+    }
+    free(msgs);
 }
 
 int
@@ -695,7 +694,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	getyx(current_win, y, x);
 
 	switch (ch) {
-	case '?':
+	case HELP_KEY_1:
 	    show_help(current_win);
 	    break;
 	case 'b':

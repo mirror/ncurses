@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.141 2017/03/31 13:09:31 tom Exp $ */
+/* $Id: test.priv.h,v 1.143 2017/04/15 17:19:47 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -558,6 +558,9 @@ extern int optind;
 #define KEY_MIN 256		/* not defined in Solaris 8 */
 #endif
 
+#define HELP_KEY_1	'?'
+#define HELP_KEY_2	KEY_F(1)
+
 /* from nc_string.h, to make this stand alone */
 #if HAVE_BSD_STRING_H
 #include <bsd/string.h>
@@ -913,17 +916,19 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 
 #define Trace2(p)		/* nothing */
 
-#define MvAddCh         (void) mvaddch
-#define MvWAddCh        (void) mvwaddch
-#define MvAddStr        (void) mvaddstr
-#define MvWAddStr       (void) mvwaddstr
-#define MvWAddChStr     (void) mvwaddchstr
-#define MvPrintw        (void) mvprintw
-#define MvWPrintw       (void) mvwprintw
-#define MvHLine         (void) mvhline
-#define MvWHLine        (void) mvwhline
-#define MvVLine         (void) mvvline
-#define MvWVLine        (void) mvwvline
+#define AddCh(c)		(void) addch((chtype)(c))
+#define WAddCh(w,c)		(void) waddch((w),(chtype)(c))
+#define MvAddCh(y,x,c)		(void) mvaddch((y),(x),(chtype)(c))
+#define MvWAddCh(w,y,x,c)	(void) mvwaddch((w),(y),(x),(chtype)(c))
+#define MvAddStr(y,x,s)		(void) mvaddstr((y),(x),(s))
+#define MvWAddStr(w,y,x,s)	(void) mvwaddstr((w),(y),(x),(s))
+#define MvWAddChStr(w,y,x,s)	(void) mvwaddchstr((w),(y),(x),(s))
+#define MvPrintw		(void) mvprintw
+#define MvWPrintw		(void) mvwprintw
+#define MvHLine			(void) mvhline
+#define MvWHLine		(void) mvwhline
+#define MvVLine			(void) mvvline
+#define MvWVLine		(void) mvwvline
 
 /*
  * The macro likely uses unsigned values, while X/Open prototype uses int.

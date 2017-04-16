@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -49,7 +49,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_raw.c,v 1.22 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: lib_raw.c,v 1.23 2017/04/15 22:24:45 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
@@ -112,8 +112,10 @@ NCURSES_SP_NAME(raw) (NCURSES_SP_DCL0)
 	    kbdinfo.fsMask |= KEYBOARD_BINARY_MODE;
 	    KbdSetStatus(&kbdinfo, 0);
 #endif
-	    SP_PARM->_raw = TRUE;
-	    SP_PARM->_cbreak = 1;
+	    if (SP_PARM) {
+		SP_PARM->_raw = TRUE;
+		SP_PARM->_cbreak = 1;
+	    }
 	    termp->Nttyb = buf;
 	}
 	AFTER("raw");
@@ -154,7 +156,9 @@ NCURSES_SP_NAME(cbreak) (NCURSES_SP_DCL0)
 #endif
 	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);
 	if (result == OK) {
-	    SP_PARM->_cbreak = 1;
+	    if (SP_PARM) {
+		SP_PARM->_cbreak = 1;
+	    }
 	    termp->Nttyb = buf;
 	}
 	AFTER("cbreak");
@@ -242,8 +246,10 @@ NCURSES_SP_NAME(noraw) (NCURSES_SP_DCL0)
 	    kbdinfo.fsMask |= KEYBOARD_ASCII_MODE;
 	    KbdSetStatus(&kbdinfo, 0);
 #endif
-	    SP_PARM->_raw = FALSE;
-	    SP_PARM->_cbreak = 0;
+	    if (SP_PARM) {
+		SP_PARM->_raw = FALSE;
+		SP_PARM->_cbreak = 0;
+	    }
 	    termp->Nttyb = buf;
 	}
 	AFTER("noraw");
@@ -281,7 +287,9 @@ NCURSES_SP_NAME(nocbreak) (NCURSES_SP_DCL0)
 #endif
 	result = NCURSES_SP_NAME(_nc_set_tty_mode) (NCURSES_SP_ARGx &buf);
 	if (result == OK) {
-	    SP_PARM->_cbreak = 0;
+	    if (SP_PARM) {
+		SP_PARM->_cbreak = 0;
+	    }
 	    termp->Nttyb = buf;
 	}
 	AFTER("nocbreak");

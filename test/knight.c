@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.36 2013/02/16 19:53:08 tom Exp $
+ * $Id: knight.c,v 1.37 2017/04/15 17:43:11 tom Exp $
  */
 
 #include <test.priv.h>
@@ -734,7 +734,7 @@ play(void)
 	    case 'x':
 		goto dropout;
 
-	    case '?':
+	    case HELP_KEY_1:
 		show_help(&keyhelp);
 		break;
 

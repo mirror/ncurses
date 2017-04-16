@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2010,2012 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2012,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.15 2012/12/15 20:57:17 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.16 2017/04/05 22:33:07 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -46,7 +46,7 @@ MODULE_ID("$Id: trim_sgr0.c,v 1.15 2012/12/15 20:57:17 tom Exp $")
 #define L_BRACK   '['
 
 static char *
-set_attribute_9(TERMTYPE *tp, int flag)
+set_attribute_9(TERMTYPE2 *tp, int flag)
 {
     const char *value;
     char *result;
@@ -232,7 +232,7 @@ compare_part(const char *part, const char *full)
  * an error occurs, or the original sgr0 if no change is needed.
  */
 NCURSES_EXPORT(char *)
-_nc_trim_sgr0(TERMTYPE *tp)
+_nc_trim_sgr0(TERMTYPE2 *tp)
 {
     char *result = exit_attribute_mode;
 

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.447 2017/03/11 23:20:12 Petr.Vanek Exp $
+$Id: ncurses.c,v 1.449 2017/04/15 18:53:50 tom Exp $
 
 ***************************************************************************/
 
@@ -1575,7 +1575,7 @@ attr_getc(int *skip,
 	    case CTRL('L'):
 		Repaint();
 		break;
-	    case '?':
+	    case HELP_KEY_1:
 		if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		    box(helpwin, 0, 0);
 		    attr_legend(helpwin);
@@ -1925,7 +1925,7 @@ wide_attr_getc(int *skip,
 	    case CTRL('L'):
 		Repaint();
 		break;
-	    case '?':
+	    case HELP_KEY_1:
 		if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		    box_set(helpwin, 0, 0);
 		    attr_legend(helpwin);
@@ -2387,7 +2387,7 @@ color_test(void)
 		}
 	    }
 	    break;
-	case '?':
+	case HELP_KEY_1:
 	    if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		box(helpwin, 0, 0);
 		color_legend(helpwin, FALSE);
@@ -2623,7 +2623,7 @@ wide_color_test(void)
 		}
 	    }
 	    break;
-	case '?':
+	case HELP_KEY_1:
 	    if ((helpwin = newwin(LINES - 1, COLS - 2, 0, 0)) != 0) {
 		box(helpwin, 0, 0);
 		color_legend(helpwin, TRUE);
@@ -2928,7 +2928,7 @@ color_edit(void)
 	    change_color((NCURSES_PAIRS_T) current, field, value, 0);
 	    break;
 
-	case '?':
+	case HELP_KEY_1:
 	    erase();
 	    P("                      RGB Value Editing Help");
 	    P("");
@@ -3172,7 +3172,7 @@ slk_test(void)
 	case 's':
 	    MvPrintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
 	    while ((c = Getchar()) != 'Q' && (c != ERR))
-		addch((chtype) c);
+		AddCh(c);
 	    break;
 
 	case 'd':
@@ -3292,7 +3292,7 @@ wide_slk_test(void)
 	case 's':
 	    MvPrintw(SLK_WORK, 0, "Press Q to stop the scrolling-test: ");
 	    while ((c = Getchar()) != 'Q' && (c != ERR))
-		addch((chtype) c);
+		AddCh(c);
 	    break;
 
 	case 'd':
@@ -3424,7 +3424,7 @@ show_256_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 	int col = (int) (5 * (code % 16));
 	IGNORE_RC(mvaddch(row, col, colored_chtype(code, attr, pair)));
 	for (count = 1; count < repeat; ++count) {
-	    addch(colored_chtype(code, attr, pair));
+	    AddCh(colored_chtype(code, attr, pair));
 	}
     }
 
@@ -3468,7 +3468,7 @@ show_upper_chars(int base, int pagesize, int repeat, attr_t attr, NCURSES_PAIRS_
 	    if (C1) {
 		/* (yes, this _is_ crude) */
 		while ((reply = Getchar()) != ERR) {
-		    addch(UChar(reply));
+		    AddCh(UChar(reply));
 		    napms(10);
 		}
 		nodelay(stdscr, FALSE);
@@ -3513,7 +3513,7 @@ show_pc_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 		 */
 		break;
 	    default:
-		addch(colored_chtype(code, A_ALTCHARSET | attr, pair));
+		AddCh(colored_chtype(code, A_ALTCHARSET | attr, pair));
 		break;
 	    }
 	} while (--count > 0);
@@ -3562,7 +3562,7 @@ show_1_acs(int n, int repeat, const char *name, chtype code)
 
     MvPrintw(row, col, "%*s : ", COLS / 4, name);
     do {
-	addch(code);
+	AddCh(code);
     } while (--repeat > 0);
     return n + 1;
 }
@@ -3796,7 +3796,7 @@ show_paged_widechars(int base,
 	setcchar(&temp, codes, attr, pair, 0);
 	move(row, col);
 	if (wcwidth(code) == 0 && code != 0) {
-	    addch((chtype) space |
+	    AddCh((chtype) space |
 		  (A_REVERSE ^ attr) |
 		  (attr_t) COLOR_PAIR(pair));
 	}
@@ -3843,7 +3843,7 @@ show_upper_widechars(int first, int repeat, int space, attr_t attr, NCURSES_PAIR
 	     * the display.
 	     */
 	    if (wcwidth(code) == 0) {
-		addch((chtype) space |
+		AddCh((chtype) space |
 		      (A_REVERSE ^ attr) |
 		      (attr_t) COLOR_PAIR(pair));
 	    }
@@ -5372,8 +5372,8 @@ panner(WINDOW *pad,
 	    erase();
 
 	    /* FALLTHRU */
-	case '?':
-	    if (c == '?')
+	case HELP_KEY_1:
+	    if (c == HELP_KEY_1)
 		show_panner_legend = !show_panner_legend;
 	    panner_legend(LINES - 4);
 	    panner_legend(LINES - 3);
@@ -6850,7 +6850,7 @@ overlap_test(void)
 	    state = overlap_help(state, flavor);
 	    break;
 
-	case '?':
+	case HELP_KEY_1:
 	    state = overlap_help(state, flavor);
 	    break;
 
@@ -6883,7 +6883,7 @@ show_string_setting(const char *name, const char *value)
 	addstr("<NULL>");
 	attroff(A_REVERSE);
     }
-    addch('\n');
+    AddCh('\n');
 }
 
 static void
@@ -6897,7 +6897,7 @@ show_number_setting(const char *name, int value)
 	printw("%d", value);
 	attroff(A_REVERSE);
     }
-    addch('\n');
+    AddCh('\n');
 }
 
 static void
@@ -6911,7 +6911,7 @@ show_boolean_setting(const char *name, int value)
 	printw("%d", value);
 	attroff(A_REVERSE);
     }
-    addch('\n');
+    AddCh('\n');
 }
 
 static void

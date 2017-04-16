@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.103 2016/05/28 23:22:52 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.104 2017/04/08 11:30:52 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -668,7 +668,15 @@ _nc_get_token(bool silent)
 		    if (numchk == numbuf)
 			_nc_warning("no value given for `%s'", tok_buf);
 		    if ((*numchk != '\0') || (ch != separator))
-			_nc_warning("Missing separator");
+			_nc_warning("Missing separator for `%s'", tok_buf);
+		    if (number < 0)
+			_nc_warning("value of `%s' cannot be negative", tok_buf);
+		    if (number > MAX_OF_TYPE(NCURSES_INT2)) {
+			_nc_warning("limiting value of `%s' from %#lx to %#x",
+				    tok_buf,
+				    number, MAX_OF_TYPE(NCURSES_INT2));
+			number = MAX_OF_TYPE(NCURSES_INT2);
+		    }
 		}
 		_nc_curr_token.tk_name = tok_buf;
 		_nc_curr_token.tk_valnumber = (int) number;

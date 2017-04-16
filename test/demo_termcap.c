@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.53 2017/04/08 19:08:42 tom Exp $
+ * $Id: demo_termcap.c,v 1.54 2017/04/13 09:12:40 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -884,7 +884,7 @@ main(int argc, char *argv[])
 	show_number("PC", PC);
 	show_string("UP", UP);
 	show_string("BC", BC);
-	show_number("ospeed", ospeed);
+	show_number("ospeed", (int) ospeed);
     }
 #endif
 

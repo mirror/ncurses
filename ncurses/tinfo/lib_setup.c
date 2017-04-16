@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.174 2017/04/02 14:26:18 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.178 2017/04/11 23:51:32 tom Exp $")
 
 /****************************************************************************
  *
@@ -98,7 +98,7 @@ MODULE_ID("$Id: lib_setup.c,v 1.174 2017/04/02 14:26:18 tom Exp $")
  * Reduce explicit use of "cur_term" global variable.
  */
 #undef CUR
-#define CUR termp->type.
+#define CUR TerminalType(termp).
 
 /*
  * Wrap global variables in this module.
@@ -270,7 +270,7 @@ use_tioctl(bool f)
 NCURSES_EXPORT(void)
 _nc_get_screensize(SCREEN *sp,
 #ifdef USE_TERM_DRIVER
-		   TERMINAL * termp,
+		   TERMINAL *termp,
 #endif
 		   int *linep, int *colp)
 /* Obtain lines/columns values from the environment and/or terminfo entry */
@@ -398,8 +398,14 @@ _nc_get_screensize(SCREEN *sp,
 	 * Put the derived values back in the screen-size caps, so
 	 * tigetnum() and tgetnum() will do the right thing.
 	 */
-	lines = (short) (*linep);
-	columns = (short) (*colp);
+	lines = (NCURSES_INT2) (*linep);
+	columns = (NCURSES_INT2) (*colp);
+#if NCURSES_EXT_NUMBERS
+#define OldNumber(termp,name) \
+	(termp)->type.Numbers[(&name - (termp)->type2.Numbers)]
+	OldNumber(termp, lines) = (short) (*linep);
+	OldNumber(termp, columns) = (short) (*colp);
+#endif
     }
 
     T(("screen size is %dx%d", *linep, *colp));
@@ -470,10 +476,10 @@ _nc_update_screensize(SCREEN *sp)
  * just like tgetent().
  */
 int
-_nc_setup_tinfo(const char *const tn, TERMTYPE *const tp)
+_nc_setup_tinfo(const char *const tn, TERMTYPE2 *const tp)
 {
     char filename[PATH_MAX];
-    int status = _nc_read_entry(tn, filename, tp);
+    int status = _nc_read_entry2(tn, filename, tp);
 
     /*
      * If we have an entry, force all of the cancelled strings to null
@@ -501,7 +507,7 @@ _nc_setup_tinfo(const char *const tn, TERMTYPE *const tp)
 **	and substitute it in for the prototype given in 'command_character'.
 */
 void
-_nc_tinfo_cmdch(TERMINAL * termp, int proto)
+_nc_tinfo_cmdch(TERMINAL *termp, int proto)
 {
     char *tmp;
 
@@ -580,7 +586,7 @@ _nc_unicode_locale(void)
  * character set.
  */
 NCURSES_EXPORT(int)
-_nc_locale_breaks_acs(TERMINAL * termp)
+_nc_locale_breaks_acs(TERMINAL *termp)
 {
     const char *env_name = "NCURSES_NO_UTF8_ACS";
     const char *env;
@@ -611,7 +617,7 @@ _nc_locale_breaks_acs(TERMINAL * termp)
 }
 
 NCURSES_EXPORT(int)
-TINFO_SETUP_TERM(TERMINAL ** tp,
+TINFO_SETUP_TERM(TERMINAL **tp,
 		 NCURSES_CONST char *tname,
 		 int Filedes,
 		 int *errret,
@@ -720,17 +726,17 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 	}
 #else
 #if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
-	status = _nc_setup_tinfo(tname, &termp->type);
+	status = _nc_setup_tinfo(tname, &TerminalType(termp));
 #else
 	status = TGETENT_NO;
 #endif
 
 	/* try fallback list if entry on disk */
 	if (status != TGETENT_YES) {
-	    const TERMTYPE *fallback = _nc_fallback(tname);
+	    const TERMTYPE2 *fallback = _nc_fallback2(tname);
 
 	    if (fallback) {
-		_nc_copy_termtype(&(termp->type), fallback);
+		TerminalType(termp) = *fallback;
 		status = TGETENT_YES;
 	    }
 	}
@@ -743,6 +749,9 @@ TINFO_SETUP_TERM(TERMINAL ** tp,
 		ret_error1(status, "unknown terminal type.\n", tname);
 	    }
 	}
+#if NCURSES_EXT_NUMBERS
+	_nc_export_termtype2(&termp->type, &TerminalType(termp));
+#endif
 #if !USE_REENTRANT
 #define MY_SIZE (size_t) (NAMESIZE - 1)
 	_nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
@@ -827,6 +836,7 @@ new_prescr(void)
     sp = _nc_alloc_screen_sp();
     T(("_nc_alloc_screen_sp %p", (void *) sp));
     if (sp != 0) {
+	_nc_prescreen.allocated = sp;
 	sp->rsp = sp->rippedoff;
 	sp->_filtered = _nc_prescreen.filter_mode;
 	sp->_use_env = _nc_prescreen.use_env;
