@@ -1,4 +1,4 @@
-# $Id: manhtml.aliases,v 1.11 2017/03/17 23:51:03 tom Exp $
+# $Id: manhtml.aliases,v 1.12 2017/04/22 14:07:02 tom Exp $
 #***************************************************************************
 # Copyright (c) 2013-2016,2017 Free Software Foundation, Inc.              *
 #                                                                          *
@@ -56,5 +56,6 @@ tparm(3X)		curs_terminfo(3X)
 tputs(3X)		curs_terminfo(3X)
 use_env(3X)		curs_util(3X)
 use_default_colors(3X)	default_colors(3X)
+use_extended_names(3X)	curs_extend(3X)
 vidputs(3X)		curs_terminfo(3X)
 wgetch(3X)		curs_getch(3X)

@@ -467,6 +467,7 @@
 ./doc/html/man/new_pair.3x.html
 ./doc/html/man/panel.3x.html
 ./doc/html/man/resizeterm.3x.html
+./doc/html/man/scr_dump.5.html
 ./doc/html/man/tabs.1.html
 ./doc/html/man/term.5.html
 ./doc/html/man/term.7.html
@@ -695,6 +696,7 @@
 ./man/new_pair.3x
 ./man/panel.3x
 ./man/resizeterm.3x
+./man/scr_dump.5
 ./man/tabs.1
 ./man/term.5
 ./man/term.7

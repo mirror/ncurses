@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2806 2017/04/15 18:00:38 tom Exp $
+-- $Id: NEWS,v 1.2822 2017/04/22 20:29:13 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,35 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170422
+	+ build-fix for termcap-configuration (report by Chi-Hsuan Yen).
+	+ improve terminfo manual page discussion of control- and graphics-
+	  characters.
+	+ remove tic warning about "^?" in string capabilities, which was
+	  marked as an extension (cf: 20000610, 20110820); however all Unix
+	  implementations support this and X/Open Curses does not address it.
+	  On the other hand, termcap never did support this feature.
+	+ correct missing comma-separator between string capabilities in
+	  icl6402 and m2-nam -TD
+	+ restore rmir/smir in ansi+idc to better match original ansiterm+idc,
+	  add alias ansiterm (report by Robert King).
+	+ amend an old check for ambiguous use of "ma" in terminfo versus
+	  a termcap use, if the capability is cancelled to treat it as number.
+	+ correct a case in _nc_captoinfo() which read "%%" and emitted "%".
+	+ modify sscanf calls in _nc_infotocap() for patterns "%{number}%+%c"
+	  and "%'char'%+%c" to check that the final character is really 'c',
+	  avoiding a case in icl6404 which cannot be converted to termcap.
+	+ in _nc_infotocap(), add a check to ensure that terminfo "^?" is not
+	  written to termcap, because the BSDs did not implement that.
+	+ in _nc_tic_expand() and _nc_infotocap(), improve string-length check
+	  when deciding whether to use "^X" or "\xxx" format for control
+	  characters, to make the output of tic/infocmp more predictable.
+	+ limit termcap "%d" width to 2 digits on input, and use "%2" in
+	  preference to "%02" on output.
+	+ correct terminfo/termcap conversion of "%02" and "%03" into "%2" and
+	  "%3"; the result repeated the last character.
+	+ add man/scr_dump.5 to document screen-dump format.
 
 20170415
 	+ modify several test programs to use new popup_msgs, adapted from

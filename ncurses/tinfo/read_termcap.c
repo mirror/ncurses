@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.92 2017/04/13 23:40:02 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.93 2017/04/22 16:11:03 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -956,7 +956,7 @@ add_tc(char *termpaths[], char *path, int count)
 #endif /* !USE_GETCAP */
 
 NCURSES_EXPORT(int)
-_nc_read_termcap_entry(const char *const tn, TERMTYPE *const tp)
+_nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 {
     int found = TGETENT_NO;
     ENTRY *ep;

@@ -5168,9 +5168,6 @@ char	*_nc_tic_expand(
 void	(*_nc_check_termtype2)(
 		TERMTYPE2 *p1, 
 		NCURSES_BOOL p2);
-#undef _nc_check_termtype
-void	(*_nc_check_termtype)(
-		TERMTYPE *p1);
 
 #undef _nc_entry_match
 NCURSES_BOOL _nc_entry_match(
@@ -5192,11 +5189,6 @@ void	_nc_read_entry_source(
 int	_nc_resolve_uses2(
 		NCURSES_BOOL fullresolve, 
 		NCURSES_BOOL literal)
-		{ return(*(int *)0); }
-
-#undef _nc_resolve_uses
-int	_nc_resolve_uses(
-		NCURSES_BOOL fullresolve)
 		{ return(*(int *)0); }
 
 /* ./tinfo/comp_scan.c */

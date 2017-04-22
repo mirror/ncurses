@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.570 2017/04/12 00:50:57 tom Exp $
+ * $Id: curses.priv.h,v 1.572 2017/04/20 09:05:57 tom Exp $
  *
  *	curses.priv.h
  *
@@ -786,6 +786,16 @@ typedef struct {
 } TGETENT_CACHE;
 
 #define TGETENT_MAX 4
+
+/*
+ * When converting from terminfo to termcap, check for cases where we can trim
+ * octal escapes down to 2-character form.  It is useful for terminfo format
+ * also, but not as important.
+ */
+#define MAX_TC_FIXUPS	10
+#define MIN_TC_FIXUPS	4
+
+#define isoctal(c) ((c) >= '0' && (c) <= '7')
 
 /*
  * State of tparm().

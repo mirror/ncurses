@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.15 2017/04/16 00:47:55 tom Exp $
+ * $Id: chgat.c,v 1.16 2017/04/16 15:15:34 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -46,10 +46,10 @@
 #endif
 
 typedef struct {
-    unsigned c;
-    unsigned v;
+    size_t c;
+    size_t v;
     short pair;
-    unsigned attr;
+    attr_t attr;
     int count;
     int ch;
     const char *c_msg;
@@ -61,7 +61,7 @@ typedef struct {
 } STATUS;
 
 static const char *
-color_params(unsigned state, short *pair)
+color_params(size_t state, short *pair)
 {
     /* *INDENT-OFF* */
     static struct {
@@ -80,7 +80,7 @@ color_params(unsigned state, short *pair)
 
     if (has_colors()) {
 	if (first) {
-	    unsigned n;
+	    size_t n;
 
 	    start_color();
 	    for (n = 0; n < SIZEOF(table); ++n) {
@@ -96,11 +96,11 @@ color_params(unsigned state, short *pair)
 }
 
 static const char *
-video_params(unsigned state, unsigned *attr)
+video_params(size_t state, attr_t *attr)
 {
     /* *INDENT-OFF* */
     static struct {
-	unsigned attr;
+	attr_t attr;
 	const char *msg;
     } table[] = {
 	{ A_NORMAL,	"normal" },

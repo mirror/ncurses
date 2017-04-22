@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.78 2017/03/04 23:52:35 tom Exp $
+.\" $Id: terminfo.tail,v 1.85 2017/04/22 18:59:02 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -21,7 +21,7 @@ That is, if \fB@TIC@\fP encounters a capability name
 which it does not recognize,
 it infers its type (boolean, number or string) from the syntax
 and makes an extended table entry for that capability.
-The \fBuse_extended_names\fP function makes this information
+The \fBuse_extended_names\fP(3X) function makes this information
 conditionally available to applications.
 The ncurses library provides the data leaving most of the behavior
 to applications:
@@ -124,12 +124,33 @@ sequence) are given by the two-character code, an \*(``=\*('', and then a string
 ending at the next following \*(``,\*(''.
 .PP
 A number of escape sequences are provided in the string valued capabilities
-for easy encoding of characters there.
+for easy encoding of characters there:
+.bP
 Both \fB\eE\fR and \fB\ee\fR
 map to an \s-1ESCAPE\s0 character,
-\fB^x\fR maps to a control-x for any appropriate x, and the sequences
-\fB\en \el \er \et \eb \ef \es\fR give
-a newline, line-feed, return, tab, backspace, form-feed, and space.
+.bP
+\fB^x\fR maps to a control-x for any appropriate \fIx\fP, and
+.bP
+the sequences
+.RS 6
+.PP
+\fB\en\fP, \fB\el\fP, \fB\er\fP, \fB\et\fP, \fB\eb\fP, \fB\ef\fP, and \fB\es\fR
+.RE
+.IP
+produce
+.RS 6
+.PP
+\fInewline\fP, \fIline-feed\fP, \fIreturn\fP, \fItab\fP, \fIbackspace\fP, \fIform-feed\fP, and \fIspace\fP,
+.RE
+.IP
+respectively.
+.PP
+X/Open Curses does not say what \*(``appropriate \fIx\fP\*('' might be.
+In practice, that is a printable ASCII graphic character.
+The special case \*(``^?\*('' is interpreted as DEL (127).
+In all other cases, the character value is AND'd with 0x1f,
+mapping to ASCII control codes in the range 0 through 31.
+.PP
 Other escapes include
 .bP
 \fB\e^\fR for \fB^\fR,
@@ -144,7 +165,7 @@ and \fB\e0\fR for null.
 .IP
 \fB\e0\fR will produce \e200, which does not terminate a string but behaves
 as a null character on most terminals, providing CS7 is specified.
-See stty(1).
+See \fBstty\fP(1).
 .IP
 The reason for this quirk is to maintain binary compatibility of the
 compiled terminfo files with other implementations,
@@ -1269,51 +1290,64 @@ They are documented here in case they ever become important.
 .SS Line Graphics
 .PP
 Many terminals have alternate character sets useful for forms-drawing.
-Terminfo and \fBcurses\fR build in support for the drawing characters
+Terminfo and \fBcurses\fR built-in support for the drawing characters
 supported by the VT100, with some characters from the AT&T 4410v1 added.
 This alternate character set may be specified by the \fBacsc\fR capability.
 .PP
 .TS H
 center expand;
-l l l l
-l l l l
-lw25 lw10 lw6 lw6.
+l l l l l
+l l l l l
+_ _ _ _ _
+lw25 lw10 lw6 lw6 lw6.
 .\".TH
-\fBGlyph	ACS	Ascii	VT100\fR
-\fBName	Name	Default	Name\fR
-UK pound sign        	ACS_STERLING	f	}
-arrow pointing down	ACS_DARROW	v	.
-arrow pointing left	ACS_LARROW	<	,
-arrow pointing right	ACS_RARROW	>	+
-arrow pointing up	ACS_UARROW	^	\-
-board of squares	ACS_BOARD	#	h
-bullet          	ACS_BULLET	o	~
-checker board (stipple)	ACS_CKBOARD	:	a
-degree symbol   	ACS_DEGREE	\e	f
-diamond         	ACS_DIAMOND	+	`
-greater-than-or-equal-to	ACS_GEQUAL	>	z
-greek pi        	ACS_PI	*	{
-horizontal line 	ACS_HLINE	\-	q
-lantern symbol  	ACS_LANTERN	#	i
-large plus or crossover	ACS_PLUS	+	n
-less-than-or-equal-to	ACS_LEQUAL	<	y
-lower left corner	ACS_LLCORNER	+	m
-lower right corner	ACS_LRCORNER	+	j
-not-equal       	ACS_NEQUAL	!	|
-plus/minus      	ACS_PLMINUS	#	g
-scan line 1     	ACS_S1  	~	o
-scan line 3     	ACS_S3  	\-	p
-scan line 7     	ACS_S7  	\-	r
-scan line 9     	ACS_S9  	\&_	s
-solid square block	ACS_BLOCK	#	0
-tee pointing down	ACS_TTEE	+	w
-tee pointing left	ACS_RTEE	+	u
-tee pointing right	ACS_LTEE	+	t
-tee pointing up 	ACS_BTEE	+	v
-upper left corner	ACS_ULCORNER	+	l
-upper right corner	ACS_URCORNER	+	k
-vertical line   	ACS_VLINE	|	x
+\fBGlyph	ACS	Ascii	VT100	VT100\fR
+\fBName	Name	Default	Char	Code\fR
+arrow pointing right	ACS_RARROW	>	+	0x2b
+arrow pointing left	ACS_LARROW	<	,	0x2c
+arrow pointing up	ACS_UARROW	^	\-	0x2d
+arrow pointing down	ACS_DARROW	v	.	0x2e
+solid square block	ACS_BLOCK	#	0	0x30
+diamond         	ACS_DIAMOND	+	`	0x60
+checker board (stipple)	ACS_CKBOARD	:	a	0x61
+degree symbol   	ACS_DEGREE	\e	f	0x66
+plus/minus      	ACS_PLMINUS	#	g	0x67
+board of squares	ACS_BOARD	#	h	0x68
+lantern symbol  	ACS_LANTERN	#	i	0x69
+lower right corner	ACS_LRCORNER	+	j	0x6a
+upper right corner	ACS_URCORNER	+	k	0x6b
+upper left corner	ACS_ULCORNER	+	l	0x6c
+lower left corner	ACS_LLCORNER	+	m	0x6d
+large plus or crossover	ACS_PLUS	+	n	0x6e
+scan line 1     	ACS_S1  	~	o	0x6f
+scan line 3     	ACS_S3  	\-	p	0x70
+horizontal line 	ACS_HLINE	\-	q	0x71
+scan line 7     	ACS_S7  	\-	r	0x72
+scan line 9     	ACS_S9  	\&_	s	0x73
+tee pointing right	ACS_LTEE	+	t	0x74
+tee pointing left	ACS_RTEE	+	u	0x75
+tee pointing up 	ACS_BTEE	+	v	0x76
+tee pointing down	ACS_TTEE	+	w	0x77
+vertical line   	ACS_VLINE	|	x	0x78
+less-than-or-equal-to	ACS_LEQUAL	<	y	0x79
+greater-than-or-equal-to	ACS_GEQUAL	>	z	0x7a
+greek pi        	ACS_PI	*	{	0x7b
+not-equal       	ACS_NEQUAL	!	|	0x7c
+UK pound sign        	ACS_STERLING	f	}	0x7d
+bullet          	ACS_BULLET	o	~	0x7e
 .TE
+.PP
+A few notes apply to the table itself:
+.bP
+X/Open Curses incorrectly states that the mapping for \fIlantern\fP is
+uppercase \*(``I\*('' although Unix implementations use the
+lowercase \*(``i\*('' mapping.
+.bP
+The DEC VT100 implemented graphics using the alternate character set
+feature, temporarily switching \fImodes\fP and sending characters
+in the range 0x60 (96) to 0x7e (126).
+.bP
+The AT&T terminal added graphics characters outside that range.
 .PP
 The best way to define a new device's graphics set is to add a column
 to a copy of this table for your terminal, giving the character which

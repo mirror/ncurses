@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scanw.3x,v 1.17 2010/12/04 18:40:45 tom Exp @
+  * @Id: curs_scanw.3x,v 1.18 2017/04/17 00:07:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -68,10 +68,10 @@
        ing line used as input for <STRONG>sscanf(3)</STRONG>.  Fields which do not
        map to a variable in the <EM>fmt</EM> field are lost.
 
-       The <STRONG>vwscanw</STRONG> and <STRONG>vw_scanw</STRONG> routines are analogous to <STRONG>vscanf</STRONG>.
-       They perform a <STRONG>wscanw</STRONG> using a variable argument list.  The
-       third argument is a <EM>va</EM><STRONG>_</STRONG><EM>list</EM>, a pointer to a list of  argu-
-       ments, as defined in <STRONG>&lt;stdarg.h&gt;</STRONG>.
+       The  <STRONG>vwscanw</STRONG>  and  <STRONG>vw_scanw</STRONG>  routines  are  analogous   to
+       <STRONG>vscanf(3)</STRONG>.   They  perform a <STRONG>wscanw</STRONG> using a variable argu-
+       ment list.  The third argument is a <EM>va</EM><STRONG>_</STRONG><EM>list</EM>, a pointer  to
+       a list of arguments, as defined in <STRONG>&lt;stdarg.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -100,15 +100,15 @@
 
        Both XSI and The  Single  Unix  Specification,  Version  2
        state  that  these  functions return ERR or OK.  Since the
-       underlying <STRONG>scanf</STRONG> can return the number of  items  scanned,
-       and the SVr4 code was documented to use this feature, this
-       is probably an editing error which was introduced in  XSI,
-       rather  than  being done intentionally.  Portable applica-
-       tions should only test if the return value is  ERR,  since
-       the  OK value (zero) is likely to be misleading.  One pos-
-       sible way to get useful results would be  to  use  a  "%n"
-       conversion  at the end of the format string to ensure that
-       something was processed.
+       underlying  <STRONG>scanf(3)</STRONG>  can  return  the  number  of   items
+       scanned, and the SVr4 code was documented to use this fea-
+       ture, this is probably an editing error which  was  intro-
+       duced  in XSI, rather than being done intentionally.  Por-
+       table applications should only test if the return value is
+       ERR, since the OK value (zero) is likely to be misleading.
+       One possible way to get useful results would be to  use  a
+       "%n"  conversion at the end of the format string to ensure
+       that something was processed.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

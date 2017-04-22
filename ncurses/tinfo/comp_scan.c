@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.104 2017/04/08 11:30:52 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.106 2017/04/22 11:41:12 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -817,8 +817,6 @@ _nc_trans_string(char *ptr, char *last)
 	    }
 	    if (c == '?' && (_nc_syntax != SYN_TERMCAP)) {
 		*(ptr++) = '\177';
-		if (_nc_tracing)
-		    _nc_warning("Allow ^? as synonym for \\177");
 	    } else {
 		if ((c &= 037) == 0)
 		    c = 128;
@@ -830,8 +828,6 @@ _nc_trans_string(char *ptr, char *last)
 	    c = next_char();
 	    if (c == EOF)
 		_nc_err_abort(MSG_NO_INPUTS);
-
-#define isoctal(c) ((c) >= '0' && (c) <= '7')
 
 	    if (isoctal(c) || (strict_bsd && isdigit(c))) {
 		number = c - '0';

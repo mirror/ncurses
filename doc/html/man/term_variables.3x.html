@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term_variables.3x,v 1.8 2017/01/07 19:25:15 tom Exp @
+  * @Id: term_variables.3x,v 1.9 2017/04/14 08:33:25 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -133,20 +133,26 @@
 
 
 </PRE><H3><a name="h3-Terminal-Type">Terminal Type</a></H3><PRE>
-       On  initialization  of  the curses or terminfo interfaces,
-       <STRONG><A HREF="curs_terminfo.3x.html">setupterm(3x)</A></STRONG> copies the terminal name to the  array  <STRONG>tty-</STRONG>
-       <STRONG>type</STRONG>.
+       A  terminal  description  begins with one or more terminal
+       names separated by "|" (vertical bars).  On initialization
+       of the curses or terminfo interfaces, <STRONG><A HREF="curs_terminfo.3x.html">setupterm(3x)</A></STRONG> copies
+       the terminal names to the array <STRONG>ttytype</STRONG>.
 
 
 </PRE><H3><a name="h3-Terminfo-Names">Terminfo Names</a></H3><PRE>
        In addition to the variables, <STRONG>&lt;term.h&gt;</STRONG> also defines a sym-
-       bol for each terminfo capability <EM>long</EM> <EM>name</EM>.  These are  in
+       bol  for each terminfo capability <EM>long</EM> <EM>name</EM>.  These are in
        terms of the symbol <STRONG>CUR</STRONG>, which is defined
 
-       #define CUR cur_term-&gt;type.
+       #define CUR ((TERMTYPE *)(cur_term))-&gt;
 
        These symbols provide a faster method of accessing termin-
        fo capabilities than using <STRONG><A HREF="curs_terminfo.3x.html">tigetstr(3x)</A></STRONG>, etc.
+
+       The  actual definition of <STRONG>CUR</STRONG> depends upon the implementa-
+       tion, but each terminfo library provides these long  names
+       defined  to  point  into  the current terminal description
+       loaded into memory.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>

@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.83 2017/04/06 22:15:54 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.84 2017/04/21 21:09:54 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -369,7 +369,16 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 	    }
 
 	    /* deal with bad type/value combinations. */
-	    if (token_type != CANCEL && entry_ptr->nte_type != token_type) {
+	    if (token_type == CANCEL) {
+		/*
+		 * Prefer terminfo in this (long-obsolete) ambiguity:
+		 */
+		if (!strcmp("ma", _nc_curr_token.tk_name)) {
+		    entry_ptr = _nc_find_type_entry("ma", NUMBER,
+						    _nc_syntax != 0);
+		    assert(entry_ptr != 0);
+		}
+	    } else if (entry_ptr->nte_type != token_type) {
 		/*
 		 * Nasty special cases here handle situations in which type
 		 * information can resolve name clashes.  Normal lookup

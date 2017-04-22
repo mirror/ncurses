@@ -1,4 +1,4 @@
-# $Id: manhtml.externs,v 1.5 2017/04/01 19:58:38 tom Exp $
+# $Id: manhtml.externs,v 1.9 2017/04/17 01:03:16 tom Exp $
 # Items in this list will not be linked by man2html
 #***************************************************************************
 # Copyright (c) 2013,2017 Free Software Foundation, Inc.                   *
@@ -28,15 +28,22 @@
 # authorization.                                                           *
 #***************************************************************************
 ADACURSES(1)
+COLOR_PAIR(1)
+COLOR_PAIR(2)
+COLOR_PAIR(3)
+atoi(3)
 conflict(1)
 csh(1)
 ded(1)
 environ(7)
+file(1)
 getty(1)
 nvi(1)
+od(1)
 printf(3)
 profile(5)
 putc(3)
+putchar(3)
 putwc(3)
 read(2)
 rogue(1)
@@ -50,4 +57,6 @@ termio(7)
 tty(4)
 ttys(5)
 vprintf(3)
+vscanf(3)
 wcwidth(3)
+write(2)

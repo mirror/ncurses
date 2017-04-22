@@ -25,7 +25,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: man_db.renames,v 1.50 2017/03/12 09:34:29 tom Exp $
+# $Id: man_db.renames,v 1.51 2017/04/21 23:57:09 tom Exp $
 # Manual-page renamings for the man_db program
 #
 # Files:
@@ -148,13 +148,14 @@ mitem_opts.3x			menu_opts.3menu
 mitem_userptr.3x		menu_userptr.3menu
 mitem_value.3x			menu_value.3menu
 mitem_visible.3x		menu_visible.3menu
-new_pair.3x			new_pair.3ncurses
 ncurses.3x			ncurses.3ncurses
+new_pair.3x			new_pair.3ncurses
 panel.3x			panel.3curses
 printf.3s			printf.3
 putc.3s 			putc.3
 resizeterm.3x			resizeterm.3ncurses
 scanf.3s			scanf.3
+scr_dump.5			scr_dump.5
 system.3s			system.3
 tabs.1				tabs.1
 term.5				term.5
@@ -166,7 +167,6 @@ tic.1m				tic.1
 toe.1m				toe.1
 tput.1				tput.1
 tset.1				tset.1
-vprintf.3			vprintf.3
 wresize.3x			wresize.3ncurses
 #
 # Other:
@@ -179,6 +179,7 @@ termio.7			termios.3
 system.3			system.3
 regcomp.3x			regcomp.3
 regexec.3x			regexec.3
+vprintf.3			vprintf.3
 #
 # The following are pages which may be generated depending on configuration:
 adacurses-config.1		adacurses-config.1
