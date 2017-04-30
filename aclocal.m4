@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.808 2017/02/26 00:34:27 tom Exp $
+dnl $Id: aclocal.m4,v 1.809 2017/04/29 22:41:39 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -7268,7 +7268,7 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_GPM version: 9 updated: 2016/05/28 20:33:31
+dnl CF_WITH_GPM version: 10 updated: 2017/04/29 18:32:18
 dnl -----------
 dnl
 dnl The option parameter (if neither yes/no) is assumed to be the name of
@@ -7290,7 +7290,7 @@ if test "$with_gpm" != no ; then
 			AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
 			with_gpm=yes
 		else
-			AC_CHECK_LIB(gpm,Gpm_Open,[:],[
+			AC_CHECK_LIB(gpm,Gpm_Open,[with_gpm=yes],[
 				if test "$with_gpm" = maybe; then
 					AC_MSG_WARN(Cannot link with GPM library)
 					with_gpm=no

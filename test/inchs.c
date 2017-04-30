@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inchs.c,v 1.13 2017/04/15 18:52:10 tom Exp $
+ * $Id: inchs.c,v 1.14 2017/04/29 22:03:26 tom Exp $
  *
  * Author: Thomas E Dickey
  */
@@ -78,6 +78,7 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
 	" ESC/^Q                   - quit",
 	" h,j,k,l (and arrow-keys) - move viewport",
 	" w                        - recur to new window",
+	"                            for next input file",
 	0
     };
     WINDOW *txtbox = 0;
@@ -278,7 +279,7 @@ main(int argc, char *argv[])
     setlocale(LC_ALL, "");
 
     if (argc < 2) {
-	fprintf(stderr, "usage: %s file\n", argv[0]);
+	fprintf(stderr, "usage: %s file1 [file2 [...]]\n", argv[0]);
 	return EXIT_FAILURE;
     }
 

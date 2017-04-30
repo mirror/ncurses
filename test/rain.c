@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.42 2017/04/15 19:32:33 tom Exp $
+ * $Id: rain.c,v 1.43 2017/04/30 01:08:14 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -386,6 +386,8 @@ main(int argc GCC_UNUSED,
 #endif
 	case HELP_KEY_1:
 	    popup_msg(stdscr, help);
+	    break;
+	case ERR:
 	    break;
 	default:
 	    beep();

@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: scr_dump.5,v 1.9 2017/04/22 18:44:25 tom Exp @
+  * @Id: scr_dump.5,v 1.10 2017/04/29 20:53:55 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -253,8 +253,22 @@
 
 
 </PRE><H3><a name="h3-NetBSD">NetBSD</a></H3><PRE>
-       As of April 2017,  NetBSD  curses  does  not  yet  support
-       screen dumps.
+       As of April 2017, NetBSD curses does not support  <STRONG>scr_dump</STRONG>
+       and  <STRONG>scr_restore</STRONG>  (or  <STRONG>scr_init</STRONG>, <STRONG>scr_set</STRONG>), although it has
+       <STRONG>putwin</STRONG> and <STRONG>getwin</STRONG>.
+
+       Like ncurses5, NetBSD <STRONG>putwin</STRONG> does not identify  its  dumps
+       with a useful magic number.  It writes
+
+       <STRONG>o</STRONG>   the  curses shared library major and minor versions as
+           the first two bytes (e.g., 7 and 1),
+
+       <STRONG>o</STRONG>   followed by a binary dump of the <STRONG>WINDOW</STRONG>,
+
+       <STRONG>o</STRONG>   some data for wide-characters referenced by the <STRONG>WINDOW</STRONG>
+           structure, and
+
+       <STRONG>o</STRONG>   finally, lines as done by other implementations.
 
 
 </PRE><H2><a name="h2-EXAMPLE">EXAMPLE</a></H2><PRE>

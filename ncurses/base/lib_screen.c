@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.85 2016/09/10 18:38:36 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.86 2017/04/23 15:07:27 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -61,7 +61,7 @@ MODULE_ID("$Id: lib_screen.c,v 1.85 2016/09/10 18:38:36 tom Exp $")
 #define TOP_SLIMIT _nc_SLIMIT(sizeof(buffer))
 
 /*
- * Use 0x8888 as the magic number for new-format files, since it cannot be
+ * Use 0x888888 as the magic number for new-format files, since it cannot be
  * mistaken for the _cury/_curx pair of 16-bit numbers which start the old
  * format.  It happens to be unused in the file 5.22 database (2015/03/07).
  */

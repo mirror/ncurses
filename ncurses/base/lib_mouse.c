@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.171 2017/03/25 21:20:35 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.173 2017/04/30 01:22:04 tom Exp $")
 
 #include <tic.h>
 
@@ -486,10 +486,15 @@ load_gpm_library(SCREEN *sp)
 {
     sp->_mouse_gpm_found = FALSE;
     if ((sp->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
+#pragma GCC diagnostic push
+#if (defined(__GNUC__) && (__GNUC__ >= 5)) || defined(__clang__)
+#pragma GCC diagnostic ignored "-Wpedantic"
+#endif
 	if (GET_DLSYM(gpm_fd) == 0 ||
 	    GET_DLSYM(Gpm_Open) == 0 ||
 	    GET_DLSYM(Gpm_Close) == 0 ||
 	    GET_DLSYM(Gpm_GetEvent) == 0) {
+#pragma GCC diagnostic pop
 	    T(("GPM initialization failed: %s", dlerror()));
 	    unload_gpm_library(sp);
 	} else {

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inchstr.3x,v 1.15 2010/12/04 18:36:44 tom Exp @
+  * @Id: curs_inchstr.3x,v 1.16 2017/04/29 21:31:17 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -83,26 +83,29 @@
        (the number of  characters  retrieved,  exclusive  of  the
        trailing 0).
 
-       No  error  conditions are defined.  If the <EM>chstr</EM> parameter
-       is null, no data is returned, and the return value is  ze-
-       ro.
+       X/Open Curses defines no error conditions.  In this imple-
+       mentation:
 
-       Functions  with a "mv" prefix first perform a cursor move-
-       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
+       <STRONG>o</STRONG>   If the <EM>win</EM> parameter is null, an error is returned,
+
+       <STRONG>o</STRONG>   If the <EM>chstr</EM> parameter is null, an error is returned,
+
+       Functions with a "mv" prefix first perform a cursor  move-
+       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
        outside the window, or if the window pointer is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note  that  all  routines  except <STRONG>winchnstr</STRONG> may be macros.
-       SVr4 does not document whether the result string is  zero-
-       terminated;  it  does  not document whether a length limit
+       Note that all routines except  <STRONG>winchnstr</STRONG>  may  be  macros.
+       SVr4  does not document whether the result string is zero-
+       terminated; it does not document whether  a  length  limit
        argument includes any trailing 0; and it does not document
        the meaning of the return value.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  functions are described in the XSI Curses standard,
-       Issue 4.  It is no more specific than the SVr4  documenta-
+       These functions are described in the XSI Curses  standard,
+       Issue  4.  It is no more specific than the SVr4 documenta-
        tion on the trailing 0.  It does specify that the success-
        ful return of the functions is <STRONG>OK</STRONG>.
 
@@ -110,7 +113,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>.
 
-       Comparable functions in the wide-character (ncursesw)  li-
+       Comparable  functions in the wide-character (ncursesw) li-
        brary are described in <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>.
 
 

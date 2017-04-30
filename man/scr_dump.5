@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: scr_dump.5,v 1.9 2017/04/22 18:44:25 tom Exp $
+.\" $Id: scr_dump.5,v 1.10 2017/04/29 20:53:55 tom Exp $
 .TH scr_dump 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -251,7 +251,23 @@ e.g.,
 .NE
 .SS NetBSD
 .PP
-As of April 2017, NetBSD curses does not yet support screen dumps.
+As of April 2017, NetBSD curses does
+not support \fBscr_dump\fP and \fBscr_restore\fP
+(or \fBscr_init\fP, \fBscr_set\fP),
+although it has \fBputwin\fP and \fBgetwin\fP.
+.PP
+Like ncurses5, NetBSD \fBputwin\fP does not identify its dumps with a
+useful magic number.
+It writes
+.bP
+the curses shared library major and minor versions
+as the first two bytes (e.g., 7 and 1),
+.bP
+followed by a binary dump of the \fBWINDOW\fP,
+.bP
+some data for wide-characters referenced by the \fBWINDOW\fP structure, and
+.bP
+finally, lines as done by other implementations.
 .SH EXAMPLE
 .PP
 Given a simple program which writes text to the screen

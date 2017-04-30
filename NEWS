@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2822 2017/04/22 20:29:13 tom Exp $
+-- $Id: NEWS,v 1.2829 2017/04/30 01:26:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,20 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170429
+	+ corrected a case where $with_gpm was set to "maybe" after CF_WITH_GPM,
+	  overlooked in 20160528 fixes (report by Alexandre Bury).
+	+ improve a couple of test-program's help-messages.
+	+ corrected loop in rain.c from 20170415 changes.
+	+ modify winnstr and winchnstr to return error if the output pointer is
+	  null, as well as adding a null pointer check of the window pointer
+	  for better compatibility with other implementations.
+	+ improve discussion of NetBSD curses in scr_dump.5
+	+ modify LIMIT_TYPED macro in new_pair.h to avoid changing sign of the
+	  value to be limited (reports by Darby Payne, Rob Boudreau).
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20170422
 	+ build-fix for termcap-configuration (report by Chi-Hsuan Yen).

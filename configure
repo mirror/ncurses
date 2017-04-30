@@ -5353,7 +5353,7 @@ fi
 echo "$as_me:5353: result: $ac_cv_lib_gpm_Gpm_Open" >&5
 echo "${ECHO_T}$ac_cv_lib_gpm_Gpm_Open" >&6
 if test $ac_cv_lib_gpm_Gpm_Open = yes; then
-  :
+  with_gpm=yes
 else
 
 				if test "$with_gpm" = maybe; then

@@ -1,4 +1,4 @@
-# $Id: modules,v 1.121 2017/03/01 01:58:12 tom Exp $
+# $Id: modules,v 1.122 2017/04/29 20:23:50 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -125,7 +125,7 @@ lib_freeall	lib		$(base)		$(HEADER_DEPS)	$(INCDIR)/tic.h
 charable	lib		$(wide)		$(HEADER_DEPS)
 lib_add_wch	lib		$(wide)		$(HEADER_DEPS)
 lib_box_set	lib		$(wide)		$(HEADER_DEPS)
-lib_cchar	lib		$(wide)		$(HEADER_DEPS)
+lib_cchar	lib		$(wide)		$(HEADER_DEPS)	$(srcdir)/new_pair.h
 lib_erasewchar	lib		$(wide)		$(HEADER_DEPS)
 lib_get_wch	lib		$(wide)		$(HEADER_DEPS)
 lib_get_wstr	lib		$(wide)		$(HEADER_DEPS)
