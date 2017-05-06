@@ -40,15 +40,15 @@
 <BODY>
 <H1 class="no-header">curs_addwstr 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>                                       <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>                                              <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>addwstr</STRONG>, <STRONG>addnwstr</STRONG>, <STRONG>waddwstr</STRONG>, <STRONG>waddnwstr</STRONG>, <STRONG>mvaddwstr</STRONG>,
-       <STRONG>mvaddnwstr</STRONG>, <STRONG>mvwaddwstr</STRONG>, <STRONG>mvwaddnwstr</STRONG> - add a string of wide
-       characters to a <STRONG>curses</STRONG> window and advance cursor
+       <STRONG>addwstr</STRONG>, <STRONG>addnwstr</STRONG>, <STRONG>waddwstr</STRONG>, <STRONG>waddnwstr</STRONG>, <STRONG>mvaddwstr</STRONG>, <STRONG>mvaddnwstr</STRONG>,
+       <STRONG>mvwaddwstr</STRONG>, <STRONG>mvwaddnwstr</STRONG> - add a string of wide characters to a <STRONG>curses</STRONG>
+       window and advance cursor
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -65,39 +65,35 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These  functions  write the characters of the (null-termi-
-       nated) <STRONG>wchar_t</STRONG> character string <EM>wstr</EM> on the given  window.
-       It  is  similar to constructing a <STRONG>cchar_t</STRONG> for each wchar_t
-       in the string, then calling  <STRONG>wadd_wch</STRONG>  for  the  resulting
-       <STRONG>cchar_t</STRONG>.
+       These  functions  write the characters of the (null-terminated) <STRONG>wchar_t</STRONG>
+       character string <EM>wstr</EM> on the given window.  It is similar to construct-
+       ing a <STRONG>cchar_t</STRONG> for each wchar_t in the string, then calling <STRONG>wadd_wch</STRONG> for
+       the resulting <STRONG>cchar_t</STRONG>.
 
-       The  <EM>mv</EM>  functions  perform  cursor  movement once, before
-       writing any characters.  Thereafter,  the  cursor  is  ad-
-       vanced as a side-effect of writing to the window.
+       The <EM>mv</EM> functions perform cursor movement once, before writing any char-
+       acters.  Thereafter, the cursor is advanced as a side-effect of writing
+       to the window.
 
-       The  four  functions  with <EM>n</EM> as the last argument write at
-       most <EM>n</EM> <STRONG>wchar_t</STRONG> characters, or until a terminating null  is
-       reached.   If  <EM>n</EM>  is  -1,  then  the entire string will be
-       added.
+       The four functions with <EM>n</EM> as the last argument write at most <EM>n</EM>  <STRONG>wchar_t</STRONG>
+       characters,  or  until a terminating null is reached.  If <EM>n</EM> is -1, then
+       the entire string will be added.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All functions return the integer <STRONG>ERR</STRONG> upon failure  and  <STRONG>OK</STRONG>
-       on success.
+       All functions return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on success.
 
-       X/Open  does not define any error conditions.  This imple-
-       mentation returns an error
+       X/Open does not define any error conditions.  This  implementation  re-
+       turns an error
 
        <STRONG>o</STRONG>   if the window pointer is null or
 
        <STRONG>o</STRONG>   if the string pointer is null or
 
-       <STRONG>o</STRONG>   if the corresponding calls to <STRONG>wadd_wch</STRONG> return  an  er-
-           ror.
+       <STRONG>o</STRONG>   if the corresponding calls to <STRONG>wadd_wch</STRONG> return an error.
 
-       Functions  with a "mv" prefix first perform a cursor move-
-       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
-       outside the window, or if the window pointer is null.
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -105,8 +101,7 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  functions are described in the XSI Curses standard,
-       Issue 4.
+       These functions are described in the XSI Curses standard, Issue 4.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
@@ -114,7 +109,7 @@
 
 
 
-                                                       <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
+                                                              <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

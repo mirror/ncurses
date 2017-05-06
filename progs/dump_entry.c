@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.150 2017/04/05 09:27:40 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.152 2017/05/06 18:56:15 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -796,6 +796,28 @@ fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
     return src;
 }
 
+/*
+ * Make "large" numbers a little easier to read by showing them in hexadecimal
+ * if they are "close" to a power of two.
+ */
+static const char *
+number_format(int value)
+{
+    const char *result = "%d";
+    if ((outform != F_TERMCAP) && (value > 255)) {
+	unsigned long lv = (unsigned long) value;
+	unsigned long mm;
+	int nn;
+	for (nn = 8; (mm = (1UL << nn)) != 0; ++nn) {
+	    if ((mm - 16) <= lv && (mm + 16) > lv) {
+		result = "%#x";
+		break;
+	    }
+	}
+    }
+    return result;
+}
+
 #define SAME_CAP(n,cap) (&tterm->Strings[n] == &cap)
 #define EXTRA_CAP 20
 
@@ -892,8 +914,13 @@ fmt_entry(TERMTYPE2 *tterm,
 		_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
 			    "%s@", name);
 	    } else {
+		size_t nn;
 		_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
-			    "%s#%d", name, tterm->Numbers[i]);
+			    "%s#", name);
+		nn = strlen(buffer);
+		_nc_SPRINTF(buffer + nn, _nc_SLIMIT(sizeof(buffer) - nn)
+			    number_format(tterm->Numbers[i]),
+			    tterm->Numbers[i]);
 		if (i + 1 > num_values)
 		    num_values = i + 1;
 	    }

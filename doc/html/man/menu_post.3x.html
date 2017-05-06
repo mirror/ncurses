@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">menu_post 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>                                             <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
+<STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>                                                    <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>post_menu</STRONG>, <STRONG>unpost_menu</STRONG> - write or erase menus from associ-
-       ated subwindows
+       <STRONG>post_menu</STRONG>,  <STRONG>unpost_menu</STRONG>  - write or erase menus from associated subwin-
+       dows
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -58,15 +58,13 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>post_menu</STRONG> displays a menu to  its  associated
-       subwindow.   To trigger physical display of the subwindow,
-       use <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or some  equivalent  <STRONG>curses</STRONG>  routine  (the
-       implicit  <STRONG>doupdate</STRONG>  triggered  by  an <STRONG>curses</STRONG> input request
-       will do). <STRONG>post_menu</STRONG> resets the  selection  status  of  all
+       The function <STRONG>post_menu</STRONG> displays a menu to its associated subwindow.  To
+       trigger  physical  display  of  the  subwindow, use <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or some
+       equivalent <STRONG>curses</STRONG> routine (the implicit <STRONG>doupdate</STRONG> triggered by an <STRONG>curses</STRONG>
+       input  request  will  do). <STRONG>post_menu</STRONG> resets the selection status of all
        items.
 
-       The  function  <STRONG>unpost_menu</STRONG> erases menu from its associated
-       subwindow.
+       The function <STRONG>unpost_menu</STRONG> erases menu from its associated subwindow.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -78,19 +76,17 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine detected an incorrect or  out-of-range  argu-
-            ment.
+            Routine detected an incorrect or out-of-range argument.
 
        <STRONG>E_POSTED</STRONG>
             The menu has already been posted.
 
        <STRONG>E_BAD_STATE</STRONG>
-            Routine was called from an initialization or termina-
-            tion function.
+            Routine was called from an initialization or termination function.
 
        <STRONG>E_NO_ROOM</STRONG>
-            Menu is too large for its window.   You  should  con-
-            sider using <STRONG>set_menu_format</STRONG> to solve the problem.
+            Menu is too large for  its  window.   You  should  consider  using
+            <STRONG>set_menu_format</STRONG> to solve the problem.
 
        <STRONG>E_NOT_POSTED</STRONG>
             The menu has not been posted.
@@ -104,22 +100,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V  menu  library.   They
-       were not supported on Version 7 or BSD versions.
+       These routines emulate the System V menu library.  They were  not  sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                          <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
+                                                                 <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

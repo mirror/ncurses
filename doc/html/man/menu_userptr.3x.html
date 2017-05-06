@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">menu_userptr 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>                                       <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
+<STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>                                              <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_menu_userptr</STRONG>,  <STRONG>menu_userptr</STRONG>  -  associate  application
-       data with a menu item
+       <STRONG>set_menu_userptr</STRONG>, <STRONG>menu_userptr</STRONG> - associate application data with a menu
+       item
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -58,15 +58,14 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       Every menu and every menu item has a  field  that  can  be
-       used to hold application-specific data (that is, the menu-
-       driver code leaves it alone).  These functions get and set
-       the menu user pointer field.
+       Every menu and every menu item has a field that can  be  used  to  hold
+       application-specific  data  (that  is,  the  menu-driver code leaves it
+       alone).  These functions get and set the menu user pointer field.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>menu_userptr</STRONG>  returns  a  pointer (which may be <STRONG>NULL</STRONG>).  It
-       does not set errno.
+       <STRONG>menu_userptr</STRONG> returns a pointer (which may be <STRONG>NULL</STRONG>).  It  does  not  set
+       errno.
 
        <STRONG>set_menu_userptr</STRONG> returns <STRONG>E_OK</STRONG> (success).
 
@@ -76,25 +75,25 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  routines  emulate  the System V menu library.  They
-       were not supported on Version 7 or BSD versions.
+       These routines emulate the System V menu library.  They were  not  sup-
+       ported on Version 7 or BSD versions.
 
-       The user pointer is a void pointer.  We chose not to leave
-       it as a char pointer for SVr4 compatibility.
+       The user pointer is a void pointer.  We chose not to leave it as a char
+       pointer for SVr4 compatibility.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                       <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
+                                                              <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

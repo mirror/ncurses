@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">menu_opts 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>                                             <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
+<STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>                                                    <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_menu_opts</STRONG>,  <STRONG>menu_opts_on</STRONG>,  <STRONG>menu_opts_off</STRONG>,  <STRONG>menu_opts</STRONG> -
-       set and get menu options
+       <STRONG>set_menu_opts</STRONG>,  <STRONG>menu_opts_on</STRONG>,  <STRONG>menu_opts_off</STRONG>,  <STRONG>menu_opts</STRONG>  - set and get
+       menu options
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -60,18 +60,16 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function  <STRONG>set_menu_opts</STRONG>  sets  all  the  given  menu's
-       option  bits  (menu  option  bits  may  be logically-OR'ed
-       together).
+       The function <STRONG>set_menu_opts</STRONG> sets all the given menu's option bits  (menu
+       option bits may be logically-OR'ed together).
 
-       The function <STRONG>menu_opts_on</STRONG> turns on the given option  bits,
-       and leaves others alone.
+       The  function  <STRONG>menu_opts_on</STRONG>  turns on the given option bits, and leaves
+       others alone.
 
-       The  function  <STRONG>menu_opts_off</STRONG>  turns  off  the given option
-       bits, and leaves others alone.
+       The function <STRONG>menu_opts_off</STRONG> turns off the given option bits, and  leaves
+       others alone.
 
-       The function <STRONG>menu_opts</STRONG> returns the menu's  current  option
-       bits.
+       The function <STRONG>menu_opts</STRONG> returns the menu's current option bits.
 
        The following options are defined (all are on by default):
 
@@ -79,8 +77,7 @@
             Only one item can be selected for this menu.
 
        O_SHOWDESC
-            Display  the  item  descriptions  when  the  menu  is
-            posted.
+            Display the item descriptions when the menu is posted.
 
        O_ROWMAJOR
             Display the menu in row-major order.
@@ -89,23 +86,20 @@
             Ignore the case when pattern-matching.
 
        O_SHOWMATCH
-            Move the cursor to within the item  name  while  pat-
-            tern-matching.
+            Move the cursor to within the item name while pattern-matching.
 
        O_NONCYCLIC
-            Don't   wrap   around  next-item  and  previous-item,
-            requests to the other end of the menu.
+            Don't  wrap  around  next-item  and previous-item, requests to the
+            other end of the menu.
 
        O_MOUSE_MENU
-            If user clicks with the mouse and it does not fall on
-            the  currently  active  menu,  push <STRONG>KEY_MOUSE</STRONG> and the
-            <STRONG>MEVENT</STRONG> data back on the queue to allow processing  in
-            another part of the calling program.
+            If user clicks with the mouse and it does not  fall  on  the  cur-
+            rently active menu, push <STRONG>KEY_MOUSE</STRONG> and the <STRONG>MEVENT</STRONG> data back on the
+            queue to allow processing in another part of the calling program.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except for <STRONG>menu_opts</STRONG>, each routine returns one of the fol-
-       lowing:
+       Except for <STRONG>menu_opts</STRONG>, each routine returns one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
@@ -121,22 +115,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  routines  emulate  the System V menu library.  They
-       were not supported on Version 7 or BSD versions.
+       These  routines  emulate the System V menu library.  They were not sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                          <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
+                                                                 <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

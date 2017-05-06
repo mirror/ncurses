@@ -40,15 +40,14 @@
 <BODY>
 <H1 class="no-header">curs_insstr 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>                                         <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>                                                <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>insstr</STRONG>,  <STRONG>insnstr</STRONG>,  <STRONG>winsstr</STRONG>, <STRONG>winsnstr</STRONG>, <STRONG>mvinsstr</STRONG>, <STRONG>mvinsnstr</STRONG>,
-       <STRONG>mvwinsstr</STRONG>, <STRONG>mvwinsnstr</STRONG> - insert string before cursor  in  a
-       <STRONG>curses</STRONG> window
+       <STRONG>insstr</STRONG>,  <STRONG>insnstr</STRONG>,  <STRONG>winsstr</STRONG>,  <STRONG>winsnstr</STRONG>,  <STRONG>mvinsstr</STRONG>, <STRONG>mvinsnstr</STRONG>, <STRONG>mvwinsstr</STRONG>,
+       <STRONG>mvwinsnstr</STRONG> - insert string before cursor in a <STRONG>curses</STRONG> window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -60,37 +59,34 @@
        <STRONG>int</STRONG> <STRONG>mvinsstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvinsnstr(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwinsstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvwinsnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG>
-       <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwinsnstr(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These routines insert a character string (as many  charac-
-       ters  as  will fit on the line) before the character under
-       the cursor.  All characters to the right of the cursor are
-       shifted  right with the possibility of the rightmost char-
-       acters on the line being lost.  The cursor  position  does
-       not  change  (after  moving  to  <EM>y</EM>, <EM>x</EM>, if specified).  The
-       functions with <EM>n</EM> as the last  argument  insert  a  leading
-       substring  of  at  most  <EM>n</EM>  characters.  If <EM>n</EM>&lt;=0, then the
-       entire string is inserted.
+       These routines insert a character string (as many  characters  as  will
+       fit on the line) before the character under the cursor.  All characters
+       to the right of the cursor are shifted right with  the  possibility  of
+       the  rightmost  characters on the line being lost.  The cursor position
+       does not change (after moving to <EM>y</EM>, <EM>x</EM>, if  specified).   The  functions
+       with  <EM>n</EM>  as  the  last argument insert a leading substring of at most <EM>n</EM>
+       characters.  If <EM>n</EM>&lt;=0, then the entire string is inserted.
 
        Special characters are handled as in <STRONG>addch</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines that return an integer return <STRONG>ERR</STRONG> upon  fail-
-       ure  and  OK  (SVr4 specifies only "an integer value other
-       than <STRONG>ERR</STRONG>") upon successful  completion,  unless  otherwise
-       noted in the preceding routine descriptions.
+       All routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure  and  OK
+       (SVr4 specifies only "an integer value other than <STRONG>ERR</STRONG>") upon successful
+       completion, unless otherwise noted in the  preceding  routine  descrip-
+       tions.
 
-       X/Open  defines  no error conditions.  In this implementa-
-       tion, if the window parameter is null or the str parameter
-       is null, an error is returned.
+       X/Open  defines  no  error  conditions.  In this implementation, if the
+       window parameter is null or the str parameter  is  null,  an  error  is
+       returned.
 
-       Functions  with a "mv" prefix first perform a cursor move-
-       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
-       outside the window, or if the window pointer is null.
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -98,14 +94,13 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  functions are described in the XSI Curses standard,
-       Issue 4, which adds const qualifiers to the arguments.
+       These  functions  are  described  in  the XSI Curses standard, Issue 4,
+       which adds const qualifiers to the arguments.
 
-       The Single  Unix  Specification,  Version  2  states  that
-       <STRONG>insnstr</STRONG>  and  <STRONG>winsnstr</STRONG> perform wrapping.  This is probably
-       an error, since it makes this group of functions inconsis-
-       tent.   Also,  no  implementation of curses documents this
-       inconsistency.
+       The Single Unix Specification, Version 2 states that <STRONG>insnstr</STRONG>  and  <STRONG>win-</STRONG>
+       <STRONG>snstr</STRONG> perform wrapping.  This is probably an error, since it makes this
+       group of functions inconsistent.  Also,  no  implementation  of  curses
+       documents this inconsistency.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
@@ -113,7 +108,7 @@
 
 
 
-                                                        <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
+                                                               <STRONG><A HREF="curs_insstr.3x.html">curs_insstr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

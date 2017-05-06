@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.449 2017/04/15 18:53:50 tom Exp $
+$Id: ncurses.c,v 1.450 2017/05/05 14:58:47 tom Exp $
 
 ***************************************************************************/
 
@@ -3984,7 +3984,7 @@ show_wacs_chars_double(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     n = show_1_wacs(n, repeat, BOTH2(WACS_DEGREE));
     n = show_1_wacs(n, repeat, BOTH2(WACS_DIAMOND));
     n = show_1_wacs(n, repeat, BOTH2(WACS_PLMINUS));
-    n = show_1_wacs(n, repeat, BOTH2(WACS_PLUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_D_PLUS));
 
 #ifdef CURSES_WACS_ARRAY
     n = show_1_wacs(n, repeat, BOTH2(WACS_GEQUAL));
@@ -4045,7 +4045,7 @@ show_wacs_chars_thick(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     n = show_1_wacs(n, repeat, BOTH2(WACS_DEGREE));
     n = show_1_wacs(n, repeat, BOTH2(WACS_DIAMOND));
     n = show_1_wacs(n, repeat, BOTH2(WACS_PLMINUS));
-    n = show_1_wacs(n, repeat, BOTH2(WACS_PLUS));
+    n = show_1_wacs(n, repeat, BOTH2(WACS_T_PLUS));
 
 #ifdef CURSES_WACS_ARRAY
     n = show_1_wacs(n, repeat, BOTH2(WACS_GEQUAL));

@@ -41,7 +41,7 @@
 <BODY>
 <H1 class="no-header">menu_format 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>                                         <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
+<STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>                                                <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
 
 
 
@@ -57,22 +57,19 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>set_menu_format</STRONG> sets the maximum display size
-       of the given menu.  If this size is too small  to  display
-       all  menu items, the menu will be made scrollable. If this
-       size is larger than the menus subwindow and the  subwindow
-       is  too  small  to  display all menu items, <STRONG>post_menu</STRONG> will
-       fail.
+       The function <STRONG>set_menu_format</STRONG> sets the maximum display size of the given
+       menu.  If this size is too small to display all menu  items,  the  menu
+       will  be made scrollable. If this size is larger than the menus subwin-
+       dow and the subwindow is too small to display all menu items, <STRONG>post_menu</STRONG>
+       will fail.
 
-       The  default  format  is  16  rows,  1  column.    Calling
-       <STRONG>set_menu_format</STRONG>  with a null menu pointer will change this
-       default.  A zero row or column argument to <STRONG>set_menu_format</STRONG>
-       is  interpreted  as  a  request  not to change the current
-       value.
+       The  default format is 16 rows, 1 column.  Calling <STRONG>set_menu_format</STRONG> with
+       a null menu pointer will change this default.  A  zero  row  or  column
+       argument  to  <STRONG>set_menu_format</STRONG> is interpreted as a request not to change
+       the current value.
 
-       The function <STRONG>menu_format</STRONG>  returns  the  maximum-size  con-
-       straints  for the given menu into the storage addressed by
-       <STRONG>rows</STRONG> and <STRONG>cols</STRONG>.
+       The function <STRONG>menu_format</STRONG> returns the maximum-size constraints  for  the
+       given menu into the storage addressed by <STRONG>rows</STRONG> and <STRONG>cols</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -84,8 +81,7 @@
             System error occurred (see <STRONG>errno</STRONG>).
 
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine detected an incorrect or  out-of-range  argu-
-            ment.
+            Routine detected an incorrect or out-of-range argument.
 
        <STRONG>E_POSTED</STRONG>
             The menu is already posted.
@@ -99,22 +95,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V  menu  library.   They
-       were not supported on Version 7 or BSD versions.
+       These routines emulate the System V menu library.  They were  not  sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                        <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
+                                                               <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

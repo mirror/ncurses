@@ -41,14 +41,13 @@
 <BODY>
 <H1 class="no-header">menu_hook 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>                                             <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+<STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>                                                    <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>menu_hook</STRONG> - set hooks for automatic invocation by applica-
-       tions
+       <STRONG>menu_hook</STRONG> - set hooks for automatic invocation by applications
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -64,34 +63,34 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These functions make it possible to set hook functions  to
-       be called at various points in the automatic processing of
-       input event codes by <STRONG>menu_driver</STRONG>.
+       These  functions make it possible to set hook functions to be called at
+       various points in the automatic processing  of  input  event  codes  by
+       <STRONG>menu_driver</STRONG>.
 
-       The function <STRONG>set_item_init</STRONG> sets a hook  to  be  called  at
-       menu-post  time  and  each  time the selected item changes
-       (after the change).  <STRONG>item_init</STRONG> returns  the  current  item
-       init hook, if any (<STRONG>NULL</STRONG> if there is no such hook).
+       The  function  <STRONG>set_item_init</STRONG> sets a hook to be called at menu-post time
+       and each time the selected item changes (after the change).   <STRONG>item_init</STRONG>
+       returns  the  current  item init hook, if any (<STRONG>NULL</STRONG> if there is no such
+       hook).
 
-       The  function  <STRONG>set_item_term</STRONG>  sets  a hook to be called at
-       menu-unpost time and each time the selected  item  changes
-       (before  the  change).  <STRONG>item_term</STRONG> returns the current item
-       term hook, if any (<STRONG>NULL</STRONG> if there is no such hook).
+       The function <STRONG>set_item_term</STRONG> sets a hook to be called at menu-unpost time
+       and each time the selected item changes (before the change).  <STRONG>item_term</STRONG>
+       returns the current item term hook, if any (<STRONG>NULL</STRONG> if there  is  no  such
+       hook).
 
-       The function <STRONG>set_menu_init</STRONG> sets a hook  to  be  called  at
-       menu-post  time  and  just  after  the top row on the menu
-       changes once it is posted.  <STRONG>menu_init</STRONG> returns the  current
-       menu init hook, if any (<STRONG>NULL</STRONG> if there is no such hook).
+       The  function  <STRONG>set_menu_init</STRONG> sets a hook to be called at menu-post time
+       and just after the top row on the  menu  changes  once  it  is  posted.
+       <STRONG>menu_init</STRONG>  returns the current menu init hook, if any (<STRONG>NULL</STRONG> if there is
+       no such hook).
 
-       The  function  <STRONG>set_menu_term</STRONG>  sets  a hook to be called at
-       menu-unpost time and just before the top row on  the  menu
-       changes  once it is posted.  <STRONG>menu_term</STRONG> returns the current
-       menu term hook, if any (<STRONG>NULL</STRONG> if there is no such hook).
+       The function <STRONG>set_menu_term</STRONG> sets a hook to be called at menu-unpost time
+       and  just  before  the  top  row on the menu changes once it is posted.
+       <STRONG>menu_term</STRONG> returns the current menu term hook, if any (<STRONG>NULL</STRONG> if there  is
+       no such hook).
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Routines that return pointers return <STRONG>NULL</STRONG> on error.  Other
-       routines return one of the following:
+       Routines  that  return  pointers  return <STRONG>NULL</STRONG> on error.  Other routines
+       return one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
@@ -104,22 +103,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V  menu  library.   They
-       were not supported on Version 7 or BSD versions.
+       These  routines  emulate the System V menu library.  They were not sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                          <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+                                                                 <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

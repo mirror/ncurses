@@ -27,7 +27,20 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.43 2017/01/07 19:25:15 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.45 2017/05/06 17:29:26 tom Exp $
+.de NS
+.ie \n(.sp
+.el    .sp .5
+.ie \n(.in +4
+.el    .in +2
+.nf
+.ft C			\" Courier
+..
+.de NE
+.fi
+.ft R
+.in -4
+..
 .de bP
 .IP \(bu 4
 ..
@@ -256,6 +269,51 @@ on their test result.
 .SH PORTABILITY
 These calls were designed for \fBncurses\fR(3X), and are not found in SVr4
 curses, 4.4BSD curses, or any other previous version of curses.
+.PP
+SVr4 curses had support for the mouse in a variant of \fBxterm\fP.
+It is mentioned in a few places, but with no supporting documentation:
+.bP
+the \*(``libcurses\*('' manual page lists functions for this feature
+which are prototyped in \fBcurses.h\fP:
+.NS
+extern int mouse_set(long int);
+extern int mouse_on(long int);
+extern int mouse_off(long int);
+extern int request_mouse_pos(void);
+extern int map_button(unsigned long);
+extern void wmouse_position(WINDOW *, int *, int *);
+extern unsigned long getmouse(void), getbmap(void);
+.NE
+.bP
+the \*(``terminfo\*('' manual page lists capabilities for the feature
+.NS
+buttons           btns    BT       Number of buttons on the mouse
+get_mouse         getm    Gm       Curses should get button events
+key_mouse         kmous   Km       0631, Mouse event has occured
+mouse_info        minfo   Mi       Mouse status information
+req_mouse_pos     reqmp   RQ       Request mouse position report
+.NE
+.bP
+the interface made assumptions (as does ncurses) about the escape sequences
+sent to and received from the terminal.
+.IP
+For instance
+the SVr4 curses library used the \fBget_mouse\fP capability to tell the
+terminal which mouse button events it should send,
+passing the mouse-button bit-mask to the terminal.
+Also, it could ask the terminal where the mouse was using the \fBreq_mouse_pos\fP capability.
+.IP
+Those features required a terminal which had been modified to work with curses.
+They were not part of the X Consortium's xterm.
+.PP
+When developing the xterm mouse support for ncurses in September 1995,
+Eric Raymond was uninterested in using the same interface due to its
+lack of documentation.
+Later, in 1998, Mark Hesseling provided support in
+PDCurses 2.3 using the SVr4 interface.
+PDCurses, however, does not use video terminals,
+making it unnecessary to be concerned about compatibility with the
+escape sequences.
 .PP
 The feature macro \fBNCURSES_MOUSE_VERSION\fR is provided so the preprocessor
 can be used to test whether these features are present.

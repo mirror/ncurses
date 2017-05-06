@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.85 2017/04/22 18:59:02 tom Exp $
+.\" $Id: terminfo.tail,v 1.87 2017/05/05 17:54:07 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1290,7 +1290,8 @@ They are documented here in case they ever become important.
 .SS Line Graphics
 .PP
 Many terminals have alternate character sets useful for forms-drawing.
-Terminfo and \fBcurses\fR built-in support for the drawing characters
+Terminfo and \fBcurses\fR have built-in support
+for most of the drawing characters
 supported by the VT100, with some characters from the AT&T 4410v1 added.
 This alternate character set may be specified by the \fBacsc\fR capability.
 .PP
@@ -1301,8 +1302,8 @@ l l l l l
 _ _ _ _ _
 lw25 lw10 lw6 lw6 lw6.
 .\".TH
-\fBGlyph	ACS	Ascii	VT100	VT100\fR
-\fBName	Name	Default	Char	Code\fR
+\fBGlyph	ACS	Ascii	acsc	acsc\fR
+\fBName	Name	Default	Char	Value\fR
 arrow pointing right	ACS_RARROW	>	+	0x2b
 arrow pointing left	ACS_LARROW	<	,	0x2c
 arrow pointing up	ACS_UARROW	^	\-	0x2d
@@ -1345,9 +1346,17 @@ lowercase \*(``i\*('' mapping.
 .bP
 The DEC VT100 implemented graphics using the alternate character set
 feature, temporarily switching \fImodes\fP and sending characters
-in the range 0x60 (96) to 0x7e (126).
+in the range 0x60 (96) to 0x7e (126)
+(the \fBacsc Value\fP column in the table).
 .bP
 The AT&T terminal added graphics characters outside that range.
+.IP
+Some of the characters within the range do not match the VT100;
+presumably they were used in the AT&T terminal:
+\fIboard of squares\fP replaces the VT100 \fInewline\fP symbol, while
+\fIlantern symbol\fP replaces the VT100 \fIvertical tab\fP symbol.
+The other VT100 symbols for control characters (\fIhorizontal tab\fP,
+\fIcarriage return\fP and \fIline-feed\fP) are not (re)used in curses.
 .PP
 The best way to define a new device's graphics set is to add a column
 to a copy of this table for your terminal, giving the character which

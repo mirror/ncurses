@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">resizeterm 3x</H1>
 <PRE>
-<STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>                                           <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
+<STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>                                                  <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>is_term_resized</STRONG>,  <STRONG>resize_term</STRONG>,  <STRONG>resizeterm</STRONG>  -  change  the
-       curses terminal size
+       <STRONG>is_term_resized</STRONG>,  <STRONG>resize_term</STRONG>,  <STRONG>resizeterm</STRONG> - change the curses terminal
+       size
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -60,55 +60,49 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       This is an extension to the curses library.   It  provides
-       callers  with  a hook into the <STRONG>ncurses</STRONG> data to resize win-
-       dows, primarily for use by programs running in an X Window
-       terminal (e.g., xterm).
+       This is an extension to the curses library.  It provides callers with a
+       hook into the <STRONG>ncurses</STRONG> data to resize windows, primarily for use by pro-
+       grams running in an X Window terminal (e.g., xterm).
 
 
 </PRE><H3><a name="h3-resizeterm">resizeterm</a></H3><PRE>
-       The  function  <STRONG>resizeterm</STRONG> resizes the standard and current
-       windows to the specified  dimensions,  and  adjusts  other
-       bookkeeping  data  used by the <STRONG>ncurses</STRONG> library that record
-       the window dimensions such as the  <STRONG>LINES</STRONG>  and  <STRONG>COLS</STRONG>  vari-
-       ables.
+       The function <STRONG>resizeterm</STRONG> resizes the standard and current windows to the
+       specified  dimensions,  and  adjusts other bookkeeping data used by the
+       <STRONG>ncurses</STRONG> library that record the window dimensions such as the <STRONG>LINES</STRONG> and
+       <STRONG>COLS</STRONG> variables.
 
 
 </PRE><H3><a name="h3-resize_term">resize_term</a></H3><PRE>
-       Most   of   the   work  is  done  by  the  inner  function
-       <STRONG>resize_term</STRONG>.  The outer function <STRONG>resizeterm</STRONG> adds bookkeep-
-       ing  for the SIGWINCH handler.  When resizing the windows,
-       <STRONG>resize_term</STRONG> blank-fills the areas that are extended.   The
-       calling application should fill in these areas with appro-
-       priate data.  The <STRONG>resize_term</STRONG> function attempts to  resize
-       all  windows.   However,  due to the calling convention of
-       pads, it is not possible to  resize  these  without  addi-
-       tional interaction with the application.
+       Most  of the work is done by the inner function <STRONG>resize_term</STRONG>.  The outer
+       function <STRONG>resizeterm</STRONG> adds bookkeeping for the  SIGWINCH  handler.   When
+       resizing  the  windows,  <STRONG>resize_term</STRONG>  blank-fills  the  areas  that are
+       extended.  The calling application should  fill  in  these  areas  with
+       appropriate data.  The <STRONG>resize_term</STRONG> function attempts to resize all win-
+       dows.  However, due to the calling convention of pads, it is not possi-
+       ble  to  resize  these without additional interaction with the applica-
+       tion.
 
 
 </PRE><H3><a name="h3-is_term_resized">is_term_resized</a></H3><PRE>
-       A  support  function  <STRONG>is_term_resized</STRONG>  is provided so that
-       applications can check if the <STRONG>resize_term</STRONG>  function  would
-       modify the window structures.  It returns <STRONG>TRUE</STRONG> if the win-
-       dows would be modified, and <STRONG>FALSE</STRONG> otherwise.
+       A support function <STRONG>is_term_resized</STRONG> is provided so that applications can
+       check  if  the <STRONG>resize_term</STRONG> function would modify the window structures.
+       It returns <STRONG>TRUE</STRONG> if the windows would be modified, and <STRONG>FALSE</STRONG> otherwise.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except as noted, these functions return  the  integer  <STRONG>ERR</STRONG>
-       upon  failure and <STRONG>OK</STRONG> on success.  They will fail if either
-       of the dimensions are less than or equal to zero, or if an
-       error occurs while (re)allocating memory for the windows.
+       Except as noted, these functions return the integer  <STRONG>ERR</STRONG>  upon  failure
+       and <STRONG>OK</STRONG> on success.  They will fail if either of the dimensions are less
+       than or equal to zero, or if an error occurs while (re)allocating  mem-
+       ory for the windows.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       While these functions are intended to be used to support a
-       signal handler (i.e., for SIGWINCH), care should be  taken
-       to  avoid invoking them in a context where <STRONG>malloc</STRONG> or <STRONG>real-</STRONG>
-       <STRONG>loc</STRONG> may have been interrupted, since it uses  those  func-
-       tions.
+       While  these functions are intended to be used to support a signal han-
+       dler (i.e., for SIGWINCH), care should be taken to avoid invoking  them
+       in  a  context where <STRONG>malloc</STRONG> or <STRONG>realloc</STRONG> may have been interrupted, since
+       it uses those functions.
 
-       If  ncurses  is configured to supply its own SIGWINCH han-
-       dler,
+       If ncurses is configured to supply its own SIGWINCH handler,
 
        <STRONG>o</STRONG>   on receipt of a SIGWINCH, the handler sets a flag
 
@@ -116,23 +110,21 @@
 
        <STRONG>o</STRONG>   in turn, calling the <STRONG>resizeterm</STRONG> function,
 
-       <STRONG>o</STRONG>   which <STRONG>ungetch</STRONG>'s a <STRONG>KEY_RESIZE</STRONG> which will be read on the
-           next call to <STRONG>wgetch</STRONG>.
+       <STRONG>o</STRONG>   which <STRONG>ungetch</STRONG>'s a <STRONG>KEY_RESIZE</STRONG> which will be read on the next call to
+           <STRONG>wgetch</STRONG>.
 
-           The  <STRONG>KEY_RESIZE</STRONG>  alerts an application that the screen
-           size has changed, and that it should  repaint  special
-           features  such  as  pads that cannot be done automati-
-           cally.
+           The  <STRONG>KEY_RESIZE</STRONG>  alerts  an  application  that  the screen size has
+           changed, and that it should repaint special features such  as  pads
+           that cannot be done automatically.
 
-           Calling <STRONG>resizeterm</STRONG> or <STRONG>resize_term</STRONG> directly from a sig-
-           nal  handler  is unsafe.  This indirect method is used
-           to provide a safe  way  to  resize  the  ncurses  data
-           structures.
+           Calling <STRONG>resizeterm</STRONG> or <STRONG>resize_term</STRONG> directly from a signal handler is
+           unsafe.  This indirect method is used to  provide  a  safe  way  to
+           resize the ncurses data structures.
 
-       If  the  environment  variables  <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set,
-       this overrides  the  library's  use  of  the  window  size
-       obtained  from the operating system.  Thus, even if a SIG-
-       WINCH is received, no screen size change may be recorded.
+       If  the  environment variables <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set, this overrides
+       the library's use of the window size obtained from the  operating  sys-
+       tem.   Thus,  even if a SIGWINCH is received, no screen size change may
+       be recorded.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -144,8 +136,8 @@
 
        Doing that clears the screen and is visually distracting.
 
-       This extension of ncurses was introduced in mid-1995.   It
-       was adopted in NetBSD curses (2001) and PDCurses (2003).
+       This extension of ncurses was introduced in mid-1995.  It  was  adopted
+       in NetBSD curses (2001) and PDCurses (2003).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
@@ -153,12 +145,12 @@
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
-       Thomas Dickey (from an equivalent function written in 1988
-       for BSD curses).
+       Thomas  Dickey  (from  an  equivalent  function written in 1988 for BSD
+       curses).
 
 
 
-                                                         <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
+                                                                <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

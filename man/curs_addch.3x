@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.39 2017/04/17 00:14:02 tom Exp $
+.\" $Id: curs_addch.3x,v 1.41 2017/05/05 18:15:29 tom Exp $
 .TH curs_addch 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .IP \(bu 4
 ..
@@ -117,50 +121,52 @@ library is unable to use Unicode.
 The names are taken from VT100 nomenclature.
 .PP
 .TS
-l l l
-_ _ _
-l l l.
-\fIName\fR	\fIDefault\fR	\fIDescription\fR
-ACS_BLOCK	#	solid square block
-ACS_BOARD	#	board of squares
-ACS_BTEE	+	bottom tee
-ACS_BULLET	o	bullet
-ACS_CKBOARD	:	checker board (stipple)
-ACS_DARROW	v	arrow pointing down
-ACS_DEGREE	'	degree symbol
-ACS_DIAMOND	+	diamond
-ACS_GEQUAL	>	greater-than-or-equal-to
-ACS_HLINE	\-	horizontal line
-ACS_LANTERN	#	lantern symbol
-ACS_LARROW	<	arrow pointing left
-ACS_LEQUAL	<	less-than-or-equal-to
-ACS_LLCORNER	+	lower left-hand corner
-ACS_LRCORNER	+	lower right-hand corner
-ACS_LTEE	+	left tee
-ACS_NEQUAL	!	not-equal
-ACS_PI	*	greek pi
-ACS_PLMINUS	#	plus/minus
-ACS_PLUS	+	plus
-ACS_RARROW	>	arrow pointing right
-ACS_RTEE	+	right tee
-ACS_S1	\-	scan line 1
-ACS_S3	\-	scan line 3
-ACS_S7	\-	scan line 7
-ACS_S9	\&_	scan line 9
-ACS_STERLING	f	pound-sterling symbol
-ACS_TTEE	+	top tee
-ACS_UARROW	^	arrow pointing up
-ACS_ULCORNER	+	upper left-hand corner
-ACS_URCORNER	+	upper right-hand corner
-ACS_VLINE	|	vertical line
+l l l l
+l l l l
+_ _ _ _
+l l l l.
+\fBACS\fR	\fBACS\fR	\fBacsc\fP	\fBGlyph\fR
+\fBName\fR	\fBDefault\fR	\fBchar\fP	\fBName\fR
+ACS_BLOCK	#	0	solid square block
+ACS_BOARD	#	h	board of squares
+ACS_BTEE	+	v	bottom tee
+ACS_BULLET	o	~	bullet
+ACS_CKBOARD	:	a	checker board (stipple)
+ACS_DARROW	v	.	arrow pointing down
+ACS_DEGREE	'	f	degree symbol
+ACS_DIAMOND	+	`	diamond
+ACS_GEQUAL	>	>	greater-than-or-equal-to
+ACS_HLINE	\-	q	horizontal line
+ACS_LANTERN	#	i	lantern symbol
+ACS_LARROW	<	,	arrow pointing left
+ACS_LEQUAL	<	y	less-than-or-equal-to
+ACS_LLCORNER	+	m	lower left-hand corner
+ACS_LRCORNER	+	j	lower right-hand corner
+ACS_LTEE	+	t	left tee
+ACS_NEQUAL	!	|	not-equal
+ACS_PI	*	{	greek pi
+ACS_PLMINUS	#	g	plus/minus
+ACS_PLUS	+	n	plus
+ACS_RARROW	>	+	arrow pointing right
+ACS_RTEE	+	u	right tee
+ACS_S1	\-	o	scan line 1
+ACS_S3	\-	p	scan line 3
+ACS_S7	\-	r	scan line 7
+ACS_S9	\&_	s	scan line 9
+ACS_STERLING	f	}	pound-sterling symbol
+ACS_TTEE	+	w	top tee
+ACS_UARROW	^	\-	arrow pointing up
+ACS_ULCORNER	+	l	upper left-hand corner
+ACS_URCORNER	+	k	upper right-hand corner
+ACS_VLINE	|	x	vertical line
 .TE
 .SH RETURN VALUE
 All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success
-(the SVr4 manuals specify only "an integer value other than \fBERR\fR") upon
-successful completion, unless otherwise noted in the preceding routine
-descriptions.
+(the SVr4 manuals specify only
+\*(``an integer value other than \fBERR\fR\*('') upon successful completion,
+unless otherwise noted in the preceding routine descriptions.
 .PP
-Functions with a "mv" prefix first perform a cursor movement using
+Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES

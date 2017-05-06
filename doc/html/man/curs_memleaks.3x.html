@@ -40,14 +40,13 @@
 <BODY>
 <H1 class="no-header">curs_memleaks 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>                                     <STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>
+<STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>                                            <STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>_nc_freeall</STRONG> <STRONG>_nc_free_and_exit</STRONG> - <STRONG>curses</STRONG> memory-leak
-       checking
+       <STRONG>_nc_freeall</STRONG> <STRONG>_nc_free_and_exit</STRONG> - <STRONG>curses</STRONG> memory-leak checking
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -58,28 +57,24 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These functions are used to simplify  analysis  of  memory
-       leaks  in  the  ncurses  library.   They  are normally not
-       available; they must be configured  into  the  library  at
-       build  time  using  the <STRONG>--disable-leaks</STRONG> option.  That com-
-       piles-in code that frees memory that normally would not be
+       These  functions  are  used to simplify analysis of memory leaks in the
+       ncurses library.  They are normally not available; they must be config-
+       ured  into  the library at build time using the <STRONG>--disable-leaks</STRONG> option.
+       That compiles-in code that frees memory  that  normally  would  not  be
        freed.
 
-       Any  implementation of curses must not free the memory as-
-       sociated with a screen, since (even after calling <STRONG>endwin</STRONG>),
-       it  must  be  available  for  use  in the next call to <STRONG>re-</STRONG>
-       <STRONG><A HREF="refresh.3x.html">fresh(3x)</A></STRONG>.  There are also chunks of memory held for  per-
-       formance  reasons.   That  makes it hard to analyze curses
-       applications for memory leaks.  To work around  this,  one
-       can build a debugging version of the ncurses library which
-       frees those chunks which it can, and provides these  func-
-       tions  to  free all of the memory allocated by the ncurses
-       library.
+       Any implementation of curses must not free the memory associated with a
+       screen, since (even after calling <STRONG>endwin</STRONG>), it must be available for use
+       in  the next call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  There are also chunks of memory held
+       for performance reasons.  That makes it hard to analyze curses applica-
+       tions for memory leaks.  To work around this, one can build a debugging
+       version of the ncurses library which frees those chunks which  it  can,
+       and provides these functions to free all of the memory allocated by the
+       ncurses library.
 
-       The _nc_free_and_exit function is the preferred one  since
-       some  of the memory which is freed may be required for the
-       application to continue running.   Its  parameter  is  the
-       code to pass to the exit routine.
+       The _nc_free_and_exit function is the preferred one since some  of  the
+       memory  which  is freed may be required for the application to continue
+       running.  Its parameter is the code to pass to the exit routine.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -95,7 +90,7 @@
 
 
 
-                                                      <STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>
+                                                             <STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">curs_inch 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>                                             <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>
+<STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>                                                    <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>inch</STRONG>,  <STRONG>winch</STRONG>,  <STRONG>mvinch</STRONG>,  <STRONG>mvwinch</STRONG>  -  get  a  character  and
-       attributes from a <STRONG>curses</STRONG> window
+       <STRONG>inch</STRONG>,  <STRONG>winch</STRONG>,  <STRONG>mvinch</STRONG>,  <STRONG>mvwinch</STRONG> - get a character and attributes from a
+       <STRONG>curses</STRONG> window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -61,17 +61,16 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These routines return the character, of  type  <STRONG>chtype</STRONG>,  at
-       the   current  position  in  the  named  window.   If  any
-       attributes are set for that  position,  their  values  are
-       OR'ed  into  the  value  returned.   Constants  defined in
-       <STRONG>&lt;curses.h&gt;</STRONG> can be used with the <STRONG>&amp;</STRONG> (logical  AND)  operator
-       to extract the character or attributes alone.
+       These routines return the character, of type  <STRONG>chtype</STRONG>,  at  the  current
+       position in the named window.  If any attributes are set for that posi-
+       tion, their values  are  OR'ed  into  the  value  returned.   Constants
+       defined  in <STRONG>&lt;curses.h&gt;</STRONG> can be used with the <STRONG>&amp;</STRONG> (logical AND) operator to
+       extract the character or attributes alone.
 
 
 </PRE><H3><a name="h3-Attributes">Attributes</a></H3><PRE>
-       The  following  bit-masks  may  be  AND-ed with characters
-       returned by <STRONG>winch</STRONG>.
+       The following bit-masks may  be  AND-ed  with  characters  returned  by
+       <STRONG>winch</STRONG>.
 
        <STRONG>A_CHARTEXT</STRONG>     Bit-mask to extract character
        <STRONG>A_ATTRIBUTES</STRONG>   Bit-mask to extract attributes
@@ -79,9 +78,9 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Functions with a "mv" prefix first perform a cursor  move-
-       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
-       outside the window, or if the window pointer is null.
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -89,19 +88,18 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These functions are described in the XSI Curses  standard,
-       Issue 4.
+       These functions are described in the XSI Curses standard, Issue 4.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
-       Comparable  functions  in  the  wide-character  (ncursesw)
-       library are described in <STRONG><A HREF="curs_in_wch.3x.html">curs_in_wch(3x)</A></STRONG>.
+       Comparable  functions  in  the  wide-character  (ncursesw)  library are
+       described in <STRONG><A HREF="curs_in_wch.3x.html">curs_in_wch(3x)</A></STRONG>.
 
 
 
-                                                          <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>
+                                                                 <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

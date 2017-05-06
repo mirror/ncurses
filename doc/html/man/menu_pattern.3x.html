@@ -40,14 +40,13 @@
 <BODY>
 <H1 class="no-header">menu_pattern 3x</H1>
 <PRE>
-<STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>                                       <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+<STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>                                              <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_menu_pattern</STRONG>, <STRONG>menu_pattern</STRONG> - set and get a menu's pat-
-       tern buffer
+       <STRONG>set_menu_pattern</STRONG>, <STRONG>menu_pattern</STRONG> - set and get a menu's pattern buffer
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -57,38 +56,31 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       Every menu has an associated  pattern  match  buffer.   As
-       input  events  that are printable characters come in, they
-       are appended to this match buffer and tested for a  match,
-       as described in <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>.
+       Every  menu  has  an  associated pattern match buffer.  As input events
+       that are printable characters come in, they are appended to this  match
+       buffer and tested for a match, as described in <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>.
 
-       The  function <STRONG>set_menu_pattern</STRONG> sets the pattern buffer for
-       the given menu and tries to find the first matching  item.
-       If  it  succeeds,  that  item becomes current; if not, the
-       current item does not change.
+       The  function  <STRONG>set_menu_pattern</STRONG>  sets  the pattern buffer for the given
+       menu and tries to find the first matching item.  If it  succeeds,  that
+       item becomes current; if not, the current item does not change.
 
-       The function <STRONG>menu_pattern</STRONG> returns the  pattern  buffer  of
-       the given <EM>menu</EM>.
+       The function <STRONG>menu_pattern</STRONG> returns the pattern buffer of the given <EM>menu</EM>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The function <STRONG>menu_pattern</STRONG> returns a pointer, which is <STRONG>NULL</STRONG>
-       if the <EM>menu</EM> parameter is <STRONG>NULL</STRONG>.  Otherwise, it is a pointer
-       to a string which is empty if no pattern has been set.  It
-       does not set errno.
+       The  function <STRONG>menu_pattern</STRONG> returns a pointer, which is <STRONG>NULL</STRONG> if the <EM>menu</EM>
+       parameter is <STRONG>NULL</STRONG>.  Otherwise, it is a pointer to  a  string  which  is
+       empty if no pattern has been set.  It does not set errno.
 
-       The function <STRONG>set_menu_pattern</STRONG>  may  return  the  following
-       error codes:
+       The function <STRONG>set_menu_pattern</STRONG> may return the following error codes:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
        <STRONG>E_BAD_ARGUMENT</STRONG>
-            Routine  detected  an incorrect or out-of-range argu-
-            ment.
+            Routine detected an incorrect or out-of-range argument.
 
        <STRONG>E_BAD_STATE</STRONG>
-            Routine was called from an initialization or termina-
-            tion function.
+            Routine was called from an initialization or termination function.
 
        <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to menu.
@@ -105,22 +97,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;menu.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V  menu  library.   They
-       were not supported on Version 7 or BSD versions.
+       These routines emulate the System V menu library.  They were  not  sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen  Pfeifer.   Manual  pages  and  adaptation for new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                       <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+                                                              <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

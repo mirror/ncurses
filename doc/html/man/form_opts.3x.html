@@ -41,14 +41,14 @@
 <BODY>
 <H1 class="no-header">form_opts 3x</H1>
 <PRE>
-<STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>                                             <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
+<STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>                                                    <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_form_opts</STRONG>,  <STRONG>form_opts_on</STRONG>,  <STRONG>form_opts_off</STRONG>,  <STRONG>form_opts</STRONG> -
-       set and get form options
+       <STRONG>set_form_opts</STRONG>,  <STRONG>form_opts_on</STRONG>,  <STRONG>form_opts_off</STRONG>,  <STRONG>form_opts</STRONG>  - set and get
+       form options
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -60,35 +60,30 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function  <STRONG>set_form_opts</STRONG>  sets  all  the  given  form's
-       option  bits  (form  option  bits  may  be logically-OR'ed
-       together).
+       The function <STRONG>set_form_opts</STRONG> sets all the given form's option bits  (form
+       option bits may be logically-OR'ed together).
 
-       The function <STRONG>form_opts_on</STRONG> turns on the given option  bits,
-       and leaves others alone.
+       The  function  <STRONG>form_opts_on</STRONG>  turns on the given option bits, and leaves
+       others alone.
 
-       The  function  <STRONG>form_opts_off</STRONG>  turns  off  the given option
-       bits, and leaves others alone.
+       The function <STRONG>form_opts_off</STRONG> turns off the given option bits, and  leaves
+       others alone.
 
-       The function <STRONG>form_opts</STRONG> returns the form's  current  option
-       bits.
+       The function <STRONG>form_opts</STRONG> returns the form's current option bits.
 
        The following options are defined (all are on by default):
 
        O_NL_OVERLOAD
-            Overload  the  <STRONG>REQ_NEW_LINE</STRONG>  forms  driver request so
-            that calling it at the end of a  field  goes  to  the
-            next field.
+            Overload  the <STRONG>REQ_NEW_LINE</STRONG> forms driver request so that calling it
+            at the end of a field goes to the next field.
 
        O_BS_OVERLOAD
-            Overload  the  <STRONG>REQ_DEL_PREV</STRONG>  forms  driver request so
-            that calling it at the beginning of a field  goes  to
-            the previous field.
+            Overload the <STRONG>REQ_DEL_PREV</STRONG> forms driver request so that calling  it
+            at the beginning of a field goes to the previous field.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except for <STRONG>form_opts</STRONG>, each routine returns one of the fol-
-       lowing:
+       Except for <STRONG>form_opts</STRONG>, each routine returns one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
@@ -101,22 +96,22 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;form.h&gt;</STRONG> automatically includes the header
-       file <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  routines  emulate the System V forms library.  They
-       were not supported on Version 7 or BSD versions.
+       These routines emulate the System V forms library.  They were not  sup-
+       ported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Juergen Pfeifer.  Manual  pages  and  adaptation  for  new
-       curses by Eric S. Raymond.
+       Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric S.
+       Raymond.
 
 
 
-                                                          <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
+                                                                 <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

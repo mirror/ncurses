@@ -40,7 +40,7 @@
 <BODY>
 <H1 class="no-header">ADACURSES 1   User Commands</H1>
 <PRE>
-<STRONG>ADACURSES(1)</STRONG>                 User Commands                 <STRONG>ADACURSES(1)</STRONG>
+<STRONG>ADACURSES(1)</STRONG>                     User Commands                    <STRONG>ADACURSES(1)</STRONG>
 
 
 
@@ -54,35 +54,30 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       This  is  a  shell  script which simplifies configuring an
-       application  to  use  the  AdaCurses  library  binding  to
-       ncurses.
+       This  is  a shell script which simplifies configuring an application to
+       use the AdaCurses library binding to ncurses.
 
 
 </PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
        <STRONG>--cflags</STRONG>
-              echos  the gnat (Ada compiler) flags needed to com-
-              pile with AdaCurses.
-
-       <STRONG>--libs</STRONG> echos  the  gnat  libraries  needed  to  link  with
+              echos the gnat (Ada  compiler)  flags  needed  to  compile  with
               AdaCurses.
 
+       <STRONG>--libs</STRONG> echos the gnat libraries needed to link with AdaCurses.
+
        <STRONG>--version</STRONG>
-              echos  the release+patchdate version of the ncurses
-              libraries used to configure and build AdaCurses.
+              echos  the  release+patchdate  version  of the ncurses libraries
+              used to configure and build AdaCurses.
 
-       <STRONG>--help</STRONG> prints a list  of  the  <STRONG>adacurses6-config</STRONG>  script's
-              options.
+       <STRONG>--help</STRONG> prints a list of the <STRONG>adacurses6-config</STRONG> script's options.
 
-       If no options are given, <STRONG>adacurses6-config</STRONG> prints the com-
-       bination of <STRONG>--cflags</STRONG> and <STRONG>--libs</STRONG> that <STRONG>gnatmake</STRONG> expects (see
-       example).
+       If no options are given, <STRONG>adacurses6-config</STRONG> prints  the  combination  of
+       <STRONG>--cflags</STRONG> and <STRONG>--libs</STRONG> that <STRONG>gnatmake</STRONG> expects (see example).
 
 
 </PRE><H2><a name="h2-EXAMPLE">EXAMPLE</a></H2><PRE>
-       For example, supposing that you want to compile the "Hello
-       World!"   program  for  AdaCurses.   Make  a  file   named
-       "hello.adb":
+       For  example,  supposing  that  you  want to compile the "Hello World!"
+       program for AdaCurses.  Make a file named "hello.adb":
               with Terminal_Interface.Curses; use Terminal_Interface.Curses;
 
               procedure Hello is
@@ -111,7 +106,6 @@
                     end case;
 
                     Nap_Milli_Seconds (50);
-
                  end loop;
 
                  End_Windows;
@@ -119,8 +113,8 @@
               end Hello;
 
        Then, using
-              gnatmake  `adacurses-config  --cflags` hello -largs
-              `adacurses-config --libs`
+              gnatmake `adacurses-config --cflags`  hello  -largs  `adacurses-
+              config --libs`
 
        or (simpler):
               gnatmake hello `adacurses-config`
@@ -131,11 +125,11 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170429).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170506).
 
 
 
-                                                           <STRONG>ADACURSES(1)</STRONG>
+                                                                  <STRONG>ADACURSES(1)</STRONG>
 </PRE>
 <div class="nav">
 <ul>

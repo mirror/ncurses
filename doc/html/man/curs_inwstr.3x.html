@@ -40,15 +40,14 @@
 <BODY>
 <H1 class="no-header">curs_inwstr 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>                                         <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>                                                <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>inwstr</STRONG>,  <STRONG>innwstr</STRONG>,  <STRONG>winwstr</STRONG>, <STRONG>winnwstr</STRONG>, <STRONG>mvinwstr</STRONG>, <STRONG>mvinnwstr</STRONG>,
-       <STRONG>mvwinwstr</STRONG>, <STRONG>mvwinnwstr</STRONG> - get a string of <STRONG>wchar_t</STRONG> characters
-       from a curses window
+       <STRONG>inwstr</STRONG>,  <STRONG>innwstr</STRONG>,  <STRONG>winwstr</STRONG>,  <STRONG>winnwstr</STRONG>,  <STRONG>mvinwstr</STRONG>, <STRONG>mvinnwstr</STRONG>, <STRONG>mvwinwstr</STRONG>,
+       <STRONG>mvwinnwstr</STRONG> - get a string of <STRONG>wchar_t</STRONG> characters from a curses window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -65,17 +64,16 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These  routines  return  a string of <STRONG>wchar_t</STRONG> characters in
-       <EM>wstr</EM>, extracted starting at the current cursor position in
-       the  named window.  Attributes are stripped from the char-
-       acters.  The four functions with <EM>n</EM> as  the  last  argument
-       return a leading substring at most <EM>n</EM> bytes long (exclusive
-       of the trailing NUL).  Transfer stops at the  end  of  the
-       current  line,  or  when  <EM>n</EM>  bytes have been stored at the
-       location referenced by <EM>wstr</EM>.
+       These routines return a string of <STRONG>wchar_t</STRONG> characters in <EM>wstr</EM>, extracted
+       starting   at   the  current  cursor  position  in  the  named  window.
+       Attributes are stripped from the characters.  The four functions with <EM>n</EM>
+       as  the  last  argument return a leading substring at most <EM>n</EM> bytes long
+       (exclusive of the trailing NUL).  Transfer stops at the end of the cur-
+       rent  line, or when <EM>n</EM> bytes have been stored at the location referenced
+       by <EM>wstr</EM>.
 
-       If the size <EM>n</EM> is not large  enough  to  store  a  complete
-       character, an error is generated.
+       If the size <EM>n</EM> is not large enough to store  a  complete  character,  an
+       error is generated.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -83,14 +81,13 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines return <STRONG>ERR</STRONG> upon failure. Upon successful com-
-       pletion, the *<STRONG>inwstr</STRONG> routines return <STRONG>OK</STRONG>, and the  *<STRONG>innwstr</STRONG>
-       routines  return  the  number  of characters read into the
-       string.
+       All  routines  return <STRONG>ERR</STRONG> upon failure. Upon successful completion, the
+       *<STRONG>inwstr</STRONG> routines return <STRONG>OK</STRONG>, and the *<STRONG>innwstr</STRONG> routines return the number
+       of characters read into the string.
 
-       Functions with a "mv" prefix first perform a cursor  move-
-       ment  using  <STRONG>wmove</STRONG>, and return an error if the position is
-       outside the window, or if the window pointer is null.
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
@@ -98,7 +95,7 @@
 
 
 
-                                                        <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
+                                                               <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

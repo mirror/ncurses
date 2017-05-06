@@ -40,7 +40,7 @@
 <BODY>
 <H1 class="no-header">curs_touch 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>                                           <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
+<STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
 
 
 
@@ -61,60 +61,51 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <STRONG>touchwin</STRONG> and <STRONG>touchline</STRONG> routines throw away  all  opti-
-       mization  information about which parts of the window have
-       been touched, by pretending that  the  entire  window  has
-       been  drawn  on.   This  is sometimes necessary when using
-       overlapping windows, since a change to one window  affects
-       the other window, but the records of which lines have been
-       changed in the other window do  not  reflect  the  change.
-       The  routine <STRONG>touchline</STRONG> only pretends that <EM>count</EM> lines have
-       been changed, beginning with line <EM>start</EM>.
+       The <STRONG>touchwin</STRONG> and <STRONG>touchline</STRONG> routines throw away all optimization  infor-
+       mation about which parts of the window have been touched, by pretending
+       that the entire window has been drawn on.  This is sometimes  necessary
+       when  using  overlapping  windows, since a change to one window affects
+       the other window, but the records of which lines have been  changed  in
+       the other window do not reflect the change.  The routine <STRONG>touchline</STRONG> only
+       pretends that <EM>count</EM> lines have been changed, beginning with line <EM>start</EM>.
 
-       The <STRONG>untouchwin</STRONG> routine marks all lines in  the  window  as
-       unchanged since the last call to <STRONG>wrefresh</STRONG>.
+       The <STRONG>untouchwin</STRONG> routine marks all lines in the window as unchanged since
+       the last call to <STRONG>wrefresh</STRONG>.
 
-       The <STRONG>wtouchln</STRONG> routine makes <EM>n</EM> lines in the window, starting
-       at line <EM>y</EM>, look as if they have (<EM>changed</EM><STRONG>=1</STRONG>)  or  have  not
-       (<EM>changed</EM><STRONG>=0</STRONG>) been changed since the last call to <STRONG>wrefresh</STRONG>.
+       The  <STRONG>wtouchln</STRONG>  routine makes <EM>n</EM> lines in the window, starting at line <EM>y</EM>,
+       look as if they have (<EM>changed</EM><STRONG>=1</STRONG>) or have not (<EM>changed</EM><STRONG>=0</STRONG>)  been  changed
+       since the last call to <STRONG>wrefresh</STRONG>.
 
-       The  <STRONG>is_linetouched</STRONG> and <STRONG>is_wintouched</STRONG> routines return <STRONG>TRUE</STRONG>
-       if the specified line/window was modified since  the  last
-       call  to  <STRONG>wrefresh</STRONG>; otherwise they return <STRONG>FALSE</STRONG>.  In addi-
-       tion, <STRONG>is_linetouched</STRONG> returns <STRONG>ERR</STRONG> if <EM>line</EM> is not valid  for
-       the given window.
+       The <STRONG>is_linetouched</STRONG> and <STRONG>is_wintouched</STRONG> routines return <STRONG>TRUE</STRONG> if the speci-
+       fied line/window was modified since the last call to  <STRONG>wrefresh</STRONG>;  other-
+       wise  they  return  <STRONG>FALSE</STRONG>.   In addition, <STRONG>is_linetouched</STRONG> returns <STRONG>ERR</STRONG> if
+       <EM>line</EM> is not valid for the given window.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All  routines  return  the integer <STRONG>ERR</STRONG> upon failure and an
-       integer value other than <STRONG>ERR</STRONG> upon  successful  completion,
-       unless  otherwise  noted in the preceding routine descrip-
-       tions.
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and an  integer  value
+       other  than  <STRONG>ERR</STRONG>  upon successful completion, unless otherwise noted in
+       the preceding routine descriptions.
 
-       X/Open does not define any error conditions.  In this  im-
-       plementation
+       X/Open does not define any error conditions.  In this implementation
 
               <STRONG>is_linetouched</STRONG>
-                   returns  an  error  if  the  window pointer is
-                   null, or if the line  number  is  outside  the
-                   window.   Note  that ERR is distinct from <STRONG>TRUE</STRONG>
-                   and <STRONG>FALSE</STRONG>, which are the normal return  values
-                   of this function.
+                   returns an error if the window pointer is null, or  if  the
+                   line  number  is outside the window.  Note that ERR is dis-
+                   tinct from <STRONG>TRUE</STRONG> and <STRONG>FALSE</STRONG>, which are the normal return val-
+                   ues of this function.
 
               <STRONG>wtouchln</STRONG>
-                   returns  an  error  if  the  window pointer is
-                   null, or if the line  number  is  outside  the
-                   window.
+                   returns  an  error if the window pointer is null, or if the
+                   line number is outside the window.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  XSI  Curses  standard,  Issue 4 describes these func-
-       tions.
+       The XSI Curses standard, Issue 4 describes these functions.
 
-       Some historic curses implementations had,  as  an  undocu-
-       mented  feature,  the  ability  to  do  the  equivalent of
-       <STRONG>clearok(...,</STRONG> <STRONG>1)</STRONG> by saying <STRONG>touchwin(stdscr)</STRONG>  or  <STRONG>clear(std-</STRONG>
-       <STRONG>scr)</STRONG>.  This will not work under ncurses.
+       Some historic curses implementations had, as an  undocumented  feature,
+       the  ability  to  do the equivalent of <STRONG>clearok(...,</STRONG> <STRONG>1)</STRONG> by saying <STRONG>touch-</STRONG>
+       <STRONG>win(stdscr)</STRONG> or <STRONG>clear(stdscr)</STRONG>.  This will not work under ncurses.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -126,7 +117,7 @@
 
 
 
-                                                         <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
+                                                                <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

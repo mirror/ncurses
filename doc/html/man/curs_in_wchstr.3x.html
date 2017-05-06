@@ -40,16 +40,15 @@
 <BODY>
 <H1 class="no-header">curs_in_wchstr 3x</H1>
 <PRE>
-<STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>                                   <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
+<STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>                                          <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>in_wchstr</STRONG>, <STRONG>in_wchnstr</STRONG>, <STRONG>win_wchstr</STRONG>, <STRONG>win_wchnstr</STRONG>,
-       <STRONG>mvin_wchstr</STRONG>, <STRONG>mvin_wchnstr</STRONG>, <STRONG>mvwin_wchstr</STRONG>, <STRONG>mvwin_wchnstr</STRONG> -
-       get an array of complex characters and renditions from a
-       curses window
+       <STRONG>in_wchstr</STRONG>, <STRONG>in_wchnstr</STRONG>, <STRONG>win_wchstr</STRONG>, <STRONG>win_wchnstr</STRONG>, <STRONG>mvin_wchstr</STRONG>,
+       <STRONG>mvin_wchnstr</STRONG>, <STRONG>mvwin_wchstr</STRONG>, <STRONG>mvwin_wchnstr</STRONG> - get an array of complex
+       characters and renditions from a curses window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -66,47 +65,44 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These functions return an array of complex  characters  in
-       <EM>wchstr</EM>,  starting  at  the  current cursor position in the
-       named window.  Attributes (rendition) are stored with  the
-       characters.
+       These functions return an array of complex characters in <EM>wchstr</EM>, start-
+       ing at the current cursor position in  the  named  window.   Attributes
+       (rendition) are stored with the characters.
 
-       The  <STRONG>in_wchnstr</STRONG>, <STRONG>mvin_wchnstr</STRONG>, <STRONG>mvwin_wchnstr</STRONG> and <STRONG>win_wchn-</STRONG>
-       <STRONG>str</STRONG> fill the array with at most <EM>n</EM> <STRONG>cchar_t</STRONG> elements.
+       The  <STRONG>in_wchnstr</STRONG>,  <STRONG>mvin_wchnstr</STRONG>,  <STRONG>mvwin_wchnstr</STRONG> and <STRONG>win_wchnstr</STRONG> fill the
+       array with at most <EM>n</EM> <STRONG>cchar_t</STRONG> elements.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that all routines except <STRONG>win_wchnstr</STRONG> may be macros.
 
-       Reading a line that overflows the array pointed to by <EM>wch-</EM>
-       <EM>str</EM>  with <STRONG>in_wchstr</STRONG>, <STRONG>mvin_wchstr</STRONG>, <STRONG>mvwin_wchstr</STRONG> or <STRONG>win_wch-</STRONG>
-       <STRONG>str</STRONG>  causes  undefined  results.  Therefore,  the  use  of
-       <STRONG>in_wchnstr</STRONG>, <STRONG>mvin_wchnstr</STRONG>, <STRONG>mvwin_wchnstr</STRONG>, or <STRONG>win_wchnstr</STRONG> is
-       recommended.
+       Reading a line that overflows the  array  pointed  to  by  <EM>wchstr</EM>  with
+       <STRONG>in_wchstr</STRONG>, <STRONG>mvin_wchstr</STRONG>, <STRONG>mvwin_wchstr</STRONG> or <STRONG>win_wchstr</STRONG> causes undefined re-
+       sults. Therefore, the use of <STRONG>in_wchnstr</STRONG>,  <STRONG>mvin_wchnstr</STRONG>,  <STRONG>mvwin_wchnstr</STRONG>,
+       or <STRONG>win_wchnstr</STRONG> is recommended.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Upon successful completion,  these  functions  return  <STRONG>OK</STRONG>.
-       Otherwise, they return <STRONG>ERR</STRONG>.
+       Upon successful completion, these functions return <STRONG>OK</STRONG>.  Otherwise, they
+       return <STRONG>ERR</STRONG>.
 
-       Functions  with a "mv" prefix first perform a cursor move-
-       ment using <STRONG>wmove</STRONG>, and return an error if the  position  is
-       outside the window, or if the window pointer is null.
+       Functions with a "mv" prefix first  perform  a  cursor  movement  using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  XSI  Curses defines no error conditions.  This imple-
-       mentation checks for null pointers, returning ERR in  that
-       case.
+       The XSI Curses defines no error conditions.  This implementation checks
+       for null pointers, returning ERR in that case.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       Functions:  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_in_wch.3x.html">curs_in_wch(3x)</A></STRONG>,  <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG> <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
+       Functions: <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_in_wch.3x.html">curs_in_wch(3x)</A></STRONG>, <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>, <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
+       <STRONG><A HREF="curs_inchstr.3x.html">curs_inchstr(3x)</A></STRONG>
 
 
 
-                                                     <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
+                                                            <STRONG><A HREF="curs_in_wchstr.3x.html">curs_in_wchstr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>
