@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.116 2017/03/25 21:10:54 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.117 2017/05/07 20:46:03 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -538,8 +538,8 @@ _nc_init_pair(SCREEN *sp, int pair, int f, int b)
      * pair colors with the new ones).
      */
     MakeColorPair(result, f, b);
-    if (FORE_OF(previous) != 0
-	&& BACK_OF(previous) != 0
+    if ((FORE_OF(previous) != 0
+	 || BACK_OF(previous) != 0)
 	&& !isSamePair(previous, result)) {
 	_nc_change_pair(sp, pair);
     }

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.450 2017/05/05 14:58:47 tom Exp $
+$Id: ncurses.c,v 1.451 2017/05/13 23:25:11 tom Exp $
 
 ***************************************************************************/
 
@@ -142,7 +142,7 @@ extern unsigned _nc_tracing;
 #define state_unused
 #endif
 
-#define ToggleAcs(temp,real) temp = ((temp == real) ? 0 : real)
+#define ToggleAcs(temp,real) temp = ((temp == real) ? NULL : real)
 
 #define P(string)	printw("%s\n", string)
 
@@ -4653,7 +4653,7 @@ delete_framed(FRAME * fp, bool showit)
 	}
 	delwin(fp->wind);
 
-	np = (fp == fp->next) ? 0 : fp->next;
+	np = (fp == fp->next) ? NULL : fp->next;
 	free(fp);
     }
     return np;
@@ -4990,7 +4990,7 @@ mkpanel(NCURSES_COLOR_T color, int rows, int cols, int tly, int tlx)
 	rmpanel(pan)
 --------------------------------------------------------------------------*/
 static void
-rmpanel(PANEL * pan)
+rmpanel(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     del_panel(pan);
@@ -5022,7 +5022,7 @@ init_panel(WINDOW *win)
 }
 
 static void
-fill_panel(PANEL * pan)
+fill_panel(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     const char *userptr = (const char *) panel_userptr(pan);
@@ -5059,7 +5059,7 @@ init_wide_panel(WINDOW *win)
 }
 
 static void
-fill_wide_panel(PANEL * pan)
+fill_wide_panel(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     const char *userptr = (const char *) panel_userptr(pan);
@@ -5082,7 +5082,7 @@ fill_wide_panel(PANEL * pan)
 #define MAX_PANELS 5
 
 static void
-canned_panel(PANEL * px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
+canned_panel(PANEL *px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
 {
     int which = cmd[1] - '0';
 
@@ -6128,7 +6128,7 @@ make_field(int frow, int fcol, int rows, int cols, bool secure)
 }
 
 static void
-display_form(FORM * f)
+display_form(FORM *f)
 {
     WINDOW *w;
     int rows, cols;
@@ -6146,7 +6146,7 @@ display_form(FORM * f)
 }
 
 static void
-erase_form(FORM * f)
+erase_form(FORM *f)
 {
     WINDOW *w = form_win(f);
     WINDOW *s = form_sub(f);
@@ -6159,7 +6159,7 @@ erase_form(FORM * f)
 }
 
 static int
-edit_secure(FIELD * me, int c)
+edit_secure(FIELD *me, int c)
 {
     int rows, cols, frow, fcol, nrow, nbuf;
 
@@ -6225,7 +6225,7 @@ edit_secure(FIELD * me, int c)
 }
 
 static int
-form_virtualize(FORM * f, WINDOW *w)
+form_virtualize(FORM *f, WINDOW *w)
 {
     /* *INDENT-OFF* */
     static const struct {
@@ -6332,7 +6332,7 @@ form_virtualize(FORM * f, WINDOW *w)
 }
 
 static int
-my_form_driver(FORM * form, int c)
+my_form_driver(FORM *form, int c)
 {
     if (c == (MAX_FORM_COMMAND + 1)
 	&& form_driver(form, REQ_VALIDATION) == E_OK)

@@ -1106,6 +1106,7 @@
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h
+./test/escherknot.xbm
 ./test/extended_color.c
 ./test/filter.c
 ./test/firework.c
@@ -1130,6 +1131,8 @@
 ./test/listused.sh
 ./test/lrtest.c
 ./test/make-tar.sh
+./test/mensetmanus.xbm
+./test/mini.xterm_48x48.xpm
 ./test/mk-test.awk
 ./test/modules
 ./test/movewindow.c
@@ -1159,6 +1162,7 @@
 ./test/package/debian/watch
 ./test/package/mingw-ncurses-examples.spec
 ./test/package/ncurses-examples.spec
+./test/picsmap.c
 ./test/popup_msg.c
 ./test/popup_msg.h
 ./test/programs
@@ -1169,6 +1173,7 @@
 ./test/savescreen.sh
 ./test/sp_tinfo.c
 ./test/tclock.c
+./test/terminal.xbm
 ./test/test.priv.h
 ./test/test_add_wchstr.c
 ./test/test_addchstr.c
@@ -1198,3 +1203,4 @@
 ./test/xterm-16color.dat
 ./test/xterm-256color.dat
 ./test/xterm-88color.dat
+./test/xterm-color_48x48.xpm

@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.66 2017/04/15 13:38:13 tom Exp $
+ * $Id: bs.c,v 1.67 2017/05/14 00:27:05 tom Exp $
  */
 
 #include <test.priv.h>
@@ -1003,7 +1003,7 @@ cputurn(void)
 #define REVERSE_JUMP	4
 #define SECOND_PASS	5
     static int next = RANDOM_FIRE;
-    static bool used[4];
+    static bool used[5];
     static ship_t ts;
     int navail, x, y, d, n;
     int hit = S_MISS;
@@ -1039,10 +1039,10 @@ cputurn(void)
 	    goto refire;	/* ...so we must random-fire */
 	else {
 	    n = rnd(navail) + 1;
-	    for (d = 0; used[d]; d++) ;
+	    for (d = 0; d < 4 && used[d]; d++) ;
 	    /* used[d] is first that == 0 */
 	    for (; n > 1; n--)
-		while (used[++d]) ;
+		while (d < 4 && used[++d]) ;
 	    /* used[d] is next that == 0 */
 
 	    assert(d < 4);

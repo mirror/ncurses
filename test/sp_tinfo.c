@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.18 2017/04/13 21:35:31 tom Exp $
+ * $Id: sp_tinfo.c,v 1.19 2017/05/13 23:19:04 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -74,7 +74,7 @@ initialize(const char *name, FILE *output)
     result->fp = output;
     result->name = name;
     result->outc = (fileno(output) == 1) ? my_outc : my_errc;
-    result->sp = opt_n ? 0 : new_prescr();
+    result->sp = opt_n ? NULL : new_prescr();
 
     if (opt_t) {
 	char *temp = strdup(name);
