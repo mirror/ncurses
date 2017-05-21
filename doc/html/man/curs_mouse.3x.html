@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.45 2017/05/06 17:29:26 tom Exp @
+  * @Id: curs_mouse.3x,v 1.46 2017/05/20 14:42:41 Sven.Joachim Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -247,7 +247,7 @@
        SVr4 curses had support for the mouse in a variant  of  <STRONG>xterm</STRONG>.   It  is
        mentioned in a few places, but with no supporting documentation:
 
-       <STRONG>o</STRONG>   the  libcurses  manual  page lists functions for this feature which
+       <STRONG>o</STRONG>   the  "libcurses" manual page lists functions for this feature which
            are prototyped in <STRONG>curses.h</STRONG>:
 
              extern int mouse_set(long int);
@@ -258,11 +258,11 @@
              extern void wmouse_position(WINDOW *, int *, int *);
              extern unsigned long getmouse(void), getbmap(void);
 
-       <STRONG>o</STRONG>   the terminfo manual page lists capabilities for the feature
+       <STRONG>o</STRONG>   the "terminfo" manual page lists capabilities for the feature
 
              buttons           btns    BT       Number of buttons on the mouse
              get_mouse         getm    Gm       Curses should get button events
-             key_mouse         kmous   Km       0631, Mouse event has occured
+             key_mouse         kmous   Km       0631, Mouse event has occurred
              mouse_info        minfo   Mi       Mouse status information
              req_mouse_pos     reqmp   RQ       Request mouse position report
 

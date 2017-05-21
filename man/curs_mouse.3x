@@ -27,7 +27,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.45 2017/05/06 17:29:26 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.46 2017/05/20 14:42:41 Sven.Joachim Exp $
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de NS
 .ie \n(.sp
 .el    .sp .5
@@ -289,7 +293,7 @@ the \*(``terminfo\*('' manual page lists capabilities for the feature
 .NS
 buttons           btns    BT       Number of buttons on the mouse
 get_mouse         getm    Gm       Curses should get button events
-key_mouse         kmous   Km       0631, Mouse event has occured
+key_mouse         kmous   Km       0631, Mouse event has occurred
 mouse_info        minfo   Mi       Mouse status information
 req_mouse_pos     reqmp   RQ       Request mouse position report
 .NE

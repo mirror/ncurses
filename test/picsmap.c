@@ -26,14 +26,15 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.8 2017/05/14 01:26:30 tom Exp $
+ * $Id: picsmap.c,v 1.17 2017/05/21 00:22:22 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
  * A little more interesting than "dots", read a simple image into memory and
  * measure the time taken to paint it normally vs randomly.
  *
- * TODO read xpm file
+ * TODO handle hex color-codes for xpm other than 3-bytes
+ * TODO read rgb.txt to handle xpm color names other than "None"
  * TODO read "convert" via pipe (from ImageMagick)
  * TODO write cells/second to stderr (or log)
  * TODO write picture left-to-right/top-to-bottom
@@ -71,6 +72,21 @@ typedef struct {
 } PICS_HEAD;
 
 static bool in_curses = FALSE;
+
+static void
+free_data(char **data)
+{
+    free(data[0]);
+    free(data);
+}
+
+static void
+free_pics_head(PICS_HEAD * pics)
+{
+    free(pics->pairs);
+    free(pics->cells);
+    free(pics);
+}
 
 /*
  * Simplify reading xbm/xpm files by first making an array of lines.  Blank
@@ -168,6 +184,85 @@ bytes_of(int value)
 	value++;
     }
     return value;
+}
+
+static int match_c(const char *, const char *,...) GCC_SCANFLIKE(2,3);
+
+static const char *
+skip_s(const char *s)
+{
+    while (isspace(UChar(*s)))
+	s++;
+    return s;
+}
+
+static int
+match_c(const char *source, const char *pattern,...)
+{
+    const char *last_s = source + strlen(source);
+    va_list ap;
+    int ch;
+    int *ip;
+    char *cp;
+    long lv;
+
+    va_start(ap, pattern);
+
+    while (*pattern != '\0') {
+	ch = UChar(*pattern++);
+	/* blank in the pattern matches zero-or-more blanks in source */
+	if (isspace(ch)) {
+	    source = skip_s(source);
+	    continue;
+	}
+	/* %c, %d, %s are like sscanf except for special treatment of blanks */
+	if (ch == '%' && *pattern != '\0' && strchr("cds", *pattern)) {
+	    bool found = FALSE;
+	    ch = *pattern++;
+	    switch (ch) {
+	    case 'c':
+		cp = va_arg(ap, char *);
+		*cp = *source++;
+		break;
+	    case 'd':
+		ip = va_arg(ap, int *);
+		lv = strtol(source, &cp, 0);
+		if (cp != 0 && cp != source) {
+		    *ip = (int) lv;
+		    source = cp;
+		} else {
+		    goto finish;
+		}
+		break;
+	    case 's':
+		cp = va_arg(ap, char *);
+		while (*source != '\0') {
+		    ch = UChar(*source);
+		    if (isspace(ch)) {
+			break;
+		    } else if (found && (ch == *skip_s(pattern))) {
+			break;
+		    } else {
+			*cp++ = *source++;
+			found = TRUE;
+		    }
+		}
+		*cp = '\0';
+		break;
+	    }
+	    continue;
+	}
+	/* other characters are matched literally */
+	if (*source++ != ch) {
+	    break;
+	}
+    }
+  finish:
+
+    va_end(ap);
+    if (source > last_s)
+	source = last_s;
+    return (*source || *pattern) ? 0 : 1;
 }
 
 static PICS_HEAD *
@@ -280,6 +375,137 @@ parse_xbm(char **data)
     return result;
 }
 
+static PICS_HEAD *
+parse_xpm(char **data)
+{
+    int state = 0;
+    PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
+    int n;
+    int cells = 0;
+    int color = 0;
+    int cpp = 1;		/* chars per pixel */
+    int num[6];
+    int which = 0;
+    char ch;
+    const char *cs;
+    char *s;
+    char buf[BUFSIZ];
+    char arg1[BUFSIZ];
+    char arg2[BUFSIZ];
+    char arg3[BUFSIZ];
+    char **list = 0;
+
+    for (n = 0; data[n] != 0; ++n) {
+	if (strlen(s = data[n]) >= sizeof(buf) - 1)
+	    continue;
+	switch (state) {
+	case 0:
+	    if (match_c(s, " /* XPM */ ")) {
+		state = 1;
+	    }
+	    break;
+	case 1:
+	    if (match_c(s, " static char * %s [] = %c ", arg1, &ch) &&
+		ch == L_CURL) {
+		result->name = strdup(arg1);
+		state = 2;
+	    }
+	    break;
+	case 2:
+	    if (match_c(s, " \" %d %d %d %d \" , ",
+			num + 0, num + 1, num + 2, num + 3) ||
+		match_c(s, " \" %d %d %d %d %d %d \" , ",
+			num + 0, num + 1, num + 2, num + 3, num + 4, num + 5)) {
+		result->wide = num[0];
+		result->high = num[1];
+		result->colors = num[2];
+		result->pairs = typeCalloc(PICS_PAIR, result->colors);
+		cells = (size_t) (result->wide * result->high);
+		result->cells = typeCalloc(PICS_CELL, cells);
+		list = typeCalloc(char *, result->colors);
+		cpp = num[3];
+		state = 3;
+	    }
+	    break;
+	case 3:
+	    if (match_c(s, " \" %s %s %s \" , ", arg1, arg2, arg3)) {
+		;
+	    } else if (match_c(s, " \" %s %s \" , ", arg2, arg3)) {
+		strcpy(arg1, " ");
+	    } else {
+		break;
+	    }
+	    while ((int) strlen(arg1) < cpp)
+		strcat(arg1, " ");
+	    list[color] = strdup(arg1);
+	    if (!strcmp(arg3, "None")) {
+		result->pairs[color].fg = -1;
+	    } else if (*arg3 == '#') {
+		unsigned long value = strtoul(arg3 + 1, &s, 16);
+		result->pairs[color].fg = (int) value;
+	    } else {
+		result->pairs[color].fg = 0;	/* actually an error */
+	    }
+	    if (++color >= result->colors)
+		state = 4;
+	    break;
+	case 4:
+	    if (*(cs = skip_s(s)) == '"') {
+		++cs;
+		while (*cs != '\0' && *cs != '"') {
+		    int c;
+
+		    for (c = 0; c < result->colors; ++c) {
+			if (!strncmp(cs, list[c], cpp)) {
+			    result->cells[which].ch = list[c][0];
+			    result->cells[which].fg = c;
+			    break;
+			}
+		    }
+
+		    if (result->cells[which].ch == 0) {
+			result->cells[which].ch = '?';
+			result->cells[which].fg = 0;
+		    }
+
+		    if (++which >= cells) {
+			state = 5;
+			break;
+		    }
+		    for (c = cpp; c > 0; --c, ++cs) ;
+		}
+	    }
+	    break;
+	}
+    }
+
+    if (result && list) {
+	for (n = 0; n < result->colors; ++n)
+	    free(list[n]);
+	free(list);
+    }
+
+    if (state < 5) {
+	free_pics_head(result);
+	result = 0;
+    }
+
+    return result;
+}
+
+static PICS_HEAD *
+read_picture(const char *filename, char **data)
+{
+    PICS_HEAD *pics;
+    if ((pics = parse_xbm(data)) == 0) {
+	if ((pics = parse_xpm(data)) == 0) {
+	    free_data(data);
+	    giveup("unexpected file-format for \"%s\"", filename);
+	}
+    }
+    return pics;
+}
+
 static void
 dump_picture(PICS_HEAD * pics)
 {
@@ -287,6 +513,14 @@ dump_picture(PICS_HEAD * pics)
 
     printf("Name %s\n", pics->name);
     printf("Size %dx%d\n", pics->high, pics->wide);
+    printf("Color\n");
+    for (y = 0; y < pics->colors; ++y) {
+	if (pics->pairs[y].fg < 0) {
+	    printf(" %3d: %d\n", y, pics->pairs[y].fg);
+	} else {
+	    printf(" %3d: #%06x\n", y, pics->pairs[y].fg);
+	}
+    }
     for (y = 0; y < pics->high; ++y) {
 	for (x = 0; x < pics->wide; ++x) {
 	    putchar(pics->cells[y * pics->wide + x].ch);
@@ -346,13 +580,18 @@ main(int argc, char *argv[])
 	    PICS_HEAD *pics;
 	    if (data == 0) {
 		giveup("cannot read \"%s\"", argv[n]);
-	    } else if ((pics = parse_xbm(data)) == 0) {
+	    }
+	    if ((pics = read_picture(argv[n], data)) == 0) {
+		free_data(data);
 		giveup("unexpected file-format for \"%s\"", argv[n]);
-	    } else if (isatty(fileno(stdout))) {
+	    }
+	    if (isatty(fileno(stdout))) {
 		show_picture(pics);
 	    } else {
 		dump_picture(pics);
 	    }
+	    free_data(data);
+	    free_pics_head(pics);
 	}
     } else {
 	usage();
