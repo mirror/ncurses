@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2844 2017/05/21 00:24:14 tom Exp $
+-- $Id: NEWS,v 1.2847 2017/05/27 22:31:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170527
+	+ improved test/picsmap.c:
+	  + lookup named colors for xpm files in rgb.txt
+	  + accept blanks in color-keys for xpm files.
+	  + if neither xbm/xpm work, try "convert", which may be available.
 
 20170520
 	+ modify test/picsmap.c to read xpm files.
