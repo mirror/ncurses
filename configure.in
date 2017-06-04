@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.641 2017/04/13 23:35:03 tom Exp $
+dnl $Id: configure.in,v 1.642 2017/06/03 13:26:42 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.641 $)
+AC_REVISION($Revision: 1.642 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2267,10 +2267,13 @@ AC_SUBST(UNALTERED_SYMS)
 
 if test "x$cross_compiling" = xyes ; then
 	ADAGEN_LDFLAGS='$(CROSS_LDFLAGS)'
+	CHECK_BUILD="#"
 else
 	ADAGEN_LDFLAGS='$(NATIVE_LDFLAGS)'
+	CHECK_BUILD=
 fi
 AC_SUBST(ADAGEN_LDFLAGS)
+AC_SUBST(CHECK_BUILD)
 
 AC_OUTPUT( \
 	include/MKterm.h.awk \

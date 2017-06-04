@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.572 2017/04/20 09:05:57 tom Exp $
+ * $Id: curses.priv.h,v 1.573 2017/06/02 23:19:52 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1137,11 +1137,6 @@ struct screen {
 	int		_pair_count;	/* same as COLOR_PAIRS               */
 	int		_pair_limit;	/* actual limit of color-pairs       */
 #if NCURSES_EXT_FUNCS
-#if USE_NEW_PAIR
-	void		*_ordered_pairs; /* index used by alloc_pair()	     */
-	int		_pairs_used;	/* actual number of color-pairs used */
-	int		_recent_pair;	/* number for most recent free-pair  */
-#endif
 	bool		_assumed_color; /* use assumed colors		     */
 	bool		_default_color; /* use default colors		     */
 	bool		_has_sgr_39_49; /* has ECMA default color support    */
@@ -1301,6 +1296,11 @@ struct screen {
 	 */
 	bool		_screen_acs_fix;
 	bool		_screen_unicode;
+#endif
+#if NCURSES_EXT_FUNCS && USE_NEW_PAIR
+	void		*_ordered_pairs; /* index used by alloc_pair()	     */
+	int		_pairs_used;	/* actual number of color-pairs used */
+	int		_recent_pair;	/* number for most recent free-pair  */
 #endif
 };
 

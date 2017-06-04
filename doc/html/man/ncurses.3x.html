@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.133 2017/05/06 14:32:49 tom Exp @
+  * @Id: ncurses.3x,v 1.134 2017/05/30 21:07:33 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,7 +59,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170520).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170603).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -1222,7 +1222,7 @@
        The <STRONG>ncurses</STRONG> library includes facilities for responding to window resiz-
        ing events, e.g., when running in an xterm.  See the <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG> and
        <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG> manual pages for details.  In addition, the library may  be
-       configured with a SIGWINCH handler.
+       configured with a <STRONG>SIGWINCH</STRONG> handler.
 
        The  <STRONG>ncurses</STRONG> library extends the fixed set of function key capabilities
        of terminals by allowing the application designer to define  additional

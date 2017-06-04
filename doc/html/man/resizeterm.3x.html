@@ -27,7 +27,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.22 2017/01/07 19:25:15 tom Exp @
+  * @Id: resizeterm.3x,v 1.23 2017/05/30 21:08:21 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -74,7 +74,7 @@
 
 </PRE><H3><a name="h3-resize_term">resize_term</a></H3><PRE>
        Most  of the work is done by the inner function <STRONG>resize_term</STRONG>.  The outer
-       function <STRONG>resizeterm</STRONG> adds bookkeeping for the  SIGWINCH  handler.   When
+       function <STRONG>resizeterm</STRONG> adds bookkeeping for the  <STRONG>SIGWINCH</STRONG>  handler.   When
        resizing  the  windows,  <STRONG>resize_term</STRONG>  blank-fills  the  areas  that are
        extended.  The calling application should  fill  in  these  areas  with
        appropriate data.  The <STRONG>resize_term</STRONG> function attempts to resize all win-
@@ -98,13 +98,13 @@
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        While  these functions are intended to be used to support a signal han-
-       dler (i.e., for SIGWINCH), care should be taken to avoid invoking  them
+       dler (i.e., for <STRONG>SIGWINCH</STRONG>), care should be taken to avoid invoking  them
        in  a  context where <STRONG>malloc</STRONG> or <STRONG>realloc</STRONG> may have been interrupted, since
        it uses those functions.
 
-       If ncurses is configured to supply its own SIGWINCH handler,
+       If ncurses is configured to supply its own <STRONG>SIGWINCH</STRONG> handler,
 
-       <STRONG>o</STRONG>   on receipt of a SIGWINCH, the handler sets a flag
+       <STRONG>o</STRONG>   on receipt of a <STRONG>SIGWINCH</STRONG>, the handler sets a flag
 
        <STRONG>o</STRONG>   which is tested in <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> and <STRONG>doupdate</STRONG>,
 
@@ -123,7 +123,7 @@
 
        If  the  environment variables <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set, this overrides
        the library's use of the window size obtained from the  operating  sys-
-       tem.   Thus,  even if a SIGWINCH is received, no screen size change may
+       tem.   Thus,  even if a <STRONG>SIGWINCH</STRONG> is received, no screen size change may
        be recorded.
 
 

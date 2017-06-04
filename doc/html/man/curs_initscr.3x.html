@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.27 2017/03/04 20:59:02 tom Exp @
+  * @Id: curs_initscr.3x,v 1.28 2017/05/30 21:12:51 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -188,8 +188,8 @@
        Quoting from X/Open Curses, section 3.1.1:
 
             <EM>Curses</EM>  <EM>implementations</EM>  <EM>may</EM>  <EM>provide</EM>  <EM>for</EM> <EM>special</EM> <EM>handling</EM> <EM>of</EM> <EM>the</EM>
-            <EM>SIGINT,</EM> <EM>SIGQUIT</EM>  <EM>and</EM>  <EM>SIGTSTP</EM>  <EM>signals</EM>  <EM>if</EM>  <EM>their</EM>  <EM>disposition</EM>  <EM>is</EM>
-            <EM>SIG</EM><STRONG>_</STRONG><EM>DFL</EM> <EM>at</EM> <EM>the</EM> <EM>time</EM> <STRONG>initscr</STRONG> <EM>is</EM> <EM>called</EM> <STRONG>...</STRONG>
+            <STRONG>SIGINT</STRONG><EM>,</EM> <STRONG>SIGQUIT</STRONG>  <EM>and</EM>  <STRONG>SIGTSTP</STRONG>  <EM>signals</EM>  <EM>if</EM>  <EM>their</EM>  <EM>disposition</EM>  <EM>is</EM>
+            <STRONG>SIG_DFL</STRONG> <EM>at</EM> <EM>the</EM> <EM>time</EM> <STRONG>initscr</STRONG> <EM>is</EM> <EM>called</EM> <STRONG>...</STRONG>
 
             <EM>Any</EM>  <EM>special</EM>  <EM>handling</EM>  <EM>for</EM> <EM>these</EM> <EM>signals</EM> <EM>may</EM> <EM>remain</EM> <EM>in</EM> <EM>effect</EM> <EM>for</EM>
             <EM>the</EM> <EM>life</EM> <EM>of</EM> <EM>the</EM> <EM>process</EM> <EM>or</EM> <EM>until</EM> <EM>the</EM> <EM>process</EM> <EM>changes</EM> <EM>the</EM>  <EM>disposi-</EM>
@@ -229,9 +229,9 @@
             terminal modes with <STRONG>def_shell_mode</STRONG> (see <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>).
 
        <STRONG>SIGWINCH</STRONG>
-            This  handles the window-size changes which were initially ignored
-            in the standardization efforts.  The handler sets a  (signal-safe)
-            variable which is later tested in <STRONG>wgetch</STRONG> (see <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>).  If
+            This  handles  the  window-size  changes which were ignored in the
+            standardization efforts.  The handler sets a  (signal-safe)  vari-
+            able  which  is  later  tested in <STRONG>wgetch</STRONG> (see <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>).  If
             <STRONG>keypad</STRONG> has been enabled for the corresponding window,  <STRONG>wgetch</STRONG>  re-
             turns  the  key symbol <STRONG>KEY_RESIZE</STRONG>.  At the same time, <STRONG>wgetch</STRONG> calls
             <STRONG>resizeterm</STRONG> to adjust the standard screen <STRONG>stdscr</STRONG>, and update  other

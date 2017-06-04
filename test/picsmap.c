@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.29 2017/05/28 00:19:58 tom Exp $
+ * $Id: picsmap.c,v 1.35 2017/06/04 00:20:15 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -37,22 +37,29 @@
  * TODO write picture left-to-right/top-to-bottom
  * TODO write picture randomly
  * TODO add one-shot option vs repeat-count before exiting
- * TODO add option for assumed palette of terminal
  * TODO add option for init_color
  * TODO add option for init_color vs init_extended_color
  * TODO add option for init_pair vs alloc_pair
  * TODO use pad to allow pictures larger than screen
+ * TODO improve load of image-file's color-table using tsearch.
  */
 #include <test.priv.h>
 
 #include <sys/types.h>
 #include <sys/stat.h>
 
+#undef CUR			/* use only the curses interface */
+
 #define  L_BLOCK '['
 #define  R_BLOCK ']'
 
 #define  L_CURLY '{'
 #define  R_CURLY '}'
+
+#define okCOLOR(n) ((n) >= 0 && (n) < COLORS)
+#define okRGB(n)   ((n) >= 0 && (n) <= 1000)
+#define Scaled256(n) (NCURSES_COLOR_T) (int)(((n) * 1000.0) / 256)
+#define ScaledColor(n) (NCURSES_COLOR_T) (int)(((n) * 1000.0) / scale)
 
 typedef struct {
     int ch;			/* nominal character to display */
@@ -76,10 +83,19 @@ typedef struct {
 typedef struct {
     const char *name;
     int value;
+} RGB_NAME;
+
+typedef struct {
+    short red;
+    short green;
+    short blue;
 } RGB_DATA;
 
+static void giveup(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+
 static bool in_curses = FALSE;
-static RGB_DATA *rgb_table;
+static RGB_NAME *rgb_table;
+static RGB_DATA *all_colors;
 
 static void
 free_data(char **data)
@@ -106,7 +122,11 @@ read_file(const char *filename)
     char **result = 0;
     struct stat sb;
 
+    if (in_curses)
+	endwin();
+
     printf("** %s\n", filename);
+
     if (stat(filename, &sb) == 0
 	&& (sb.st_mode & S_IFMT) == S_IFREG
 	&& sb.st_size != 0) {
@@ -149,9 +169,17 @@ usage(void)
 {
     static const char *msg[] =
     {
-	"Usage: picsmap [-x rgb-path] [xbm-file [...]]"
+	"Usage: picsmap [options] [imagefile [...]]",
+	"Read/display one or more xbm/xpm files (possibly use \"convert\")",
+	"",
+	"Options:",
+	"  -p palette",
+	"  -r rgb-path"
     };
     size_t n;
+
+    if (in_curses)
+	endwin();
 
     fflush(stdout);
     for (n = 0; n < SIZEOF(msg); n++)
@@ -173,14 +201,118 @@ giveup(const char *fmt,...)
     usage();
 }
 
+static void
+init_palette(const char *palette_file)
+{
+    if (palette_file != 0) {
+	int cp;
+
+	all_colors = typeMalloc(RGB_DATA, (unsigned) COLORS);
+	for (cp = 0; cp < COLORS; ++cp) {
+	    color_content(cp,
+			  &all_colors[cp].red,
+			  &all_colors[cp].green,
+			  &all_colors[cp].blue);
+	    if (palette_file != 0) {
+		char **data = read_file(palette_file);
+		if (data != 0) {
+		    int n;
+		    int red, green, blue;
+		    int scale = 1000;
+		    int c;
+		    for (n = 0; data[n] != 0; ++n) {
+			if (sscanf(data[n], "scale:%d", &c) == 1) {
+			    scale = c;
+			} else if (sscanf(data[n], "%d:%d %d %d",
+					  &c,
+					  &red,
+					  &green,
+					  &blue) == 4
+				   && okCOLOR(c)
+				   && okRGB(red)
+				   && okRGB(green)
+				   && okRGB(blue)) {
+			    /* *INDENT-EQLS* */
+			    all_colors[c].red   = ScaledColor(red);
+			    all_colors[c].green = ScaledColor(green);
+			    all_colors[c].blue  = ScaledColor(blue);
+			}
+		    }
+		    free_data(data);
+		}
+	    }
+	}
+    } else if (COLORS   > 1) {
+	/* *INDENT-EQLS* */
+	int power2 = 1;
+	int shift = 0;
+
+	while (power2 < COLORS) {
+	    ++shift;
+	    power2 <<= 1;
+	}
+
+	if (power2 != COLORS || (shift % 3) != 0) {
+	    giveup("With %d colors, you need a palette-file", COLORS);
+	}
+    }
+}
+
+/*
+ * Map the 24-bit RGB value to a color index if using a palette, otherwise to a
+ * direct color value.
+ */
 static int
 map_color(int value)
 {
-    int r = (value & 0xff0000) >> 16;
-    int g = (value & 0x00ff00) >> 8;
-    int b = (value & 0x0000ff) >> 0;
-    /* TODO simple mapping into COLOR_BLACK .. COLOR_WHITE */
-    int result = ((r >= 128) << 2) + ((g >= 128) << 1) + (b >= 128);
+    int result = value;
+
+    if (result < 0) {
+	result = -1;
+    } else {
+	/* *INDENT-EQLS* */
+	int red   = (value & 0xff0000) >> 16;
+	int green = (value & 0x00ff00) >> 8;
+	int blue  = (value & 0x0000ff) >> 0;
+
+	if (all_colors != 0) {
+#define Diff2(n,m) ((m) - all_colors[n].m) * ((m) - all_colors[n].m)
+#define Diff2S(n) Diff2(n,red) + Diff2(n,green) + Diff2(n,blue)
+	    int d2 = Diff2S(0);
+	    int n;
+
+	    /* *INDENT-EQLS* */
+	    red   = Scaled256(red);
+	    green = Scaled256(green);
+	    blue  = Scaled256(blue);
+
+	    for (result = 0, n = 1; n < COLORS; ++n) {
+		int d = Diff2(n, red) + Diff2(n, green) + Diff2(n, blue);
+		if (d < d2) {
+		    d2 = d;
+		    result = n;
+		}
+	    }
+	} else {		/* direct color */
+	    int power2 = 1;
+	    int shifts = 8;
+
+	    while (power2 < COLORS) {
+		power2 <<= 3;
+		shifts--;
+	    }
+
+	    if (shifts > 0) {
+		/* TODO: round up */
+		red >>= shifts;
+		green >>= shifts;
+		blue >>= shifts;
+		result = ((red << (2 * (8 - shifts)))
+			  + (green << (8 - shifts))
+			  + blue);
+	    }
+	}
+    }
     return result;
 }
 
@@ -332,7 +464,7 @@ match_colors(const char *source, int cpp, char *arg1, char *arg2, char *arg3)
     return result;
 }
 
-static RGB_DATA *
+static RGB_NAME *
 parse_rgb(char **data)
 {
     char buf[BUFSIZ];
@@ -341,10 +473,10 @@ parse_rgb(char **data)
     char *s, *t;
     size_t item = 0;
     size_t need;
-    RGB_DATA *result = 0;
+    RGB_NAME *result = 0;
 
     for (need = 0; data[need] != 0; ++need) ;
-    result = typeCalloc(RGB_DATA, need + 2);
+    result = typeCalloc(RGB_NAME, need + 2);
 
     for (n = 0; data[n] != 0; ++n) {
 	if (strlen(t = data[n]) >= sizeof(buf) - 1)
@@ -375,10 +507,10 @@ parse_rgb(char **data)
     return result;
 }
 
-static RGB_DATA *
+static RGB_NAME *
 lookup_rgb(const char *name)
 {
-    RGB_DATA *result = 0;
+    RGB_NAME *result = 0;
     if (rgb_table != 0) {
 	int n;
 	for (n = 0; rgb_table[n].name != 0; ++n) {
@@ -504,7 +636,7 @@ parse_xpm(char **data)
 {
     int state = 0;
     PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
-    RGB_DATA *by_name;
+    RGB_NAME *by_name;
     int n;
     int cells = 0;
     int color = 0;
@@ -811,10 +943,14 @@ int
 main(int argc, char *argv[])
 {
     int n;
+    const char *palette_path = 0;
     const char *rgb_path = "/etc/X11/rgb.txt";
 
-    while ((n = getopt(argc, argv, "r:")) != -1) {
+    while ((n = getopt(argc, argv, "p:r:")) != -1) {
 	switch (n) {
+	case 'p':
+	    palette_path = optarg;
+	    break;
 	case 'r':
 	    rgb_path = optarg;
 	    break;
@@ -824,7 +960,7 @@ main(int argc, char *argv[])
 	}
     }
 
-    if (argc > 1) {
+    if (optind < argc) {
 	char **rgb_data = read_file(rgb_path);
 
 	if (rgb_data)
@@ -835,13 +971,17 @@ main(int argc, char *argv[])
 	    initscr();
 	    cbreak();
 	    noecho();
-	    if (has_colors())
+	    if (has_colors()) {
 		start_color();
+		init_palette(palette_path);
+	    }
 	    scrollok(stdscr, FALSE);
 	    endwin();
 	}
+	if (optind >= argc)
+	    giveup("expected at least one image filename");
 
-	for (n = 1; n < argc; ++n) {
+	for (n = optind; n < argc; ++n) {
 	    PICS_HEAD *pics;
 	    char **data = read_file(argv[n]);
 

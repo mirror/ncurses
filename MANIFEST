@@ -891,6 +891,7 @@
 ./ncurses/llib-ltinfow
 ./ncurses/modules
 ./ncurses/new_pair.h
+./ncurses/report_offsets.c
 ./ncurses/tinfo/MKcaptab.awk
 ./ncurses/tinfo/MKcaptab.sh
 ./ncurses/tinfo/MKcodes.awk

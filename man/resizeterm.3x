@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.22 2017/01/07 19:25:15 tom Exp $
+.\" $Id: resizeterm.3x,v 1.23 2017/05/30 21:08:21 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .IP \(bu 4
@@ -59,7 +59,7 @@ such as the \fBLINES\fP and \fBCOLS\fP variables.
 .SS resize_term
 .PP
 Most of the work is done by the inner function \fBresize_term\fR.
-The outer function \fBresizeterm\fR adds bookkeeping for the SIGWINCH handler.
+The outer function \fBresizeterm\fR adds bookkeeping for the \fBSIGWINCH\fP handler.
 When resizing the windows,
 \fBresize_term\fR blank-fills the areas that are extended.
 The calling application should fill in these areas with appropriate data.
@@ -79,13 +79,13 @@ They will fail if either of the dimensions are less than or equal to zero,
 or if an error occurs while (re)allocating memory for the windows.
 .SH NOTES
 While these functions are intended to be used to support a signal handler
-(i.e., for SIGWINCH), care should be taken to avoid invoking them in a
+(i.e., for \fBSIGWINCH\fP), care should be taken to avoid invoking them in a
 context where \fBmalloc\fR or \fBrealloc\fR may have been interrupted,
 since it uses those functions.
 .PP
-If ncurses is configured to supply its own SIGWINCH handler,
+If ncurses is configured to supply its own \fBSIGWINCH\fP handler,
 .bP
-on receipt of a SIGWINCH, the handler sets a flag
+on receipt of a \fBSIGWINCH\fP, the handler sets a flag
 .bP
 which is tested in \fBwgetch\fP(3X) and \fBdoupdate\fP,
 .bP
@@ -106,7 +106,7 @@ data structures.
 If the environment variables \fBLINES\fP or \fBCOLUMNS\fP are set,
 this overrides the library's use of the window size obtained from
 the operating system.
-Thus, even if a SIGWINCH is received,
+Thus, even if a \fBSIGWINCH\fP is received,
 no screen size change may be recorded.
 .SH PORTABILITY
 .PP

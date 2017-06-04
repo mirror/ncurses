@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.133 2017/05/06 14:32:49 tom Exp $
+.\" $Id: ncurses.3x,v 1.134 2017/05/30 21:07:33 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1292,7 +1292,7 @@ The \fBncurses\fR library includes facilities for responding to window
 resizing events, e.g., when running in an xterm.
 See the \fBresizeterm\fR(3X)
 and \fBwresize\fR(3X) manual pages for details.
-In addition, the library may be configured with a SIGWINCH handler.
+In addition, the library may be configured with a \fBSIGWINCH\fP handler.
 .PP
 The \fBncurses\fR library extends the fixed set of function key capabilities
 of terminals by allowing the application designer to define additional

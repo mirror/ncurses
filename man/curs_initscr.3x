@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_initscr.3x,v 1.27 2017/03/04 20:59:02 tom Exp $
+.\" $Id: curs_initscr.3x,v 1.28 2017/05/30 21:12:51 tom Exp $
 .TH curs_initscr 3X ""
 .de bP
 .IP \(bu 4
@@ -190,8 +190,9 @@ Other implementations may handle a missing/empty TERM variable differently.
 Quoting from X/Open Curses, section 3.1.1:
 .RS 5
 .PP
-\fICurses implementations may provide for special handling of the SIGINT,
-SIGQUIT and SIGTSTP signals if their disposition is SIG_DFL at the time
+\fICurses implementations may provide for special handling of the \fBSIGINT\fP,
+\fBSIGQUIT\fP and \fBSIGTSTP\fP signals
+if their disposition is \fBSIG_DFL\fP at the time
 \fBinitscr\fP is called \fP...
 .PP
 \fIAny special handling for these signals may remain in effect for the
@@ -234,7 +235,7 @@ assuming that it has been completely altered.
 It also updates the saved terminal modes with \fBdef_shell_mode\fP (see curs_kernel(3X)).
 .TP 5
 .B SIGWINCH
-This handles the window-size changes which were initially ignored in
+This handles the window-size changes which were ignored in
 the standardization efforts.
 The handler sets a (signal-safe) variable
 which is later tested in \fBwgetch\fP (see curs_getch(3X)).

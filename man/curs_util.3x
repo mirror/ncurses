@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.48 2017/04/22 14:05:14 tom Exp $
+.\" $Id: curs_util.3x,v 1.49 2017/05/30 21:09:21 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -159,7 +159,7 @@ Finally (unless \fBuse_env\fP was called with \fBFALSE\fP parameter),
 using a value in those to override the results
 from the operating system or terminal database.
 .IP
-\fBNcurses\fP also updates the screen size in response to SIGWINCH,
+\fBNcurses\fP also updates the screen size in response to \fBSIGWINCH\fP,
 unless overridden by the \fBLINES\fR or \fBCOLUMNS\fR environment variables,
 .SS use_tioctl
 .PP
