@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.173 2017/04/30 01:22:04 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.174 2017/06/10 23:27:20 tom Exp $")
 
 #include <tic.h>
 
@@ -1028,7 +1028,8 @@ decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 static bool
 decode_xterm_X10(SCREEN *sp, MEVENT * eventp)
 {
-    unsigned char kbuf[4];
+#define MAX_KBUF 3
+    unsigned char kbuf[MAX_KBUF + 1];
     size_t grabbed;
     int res;
     bool result;
@@ -1039,7 +1040,7 @@ decode_xterm_X10(SCREEN *sp, MEVENT * eventp)
 #  endif
 	_nc_globals.read_thread = pthread_self();
 # endif
-    for (grabbed = 0; grabbed < 3; grabbed += (size_t) res) {
+    for (grabbed = 0; grabbed < MAX_KBUF; grabbed += (size_t) res) {
 
 	/* For VIO mouse we add extra bit 64 to disambiguate button-up. */
 	res = (int) read(
@@ -1048,14 +1049,14 @@ decode_xterm_X10(SCREEN *sp, MEVENT * eventp)
 #else
 			    sp->_ifd,
 #endif
-			    kbuf + grabbed, 3 - grabbed);
+			    kbuf + grabbed, (size_t) (MAX_KBUF - (int) grabbed));
 	if (res == -1)
 	    break;
     }
 #if USE_PTHREADS_EINTR
     _nc_globals.read_thread = 0;
 #endif
-    kbuf[3] = '\0';
+    kbuf[MAX_KBUF] = '\0';
 
     TR(TRACE_IEVENT,
        ("_nc_mouse_inline sees the following xterm data: '%s'", kbuf));
@@ -1191,7 +1192,7 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
 			    kbuf + grabbed, 1);
 	if (res == -1)
 	    break;
-	if ((grabbed + 3) >= (int) sizeof(kbuf)) {
+	if ((grabbed + MAX_KBUF) >= (int) sizeof(kbuf)) {
 	    result->nerror++;
 	    break;
 	}

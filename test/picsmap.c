@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.35 2017/06/04 00:20:15 tom Exp $
+ * $Id: picsmap.c,v 1.50 2017/06/11 00:37:27 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -37,11 +37,11 @@
  * TODO write picture left-to-right/top-to-bottom
  * TODO write picture randomly
  * TODO add one-shot option vs repeat-count before exiting
- * TODO add option for init_color
- * TODO add option for init_color vs init_extended_color
- * TODO add option for init_pair vs alloc_pair
+ * TODO add option "-xc" for init_color vs init_extended_color
+ * TODO add option "-xa" for init_pair vs alloc_pair
  * TODO use pad to allow pictures larger than screen
  * TODO improve load of image-file's color-table using tsearch.
+ * TODO add option to just use convert (which can scale) vs builtin xbm/xpm.
  */
 #include <test.priv.h>
 
@@ -97,19 +97,31 @@ static bool in_curses = FALSE;
 static RGB_NAME *rgb_table;
 static RGB_DATA *all_colors;
 
+#if HAVE_ALLOC_PAIR && HAVE_INIT_EXTENDED_COLOR
+#define USE_EXTENDED_COLORS 1
+static bool use_extended_pairs = FALSE;
+static bool use_extended_colors = FALSE;
+#else
+#define USE_EXTENDED_COLORS 0
+#endif
+
 static void
 free_data(char **data)
 {
-    free(data[0]);
-    free(data);
+    if (data != 0) {
+	free(data[0]);
+	free(data);
+    }
 }
 
 static void
 free_pics_head(PICS_HEAD * pics)
 {
-    free(pics->pairs);
-    free(pics->cells);
-    free(pics);
+    if (pics != 0) {
+	free(pics->pairs);
+	free(pics->cells);
+	free(pics);
+    }
 }
 
 /*
@@ -169,12 +181,15 @@ usage(void)
 {
     static const char *msg[] =
     {
-	"Usage: picsmap [options] [imagefile [...]]",
-	"Read/display one or more xbm/xpm files (possibly use \"convert\")",
-	"",
-	"Options:",
-	"  -p palette",
-	"  -r rgb-path"
+	"Usage: picsmap [options] [imagefile [...]]"
+	,"Read/display one or more xbm/xpm files (possibly use \"convert\")"
+	,""
+	,"Options:"
+	,"  -p palette"
+	,"  -r rgb-path"
+#if USE_EXTENDED_COLORS
+	,"  -x [p]   use extension (p=init_extended_pair)"
+#endif
     };
     size_t n;
 
@@ -205,43 +220,41 @@ static void
 init_palette(const char *palette_file)
 {
     if (palette_file != 0) {
+	char **data = read_file(palette_file);
 	int cp;
 
 	all_colors = typeMalloc(RGB_DATA, (unsigned) COLORS);
 	for (cp = 0; cp < COLORS; ++cp) {
-	    color_content(cp,
+	    color_content((short) cp,
 			  &all_colors[cp].red,
 			  &all_colors[cp].green,
 			  &all_colors[cp].blue);
-	    if (palette_file != 0) {
-		char **data = read_file(palette_file);
-		if (data != 0) {
-		    int n;
-		    int red, green, blue;
-		    int scale = 1000;
-		    int c;
-		    for (n = 0; data[n] != 0; ++n) {
-			if (sscanf(data[n], "scale:%d", &c) == 1) {
-			    scale = c;
-			} else if (sscanf(data[n], "%d:%d %d %d",
-					  &c,
-					  &red,
-					  &green,
-					  &blue) == 4
-				   && okCOLOR(c)
-				   && okRGB(red)
-				   && okRGB(green)
-				   && okRGB(blue)) {
-			    /* *INDENT-EQLS* */
-			    all_colors[c].red   = ScaledColor(red);
-			    all_colors[c].green = ScaledColor(green);
-			    all_colors[c].blue  = ScaledColor(blue);
-			}
-		    }
-		    free_data(data);
+	}
+	if (palette_file != 0 && data != 0) {
+	    int n;
+	    int red, green, blue;
+	    int scale = 1000;
+	    int c;
+	    for (n = 0; data[n] != 0; ++n) {
+		if (sscanf(data[n], "scale:%d", &c) == 1) {
+		    scale = c;
+		} else if (sscanf(data[n], "%d:%d %d %d",
+				  &c,
+				  &red,
+				  &green,
+				  &blue) == 4
+			   && okCOLOR(c)
+			   && okRGB(red)
+			   && okRGB(green)
+			   && okRGB(blue)) {
+		    /* *INDENT-EQLS* */
+		    all_colors[c].red   = ScaledColor(red);
+		    all_colors[c].green = ScaledColor(green);
+		    all_colors[c].blue  = ScaledColor(blue);
 		}
 	    }
 	}
+	free_data(data);
     } else if (COLORS   > 1) {
 	/* *INDENT-EQLS* */
 	int power2 = 1;
@@ -252,7 +265,7 @@ init_palette(const char *palette_file)
 	    power2 <<= 1;
 	}
 
-	if (power2 != COLORS || (shift % 3) != 0) {
+	if ((power2 != COLORS) || ((shift % 3) != 0)) {
 	    giveup("With %d colors, you need a palette-file", COLORS);
 	}
     }
@@ -340,6 +353,15 @@ static const char *
 skip_cs(const char *s)
 {
     while (isspace(UChar(*s)))
+	s++;
+    return s;
+}
+
+static char *
+skip_word(char *s)
+{
+    s = skip_s(s);
+    while (isgraph(UChar(*s)))
 	s++;
     return s;
 }
@@ -677,7 +699,7 @@ parse_xpm(char **data)
 		result->high = num[1];
 		result->colors = num[2];
 		result->pairs = typeCalloc(PICS_PAIR, result->colors);
-		cells = (size_t) (result->wide * result->high);
+		cells = (result->wide * result->high);
 		result->cells = typeCalloc(PICS_CELL, cells);
 		list = typeCalloc(char *, result->colors);
 		cpp = num[3];
@@ -763,13 +785,38 @@ parse_xpm(char **data)
 static PICS_HEAD *
 parse_img(const char *filename)
 {
-    char *cmd = malloc(strlen(filename) + 80);
+    char *cmd = malloc(strlen(filename) + 256);
     FILE *pp;
     char buffer[BUFSIZ];
     bool failed = FALSE;
     PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
+    int pic_x = 0;
+    int pic_y = 0;
+    int width = in_curses ? COLS : 80;
 
-    sprintf(cmd, "convert -thumbnail %dx \"%s\" txt:-", COLS, filename);
+    sprintf(cmd, "identify \"%s\"", filename);
+
+    if ((pp = popen(cmd, "r")) != 0) {
+	if (fgets(buffer, sizeof(buffer), pp) != 0) {
+	    size_t n = strlen(filename);
+	    if (strlen(buffer) > n &&
+		!strncmp(buffer, filename, n) &&
+		isspace(UChar(buffer[n])) &&
+		sscanf(skip_word(buffer + n), " %dx%d ", &pic_x, &pic_y) == 2) {
+		/* distort image to make it show normally on terminal */
+		pic_x = (166 * pic_x) / 100;
+	    } else {
+		pic_x = pic_y = 0;
+	    }
+	}
+	pclose(pp);
+    }
+    if (pic_x <= 0 || pic_y <= 0)
+	goto finish;
+
+    sprintf(cmd, "convert -resize %dx%d\\! -thumbnail %dx \"%s\" txt:-",
+	    pic_x, pic_y, width, filename);
+
     if ((pp = popen(cmd, "r")) != 0) {
 	int count = 0;
 	int col = 0;
@@ -841,7 +888,10 @@ parse_img(const char *filename)
 			}
 		    }
 		    which = col + (row * result->wide);
-		    result->cells[which].ch = '#';	/* TODO: space? */
+		    result->cells[which].ch = ((in_curses ||
+						check == 0xffffff)
+					       ? ' '
+					       : '#');
 		    result->cells[which].fg = (c < result->colors) ? c : -1;
 		} else {
 		    failed = TRUE;
@@ -860,6 +910,7 @@ parse_img(const char *filename)
 	    }
 	}
     }
+  finish:
     free(cmd);
 
     if (failed) {
@@ -913,12 +964,22 @@ show_picture(PICS_HEAD * pics)
 {
     int y, x;
     int n;
+    int my_pair, my_color;
 
     if (has_colors()) {
 	for (n = 0; n < pics->colors; ++n) {
-	    init_pair((short) (n + 1),
-		      (short) map_color(pics->pairs[n].fg),
-		      COLOR_BLACK);
+	    my_pair = (n + 1);
+	    my_color = map_color(pics->pairs[n].fg);
+#if USE_EXTENDED_COLORS
+	    if (use_extended_pairs) {
+		init_extended_pair(my_pair, my_color, my_color);
+	    } else
+#endif
+	    {
+		my_pair &= 0x7fff;
+		my_color &= 0x7fff;
+		init_pair((short) my_pair, (short) my_color, (short) my_color);
+	    }
 	}
 	attrset(COLOR_PAIR(1));
 	erase();
@@ -931,8 +992,21 @@ show_picture(PICS_HEAD * pics)
 	    if (x >= COLS)
 		break;
 	    n = (y * pics->wide + x);
-	    attrset(COLOR_PAIR(pics->cells[n].fg + 1));
-	    addch((chtype) pics->cells[n].ch);
+	    my_pair = pics->cells[n].fg + 1;
+#if USE_EXTENDED_COLORS
+	    if (use_extended_pairs) {
+		cchar_t temp;
+		wchar_t wch[2];
+		wch[0] = (wchar_t) pics->cells[n].ch;
+		wch[1] = 0;
+		setcchar(&temp, wch, A_NORMAL, (short) my_pair, &my_pair);
+		add_wch(&temp);
+	    } else
+#endif
+	    {
+		attrset(COLOR_PAIR(my_pair));
+		addch((chtype) pics->cells[n].ch);
+	    }
 	}
     }
     mvgetch(0, 0);
@@ -946,7 +1020,7 @@ main(int argc, char *argv[])
     const char *palette_path = 0;
     const char *rgb_path = "/etc/X11/rgb.txt";
 
-    while ((n = getopt(argc, argv, "p:r:")) != -1) {
+    while ((n = getopt(argc, argv, "p:r:x:")) != -1) {
 	switch (n) {
 	case 'p':
 	    palette_path = optarg;
@@ -954,6 +1028,26 @@ main(int argc, char *argv[])
 	case 'r':
 	    rgb_path = optarg;
 	    break;
+#if USE_EXTENDED_COLORS
+	case 'x':
+	    {
+		char *s = optarg;
+		while (*s) {
+		    switch (*s++) {
+		    case 'p':
+			use_extended_pairs = TRUE;
+			break;
+		    case 'c':
+			use_extended_colors = TRUE;
+			break;
+		    default:
+			usage();
+			break;
+		    }
+		}
+	    }
+	    break;
+#endif
 	default:
 	    usage();
 	    break;
