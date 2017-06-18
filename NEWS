@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2855 2017/06/10 22:10:46 tom Exp $
+-- $Id: NEWS,v 1.2859 2017/06/17 21:53:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170617
+	+ fill in some places where TERMTYPE2 vs TERMTYPE was not used
+	  (report by Allen Hewes).
+	+ use ExitTerminfo() internally in error-exits for ncurses' setupterm
+	  to help with leak checking.
+	+ use ExitProgram() in error-exit from initscr() to help with leak
+	  checking.
+	+ review test-programs, adding checks for cases where the terminal
+	  cannot be initialized.
 
 20170610
 	+ add option "-xp" to picsmap.c, to use init_extended_pair().

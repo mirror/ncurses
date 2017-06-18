@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.178 2017/04/11 23:51:32 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.182 2017/06/17 22:21:50 tom Exp $")
 
 /****************************************************************************
  *
@@ -115,12 +115,12 @@ NCURSES_PUBLIC_VAR(ttytype) (void)
     if (CURRENT_SCREEN) {
 	TERMINAL *termp = TerminalOf(CURRENT_SCREEN);
 	if (termp != 0) {
-	    result = termp->type.term_names;
+	    result = TerminalType(termp).term_names;
 	}
     }
 #else
     if (cur_term != 0) {
-	result = cur_term->type.term_names;
+	result = TerminalType(cur_term).term_names;
     }
 #endif
     return result;
@@ -693,7 +693,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	&& termp->Filedes == Filedes
 	&& termp->_termname != 0
 	&& !strcmp(termp->_termname, tname)
-	&& _nc_name_match(termp->type.term_names, tname, "|")) {
+	&& _nc_name_match(TerminalType(termp).term_names, tname, "|")) {
 	T(("reusing existing terminal information and mode-settings"));
 	code = OK;
 #ifdef USE_TERM_DRIVER
@@ -721,6 +721,8 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	    termp->Filedes = (short) Filedes;
 	    termp->_termname = strdup(tname);
 	} else {
+	    _nc_free_termtype2(&TerminalType(termp));
+	    free(my_tcb);
 	    ret_error0(errret ? *errret : TGETENT_ERR,
 		       "Could not find any driver to handle this terminal.\n");
 	}
@@ -744,8 +746,10 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	if (status != TGETENT_YES) {
 	    del_curterm(termp);
 	    if (status == TGETENT_ERR) {
+		_nc_free_termtype2(&TerminalType(termp));
 		ret_error0(status, "terminals database is inaccessible\n");
 	    } else if (status == TGETENT_NO) {
+		_nc_free_termtype2(&TerminalType(termp));
 		ret_error1(status, "unknown terminal type.\n", tname);
 	    }
 	}
@@ -753,9 +757,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	_nc_export_termtype2(&termp->type, &TerminalType(termp));
 #endif
 #if !USE_REENTRANT
-#define MY_SIZE (size_t) (NAMESIZE - 1)
-	_nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
-	ttytype[MY_SIZE] = '\0';
+	save_ttytype(termp);
 #endif
 
 	termp->Filedes = (short) Filedes;

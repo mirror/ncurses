@@ -45,7 +45,7 @@
 #include <sys/termio.h>		/* needed for ISC */
 #endif
 
-MODULE_ID("$Id: lib_initscr.c,v 1.42 2017/03/28 21:14:01 tom Exp $")
+MODULE_ID("$Id: lib_initscr.c,v 1.43 2017/06/17 18:42:45 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 initscr(void)
@@ -88,7 +88,7 @@ initscr(void)
 #endif
 	if (newterm(name, stdout, stdin) == 0) {
 	    fprintf(stderr, "Error opening terminal: %s.\n", name);
-	    exit(EXIT_FAILURE);
+	    ExitProgram(EXIT_FAILURE);
 	}
 
 	/* def_shell_mode - done in newterm/_nc_setupscreen */

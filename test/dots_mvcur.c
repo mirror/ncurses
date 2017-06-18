@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2009,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.10 2013/09/28 22:44:18 tom Exp $
+ * $Id: dots_mvcur.c,v 1.11 2017/06/17 18:25:30 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -113,7 +113,10 @@ main(int argc GCC_UNUSED,
     CATCHALL(onsig);
 
     srand((unsigned) time(0));
-    sp = newterm((char *) 0, stdout, stdin);
+    if ((sp = newterm((char *) 0, stdout, stdin)) == 0) {
+	fprintf(stderr, "Cannot initialize terminal\n");
+	ExitProgram(EXIT_FAILURE);
+    }
     outs(clear_screen);
     outs(cursor_home);
     outs(cursor_invisible);

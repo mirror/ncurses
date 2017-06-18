@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006,2016 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.5 2016/09/04 20:49:06 tom Exp $
+ * $Id: foldkeys.c,v 1.6 2017/06/17 19:36:33 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -209,9 +209,13 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     struct timeval current, previous;
 #endif
 
+    if (newterm(0, stdout, stdin) == 0) {
+	fprintf(stderr, "Cannot initialize terminal\n");
+	ExitProgram(EXIT_FAILURE);
+    }
+
     unlink(MY_LOGFILE);
 
-    newterm(0, stdout, stdin);
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
 

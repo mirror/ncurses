@@ -39,7 +39,7 @@
 #include <curses.priv.h>
 #include <termcap.h>		/* ospeed */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.40 2017/04/15 21:35:08 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.41 2017/06/17 22:21:35 tom Exp $")
 
 #undef CUR
 #define CUR TerminalType(termp).
@@ -108,9 +108,7 @@ NCURSES_SP_NAME(set_curterm) (NCURSES_SP_DCLx TERMINAL *termp)
 	}
 #endif
 #if !USE_REENTRANT
-#define MY_SIZE (size_t) (NAMESIZE - 1)
-	_nc_STRNCPY(ttytype, TerminalType(termp).term_names, MY_SIZE);
-	ttytype[MY_SIZE] = '\0';
+	save_ttytype(termp);
 #endif
     }
     _nc_unlock_global(curses);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2010,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.10 2016/09/04 20:17:42 tom Exp $
+ * $Id: demo_altkeys.c,v 1.11 2017/06/17 18:33:03 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -91,7 +91,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     unlink(MY_LOGFILE);
 
-    newterm(0, stdout, stdin);
+    if (newterm(0, stdout, stdin) == 0) {
+	fprintf(stderr, "Cannot initialize terminal\n");
+	ExitProgram(EXIT_FAILURE);
+    }
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
 

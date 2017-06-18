@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.573 2017/06/02 23:19:52 tom Exp $
+ * $Id: curses.priv.h,v 1.575 2017/06/17 22:21:08 tom Exp $
  *
  *	curses.priv.h
  *
@@ -394,6 +394,11 @@ color_t;
 #define TerminalType(tp)     (tp)->type
 #endif
 
+#ifdef CUR
+#undef CUR
+#define CUR TerminalType(cur_term).
+#endif
+
 /*
  * Reduce dependency on cur_term global by using terminfo data from SCREEN's
  * pointer to this data.
@@ -402,7 +407,7 @@ color_t;
 #undef CUR
 #endif
 
-#define SP_TERMTYPE TerminalOf(sp)->type.
+#define SP_TERMTYPE TerminalType(TerminalOf(sp)).
 
 #include <term_entry.h>
 
@@ -1918,6 +1923,14 @@ extern NCURSES_EXPORT(void) _nc_expanded (void);
 #define getcwd(buf,len) getwd(buf)
 #endif
 
+#define save_ttytype(termp) \
+	if (TerminalType(termp).term_names != 0) { \
+	    _nc_STRNCPY(ttytype, \
+	    		TerminalType(termp).term_names, \
+			NAMESIZE - 1); \
+	    ttytype[NAMESIZE - 1] = '\0'; \
+	}
+
 /* charable.c */
 #if USE_WIDEC_SUPPORT
 extern NCURSES_EXPORT(bool) _nc_is_charable(wchar_t);
@@ -2010,13 +2023,20 @@ extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, int);
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 /* lib_setup.c */
+#if NO_LEAKS
+#define ExitTerminfo(code)    _nc_free_tinfo(code)
+#else
+#define ExitTerminfo(code)    exit(code)
+#endif
+
 #define SETUP_FAIL ERR
+
 #define ret_error(code, fmt, arg)	if (errret) {\
 					    *errret = code;\
 					    returnCode(SETUP_FAIL);\
 					} else {\
 					    fprintf(stderr, fmt, arg);\
-					    exit(EXIT_FAILURE);\
+					    ExitTerminfo(EXIT_FAILURE);\
 					}
 
 #define ret_error1(code, fmt, arg)	ret_error(code, "'%s': " fmt, arg)
@@ -2026,7 +2046,7 @@ extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 					    returnCode(SETUP_FAIL);\
 					} else {\
 					    fprintf(stderr, msg);\
-					    exit(EXIT_FAILURE);\
+					    ExitTerminfo(EXIT_FAILURE);\
 					}
 
 /* lib_tstp.c */

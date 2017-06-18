@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.51 2017/04/14 08:19:49 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.54 2017/06/17 22:22:03 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -179,8 +179,10 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     if (status != TGETENT_YES) {
 	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx termp);
 	if (status == TGETENT_ERR) {
+	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error0(status, "terminals database is inaccessible\n");
 	} else if (status == TGETENT_NO) {
+	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error1(status, "unknown terminal type.\n", tname);
 	}
     }
@@ -189,9 +191,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     _nc_export_termtype2(&termp->type, &TerminalType(termp));
 #endif
 #if !USE_REENTRANT
-#define MY_SIZE (size_t) NAMESIZE - 1
-    _nc_STRNCPY(ttytype, termp->type.term_names, MY_SIZE);
-    ttytype[MY_SIZE] = '\0';
+    save_ttytype(termp);
 #endif
 
     if (command_character)
@@ -215,12 +215,15 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	if ((VALID_STRING(cursor_address)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
+	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
 	} else {
+	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
 	}
     }
     if (hard_copy) {
+	_nc_free_termtype2(&TerminalType(termp));
 	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 
@@ -887,10 +890,10 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
     if (sp != 0) {
 	if (key_mouse != 0) {
 	    if (!strcmp(key_mouse, xterm_kmous)
-		|| strstr(TerminalOf(sp)->type.term_names, "xterm") != 0) {
+		|| strstr(SP_TERMTYPE term_names, "xterm") != 0) {
 		init_xterm_mouse(sp);
 	    }
-	} else if (strstr(TerminalOf(sp)->type.term_names, "xterm") != 0) {
+	} else if (strstr(SP_TERMTYPE term_names, "xterm") != 0) {
 	    if (_nc_add_to_try(&(sp->_keytry), xterm_kmous, KEY_MOUSE) == OK)
 		init_xterm_mouse(sp);
 	}

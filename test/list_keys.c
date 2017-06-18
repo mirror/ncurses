@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.19 2017/04/08 22:57:26 tom Exp $
+ * $Id: list_keys.c,v 1.20 2017/06/17 21:11:25 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -89,7 +89,7 @@ show_key(const char *name, bool show)
 {
     int width = 0;
     char buffer[10];
-    NCURSES_CONST char *value = tigetstr(name);
+    NCURSES_CONST char *value = tigetstr((NCURSES_CONST char *) name);
 
     if (show && t_opt)
 	fputc('"', stdout);

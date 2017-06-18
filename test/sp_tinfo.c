@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.19 2017/05/13 23:19:04 tom Exp $
+ * $Id: sp_tinfo.c,v 1.21 2017/06/17 21:19:25 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -81,7 +81,7 @@ initialize(const char *name, FILE *output)
 	tgetent_sp(result->sp, temp, name);
 	free(temp);
     } else {
-	setupterm(name, fileno(output), &error);
+	setupterm((NCURSES_CONST char *) name, fileno(output), &error);
     }
     result->term = cur_term;
 
@@ -100,13 +100,16 @@ show_flag(MYDATA * data, const char *name, int value)
     }
 }
 
+#define TC_PARMS data->sp, (NCURSES_CONST char *)tc
+#define TI_PARMS data->sp, (NCURSES_CONST char *)ti
+
 static void
 show_cap_flag(MYDATA * data, const char *ti, const char *tc)
 {
     const char *name = (opt_t ? tc : ti);
     show_flag(data, name, (opt_t
-			   ? tgetflag_sp(data->sp, tc)
-			   : tigetflag_sp(data->sp, ti)));
+			   ? tgetflag_sp(TC_PARMS)
+			   : tigetflag_sp(TI_PARMS)));
 }
 
 static void
@@ -126,8 +129,8 @@ show_cap_number(MYDATA * data, const char *ti, const char *tc)
 {
     const char *name = (opt_t ? tc : ti);
     show_number(data, name, (opt_t
-			     ? tgetnum_sp(data->sp, tc)
-			     : tigetnum_sp(data->sp, ti)));
+			     ? tgetnum_sp(TC_PARMS)
+			     : tigetnum_sp(TI_PARMS)));
 }
 
 static void
@@ -162,8 +165,8 @@ show_cap_string(MYDATA * data, const char *ti, const char *tc)
     char tcapjunk[1024];
     char *tcap_ptr = tcapjunk;
     show_string(data, name, (opt_t
-			     ? tgetstr_sp(data->sp, tc, &tcap_ptr)
-			     : tigetstr_sp(data->sp, ti)));
+			     ? tgetstr_sp(TC_PARMS, &tcap_ptr)
+			     : tigetstr_sp(TI_PARMS)));
 }
 
 static void

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey 1998
  *
- * $Id: filter.c,v 1.28 2016/09/10 21:23:23 tom Exp $
+ * $Id: filter.c,v 1.29 2017/06/17 18:16:39 tom Exp $
  *
  * An example of the 'filter()' function in ncurses, this program prompts
  * for commands and executes them (like a command shell).  It illustrates
@@ -359,7 +359,10 @@ main(int argc, char *argv[])
     if (i_option) {
 	initscr();
     } else {
-	(void) newterm((char *) 0, stdout, stdin);
+	if (newterm((char *) 0, stdout, stdin) == 0) {
+	    fprintf(stderr, "cannot initialize terminal\n");
+	    ExitProgram(EXIT_FAILURE);
+	}
     }
 #ifdef NCURSES_VERSION
     if (a_option) {

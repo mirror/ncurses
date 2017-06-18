@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.67 2017/05/14 00:27:05 tom Exp $
+ * $Id: bs.c,v 1.68 2017/06/17 18:45:40 tom Exp $
  */
 
 #include <test.priv.h>
@@ -220,6 +220,7 @@ intro(void)
     srand((unsigned) (time(0L) + getpid()));	/* Kick the random number generator */
 
     CATCHALL(uninitgame);
+    (void) initscr();
 
     if ((tmpname = getlogin()) != 0 &&
 	(your_name = strdup(tmpname)) != 0) {
@@ -228,7 +229,6 @@ intro(void)
 	your_name = strdup(dftname);
     }
 
-    (void) initscr();
     keypad(stdscr, TRUE);
     (void) def_prog_mode();
     (void) nonl();

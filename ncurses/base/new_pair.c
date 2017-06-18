@@ -60,7 +60,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.10 2017/03/28 09:14:15 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.11 2017/06/17 18:43:16 tom Exp $")
 
 #if USE_NEW_PAIR
 
@@ -118,7 +118,7 @@ dumpit(SCREEN *sp, int pair, const char *tag)
 
     if (next_len(sp, 0) != prev_len(sp, 0)) {
 	endwin();
-	exit(1);
+	ExitProgram(EXIT_FAILURE);
     }
 }
 #else
