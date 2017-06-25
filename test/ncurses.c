@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.451 2017/05/13 23:25:11 tom Exp $
+$Id: ncurses.c,v 1.453 2017/06/24 20:49:44 tom Exp $
 
 ***************************************************************************/
 
@@ -77,7 +77,6 @@ $Id: ncurses.c,v 1.451 2017/05/13 23:25:11 tom Exp $
 
 #ifdef TRACE
 static unsigned save_trace = TRACE_ORDINARY | TRACE_ICALLS | TRACE_CALLS;
-extern unsigned _nc_tracing;
 #endif
 
 #else
@@ -4551,8 +4550,8 @@ selectcell(int uli, int ulj, int lri, int lrj)
 		    break;
 		}
 	    }
-	    /* FALLTHRU */
 #endif
+	    /* FALLTHRU */
 	default:
 	    res.y = uli + i;
 	    res.x = ulj + j;

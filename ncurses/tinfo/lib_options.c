@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_options.c,v 1.79 2017/04/15 22:24:38 tom Exp $")
+MODULE_ID("$Id: lib_options.c,v 1.80 2017/06/24 23:13:09 tom Exp $")
 
 NCURSES_EXPORT(int)
 idlok(WINDOW *win, bool flag)
@@ -202,7 +202,7 @@ NCURSES_SP_NAME(curs_set) (NCURSES_SP_DCLx int vis)
 #ifdef USE_TERM_DRIVER
 	    code = CallDriver_1(SP_PARM, td_cursorSet, vis);
 #else
-	    if (IsTermInfo(SP_PARM)) {
+	    if (IsValidTIScreen(SP_PARM)) {
 		switch (vis) {
 		case 2:
 		    code = NCURSES_PUTP2_FLUSH("cursor_visible",

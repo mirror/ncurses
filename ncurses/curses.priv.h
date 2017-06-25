@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.575 2017/06/17 22:21:08 tom Exp $
+ * $Id: curses.priv.h,v 1.576 2017/06/24 15:08:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1685,7 +1685,7 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 
 typedef void VoidFunc(void);
 
-#define TR_FUNC(value)          ((const char*) &(value))
+#define TR_FUNC(value)          ((const char*) (value))
 #define NonNull(s)	        ((s) != 0 ? s : "<null>")
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)

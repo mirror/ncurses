@@ -36,7 +36,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.24 2017/03/17 00:17:32 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.25 2017/06/24 13:22:27 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
@@ -85,6 +85,9 @@ NCURSES_SP_NAME(vid_puts) (NCURSES_SP_DCLx
 #else
 #define fix_pair0 FALSE
 #endif
+
+    if (!IsValidTIScreen(SP_PARM))
+	returnCode(ERR);
 
     newmode &= A_ATTRIBUTES;
     set_extended_pair(opts, color_pair);

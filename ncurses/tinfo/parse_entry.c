@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.84 2017/04/21 21:09:54 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.85 2017/06/24 22:59:46 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -527,43 +527,50 @@ NCURSES_EXPORT(int)
 _nc_capcmp(const char *s, const char *t)
 /* compare two string capabilities, stripping out padding */
 {
-    if (!VALID_STRING(s) && !VALID_STRING(t))
-	return (0);
-    else if (!VALID_STRING(s) || !VALID_STRING(t))
-	return (1);
+    bool ok_s = VALID_STRING(s);
+    bool ok_t = VALID_STRING(t);
 
-    for (;;) {
-	if (s[0] == '$' && s[1] == '<') {
-	    for (s += 2;; s++)
-		if (!(isdigit(UChar(*s))
-		      || *s == '.'
-		      || *s == '*'
-		      || *s == '/'
-		      || *s == '>'))
-		    break;
+    if (ok_s && ok_t) {
+	for (;;) {
+	    if (s[0] == '$' && s[1] == '<') {
+		for (s += 2;; s++) {
+		    if (!(isdigit(UChar(*s))
+			  || *s == '.'
+			  || *s == '*'
+			  || *s == '/'
+			  || *s == '>')) {
+			break;
+		    }
+		}
+	    }
+
+	    if (t[0] == '$' && t[1] == '<') {
+		for (t += 2;; t++) {
+		    if (!(isdigit(UChar(*t))
+			  || *t == '.'
+			  || *t == '*'
+			  || *t == '/'
+			  || *t == '>')) {
+			break;
+		    }
+		}
+	    }
+
+	    /* we've now pushed s and t past any padding they pointed at */
+
+	    if (*s == '\0' && *t == '\0')
+		return (0);
+
+	    if (*s != *t)
+		return (*t - *s);
+
+	    /* else *s == *t but one is not NUL, so continue */
+	    s++, t++;
 	}
-
-	if (t[0] == '$' && t[1] == '<') {
-	    for (t += 2;; t++)
-		if (!(isdigit(UChar(*t))
-		      || *t == '.'
-		      || *t == '*'
-		      || *t == '/'
-		      || *t == '>'))
-		    break;
-	}
-
-	/* we've now pushed s and t past any padding they were pointing at */
-
-	if (*s == '\0' && *t == '\0')
-	    return (0);
-
-	if (*s != *t)
-	    return (*t - *s);
-
-	/* else *s == *t but one is not NUL, so continue */
-	s++, t++;
+    } else if (ok_s || ok_t) {
+	return 1;
     }
+    return 0;
 }
 
 static void

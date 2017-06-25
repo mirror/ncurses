@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: redraw.c,v 1.9 2017/04/15 19:57:47 tom Exp $
+ * $Id: redraw.c,v 1.10 2017/06/24 14:04:57 tom Exp $
  *
  * Demonstrate the redrawwin() and wredrawln() functions.
  * Thomas Dickey - 2006/11/4
@@ -185,10 +185,52 @@ test_redraw(WINDOW *win)
     }
 }
 
+static void
+usage(void)
+{
+    static const char *tbl[] =
+    {
+	"Usage: redraw [options]"
+	,""
+	,"Options:"
+	,"  -e      use stderr (default stdout)"
+	,"  -n      do not initialize terminal"
+    };
+    unsigned n;
+    for (n = 0; n < SIZEOF(tbl); ++n)
+	fprintf(stderr, "%s\n", tbl[n]);
+    ExitProgram(EXIT_FAILURE);
+}
+
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    initscr();
+    int ch;
+    bool no_init = FALSE;
+    FILE *my_fp = stdout;
+
+    while ((ch = getopt(argc, argv, "en")) != -1) {
+	switch (ch) {
+	case 'e':
+	    my_fp = stderr;
+	    break;
+	case 'n':
+	    no_init = TRUE;
+	    break;
+	default:
+	    usage();
+	    break;
+	}
+    }
+    if (optind < argc)
+	usage();
+
+    if (no_init) {
+	START_TRACE();
+    } else {
+	newterm((char *) 0, my_fp, stdin);
+    }
+
     raw();
     noecho();
     test_redraw(stdscr);

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: edit_field.c,v 1.27 2017/04/15 17:57:40 tom Exp $
+ * $Id: edit_field.c,v 1.28 2017/06/24 23:10:08 tom Exp $
  *
  * A wrapper for form_driver() which keeps track of the user's editing changes
  * for each field, and makes the resulting length available as a
@@ -178,7 +178,7 @@ help_edit_field(void)
 {
     int used = 0;
     unsigned n;
-    char **msgs = typeCalloc(char *, 2 + SIZEOF(commands));
+    char **msgs = typeCalloc(char *, 3 + SIZEOF(commands));
 
     msgs[used++] = strdup("Defined form edit/traversal keys:");
     for (n = 0; n < SIZEOF(commands); ++n) {

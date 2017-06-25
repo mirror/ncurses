@@ -1,4 +1,4 @@
-# $Id: modules,v 1.62 2017/05/07 21:32:45 tom Exp $
+# $Id: modules,v 1.64 2017/06/24 18:26:44 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -97,6 +97,7 @@ test_inwstr	progs		$(srcdir)	$(HEADER_DEPS)
 test_opaque	progs		$(srcdir)	$(HEADER_DEPS)
 test_setupterm	progs		$(srcdir)	$(HEADER_DEPS)
 test_sgr	progs		$(srcdir)	$(HEADER_DEPS)
+test_termattrs	progs		$(srcdir)	$(HEADER_DEPS)
 test_vid_puts	progs		$(srcdir)	$(HEADER_DEPS)
 test_vidputs	progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)

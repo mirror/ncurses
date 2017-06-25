@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.130 2017/03/31 12:15:36 tom Exp $
+dnl $Id: configure.in,v 1.132 2017/06/24 14:10:13 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -40,7 +40,7 @@ dnl For additional information, see
 dnl		http://invisible-island.net/autoconf/
 dnl		http://invisible-island.net/ncurses/ncurses-examples.html
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.52.20030208)
+AC_PREREQ(2.52.20170501)
 AC_INIT(ncurses.c)
 AC_CONFIG_HEADER(ncurses_cfg.h:ncurses_tst.hin)
 
@@ -248,6 +248,7 @@ wchgat \
 winsstr \
 wresize \
 wsyncdown \
+_tracef \
 )
 
 CF_TPUTS_PROTO

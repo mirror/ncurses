@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2859 2017/06/17 21:53:35 tom Exp $
+-- $Id: NEWS,v 1.2866 2017/06/24 22:16:43 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170624
+	+ modify c++/etip.h.in to accommodate deprecation of throw() and
+	  throws() in c++17 (prompted by patch by Romain Geissler).
+	+ remove some incorrect calls for memory-leaks from 20170617 changes
+	  (report by Allen Hewes).
+	+ add test-programs for termattrs and term_attrs.
+	+ modify _nc_outc_wrapper to use the standard output if the screen was
+	  not initialized, rather than returning an error.
+	+ improve checks for low-level terminfo functions when the terminal
+	  has not been initialized (Redhat #1345963).
+	+ modify make_hash to allow building with address-sanitizer,
+	  assuming that --disable-leaks is configured.
+	+ amend changes for number_format() in 20170506 to avoid undefined
+	  behavior when shifting (patch by Emanuele Giaquinta).
 
 20170617
 	+ fill in some places where TERMTYPE2 vs TERMTYPE was not used

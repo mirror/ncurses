@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.99 2016/12/17 20:47:21 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.100 2017/06/24 15:15:55 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -426,7 +426,7 @@ NCURSES_EXPORT(int)
 _nc_outc_wrapper(SCREEN *sp, int c)
 {
     if (0 == sp) {
-	return (ERR);
+	return fputc(c, stdout);
     } else {
 	return sp->jump(c);
     }

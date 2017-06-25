@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,13 +31,13 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.50 2014/02/01 22:17:37 tom Exp $
-
-#include <etip.h>
+// $Id: cursesw.h,v 1.51 2017/06/24 22:05:30 tom Exp $
 
 extern "C" {
 #  include   <curses.h>
 }
+
+#include <etip.h>
 
 /* SCO 3.2v4 curses.h includes term.h, which defines lines as a macro.
    Undefine it here, because NCursesWindow uses lines as a method.  */

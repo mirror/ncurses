@@ -97,7 +97,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.94 2017/04/21 23:26:38 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.95 2017/06/23 22:40:22 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -680,7 +680,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		    if (isoctal(UChar(xx1))) {
 			int pad = 0;
 			int xx2;
-			int fix;
+			int fix = 0;
 
 			if (!isoctal(UChar(str[1])))
 			    pad = 2;

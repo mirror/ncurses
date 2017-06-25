@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.642 2017/06/03 13:26:42 tom Exp $
+dnl $Id: configure.in,v 1.643 2017/06/24 14:19:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.642 $)
+AC_PREREQ(2.52.20170501)
+AC_REVISION($Revision: 1.643 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1509,6 +1509,7 @@ if test "x$cf_with_trace" = xyes ; then
 	LIB_TRACING=all
 	ADA_TRACE=TRUE
 	CF_ADD_CFLAGS(-DTRACE)
+	AC_DEFINE(HAVE__TRACEF,1,[Define to 1 if we have _tracef function])
 else
 	LIB_TRACING=DEBUG
 	ADA_TRACE=FALSE

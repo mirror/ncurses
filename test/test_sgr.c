@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.10 2017/04/09 00:27:42 tom Exp $
+ * $Id: test_sgr.c,v 1.11 2017/06/24 18:35:25 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -49,6 +49,7 @@ failed(const char *msg)
 
 #if HAVE_TIGETSTR
 
+static bool no_init = FALSE;
 static bool q_opt = FALSE;
 
 static char *d_opt;
@@ -185,9 +186,16 @@ brute_force(const char *name)
     if (db_list) {
 	putenv(next_dbitem());
     }
+
     if (!q_opt)
 	printf("Terminal type \"%s\"\n", name);
-    setupterm((NCURSES_CONST char *) name, 1, (int *) 0);
+
+    if (no_init) {
+	START_TRACE();
+    } else {
+	setupterm((NCURSES_CONST char *) name, 1, (int *) 0);
+    }
+
     if (!q_opt) {
 	if (strcmp(name, ttytype))
 	    printf("... actual \"%s\"\n", ttytype);
@@ -305,6 +313,7 @@ usage(void)
 	"Options:",
 	" -d LIST  colon-separated list of databases to use",
 	" -e NAME  environment variable to set with -d option",
+	" -n       do not initialize terminal, to test error-checking",
 	" -q       quiet (prints only counts)",
     };
     unsigned n;
@@ -320,13 +329,16 @@ main(int argc, char *argv[])
     int n;
     char *name;
 
-    while ((n = getopt(argc, argv, "d:e:q")) != -1) {
+    while ((n = getopt(argc, argv, "d:e:nq")) != -1) {
 	switch (n) {
 	case 'd':
 	    d_opt = optarg;
 	    break;
 	case 'e':
 	    e_opt = optarg;
+	    break;
+	case 'n':
+	    no_init = TRUE;
 	    break;
 	case 'q':
 	    q_opt = TRUE;

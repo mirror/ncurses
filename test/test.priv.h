@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.143 2017/04/15 17:19:47 tom Exp $ */
+/* $Id: test.priv.h,v 1.145 2017/06/24 14:07:38 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -275,6 +275,10 @@
 
 #ifndef HAVE_WRESIZE
 #define HAVE_WRESIZE 0
+#endif
+
+#ifndef HAVE__TRACEF
+#define HAVE__TRACEF 0
 #endif
 
 #ifndef NCURSES_EXT_FUNCS
@@ -906,12 +910,22 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #endif
 
-#ifdef TRACE
+#if defined(TRACE) && HAVE__TRACEF
 #define Trace(p) _tracef p
 #define USE_TRACE 1
+#define START_TRACE() \
+	if ((_nc_tracing & TRACE_MAXIMUM) == 0) { \
+	    int t = _nc_getenv_num("NCURSES_TRACE"); \
+	    if (t >= 0) \
+		trace((unsigned) t); \
+	}
+extern unsigned _nc_tracing;
+extern int _nc_getenv_num(const char *);
 #else
+#undef TRACE
 #define Trace(p)		/* nothing */
 #define USE_TRACE 0
+#define START_TRACE()		/* nothing */
 #endif
 
 #define Trace2(p)		/* nothing */

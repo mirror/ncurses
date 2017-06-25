@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.182 2017/06/17 22:21:50 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.183 2017/06/24 19:10:43 tom Exp $")
 
 /****************************************************************************
  *
@@ -746,10 +746,8 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	if (status != TGETENT_YES) {
 	    del_curterm(termp);
 	    if (status == TGETENT_ERR) {
-		_nc_free_termtype2(&TerminalType(termp));
 		ret_error0(status, "terminals database is inaccessible\n");
 	    } else if (status == TGETENT_NO) {
-		_nc_free_termtype2(&TerminalType(termp));
 		ret_error1(status, "unknown terminal type.\n", tname);
 	    }
 	}

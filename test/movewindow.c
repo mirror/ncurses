@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.42 2017/04/15 18:37:42 tom Exp $
+ * $Id: movewindow.c,v 1.43 2017/06/24 20:48:46 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -191,6 +191,7 @@ selectcell(WINDOW *parent,
 	    moved = TRUE;
 	    break;
 	case QUIT:
+	    /* FALLTHRU */
 	case ESCAPE:
 	    return ((PAIR *) 0);
 #ifdef NCURSES_MOUSE_VERSION
@@ -212,8 +213,8 @@ selectcell(WINDOW *parent,
 		    break;
 		}
 	    }
-	    /* FALLTHRU */
 #endif
+	    /* FALLTHRU */
 	default:
 	    res.y = uli + i;
 	    res.x = ulj + j;

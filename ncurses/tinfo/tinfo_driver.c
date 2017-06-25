@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.54 2017/06/17 22:22:03 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.56 2017/06/24 19:54:16 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -179,10 +179,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     if (status != TGETENT_YES) {
 	NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx termp);
 	if (status == TGETENT_ERR) {
-	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error0(status, "terminals database is inaccessible\n");
 	} else if (status == TGETENT_NO) {
-	    _nc_free_termtype2(&TerminalType(termp));
 	    ret_error1(status, "unknown terminal type.\n", tname);
 	}
     }
@@ -216,14 +214,17 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
 	    _nc_free_termtype2(&TerminalType(termp));
+	    free(TCB);
 	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
 	} else {
 	    _nc_free_termtype2(&TerminalType(termp));
+	    free(TCB);
 	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
 	}
     }
     if (hard_copy) {
 	_nc_free_termtype2(&TerminalType(termp));
+	free(TCB);
 	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 

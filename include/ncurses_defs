@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.72 2017/03/31 13:00:11 tom Exp $
+# $Id: ncurses_defs,v 1.73 2017/06/24 14:20:57 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -188,6 +188,7 @@ HAVE_WORKING_POLL
 HAVE_WRESIZE
 HAVE_WSYNCDOWN	1
 HAVE__DOSCAN
+HAVE__TRACEF
 MIXEDCASE_FILENAMES
 NCURSES_CHAR_EQ
 NCURSES_EXPANDED

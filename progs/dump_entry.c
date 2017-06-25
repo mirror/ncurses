@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.152 2017/05/06 18:56:15 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.153 2017/06/23 22:47:43 Emanuele.Giaquinta Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -807,8 +807,10 @@ number_format(int value)
     if ((outform != F_TERMCAP) && (value > 255)) {
 	unsigned long lv = (unsigned long) value;
 	unsigned long mm;
+	int bits = sizeof(unsigned long) * 8;
 	int nn;
-	for (nn = 8; (mm = (1UL << nn)) != 0; ++nn) {
+	for (nn = 8; nn < bits; ++nn) {
+	    mm = 1UL << nn;
 	    if ((mm - 16) <= lv && (mm + 16) > lv) {
 		result = "%#x";
 		break;
