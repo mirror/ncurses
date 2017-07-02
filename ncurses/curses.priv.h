@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.576 2017/06/24 15:08:46 tom Exp $
+ * $Id: curses.priv.h,v 1.580 2017/07/01 17:56:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -966,6 +966,9 @@ typedef struct {
 
 #ifdef USE_PTHREADS
 	pthread_mutex_t	mutex_curses;
+	pthread_mutex_t	mutex_prescreen;
+	pthread_mutex_t	mutex_screen;
+	pthread_mutex_t	mutex_update;
 	pthread_mutex_t	mutex_tst_tracef;
 	pthread_mutex_t	mutex_tracef;
 	int		nested_tracef;
@@ -984,12 +987,24 @@ extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
 
 #define N_RIPS 5
 
+#ifdef USE_PTHREADS
+typedef struct _prescreen_list {
+	struct _prescreen_list *next;
+	pthread_t id;
+	struct screen *sp;
+} PRESCREEN_LIST;
+#endif
+
 /*
  * Global data which can be swept up into a SCREEN when one is created.
  * It may be modified before the next SCREEN is created.
  */
 typedef struct {
+#ifdef USE_PTHREADS
+	PRESCREEN_LIST *allocated;
+#else
 	struct screen * allocated;
+#endif
 	bool		use_env;
 	bool		filter_mode;
 	attr_t		previous_attr;
@@ -2018,6 +2033,14 @@ extern NCURSES_EXPORT(int)    _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int)    _nc_locale_breaks_acs(TERMINAL *);
 extern NCURSES_EXPORT(int)    _nc_setupterm(NCURSES_CONST char *, int, int *, int);
 extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, int);
+
+#ifdef USE_PTHREADS
+extern NCURSES_EXPORT(SCREEN *) _nc_find_prescr(void);
+extern NCURSES_EXPORT(void)   _nc_forget_prescr(void);
+#else
+#define _nc_find_prescr()     _nc_prescreen.allocated
+#define _nc_forget_prescr()   _nc_prescreen.allocated = 0
+#endif
 
 /* lib_set_term.c */
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));

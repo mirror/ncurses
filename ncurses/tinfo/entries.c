@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.23 2017/04/13 22:39:57 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.25 2017/07/01 16:58:42 tom Exp $")
 
 /****************************************************************************
  *
@@ -126,7 +126,7 @@ _nc_leaks_tinfo(void)
     if (TerminalOf(CURRENT_SCREEN) != 0) {
 	del_curterm(TerminalOf(CURRENT_SCREEN));
     }
-    free(_nc_prescreen.allocated);
+    _nc_forget_prescr();
 
     _nc_comp_captab_leaks();
     _nc_free_entries(_nc_head);

@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.85 2017/06/24 22:59:46 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.86 2017/06/28 00:53:12 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -236,13 +236,14 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
      * implemented it.  Note that the resulting terminal type was never the
      * 2-character name, but was instead the first alias after that.
      */
+#define ok_TC2(s) (isgraph(UChar(s)) && (s) != '|')
     ptr = _nc_curr_token.tk_name;
     if (_nc_syntax == SYN_TERMCAP
 #if NCURSES_XNAMES
 	&& !_nc_user_definable
 #endif
 	) {
-	if (ptr[2] == '|') {
+	if (ok_TC2(ptr[0]) && ok_TC2(ptr[1]) && (ptr[2] == '|')) {
 	    ptr += 3;
 	    _nc_curr_token.tk_name[2] = '\0';
 	}
@@ -284,9 +285,11 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 	if (is_use || is_tc) {
 	    entryp->uses[entryp->nuses].name = _nc_save_str(_nc_curr_token.tk_valstring);
 	    entryp->uses[entryp->nuses].line = _nc_curr_line;
-	    entryp->nuses++;
-	    if (entryp->nuses > 1 && is_tc) {
-		BAD_TC_USAGE
+	    if (VALID_STRING(entryp->uses[entryp->nuses].name)) {
+		entryp->nuses++;
+		if (entryp->nuses > 1 && is_tc) {
+		    BAD_TC_USAGE
+		}
 	    }
 	} else {
 	    /* normal token lookup */
@@ -588,7 +591,7 @@ append_acs0(string_desc * dst, int code, int src)
 static void
 append_acs(string_desc * dst, int code, char *src)
 {
-    if (src != 0 && strlen(src) == 1) {
+    if (VALID_STRING(src) && strlen(src) == 1) {
 	append_acs0(dst, code, *src);
     }
 }
@@ -849,15 +852,14 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	    }
 
 	    if (tp->Strings[to_ptr->nte_index]) {
+		const char *s = tp->Strings[from_ptr->nte_index];
+		const char *t = tp->Strings[to_ptr->nte_index];
 		/* There's no point in warning about it if it's the same
 		 * string; that's just an inefficiency.
 		 */
-		if (strcmp(
-			      tp->Strings[from_ptr->nte_index],
-			      tp->Strings[to_ptr->nte_index]) != 0)
+		if (VALID_STRING(s) && VALID_STRING(t) && strcmp(s, t) != 0)
 		    _nc_warning("%s (%s) already has an explicit value %s, ignoring ko",
-				ap->to, ap->from,
-				_nc_visbuf(tp->Strings[to_ptr->nte_index]));
+				ap->to, ap->from, t);
 		continue;
 	    }
 

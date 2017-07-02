@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2866 2017/06/24 22:16:43 tom Exp $
+-- $Id: NEWS,v 1.2878 2017/07/01 22:57:06 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,33 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170701
+	+ modify update_getenv() in db_iterator.c to ensure that environment
+	  variables which are not initially set will be checked later if an
+	  application happens to set them (patch by Guillaume Maudoux).
+	+ remove initialization-check for calling napms() in the term-driver
+	  configuration; none is needed.
+	+ add help-screen to test/test_getstr.c and test/test_get_wstr.c
+	+ improve compatibility between different configurations of new_prescr,
+	  fixing a case with threaded code and term-driver where c++/demo did
+	  not work (cf: 20160213).
+	+ the fixes for Redhat #1464685 obscured a problem subsequently
+	  reported in Redhat #1464687; the given test-case was no longer
+	  reproducible.  Testing without the fixes for the earlier reports
+	  showed a problem with buffer overflow in dump_entry.c, which is
+	  addressed by reducing the use of a fixed-size buffer.
+	+ add/improve checks in tic's parser to address invalid input
+	  (Redhat #1464684, #1464685, #1464686, #1464691).
+	  + alloc_entry.c, add a check for a null-pointer.
+	  + parse_entry.c, add several checks for valid pointers as well as
+	    one check to ensure that a single character on a line is not
+	    treated as the 2-character termcap short-name.
+	+ fix a memory leak in delscreen() (report by Bai Junq).
+	+ improve tracemunch, showing thread identifiers as names.
+	+ fix a use-after-free in NCursesMenu::~NCursesMenu()
+	+ further amend incorrect calls for memory-leaks from 20170617 changes
+	  (report by Allen Hewes).
 
 20170624
 	+ modify c++/etip.h.in to accommodate deprecation of throw() and

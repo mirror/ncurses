@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.72 2017/04/10 08:34:31 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.74 2017/06/30 11:36:55 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -199,6 +199,9 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 #endif /* TRACE */
 #ifdef USE_PTHREADS
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_curses */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_prescreen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_screen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_update */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
     PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
     0,				/* nested_tracef */
@@ -294,6 +297,9 @@ init_global_mutexes(void)
     if (!initialized) {
 	initialized = TRUE;
 	_nc_mutex_init(&_nc_globals.mutex_curses);
+	_nc_mutex_init(&_nc_globals.mutex_prescreen);
+	_nc_mutex_init(&_nc_globals.mutex_screen);
+	_nc_mutex_init(&_nc_globals.mutex_update);
 	_nc_mutex_init(&_nc_globals.mutex_tst_tracef);
 	_nc_mutex_init(&_nc_globals.mutex_tracef);
     }

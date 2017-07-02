@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.44 2017/02/04 23:27:01 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.46 2017/07/01 22:54:42 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -123,19 +123,21 @@ update_getenv(const char *name, DBDIRS which)
 
     if (which < dbdLAST) {
 	char *value;
+	char *cached_value = my_vars[which].value;
+	bool same_value;
 
-	if ((value = getenv(name)) == 0 || (value = strdup(value)) == 0) {
-	    ;
-	} else if (my_vars[which].name == 0 || strcmp(my_vars[which].name, name)) {
-	    FreeIfNeeded(my_vars[which].value);
-	    my_vars[which].name = name;
-	    my_vars[which].value = value;
-	    result = TRUE;
-	} else if ((my_vars[which].value != 0) ^ (value != 0)) {
-	    FreeIfNeeded(my_vars[which].value);
-	    my_vars[which].value = value;
-	    result = TRUE;
-	} else if (value != 0 && strcmp(value, my_vars[which].value)) {
+	if ((value = getenv(name)) != 0) {
+	    value = strdup(value);
+	}
+	same_value = ((value == 0 && cached_value == 0) ||
+		      (value != 0 &&
+		       cached_value != 0 &&
+		       strcmp(value, cached_value) == 0));
+
+	/* Set variable name to enable checks in cache_expired(). */
+	my_vars[which].name = name;
+
+	if (!same_value) {
 	    FreeIfNeeded(my_vars[which].value);
 	    my_vars[which].value = value;
 	    result = TRUE;

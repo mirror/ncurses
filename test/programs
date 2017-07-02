@@ -1,4 +1,4 @@
-# $Id: programs,v 1.38 2017/06/24 20:22:44 tom Exp $
+# $Id: programs,v 1.39 2017/07/01 20:14:35 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -86,8 +86,8 @@ test_addchstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addchstr
 test_addstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addstr
 test_addwstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addwstr
 test_arrays	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	test_arrays
-test_get_wstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_get_wstr
-test_getstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_getstr
+test_get_wstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_get_wstr popup_msg
+test_getstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_getstr popup_msg
 test_instr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_instr
 test_inwstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_inwstr
 test_opaque	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_opaque

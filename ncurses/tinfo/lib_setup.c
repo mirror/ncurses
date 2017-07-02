@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.183 2017/06/24 19:10:43 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.188 2017/07/01 18:24:50 tom Exp $")
 
 /****************************************************************************
  *
@@ -702,8 +702,9 @@ TINFO_SETUP_TERM(TERMINAL **tp,
     } else {
 #ifdef USE_TERM_DRIVER
 	TERMINAL_CONTROL_BLOCK *my_tcb;
-	my_tcb = typeCalloc(TERMINAL_CONTROL_BLOCK, 1);
-	termp = &(my_tcb->term);
+	termp = 0;
+	if ((my_tcb = typeCalloc(TERMINAL_CONTROL_BLOCK, 1)) != 0)
+	    termp = &(my_tcb->term);
 #else
 	int status;
 
@@ -818,6 +819,48 @@ TINFO_SETUP_TERM(TERMINAL **tp,
     returnCode(code);
 }
 
+#ifdef USE_PTHREADS
+/*
+ * Returns a non-null pointer unless a new screen should be allocated because
+ * no match was found in the pre-screen cache.
+ */
+NCURSES_EXPORT(SCREEN *)
+_nc_find_prescr(void)
+{
+    SCREEN *result = 0;
+    PRESCREEN_LIST *p;
+    for (p = _nc_prescreen.allocated; p != 0; p = p->next) {
+	if (p->id == pthread_self()) {
+	    result = p->sp;
+	    break;
+	}
+    }
+    return result;
+}
+
+/*
+ * Tells ncurses to forget that this thread was associated with the pre-screen
+ * cache.  It does not modify the pre-screen cache itself, since that is used
+ * for creating new screens.
+ */
+NCURSES_EXPORT(void)
+_nc_forget_prescr(void)
+{
+    PRESCREEN_LIST *p, *q;
+    for (p = _nc_prescreen.allocated, q = 0; p != 0; q = p, p = p->next) {
+	if (p->id == pthread_self()) {
+	    if (q) {
+		q->next = p->next;
+	    } else {
+		_nc_prescreen.allocated = p->next;
+	    }
+	    free(p);
+	    break;
+	}
+    }
+}
+#endif /* USE_PTHREADS */
+
 #if NCURSES_SP_FUNCS
 /*
  * In case of handling multiple screens, we need to have a screen before
@@ -833,25 +876,41 @@ new_prescr(void)
     START_TRACE();
     T((T_CALLED("new_prescr()")));
 
-    sp = _nc_alloc_screen_sp();
-    T(("_nc_alloc_screen_sp %p", (void *) sp));
-    if (sp != 0) {
-	_nc_prescreen.allocated = sp;
-	sp->rsp = sp->rippedoff;
-	sp->_filtered = _nc_prescreen.filter_mode;
-	sp->_use_env = _nc_prescreen.use_env;
+    _nc_lock_global(screen);
+    if ((sp = _nc_find_prescr()) == 0) {
+	sp = _nc_alloc_screen_sp();
+	T(("_nc_alloc_screen_sp %p", (void *) sp));
+	if (sp != 0) {
+#ifdef USE_PTHREADS
+	    PRESCREEN_LIST *p = typeCalloc(PRESCREEN_LIST, 1);
+	    if (p != 0) {
+		p->id = pthread_self();
+		p->sp = sp;
+		p->next = _nc_prescreen.allocated;
+		_nc_prescreen.allocated = p;
+	    }
+#else
+	    _nc_prescreen.allocated = sp;
+#endif
+	    sp->rsp = sp->rippedoff;
+	    sp->_filtered = _nc_prescreen.filter_mode;
+	    sp->_use_env = _nc_prescreen.use_env;
 #if NCURSES_NO_PADDING
-	sp->_no_padding = _nc_prescreen._no_padding;
+	    sp->_no_padding = _nc_prescreen._no_padding;
 #endif
-	sp->slk_format = 0;
-	sp->_slk = 0;
-	sp->_prescreen = TRUE;
-	SP_PRE_INIT(sp);
+	    sp->slk_format = 0;
+	    sp->_slk = 0;
+	    sp->_prescreen = TRUE;
+	    SP_PRE_INIT(sp);
 #if USE_REENTRANT
-	sp->_TABSIZE = _nc_prescreen._TABSIZE;
-	sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
+	    sp->_TABSIZE = _nc_prescreen._TABSIZE;
+	    sp->_ESCDELAY = _nc_prescreen._ESCDELAY;
 #endif
+	}
+    } else {
+	T(("_nc_alloc_screen_sp %p (reuse)", (void *) sp));
     }
+    _nc_unlock_global(screen);
     returnSP(sp);
 }
 #endif
@@ -867,12 +926,19 @@ _nc_setupterm(NCURSES_CONST char *tname,
 	      int *errret,
 	      int reuse)
 {
-    int res;
+    int rc = ERR;
     TERMINAL *termp = 0;
-    res = TINFO_SETUP_TERM(&termp, tname, Filedes, errret, reuse);
-    if (ERR != res)
-	NCURSES_SP_NAME(set_curterm) (CURRENT_SCREEN_PRE, termp);
-    return res;
+
+    _nc_lock_global(prescreen);
+    START_TRACE();
+    if (TINFO_SETUP_TERM(&termp, tname, Filedes, errret, reuse) == OK) {
+	_nc_forget_prescr();
+	if (NCURSES_SP_NAME(set_curterm) (CURRENT_SCREEN_PRE, termp) != 0) {
+	    rc = OK;
+	}
+    }
+    _nc_unlock_global(prescreen);
+    return rc;
 }
 #endif
 

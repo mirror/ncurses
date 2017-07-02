@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.14 2017/06/17 19:48:45 tom Exp $
+ * $Id: demo_new_pair.c,v 1.15 2017/06/26 00:20:23 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -231,6 +231,7 @@ main(int argc, char *argv[])
     }
     if (newterm(NULL, output, stdin) == 0) {
 	fprintf(stderr, "Cannot initialize terminal\n");
+	fclose(output);
 	ExitProgram(EXIT_FAILURE);
     }
     (void) cbreak();		/* read chars without wait for \n */

@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.288 2017/03/16 08:24:12 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.289 2017/06/30 11:47:01 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -769,9 +769,12 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 
     T((T_CALLED("_nc_tinfo:doupdate(%p)"), (void *) SP_PARM));
 
-    if (SP_PARM == 0)
-	returnCode(ERR);
+    _nc_lock_global(update);
 
+    if (SP_PARM == 0) {
+	_nc_unlock_global(update);
+	returnCode(ERR);
+    }
 #if !USE_REENTRANT
     /*
      * It is "legal" but unlikely that an application could assign a new
@@ -792,9 +795,10 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 
     if (CurScreen(SP_PARM) == 0
 	|| NewScreen(SP_PARM) == 0
-	|| StdScreen(SP_PARM) == 0)
+	|| StdScreen(SP_PARM) == 0) {
+	_nc_unlock_global(update);
 	returnCode(ERR);
-
+    }
 #ifdef TRACE
     if (USE_TRACEF(TRACE_UPDATE)) {
 	if (CurScreen(SP_PARM)->_clear)
@@ -1102,6 +1106,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 
     _nc_signal_handler(TRUE);
 
+    _nc_unlock_global(update);
     returnCode(OK);
 }
 

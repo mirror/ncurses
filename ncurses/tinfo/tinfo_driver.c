@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.56 2017/06/24 19:54:16 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.58 2017/06/26 00:43:07 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -204,8 +204,16 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     if (sp == 0 && NC_ISATTY(termp->Filedes)) {
 	get_baudrate(termp);
     }
+#if NCURSES_EXT_NUMBERS
+#define cleanup_termtype() \
+    _nc_free_termtype2(&TerminalType(termp)); \
+    _nc_free_termtype(&termp->type)
+#else
+#define cleanup_termtype() \
+    _nc_free_termtype2(&TerminalType(termp))
+#endif
 
-    if (generic_type) {
+	if (generic_type) {
 	/*
 	 * BSD 4.3's termcap contains mis-typed "gn" for wy99.  Do a sanity
 	 * check before giving up.
@@ -213,18 +221,15 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	if ((VALID_STRING(cursor_address)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
-	    _nc_free_termtype2(&TerminalType(termp));
-	    free(TCB);
+	    cleanup_termtype();
 	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
 	} else {
-	    _nc_free_termtype2(&TerminalType(termp));
-	    free(TCB);
+	    cleanup_termtype();
 	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
 	}
     }
     if (hard_copy) {
-	_nc_free_termtype2(&TerminalType(termp));
-	free(TCB);
+	cleanup_termtype();
 	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
     }
 

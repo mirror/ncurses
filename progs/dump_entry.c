@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.153 2017/06/23 22:47:43 Emanuele.Giaquinta Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.154 2017/07/01 11:27:29 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -841,9 +841,10 @@ fmt_entry(TERMTYPE2 *tterm,
     PredIdx num_strings = 0;
     bool outcount = 0;
 
-#define WRAP_CONCAT	\
-	wrap_concat(buffer); \
-	outcount = TRUE
+#define WRAP_CONCAT1(s)		wrap_concat(s); outcount = TRUE
+#define WRAP_CONCAT2(a,b)	wrap_concat(a); WRAP_CONCAT1(b)
+#define WRAP_CONCAT3(a,b,c)	wrap_concat(a); WRAP_CONCAT2(b,c)
+#define WRAP_CONCAT		WRAP_CONCAT1(buffer)
 
     len = 12;			/* terminfo file-header */
 
@@ -1007,9 +1008,9 @@ fmt_entry(TERMTYPE2 *tterm,
 		    set_attributes = save_sgr;
 
 		    trimmed_sgr0 = _nc_trim_sgr0(tterm);
-		    if (strcmp(capability, trimmed_sgr0))
+		    if (strcmp(capability, trimmed_sgr0)) {
 			capability = trimmed_sgr0;
-		    else {
+		    } else {
 			if (trimmed_sgr0 != exit_attribute_mode)
 			    free(trimmed_sgr0);
 		    }
@@ -1046,13 +1047,21 @@ fmt_entry(TERMTYPE2 *tterm,
 			_nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
 				    "%s=!!! %s WILL NOT CONVERT !!!",
 				    name, srccap);
+			WRAP_CONCAT;
 		    } else if (suppress_untranslatable) {
 			continue;
 		    } else {
 			char *s = srccap, *d = buffer;
-			_nc_SPRINTF(d, _nc_SLIMIT(sizeof(buffer)) "..%s=", name);
-			d += strlen(d);
+			WRAP_CONCAT3("..", name, "=");
 			while ((*d = *s++) != 0) {
+			    if ((d - buffer - 1) >= (int) sizeof(buffer)) {
+				fprintf(stderr,
+					"%s: value for %s is too long\n",
+					_nc_progname,
+					name);
+				*d = '\0';
+				break;
+			    }
 			    if (*d == ':') {
 				*d++ = '\\';
 				*d = ':';
@@ -1061,13 +1070,12 @@ fmt_entry(TERMTYPE2 *tterm,
 			    }
 			    d++;
 			}
+			WRAP_CONCAT;
 		    }
 		} else {
-		    _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
-				"%s=%s", name, cv);
+		    WRAP_CONCAT3(name, "=", cv);
 		}
 		len += (int) strlen(capability) + 1;
-		WRAP_CONCAT;
 	    } else {
 		char *src = _nc_tic_expand(capability,
 					   outform == F_TERMINFO, numbers);
@@ -1083,8 +1091,7 @@ fmt_entry(TERMTYPE2 *tterm,
 		    strcpy_DYN(&tmpbuf, src);
 		}
 		len += (int) strlen(capability) + 1;
-		wrap_concat(tmpbuf.text);
-		outcount = TRUE;
+		WRAP_CONCAT1(tmpbuf.text);
 	    }
 	}
 	/* e.g., trimmed_sgr0 */
@@ -1526,7 +1533,8 @@ dump_entry(TERMTYPE2 *tterm,
 		}
 		if (len > critlen) {
 		    (void) fprintf(stderr,
-				   "warning: %s entry is %d bytes long\n",
+				   "%s: %s entry is %d bytes long\n",
+				   _nc_progname,
 				   _nc_first_name(tterm->term_names),
 				   len);
 		    SHOW_WHY("# WARNING: this entry, %d bytes long, may core-dump %s libraries!\n",

@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.96 2017/04/02 14:26:18 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.99 2017/07/01 18:14:07 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -349,6 +349,12 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 NCURSES_EXPORT(SCREEN *)
 newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
 {
-    return NCURSES_SP_NAME(newterm) (CURRENT_SCREEN_PRE, name, ofp, ifp);
+    SCREEN *rc;
+    _nc_lock_global(prescreen);
+    START_TRACE();
+    rc = NCURSES_SP_NAME(newterm) (CURRENT_SCREEN_PRE, name, ofp, ifp);
+    _nc_forget_prescr();
+    _nc_unlock_global(prescreen);
+    return rc;
 }
 #endif
