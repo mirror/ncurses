@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.154 2017/07/01 11:27:29 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.155 2017/07/08 18:34:53 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1054,7 +1054,7 @@ fmt_entry(TERMTYPE2 *tterm,
 			char *s = srccap, *d = buffer;
 			WRAP_CONCAT3("..", name, "=");
 			while ((*d = *s++) != 0) {
-			    if ((d - buffer - 1) >= (int) sizeof(buffer)) {
+			    if ((d - buffer + 1) >= (int) sizeof(buffer)) {
 				fprintf(stderr,
 					"%s: value for %s is too long\n",
 					_nc_progname,

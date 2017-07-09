@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.63 2017/01/14 19:50:09 tom Exp $
+.\" $Id: tic.1m,v 1.65 2017/07/08 19:48:37 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -345,6 +345,9 @@ If the debug level \fIn\fR is not given, it is taken to be one.
 \fB\-W\fR
 By itself, the \fB\-w\fP option will not force long strings to be wrapped.
 Use the \fB\-W\fP option to do this.
+.IP
+If you specify both \fB\-f\fP and \fB\-W\fP options,
+the latter is ignored when \fB\-f\fP has already split the line.
 .TP
 \fB\-w\fR\fIn\fR
 specifies the width of the output.
