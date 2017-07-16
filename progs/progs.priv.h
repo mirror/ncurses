@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.43 2017/04/06 23:02:26 tom Exp $
+ * $Id: progs.priv.h,v 1.44 2017/07/15 18:26:07 tom Exp $
  *
  *	progs.priv.h
  *
@@ -218,6 +218,7 @@ extern int optind;
 #if NCURSES_EXT_NUMBERS
 #else
 #define _nc_free_termtype2(t) _nc_free_termtype(t)
+#define _nc_read_entry2(n,f,t) _nc_read_entry(n,f,t)
 #endif
 
 #endif /* PROGS_PRIV_H */

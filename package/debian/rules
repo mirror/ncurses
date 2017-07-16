@@ -25,6 +25,7 @@ NORMAL_DIR=$(CURDIR)/debian/ncurses$(MY_ABI)
 THREAD_DIR=$(CURDIR)/debian/ncursest$(MY_ABI)
 
 CFLAGS   = $(shell dpkg-buildflags --get CFLAGS) $(CC_NORMAL)
+CXXFLAGS = $(shell dpkg-buildflags --get CXXFLAGS)
 CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 LDFLAGS  = $(shell dpkg-buildflags --get LDFLAGS)
 
@@ -207,6 +208,7 @@ ifneq ($(PACKAGES.indep),)
 	rm -f $(PACKAGES.indep:%=install-%-stamp)
 	dh_testdir
 	dh_testroot
+	dh_lintian           $(verbose) $(PACKAGES.arch:%=-p%)
 	dh_installdocs       $(verbose) $(PACKAGES.indep:%=-p%)
 	dh_installman        $(verbose) $(PACKAGES.indep:%=-p%)
 	dh_installexamples   $(verbose) $(PACKAGES.indep:%=-p%)
@@ -225,6 +227,8 @@ ifneq ($(PACKAGES.arch),)
 	rm -f $(PACKAGES.arch:%=install-%-stamp)
 	dh_testdir
 	dh_testroot
+	dh_lintian           $(verbose) $(PACKAGES.arch:%=-p%)
+	dh_installdocs       $(verbose) $(PACKAGES.arch:%=-p%)
 	dh_installchangelogs $(verbose) $(PACKAGES.arch:%=-p%)  NEWS
 	dh_strip             $(verbose) $(PACKAGES.arch:%=-p%)
 	dh_compress          $(verbose) $(PACKAGES.arch:%=-p%)

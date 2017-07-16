@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.232 2017/04/13 09:12:05 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.233 2017/07/15 17:40:19 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -976,7 +976,8 @@ main(int argc, char *argv[])
 
 		if (len > (infodump ? MAX_TERMINFO_LENGTH : MAX_TERMCAP_LENGTH))
 		    (void) fprintf(stderr,
-				   "warning: resolved %s entry is %d bytes long\n",
+				   "%s: resolved %s entry is %d bytes long\n",
+				   _nc_progname,
 				   _nc_first_name(qp->tterm.term_names),
 				   len);
 	    }

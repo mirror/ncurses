@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.50 2017/06/11 00:37:27 tom Exp $
+ * $Id: picsmap.c,v 1.52 2017/07/15 22:25:06 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -814,7 +814,8 @@ parse_img(const char *filename)
     if (pic_x <= 0 || pic_y <= 0)
 	goto finish;
 
-    sprintf(cmd, "convert -resize %dx%d\\! -thumbnail %dx \"%s\" txt:-",
+    sprintf(cmd, "convert " "-resize %dx%d\\! " "-thumbnail %dx \"%s\" "
+	    "-define txt:compliance=SVG txt:-",
 	    pic_x, pic_y, width, filename);
 
     if ((pp = popen(cmd, "r")) != 0) {
@@ -843,10 +844,11 @@ parse_img(const char *filename)
 		}
 	    } else {
 		/* subsequent lines begin "col,row: (r,g,b,a) #RGB" */
-		int r, g, b;
+		int r, g, b, nocolor;
 		unsigned check;
 		int which, c;
-		char *s = strchr(buffer, '#');
+		char *t;
+		char *s = t = strchr(buffer, '#');
 		if (s != 0) {
 		    /* after the "#RGB", there are differences - just ignore */
 		    while (*s != '\0' && !isspace(UChar(*s)))
@@ -854,10 +856,12 @@ parse_img(const char *filename)
 		    *++s = '\0';
 		}
 		if (match_c(buffer,
-			    "%d,%d: (%d,%d,%d,255) #%x ",
+			    "%d,%d: (%d,%d,%d,%d) #%x ",
 			    &col, &row,
-			    &r, &g, &b,
+			    &r, &g, &b, &nocolor,
 			    &check)) {
+		    if ((s - t) > 8)	/* 6 hex digits vs 8 */
+			check /= 256;
 		    if (r > 255 ||
 			g > 255 ||
 			b > 255 ||

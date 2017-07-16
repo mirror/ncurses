@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.602 $
-#	$Date: 2017/04/22 20:18:54 $
+#	$Revision: 1.603 $
+#	$Date: 2017/05/14 01:32:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -356,7 +356,8 @@ ansi+idl1,
 ansi+idl,
 	dl=\E[%p1%dM, il=\E[%p1%dL, use=ansi+idl1,
 ansi+idc,
-	dch1=\E[P, ich=\E[%p1%d@, ich1=\E[@, rmir=\E[4l, smir=\E[4h,
+	dch1=\E[P, ich=\E[%p1%d@, ich1=\E[@, rmir=\E[4l,
+	smir=\E[4h,
 ansi+arrows,
 	kbs=^H, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	khome=\E[H,
@@ -723,7 +724,7 @@ nansi.sysk|nansisysk|PC-DOS Public Domain NANSI.SYS with keypad redefined for vi
 #
 tw52|tw52-color|Toswin window manager with color,
 	bce,
-	colors#16, pairs#256,
+	colors#16, pairs#0x100,
 	oc=\Eb?\Ec0, op=\Eb?\Ec0,
 	setab=\Ec%?%p1%{0}%=%t?%e%p1%{7}%=%t0%e%p1%{15}%=%t7%e%p1
 	      %{48}%+%c,
@@ -745,7 +746,7 @@ tt52|Atari TT medium and high resolution,
 	lines#30, use=at-color,
 st52-color|at-color|atari-color|atari_st-color|Atari ST with color,
 	bce,
-	colors#16, pairs#256,
+	colors#16, pairs#0x100,
 	is2=\Ev\Eq\Ee\Eb1\Ec0, rs2=\Ev\Eq\Ee\Eb1\Ec0,
 	setab=\Ec%?%p1%{0}%=%t1%e%p1%{1}%=%t2%e%p1%{2}%=%t3%e%p1%{3}
 	      %=%t>%e%p1%{4}%=%t4%e%p1%{5}%=%t7%e%p1%{6}%=%t5%e%p1
@@ -1525,7 +1526,7 @@ xnuppc+200x75|Darwin PowerPC Console 200x75 support (1600x1200 pixels),
 	cols#200, lines#75,
 
 xnuppc+256x96|Darwin PowerPC Console 256x96 support (2048x1536 pixels),
-	cols#256, lines#96,
+	cols#0x100, lines#96,
 
 # These are different combinations of the building blocks
 
@@ -1842,7 +1843,7 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 # Not used here, the program recognizes escapes for italic, underline and
 # dim, rendering those as green, cyan and gray respectively.
 fbterm|FbTerm for Linux with framebuffer,
-	colors#256, pairs#32767,
+	colors#0x100, pairs#0x7fff,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i
 	     \316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u
 	     \264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
@@ -1857,7 +1858,7 @@ fbterm|FbTerm for Linux with framebuffer,
 # you use a 512-character console font. This uses bold for bright
 # foreground colors and blink for bright background colors.
 linux-16color|linux console with 16 colors,
-	colors#16, ncv#42, pairs#256,
+	colors#16, ncv#42, pairs#0x100,
 	setab=\E[4%p1%{8}%m%d%?%p1%{7}%>%t;5%e;25%;m,
 	setaf=\E[3%p1%{8}%m%d%?%p1%{7}%>%t;1%e;21%;m,
 	use=linux,
@@ -4403,7 +4404,7 @@ xterm-16color|xterm with 16 colors like aixterm,
 # xterm patch #111 (1999/7/10) -TD
 xterm+256color|xterm 256-color feature,
 	ccc,
-	colors#256, pairs#32767,
+	colors#0x100, pairs#0x7fff,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
 	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
 	oc=\E]104\007,
@@ -4416,7 +4417,7 @@ xterm+256color|xterm 256-color feature,
 # palette is hardcoded...
 xterm+256setaf|xterm 256-color (set-only),
 	ccc@,
-	colors#256, pairs#32767,
+	colors#0x100, pairs#0x7fff,
 	initc@,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
 	      5;%p1%d%;m,
@@ -6018,7 +6019,7 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 # e) removed km
 terminator|Terminator no line wrap,
 	eo, mir, msgr, xenl, xon,
-	colors#256, cols#80, it#8, lines#24, lm#0, pairs#32767,
+	colors#0x100, cols#80, it#8, lines#24, lm#0, pairs#0x7fff,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bold=\E[1m, civis=\E[?25l, clear=\E[H\E[2J,
 	cnorm=\E[?25h, cr=\r, csr=\E[%i%p1%d;%p2%dr,
@@ -6575,7 +6576,7 @@ dvtm|dynamic virtual terminal manager,
 	vpa=\E[%i%p1%dd,
 
 dvtm-256color|dynamic virtual terminal manager with 256 colors,
-	colors#256, pairs#32767,
+	colors#0x100, pairs#0x7fff,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
 	      5;%p1%d%;m,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
@@ -12328,7 +12329,7 @@ att500|att513|AT&T 513 using page mode,
 # The <u0> capability sets form length
 att5310|att5320|AT&T Model 53210 or 5320 matrix printer,
 	xhpa, xvpa,
-	bufsz#8192, cols#132, cps#120, it#8, lines#66, orc#10,
+	bufsz#0x2000, cols#132, cps#120, it#8, lines#66, orc#10,
 	orhi#100, orl#12, orvi#72,
 	cpi=%?%p1%{10}%=%t\E[w%e%p1%{12}%=%t\E[2w%e%p1%{5}%=%t\E[5w
 	    %e%p1%{13}%=%p1%{14}%=%O%t\E[3w%e%p1%{16}%=%p1%{17}%=%O
@@ -13817,7 +13818,7 @@ citoh-comp|citoh in compressed,
 	use=citoh,
 # citoh has infinite cols because we don't want lp ever inserting \n\t**.
 citoh-prop|citoh-ps|ips|citoh in proportional spacing mode,
-	cols#32767,
+	cols#0x7fff,
 	is1=\EP, use=citoh,
 citoh-6lpi|citoh in 6 lines per inch mode,
 	is3=\EA, use=citoh,
@@ -14574,7 +14575,7 @@ dgkeys+15|Private entry describing 15 DG mode special keys,
 #
 dgunix+fixed|Fixed color info for DG D430C terminals in DG-UNIX mode,
 	bce,
-	colors#16, ncv#53, pairs#256,
+	colors#16, ncv#53, pairs#0x100,
 	op=\036Ad\036Bd,
 	setab=\036B%p1%?%p1%{8}%<%t%{2}%&%?%p1%{1}%&%t%{4}%|%;%?%p1
 	      %{4}%&%t%{1}%|%;%;%{48}%+%c,
@@ -14600,7 +14601,7 @@ dg+color8|Color info for Data General D220 and D230C terminals in ANSI mode,
 	     %d%?%gD%t;2%;%?%gU%t;4%;%?%gB%t;5%;%?%gR%t;7%;m,
 
 dg+color|Color info for Data General D470C terminals in ANSI mode,
-	colors#16, ncv#53, pairs#256,
+	colors#16, ncv#53, pairs#0x100,
 	setab=\E[%?%p1%{8}%<%t4%p1%e=%p1%{2}%&%?%p1%{1}%&%t%{4}%|%;
 	      %?%p1%{4}%&%t%{1}%|%;%;%d%?%gD%t;2%;%?%gU%t;4%;%?%gB%t
 	      ;5%;%?%gR%t;7%;m,
@@ -14626,7 +14627,7 @@ dgmode+color8|Color info for Data General D220/D230C terminals in DG mode,
 	setb=\036B%p1%{48}%+%c, setf=\036A%p1%{48}%+%c,
 
 dgmode+color|Color info for Data General D470C terminals in DG mode,
-	colors#16, pairs#256,
+	colors#16, pairs#0x100,
 	setab=\036B%p1%?%p1%{8}%<%t%{2}%&%?%p1%{1}%&%t%{4}%|%;%?%p1
 	      %{4}%&%t%{1}%|%;%;%{48}%+%c,
 	setaf=\036A%p1%?%p1%{8}%<%t%{2}%&%?%p1%{1}%&%t%{4}%|%;%?%p1
@@ -16108,7 +16109,7 @@ ibm+color|IBM color definitions,
 	     %p1%{3}%=%t33m%e%p1%{4}%=%t34m%e%p1%{5}%=%t35m%e%p1%{6}
 	     %=%t36m%e%p1%{7}%=%t97m%;,
 ibm+16color|IBM aixterm color definitions,
-	colors#16, pairs#256,
+	colors#16, pairs#0x100,
 	setab=\E[%?%p1%{8}%<%t%p1%{40}%+%e%p1%{92}%+%;%dm,
 	setaf=\E[%?%p1%{8}%<%t%p1%{30}%+%e%p1%{82}%+%;%dm,
 	setb=%p1%{8}%/%{6}%*%{4}%+\E[%d%p1%{8}%m%Pa%?%ga%{1}%=%t4%e
@@ -19116,7 +19117,7 @@ amiga-8bit|Amiga ANSI using 8-bit controls,
 # requires use of appropriate preferences settings.
 amiga-vnc|Amiga using VNC console (black on light gray),
 	am, da, db, msgr, ndscr,
-	btns#1, colors#16, cols#80, lines#24, lm#0, ncv#0, pairs#256,
+	btns#1, colors#16, cols#80, lines#24, lm#0, ncv#0, pairs#0x100,
 	bel=^G, blink=\E[7;2m, bold=\E[1m, civis=\E[0p,
 	clear=\E[H\E[J, cnorm=\E[p\E[>?6l, cr=\r,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=\E[D,
@@ -25114,5 +25115,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ update formatting with ncurses 6.0.20170422 -TD
 #	+ restore rmir/smir in ansi+idc to better match original ansiterm+idc,
 #	  add alias ansiterm (report by Robert King).
+#
+# 2017-05-13
+#	+ reformatted using hexadecimal numbers to improve readability -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

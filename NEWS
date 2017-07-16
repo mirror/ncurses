@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2882 2017/07/09 00:25:16 tom Exp $
+-- $Id: NEWS,v 1.2888 2017/07/15 22:29:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170715
+	+ modify command-line parameters for "convert" used in picsmap to work
+	  with ImageMagick 6.8 and newer.
+	+ fix build-problem with tack and ABI-5 (Debian #868328).
+	+ repair termcap-format from tic/infocmp broken in 20170701 fixes
+	  (Debian #868266).
+	+ reformat terminfo.src with 20170513 updates.
+	+ improve test-packages to address lintian warnings.
 
 20170708
 	+ add a note to tic manual page about -W versus -f options.

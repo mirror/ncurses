@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.580 2017/07/01 17:56:12 tom Exp $
+ * $Id: curses.priv.h,v 1.581 2017/07/15 20:17:01 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2168,6 +2168,8 @@ extern NCURSES_EXPORT(void) _nc_import_termtype2(TERMTYPE2 *, const TERMTYPE *);
 #define _nc_export_termtype2(dst,src) /* nothing */
 #define _nc_import_termtype2(dst,src) /* nothing */
 #define _nc_free_termtype2(t) _nc_free_termtype(t)
+/* also... */
+#define _nc_read_entry2 _nc_read_entry
 #endif
 
 #if NO_LEAKS

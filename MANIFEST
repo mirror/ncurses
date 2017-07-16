@@ -997,6 +997,7 @@
 ./package/debian-mingw/compat
 ./package/debian-mingw/control
 ./package/debian-mingw/copyright
+./package/debian-mingw/mingw32-ncurses6.lintian-overrides
 ./package/debian-mingw/rules
 ./package/debian-mingw/source/format
 ./package/debian-mingw/watch
@@ -1004,6 +1005,7 @@
 ./package/debian-mingw64/compat
 ./package/debian-mingw64/control
 ./package/debian-mingw64/copyright
+./package/debian-mingw64/mingw64-ncurses6.lintian-overrides
 ./package/debian-mingw64/rules
 ./package/debian-mingw64/source/format
 ./package/debian-mingw64/watch
@@ -1011,6 +1013,8 @@
 ./package/debian/compat
 ./package/debian/control
 ./package/debian/copyright
+./package/debian/ncurses6.lintian-overrides
+./package/debian/ncursest6.lintian-overrides
 ./package/debian/rules
 ./package/debian/source/format
 ./package/debian/watch

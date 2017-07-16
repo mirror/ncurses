@@ -8,7 +8,7 @@ Standards-Version: 3.8.2
 
 Package: ncurses6
 Architecture: any
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libc6 (>= 2.4)
 Description: shared libraries for terminal handling
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.
@@ -17,7 +17,7 @@ Description: shared libraries for terminal handling
 
 Package: ncursest6
 Architecture: any
-Depends: ${misc:Depends}
+Depends: ${misc:Depends}, libc6 (>= 2.4)
 Description: shared libraries for terminal handling
  The ncurses library routines are a terminal-independent method of
  updating character screens with reasonable optimization.

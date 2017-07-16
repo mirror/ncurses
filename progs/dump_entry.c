@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.155 2017/07/08 18:34:53 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.167 2017/07/15 21:22:01 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -499,8 +499,9 @@ find_split(const char *src, int step, int size)
 		int ch = UChar(src[step + n]);
 		if (ch == '%') {
 		    int need = op_length(src, step + n);
-		    if ((n + need) > size)
+		    if ((n + need) > size) {
 			mark = n;
+		    }
 		    break;
 		}
 	    }
@@ -553,22 +554,34 @@ fill_spaces(const char *src)
     return result;
 }
 
+typedef enum {
+    wOFF = 0
+    ,w1ST = 1
+    ,w2ND = 2
+    ,wEND = 4
+    ,wERR = 8
+} WRAPMODE;
+
+#define wrap_1ST(mode) ((mode)&w1ST)
+#define wrap_END(mode) ((mode)&wEND)
+#define wrap_ERR(mode) ((mode)&wERR)
+
 static void
-wrap_concat(const char *src)
+wrap_concat(const char *src, int need, unsigned mode)
 {
-    int need = (int) strlen(src);
     int gaps = (int) strlen(separator);
     int want = gaps + need;
 
     did_wrap = (width <= 0);
-    if (column > indent
+    if (wrap_1ST(mode)
+	&& column > indent
 	&& column + want > width) {
 	force_wrap();
     }
-    if (wrapped &&
+    if ((wrap_END(mode) && !wrap_ERR(mode)) &&
+	wrapped &&
 	(width >= 0) &&
-	(column + want) > width &&
-	(!TcOutput() || strncmp(src, "..", 2))) {
+	(column + want) > width) {
 	int step = 0;
 	int used = width > WRAPPED ? width : WRAPPED;
 	int size;
@@ -583,8 +596,13 @@ wrap_concat(const char *src)
 	if (TcOutput())
 	    trailer = "\\\n\t ";
 
-	if ((p = strchr(fill, '=')) != 0) {
+	if (!TcOutput() && (p = strchr(fill, '=')) != 0) {
 	    base = (int) (p + 1 - fill);
+	    if (base > 8)
+		base = 8;
+	    _nc_SPRINTF(align, _nc_SLIMIT(align) "%*s", base, " ");
+	} else if (column > 8) {
+	    base = column - 8;
 	    if (base > 8)
 		base = 8;
 	    _nc_SPRINTF(align, _nc_SLIMIT(align) "%*s", base, " ");
@@ -593,8 +611,14 @@ wrap_concat(const char *src)
 	}
 	/* "pretty" overrides wrapping if it already split the line */
 	if (!pretty || strchr(fill, '\n') == 0) {
+	    int tag = 0;
+
+	    if (TcOutput() && outbuf.used && !wrap_1ST(mode)) {
+		tag = 3;
+	    }
+
 	    while ((column + (need + gaps)) > used) {
-		size = used;
+		size = used - tag;
 		if (step) {
 		    strcpy_DYN(&outbuf, align);
 		    size -= base;
@@ -609,6 +633,7 @@ wrap_concat(const char *src)
 		if (need > 0) {
 		    force_wrap();
 		    did_wrap = TRUE;
+		    tag = 0;
 		}
 	    }
 	}
@@ -617,16 +642,37 @@ wrap_concat(const char *src)
 		strcpy_DYN(&outbuf, align);
 	    strcpy_DYN(&outbuf, fill + step);
 	}
-	strcpy_DYN(&outbuf, separator);
+	if (wrap_END(mode))
+	    strcpy_DYN(&outbuf, separator);
 	trailer = my_t;
 	force_wrap();
 
 	free(fill);
     } else {
 	strcpy_DYN(&outbuf, src);
-	strcpy_DYN(&outbuf, separator);
-	column += need;
+	if (wrap_END(mode))
+	    strcpy_DYN(&outbuf, separator);
+	column += (int) strlen(src);
     }
+}
+
+static void
+wrap_concat1(const char *src)
+{
+    int need = (int) strlen(src);
+    wrap_concat(src, need, w1ST | wEND);
+}
+
+static void
+wrap_concat3(const char *name, const char *eqls, const char *value)
+{
+    int nlen = (int) strlen(name);
+    int elen = (int) strlen(eqls);
+    int vlen = (int) strlen(value);
+
+    wrap_concat(name, nlen + elen + vlen, w1ST);
+    wrap_concat(eqls, elen + vlen, w2ND);
+    wrap_concat(value, vlen, wEND);
 }
 
 #define IGNORE_SEP_TRAIL(first,last,sep_trail) \
@@ -841,9 +887,7 @@ fmt_entry(TERMTYPE2 *tterm,
     PredIdx num_strings = 0;
     bool outcount = 0;
 
-#define WRAP_CONCAT1(s)		wrap_concat(s); outcount = TRUE
-#define WRAP_CONCAT2(a,b)	wrap_concat(a); WRAP_CONCAT1(b)
-#define WRAP_CONCAT3(a,b,c)	wrap_concat(a); WRAP_CONCAT2(b,c)
+#define WRAP_CONCAT1(s)		wrap_concat1(s); outcount = TRUE
 #define WRAP_CONCAT		WRAP_CONCAT1(buffer)
 
     len = 12;			/* terminfo file-header */
@@ -1052,7 +1096,7 @@ fmt_entry(TERMTYPE2 *tterm,
 			continue;
 		    } else {
 			char *s = srccap, *d = buffer;
-			WRAP_CONCAT3("..", name, "=");
+			int need = 3 + (int) strlen(name);
 			while ((*d = *s++) != 0) {
 			    if ((d - buffer + 1) >= (int) sizeof(buffer)) {
 				fprintf(stderr,
@@ -1069,11 +1113,20 @@ fmt_entry(TERMTYPE2 *tterm,
 				*++d = *s++;
 			    }
 			    d++;
+			    *d = '\0';
 			}
-			WRAP_CONCAT;
+			need += (int) (d - buffer);
+			wrap_concat("..", need, w1ST | wERR);
+			need -= 2;
+			wrap_concat(name, need, wOFF | wERR);
+			need -= (int) strlen(name);
+			wrap_concat("=", need, w2ND | wERR);
+			need -= 1;
+			wrap_concat(buffer, need, wEND | wERR);
+			outcount = TRUE;
 		    }
 		} else {
-		    WRAP_CONCAT3(name, "=", cv);
+		    wrap_concat3(name, "=", cv);
 		}
 		len += (int) strlen(capability) + 1;
 	    } else {
@@ -1406,12 +1459,12 @@ dump_entry(TERMTYPE2 *tterm,
 	    char numbuf[80];
 	    if (quickdump & 1) {
 		if (outbuf.used)
-		    wrap_concat("\n");
-		wrap_concat("hex:");
+		    wrap_concat1("\n");
+		wrap_concat1("hex:");
 		for (n = 0; n < offset; ++n) {
 		    _nc_SPRINTF(numbuf, _nc_SLIMIT(sizeof(numbuf))
 				"%02X", UChar(bigbuf[n]));
-		    wrap_concat(numbuf);
+		    wrap_concat1(numbuf);
 		}
 	    }
 	    if (quickdump & 2) {
@@ -1419,24 +1472,24 @@ dump_entry(TERMTYPE2 *tterm,
 		{0, 0};
 		int value = 0;
 		if (outbuf.used)
-		    wrap_concat("\n");
-		wrap_concat("b64:");
+		    wrap_concat1("\n");
+		wrap_concat1("b64:");
 		for (n = 0; n < offset; ++n) {
 		    encode_b64(numbuf, bigbuf, n, &value);
-		    wrap_concat(numbuf);
+		    wrap_concat1(numbuf);
 		}
 		switch (n % 3) {
 		case 0:
 		    break;
 		case 1:
 		    encode_b64(numbuf, padding, 1, &value);
-		    wrap_concat(numbuf);
-		    wrap_concat("==");
+		    wrap_concat1(numbuf);
+		    wrap_concat1("==");
 		    break;
 		case 2:
 		    encode_b64(numbuf, padding, 1, &value);
-		    wrap_concat(numbuf);
-		    wrap_concat("=");
+		    wrap_concat1(numbuf);
+		    wrap_concat1("=");
 		    break;
 		}
 	    }
@@ -1564,7 +1617,7 @@ dump_uses(const char *name, bool infodump)
 	trim_trailing();
     _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
 		"%s%s", infodump ? "use=" : "tc=", name);
-    wrap_concat(buffer);
+    wrap_concat1(buffer);
 }
 
 int

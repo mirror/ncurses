@@ -23,6 +23,8 @@ MINGW_TMP = $(CURDIR)/debian/mingw32-ncurses6
 
 CFLAGS = $(CC_NORMAL)
 
+verbose = # -v
+
 CONFIG_OPTIONS = \
 	--disable-echo \
 	--disable-db-install \
@@ -101,7 +103,7 @@ install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
 	dh_clean -k
-	dh_installdirs
+	dh_installdirs      $(verbose)
 
 	$(MAKE) install.libs DESTDIR=$(MINGW_TMP)
 
@@ -121,16 +123,18 @@ binary-indep: build install
 # Build architecture-dependent files here.
 binary-arch: build install
 	dh_testdir
-	dh_testroot
-	dh_installchangelogs NEWS
+	dh_testroot          $(verbose)
+	dh_lintian           $(verbose)
+	dh_installdocs       $(verbose)
+	dh_installchangelogs $(verbose) NEWS
 	# dh_strip
-	dh_compress
-	dh_fixperms
-	dh_installdeb
-	dh_shlibdeps
-	dh_gencontrol
-	dh_md5sums
-	dh_builddeb
+	dh_compress          $(verbose)
+	dh_fixperms          $(verbose)
+	dh_installdeb        $(verbose)
+	dh_shlibdeps         $(verbose)
+	dh_gencontrol        $(verbose)
+	dh_md5sums           $(verbose)
+	dh_builddeb          $(verbose)
 
 binary: binary-indep binary-arch
 .PHONY: build clean binary-indep binary-arch binary install install-stamp
