@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.289 2017/06/30 11:47:01 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.290 2017/07/22 23:30:28 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -816,7 +816,8 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 	SP_PARM->_fifohold--;
 
 #if USE_SIZECHANGE
-    if (SP_PARM->_endwin || _nc_handle_sigwinch(SP_PARM)) {
+    if ((SP_PARM->_endwin == ewRunning)
+	|| _nc_handle_sigwinch(SP_PARM)) {
 	/*
 	 * This is a transparent extension:  XSI does not address it,
 	 * and applications need not know that ncurses can do it.
@@ -829,7 +830,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
     }
 #endif
 
-    if (SP_PARM->_endwin) {
+    if (SP_PARM->_endwin == ewSuspend) {
 
 	T(("coming back from shell mode"));
 	NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_ARG);
@@ -838,7 +839,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 	NCURSES_SP_NAME(_nc_screen_resume) (NCURSES_SP_ARG);
 	SP_PARM->_mouse_resume(SP_PARM);
 
-	SP_PARM->_endwin = FALSE;
+	SP_PARM->_endwin = ewRunning;
     }
 #if USE_TRACE_TIMES
     /* zero the metering machinery */

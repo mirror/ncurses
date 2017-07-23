@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.73 2017/03/18 17:14:19 tom Exp $
+ * $Id: tic.h,v 1.74 2017/07/22 16:25:10 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -43,6 +43,8 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#include <ncurses_cfg.h>
 
 #include <curses.h>	/* for the _tracef() prototype, ERR/OK, bool defs */
 

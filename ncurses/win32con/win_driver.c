@@ -54,7 +54,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.58 2017/04/14 09:11:00 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.59 2017/07/22 21:10:28 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -494,7 +494,7 @@ wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	   CurScreen(sp)->_clear,
 	   NewScreen(sp)->_clear));
 
-	if (SP_PARM->_endwin) {
+	if (SP_PARM->_endwin == ewSuspend) {
 
 	    T(("coming back from shell mode"));
 	    NCURSES_SP_NAME(reset_prog_mode) (NCURSES_SP_ARG);
@@ -503,7 +503,7 @@ wcon_doupdate(TERMINAL_CONTROL_BLOCK * TCB)
 	    NCURSES_SP_NAME(_nc_screen_resume) (NCURSES_SP_ARG);
 	    SP_PARM->_mouse_resume(SP_PARM);
 
-	    SP_PARM->_endwin = FALSE;
+	    SP_PARM->_endwin = ewRunning;
 	}
 
 	if ((CurScreen(sp)->_clear || NewScreen(sp)->_clear)) {

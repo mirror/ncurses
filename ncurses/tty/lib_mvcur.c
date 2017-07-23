@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.141 2017/04/07 00:34:22 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.144 2017/07/22 23:59:07 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -450,8 +450,8 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 
     /*
      * A different, possibly better way to arrange this would be to set the
-     * SCREEN's _endwin to TRUE at window initialization time and let this be
-     * called by doupdate's return-from-shellout code.
+     * SCREEN's _endwin at window initialization time and let this be called by
+     * doupdate's return-from-shellout code.
      */
     NCURSES_SP_NAME(_nc_mvcur_resume) (NCURSES_SP_ARG);
 }
@@ -1056,9 +1056,18 @@ NCURSES_SP_NAME(_nc_mvcur) (NCURSES_SP_DCLx
 			    int yold, int xold,
 			    int ynew, int xnew)
 {
-    return _nc_real_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew,
-			  NCURSES_SP_NAME(_nc_outch),
-			  TRUE);
+    int rc;
+    rc = _nc_real_mvcur(NCURSES_SP_ARGx yold, xold, ynew, xnew,
+			NCURSES_SP_NAME(_nc_outch),
+			TRUE);
+    /*
+     * With the terminal-driver, we cannot distinguish between internal and
+     * external calls.  Flush the output if the screen has not been
+     * initialized, e.g., when used from low-level terminfo programs.
+     */
+    if ((SP_PARM != 0) && (SP_PARM->_endwin == ewInitial))
+	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
+    return rc;
 }
 
 #if NCURSES_SP_FUNCS
@@ -1077,11 +1086,16 @@ _nc_mvcur(int yold, int xold,
 NCURSES_EXPORT(int)
 TINFO_MVCUR(NCURSES_SP_DCLx int yold, int xold, int ynew, int xnew)
 {
-    return _nc_real_mvcur(NCURSES_SP_ARGx
-			  yold, xold,
-			  ynew, xnew,
-			  NCURSES_SP_NAME(_nc_outch),
-			  TRUE);
+    int rc;
+    rc = _nc_real_mvcur(NCURSES_SP_ARGx
+			yold, xold,
+			ynew, xnew,
+			NCURSES_SP_NAME(_nc_outch),
+			TRUE);
+    if ((SP_PARM != 0) && (SP_PARM->_endwin == ewInitial))
+	NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
+    NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
+    return rc;
 }
 
 #else /* !USE_TERM_DRIVER */
@@ -1197,8 +1211,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	int fy, fx, ty, tx, n, i;
 	char buf[BUFSIZ], capname[BUFSIZ];
 
-	(void) fputs("> ", stdout);
-	(void) fgets(buf, sizeof(buf), stdin);
+	if (fputs("> ", stdout) == EOF)
+	    break;
+	if (fgets(buf, sizeof(buf), stdin) == 0)
+	    break;
 
 	if (buf[0] == '?') {
 	    (void) puts("?                -- display this help message");

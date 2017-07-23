@@ -18,7 +18,9 @@ PACKAGES.arch  = $(NCURSES_PKG) $(NCURSEST_PKG)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
-CFLAGS =
+CFLAGS   = $(shell dpkg-buildflags --get CFLAGS)
+CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
+LDFLAGS  = $(shell dpkg-buildflags --get LDFLAGS)
 
 ifneq (,$(findstring noopt,$(DEB_BUILD_OPTIONS)))
         CFLAGS += -O0
@@ -32,7 +34,9 @@ endif
 verbose = # -v
 
 configure = \
-	CFLAGS="$(CFLAGS)" ../../configure \
+	CFLAGS="$(CFLAGS)" \
+	CPPFLAGS="$(CPPFLAGS)" \
+	LDFLAGS="$(LDFLAGS)" ../../configure \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=/usr \

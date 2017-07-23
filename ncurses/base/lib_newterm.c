@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.99 2017/07/01 18:14:07 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.100 2017/07/22 23:19:00 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -287,7 +287,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 #else
 	    SP_PARM->_use_meta = FALSE;
 #endif
-	    SP_PARM->_endwin = FALSE;
+	    SP_PARM->_endwin = ewInitial;
 #ifndef USE_TERM_DRIVER
 	    /*
 	     * Check whether we can optimize scrolling under dumb terminals in

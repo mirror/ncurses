@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.581 2017/07/15 20:17:01 tom Exp $
+ * $Id: curses.priv.h,v 1.583 2017/07/22 23:19:00 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1046,6 +1046,12 @@ typedef struct {
 
 extern NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen;
 
+typedef enum {
+    ewInitial = 0,
+    ewRunning,
+    ewSuspend
+} ENDWIN;
+
 /*
  * The SCREEN structure.
  */
@@ -1355,7 +1361,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
     sp->_cbreak = 0;                            \
     sp->_echo = TRUE;                           \
     sp->_fifohead = -1;                         \
-    sp->_endwin = TRUE;                         \
+    sp->_endwin = ewSuspend;                    \
     sp->_cursor = -1;                           \
     SP_INIT_WINDOWLIST(sp);                     \
     sp->_outch = NCURSES_OUTC_FUNC;             \
@@ -1473,6 +1479,8 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 		       && (a).chars[3] == (b).chars[3] \
 		       && (a).chars[4] == (b).chars[4] \
 			if_EXT_COLORS(&& (a).ext_color == (b).ext_color))
+#elif CCHARW_MAX > 0
+#error Inconsistent values for CCHARW_MAX
 #else
 #define CharEq(a,b)	(!memcmp(&(a), &(b), sizeof(a)))
 #endif

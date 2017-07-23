@@ -31,11 +31,13 @@
  ****************************************************************************/
 
 /*
- * $Id: hashed_db.h,v 1.7 2017/02/26 22:59:23 Andre.Sa Exp $
+ * $Id: hashed_db.h,v 1.8 2017/07/22 16:22:49 tom Exp $
  */
 
 #ifndef HASHED_DB_H
 #define HASHED_DB_H 1
+
+#include <ncurses_cfg.h>
 
 #include <curses.h>
 
