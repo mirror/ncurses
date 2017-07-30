@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.809 2017/04/29 22:41:39 tom Exp $
+dnl $Id: aclocal.m4,v 1.810 2017/07/26 21:08:35 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3914,15 +3914,13 @@ CF_EOF
 
 # Special case: tack's manpage lives in its own directory.
 if test "x$cf_with_manpages" = xyes; then
-if test -d tack ; then
-if test -f $srcdir/$tack.h; then
+if test "x$cf_with_tack" = "xyes"; then
 cat >> Makefile <<CF_EOF
 
 install.man \\
 uninstall.man ::
 	cd tack && \${MAKE} \${TOP_MFLAGS} \[$]@
 CF_EOF
-fi
 fi
 fi
 
@@ -6436,7 +6434,7 @@ do
 		# We may/may not have tack in the distribution, though the
 		# makefile is.
 		if test $cf_dir = tack ; then
-			if test ! -f $srcdir/${cf_dir}/${cf_dir}.h; then
+			if test "x$cf_with_tack" != "xyes"; then
 				continue
 			fi
 		fi

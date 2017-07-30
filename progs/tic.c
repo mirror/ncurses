@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.233 2017/07/15 17:40:19 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.240 2017/07/29 16:14:16 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1717,13 +1717,24 @@ expected_params(const char *name)
     return result;
 }
 
+static int
+is_user_capability(const char *name)
+{
+    int result = 0;
+    if (name[0] == 'u' &&
+	(name[1] >= '0' && name[1] <= '9') &&
+	name[2] == '\0')
+	result = 1;
+    return result;
+}
+
 /*
  * Make a quick sanity check for the parameters which are used in the given
  * strings.  If there are no "%p" tokens, then there should be no other "%"
  * markers.
  */
 static void
-check_params(TERMTYPE2 *tp, const char *name, char *value)
+check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 {
     int expected = expected_params(name);
     int actual = 0;
@@ -1760,6 +1771,14 @@ check_params(TERMTYPE2 *tp, const char *name, char *value)
 	s++;
     }
 
+    if (extended) {
+	if (actual > 0) {
+	    _nc_warning("extended %s capability has %d parameters",
+			name, actual);
+	    expected = actual;
+	}
+    }
+
     if (params[0]) {
 	_nc_warning("%s refers to parameter 0 (%%p0), which is not allowed", name);
     }
@@ -1771,6 +1790,29 @@ check_params(TERMTYPE2 *tp, const char *name, char *value)
 	for (n = 1; n < actual; n++) {
 	    if (!params[n])
 		_nc_warning("%s omits parameter %d", name, n);
+	}
+    }
+
+    /*
+     * Counting "%p" markers does not account for termcap expressions which
+     * may not have been fully translated.  Also, tparm does its own analysis.
+     * Report differences here.
+     */
+    if (actual >= 0) {
+	char *p_is_s[NUM_PARM];
+	int popcount;
+	int analyzed = _nc_tparm_analyze(value, p_is_s, &popcount);
+	if (analyzed < popcount) {
+	    analyzed = popcount;
+	}
+	if (actual != analyzed && expected != analyzed) {
+	    if (is_user_capability(name)) {
+		_nc_warning("tparm will use %d parameters for %s",
+			    analyzed, name);
+	    } else {
+		_nc_warning("tparm analyzed %d parameters for %s, expected %d",
+			    analyzed, name, actual);
+	    }
 	}
     }
 }
@@ -2399,7 +2441,7 @@ check_conflict(TERMTYPE2 *tp)
 	NAME_VALUE *given = get_fkey_list(tp);
 
 	if (check == 0)
-	    failed("check_termtype");
+	    failed("check_conflict");
 
 	for (j = 0; given[j].keycode; ++j) {
 	    const char *a = given[j].value;
@@ -2543,7 +2585,16 @@ check_termtype(TERMTYPE2 *tp, bool literal)
     for_each_string(j, tp) {
 	char *a = tp->Strings[j];
 	if (VALID_STRING(a)) {
-	    check_params(tp, ExtStrname(tp, (int) j, strnames), a);
+	    const char *name = ExtStrname(tp, (int) j, strnames);
+	    /*
+	     * If we expect parameters, or if there might be parameters,
+	     * check for consistent number of parameters.
+	     */
+	    if (j >= SIZEOF(parametrized) ||
+		is_user_capability(name) ||
+		parametrized[j] > 0) {
+		check_params(tp, name, a, (j >= STRCOUNT));
+	    }
 	    check_delays(ExtStrname(tp, (int) j, strnames), a);
 	    if (capdump) {
 		check_infotocap(tp, (int) j, a);

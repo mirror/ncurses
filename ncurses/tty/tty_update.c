@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.290 2017/07/22 23:30:28 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.293 2017/07/29 13:09:05 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -666,7 +666,12 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 		} else {
 		    return 1;	/* cursor stays in the middle */
 		}
-	    } else if (repeat_char && runcount > SP_PARM->_rep_cost) {
+	    } else if (repeat_char != 0 &&
+#if USE_WIDEC_SUPPORT
+		       (CharOf(ntext0) < ACS_LEN) &&
+#endif
+		       runcount > SP_PARM->_rep_cost) {
+		NCURSES_CH_T temp;
 		bool wrap_possible = (SP_PARM->_curscol + runcount >=
 				      screen_columns(SP_PARM));
 		int rep_count = runcount;
@@ -675,9 +680,16 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 		    rep_count--;
 
 		UpdateAttrs(SP_PARM, ntext0);
+		temp = ntext0;
+		if ((AttrOf(temp) & A_ALTCHARSET) &&
+		    SP_PARM->_acs_map != 0) {
+		    SetChar(temp,
+			    SP_PARM->_acs_map[CharOf(temp)],
+			    AttrOf(temp) | A_ALTCHARSET);
+		}
 		NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
 					TPARM_2(repeat_char,
-						CharOf(ntext0),
+						CharOf(temp),
 						rep_count),
 					1,
 					NCURSES_SP_NAME(_nc_outch));

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.130 2016/05/28 23:12:00 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.131 2017/07/29 20:42:02 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -117,14 +117,18 @@ _nc_render(WINDOW *win, NCURSES_CH_T ch)
 #endif
 
 static bool
-newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T * ypos)
+newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T *ypos)
 {
     bool result = FALSE;
 
-    if (*ypos >= win->_regtop && *ypos == win->_regbottom) {
-	*ypos = win->_regbottom;
-	result = TRUE;
-    } else {
+    if (*ypos >= win->_regtop && *ypos <= win->_regbottom) {
+	if (*ypos == win->_regbottom) {
+	    *ypos = win->_regbottom;
+	    result = TRUE;
+	} else {
+	    *ypos = (NCURSES_SIZE_T) (*ypos + 1);
+	}
+    } else if (*ypos < win->_maxy) {
 	*ypos = (NCURSES_SIZE_T) (*ypos + 1);
     }
     return result;

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.603 $
-#	$Date: 2017/05/14 01:32:04 $
+#	$Revision: 1.607 $
+#	$Date: 2017/07/30 00:10:59 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4180,8 +4180,9 @@ xterm-xfree86|xterm terminal emulator (XFree86),
 xterm-new|modern xterm terminal emulator,
 	npc,
 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
-	rin=\E[%p1%dT, use=ansi+enq, use=xterm+pcfkeys,
-	use=xterm+tmux, use=ecma+strikeout, use=xterm-basic,
+	rin=\E[%p1%dT, use=ansi+rep, use=ansi+enq,
+	use=xterm+pcfkeys, use=xterm+tmux, use=ecma+strikeout,
+	use=xterm-basic,
 
 # This fragment is for people who cannot agree on what the backspace key
 # should send.
@@ -5028,7 +5029,8 @@ gnome-2008|GNOME Terminal snapshot 2.22.3,
 # Testing with tack shows that flash does not/has not worked -TD
 vte-2012|VTE 0.34.1,
 	ncv#16,
-	dim=\E[2m, flash@, invis=\E[8m, ritm=\E[23m,
+	dim=\E[2m, flash@, invis=\E[8m, ritm=\E[23m, rmso=\E[27m,
+	rmul=\E[24m,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p5%t;2%;%?%p7%t;8%;%?%p1%p3
 	    %|%t;7%;m%?%p9%t\016%e\017%;,
 	sitm=\E[3m, use=vte-2008,
@@ -5073,8 +5075,7 @@ vte-2014|VTE 0.35.1,
 	ncv@,
 	cbt=\E[Z, el1=\E[1K, flash=\E[?5h$<100/>\E[?5l,
 	ich=\E[%p1%d@, indn=\E[%p1%dS, kent=\EOM, rin=\E[%p1%dT,
-	rmso=\E[27m, rmul=\E[24m, use=xterm+pcfkeys,
-	use=vte-2012,
+	use=xterm+pcfkeys, use=vte-2012,
 
 vte|VTE aka GNOME Terminal,
 	use=vte-2014,
@@ -6385,13 +6386,14 @@ screen+italics|screen cannot support italics,
 # (e)	when screen finds one of these customized entries, it sets $TERM to
 #	match.  Hence, no "screen.xterm" entry is provided, since that would
 #	create heartburn for people running remote xterm's.
+# (f)   screen does not support rep.
 #
 #	xterm (-xfree86 or -r6) does not normally support kIC, kNXT and kPRV
 #	since the default translations override the built-in keycode
 #	translation.  They are suppressed here to show what is tested by tack.
 screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	bce@, bw,
-	invis@, kIC@, kNXT@, kPRV@, meml@, memu@,
+	invis@, kIC@, kNXT@, kPRV@, meml@, memu@, rep@,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
 	E3@, use=screen+italics, use=screen+fkeys, use=xterm-new,
@@ -7573,41 +7575,53 @@ pcmw|PC running Microsoft Works,
 # Later OpenNT was renamed to Interix.
 #
 # Presently it is distributed by Microsoft as Services For Unix (SFU).
-# The 3.5 beta contains ncurses 4.2 (that is header files and executables,
-# the documentation dates from 1.9.9e) -TD
+# The 3.5 beta contained ncurses 4.2 (that is header files and executables,
+# the documentation dated from 1.9.9e) -TD
+#
+# For a US keyboard, with 12 function-kecbt=\E[Z, ys,
+#	kf1-kf12 are unmodifiedcbt=\E[Z, cbt=\E[Z, 
+#	kf13-kf24 use the shift-key
+#	kf25-kf36 use the left alt-key
+#	kf37-kf38 use the control-key
+#	kf49-kf60 use the shift- and control-keys
+# The shifted cursor keys send the sequences originally used for kf61-kf64:
+#	down=\EF+	(kf61)
+#	up=\EF-		(kf62) 
+#	left=\EF^	(unassigned)
+#	right=\EF$	(kf64) 
 
 interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with color,
-	am, bw, msgr,
-	colors#8, cols#80, lines#25, ncv#3, pairs#64,
+	am, bce, msgr,
+	cols#80, it#8, lines#25,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j
 	     \331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v
 	     \301w\302x\263y\363z\362{\343|\330}\234~\376,
-	bel=^G, bold=\E[1m, cbt=\E[Z, clear=\E[2J, cub=\E[%p1%dD,
+	bel=^G, bold=\E[1m, clear=\E[2J, cr=\r, cub=\E[%p1%dD,
 	cub1=\E[D, cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC,
 	cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA,
 	cuu1=\E[A, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K,
 	home=\E[H, ht=^I, il=\E[%p1%dL, il1=\E[L, ind=\E[S,
-	indn=\E[%p1%dS, kbs=^H, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B,
-	kcuf1=\E[C, kcuu1=\E[A, kdch1=\E[M, kend=\E[U, kf0=\EFA,
-	kf1=\EF1, kf10=\EFA, kf11=\EFB, kf12=\EFC, kf13=\EFD,
-	kf14=\EFE, kf15=\EFF, kf16=\EFG, kf17=\EFH, kf18=\EFI,
-	kf19=\EFJ, kf2=\EF2, kf20=\EFK, kf21=\EFL, kf22=\EFM,
-	kf23=\EFN, kf24=\EFO, kf25=\EFP, kf26=\EFQ, kf27=\EFR,
-	kf28=\EFS, kf29=\EFT, kf3=\EF3, kf30=\EFU, kf31=\EFV,
-	kf32=\EFW, kf33=\EFX, kf34=\EFY, kf35=\EFZ, kf36=\EFa,
-	kf37=\EFb, kf38=\EFc, kf39=\EFd, kf4=\EF4, kf40=\EFe,
-	kf41=\EFf, kf42=\EFg, kf43=\EFh, kf44=\EFi, kf45=\EFj,
-	kf46=\EFk, kf47=\EFm, kf48=\EFn, kf49=\EFo, kf5=\EF5,
-	kf50=\EFp, kf51=\EFq, kf52=\EFr, kf53=\EFs, kf54=\EFt,
-	kf55=\EFu, kf56=\EFv, kf57=\EFw, kf58=\EFx, kf59=\EFy,
-	kf6=\EF6, kf60=\EFz, kf61=\EF+, kf62=\EF-, kf63=\EF^L,
-	kf7=\EF7, kf8=\EF8, kf9=\EF9, kich1=\E[L, kll=\E[U, knp=\E[T,
-	kpp=\E[S, ll=\E[U, nel=\r\n, op=\E[m, rc=\E[u, rev=\E[7m,
-	ri=\E[T, rin=\E[%p1%dT, rmcup=\E[2b\E[u\r\E[K, rmso=\E[m,
-	rmul=\E[m, rs1=\Ec, sc=\E[s, setab=\E[4%p1%dm,
-	setaf=\E[3%p1%dm, setb=\E[%p1%{40}%+%dm,
-	setf=\E[%p1%{30}%+%dm, sgr0=\E[0m, smcup=\E[s\E[1b,
-	smso=\E[7m, smul=\E[4m, kf64=\EF$,
+	indn=\E[%p1%dS, kLFT=\EF\^, kRIT=\EF$, kbs=^H, kcbt=\E[Z,
+	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, kdch1=^?,
+	kend=\E[U, kf0=\EFA, kf1=\EF1, kf10=\EFA, kf11=\EFB,
+	kf12=\EFC, kf13=\EFD, kf14=\EFE, kf15=\EFF, kf16=\EFG,
+	kf17=\EFH, kf18=\EFI, kf19=\EFJ, kf2=\EF2, kf20=\EFK,
+	kf21=\EFL, kf22=\EFM, kf23=\EFN, kf24=\EFO, kf25=\EFP,
+	kf26=\EFQ, kf27=\EFR, kf28=\EFS, kf29=\EFT, kf3=\EF3,
+	kf30=\EFU, kf31=\EFV, kf32=\EFW, kf33=\EFX, kf34=\EFY,
+	kf35=\EFZ, kf36=\EFa, kf37=\EFb, kf38=\EFc, kf39=\EFd,
+	kf4=\EF4, kf40=\EFe, kf41=\EFf, kf42=\EFg, kf43=\EFh,
+	kf44=\EFi, kf45=\EFj, kf46=\EFk, kf47=\EFm, kf48=\EFn,
+	kf49=\EFo, kf5=\EF5, kf50=\EFp, kf51=\EFq, kf52=\EFr,
+	kf53=\EFs, kf54=\EFt, kf55=\EFu, kf56=\EFv, kf57=\EFw,
+	kf58=\EFx, kf59=\EFy, kf6=\EF6, kf60=\EFz, kf7=\EF7,
+	kf8=\EF8, kf9=\EF9, khome=\E[H, kich1=\E[L, kind=\EF+,
+	kll=\E[U, knp=\E[T, kpp=\E[S, kri=\EF-, ll=\E[U, nel=\r\n,
+	op=\E[m, rc=\E[u, rev=\E[7m, ri=\E[T, rin=\E[%p1%dT,
+	rmcup=\E[2b\E[u\r\E[K, rmso=\E[m, rmul=\E[m, rs1=\Ec,
+	sc=\E[s, setb=\E[%p1%{40}%+%dm, setf=\E[%p1%{30}%+%dm,
+	sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m, smul=\E[4m,
+	use=ansi+rep, use=klone+color,
 
 opennt-35|ntconsole-35|OpenNT-term35 compatible with color,
 	lines#35, use=opennt,
@@ -25118,5 +25132,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2017-05-13
 #	+ reformatted using hexadecimal numbers to improve readability -TD
+#
+# 2017-07-29
+#	+ update interix entry using tack and SFU on Windows 7 Ultimate -TD
+#	+ use ^? for kdch1 in interix (reported by Jonathan de Boyne Pollard)
+#	+ add "rep" to xterm-new, available since 1997/01/26 -TD
+#	+ move SGR 24 and 27 from vte-2014 to vte-2012 (request by Alain
+#	  Williams) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

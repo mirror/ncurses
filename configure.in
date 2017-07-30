@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.643 2017/06/24 14:19:55 tom Exp $
+dnl $Id: configure.in,v 1.645 2017/07/26 22:24:31 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.643 $)
+AC_REVISION($Revision: 1.645 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -178,6 +178,22 @@ AC_ARG_WITH(progs,
 	[cf_with_progs=yes])
 AC_MSG_RESULT($cf_with_progs)
 
+if test -f $srcdir/tack/tack.h; then
+	if test "x$cross_compiling" = xyes ; then
+		CF_VERBOSE(ignoring tack because we are cross-compiling)
+		cf_with_tack=no
+	else
+		AC_MSG_CHECKING(if you want to build the tack program)
+		AC_ARG_WITH(tack,
+			[  --without-tack          suppress build/install with tack program],
+			[cf_with_tack=$withval],
+			[cf_with_tack=$cf_with_progs])
+		AC_MSG_RESULT($cf_with_tack)
+	fi
+else
+	cf_with_tack=no
+fi
+
 AC_MSG_CHECKING(if you want to build test-programs)
 AC_ARG_WITH(tests,
 	[  --without-tests         suppress build/install with test-programs],
@@ -193,9 +209,8 @@ AC_ARG_WITH(curses-h,
 AC_MSG_RESULT($with_curses_h)
 
 modules_to_build="ncurses"
-if test "X$cf_with_progs" != Xno ; then
-modules_to_build="$modules_to_build progs tack"
-fi
+test "X$cf_with_progs" != Xno && modules_to_build="$modules_to_build progs"
+test "X$cf_with_tack"  != Xno && modules_to_build="$modules_to_build tack"
 modules_to_build="$modules_to_build panel menu form"
 
 AC_ARG_PROGRAM
@@ -2275,6 +2290,8 @@ else
 fi
 AC_SUBST(ADAGEN_LDFLAGS)
 AC_SUBST(CHECK_BUILD)
+
+AC_DEFINE(HAVE_CURSES_DATA_BOOLNAMES,1,[definition needed for in-tree build of tack])
 
 AC_OUTPUT( \
 	include/MKterm.h.awk \
