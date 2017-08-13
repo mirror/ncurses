@@ -33,7 +33,7 @@
 /*
  * Common type definitions and macros for new_pair.c, lib_color.c
  *
- * $Id: new_pair.h,v 1.6 2017/04/29 20:25:29 tom Exp $
+ * $Id: new_pair.h,v 1.8 2017/08/11 18:15:11 tom Exp $
  */
 
 #ifndef NEW_PAIR_H
@@ -109,11 +109,14 @@ colorpair_t;
     ((sp != 0) && (pair >= 0) && (pair < sp->_pair_limit) && sp->_coloron)
 
 #if USE_NEW_PAIR
-extern NCURSES_EXPORT(void)     _nc_set_color_pair(SCREEN*, int, int);
+extern NCURSES_EXPORT(void)     _nc_copy_pairs(SCREEN*, colorpair_t*, colorpair_t*, int);
+extern NCURSES_EXPORT(void)     _nc_free_ordered_pairs(SCREEN*);
 extern NCURSES_EXPORT(void)     _nc_reset_color_pair(SCREEN*, int, colorpair_t*);
+extern NCURSES_EXPORT(void)     _nc_set_color_pair(SCREEN*, int, int);
 #else
-#define _nc_set_color_pair(sp, pair, mode) /* nothing */
+#define _nc_free_ordered_pairs(sp) /* nothing */
 #define _nc_reset_color_pair(sp, pair, data) /* nothing */
+#define _nc_set_color_pair(sp, pair, mode) /* nothing */
 #endif
 
 #else

@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.12 2017/06/29 09:23:58 tom Exp $
+# $Id: tracemunch,v 1.16 2017/08/09 23:59:00 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2005,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -75,6 +75,15 @@ sub transaddr {
     foreach my $addr ( keys %win_addr ) {
         $n = $win_addr{$addr};
         $arg =~ s/\b$addr\b/window$n/g;
+    }
+    if ( $arg =~ /add_wch\((window\d+,)?0x[[:xdigit:]]+\)/i ) {
+        $arg =~ s/(0x[[:xdigit:]]+)[)]/\&wch)/i;
+    }
+    elsif ( $arg =~ /color_content\((screen\d+,)?\d+(,0x[[:xdigit:]]+){3}/i ) {
+        $arg =~ s/(,0x[[:xdigit:]]+){3}[)]/,\&r,\&g,\&b)/i;
+    }
+    elsif ( $arg =~ /pair_content\((screen\d+,)?\d+(,0x[[:xdigit:]]+){2}/i ) {
+        $arg =~ s/(,0x[[:xdigit:]]+){2}[)]/,\&fg,\&bg)/i;
     }
 
     return $arg;

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.145 2017/06/24 14:07:38 tom Exp $ */
+/* $Id: test.priv.h,v 1.146 2017/08/07 23:29:48 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -205,6 +205,10 @@
 #define HAVE_SYS_SELECT_H 0
 #endif
 
+#ifndef HAVE_TDESTROY
+#define HAVE_TDESTROY 0
+#endif
+
 #ifndef HAVE_TERMATTRS
 #define HAVE_TERMATTRS 0
 #endif
@@ -235,6 +239,10 @@
 
 #ifndef HAVE_TPUTS_SP
 #define HAVE_TPUTS_SP 0
+#endif
+
+#ifndef HAVE_TSEARCH
+#define HAVE_TSEARCH 0
 #endif
 
 #ifndef HAVE_TYPEAHEAD

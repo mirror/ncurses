@@ -1,4 +1,4 @@
-# $Id: mk-test.awk,v 1.13 2015/05/01 00:47:26 tom Exp $
+# $Id: mk-test.awk,v 1.16 2017/08/11 16:51:10 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2010,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -67,6 +67,7 @@ END	{
 		}
 		print "";
 	}
+	print	"DATAFILES = $(srcdir)/*.x* $(srcdir)/*.dat"
 	print	""
 	print	"all: $(TESTS)"
 	print	""
@@ -83,17 +84,27 @@ END	{
 	if (INSTALL == "yes") {
 		print	"# we might install the test-programs"
 		print	"install \\"
-		print	"install.test: $(BINDIR) $(TESTS)"
-		print	"	$(SHELL) -c 'for src in $(TESTS); do \\"
+		print	"install.test: $(BINDIR) $(DATADIR) $(TESTS)"
+		print	"	@$(SHELL) -c 'for src in $(TESTS); do \\"
 		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
+		print	"	echo \"installing $$src -> $(BINDIR)/$$dst\"; \\"
 		print	"	$(INSTALL_PROG) $$src $(BINDIR)/$$dst; \\"
+		print	"	done'"
+		print	"	@$(SHELL) -c 'for src in $(DATAFILES); do \\"
+		print	"	dst=`echo $$src | sed -e 's,^.*/,,'`; \\"
+		print	"	echo \"installing $$src -> $(DATADIR)/$$dst\"; \\"
+		print	"	$(INSTALL_DATA) $$src $(DATADIR)/$$dst; \\"
 		print	"	done'"
 		print	""
 		print	"uninstall \\"
 		print	"uninstall.test:"
-		print	"	$(SHELL) -c 'for src in $(TESTS); do \\"
+		print	"	@$(SHELL) -c 'for src in $(TESTS); do \\"
 		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
 		print	"	rm -f $(BINDIR)/$$dst; \\"
+		print	"	done'"
+		print	"	@$(SHELL) -c 'for src in $(DATAFILES); do \\"
+		print	"	dst=`echo $$src | sed -e 's,^.*/,,'`; \\"
+		print	"	rm -f $(DATADIR)/$$dst; \\"
 		print	"	done'"
 	} else {
 		print	"install \\"
@@ -116,7 +127,7 @@ END	{
 	print	""
 	print	"lint:"
 	print	"	$(SHELL) -c 'for N in $(TESTS); do echo LINT:$$N; $(LINT) $(LINT_OPTS) $(CPPFLAGS) $(srcdir)/$$N.c $(LINT_LIBS); done'"
-	print	"$(BINDIR) :"
+	print	"$(BINDIR) $(DATADIR) :"
 	print	"	mkdir -p $@"
 
 

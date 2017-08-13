@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.21 2017/06/24 22:13:47 tom Exp $
+ * $Id: list_keys.c,v 1.22 2017/08/12 17:28:23 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -238,7 +238,7 @@ modified_key(const char *name)
 	map &= ~6;
 	map |= (bit1 << 1) | (bit2 >> 1);
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
-		    "%sF%d", modifiers[map][(unsigned)f_opt], 1 + key);
+		    "%sF%d", modifiers[map][(unsigned) f_opt], 1 + key);
     } else if (sscanf(name, "k%[A-Z]%d%c", buffer, &value, &chr) == 2 &&
 	       (value > 1 &&
 		value <= 8) &&
@@ -253,12 +253,12 @@ modified_key(const char *name)
 		!strcmp(buffer, "NXT") ||
 		!strcmp(buffer, "PRV"))) {
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
-		    "%sk%s", modifiers[value - 1][(unsigned)f_opt], buffer);
+		    "%sk%s", modifiers[value - 1][(unsigned) f_opt], buffer);
     } else if (sscanf(name, "k%[A-Z]%c", buffer, &chr) == 1 &&
 	       (!strcmp(buffer, "UP") ||
 		!strcmp(buffer, "DN"))) {
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
-		    "%sk%s", modifiers[1][f_opt], buffer);
+		    "%sk%s", modifiers[1][(unsigned) f_opt], buffer);
     } else {
 	*result = '\0';
     }

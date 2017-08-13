@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.810 2017/07/26 21:08:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.811 2017/08/12 12:06:16 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3458,7 +3458,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 86 updated: 2015/11/07 20:01:34
+dnl CF_LIB_RULES version: 87 updated: 2017/07/26 17:08:35
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -4160,7 +4160,7 @@ AC_DEFUN([CF_LIB_TYPE],
 	test -n "$LIB_SUFFIX" && $2="${LIB_SUFFIX}[$]{$2}"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_DATAONLY version: 11 updated: 2017/01/21 11:06:25
+dnl CF_LINK_DATAONLY version: 12 updated: 2017/07/23 17:46:07
 dnl ----------------
 dnl Some systems have a non-ANSI linker that doesn't pull in modules that have
 dnl only data (i.e., no functions), for example NeXT.  On those systems we'll
@@ -4182,7 +4182,7 @@ EOF
 	rm -f conftest.$ac_ext data.o
 	cat >conftest.$ac_ext <<EOF
 #line __oline__ "configure"
-int	testfunc()
+int	testfunc(void)
 {
 #if defined(NeXT)
 	${cf_cv_main_return:-return}(1);	/* I'm told this linker is broken */
@@ -4578,7 +4578,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 46 updated: 2015/08/05 20:44:28
+dnl CF_MAN_PAGES version: 47 updated: 2017/08/12 07:58:51
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -4651,7 +4651,7 @@ INSTALL_DATA="$INSTALL_DATA"
 transform="$program_transform_name"
 
 TMP=\${TMPDIR:=/tmp}/man\$\$
-trap "rm -f \$TMP" 0 1 2 5 15
+trap "rm -f \$TMP" 0 1 2 3 15
 
 form=\[$]1
 shift || exit 1
@@ -6402,7 +6402,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 29 updated: 2015/04/12 11:42:01
+dnl CF_SRC_MODULES version: 30 updated: 2017/07/26 17:08:35
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -7304,7 +7304,7 @@ if test "$with_gpm" != no ; then
 fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_LIBTOOL version: 34 updated: 2016/12/31 12:04:57
+dnl CF_WITH_LIBTOOL version: 35 updated: 2017/08/12 07:58:51
 dnl ---------------
 dnl Provide a configure option to incorporate libtool.  Define several useful
 dnl symbols for the makefile rules.
@@ -7328,7 +7328,7 @@ dnl
 dnl	LOCAL=aclocal.m4
 dnl	ORIG=aclocal.m4.orig
 dnl
-dnl	trap "mv $ORIG $LOCAL" 0 1 2 5 15
+dnl	trap "mv $ORIG $LOCAL" 0 1 2 3 15
 dnl	rm -f $ORIG
 dnl	mv $LOCAL $ORIG
 dnl

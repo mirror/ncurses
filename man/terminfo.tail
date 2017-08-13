@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.87 2017/05/05 17:54:07 tom Exp $
+.\" $Id: terminfo.tail,v 1.88 2017/08/12 22:26:02 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1843,6 +1843,7 @@ files containing terminal descriptions
 \fBprintf\fR(3),
 \fBterm\fR(\*n).
 \fBterm_variables\fR(3X).
+\fBuser_caps\fR(5).
 .SH AUTHORS
 Zeyd M. Ben-Halim, Eric S. Raymond, Thomas E. Dickey.
 Based on pcurses by Pavel Curtis.

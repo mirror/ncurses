@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2903 2017/07/30 00:14:33 tom Exp $
+-- $Id: NEWS,v 1.2916 2017/08/13 00:24:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,39 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170812
+	+ improve description of -R option in infocmp manual page (report by
+	  Stephane Chazelas).
+	+ add reset_color_pairs() function.
+	+ add user_caps.5 manual page to document the terminfo extensions used
+	  by ncurses.
+	+ improve build scripts, using SIGQUIT vs SIGTRAP; add other configure
+	  script fixes from work on xterm, lynx and tack.
+	+ modify install-rule for ncurses-examples to put the data files in
+	  /usr/share/ncurses-examples
+	+ improve tracemunch, by changing address-parameters of add_wch(),
+	  color_content() and pair_content() to dummy parameters.
+	+ minor optimization to _nc_change_pair, to return quickly when the
+	  current screen is marked for clearing.
+	+ in-progress changes to improve performance of test/picsmap.c for
+	  loading image files.
+	+ modify allocation for SCREEN's color-pair table to start small, grow
+	  on demand up to the existing limit.
+	+ add "RGB" extension capability for direct-color support, use this to
+	  improve color_content().
+	+ improve picsmap test-program:
+	  + if no palette file is needed, attempt to load one based on $TERM,
+	    checking first in the current directory, then by adding ".dat"
+	    suffix, and finally in the data-directory, e.g.,
+	    /usr/share/ncurses-examples
+	  + add "-l" option for logging
+	  + add "-d" option for debugging
+	  + add "-s" option for stepping automatically through list of images,
+	    with time delay.
+	  + use tsearch to improve time for loading color table for images.
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20170729
 	+ update interix entry using tack and SFU on Windows 7 Ultimate -TD

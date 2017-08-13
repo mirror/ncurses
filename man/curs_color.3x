@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.50 2017/04/01 19:57:19 tom Exp $
+.\" $Id: curs_color.3x,v 1.51 2017/08/12 21:40:14 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -46,6 +46,7 @@
 \fBinit_color\fR,
 \fBcolor_content\fR,
 \fBpair_content\fR,
+\fBreset_color_pairs\fR,
 \fBCOLOR_PAIR\fR,
 \fBPAIR_NUMBER\fR \- \fBcurses\fR color manipulation routines
 .ad
@@ -78,6 +79,10 @@
 \fBint extended_color_content(int color, int *r, int *g, int *b);\fR
 .br
 \fBint extended_pair_content(int pair, int *f, int *b);\fR
+.sp
+/* extensions */
+.br
+\fBvoid reset_color_pairs(void);\fR
 .sp
 \fBint COLOR_PAIR(int n);\fR
 .br
@@ -274,6 +279,11 @@ As an extension, ncurses allows you to set color pair \fB0\fP via
 the \fBassume_default_colors\fR(3X) routine, or to specify the use of
 default colors (color number \fB\-1\fR) if you first invoke the
 \fBuse_default_colors\fR(3X) routine.
+.PP
+The extension \fBreset_color_pairs\fP tells ncurses to discard all
+of the color-pair information which was set with \fBinit_pair\fP.
+It also touches the current- and standard-screens, allowing an application to
+switch color palettes rapidly.
 .SS init_color
 .PP
 The \fBinit_color\fR routine changes the definition of a color.
@@ -409,6 +419,8 @@ terminfo database, which uses signed 16-bit numbers.
 This implementation provides extended versions of those functions
 which use \fBshort\fP parameters,
 allowing applications to use larger color- and pair-numbers.
+.PP
+The \fBreset_color_pairs\fP function is an extension of ncurses.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_initscr\fR(3X),

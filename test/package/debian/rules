@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# MAde with the aid of dh_make, by Craig Small
+# Made with the aid of dh_make, by Craig Small
 # Sample debian/rules that uses debhelper. GNU copyright 1997 by Joey Hess.
 # Some lines taken from debmake, by Cristoph Lameter.
 
@@ -75,6 +75,7 @@ config-$(NCURSES_PKG)-stamp:
 
 	cd t/ncurses6; $(configure) \
 		--bindir=\$${prefix}/bin/$(NCURSES_PKG) \
+		--datadir=\$${prefix}/share/$(NCURSES_PKG) \
 		--with-screen=ncursesw6
 
 	touch $@
@@ -87,6 +88,7 @@ config-$(NCURSEST_PKG)-stamp:
 
 	cd t/ncursest6; $(configure) \
 		--bindir=\$${prefix}/bin/$(NCURSEST_PKG) \
+		--datadir=\$${prefix}/share/$(NCURSEST_PKG) \
 		--with-screen=ncursestw6
 
 	touch $@

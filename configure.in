@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.645 2017/07/26 22:24:31 tom Exp $
+dnl $Id: configure.in,v 1.646 2017/08/07 23:27:56 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.645 $)
+AC_REVISION($Revision: 1.646 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1643,7 +1643,9 @@ sigvec \
 strdup \
 strstr \
 tcgetpgrp \
+tdestroy \
 times \
+tsearch \
 vsnprintf \
 )
 

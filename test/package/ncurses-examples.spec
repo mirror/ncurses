@@ -2,7 +2,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.5 2015/04/25 10:55:22 tom Exp $
+# $Id: ncurses-examples.spec,v 1.6 2017/08/11 00:12:20 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -29,6 +29,7 @@ INSTALL_PROGRAM='${INSTALL}' \
 		--target %{_target_platform} \
 		--prefix=%{_prefix} \
 		--bindir=%{_bindir}/%{AppProgram} \
+		--datadir=%{_datadir}/%{AppProgram} \
 		--with-screen=ncursesw6 \
 		--disable-rpath-hack
 

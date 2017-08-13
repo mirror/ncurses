@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.73 2017/06/24 14:20:57 tom Exp $
+# $Id: ncurses_defs,v 1.74 2017/08/07 23:28:49 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -148,6 +148,7 @@ HAVE_SYS_TIME_H
 HAVE_SYS_TIME_SELECT
 HAVE_TCGETATTR
 HAVE_TCGETPGRP
+HAVE_TDESTROY
 HAVE_TELL
 HAVE_TERMATTRS	1
 HAVE_TERMIOS_H
@@ -160,6 +161,7 @@ HAVE_TIGETNUM	1
 HAVE_TIGETSTR	1
 HAVE_TIMES
 HAVE_TPUTS_SP
+HAVE_TSEARCH
 HAVE_TTYENT_H
 HAVE_TYPEAHEAD	1
 HAVE_TYPEINFO

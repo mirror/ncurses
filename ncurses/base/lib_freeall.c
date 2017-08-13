@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.66 2017/03/25 22:59:38 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.68 2017/08/04 09:01:46 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -52,6 +52,7 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 
     T((T_CALLED("_nc_freeall()")));
 #if NO_LEAKS
+    _nc_globals.leak_checking = TRUE;
     if (SP_PARM != 0) {
 	if (SP_PARM->_oldnum_list != 0) {
 	    FreeAndNull(SP_PARM->_oldnum_list);
@@ -145,6 +146,7 @@ _nc_freeall(void)
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
 {
+    T((T_CALLED("_nc_free_and_exit(%d)"), code));
     NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_ARG);
     NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_ARG);
 #ifdef TRACE

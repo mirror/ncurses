@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.65 2017/02/18 19:21:05 tom Exp @
+  * @Id: infocmp.1m,v 1.66 2017/08/13 00:21:55 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -382,10 +382,16 @@
             variants such as AIX that have their own  extensions  incompatible
             with SVr4/XSI.
 
-            Available  terminfo subsets are "SVr1", "Ultrix", "HP", and "AIX";
-            see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for details.  You can also choose the subset "BSD"
-            which  selects  only  capabilities with termcap equivalents recog-
-            nized by 4.4BSD.
+            <STRONG>o</STRONG>   Available  terminfo  subsets  are  "SVr1", "Ultrix", "HP", and
+                "AIX"; see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for details.
+
+            <STRONG>o</STRONG>   You can also choose the subset "BSD" which selects only  capa-
+                bilities  with  termcap equivalents recognized by 4.4BSD.  The
+                <STRONG>-C</STRONG> option sets the "BSD" subset as a side-effect.
+
+            <STRONG>o</STRONG>   If you select any other value for <STRONG>-R</STRONG>, it is  the  same  as  no
+                subset,  i.e., all capabilities are used.  The <STRONG>-I</STRONG> option like-
+                wise selects no subset as a side-effect.
 
        <STRONG>-s</STRONG> <EM>[d|i|l|c]</EM>
             The <STRONG>-s</STRONG> option sorts the fields within each type according  to  the
@@ -470,7 +476,7 @@
 
        http://invisible-island.net/ncurses/tctest.html
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170603).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170812).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

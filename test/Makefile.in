@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.115 2015/08/05 23:15:41 tom Exp $
+# $Id: Makefile.in,v 1.116 2017/08/11 00:13:11 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -54,10 +54,13 @@ bindir		= @bindir@
 libdir		= @libdir@
 includedir	= @includedir@
 includesubdir	= @includesubdir@
+datarootdir	= @datarootdir@
+datadir		= @datadir@
 
 BINDIR		= $(DESTDIR)$(bindir)
 LIBDIR		= $(DESTDIR)$(libdir)
 INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
+DATADIR		= $(DESTDIR)$(datadir)
 
 PACKAGE		= @PACKAGE@
 
@@ -69,6 +72,7 @@ LIBTOOL_LINK	= @LIB_LINK@
 
 INSTALL		= @INSTALL@
 INSTALL_PROG	= @INSTALL_PROGRAM@
+INSTALL_DATA	= @INSTALL_DATA@
 transform	= @program_transform_name@
 TRANSFORM	= sed 's/$x$$//'|sed '$(transform)'|sed 's/$$/$x/'
 
@@ -79,7 +83,7 @@ CC		= @CC@
 CPP		= @CPP@
 
 CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
-CPPFLAGS	= -I. -I$(srcdir) -I../test -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -I. -I$(srcdir) -I../test -DHAVE_CONFIG_H -DDATA_DIR=\"$(datadir)\" @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 

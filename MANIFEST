@@ -477,6 +477,7 @@
 ./doc/html/man/toe.1m.html
 ./doc/html/man/tput.1.html
 ./doc/html/man/tset.1.html
+./doc/html/man/user_caps.5.html
 ./doc/html/man/wresize.3x.html
 ./doc/html/ncurses-intro.html
 ./doc/ncurses-intro.doc
@@ -707,6 +708,7 @@
 ./man/toe.1m
 ./man/tput.1
 ./man/tset.1
+./man/user_caps.5
 ./man/wresize.3x
 ./menu/Makefile.in
 ./menu/READ.ME

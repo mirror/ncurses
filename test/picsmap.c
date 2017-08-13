@@ -26,12 +26,16 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.52 2017/07/15 22:25:06 tom Exp $
+ * $Id: picsmap.c,v 1.90 2017/08/12 17:21:48 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
  * A little more interesting than "dots", read a simple image into memory and
  * measure the time taken to paint it normally vs randomly.
+ *
+ * TODO improve use of rgb-names using tsearch.
+ * TODO when not using tsearch, dispense with intermediate index
+ * TODO count/report uses of each color, giving percentiles.
  *
  * TODO write cells/second to stderr (or log)
  * TODO write picture left-to-right/top-to-bottom
@@ -40,13 +44,19 @@
  * TODO add option "-xc" for init_color vs init_extended_color
  * TODO add option "-xa" for init_pair vs alloc_pair
  * TODO use pad to allow pictures larger than screen
- * TODO improve load of image-file's color-table using tsearch.
  * TODO add option to just use convert (which can scale) vs builtin xbm/xpm.
+ * TODO add scr_dump and scr_restore calls
+ * TODO add option for assume_default_colors
  */
 #include <test.priv.h>
 
+#include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#if HAVE_TSEARCH
+#include <search.h>
+#endif
 
 #undef CUR			/* use only the curses interface */
 
@@ -56,27 +66,32 @@
 #define  L_CURLY '{'
 #define  R_CURLY '}'
 
-#define okCOLOR(n) ((n) >= 0 && (n) < COLORS)
-#define okRGB(n)   ((n) >= 0 && (n) <= 1000)
-#define Scaled256(n) (NCURSES_COLOR_T) (int)(((n) * 1000.0) / 256)
-#define ScaledColor(n) (NCURSES_COLOR_T) (int)(((n) * 1000.0) / scale)
+#define okCOLOR(n)	((n) >= 0 && (n) < COLORS)
+#define okRGB(n)	((n) >= 0 && (n) <= 1000)
+#define Scaled256(n)	(NCURSES_COLOR_T) (int)(((n) * 1000.0) / 256)
+#define ScaledColor(n)	(NCURSES_COLOR_T) (int)(((n) * 1000.0) / scale)
+
+#define RGB_PATH "/etc/X11/rgb.txt"
+
+typedef int NUM_COLOR;
 
 typedef struct {
-    int ch;			/* nominal character to display */
-    int fg;			/* foreground color */
+    char ch;			/* nominal character to display */
+    NUM_COLOR fg;		/* foreground color */
 } PICS_CELL;
 
 typedef struct {
-    int fg;
-    int bg;
-} PICS_PAIR;
+    NUM_COLOR fgcol;
+    unsigned short which;
+    unsigned short count;
+} FG_NODE;
 
 typedef struct {
     char *name;
-    int high;
-    int wide;
+    short high;
+    short wide;
     int colors;
-    PICS_PAIR *pairs;
+    FG_NODE **fgcol;
     PICS_CELL *cells;
 } PICS_HEAD;
 
@@ -91,11 +106,43 @@ typedef struct {
     short blue;
 } RGB_DATA;
 
-static void giveup(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+typedef struct {
+    size_t file;
+    size_t name;
+    size_t list;
+    size_t data;
+    size_t head;
+    size_t pair;
+    size_t cell;
+} HOW_MUCH;
 
+#define stop_curses() if (in_curses) endwin()
+
+#define debugmsg if (debugging) logmsg
+#define debugmsg2 if (debugging) logmsg2
+
+static void cleanup(int) GCC_NORETURN;
+static void giveup(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static void logmsg(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static void logmsg2(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static void warning(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+
+static FILE *logfp = 0;
 static bool in_curses = FALSE;
+static bool debugging = FALSE;
+static bool quiet = FALSE;
+static int slow_time = -1;
 static RGB_NAME *rgb_table;
 static RGB_DATA *all_colors;
+static HOW_MUCH how_much;
+
+static int reading_last;
+static int reading_size;
+static FG_NODE **reading_ncols;
+
+#if HAVE_TSEARCH
+static void *reading_ntree;
+#endif
 
 #if HAVE_ALLOC_PAIR && HAVE_INIT_EXTENDED_COLOR
 #define USE_EXTENDED_COLORS 1
@@ -106,6 +153,87 @@ static bool use_extended_colors = FALSE;
 #endif
 
 static void
+logmsg(const char *fmt,...)
+{
+    if (logfp != 0) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(logfp, fmt, ap);
+	va_end(ap);
+	fputc('\n', logfp);
+	fflush(logfp);
+    }
+}
+
+static void
+logmsg2(const char *fmt,...)
+{
+    if (logfp != 0) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(logfp, fmt, ap);
+	va_end(ap);
+	fflush(logfp);
+    }
+}
+
+static void
+close_log(void)
+{
+    if (logfp != 0) {
+	logmsg("Allocations:");
+	logmsg("%8ld file", (long) how_much.file);
+	logmsg("%8ld name", (long) how_much.name);
+	logmsg("%8ld list", (long) how_much.list);
+	logmsg("%8ld data", (long) how_much.data);
+	logmsg("%8ld head", (long) how_much.head);
+	logmsg("%8ld pair", (long) how_much.pair);
+	logmsg("%8ld cell", (long) how_much.cell);
+	logmsg("%8ld window", LINES * COLS * (long) sizeof(NCURSES_CH_T));
+	fclose(logfp);
+	logfp = 0;
+    }
+}
+
+static void
+cleanup(int code)
+{
+    stop_curses();
+    close_log();
+    ExitProgram(code);
+    /* NOTREACHED */
+}
+
+static void
+failed(const char *msg)
+{
+    int save = errno;
+    perror(msg);
+    logmsg("failed with %s", strerror(save));
+    cleanup(EXIT_FAILURE);
+}
+
+static void
+warning(const char *fmt,...)
+{
+    if (logfp != 0) {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(logfp, fmt, ap);
+	va_end(ap);
+	fputc('\n', logfp);
+	fflush(logfp);
+    } else {
+	va_list ap;
+	va_start(ap, fmt);
+	vfprintf(stderr, fmt, ap);
+	va_end(ap);
+	fputc('\n', stderr);
+	cleanup(EXIT_FAILURE);
+    }
+}
+
+static void
 free_data(char **data)
 {
     if (data != 0) {
@@ -114,14 +242,215 @@ free_data(char **data)
     }
 }
 
-static void
+static PICS_HEAD *
 free_pics_head(PICS_HEAD * pics)
 {
     if (pics != 0) {
-	free(pics->pairs);
+#if !(HAVE_TSEARCH && HAVE_TDESTROY)
+	int n;
+	if (pics->fgcol != 0) {
+	    for (n = 0; n < pics->colors; ++n) {
+		free(pics->fgcol[n]);
+	    }
+	}
+#endif
+	free(pics->fgcol);
 	free(pics->cells);
+	free(pics->name);
 	free(pics);
+	pics = 0;
     }
+    return pics;
+}
+
+static void
+begin_c_values(int size)
+{
+    reading_last = 0;
+    reading_size = size;
+    reading_ncols = typeCalloc(FG_NODE *, size + 1);
+    how_much.pair += (sizeof(FG_NODE *) * (size_t) size);
+}
+
+#if HAVE_TSEARCH
+static int
+compare_c_values(const void *p, const void *q)
+{
+    const FG_NODE *a = (const FG_NODE *) p;
+    const FG_NODE *b = (const FG_NODE *) q;
+    return (a->fgcol - b->fgcol);
+}
+
+#ifdef DEBUG_TSEARCH
+static void
+check_c_values(int ln)
+{
+    static int oops = 5;
+    FG_NODE **ft;
+    int n;
+    if (oops-- <= 0)
+	return;
+    for (n = 0; n < reading_last; ++n) {
+	if (reading_ncols[n] == 0)
+	    continue;
+	ft = tfind(reading_ncols[n], &reading_ntree, compare_c_values);
+	if (ft != 0 && *ft != 0) {
+	    if ((*ft)->fgcol != reading_ncols[n]->fgcol) {
+		logmsg("@%d, %d:%d (%d) %p %p fgcol %06X %06X", ln, n,
+		       reading_last - 1,
+		       reading_size,
+		       (*ft), reading_ncols[n],
+		       reading_ncols[n]->fgcol,
+		       (*ft)->fgcol);
+	    }
+	    if ((*ft)->which != reading_ncols[n]->which) {
+		logmsg("@%d, %d:%d (%d) %p %p which %d %d", ln, n,
+		       reading_last - 1,
+		       reading_size,
+		       (*ft), reading_ncols[n],
+		       reading_ncols[n]->which,
+		       (*ft)->which);
+	    }
+	} else {
+	    logmsg("@%d, %d:%d (%d) %p %p null %06X %d", ln, n,
+		   reading_last - 1,
+		   reading_size,
+		   ft, reading_ncols[n],
+		   reading_ncols[n]->fgcol,
+		   reading_ncols[n]->which);
+	}
+    }
+}
+#else
+#define check_c_values(n)	/* nothing */
+#endif
+#endif
+
+#undef MAX
+#define MAX(a,b) ((a)>(b)?(a):(b))
+
+static int
+gather_c_values(int fg)
+{
+    int found = -1;
+#if HAVE_TSEARCH
+    FG_NODE **ft;
+    FG_NODE *find = typeMalloc(FG_NODE, 1);
+
+    how_much.pair += sizeof(FG_NODE);
+    find->fgcol = fg;
+    find->which = 0;
+
+    check_c_values(__LINE__);
+    if ((ft = tfind(find, &reading_ntree, compare_c_values)) != 0) {
+	found = (*ft)->which;
+    } else {
+	if (reading_last + 1 >= reading_size) {
+	    int more = ((MAX(reading_last, reading_size) + 2) * 3) / 2;
+	    FG_NODE **p = typeRealloc(FG_NODE *, more, reading_ncols);
+	    if (p == 0)
+		goto done;
+
+	    /* FIXME - this won't reallocate pointers for tsearch */
+	    how_much.pair -= (sizeof(FG_NODE *) * (size_t) reading_size);
+	    how_much.pair += (sizeof(FG_NODE *) * (size_t) more);
+	    reading_size = more;
+	    reading_ncols = p;
+	    memset(reading_ncols + reading_last, 0,
+		   sizeof(FG_NODE *) * (size_t) (more - reading_last));
+	    check_c_values(__LINE__);
+	}
+	reading_ncols[reading_last] = find;
+	find->which = (unsigned short) reading_last++;
+	if ((ft = tsearch(find, &reading_ntree, compare_c_values)) != 0) {
+	    found = find->which;
+	    check_c_values(__LINE__);
+	}
+    }
+#else
+    int n;
+
+    for (n = 0; n < reading_last; ++n) {
+	if (reading_ncols[n]->fgcol == fg) {
+	    found = n;
+	    break;
+	}
+    }
+    if (found < 0) {
+	FG_NODE *node = typeMalloc(FG_NODE, 1);
+	how_much.pair += sizeof(FG_NODE);
+	if (reading_last + 2 >= reading_size) {
+	    int more = ((reading_last + 2) * 3) / 2;
+	    FG_NODE **p = typeRealloc(FG_NODE *, more, reading_ncols);
+	    if (p == 0)
+		goto done;
+
+	    how_much.pair -= (sizeof(FG_NODE *) * reading_size);
+	    how_much.pair += (sizeof(FG_NODE *) * more);
+	    reading_size = more;
+	    reading_ncols = p;
+	    memset(reading_ncols + reading_last, 0,
+		   sizeof(FG_NODE) * (more - reading_last));
+	}
+	node->fgcol = fg;
+	node->which = reading_last;
+	reading_ncols[reading_last] = node;
+	found = reading_last++;
+    }
+#endif
+  done:
+    return found;
+}
+
+static void
+finish_c_values(PICS_HEAD * head)
+{
+    head->colors = reading_last;
+    head->fgcol = reading_ncols;
+
+    reading_last = 0;
+    reading_size = 0;
+    reading_ncols = 0;
+}
+
+static void
+dispose_c_values(void)
+{
+    int n;
+#if HAVE_TSEARCH
+    if (reading_ntree != 0) {
+#if HAVE_TDESTROY
+	tdestroy(reading_ntree, free);
+#else
+	for (n = 0; n < reading_last; ++n) {
+	    tdelete(reading_ncols[n], &reading_ntree, compare_c_values);
+	}
+#endif
+	reading_ntree = 0;
+    }
+#endif
+    if (reading_ncols != 0) {
+	for (n = 0; n < reading_last; ++n) {
+	    free(reading_ncols[n]);
+	}
+	free(reading_ncols);
+	reading_ncols = 0;
+    }
+    reading_last = 0;
+    reading_size = 0;
+}
+
+static int
+is_file(const char *filename, struct stat *sb)
+{
+    int result = 0;
+    if (stat(filename, sb) == 0
+	&& (sb->st_mode & S_IFMT) == S_IFREG
+	&& sb->st_size != 0) {
+	result = 1;
+    }
+    debugmsg("is_file(%s) %d", filename, result);
+    return result;
 }
 
 /*
@@ -134,28 +463,38 @@ read_file(const char *filename)
     char **result = 0;
     struct stat sb;
 
-    if (in_curses)
-	endwin();
+    if (!quiet) {
+	stop_curses();
+	printf("** %s\n", filename);
+    }
 
-    printf("** %s\n", filename);
-
-    if (stat(filename, &sb) == 0
-	&& (sb.st_mode & S_IFMT) == S_IFREG
-	&& sb.st_size != 0) {
+    if (is_file(filename, &sb)) {
 	size_t size = (size_t) sb.st_size;
 	char *blob = typeMalloc(char, size + 1);
 	bool had_line = TRUE;
+	bool binary = FALSE;
 	unsigned j;
 	unsigned k = 0;
 
 	result = typeCalloc(char *, size + 1);
+	how_much.file += ((size + 1) * 2);
+
 	if (blob != 0 && result != 0) {
 	    FILE *fp = fopen(filename, "r");
 	    if (fp != 0) {
+		logmsg("opened %s", filename);
 		if (fread(blob, sizeof(char), size, fp) == size) {
 		    for (j = 0; (size_t) j < size; ++j) {
+			if (blob[j] == '\0' ||
+			    (UChar(blob[j]) < 32 &&
+			     !isspace(blob[j])) ||
+			    (UChar(blob[j]) >= 128 && UChar(blob[j]) < 160))
+			    binary = TRUE;
 			if (blob[j] == '\n') {
 			    blob[j] = '\0';
+			    if (k && !binary) {
+				debugmsg2("[%5d] %s\n", k, result[k - 1]);
+			    }
 			    had_line = TRUE;
 			} else if (had_line) {
 			    had_line = FALSE;
@@ -163,14 +502,22 @@ read_file(const char *filename)
 			}
 		    }
 		    result[k] = 0;
+		    if (k && !binary) {
+			debugmsg2("[%5d] %s\n", k, result[k - 1]);
+		    }
 		}
 		fclose(fp);
+	    } else {
+		logmsg("cannot open %s", filename);
 	    }
 	}
 	if (k == 0) {
+	    debugmsg("...file is empty");
 	    free(blob);
 	    free(result);
 	    result = 0;
+	} else if (binary) {
+	    debugmsg("...file is non-text");
 	}
     }
     return result;
@@ -185,52 +532,143 @@ usage(void)
 	,"Read/display one or more xbm/xpm files (possibly use \"convert\")"
 	,""
 	,"Options:"
-	,"  -p palette"
-	,"  -r rgb-path"
+	,"  -d           add debugging information to logfile"
+	,"  -l logfile   write informational messages to logfile"
+	,"  -p palette   color-palette file (default \"$TERM.dat\")"
+	,"  -q           less verbose"
+	,"  -r rgb-path  xpm uses X rgb color-names (default \"" RGB_PATH "\")"
+	,"  -s SECS      pause for SECS seconds after display vs getch"
 #if USE_EXTENDED_COLORS
-	,"  -x [p]   use extension (p=init_extended_pair)"
+	,"  -x [pc]      use extension (p=extended-pairs, c=extended-colors)"
+	,"               Either/both extension may be given"
 #endif
     };
     size_t n;
 
-    if (in_curses)
-	endwin();
+    stop_curses();
 
     fflush(stdout);
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
-    ExitProgram(EXIT_FAILURE);
+    cleanup(EXIT_FAILURE);
 }
 
 static void
 giveup(const char *fmt,...)
 {
     va_list ap;
-    if (in_curses)
-	endwin();
+
+    stop_curses();
     fflush(stdout);
+
     va_start(ap, fmt);
     vfprintf(stderr, fmt, ap);
     fputc('\n', stderr);
     va_end(ap);
+
+    if (logfp) {
+	va_start(ap, fmt);
+	vfprintf(logfp, fmt, ap);
+	fputc('\n', logfp);
+	va_end(ap);
+	fflush(logfp);
+    }
+
     usage();
+}
+
+/*
+ * Palette files are named for $TERM values.  However, there are fewer palette
+ * files than $TERM's.  Although there are known problems (some cannot even get
+ * black and white correct), for the purpose of comparison, pretending that
+ * those map into "xterm" is useful.
+ */
+static char **
+read_palette(const char *filename)
+{
+    static const char *data_dir = DATA_DIR;
+    char **result = 0;
+    char *full_name = malloc(strlen(data_dir) + 20 + strlen(filename));
+    char *s;
+    struct stat sb;
+
+    if (full_name != 0) {
+	int tries;
+	for (tries = 0; tries < 8; ++tries) {
+
+	    *(s = full_name) = '\0';
+	    if (tries & 1) {
+		if (strchr(filename, '/') == 0) {
+		    sprintf(full_name, "%s/", data_dir);
+		} else {
+		    continue;
+		}
+	    }
+	    s += strlen(s);
+
+	    strcpy(s, filename);
+	    if (tries & 4) {
+		char *t = s;
+		int num;
+		char chr;
+		int found = 0;
+		while (*t != '\0') {
+		    if (*t == '-') {
+			if (sscanf(t, "-%d%c", &num, &chr) == 2 &&
+			    chr == 'c' &&
+			    !strncmp(strchr(t, chr), "color", 5)) {
+			    found = 1;
+			}
+			break;
+		    }
+		    ++t;
+		}
+		if (found && (t != s)
+		    && strncmp(s, "xterm", (size_t) (t - s))) {
+		    sprintf(s, "xterm%s", filename + (t - s));
+		} else {
+		    continue;
+		}
+	    }
+	    s += strlen(s);
+
+	    if (tries & 2) {
+		int len = (int) strlen(filename);
+		if (len <= 4 || strcmp(filename + len - 4, ".dat")) {
+		    strcpy(s, ".dat");
+		} else {
+		    continue;
+		}
+	    }
+	    if (is_file(full_name, &sb))
+		goto ok;
+	}
+	goto failed;
+      ok:
+	result = read_file(full_name);
+      failed:
+	free(full_name);
+    }
+    return result;
 }
 
 static void
 init_palette(const char *palette_file)
 {
     if (palette_file != 0) {
-	char **data = read_file(palette_file);
+	char **data = read_palette(palette_file);
 	int cp;
 
 	all_colors = typeMalloc(RGB_DATA, (unsigned) COLORS);
+	how_much.data += (sizeof(RGB_DATA) * (unsigned) COLORS);
+
 	for (cp = 0; cp < COLORS; ++cp) {
 	    color_content((short) cp,
 			  &all_colors[cp].red,
 			  &all_colors[cp].green,
 			  &all_colors[cp].blue);
 	}
-	if (palette_file != 0 && data != 0) {
+	if (data != 0) {
 	    int n;
 	    int red, green, blue;
 	    int scale = 1000;
@@ -255,8 +693,8 @@ init_palette(const char *palette_file)
 	    }
 	}
 	free_data(data);
-    } else if (COLORS   > 1) {
 	/* *INDENT-EQLS* */
+    } else if (COLORS > 1) {
 	int power2 = 1;
 	int shift = 0;
 
@@ -266,7 +704,12 @@ init_palette(const char *palette_file)
 	}
 
 	if ((power2 != COLORS) || ((shift % 3) != 0)) {
-	    giveup("With %d colors, you need a palette-file", COLORS);
+	    if (all_colors == 0) {
+		init_palette(getenv("TERM"));
+	    }
+	    if (all_colors == 0) {
+		giveup("With %d colors, you need a palette-file", COLORS);
+	    }
 	}
     }
 }
@@ -498,7 +941,9 @@ parse_rgb(char **data)
     RGB_NAME *result = 0;
 
     for (need = 0; data[need] != 0; ++need) ;
+
     result = typeCalloc(RGB_NAME, need + 2);
+    how_much.name += (sizeof(RGB_NAME) * (need + 2));
 
     for (n = 0; data[n] != 0; ++n) {
 	if (strlen(t = data[n]) >= sizeof(buf) - 1)
@@ -518,8 +963,9 @@ parse_rgb(char **data)
 	while (t-- != s && isspace(UChar(*t))) {
 	    *t = '\0';
 	}
-	result[item].value = (int) ((r & 0xff) << 16 | (g & 0xff) << 8 | (b
-									  & 0xff));
+	result[item].value = (int) ((r & 0xff) << 16 |
+				    (g & 0xff) << 8 |
+				    (b & 0xff));
 	++item;
     }
 
@@ -555,9 +1001,14 @@ parse_xbm(char **data)
     char ch;
     char *s;
     char *t;
-    PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
+    PICS_HEAD *result;
     size_t which = 0;
     size_t cells = 0;
+
+    debugmsg("called parse_xbm");
+
+    result = typeCalloc(PICS_HEAD, 1);
+    how_much.head += sizeof(PICS_HEAD);
 
     for (n = 0; data[n] != 0; ++n) {
 	if (strlen(s = data[n]) >= sizeof(buf) - 1)
@@ -569,10 +1020,10 @@ parse_xbm(char **data)
 	    if (sscanf(s, "#define %s %d%c", buf, &num, &ch) >= 2) {
 		if ((t = strstr(buf, "_width")) != 0) {
 		    state |= 1;
-		    result->wide = bytes_of(num);
+		    result->wide = (short) bytes_of(num);
 		} else if ((t = strstr(buf, "_height")) != 0) {
 		    state |= 2;
-		    result->high = num;
+		    result->high = (short) num;
 		}
 		*t = '\0';
 		if (result->name) {
@@ -591,7 +1042,10 @@ parse_xbm(char **data)
 		}
 		state = 4;
 		cells = (size_t) (result->wide * result->high);
+
 		result->cells = typeCalloc(PICS_CELL, cells);
+		how_much.cell += (sizeof(PICS_CELL) * cells);
+
 		if ((s = strchr(s, L_CURLY)) == 0)
 		    break;
 		++s;
@@ -641,14 +1095,15 @@ parse_xbm(char **data)
     }
   finish:
     if (state < 4) {
+	debugmsg("...state was only %d", state);
 	if (result) {
-	    free_pics_head(result);
-	    result = 0;
+	    result = free_pics_head(result);
 	}
     } else {
-	result->colors = 2;
-	result->pairs = typeCalloc(PICS_PAIR, 2);
-	result->pairs[1].fg = 0xffffff;
+	begin_c_values(2);
+	gather_c_values(0);
+	gather_c_values(0xffffff);
+	finish_c_values(result);
     }
     return result;
 }
@@ -657,14 +1112,15 @@ static PICS_HEAD *
 parse_xpm(char **data)
 {
     int state = 0;
-    PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
+    PICS_HEAD *result;
     RGB_NAME *by_name;
     int n;
     int cells = 0;
-    int color = 0;
     int cpp = 1;		/* chars per pixel */
     int num[6];
+    int found;
     int which = 0;
+    int num_colors = 0;
     char ch;
     const char *cs;
     char *s;
@@ -673,6 +1129,11 @@ parse_xpm(char **data)
     char arg2[BUFSIZ];
     char arg3[BUFSIZ];
     char **list = 0;
+
+    debugmsg("called parse_xpm");
+
+    result = typeCalloc(PICS_HEAD, 1);
+    how_much.head += sizeof(PICS_HEAD);
 
     for (n = 0; data[n] != 0; ++n) {
 	if (strlen(s = data[n]) >= sizeof(buf) - 1)
@@ -695,13 +1156,20 @@ parse_xpm(char **data)
 			num + 0, num + 1, num + 2, num + 3) ||
 		match_c(s, " \" %d %d %d %d %d %d \" , ",
 			num + 0, num + 1, num + 2, num + 3, num + 4, num + 5)) {
-		result->wide = num[0];
-		result->high = num[1];
+		result->wide = (short) num[0];
+		result->high = (short) num[1];
 		result->colors = num[2];
-		result->pairs = typeCalloc(PICS_PAIR, result->colors);
+
+		begin_c_values(num[2]);
+
 		cells = (result->wide * result->high);
+
 		result->cells = typeCalloc(PICS_CELL, cells);
+		how_much.cell += sizeof(PICS_CELL) * (size_t) cells;
+
 		list = typeCalloc(char *, result->colors);
+		how_much.list += sizeof(char *) * (size_t) result->colors;
+
 		cpp = num[3];
 		state = 3;
 	    }
@@ -710,9 +1178,10 @@ parse_xpm(char **data)
 	    if (!match_colors(s, cpp, arg1, arg2, arg3)) {
 		break;
 	    }
-	    list[color] = strdup(arg1);
+	    num_colors++;
+	    list[reading_last] = strdup(arg1);
 	    if ((by_name = lookup_rgb(arg3)) != 0) {
-		result->pairs[color].fg = by_name->value;
+		found = gather_c_values(by_name->value);
 	    } else if (*arg3 == '#') {
 		char *rgb = arg3 + 1;
 		unsigned long value = strtoul(rgb, &s, 16);
@@ -725,15 +1194,19 @@ parse_xpm(char **data)
 			     | ((value >> 8) & 0xffL));
 		    break;
 		default:
-		    printf("unexpected rgb value %s\n", rgb);
+		    warning("unexpected rgb value %s", rgb);
 		    break;
 		}
-		result->pairs[color].fg = (int) value;
+		found = gather_c_values((int) value);
 	    } else {
-		result->pairs[color].fg = 0;	/* actually an error */
+		found = gather_c_values(0);	/* actually an error */
 	    }
-	    if (++color >= result->colors)
+	    debugmsg("  [%d:%d] %06X", num_colors, result->colors,
+		     reading_ncols[(found >= 0) ? found : 0]->fgcol);
+	    if (num_colors >= result->colors) {
+		finish_c_values(result);
 		state = 4;
+	    }
 	    break;
 	case 4:
 	    if (*(cs = skip_cs(s)) == '"') {
@@ -741,6 +1214,7 @@ parse_xpm(char **data)
 		while (*cs != '\0' && *cs != '"') {
 		    int c;
 
+		    /* FIXME - factor out */
 		    for (c = 0; c < result->colors; ++c) {
 			if (!strncmp(cs, list[c], (size_t) cpp)) {
 			    result->cells[which].ch = list[c][0];
@@ -772,8 +1246,12 @@ parse_xpm(char **data)
     }
 
     if (state < 5) {
-	free_pics_head(result);
-	result = 0;
+	debugmsg("...state was only %d", state);
+	result = free_pics_head(result);
+    }
+
+    if (result) {
+	debugmsg("...allocated %d colors", result->colors);
     }
 
     return result;
@@ -788,17 +1266,26 @@ parse_img(const char *filename)
     char *cmd = malloc(strlen(filename) + 256);
     FILE *pp;
     char buffer[BUFSIZ];
-    bool failed = FALSE;
-    PICS_HEAD *result = typeCalloc(PICS_HEAD, 1);
+    char dummy[BUFSIZ];
+    bool okay = TRUE;
+    PICS_HEAD *result;
     int pic_x = 0;
     int pic_y = 0;
     int width = in_curses ? COLS : 80;
 
     sprintf(cmd, "identify \"%s\"", filename);
+    if (quiet)
+	strcat(cmd, " 2>/dev/null");
+
+    logmsg("...opening pipe to %s", cmd);
+
+    result = typeCalloc(PICS_HEAD, 1);
+    how_much.head += sizeof(PICS_HEAD);
 
     if ((pp = popen(cmd, "r")) != 0) {
 	if (fgets(buffer, sizeof(buffer), pp) != 0) {
 	    size_t n = strlen(filename);
+	    debugmsg2("...read %s", buffer);
 	    if (strlen(buffer) > n &&
 		!strncmp(buffer, filename, n) &&
 		isspace(UChar(buffer[n])) &&
@@ -817,29 +1304,35 @@ parse_img(const char *filename)
     sprintf(cmd, "convert " "-resize %dx%d\\! " "-thumbnail %dx \"%s\" "
 	    "-define txt:compliance=SVG txt:-",
 	    pic_x, pic_y, width, filename);
+    if (quiet)
+	strcat(cmd, " 2>/dev/null");
 
+    logmsg("...opening pipe to %s", cmd);
     if ((pp = popen(cmd, "r")) != 0) {
 	int count = 0;
 	int col = 0;
 	int row = 0;
 	int len = 0;
 	while (fgets(buffer, sizeof(buffer), pp) != 0) {
+	    debugmsg2("[%5d] %s", count + 1, buffer);
 	    if (strlen(buffer) > 160) {		/* 80 columns would be enough */
-		failed = TRUE;
+		okay = FALSE;
 		break;
 	    }
 	    if (count++ == 0) {
 		if (match_c(buffer,
-			    "# ImageMagick pixel enumeration: %d,%d,%d,srgba ",
-			    &col, &row, &len)) {
+			    "# ImageMagick pixel enumeration: %d,%d,%d,%s ",
+			    &col, &row, &len, dummy)) {
 		    result->name = strdup(filename);
-		    result->wide = col;
-		    result->high = row;
-		    result->colors = 256;
-		    result->pairs = typeCalloc(PICS_PAIR, result->colors);
+		    result->wide = (short) col;
+		    result->high = (short) row;
+
+		    begin_c_values(256);
+
 		    result->cells = typeCalloc(PICS_CELL, (size_t) (col * row));
+		    how_much.cell += (sizeof(PICS_CELL) * (size_t) (col * row));
 		} else {
-		    failed = TRUE;
+		    okay = FALSE;
 		    break;
 		}
 	    } else {
@@ -866,47 +1359,30 @@ parse_img(const char *filename)
 			g > 255 ||
 			b > 255 ||
 			check != (unsigned) ((r << 16) | (g << 8) | b)) {
-			failed = TRUE;
+			okay = FALSE;
 			break;
 		    }
-		    for (c = 0; c < result->colors; ++c) {
-			if (result->pairs[c].fg == (int) check) {
-			    break;
-			} else if (result->pairs[c].fg == 0) {
-			    result->pairs[c].fg = (int) check;
-			    break;
-			}
-		    }
-		    if (c >= result->colors) {
-			int more = (result->colors * 3) / 2;
-			PICS_PAIR *p = typeRealloc(PICS_PAIR, more, result->pairs);
-			if (p != 0) {
-			    result->colors = more;
-			    result->pairs = p;
-			    result->pairs[c].fg = (int) check;
-			    result->pairs[c].bg = 0;
-			    while (++c < more) {
-				result->pairs[c].fg = 0;
-				result->pairs[c].bg = 0;
-			    }
-			}
-		    }
+		    c = gather_c_values((int) check);
 		    which = col + (row * result->wide);
 		    result->cells[which].ch = ((in_curses ||
 						check == 0xffffff)
 					       ? ' '
 					       : '#');
-		    result->cells[which].fg = (c < result->colors) ? c : -1;
+		    result->cells[which].fg = ((c >= 0 && c < reading_last)
+					       ? c
+					       : -1);
 		} else {
-		    failed = TRUE;
+		    okay = FALSE;
 		    break;
 		}
 	    }
 	}
+	finish_c_values(result);
 	pclose(pp);
-	if (!failed) {
+	if (okay) {
+	    /* FIXME - is this trimming needed? */
 	    for (len = result->colors; len > 3; len--) {
-		if (result->pairs[len - 1].fg == 0) {
+		if (result->fgcol[len - 1] == 0) {
 		    result->colors = len - 1;
 		} else {
 		    break;
@@ -917,9 +1393,8 @@ parse_img(const char *filename)
   finish:
     free(cmd);
 
-    if (failed) {
-	free_pics_head(result);
-	result = 0;
+    if (!okay) {
+	result = free_pics_head(result);
     }
 
     return result;
@@ -930,15 +1405,25 @@ read_picture(const char *filename, char **data)
 {
     PICS_HEAD *pics;
     if ((pics = parse_xbm(data)) == 0) {
+	dispose_c_values();
 	if ((pics = parse_xpm(data)) == 0) {
+	    dispose_c_values();
 	    if ((pics = parse_img(filename)) == 0) {
+		dispose_c_values();
 		free_data(data);
-		giveup("unexpected file-format for \"%s\"", filename);
+		warning("unexpected file-format for \"%s\"", filename);
+	    } else if (pics->high == 0 || pics->wide == 0) {
+		dispose_c_values();
+		free_data(data);
+		pics = free_pics_head(pics);
+		warning("no picture found in \"%s\"", filename);
 	    }
 	}
     }
     return pics;
 }
+
+#define fg_color(pics,n) (pics->fgcol[n]->fgcol)
 
 static void
 dump_picture(PICS_HEAD * pics)
@@ -949,10 +1434,10 @@ dump_picture(PICS_HEAD * pics)
     printf("Size %dx%d\n", pics->high, pics->wide);
     printf("Color\n");
     for (y = 0; y < pics->colors; ++y) {
-	if (pics->pairs[y].fg < 0) {
-	    printf(" %3d: %d\n", y, pics->pairs[y].fg);
+	if (fg_color(pics, y) < 0) {
+	    printf(" %3d: %d\n", y, fg_color(pics, y));
 	} else {
-	    printf(" %3d: #%06x\n", y, pics->pairs[y].fg);
+	    printf(" %3d: #%06x\n", y, fg_color(pics, y));
 	}
     }
     for (y = 0; y < pics->high; ++y) {
@@ -970,10 +1455,18 @@ show_picture(PICS_HEAD * pics)
     int n;
     int my_pair, my_color;
 
+    debugmsg("called show_picture");
+#if USE_EXTENDED_COLORS
+    reset_color_pairs();
+#else
+    wclear(curscr);
+    clear();
+#endif
     if (has_colors()) {
+	logmsg("...using %d colors", pics->colors);
 	for (n = 0; n < pics->colors; ++n) {
 	    my_pair = (n + 1);
-	    my_color = map_color(pics->pairs[n].fg);
+	    my_color = map_color(fg_color(pics, n));
 #if USE_EXTENDED_COLORS
 	    if (use_extended_pairs) {
 		init_extended_pair(my_pair, my_color, my_color);
@@ -1013,8 +1506,20 @@ show_picture(PICS_HEAD * pics)
 	    }
 	}
     }
-    mvgetch(0, 0);
-    endwin();
+    if (slow_time >= 0) {
+	refresh();
+	if (slow_time > 0) {
+#ifdef NCURSES_VERSION
+	    napms(1000 * slow_time);
+#else
+	    sleep((unsigned) slow_time);
+#endif
+	}
+    } else {
+	mvgetch(0, 0);
+    }
+    if (!quiet)
+	endwin();
 }
 
 int
@@ -1024,13 +1529,26 @@ main(int argc, char *argv[])
     const char *palette_path = 0;
     const char *rgb_path = "/etc/X11/rgb.txt";
 
-    while ((n = getopt(argc, argv, "p:r:x:")) != -1) {
+    while ((n = getopt(argc, argv, "dl:p:qr:s:x:")) != -1) {
 	switch (n) {
+	case 'd':
+	    debugging = TRUE;
+	    break;
+	case 'l':
+	    if ((logfp = fopen(optarg, "a")) == 0)
+		failed(optarg);
+	    break;
 	case 'p':
 	    palette_path = optarg;
 	    break;
+	case 'q':
+	    quiet = TRUE;
+	    break;
 	case 'r':
 	    rgb_path = optarg;
+	    break;
+	case 's':
+	    slow_time = atoi(optarg);
 	    break;
 #if USE_EXTENDED_COLORS
 	case 'x':
@@ -1069,6 +1587,7 @@ main(int argc, char *argv[])
 	    initscr();
 	    cbreak();
 	    noecho();
+	    curs_set(0);
 	    if (has_colors()) {
 		start_color();
 		init_palette(palette_path);
@@ -1084,21 +1603,26 @@ main(int argc, char *argv[])
 	    char **data = read_file(argv[n]);
 
 	    if (data == 0) {
-		giveup("cannot read \"%s\"", argv[n]);
+		warning("cannot read \"%s\"", argv[n]);
+		continue;
 	    }
-	    pics = read_picture(argv[n], data);
-	    if (in_curses) {
-		show_picture(pics);
-	    } else {
-		dump_picture(pics);
+	    if ((pics = read_picture(argv[n], data)) != 0) {
+		if (in_curses) {
+		    show_picture(pics);
+		} else {
+		    dump_picture(pics);
+		}
+		dispose_c_values();
+		free_data(data);
+		free_pics_head(pics);
 	    }
-	    free_data(data);
-	    free_pics_head(pics);
 	}
 	free_data(rgb_data);
 	free(rgb_table);
+	free(all_colors);
     } else {
 	usage();
     }
-    ExitProgram(EXIT_SUCCESS);
+
+    cleanup(EXIT_SUCCESS);
 }

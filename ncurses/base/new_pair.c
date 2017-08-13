@@ -60,7 +60,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.11 2017/06/17 18:43:16 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.14 2017/08/11 18:20:22 tom Exp $")
 
 #if USE_NEW_PAIR
 
@@ -171,14 +171,29 @@ delink_color_pair(SCREEN *sp, int pair)
 }
 
 /*
+ * Discard all nodes in the fast-index.
+ */
+NCURSES_EXPORT(void)
+_nc_free_ordered_pairs(SCREEN *sp)
+{
+    if (sp && sp->_ordered_pairs && sp->_pair_alloc) {
+	int n;
+	for (n = 0; n < sp->_pair_alloc; ++n) {
+	    tdelete(&sp->_color_pairs[n], &sp->_ordered_pairs, compare_data);
+	}
+    }
+}
+
+/*
  * Use this call to update the fast-index when modifying an entry in the color
  * pair table.
  */
 NCURSES_EXPORT(void)
 _nc_reset_color_pair(SCREEN *sp, int pair, colorpair_t * next)
 {
+    colorpair_t *last;
     if (ValidPair(sp, pair)) {
-	colorpair_t *last = &(sp->_color_pairs[pair]);
+	last = _nc_reserve_pairs(sp, pair);
 	delink_color_pair(sp, pair);
 	if (last->mode > cpFREE &&
 	    (last->fg != next->fg || last->bg != next->bg)) {
@@ -216,6 +231,22 @@ _nc_set_color_pair(SCREEN *sp, int pair, int mode)
     }
 }
 
+/*
+ * If we reallocate the color-pair array, we have to adjust the fast-index.
+ */
+NCURSES_EXPORT(void)
+_nc_copy_pairs(SCREEN *sp, colorpair_t * target, colorpair_t * source, int length)
+{
+    int n;
+    for (n = 0; n < length; ++n) {
+	void *find = tfind(source + n, &sp->_ordered_pairs, compare_data);
+	if (find != 0) {
+	    tdelete(source + n, &sp->_ordered_pairs, compare_data);
+	    tsearch(target + n, &sp->_ordered_pairs, compare_data);
+	}
+    }
+}
+
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(alloc_pair) (NCURSES_SP_DCLx int fg, int bg)
 {
@@ -237,11 +268,19 @@ NCURSES_SP_NAME(alloc_pair) (NCURSES_SP_DCLx int fg, int bg)
 	     * The linear search is done to allow mixing calls to init_pair()
 	     * and alloc_pair().  The former can make gaps...
 	     */
-	    for (pair = hint + 1; pair < SP_PARM->_pair_limit; pair++) {
+	    for (pair = hint + 1; pair < SP_PARM->_pair_alloc; pair++) {
 		if (SP_PARM->_color_pairs[pair].mode == cpFREE) {
 		    T(("found gap %d", pair));
 		    found = TRUE;
 		    break;
+		}
+	    }
+	    if (!found && (SP_PARM->_pair_alloc < SP_PARM->_pair_limit)) {
+		pair = SP_PARM->_pair_alloc;
+		if (_nc_reserve_pairs(sp, pair) == 0) {
+		    pair = -1;
+		} else {
+		    found = TRUE;
 		}
 	    }
 	    if (!found) {
@@ -285,7 +324,7 @@ NCURSES_SP_NAME(free_pair) (NCURSES_SP_DCLx int pair)
 {
     int result = ERR;
     T((T_CALLED("free_pair(%d)"), pair));
-    if (ValidPair(SP_PARM, pair)) {
+    if (ValidPair(SP_PARM, pair) && pair < SP_PARM->_pair_alloc) {
 	colorpair_t *cp = &(SP_PARM->_color_pairs[pair]);
 	if (pair != 0) {
 	    _nc_change_pair(SP_PARM, pair);

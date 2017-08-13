@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.103 2017/07/30 00:13:55 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.104 2017/08/02 01:23:51 tom Exp $")
 
 /*
  *	char *
@@ -549,7 +549,8 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 	for (i = 0; i < num_args; i++) {
 	    if (p_is_s[i] != 0) {
 		save_text(", %s", _nc_visbuf(p_is_s[i]), 0);
-	    } else if ((long) param[i] > 32767 || (long) param[i] < 0) {
+	    } else if ((long) param[i] > MAX_OF_TYPE(NCURSES_INT2) ||
+		       (long) param[i] < 0) {
 		_tracef("BUG: problem with tparm parameter #%d of %d",
 			i + 1, num_args);
 		break;

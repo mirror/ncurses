@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.134 2017/05/30 21:07:33 tom Exp $
+.\" $Id: ncurses.3x,v 1.135 2017/08/12 22:27:43 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1275,6 +1275,8 @@ terminal capability database
 "curs_" for detailed routine descriptions.
 .br
 \fBcurs_variables\fR(3X)
+.br
+\fBuser_caps\fP(5) for user-defined capabilities
 .SH EXTENSIONS
 The \fBncurses\fR library can be compiled with an option (\fB\-DUSE_GETCAP\fR)
 that falls back to the old-style /etc/termcap file if the terminal setup code

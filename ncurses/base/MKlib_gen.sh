@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.56 2017/01/07 16:02:47 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.57 2017/08/12 12:22:06 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2017,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -91,7 +91,7 @@ ED4=sed4_${PID}.sed
 AW1=awk1_${PID}.awk
 AW2=awk2_${PID}.awk
 TMP=gen__${PID}.c
-trap "rm -f $ED1 $ED2 $ED3 $ED4 $AW1 $AW2 $TMP" 0 1 2 5 15
+trap "rm -f $ED1 $ED2 $ED3 $ED4 $AW1 $AW2 $TMP" 0 1 2 3 15
 
 ALL=$USE
 if test "$USE" = implemented ; then
