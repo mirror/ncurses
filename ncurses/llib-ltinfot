@@ -805,6 +805,14 @@ int	_nc_setupterm(
 		int	reuse)
 		{ return(*(int *)0); }
 
+#undef _nc_find_prescr
+SCREEN	*_nc_find_prescr(void)
+		{ return(*(SCREEN **)0); }
+
+#undef _nc_forget_prescr
+void	_nc_forget_prescr(void)
+		{ /* void */ }
+
 #undef new_prescr
 SCREEN	*new_prescr(void)
 		{ return(*(SCREEN **)0); }
@@ -1379,8 +1387,8 @@ int	_nc_read_file_entry(
 		TERMTYPE2 *ptr)
 		{ return(*(int *)0); }
 
-#undef _nc_read_entry2
-int	_nc_read_entry2(
+#undef _nc_read_entry
+int	_nc_read_entry(
 		const char *const name, 
 		char	*const filename, 
 		TERMTYPE2 *const tp)

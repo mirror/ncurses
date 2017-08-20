@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.132 2017/08/12 22:23:52 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.135 2017/08/19 23:48:19 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -266,7 +266,7 @@ init_direct_colors(NCURSES_SP_DCL0)
 	}
 
 	if ((n = tigetflag(name)) > 0) {
-	    n = width / 3;
+	    n = (width + 2) / 3;
 	    result->bits.red = UChar(n);
 	    result->bits.green = UChar(n);
 	    result->bits.blue = UChar(width - (2 * n));
@@ -282,6 +282,7 @@ init_direct_colors(NCURSES_SP_DCL0)
 	    switch (sscanf(s, "%d/%d/%d", &red, &green, &blue)) {
 	    default:
 		blue = width - (2 * n);
+		/* FALLTHRU */
 	    case 1:
 		green = n;
 		/* FALLTHRU */
@@ -1117,8 +1118,11 @@ NCURSES_SP_NAME(reset_color_pairs) (NCURSES_SP_DCL0)
 {
     if (SP_PARM != 0) {
 	if (SP_PARM->_color_pairs) {
-	    memset(sp->_color_pairs, 0, sizeof(colorpair_t) * (size_t) sp->_pair_alloc);
 	    _nc_free_ordered_pairs(SP_PARM);
+	    free(SP_PARM->_color_pairs);
+	    SP_PARM->_color_pairs = 0;
+	    SP_PARM->_pair_alloc = 0;
+	    _nc_reserve_pairs(SP_PARM, 16);
 	    clearok(CurScreen(SP_PARM), TRUE);
 	    touchwin(StdScreen(SP_PARM));
 	}

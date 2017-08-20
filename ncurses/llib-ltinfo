@@ -1275,8 +1275,8 @@ int	_nc_read_file_entry(
 		TERMTYPE2 *ptr)
 		{ return(*(int *)0); }
 
-#undef _nc_read_entry2
-int	_nc_read_entry2(
+#undef _nc_read_entry
+int	_nc_read_entry(
 		const char *const name, 
 		char	*const filename, 
 		TERMTYPE2 *const tp)

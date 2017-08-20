@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: clear.1,v 1.16 2016/12/31 16:09:34 tom Exp $
+.\" $Id: clear.1,v 1.17 2017/08/19 14:12:50 tom Exp $
 .TH @CLEAR@ 1 ""
 .\" these would be fallbacks for DS/DE,
 .\" but groff changed the meaning of the macros.
@@ -54,7 +54,7 @@
 .SH NAME
 \fB@CLEAR@\fR \- clear the terminal screen
 .SH SYNOPSIS
-\fB@CLEAR@\fR
+\fB@CLEAR@\fR [\fB\-T\fR\fItype\fR] [\fB\-V\fP] [\fB\-x\fP]
 .br
 .SH DESCRIPTION
 \fB@CLEAR@\fR clears your screen if this is possible,
@@ -68,10 +68,22 @@ and then in the
 You can redirect the standard output to a file (which prevents
 \fB@CLEAR@\fR from actually clearing the screen),
 and later \fBcat\fP the file to the screen, clearing it at that point.
+.SH OPTIONS
 .PP
-\fB@CLEAR@\fR ignores any command-line parameters that may be present.
-The analogous \*(``\fB@TPUT@\fP clear\*('' has command-line parameters
-including \fB\-T\fP for overriding the \fBTERM\fP environment variable.
+.TP 5
+.B \-T \fItype\fP
+indicates the \fItype\fR of terminal.
+Normally this option is
+unnecessary, because the default is taken from the environment
+variable \fBTERM\fR.
+.TP
+.B \-V
+reports the version of ncurses which was used in this program, and exits.
+The options are as follows:
+.TP
+.B \-x
+do not attempt to clear the terminal's scrollback buffer
+using the extended \*(``E3\*('' capability.
 .SH HISTORY
 A \fBclear\fP command appeared in 2.79BSD dated February 24, 1979.
 Later that was provided in Unix 8th edition (1985).

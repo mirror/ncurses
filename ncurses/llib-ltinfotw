@@ -833,6 +833,14 @@ int	_nc_setupterm(
 		int	reuse)
 		{ return(*(int *)0); }
 
+#undef _nc_find_prescr
+SCREEN	*_nc_find_prescr(void)
+		{ return(*(SCREEN **)0); }
+
+#undef _nc_forget_prescr
+void	_nc_forget_prescr(void)
+		{ /* void */ }
+
 #undef new_prescr
 SCREEN	*new_prescr(void)
 		{ return(*(SCREEN **)0); }

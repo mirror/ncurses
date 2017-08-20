@@ -282,6 +282,12 @@ void	_nc_change_pair(
 		int	pair)
 		{ /* void */ }
 
+#undef _nc_reserve_pairs
+colorpair_t *_nc_reserve_pairs(
+		SCREEN	*sp, 
+		int	want)
+		{ return(*(colorpair_t **)0); }
+
 #undef _nc_init_pair
 int	_nc_init_pair(
 		SCREEN	*sp, 
@@ -440,6 +446,11 @@ int	extended_pair_content_sp(
 		int	*b)
 		{ return(*(int *)0); }
 
+#undef reset_color_pairs_sp
+void	reset_color_pairs_sp(
+		SCREEN	*sp)
+		{ /* void */ }
+
 #undef init_extended_pair
 int	init_extended_pair(
 		int	pair, 
@@ -469,6 +480,10 @@ int	extended_pair_content(
 		int	*f, 
 		int	*b)
 		{ return(*(int *)0); }
+
+#undef reset_color_pairs
+void	reset_color_pairs(void)
+		{ /* void */ }
 
 /* ./base/lib_colorset.c */
 
@@ -3529,6 +3544,11 @@ int	mcprint(
 
 /* ./base/new_pair.c */
 
+#undef _nc_free_ordered_pairs
+void	_nc_free_ordered_pairs(
+		SCREEN	*sp)
+		{ /* void */ }
+
 #undef _nc_reset_color_pair
 void	_nc_reset_color_pair(
 		SCREEN	*sp, 
@@ -3541,6 +3561,14 @@ void	_nc_set_color_pair(
 		SCREEN	*sp, 
 		int	pair, 
 		int	mode)
+		{ /* void */ }
+
+#undef _nc_copy_pairs
+void	_nc_copy_pairs(
+		SCREEN	*sp, 
+		colorpair_t *target, 
+		colorpair_t *source, 
+		int	length)
 		{ /* void */ }
 
 #undef alloc_pair_sp
@@ -4955,7 +4983,7 @@ int	_nc_read_entry(
 #undef _nc_read_termcap_entry
 int	_nc_read_termcap_entry(
 		const char *const tn, 
-		TERMTYPE *const tp)
+		TERMTYPE2 *const tp)
 		{ return(*(int *)0); }
 
 /* ./tinfo/strings.c */

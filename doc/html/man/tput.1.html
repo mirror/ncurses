@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.54 2017/01/29 00:51:08 tom Exp @
+  * @Id: tput.1,v 1.55 2017/08/19 14:26:42 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -52,7 +52,7 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <EM>capname</EM> [<EM>parameters</EM>]
-       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>clear</STRONG>
+       <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] [<STRONG>-x</STRONG>] <STRONG>clear</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>init</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>reset</STRONG>
        <STRONG>tput</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] <STRONG>longname</STRONG>
@@ -87,24 +87,28 @@
 
 
 </PRE><H3><a name="h3-Options">Options</a></H3><PRE>
+       <STRONG>-S</STRONG>     allows more than one capability per  invocation  of  <STRONG>tput</STRONG>.   The
+              capabilities  must  be  passed  to  <STRONG>tput</STRONG> from the standard input
+              instead of from the command line (see example).  Only  one  <EM>cap-</EM>
+              <EM>name</EM>  is allowed per line.  The <STRONG>-S</STRONG> option changes the meaning of
+              the <STRONG>0</STRONG> and <STRONG>1</STRONG> boolean and string exit codes (see  the  EXIT  CODES
+              section).
+
+              Because  some capabilities may use <EM>string</EM> parameters rather than
+              <EM>numbers</EM>, <STRONG>tput</STRONG> uses a table and the presence of parameters in its
+              input  to  decide whether to use <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG>, and how to interpret
+              the parameters.
+
        <STRONG>-T</STRONG><EM>type</EM> indicates the <EM>type</EM> of terminal.  Normally this option is  unnec-
               essary,  because the default is taken from the environment vari-
               able <STRONG>TERM</STRONG>.  If <STRONG>-T</STRONG> is specified, then the shell  variables  <STRONG>LINES</STRONG>
               and <STRONG>COLUMNS</STRONG> will also be ignored.
 
-       <STRONG>-S</STRONG>     allows  more  than  one  capability per invocation of <STRONG>tput</STRONG>.  The
-              capabilities must be passed to  <STRONG>tput</STRONG>  from  the  standard  input
-              instead  of  from the command line (see example).  Only one <EM>cap-</EM>
-              <EM>name</EM> is allowed per line.  The <STRONG>-S</STRONG> option changes the meaning  of
-              the  <STRONG>0</STRONG>  and  <STRONG>1</STRONG> boolean and string exit codes (see the EXIT CODES
-              section).
-
-              Again, <STRONG>tput</STRONG> uses a table and the presence of parameters  in  its
-              input  to  decide whether to use <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG>, and how to interpret
-              the parameters.
-
-       <STRONG>-V</STRONG>     reports the version of ncurses which was used in  this  program,
+       <STRONG>-V</STRONG>     reports  the  version of ncurses which was used in this program,
               and exits.
+
+       <STRONG>-x</STRONG>     do not attempt to clear the terminal's scrollback  buffer  using
+              the extended "E3" capability.
 
 
 </PRE><H3><a name="h3-Commands">Commands</a></H3><PRE>
@@ -300,7 +304,7 @@
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
-       <STRONG>/usr/share/terminfo</STRONG>
+       <STRONG>/usr/local/ncurses/lib/terminfo</STRONG>
               compiled terminal description database
 
        <STRONG>/usr/share/tabset/*</STRONG>
@@ -478,7 +482,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>stty(1)</STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170812).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170819).
 
 
 

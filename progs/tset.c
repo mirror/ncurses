@@ -97,7 +97,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.116 2017/01/07 22:48:20 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.118 2017/08/19 13:16:03 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -711,27 +711,36 @@ print_shell_commands(const char *ttype)
 static void
 usage(void)
 {
-#define DATA(s) s "\n"
+#define SKIP(s)			/* nothing */
+#define KEEP(s) s "\n"
     static const char msg[] =
     {
-	DATA("")
-	DATA("Options:")
-	DATA("  -c          set control characters")
-	DATA("  -e ch       erase character")
-	DATA("  -I          no initialization strings")
-	DATA("  -i ch       interrupt character")
-	DATA("  -k ch       kill character")
-	DATA("  -m mapping  map identifier to type")
-	DATA("  -Q          do not output control key settings")
-	DATA("  -r          display term on stderr")
-	DATA("  -s          output TERM set command")
-	DATA("  -V          print curses-version")
-	DATA("  -w          set window-size")
+	KEEP("")
+	KEEP("Options:")
+	SKIP("  -a arpanet  (obsolete)")
+	KEEP("  -c          set control characters")
+	SKIP("  -d dialup   (obsolete)")
+	KEEP("  -e ch       erase character")
+	KEEP("  -I          no initialization strings")
+	KEEP("  -i ch       interrupt character")
+	KEEP("  -k ch       kill character")
+	KEEP("  -m mapping  map identifier to type")
+	SKIP("  -p plugboard (obsolete)")
+	KEEP("  -Q          do not output control key settings")
+	KEEP("  -q          display term only, do no changes")
+	KEEP("  -r          display term on stderr")
+	SKIP("  -S          (obsolete)")
+	KEEP("  -s          output TERM set command")
+	KEEP("  -V          print curses-version")
+	KEEP("  -w          set window-size")
+	KEEP("")
+	KEEP("If neither -c/-w are given, both are assumed.")
     };
-#undef DATA
+#undef KEEP
+#undef SKIP
     (void) fprintf(stderr, "Usage: %s [options] [terminal]\n", _nc_progname);
     fputs(msg, stderr);
-    exit_error();
+    ExitProgram(EXIT_FAILURE);
     /* NOTREACHED */
 }
 
@@ -759,7 +768,7 @@ main(int argc, char **argv)
     my_fd = STDERR_FILENO;
     obsolete(argv);
     noinit = noset = quiet = Sflag = sflag = showterm = 0;
-    while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:p:qQSrsVw")) != -1) {
+    while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:p:qQrSsVw")) != -1) {
 	switch (ch) {
 	case 'c':		/* set control-chars */
 	    opt_c = TRUE;

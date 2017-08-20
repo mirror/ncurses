@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2916 2017/08/13 00:24:51 tom Exp $
+-- $Id: NEWS,v 1.2920 2017/08/19 20:10:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170819
+	+ update "iterm" entry -TD
+	+ add "iterm2" entry (report by Leonardo Brondani Schenkel) -TD
+	+ regenerate llib-* files.
+	+ regenerate HTML manpages.
+	+ improve picsmap test-program:
+	  + reduce memory used for tsearch
+	  + add report in log file showing cumulative color coverage.
+	+ add -x option to clear/tput to make the E3 extension optional
+	  (cf: 20130622).
+	+ add options -T and -V to clear command for compatibility with tput.
+	+ add usage message to clear command (Debian #371855).
+	+ improve usage messages for tset and tput.
+	+ minor fixes to "RDGB" extension and reset_color_pairs().
 
 20170812
 	+ improve description of -R option in infocmp manual page (report by

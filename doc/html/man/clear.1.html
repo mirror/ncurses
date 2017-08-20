@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2013,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: clear.1,v 1.16 2016/12/31 16:09:34 tom Exp @
+  * @Id: clear.1,v 1.17 2017/08/19 14:12:50 tom Exp @
   * these would be fallbacks for DS/DE,
   * but groff changed the meaning of the macros.
 -->
@@ -52,7 +52,7 @@
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>clear</STRONG>
+       <STRONG>clear</STRONG> [<STRONG>-T</STRONG><EM>type</EM>] [<STRONG>-V</STRONG>] [<STRONG>-x</STRONG>]
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -67,9 +67,18 @@
        screen),  and  later  <STRONG>cat</STRONG>  the  file to the screen, clearing it at that
        point.
 
-       <STRONG>clear</STRONG> ignores any command-line parameters that  may  be  present.   The
-       analogous  "<STRONG>tput</STRONG>  clear"  has  command-line parameters including <STRONG>-T</STRONG> for
-       overriding the <STRONG>TERM</STRONG> environment variable.
+
+</PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
+       <STRONG>-T</STRONG> <EM>type</EM>
+            indicates the <EM>type</EM> of terminal.  Normally this option is  unneces-
+            sary,  because  the default is taken from the environment variable
+            <STRONG>TERM</STRONG>.
+
+       <STRONG>-V</STRONG>   reports the version of ncurses which was used in this program, and
+            exits.  The options are as follows:
+
+       <STRONG>-x</STRONG>   do not attempt to clear the terminal's scrollback buffer using the
+            extended "E3" capability.
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
@@ -138,7 +147,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170812).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20170819).
 
 
 
@@ -149,6 +158,7 @@
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-OPTIONS">OPTIONS</a></li>
 <li><a href="#h2-HISTORY">HISTORY</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

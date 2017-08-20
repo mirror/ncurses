@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: clear_cmd.h,v 1.1 2016/10/21 23:29:04 tom Exp $
+ * $Id: clear_cmd.h,v 1.2 2017/08/19 13:37:38 tom Exp $
  *
  * Utility functions for clearing terminal.
  */
@@ -39,6 +39,6 @@
 #define CLEAR_CMD_H 1
 
 #include <progs.priv.h>
-extern int clear_cmd(void);
+extern int clear_cmd(bool);
 
 #endif /* CLEAR_CMD_H */

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.54 2017/01/29 00:51:08 tom Exp $
+.\" $Id: tput.1,v 1.55 2017/08/19 14:26:42 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -43,7 +43,7 @@
 .SH SYNOPSIS
 \fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fIcapname\fR [\fIparameters\fR]
 .br
-\fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fBclear\fR
+\fB@TPUT@\fR [\fB\-T\fR\fItype\fR] [\fB\-x\fP] \fBclear\fR
 .br
 \fB@TPUT@\fR [\fB\-T\fR\fItype\fR] \fBinit\fR
 .br
@@ -86,14 +86,6 @@ For a complete list of capabilities
 and the \fIcapname\fR associated with each, see \fBterminfo\fR(5).
 .SS Options
 .TP
-\fB\-T\fR\fItype\fR
-indicates the \fItype\fR of terminal.
-Normally this option is
-unnecessary, because the default is taken from the environment
-variable \fBTERM\fR.
-If \fB\-T\fR is specified, then the shell
-variables \fBLINES\fR and \fBCOLUMNS\fR will also be ignored.
-.TP
 \fB\-S\fR
 allows more than one capability per invocation of \fB@TPUT@\fR.  The
 capabilities must be passed to \fB@TPUT@\fR from the standard input
@@ -103,12 +95,26 @@ The \fB\-S\fR option changes the
 meaning of the \fB0\fR and \fB1\fR boolean and string exit codes (see the
 EXIT CODES section).
 .IP
-Again, \fB@TPUT@\fR uses a table and the presence of parameters in its input
+Because some capabilities may use
+\fIstring\fP parameters rather than \fInumbers\fP,
+\fB@TPUT@\fR uses a table and the presence of parameters in its input
 to decide whether to use \fBtparm\fR(3X),
 and how to interpret the parameters.
 .TP
+\fB\-T\fR\fItype\fR
+indicates the \fItype\fR of terminal.
+Normally this option is
+unnecessary, because the default is taken from the environment
+variable \fBTERM\fR.
+If \fB\-T\fR is specified, then the shell
+variables \fBLINES\fR and \fBCOLUMNS\fR will also be ignored.
+.TP
 \fB\-V\fR
 reports the version of ncurses which was used in this program, and exits.
+.TP
+.B \-x
+do not attempt to clear the terminal's scrollback buffer
+using the extended \*(``E3\*('' capability.
 .SS Commands
 A few commands (\fBinit\fP, \fBreset\fP and \fBlongname\fP) are
 special; they are defined by the \fB@TPUT@\fP program.

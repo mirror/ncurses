@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.90 2017/08/12 17:21:48 tom Exp $
+ * $Id: picsmap.c,v 1.100 2017/08/19 23:42:27 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -34,9 +34,8 @@
  * measure the time taken to paint it normally vs randomly.
  *
  * TODO improve use of rgb-names using tsearch.
- * TODO when not using tsearch, dispense with intermediate index
- * TODO count/report uses of each color, giving percentiles.
  *
+ * TODO add option to dump picture in non-optimized mode, e.g., like tput.
  * TODO write cells/second to stderr (or log)
  * TODO write picture left-to-right/top-to-bottom
  * TODO write picture randomly
@@ -53,6 +52,13 @@
 #include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+
+#ifdef HAVE_STDINT_H
+#include <stdint.h>
+#define my_intptr_t	intptr_t
+#else
+#define my_intptr_t	long
+#endif
 
 #if HAVE_TSEARCH
 #include <search.h>
@@ -74,6 +80,7 @@
 #define RGB_PATH "/etc/X11/rgb.txt"
 
 typedef int NUM_COLOR;
+typedef unsigned short NUM_COUNT;
 
 typedef struct {
     char ch;			/* nominal character to display */
@@ -82,8 +89,7 @@ typedef struct {
 
 typedef struct {
     NUM_COLOR fgcol;
-    unsigned short which;
-    unsigned short count;
+    NUM_COUNT count;
 } FG_NODE;
 
 typedef struct {
@@ -91,7 +97,7 @@ typedef struct {
     short high;
     short wide;
     int colors;
-    FG_NODE **fgcol;
+    FG_NODE *fgcol;
     PICS_CELL *cells;
 } PICS_HEAD;
 
@@ -116,6 +122,15 @@ typedef struct {
     size_t cell;
 } HOW_MUCH;
 
+#undef MAX
+#define MAX(a,b) ((a)>(b)?(a):(b))
+
+/*
+ * tfind will return null on failure, so we map subscripts starting at one.
+ */
+#define P2I(n) (((int)(my_intptr_t)(n)) - 1)
+#define I2P(n) (void *)(my_intptr_t)((n) + 1)
+
 #define stop_curses() if (in_curses) endwin()
 
 #define debugmsg if (debugging) logmsg
@@ -126,6 +141,7 @@ static void giveup(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
 static void logmsg(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
 static void logmsg2(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
 static void warning(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static int gather_c_values(int);
 
 static FILE *logfp = 0;
 static bool in_curses = FALSE;
@@ -138,7 +154,7 @@ static HOW_MUCH how_much;
 
 static int reading_last;
 static int reading_size;
-static FG_NODE **reading_ncols;
+static FG_NODE *reading_ncols;
 
 #if HAVE_TSEARCH
 static void *reading_ntree;
@@ -246,14 +262,6 @@ static PICS_HEAD *
 free_pics_head(PICS_HEAD * pics)
 {
     if (pics != 0) {
-#if !(HAVE_TSEARCH && HAVE_TDESTROY)
-	int n;
-	if (pics->fgcol != 0) {
-	    for (n = 0; n < pics->colors; ++n) {
-		free(pics->fgcol[n]);
-	    }
-	}
-#endif
 	free(pics->fgcol);
 	free(pics->cells);
 	free(pics->name);
@@ -268,17 +276,19 @@ begin_c_values(int size)
 {
     reading_last = 0;
     reading_size = size;
-    reading_ncols = typeCalloc(FG_NODE *, size + 1);
-    how_much.pair += (sizeof(FG_NODE *) * (size_t) size);
+    reading_ncols = typeCalloc(FG_NODE, size + 1);
+    how_much.pair += (sizeof(FG_NODE) * (size_t) size);
+    /* black is always the first slot, to work around P2I/I2P logic */
+    gather_c_values(0);
 }
 
 #if HAVE_TSEARCH
 static int
 compare_c_values(const void *p, const void *q)
 {
-    const FG_NODE *a = (const FG_NODE *) p;
-    const FG_NODE *b = (const FG_NODE *) q;
-    return (a->fgcol - b->fgcol);
+    const int a = P2I(p);
+    const int b = P2I(q);
+    return (reading_ncols[a].fgcol - reading_ncols[b].fgcol);
 }
 
 #ifdef DEBUG_TSEARCH
@@ -288,36 +298,26 @@ check_c_values(int ln)
     static int oops = 5;
     FG_NODE **ft;
     int n;
-    if (oops-- <= 0)
-	return;
     for (n = 0; n < reading_last; ++n) {
-	if (reading_ncols[n] == 0)
-	    continue;
-	ft = tfind(reading_ncols[n], &reading_ntree, compare_c_values);
-	if (ft != 0 && *ft != 0) {
-	    if ((*ft)->fgcol != reading_ncols[n]->fgcol) {
-		logmsg("@%d, %d:%d (%d) %p %p fgcol %06X %06X", ln, n,
+	ft = tfind(I2P(n), &reading_ntree, compare_c_values);
+	if (ft != 0) {
+	    int q = P2I(*ft);
+	    if (reading_ncols[q].fgcol != reading_ncols[n].fgcol) {
+		logmsg("@%d, %d:%d (%d) %d %d fgcol %06X %06X", ln, n,
 		       reading_last - 1,
 		       reading_size,
-		       (*ft), reading_ncols[n],
-		       reading_ncols[n]->fgcol,
-		       (*ft)->fgcol);
-	    }
-	    if ((*ft)->which != reading_ncols[n]->which) {
-		logmsg("@%d, %d:%d (%d) %p %p which %d %d", ln, n,
-		       reading_last - 1,
-		       reading_size,
-		       (*ft), reading_ncols[n],
-		       reading_ncols[n]->which,
-		       (*ft)->which);
+		       q, n,
+		       reading_ncols[n].fgcol,
+		       reading_ncols[q].fgcol);
 	    }
 	} else {
-	    logmsg("@%d, %d:%d (%d) %p %p null %06X %d", ln, n,
+	    logmsg("@%d, %d:%d (%d) ? %d null %06X", ln, n,
 		   reading_last - 1,
 		   reading_size,
-		   ft, reading_ncols[n],
-		   reading_ncols[n]->fgcol,
-		   reading_ncols[n]->which);
+		   n,
+		   reading_ncols[n].fgcol);
+	    if (oops-- <= 0)
+		return;
 	}
     }
 }
@@ -326,44 +326,41 @@ check_c_values(int ln)
 #endif
 #endif
 
-#undef MAX
-#define MAX(a,b) ((a)>(b)?(a):(b))
-
 static int
 gather_c_values(int fg)
 {
     int found = -1;
 #if HAVE_TSEARCH
     FG_NODE **ft;
-    FG_NODE *find = typeMalloc(FG_NODE, 1);
+    int next = reading_last;
 
-    how_much.pair += sizeof(FG_NODE);
-    find->fgcol = fg;
-    find->which = 0;
+    reading_ncols[next].fgcol = fg;
+    reading_ncols[next].count = 0;
 
     check_c_values(__LINE__);
-    if ((ft = tfind(find, &reading_ntree, compare_c_values)) != 0) {
-	found = (*ft)->which;
+    if ((ft = tfind(I2P(next), &reading_ntree, compare_c_values)) != 0) {
+	found = P2I(*ft);
     } else {
-	if (reading_last + 1 >= reading_size) {
+	if (reading_last + 2 >= reading_size) {
 	    int more = ((MAX(reading_last, reading_size) + 2) * 3) / 2;
-	    FG_NODE **p = typeRealloc(FG_NODE *, more, reading_ncols);
+	    int last = reading_last + 1;
+	    FG_NODE *p = typeRealloc(FG_NODE, more, reading_ncols);
 	    if (p == 0)
 		goto done;
 
-	    /* FIXME - this won't reallocate pointers for tsearch */
-	    how_much.pair -= (sizeof(FG_NODE *) * (size_t) reading_size);
-	    how_much.pair += (sizeof(FG_NODE *) * (size_t) more);
 	    reading_size = more;
 	    reading_ncols = p;
-	    memset(reading_ncols + reading_last, 0,
-		   sizeof(FG_NODE *) * (size_t) (more - reading_last));
+	    memset(reading_ncols + last, 0,
+		   sizeof(FG_NODE) * (size_t) (more - last));
 	    check_c_values(__LINE__);
 	}
-	reading_ncols[reading_last] = find;
-	find->which = (unsigned short) reading_last++;
-	if ((ft = tsearch(find, &reading_ntree, compare_c_values)) != 0) {
-	    found = find->which;
+	++reading_last;
+	how_much.pair += sizeof(FG_NODE);
+	if ((ft = tsearch(I2P(next), &reading_ntree, compare_c_values)) != 0) {
+	    found = P2I(*ft);
+	    if (found != next)
+		logmsg("OOPS expected slot %d, got %d", next, found);
+	    debugmsg("allocated color #%d as #%06X", next, fg);
 	    check_c_values(__LINE__);
 	}
     }
@@ -371,30 +368,26 @@ gather_c_values(int fg)
     int n;
 
     for (n = 0; n < reading_last; ++n) {
-	if (reading_ncols[n]->fgcol == fg) {
+	if (reading_ncols[n].fgcol == fg) {
 	    found = n;
 	    break;
 	}
     }
     if (found < 0) {
-	FG_NODE *node = typeMalloc(FG_NODE, 1);
-	how_much.pair += sizeof(FG_NODE);
 	if (reading_last + 2 >= reading_size) {
 	    int more = ((reading_last + 2) * 3) / 2;
-	    FG_NODE **p = typeRealloc(FG_NODE *, more, reading_ncols);
+	    FG_NODE *p = typeRealloc(FG_NODE, more, reading_ncols);
 	    if (p == 0)
 		goto done;
 
-	    how_much.pair -= (sizeof(FG_NODE *) * reading_size);
-	    how_much.pair += (sizeof(FG_NODE *) * more);
+	    how_much.pair -= (sizeof(FG_NODE) * (size_t) reading_size);
+	    how_much.pair += (sizeof(FG_NODE) * (size_t) more);
 	    reading_size = more;
 	    reading_ncols = p;
 	    memset(reading_ncols + reading_last, 0,
-		   sizeof(FG_NODE) * (more - reading_last));
+		   sizeof(FG_NODE) * (size_t) (more - reading_last));
 	}
-	node->fgcol = fg;
-	node->which = reading_last;
-	reading_ncols[reading_last] = node;
+	reading_ncols[reading_last].fgcol = fg;
 	found = reading_last++;
     }
 #endif
@@ -413,26 +406,30 @@ finish_c_values(PICS_HEAD * head)
     reading_ncols = 0;
 }
 
+#if HAVE_TSEARCH && HAVE_TDESTROY
+static void
+never_free(void *node GCC_UNUSED)
+{
+}
+#endif
+
 static void
 dispose_c_values(void)
 {
-    int n;
 #if HAVE_TSEARCH
     if (reading_ntree != 0) {
 #if HAVE_TDESTROY
-	tdestroy(reading_ntree, free);
+	tdestroy(reading_ntree, never_free);
 #else
+	int n;
 	for (n = 0; n < reading_last; ++n) {
-	    tdelete(reading_ncols[n], &reading_ntree, compare_c_values);
+	    tdelete(I2P(n), &reading_ntree, compare_c_values);
 	}
 #endif
 	reading_ntree = 0;
     }
 #endif
     if (reading_ncols != 0) {
-	for (n = 0; n < reading_last; ++n) {
-	    free(reading_ncols[n]);
-	}
 	free(reading_ncols);
 	reading_ncols = 0;
     }
@@ -470,7 +467,7 @@ read_file(const char *filename)
 
     if (is_file(filename, &sb)) {
 	size_t size = (size_t) sb.st_size;
-	char *blob = typeMalloc(char, size + 1);
+	char *blob = typeCalloc(char, size + 1);
 	bool had_line = TRUE;
 	bool binary = FALSE;
 	unsigned j;
@@ -1010,6 +1007,10 @@ parse_xbm(char **data)
     result = typeCalloc(PICS_HEAD, 1);
     how_much.head += sizeof(PICS_HEAD);
 
+    begin_c_values(2);
+    gather_c_values(0);
+    gather_c_values(0xffffff);
+
     for (n = 0; data[n] != 0; ++n) {
 	if (strlen(s = data[n]) >= sizeof(buf) - 1)
 	    continue;
@@ -1066,14 +1067,15 @@ parse_xbm(char **data)
 			state = -1;
 			goto finish;
 		    }
-		    /* TODO: which order? */
 		    for (b = 0; b < 8; ++b) {
 			if (((1L << b) & value) != 0) {
 			    result->cells[which].ch = '*';
 			    result->cells[which].fg = 1;
+			    reading_ncols[1].count++;
 			} else {
 			    result->cells[which].ch = ' ';
 			    result->cells[which].fg = 0;
+			    reading_ncols[0].count++;
 			}
 			if (++which > cells) {
 			    state = -1;
@@ -1100,9 +1102,6 @@ parse_xbm(char **data)
 	    result = free_pics_head(result);
 	}
     } else {
-	begin_c_values(2);
-	gather_c_values(0);
-	gather_c_values(0xffffff);
 	finish_c_values(result);
     }
     return result;
@@ -1167,8 +1166,8 @@ parse_xpm(char **data)
 		result->cells = typeCalloc(PICS_CELL, cells);
 		how_much.cell += sizeof(PICS_CELL) * (size_t) cells;
 
-		list = typeCalloc(char *, result->colors);
-		how_much.list += sizeof(char *) * (size_t) result->colors;
+		list = typeCalloc(char *, result->colors + 1);
+		how_much.list += sizeof(char *) * (size_t) (result->colors + 1);
 
 		cpp = num[3];
 		state = 3;
@@ -1202,10 +1201,12 @@ parse_xpm(char **data)
 		found = gather_c_values(0);	/* actually an error */
 	    }
 	    debugmsg("  [%d:%d] %06X", num_colors, result->colors,
-		     reading_ncols[(found >= 0) ? found : 0]->fgcol);
+		     reading_ncols[(found >= 0) ? found : 0].fgcol);
 	    if (num_colors >= result->colors) {
 		finish_c_values(result);
 		state = 4;
+		if (list != 0 && list[0] == 0)
+		    list[0] = strdup("\033");
 	    }
 	    break;
 	case 4:
@@ -1216,9 +1217,14 @@ parse_xpm(char **data)
 
 		    /* FIXME - factor out */
 		    for (c = 0; c < result->colors; ++c) {
+			if (list[c] == 0) {
+			    /* should not happen... */
+			    continue;
+			}
 			if (!strncmp(cs, list[c], (size_t) cpp)) {
 			    result->cells[which].ch = list[c][0];
 			    result->cells[which].fg = c;
+			    result->fgcol[c].count++;
 			    break;
 			}
 		    }
@@ -1232,7 +1238,10 @@ parse_xpm(char **data)
 			state = 5;
 			break;
 		    }
-		    for (c = cpp; c > 0; --c, ++cs) ;
+		    for (c = cpp; c > 0; --c, ++cs) {
+			if (*cs == '\0')
+			    break;
+		    }
 		}
 	    }
 	    break;
@@ -1368,9 +1377,12 @@ parse_img(const char *filename)
 						check == 0xffffff)
 					       ? ' '
 					       : '#');
-		    result->cells[which].fg = ((c >= 0 && c < reading_last)
-					       ? c
-					       : -1);
+		    if (c >= 0 && c < reading_last) {
+			result->cells[which].fg = c;
+			reading_ncols[c].count++;
+		    } else {
+			result->cells[which].fg = -1;
+		    }
 		} else {
 		    okay = FALSE;
 		    break;
@@ -1382,7 +1394,7 @@ parse_img(const char *filename)
 	if (okay) {
 	    /* FIXME - is this trimming needed? */
 	    for (len = result->colors; len > 3; len--) {
-		if (result->fgcol[len - 1] == 0) {
+		if (result->fgcol[len - 1].fgcol == 0) {
 		    result->colors = len - 1;
 		} else {
 		    break;
@@ -1423,7 +1435,7 @@ read_picture(const char *filename, char **data)
     return pics;
 }
 
-#define fg_color(pics,n) (pics->fgcol[n]->fgcol)
+#define fg_color(pics,n) (pics->fgcol[n].fgcol)
 
 static void
 dump_picture(PICS_HEAD * pics)
@@ -1522,6 +1534,99 @@ show_picture(PICS_HEAD * pics)
 	endwin();
 }
 
+static int
+compare_fg_counts(const void *a, const void *b)
+{
+    const FG_NODE *p = (const FG_NODE *) a;
+    const FG_NODE *q = (const FG_NODE *) b;
+    return (q->count - p->count);
+}
+
+static void
+report_colors(PICS_HEAD * pics)
+{
+    int j, k;
+    int high;
+    int wide = 4;
+    int accum;
+    double level;
+    int shift;
+    int total;
+    char buffer[256];
+
+    if (logfp == 0)
+	return;
+
+    qsort(pics->fgcol, (size_t) pics->colors, sizeof(FG_NODE), compare_fg_counts);
+    /*
+     * For debugging, show a (short) list of the colors used.
+     */
+    if (debugging && (pics->colors < 1000)) {
+	int digits = 0;
+	for (j = pics->colors; j != 0; j /= 10) {
+	    ++digits;
+	    if (j < 10)
+		++digits;
+	}
+	logmsg("These colors were used:");
+	high = (pics->colors + wide - 1) / wide;
+	for (j = 0; j < high && j < pics->colors; ++j) {
+	    char *s = buffer;
+	    *s = '\0';
+	    for (k = 0; k < wide; ++k) {
+		int n = j + (k * high);
+		if (n >= pics->colors)
+		    break;
+		if (k) {
+		    *s++ = ' ';
+		    if (digits < 8) {
+			sprintf(s, "%*s", 8 - digits, " ");
+			s += strlen(s);
+		    }
+		}
+		if (pics->fgcol[n].fgcol >= 0) {
+		    sprintf(s, "%3d #%06X %*d", n,
+			    pics->fgcol[n].fgcol,
+			    digits, pics->fgcol[n].count);
+		} else {
+		    sprintf(s, "%3d (empty) %*d", n,
+			    digits, pics->fgcol[n].count);
+		}
+		s += strlen(s);
+		if ((s - buffer) > 100)
+		    break;
+	    }
+	    logmsg("%s", buffer);
+	}
+    }
+
+    /*
+     * Given the list of colors sorted by the number of times they are used,
+     * log a short report showing the number of colors for 90%, 99%, 99.9%,
+     * etc.
+     */
+    logmsg("Number of colors versus number of cells");
+    total = pics->high * pics->wide;
+    accum = 0;
+    level = 0.1;
+    shift = 1;
+    for (j = 0; j < pics->colors; ++j) {
+	accum += pics->fgcol[j].count;
+	if (accum >= (total * (1.0 - level))) {
+	    int after = (shift > 2) ? shift - 2 : 0;
+	    logmsg("%8d colors (%.1f%%) in %d cells (%.*f%%)",
+		   j + 1,
+		   (100.0 * (j + 1)) / pics->colors,
+		   accum,
+		   after, (100.0 * accum) / total);
+	    if (accum >= total)
+		break;
+	    level /= 10.0;
+	    shift++;
+	}
+    }
+}
+
 int
 main(int argc, char *argv[])
 {
@@ -1612,6 +1717,7 @@ main(int argc, char *argv[])
 		} else {
 		    dump_picture(pics);
 		}
+		report_colors(pics);
 		dispose_c_values();
 		free_data(data);
 		free_pics_head(pics);

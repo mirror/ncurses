@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.69 2017/01/21 17:40:51 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.71 2017/08/19 13:44:27 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -77,7 +77,25 @@ quit(int status, const char *fmt,...)
 static void
 usage(void)
 {
-    fprintf(stderr, "usage: %s [-V] [-S] [-T term] capname\n", prg_name);
+#define KEEP(s) s "\n"
+    static const char msg[] =
+    {
+	KEEP("")
+	KEEP("Options:")
+	KEEP("  -S <<       read commands from standard input")
+	KEEP("  -T TERM     use this instead of $TERM")
+	KEEP("  -V          print curses-version")
+	KEEP("  -x          do not try to clear scrollback")
+	KEEP("")
+	KEEP("Commands:")
+	KEEP("  clear       clear the screen")
+	KEEP("  init        initialize the terminal")
+	KEEP("  reset       reinitialize the terminal")
+	KEEP("  capname     unlike clear/init/reset, print value for capability \"capname\"")
+    };
+#undef KEEP
+    (void) fprintf(stderr, "Usage: %s [options] [command]\n", prg_name);
+    fputs(msg, stderr);
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -118,7 +136,7 @@ exit_code(int token, int value)
 }
 
 static int
-tput_cmd(int fd, TTY * saved_settings, int argc, char *argv[])
+tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 {
     NCURSES_CONST char *name;
     char *s;
@@ -165,7 +183,7 @@ tput_cmd(int fd, TTY * saved_settings, int argc, char *argv[])
   retry:
 #endif
     if (strcmp(name, "clear") == 0) {
-	return clear_cmd();
+	return clear_cmd(opt_x);
     } else if ((status = tigetflag(name)) != -1) {
 	return exit_code(BOOLEAN, status);
     } else if ((status = tigetnum(name)) != CANCELLED_NUMERIC) {
@@ -264,6 +282,7 @@ main(int argc, char **argv)
     int result = 0;
     int fd;
     TTY tty_settings;
+    bool opt_x = FALSE;		/* clear scrollback if possible */
 
     prg_name = check_aliases(_nc_rootname(argv[0]), TRUE);
 
@@ -281,6 +300,9 @@ main(int argc, char **argv)
 	case 'V':
 	    puts(curses_version());
 	    ExitProgram(EXIT_SUCCESS);
+	case 'x':		/* do not try to clear scrollback */
+	    opt_x = TRUE;
+	    break;
 	default:
 	    usage();
 	    /* NOTREACHED */
@@ -312,7 +334,7 @@ main(int argc, char **argv)
     if (cmdline) {
 	if ((argc <= 0) && !(is_clear || is_reset || is_init))
 	    usage();
-	ExitProgram(tput_cmd(fd, &tty_settings, argc, argv));
+	ExitProgram(tput_cmd(fd, &tty_settings, opt_x, argc, argv));
     }
 
     while (fgets(buf, sizeof(buf), stdin) != 0) {
@@ -333,7 +355,7 @@ main(int argc, char **argv)
 	argvec[argnum] = 0;
 
 	if (argnum != 0
-	    && tput_cmd(fd, &tty_settings, argnum, argvec) != 0) {
+	    && tput_cmd(fd, &tty_settings, opt_x, argnum, argvec) != 0) {
 	    if (result == 0)
 		result = 4;	/* will return value >4 */
 	    ++result;

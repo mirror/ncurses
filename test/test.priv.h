@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.146 2017/08/07 23:29:48 tom Exp $ */
+/* $Id: test.priv.h,v 1.147 2017/08/19 23:40:19 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -195,6 +195,10 @@
 
 #ifndef HAVE_SLK_INIT
 #define HAVE_SLK_INIT 0
+#endif
+
+#ifndef HAVE_STDINT_H
+#define HAVE_STDINT_H 0
 #endif
 
 #ifndef HAVE_SYS_IOCTL_H
