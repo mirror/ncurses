@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.294 2017/07/31 21:06:04 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.296 2017/08/27 19:40:17 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -668,7 +668,9 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 		}
 	    } else if (repeat_char != 0 &&
 #if USE_WIDEC_SUPPORT
-		       (CharOf(ntext0) < ACS_LEN) &&
+		       (!SP_PARM->_screen_unicode &&
+			((AttrOf(ntext0) & A_ALTCHARSET) == 0 ||
+			 (CharOf(ntext0) < ACS_LEN))) &&
 #endif
 		       runcount > SP_PARM->_rep_cost) {
 		NCURSES_CH_T temp;
@@ -682,10 +684,11 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 		UpdateAttrs(SP_PARM, ntext0);
 		temp = ntext0;
 		if ((AttrOf(temp) & A_ALTCHARSET) &&
-		    SP_PARM->_acs_map != 0) {
+		    SP_PARM->_acs_map != 0 &&
+		    (SP_PARM->_acs_map[CharOf(temp)] & A_CHARTEXT) != 0) {
 		    SetChar(temp,
-			    SP_PARM->_acs_map[CharOf(temp)],
-			    AttrOf(temp) | A_ALTCHARSET);
+			    (SP_PARM->_acs_map[CharOf(ntext0)] & A_CHARTEXT),
+			    AttrOf(ntext0) | A_ALTCHARSET);
 		}
 		NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
 					TPARM_2(repeat_char,
