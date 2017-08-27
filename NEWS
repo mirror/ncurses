@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2920 2017/08/19 20:10:50 tom Exp $
+-- $Id: NEWS,v 1.2935 2017/08/26 21:33:48 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,33 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170826
+	+ fixes for "iterm2" (report by Leonardo Brondani Schenkel) -TD
+	+ corrected a warning from tic about keys which are the same, to skip
+	  over missing/cancelled values.
+	+ add check in tic for unnecessary use of "2" to denote a shifted
+	  special key.
+	+ improve checks in trim_sgr0, comp_parse.c and parse_entry.c, for
+	  cancelled string capabilities.
+	+ add check in _nc_parse_entry() for invalid entry name, setting the
+	  name to "invalid" to avoid problems storing entries.
+	+ add/improve checks in tic's parser to address invalid input
+	  + add a check in comp_scan.c to handle the special case where a
+	    nontext file ending with a NUL rather than newline is given to tic
+	    as input (Redhat #1484274).
+	  + allow for cancelled capabilities in _nc_save_str (Redhat #1484276).
+	  + add validity checks for "use=" target in _nc_parse_entry (Redhat
+	    #1484284).
+	  + check for invalid strings in postprocess_termcap (Redhat #1484285)
+	  + reset secondary pointers on EOF in next_char() (Redhat #1484287).
+	  + guard _nc_safe_strcpy() and _nc_safe_strcat() against calls using
+	    cancelled strings (Redhat #1484291).
+	+ correct typo in curs_memleaks.3x (Sven Joachim).
+	+ improve test/configure checks for some curses variants not based on
+	  X/Open Curses.
+	+ add options for test/configure to disable checks for form, menu and
+	  panel libraries.
 
 20170819
 	+ update "iterm" entry -TD
@@ -4418,7 +4445,7 @@ it is not possible to add this information.
 
 20080209
 	+ update test programs to build/work with various UNIX curses for
-	  comparisons.  This was to reinvestigate statement in X/Open curses
+	  comparisons.  This was to reinvestigate statement in X/Open Curses
 	  that insnstr and winsnstr perform wrapping.  None of the Unix-branded
 	  implementations do this, as noted in manpage (cf: 20040228).
 

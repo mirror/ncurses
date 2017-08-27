@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.616 $
-#	$Date: 2017/08/18 18:33:02 $
+#	$Revision: 1.617 $
+#	$Date: 2017/08/26 21:07:47 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -462,7 +462,7 @@ ecma+color|color control for ECMA-48-compatible terminals,
 	colors#8, ncv#3, pairs#64,
 	op=\E[39;49m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 
-ecma+italics|ECMA-48 strikeout/crossed-out,
+ecma+italics|ECMA-48 italics,
 	ritm=\E[23m, sitm=\E[3m,
 
 # Attribute control for ECMA-48-compatible terminals
@@ -1396,13 +1396,13 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	dsl=\E]2;\007, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0,
 	flash=\E[?5h$<200/>\E[?5l, fsl=^G, home=\E[H,
 	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@,
-	il=\E[%p1%dL, il1=\E[L, ind=\n, kbs=^?, kcbt=\E[Z,
-	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
-	kdch1=\E[3~, kend=\EOF, kent=\EOM, kf1=\EOP, kf10=\E[21~,
-	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
-	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
-	khome=\EOH, knp=\E[6~, kpp=\E[5~, op=\E[0m, rc=\E8,
-	rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l,
+	il=\E[%p1%dL, il1=\E[L, ind=\n, kLFT=\E[1;2D, kRIT=\E[1;2C,
+	kbs=^?, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
+	kcuu1=\EOA, kdch1=\E[3~, kend=\EOF, kent=\EOM, kf1=\EOP,
+	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR,
+	kf4=\EOS, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
+	kf9=\E[20~, khome=\EOH, knp=\E[6~, kpp=\E[5~, op=\E[0m,
+	rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l,
 	rmcup=\E[2J\E[?47l\E8, rmir=\E[4l, rmkx=\E[?1l\E>,
 	rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7,
@@ -1412,8 +1412,8 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
 	tbc=\E[3g, tsl=\E]2;, u6=\E[%i%d;%dR, u7=\E[6n,
 	u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, TS=\E]2;,
-	kEND5=\E[1;5F, kHOM5=\E[1;5H, kLFT2=\E[1;2D,
-	kRIT2=\E[1;2C, use=vt100+keypad, use=xterm+256setaf,
+	kEND5=\E[1;5F, kHOM5=\E[1;5H, use=vt100+keypad,
+	use=xterm+256setaf,
 
 # iTerm2 3.0.15
 #
@@ -1445,20 +1445,20 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 # add/change that preference (set in Preferences, Profiles, Text).  A new
 # install of iTerm 3.0.15 provides italics by default (blinking text:no).
 iTerm2.app|iterm2|terminal emulator for Mac OS X,
-	blink@, dim=\E[2m, ka1@, ka3@, kb2@, kc1@, kc3@, kent@,
-	kf13=\E[1;2P, kf14=\E[1;2Q, kf15=\E[1;2R, kf16=\E[1;2S,
-	kf17=\E[15;2~, kf18=\E[17;2~, kf19=\E[18;2~, kf2=\EOQ,
-	kf20=\E[19;2~, kf21=\E[20;2~, kf22=\E[21;2~,
-	kf23=\E[23;2~, kf24=\E[24;2~, kDN2=\E[1;2B, kDN3=\E\E[B,
-	kDN4=\E[1;10B, kDN5=\E[1;5B, kDN6=\E[1;6B, kEND2=\E[1;2F,
-	kEND3=\E[1;9F, kEND4=\E[1;10F, kEND6=\E[1;6F,
-	kEND7=\E[1;13F, kEND8=\E[1;14F, kHOM2=\E[1;2H,
-	kHOM3=\E[1;9H, kHOM4=\E[1;10H, kHOM6=\E[1;6H,
-	kHOM7=\E[1;13H, kHOM8=\E[1;14H, kLFT3=\E\E[D,
-	kLFT4=\E[1;10D, kLFT5=\E[1;5D, kLFT6=\E[1;6D,
-	kNXT3=\E\E[6~, kPRV3=\E\E[5~, kRIT3=\E\E[C,
-	kRIT4=\E[1;10C, kRIT5=\E[1;5C, kRIT6=\E[1;6C,
-	kUP2=\E[1;2A, kUP3=\E\E[A, kUP4=\E[1;10A, kUP5=\E[1;5A,
+	blink@, dim=\E[2m, kEND=\E[1;2F, kHOM=\E[1;2H, ka1@, ka3@,
+	kb2@, kc1@, kc3@, kent@, kf13=\E[1;2P, kf14=\E[1;2Q,
+	kf15=\E[1;2R, kf16=\E[1;2S, kf17=\E[15;2~, kf18=\E[17;2~,
+	kf19=\E[18;2~, kf2=\EOQ, kf20=\E[19;2~, kf21=\E[20;2~,
+	kf22=\E[21;2~, kf23=\E[23;2~, kf24=\E[24;2~,
+	kind=\E[1;2B, kri=\E[1;2A, kDN3=\E\E[B, kDN4=\E[1;10B,
+	kDN5=\E[1;5B, kDN6=\E[1;6B, kEND3=\E[1;9F,
+	kEND4=\E[1;10F, kEND6=\E[1;6F, kEND7=\E[1;13F,
+	kEND8=\E[1;14F, kHOM3=\E[1;9H, kHOM4=\E[1;10H,
+	kHOM6=\E[1;6H, kHOM7=\E[1;13H, kHOM8=\E[1;14H,
+	kLFT3=\E\E[D, kLFT4=\E[1;10D, kLFT5=\E[1;5D,
+	kLFT6=\E[1;6D, kNXT3=\E\E[6~, kPRV3=\E\E[5~,
+	kRIT3=\E\E[C, kRIT4=\E[1;10C, kRIT5=\E[1;5C,
+	kRIT6=\E[1;6C, kUP3=\E\E[A, kUP4=\E[1;10A, kUP5=\E[1;5A,
 	kUP6=\E[1;6A, use=ecma+italics, use=iterm,
 
 # xnuppc - Darwin PowerPC Console (a.k.a. "darwin")
@@ -25247,5 +25247,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2017-08-18
 #	+ update notes on user-defined capabilities -TD
+#
+# 2017-08-26
+#	+ fixes for "iterm2" (report by Leonardo Brondani Schenkel) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

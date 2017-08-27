@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.37 2017/04/15 17:43:11 tom Exp $
+ * $Id: knight.c,v 1.38 2017/08/20 16:15:42 tom Exp $
  */
 
 #include <test.priv.h>
@@ -719,6 +719,7 @@ play(void)
 		}
 		break;
 
+#if HAVE_CURSCR
 	    case KEY_REDO:
 	    case '\f':
 	    case 'r':
@@ -729,6 +730,7 @@ play(void)
 		wnoutrefresh(helpwin);
 		doupdate();
 		break;
+#endif
 
 	    case 'q':
 	    case 'x':

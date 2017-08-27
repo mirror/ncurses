@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.134 2017/08/19 23:40:39 tom Exp $
+dnl $Id: configure.in,v 1.135 2017/08/20 16:38:29 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -134,10 +134,6 @@ case $cf_cv_screen in
 (ncurses*)
 	cf_cv_libtype=`echo "$cf_cv_screen" | sed -e 's/^ncurses//'`
 	;;
-(curses|curses_*)
-	CF_NETBSD_FORM_H
-	CF_NETBSD_MENU_H
-	;;
 esac
 
 dnl If we've not specified a library, assume we're using sysvr4 libraries
@@ -145,26 +141,89 @@ dnl installed conventionally (e.g., SunOS 5.x - solaris).
 
 dnl Autoconf builds up the $LIBS in reverse order
 
+cf_curses_headers=
+
 case $cf_cv_screen in
 (pdcurses)
+	cf_default_panel=no
+	cf_default_form=no
+	cf_default_menu=no
+	cf_default_tinfo=no
+	;;
+(xcurses|bsdcurses)
+	cf_default_panel=no
+	cf_default_form=no
+	cf_default_menu=no
+	cf_default_tinfo=yes
 	;;
 (*)
-	# look for curses-related libraries
-	CF_CHECK_CURSES_LIB(panel,$cf_cv_libtype,new_panel)
-	CF_CHECK_CURSES_LIB(menu,$cf_cv_libtype,menu_driver)
-	CF_CHECK_CURSES_LIB(form,$cf_cv_libtype,form_driver)
-
-	# look for curses-related headers
-	AC_CHECK_HEADERS( \
-		nc_alloc.h \
-		nomacros.h \
-		form.h \
-		menu.h \
-		panel.h \
-		term_entry.h \
-		)
+	cf_default_panel=yes
+	cf_default_form=yes
+	cf_default_menu=yes
+	cf_default_tinfo=yes
+	case $cf_cv_screen in
+	(ncurses*)
+		cf_curses_headers="nc_alloc.h nomacros.h term_entry.h"
+		;;
+	esac
 	;;
 esac
+
+AC_MSG_CHECKING(if you want to check for panel functions)
+CF_ARG_DISABLE(panel,
+	[  --disable-panel         disable checks for panel functions],
+	cf_enable_panel=no,
+	cf_enable_panel=$cf_default_panel,
+	yes)
+AC_MSG_RESULT($cf_enable_panel)
+if test $cf_enable_panel = yes
+then
+	CF_CHECK_CURSES_LIB(panel,$cf_cv_libtype,new_panel)
+	cf_curses_headers="$cf_curses_headers panel.h"
+fi
+
+AC_MSG_CHECKING(if you want to check for menu functions)
+CF_ARG_DISABLE(menu,
+	[  --disable-menu          disable checks for menu functions],
+	cf_enable_menu=no,
+	cf_enable_menu=$cf_default_menu,
+	yes)
+AC_MSG_RESULT($cf_enable_menu)
+if test $cf_enable_menu = yes
+then
+	case $cf_cv_screen in
+	(ncurses*)
+		;;
+	(curses*)
+		CF_NETBSD_MENU_H
+		;;
+	esac
+	CF_CHECK_CURSES_LIB(menu,$cf_cv_libtype,menu_driver)
+	cf_curses_headers="$cf_curses_headers menu.h"
+fi
+
+AC_MSG_CHECKING(if you want to check for form functions)
+CF_ARG_DISABLE(form,
+	[  --disable-form          disable checks for form functions],
+	cf_enable_form=no,
+	cf_enable_form=$cf_default_form,
+	yes)
+AC_MSG_RESULT($cf_enable_form)
+if test $cf_enable_form = yes
+then
+	case $cf_cv_screen in
+	(ncurses*)
+		;;
+	(curses*)
+		CF_NETBSD_FORM_H
+		;;
+	esac
+	CF_CHECK_CURSES_LIB(form,$cf_cv_libtype,form_driver)
+	cf_curses_headers="$cf_curses_headers form.h"
+fi
+
+# look for curses-related headers
+AC_CHECK_HEADERS( $cf_curses_headers )
 
 AC_STDC_HEADERS
 AC_HEADER_TIME
@@ -211,6 +270,7 @@ CF_CURSES_FUNCS( \
 alloc_pair \
 assume_default_colors \
 chgat \
+color_content \
 color_set \
 filter \
 getbegx \
@@ -358,6 +418,7 @@ if test "$cf_enable_widec" = yes; then
 	fi
 fi
 
+CF_CURSES_CHECK_DATA(curscr)
 CF_CURSES_CHECK_DATA(ospeed)
 CF_CURSES_CHECK_DATA(boolnames)
 CF_CURSES_CHECK_DATA(boolfnames)

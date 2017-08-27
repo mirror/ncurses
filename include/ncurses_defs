@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.74 2017/08/07 23:28:49 tom Exp $
+# $Id: ncurses_defs,v 1.75 2017/08/20 16:50:04 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -50,7 +50,9 @@ HAVE_BSD_STRING_H
 HAVE_BTOWC 
 HAVE_BUILTIN_H
 HAVE_CHGAT	1
+HAVE_COLOR_CONTENT	1
 HAVE_COLOR_SET	1
+HAVE_CURSCR	1
 HAVE_DIRENT_H
 HAVE_ERRNO
 HAVE_FCNTL_H

@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: trim_sgr0.c,v 1.16 2017/04/05 22:33:07 tom Exp $")
+MODULE_ID("$Id: trim_sgr0.c,v 1.17 2017/08/26 14:54:16 tom Exp $")
 
 #undef CUR
 #define CUR tp->
@@ -263,7 +263,7 @@ _nc_trim_sgr0(TERMTYPE2 *tp)
 	    /*
 	     * If rmacs is a substring of sgr(0), remove that chunk.
 	     */
-	    if (exit_alt_charset_mode != 0) {
+	    if (PRESENT(exit_alt_charset_mode)) {
 		TR(TRACE_DATABASE, ("scan for rmacs %s", _nc_visbuf(exit_alt_charset_mode)));
 		j = strlen(off);
 		k = strlen(exit_alt_charset_mode);

@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.60 2017/06/27 23:48:55 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.61 2017/08/25 09:09:08 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -98,7 +98,7 @@ _nc_save_str(const char *const string)
     size_t old_next_free = next_free;
     size_t len;
 
-    if (string == 0)
+    if (!VALID_STRING(string))
 	return _nc_save_str("");
     len = strlen(string) + 1;
 

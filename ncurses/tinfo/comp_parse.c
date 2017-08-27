@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.97 2017/08/04 09:02:21 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.99 2017/08/26 16:15:50 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -510,9 +510,9 @@ static void
 fixup_acsc(TERMTYPE2 *tp, int literal)
 {
     if (!literal) {
-	if (acs_chars == 0
-	    && enter_alt_charset_mode != 0
-	    && exit_alt_charset_mode != 0)
+	if (acs_chars == ABSENT_STRING
+	    && PRESENT(enter_alt_charset_mode)
+	    && PRESENT(exit_alt_charset_mode))
 	    acs_chars = strdup(VT_ACSC);
     }
 }
@@ -568,9 +568,7 @@ sanity_check2(TERMTYPE2 *tp, bool literal)
     PAIRED(enter_xon_mode, exit_xon_mode);
     PAIRED(enter_am_mode, exit_am_mode);
     ANDMISSING(label_off, label_on);
-#ifdef remove_clock
     PAIRED(display_clock, remove_clock);
-#endif
     ANDMISSING(set_color_pair, initialize_pair);
 }
 

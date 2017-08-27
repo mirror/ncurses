@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.139 2017/08/12 12:12:49 tom Exp $
+dnl $Id: aclocal.m4,v 1.142 2017/08/20 18:12:43 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -838,36 +838,35 @@ if test ".$ac_cv_func_initscr" != .yes ; then
 	then
 		for cf_curs_lib in $cf_check_list xcurses jcurses pdcurses unknown
 		do
-			AC_CHECK_LIB($cf_curs_lib,initscr,[break])
+			LIBS="-l$cf_curs_lib $cf_save_LIBS"
+			if test "$cf_term_lib" = unknown ; then
+				AC_MSG_CHECKING(if we can link with $cf_curs_lib library)
+				AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
+					[initscr()],
+					[cf_result=yes],
+					[cf_result=no])
+				AC_MSG_RESULT($cf_result)
+				test $cf_result = yes && break
+			elif test "$cf_curs_lib" = "$cf_term_lib" ; then
+				cf_result=no
+			elif test "$cf_term_lib" != predefined ; then
+				AC_MSG_CHECKING(if we need both $cf_curs_lib and $cf_term_lib libraries)
+				AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
+					[initscr(); tgoto((char *)0, 0, 0);],
+					[cf_result=no],
+					[
+					LIBS="-l$cf_curs_lib -l$cf_term_lib $cf_save_LIBS"
+					AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
+						[initscr()],
+						[cf_result=yes],
+						[cf_result=error])
+					])
+				AC_MSG_RESULT($cf_result)
+				test $cf_result != error && break
+			fi
 		done
 	fi
 	test $cf_curs_lib = unknown && AC_MSG_ERROR(no curses library found)
-
-	LIBS="-l$cf_curs_lib $cf_save_LIBS"
-	if test "$cf_term_lib" = unknown ; then
-		AC_MSG_CHECKING(if we can link with $cf_curs_lib library)
-		AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
-			[initscr()],
-			[cf_result=yes],
-			[cf_result=no])
-		AC_MSG_RESULT($cf_result)
-		test $cf_result = no && AC_MSG_ERROR(Cannot link curses library)
-	elif test "$cf_curs_lib" = "$cf_term_lib" ; then
-		:
-	elif test "$cf_term_lib" != predefined ; then
-		AC_MSG_CHECKING(if we need both $cf_curs_lib and $cf_term_lib libraries)
-		AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
-			[initscr(); tgoto((char *)0, 0, 0);],
-			[cf_result=no],
-			[
-			LIBS="-l$cf_curs_lib -l$cf_term_lib $cf_save_LIBS"
-			AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
-				[initscr()],
-				[cf_result=yes],
-				[cf_result=error])
-			])
-		AC_MSG_RESULT($cf_result)
-	fi
 fi
 fi
 

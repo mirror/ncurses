@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.100 2017/08/19 23:42:27 tom Exp $
+ * $Id: picsmap.c,v 1.101 2017/08/20 16:42:13 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -659,12 +659,16 @@ init_palette(const char *palette_file)
 	all_colors = typeMalloc(RGB_DATA, (unsigned) COLORS);
 	how_much.data += (sizeof(RGB_DATA) * (unsigned) COLORS);
 
+#if HAVE_COLOR_CONTENT
 	for (cp = 0; cp < COLORS; ++cp) {
 	    color_content((short) cp,
 			  &all_colors[cp].red,
 			  &all_colors[cp].green,
 			  &all_colors[cp].blue);
 	}
+#else
+	memset(all_colors, 0, sizeof(RGB_DATA) * (size_t) COLORS);
+#endif
 	if (data != 0) {
 	    int n;
 	    int red, green, blue;
@@ -1470,7 +1474,7 @@ show_picture(PICS_HEAD * pics)
     debugmsg("called show_picture");
 #if USE_EXTENDED_COLORS
     reset_color_pairs();
-#else
+#elif HAVE_CURSCR
     wclear(curscr);
     clear();
 #endif
@@ -1528,7 +1532,8 @@ show_picture(PICS_HEAD * pics)
 #endif
 	}
     } else {
-	mvgetch(0, 0);
+	wmove(stdscr, 0, 0);
+	getch();
     }
     if (!quiet)
 	endwin();

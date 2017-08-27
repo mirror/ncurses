@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.86 2017/06/28 00:53:12 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.91 2017/08/26 16:13:34 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -180,6 +180,20 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
 }
 #endif /* NCURSES_XNAMES */
 
+static bool
+valid_entryname(const char *name)
+{
+    bool result = TRUE;
+    int ch;
+    while ((ch = UChar(*name++)) != '\0') {
+	if (ch <= ' ' || ch > '~' || ch == '/') {
+	    result = FALSE;
+	    break;
+	}
+    }
+    return result;
+}
+
 /*
  *	int
  *	_nc_parse_entry(entry, literal, silent)
@@ -211,6 +225,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
     int token_type;
     struct name_table_entry const *entry_ptr;
     char *ptr, *base;
+    const char *name;
     bool bad_tc_usage = FALSE;
 
     token_type = _nc_get_token(silent);
@@ -261,7 +276,12 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
      * results in the terminal type getting prematurely set to correspond
      * to that of the next entry.
      */
-    _nc_set_type(_nc_first_name(entryp->tterm.term_names));
+    name = _nc_first_name(entryp->tterm.term_names);
+    if (!valid_entryname(name)) {
+	_nc_warning("invalid entry name \"%s\"", name);
+	name = "invalid";
+    }
+    _nc_set_type(name);
 
     /* check for overly-long names and aliases */
     for (base = entryp->tterm.term_names; (ptr = strchr(base, '|')) != 0;
@@ -283,13 +303,24 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 	bool is_use = (strcmp(_nc_curr_token.tk_name, "use") == 0);
 	bool is_tc = !is_use && (strcmp(_nc_curr_token.tk_name, "tc") == 0);
 	if (is_use || is_tc) {
+	    if (!VALID_STRING(_nc_curr_token.tk_valstring)
+		|| _nc_curr_token.tk_valstring[0] == '\0') {
+		_nc_warning("missing name for use-clause");
+		continue;
+	    } else if (!valid_entryname(_nc_curr_token.tk_valstring)) {
+		_nc_warning("invalid name for use-clause \"%s\"",
+			    _nc_curr_token.tk_valstring);
+		continue;
+	    } else if (entryp->nuses >= MAX_USES) {
+		_nc_warning("too many use-clauses, ignored \"%s\"",
+			    _nc_curr_token.tk_valstring);
+		continue;
+	    }
 	    entryp->uses[entryp->nuses].name = _nc_save_str(_nc_curr_token.tk_valstring);
 	    entryp->uses[entryp->nuses].line = _nc_curr_line;
-	    if (VALID_STRING(entryp->uses[entryp->nuses].name)) {
-		entryp->nuses++;
-		if (entryp->nuses > 1 && is_tc) {
-		    BAD_TC_USAGE
-		}
+	    entryp->nuses++;
+	    if (entryp->nuses > 1 && is_tc) {
+		BAD_TC_USAGE
 	    }
 	} else {
 	    /* normal token lookup */
@@ -641,13 +672,6 @@ static const char C_BS[] = "\b";
 static const char C_HT[] = "\t";
 
 /*
- * Note that WANTED and PRESENT are not simple inverses!  If a capability
- * has been explicitly cancelled, it's not considered WANTED.
- */
-#define WANTED(s)	((s) == ABSENT_STRING)
-#define PRESENT(s)	(((s) != ABSENT_STRING) && ((s) != CANCELLED_STRING))
-
-/*
  * This bit of legerdemain turns all the terminfo variable names into
  * references to locations in the arrays Booleans, Numbers, and Strings ---
  * precisely what's needed.
@@ -672,10 +696,10 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 
     /* if there was a tc entry, assume we picked up defaults via that */
     if (!has_base) {
-	if (WANTED(init_3string) && termcap_init2)
+	if (WANTED(init_3string) && PRESENT(termcap_init2))
 	    init_3string = _nc_save_str(termcap_init2);
 
-	if (WANTED(reset_2string) && termcap_reset)
+	if (WANTED(reset_2string) && PRESENT(termcap_reset))
 	    reset_2string = _nc_save_str(termcap_reset);
 
 	if (WANTED(carriage_return)) {
@@ -790,7 +814,7 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	if (init_tabs != 8 && init_tabs != ABSENT_NUMERIC)
 	    _nc_warning("hardware tabs with a width other than 8: %d", init_tabs);
 	else {
-	    if (tab && _nc_capcmp(tab, C_HT))
+	    if (PRESENT(tab) && _nc_capcmp(tab, C_HT))
 		_nc_warning("hardware tabs with a non-^I tab string %s",
 			    _nc_visbuf(tab));
 	    else {
@@ -867,17 +891,22 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	     * The magic moment -- copy the mapped key string over,
 	     * stripping out padding.
 	     */
-	    for (dp = buf2, bp = tp->Strings[from_ptr->nte_index]; *bp; bp++) {
-		if (bp[0] == '$' && bp[1] == '<') {
-		    while (*bp && *bp != '>') {
-			++bp;
-		    }
-		} else
-		    *dp++ = *bp;
-	    }
-	    *dp = '\0';
+	    bp = tp->Strings[from_ptr->nte_index];
+	    if (VALID_STRING(bp)) {
+		for (dp = buf2; *bp; bp++) {
+		    if (bp[0] == '$' && bp[1] == '<') {
+			while (*bp && *bp != '>') {
+			    ++bp;
+			}
+		    } else
+			*dp++ = *bp;
+		}
+		*dp = '\0';
 
-	    tp->Strings[to_ptr->nte_index] = _nc_save_str(buf2);
+		tp->Strings[to_ptr->nte_index] = _nc_save_str(buf2);
+	    } else {
+		tp->Strings[to_ptr->nte_index] = bp;
+	    }
 	}
 
 	/*
@@ -886,7 +915,7 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	 * got mapped to kich1 and im to kIC to avoid a collision.
 	 * If the description has im but not ic, hack kIC back to kich1.
 	 */
-	if (foundim && WANTED(key_ic) && key_sic) {
+	if (foundim && WANTED(key_ic) && PRESENT(key_sic)) {
 	    key_ic = key_sic;
 	    key_sic = ABSENT_STRING;
 	}
@@ -938,9 +967,9 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	    acs_chars = _nc_save_str(buf2);
 	    _nc_warning("acsc string synthesized from XENIX capabilities");
 	}
-    } else if (acs_chars == 0
-	       && enter_alt_charset_mode != 0
-	       && exit_alt_charset_mode != 0) {
+    } else if (acs_chars == ABSENT_STRING
+	       && PRESENT(enter_alt_charset_mode)
+	       && PRESENT(exit_alt_charset_mode)) {
 	acs_chars = _nc_save_str(VT_ACSC);
     }
 }

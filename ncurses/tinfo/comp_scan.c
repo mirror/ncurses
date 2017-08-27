@@ -50,7 +50,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.106 2017/04/22 11:41:12 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.108 2017/08/25 22:57:21 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -168,6 +168,8 @@ next_char(void)
 	if (result != 0) {
 	    FreeAndNull(result);
 	    FreeAndNull(pushname);
+	    bufptr = 0;
+	    bufstart = 0;
 	    allocated = 0;
 	}
 	/*
@@ -222,6 +224,8 @@ next_char(void)
 		}
 		if ((bufptr = bufstart) != 0) {
 		    used = strlen(bufptr);
+		    if (used == 0)
+			return (EOF);
 		    while (iswhite(*bufptr)) {
 			if (*bufptr == '\t') {
 			    _nc_curr_col = (_nc_curr_col | 7) + 1;
