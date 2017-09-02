@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.296 2017/08/27 19:40:17 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.297 2017/09/02 21:45:44 Jeb.Rosen Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -831,7 +831,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 	SP_PARM->_fifohold--;
 
 #if USE_SIZECHANGE
-    if ((SP_PARM->_endwin == ewRunning)
+    if ((SP_PARM->_endwin == ewSuspend)
 	|| _nc_handle_sigwinch(SP_PARM)) {
 	/*
 	 * This is a transparent extension:  XSI does not address it,

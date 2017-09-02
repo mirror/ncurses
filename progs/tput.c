@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.71 2017/08/19 13:44:27 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.72 2017/09/02 21:03:26 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -214,7 +214,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 	}
 #endif
 	quit(4, "unknown terminfo capability '%s'", name);
-    } else if (s != ABSENT_STRING) {
+    } else if (VALID_STRING(s)) {
 	if (argc > 1) {
 	    int k;
 	    int ignored;

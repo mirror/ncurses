@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.167 2017/07/15 21:22:01 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.168 2017/09/02 21:01:54 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -987,12 +987,12 @@ fmt_entry(TERMTYPE2 *tterm,
 #undef CUR
 #define CUR tterm->
     if (outform == F_TERMCAP) {
-	if (termcap_reset != ABSENT_STRING) {
-	    if (init_3string != ABSENT_STRING
+	if (VALID_STRING(termcap_reset)) {
+	    if (VALID_STRING(init_3string)
 		&& !strcmp(init_3string, termcap_reset))
 		DISCARD(init_3string);
 
-	    if (reset_2string != ABSENT_STRING
+	    if (VALID_STRING(reset_2string)
 		&& !strcmp(reset_2string, termcap_reset))
 		DISCARD(reset_2string);
 	}
@@ -1068,7 +1068,7 @@ fmt_entry(TERMTYPE2 *tterm,
 	buffer[0] = '\0';
 
 	if (predval != FAIL) {
-	    if (capability != ABSENT_STRING
+	    if (VALID_STRING(capability)
 		&& i + 1 > num_strings)
 		num_strings = i + 1;
 
@@ -1148,8 +1148,7 @@ fmt_entry(TERMTYPE2 *tterm,
 	    }
 	}
 	/* e.g., trimmed_sgr0 */
-	if (capability != ABSENT_STRING &&
-	    capability != CANCELLED_STRING &&
+	if (VALID_STRING(capability) &&
 	    capability != tterm->Strings[i])
 	    free(capability);
     }
@@ -1320,7 +1319,8 @@ kill_labels(TERMTYPE2 *tterm, int target)
 
     for (n = 0; n <= 10; ++n) {
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "lf%d", n);
-	if ((cap = find_string(tterm, name)) != ABSENT_STRING
+	cap = find_string(tterm, name);
+	if (VALID_STRING(cap)
 	    && kill_string(tterm, cap)) {
 	    target -= (int) (strlen(cap) + 5);
 	    ++result;
@@ -1345,7 +1345,8 @@ kill_fkeys(TERMTYPE2 *tterm, int target)
 
     for (n = 60; n >= 0; --n) {
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "kf%d", n);
-	if ((cap = find_string(tterm, name)) != ABSENT_STRING
+	cap = find_string(tterm, name);
+	if (VALID_STRING(cap)
 	    && kill_string(tterm, cap)) {
 	    target -= (int) (strlen(cap) + 5);
 	    ++result;
@@ -1367,7 +1368,7 @@ one_one_mapping(const char *mapping)
 {
     bool result = TRUE;
 
-    if (mapping != ABSENT_STRING) {
+    if (VALID_STRING(mapping)) {
 	int n = 0;
 	while (mapping[n] != '\0') {
 	    if (isLine(mapping[n]) &&
