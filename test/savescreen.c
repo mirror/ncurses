@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.32 2017/04/15 17:33:50 tom Exp $
+ * $Id: savescreen.c,v 1.34 2017/09/04 15:01:45 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -313,7 +313,7 @@ main(int argc, char *argv[])
 	    }
 	    move(0, 0);
 	} else {
-	    endwin();
+	    exit_curses();
 	    fprintf(stderr, "Cannot open \"%s\"\n", fill_by);
 	    ExitProgram(EXIT_FAILURE);
 	}
@@ -325,14 +325,14 @@ main(int argc, char *argv[])
 	 * Use the last file as the initial/current screen.
 	 */
 	if (last < 0) {
-	    endwin();
+	    exit_curses();
 	    printf("No screen-dumps given\n");
 	    ExitProgram(EXIT_FAILURE);
 	}
 
 	which = last;
 	if (load_screen(files[which]) == ERR) {
-	    endwin();
+	    exit_curses();
 	    printf("Cannot load screen-dump %s\n", files[which]);
 	    ExitProgram(EXIT_FAILURE);
 	}
@@ -489,7 +489,7 @@ main(int argc, char *argv[])
 
 #else
 int
-main(int argc, char *argv[])
+main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     printf("This program requires the screen-dump functions\n");
     ExitProgram(EXIT_FAILURE);

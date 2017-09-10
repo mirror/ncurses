@@ -26,14 +26,13 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addstr.c,v 1.13 2017/04/15 14:56:27 tom Exp $
+ * $Id: test_addstr.c,v 1.15 2017/09/06 09:27:34 tom Exp $
  *
  * Demonstrate the waddstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
  */
 
 #include <test.priv.h>
-
 #include <linedata.h>
 
 /*

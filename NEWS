@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2939 2017/09/02 21:48:17 tom Exp $
+-- $Id: NEWS,v 1.2949 2017/09/09 22:32:34 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170909
+	+ improve wide-character implementation of myADDNSTR() in frm_driver.c,
+	  which was inconsistent with the normal implementation.
+	+ save/restore cursor position in Undo_Justification(), matching
+	  behavior of Buffer_To_Window() (report by Leon Winter).
+	+ modify test/knight to provide the "slow" solution for small screens
+	  using "R", noting that Warnsdorf's method is easily done with "a".
+	+ modify several test-programs which call use_default_colors() to
+	  consistently do this only if "-d" option is given.
+	+ additional changes to test with non-standard variants of curses:
+	  + modify a loop limit in firework.c to work around absense of limit
+	    checks in some libraries.
+	  + fill the last row of a window with "?" in firstlast if waddch does
+	    not return ERR on the lower-right corner.
+	+ add checks in test/configure for some functions not in 4.3BSD curses.
+	+ fix a regression in test/configure (cf: 20170826).
 
 20170902
 	+ amend change for endwin-state for better consistency with the older

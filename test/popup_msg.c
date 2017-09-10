@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: popup_msg.c,v 1.7 2017/04/15 19:16:41 tom Exp $
+ * $Id: popup_msg.c,v 1.8 2017/09/03 21:05:01 tom Exp $
  *
  * Show a multi-line message in a window which may extend beyond the screen.
  *
@@ -36,6 +36,8 @@
 #include <test.priv.h>
 
 #include <popup_msg.h>
+
+#if HAVE_NEWPAD
 
 static WINDOW *old_window;
 
@@ -167,3 +169,13 @@ popup_msg2(WINDOW *parent, char **msg)
 {
     popup_msg(parent, (const char *const *) msg);
 }
+
+#else
+void
+popup_msg(WINDOW *parent, const char *const *msg)
+{
+    (void) parent;
+    (void) msg;
+    beep();
+}
+#endif

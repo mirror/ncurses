@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.121 2017/04/08 22:02:15 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.123 2017/09/09 22:35:49 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -99,9 +99,9 @@ Perhaps at some time we will make this configurable at runtime.
 #define GROW_IF_NAVIGATE (1)
 
 #if USE_WIDEC_SUPPORT
-#define myADDNSTR(w, s, n) wadd_wchnstr(w, s, n)
-#define myINSNSTR(w, s, n) wins_wchnstr(w, s, n)
-#define myINNSTR(w, s, n)  fix_wchnstr(w, s, n)
+#define myADDNSTR(w, s, n) wide_waddnstr(w, s, n)
+#define myINSNSTR(w, s, n) wide_winsnstr(w, s, n)
+#define myINNSTR(w, s, n)  wide_winnstr(w, s, n)
 #define myWCWIDTH(w, y, x) cell_width(w, y, x)
 #else
 #define myADDNSTR(w, s, n) waddnstr(w, s, n)
@@ -239,9 +239,29 @@ check_pos(FORM *form, int lineno)
   Wide-character special functions
   --------------------------------------------------------------------------*/
 #if USE_WIDEC_SUPPORT
-/* like winsnstr */
+/* add like waddnstr, but using cchar_t* rather than char*
+ */
 static int
-wins_wchnstr(WINDOW *w, cchar_t *s, int n)
+wide_waddnstr(WINDOW *w, const cchar_t *s, int n)
+{
+  int rc = OK;
+
+  while (n-- > 0)
+    {
+      if ((rc = wadd_wch(w, s)) != OK)
+	break;
+      ++s;
+    }
+  return rc;
+}
+
+/* insert like winsnstr, but using cchar_t* rather than char*
+ *
+ * X/Open Curses has no close equivalent; inserts are done only with wchar_t
+ * strings.
+ */
+static int
+wide_winsnstr(WINDOW *w, const cchar_t *s, int n)
 {
   int code = ERR;
   int y, x;
@@ -257,11 +277,13 @@ wins_wchnstr(WINDOW *w, cchar_t *s, int n)
   return code;
 }
 
-/* win_wchnstr is inconsistent with winnstr, since it returns OK rather than
- * the number of items transferred.
+/* retrieve like winnstr, but using cchar_t*, rather than char*.
+ *
+ * X/Open Curses' closest equivalent, win_wchnstr(), is inconsistent with
+ * winnstr(), since it returns OK rather than the number of items transferred.
  */
 static int
-fix_wchnstr(WINDOW *w, cchar_t *s, int n)
+wide_winnstr(WINDOW *w, cchar_t *s, int n)
 {
   int x;
 
@@ -1023,7 +1045,10 @@ static void
 Undo_Justification(FIELD *field, WINDOW *win)
 {
   FIELD_CELL *bp;
+  int y, x;
   int len;
+
+  getyx(win, y, x);
 
   bp = (Field_Has_Option(field, O_NO_LEFT_STRIP)
 	? field->buf
@@ -1036,6 +1061,7 @@ Undo_Justification(FIELD *field, WINDOW *win)
       wmove(win, 0, 0);
       myADDNSTR(win, bp, len);
     }
+  wmove(win, y, x);
 }
 
 /*---------------------------------------------------------------------------

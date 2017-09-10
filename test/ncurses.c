@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.453 2017/06/24 20:49:44 tom Exp $
+$Id: ncurses.c,v 1.460 2017/09/09 22:52:38 tom Exp $
 
 ***************************************************************************/
 
@@ -155,6 +155,7 @@ static bool use_colors;		/* true if we use colors */
 #undef max_pairs
 static int max_pairs;		/* ...and the number of color pairs */
 
+#if HAVE_COLOR_CONTENT
 typedef struct {
     NCURSES_COLOR_T red;
     NCURSES_COLOR_T green;
@@ -162,6 +163,7 @@ typedef struct {
 } RGB_DATA;
 
 static RGB_DATA *all_colors;
+#endif
 
 static void main_menu(bool);
 static void failed(const char *s) GCC_NORETURN;
@@ -174,29 +176,16 @@ failed(const char *s)
     ExitProgram(EXIT_FAILURE);
 }
 
-/* The behavior of mvhline, mvvline for negative/zero length is unspecified,
- * though we can rely on negative x/y values to stop the macro.
- */
-static void
-do_h_line(int y, int x, chtype c, int to)
-{
-    if ((to) > (x))
-	MvHLine(y, x, c, (to) - (x));
-}
-
-static void
-do_v_line(int y, int x, chtype c, int to)
-{
-    if ((to) > (y))
-	MvVLine(y, x, c, (to) - (y));
-}
-
 static void
 Repaint(void)
 {
     touchwin(stdscr);
+#if HAVE_CURSCR
     touchwin(curscr);
     wrefresh(curscr);
+#else
+    wrefresh(stdscr);
+#endif
 }
 
 static bool
@@ -2644,6 +2633,7 @@ wide_color_test(void)
 }
 #endif /* USE_WIDEC_SUPPORT */
 
+#if HAVE_COLOR_CONTENT
 static void
 change_color(NCURSES_PAIRS_T current, int field, int value, int usebase)
 {
@@ -2990,6 +2980,7 @@ color_edit(void)
 
     endwin();
 }
+#endif /* HAVE_COLOR_CONTENT */
 
 /****************************************************************************
  *
@@ -5255,6 +5246,25 @@ demo_panels(void (*InitPanel) (WINDOW *), void (*FillPanel) (PANEL *))
  *
  ****************************************************************************/
 
+#if HAVE_NEWPAD
+
+/* The behavior of mvhline, mvvline for negative/zero length is unspecified,
+ * though we can rely on negative x/y values to stop the macro.
+ */
+static void
+do_h_line(int y, int x, chtype c, int to)
+{
+    if ((to) > (x))
+	MvHLine(y, x, c, (to) - (x));
+}
+
+static void
+do_v_line(int y, int x, chtype c, int to)
+{
+    if ((to) > (y))
+	MvVLine(y, x, c, (to) - (y));
+}
+
 #define GRIDSIZE	3
 
 static bool pending_pan = FALSE;
@@ -5703,6 +5713,7 @@ demo_pad(bool colored)
     endwin();
     erase();
 }
+#endif /* HAVE_NEWPAD */
 
 /****************************************************************************
  *
@@ -6519,6 +6530,7 @@ demo_forms(void)
  *
  ****************************************************************************/
 
+#if HAVE_COPYWIN		/* ...and overlay, overwrite */
 static void
 fillwin(WINDOW *win, char ch)
 {
@@ -6861,9 +6873,10 @@ overlap_test(void)
     delwin(win2);
     delwin(win1);
     erase();
-    curs_set(1);
-    endwin();
+    exit_curses();
 }
+
+#endif /* HAVE_COPYWIN */
 
 static void
 show_setting_name(const char *name)
@@ -6944,7 +6957,7 @@ show_settings(void)
     show_boolean_setting("has_il", has_il());
     Pause();
     erase();
-    endwin();
+    exit_curses();
 }
 
 /****************************************************************************
@@ -6994,6 +7007,7 @@ do_single_test(const char c)
 	break;
 #endif
 
+#if HAVE_COLOR_CONTENT
     case 'd':
 	if (!use_colors)
 	    Cannot("does not support color.");
@@ -7002,6 +7016,7 @@ do_single_test(const char c)
 	else
 	    color_edit();
 	break;
+#endif
 
 #if USE_SOFTKEYS
     case 'e':
@@ -7055,6 +7070,7 @@ do_single_test(const char c)
 	break;
 #endif
 
+#if HAVE_NEWPAD
     case 'p':
 	demo_pad(FALSE);
 	break;
@@ -7062,6 +7078,7 @@ do_single_test(const char c)
     case 'P':
 	demo_pad(TRUE);
 	break;
+#endif
 
 #if USE_LIBFORM
     case 'r':
@@ -7069,9 +7086,11 @@ do_single_test(const char c)
 	break;
 #endif
 
+#if HAVE_COPYWIN
     case 's':
 	overlap_test();
 	break;
+#endif
 
 #if USE_LIBMENU && defined(TRACE)
     case 't':
@@ -7116,7 +7135,9 @@ usage(void)
 	,"  -h       rip-off header line (can repeat)"
 #endif
 	,"  -m       do not use colors"
+#if HAVE_COLOR_CONTENT
 	,"  -p file  rgb values to use in 'd' rather than ncurses's builtin"
+#endif
 #if USE_LIBPANEL
 	,"  -s msec  specify nominal time for panel-demo (default: 1, to hold)"
 #endif
@@ -7126,7 +7147,9 @@ usage(void)
 #ifdef TRACE
 	,"  -t mask  specify default trace-level (may toggle with ^T)"
 #endif
+#if HAVE_COLOR_CONTENT
 	,"  -x       use xterm-compatible control for reading color palette"
+#endif
     };
     size_t n;
     for (n = 0; n < SIZEOF(tbl); n++)
@@ -7196,8 +7219,10 @@ main_menu(bool top)
 #if USE_WIDEC_SUPPORT
 	(void) puts("C = color test pattern using wide-character calls");
 #endif
+#if HAVE_COLOR_CONTENT
 	if (top)
 	    (void) puts("d = edit RGB color values");
+#endif
 #if USE_SOFTKEYS
 	(void) puts("e = exercise soft keys");
 #if USE_WIDEC_SUPPORT
@@ -7220,13 +7245,17 @@ main_menu(bool top)
 	(void) puts("O = exercise panels with wide-characters");
 #endif
 #endif
+#if HAVE_NEWPAD
 	(void) puts("p = exercise pad features");
 	(void) puts("P = exercise pad features, using color");
+#endif
 	(void) puts("q = quit");
 #if USE_LIBFORM
 	(void) puts("r = exercise forms code");
 #endif
+#if HAVE_COPYWIN
 	(void) puts("s = overlapping-refresh test");
+#endif
 #if USE_LIBMENU && defined(TRACE)
 	(void) puts("t = set trace level");
 #endif
@@ -7304,9 +7333,11 @@ main(int argc, char *argv[])
     bool assumed_colors = FALSE;
     bool default_colors = FALSE;
 #endif
-    char *palette_file = 0;
     bool monochrome = FALSE;
+#if HAVE_COLOR_CONTENT
     bool xterm_colors = FALSE;
+    char *palette_file = 0;
+#endif
 
     setlocale(LC_ALL, "");
 
@@ -7354,9 +7385,11 @@ main(int argc, char *argv[])
 	case 'm':
 	    monochrome = TRUE;
 	    break;
+#if HAVE_COLOR_CONTENT
 	case 'p':
 	    palette_file = optarg;
 	    break;
+#endif
 #if USE_LIBPANEL
 	case 's':
 	    nap_msec = (int) atol(optarg);
@@ -7372,9 +7405,11 @@ main(int argc, char *argv[])
 	    save_trace = (unsigned) strtol(optarg, 0, 0);
 	    break;
 #endif
+#if HAVE_COLOR_CONTENT
 	case 'x':
 	    xterm_colors = TRUE;
 	    break;
+#endif
 	default:
 	    usage();
 	}
@@ -7434,9 +7469,11 @@ main(int argc, char *argv[])
 #endif
 	max_pairs = COLOR_PAIRS;	/* was > 256 ? 256 : COLOR_PAIRS */
 
+#if HAVE_COLOR_CONTENT
 	if (can_change_color()) {
 	    init_all_colors(xterm_colors, palette_file);
 	}
+#endif
     }
 
     /*

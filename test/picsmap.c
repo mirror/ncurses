@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.101 2017/08/20 16:42:13 tom Exp $
+ * $Id: picsmap.c,v 1.103 2017/09/06 09:21:38 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -49,7 +49,6 @@
  */
 #include <test.priv.h>
 
-#include <stdarg.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 
@@ -1703,7 +1702,7 @@ main(int argc, char *argv[])
 		init_palette(palette_path);
 	    }
 	    scrollok(stdscr, FALSE);
-	    endwin();
+	    exit_curses();
 	}
 	if (optind >= argc)
 	    giveup("expected at least one image filename");

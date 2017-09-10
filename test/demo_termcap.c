@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.54 2017/04/13 09:12:40 tom Exp $
+ * $Id: demo_termcap.c,v 1.55 2017/09/04 13:28:44 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -74,8 +74,10 @@ static bool b_opt = FALSE;
 static bool n_opt = FALSE;
 static bool s_opt = FALSE;
 static bool q_opt = FALSE;
+#ifdef NCURSES_VERSION
 static bool x_opt = FALSE;
 static bool y_opt = FALSE;
+#endif
 
 static char *d_opt;
 static char *e_opt;
@@ -768,7 +770,9 @@ main(int argc, char *argv[])
     int n;
     char *name;
     bool a_opt = FALSE;
+#if defined(NCURSES_VERSION) || defined(HAVE_CURSES_DATA_OSPEED)
     bool v_opt = FALSE;
+#endif
     char *input_name = 0;
 
     int repeat;
@@ -804,9 +808,12 @@ main(int argc, char *argv[])
 	case 's':
 	    s_opt = TRUE;
 	    break;
+#if defined(NCURSES_VERSION) || defined(HAVE_CURSES_DATA_OSPEED)
 	case 'v':
 	    v_opt = TRUE;
 	    break;
+#endif
+#ifdef NCURSES_VERSION
 #if NCURSES_XNAMES
 	case 'x':
 	    x_opt = TRUE;
@@ -815,6 +822,7 @@ main(int argc, char *argv[])
 	    y_opt = TRUE;
 	    x_opt = TRUE;
 	    break;
+#endif
 #endif
 	default:
 	    usage();

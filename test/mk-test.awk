@@ -1,6 +1,6 @@
-# $Id: mk-test.awk,v 1.16 2017/08/11 16:51:10 tom Exp $
+# $Id: mk-test.awk,v 1.17 2017/09/04 00:50:49 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2010,2015 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2015,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #

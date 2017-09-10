@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.142 2017/08/20 18:12:43 tom Exp $
+dnl $Id: aclocal.m4,v 1.144 2017/09/07 21:08:12 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -745,7 +745,7 @@ fi
 AC_CHECK_HEADERS($cf_cv_ncurses_header)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CURSES_LIBS version: 39 updated: 2015/05/10 19:52:14
+dnl CF_CURSES_LIBS version: 40 updated: 2017/09/07 17:06:24
 dnl --------------
 dnl Look for the curses libraries.  Older curses implementations may require
 dnl termcap/termlib to be linked as well.  Call CF_CURSES_CPPFLAGS first.
@@ -839,7 +839,7 @@ if test ".$ac_cv_func_initscr" != .yes ; then
 		for cf_curs_lib in $cf_check_list xcurses jcurses pdcurses unknown
 		do
 			LIBS="-l$cf_curs_lib $cf_save_LIBS"
-			if test "$cf_term_lib" = unknown ; then
+			if test "$cf_term_lib" = unknown || test "$cf_term_lib" = "$cf_curs_lib" ; then
 				AC_MSG_CHECKING(if we can link with $cf_curs_lib library)
 				AC_TRY_LINK([#include <${cf_cv_ncurses_header:-curses.h}>],
 					[initscr()],

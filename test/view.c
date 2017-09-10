@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.101 2017/04/15 20:14:01 tom Exp $
+ * $Id: view.c,v 1.102 2017/09/04 00:39:24 tom Exp $
  */
 
 #include <test.priv.h>
@@ -506,12 +506,17 @@ main(int argc, char *argv[])
 	    break;
 #endif
 	case 's':
+#if HAVE_HALFDELAY
 	    if (got_number) {
 		halfdelay(my_delay = n);
 	    } else {
 		nodelay(stdscr, FALSE);
 		my_delay = -1;
 	    }
+#else
+	    nodelay(stdscr, FALSE);
+	    my_delay = -1;
+#endif
 	    break;
 	case ' ':
 	    nodelay(stdscr, TRUE);

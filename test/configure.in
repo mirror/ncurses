@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.135 2017/08/20 16:38:29 tom Exp $
+dnl $Id: configure.in,v 1.142 2017/09/09 23:07:56 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -52,6 +52,7 @@ AC_ARG_PROGRAM
 
 AC_PROG_MAKE_SET
 CF_PROG_CC
+AC_C_INLINE
 AC_PROG_CPP
 AC_PROG_AWK
 CF_PROG_INSTALL
@@ -272,6 +273,9 @@ assume_default_colors \
 chgat \
 color_content \
 color_set \
+copywin \
+delscreen \
+dupwin \
 filter \
 getbegx \
 getcurx \
@@ -279,10 +283,14 @@ getmaxx \
 getnstr \
 getparx \
 getwin \
+halfdelay \
 init_extended_color \
+mvderwin \
 mvvline \
+mvwin \
 mvwvline \
 napms \
+newpad \
 putwin \
 resize_term \
 resizeterm \
@@ -308,6 +316,7 @@ vidputs \
 vsscanf \
 vw_printw \
 wchgat \
+winsdelln \
 winsstr \
 wresize \
 wsyncdown \
@@ -453,7 +462,7 @@ do
 	\$(srcdir)/test.priv.h \\
 	ncurses_cfg.h
 	$SHOW_CC
-	$ECHO_CC\$(CC) -c \$(CFLAGS_DEFAULT) \$(srcdir)/$N.c
+	$ECHO_CC\$(CC) -c \$(CFLAGS_DEFAULT) -DMODULE_NAME="$N" \$(srcdir)/$N.c
 TEST_EOF
 done
 

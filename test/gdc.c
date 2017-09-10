@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.45 2016/09/10 21:47:55 tom Exp $
+ * $Id: gdc.c,v 1.50 2017/09/09 20:23:09 tom Exp $
  */
 
 #include <test.priv.h>
@@ -66,7 +66,7 @@ sighndl(int signo)
     signal(signo, sighndl);
     sigtermed = signo;
     if (redirected) {
-	endwin();
+	exit_curses();
 	ExitProgram(EXIT_FAILURE);
     }
 }
@@ -76,7 +76,7 @@ check_term(void)
 {
     if (sigtermed) {
 	(void) standend();
-	endwin();
+	exit_curses();
 	fprintf(stderr, "gdc terminated by signal %d\n", sigtermed);
 	ExitProgram(EXIT_FAILURE);
     }
@@ -156,8 +156,11 @@ usage(void)
 	"Usage: gdc [options] [count]"
 	,""
 	,"Options:"
-	,"  -n  redirect input to /dev/null"
-	,"  -s  scroll each number into place, rather than flipping"
+#if HAVE_USE_DEFAULT_COLORS
+	,"  -d       invoke use_default_colors"
+#endif
+	,"  -n       redirect input to /dev/null"
+	,"  -s       scroll each number into place, rather than flipping"
 	,"  -t hh:mm:ss specify starting time (default is ``now'')"
 	,""
 	,"If you specify a count, gdc runs for that number of seconds"
@@ -218,13 +221,21 @@ main(int argc, char *argv[])
     bool smooth = FALSE;
     bool stages = FALSE;
     time_t starts = 0;
+#if HAVE_USE_DEFAULT_COLORS
+    bool d_option = FALSE;
+#endif
 
     setlocale(LC_ALL, "");
 
     CATCHALL(sighndl);
 
-    while ((k = getopt(argc, argv, "nst:")) != -1) {
+    while ((k = getopt(argc, argv, "dnst:")) != -1) {
 	switch (k) {
+#if HAVE_USE_DEFAULT_COLORS
+	case 'd':
+	    d_option = TRUE;
+	    break;
+#endif
 	case 'n':
 	    ifp = fopen("/dev/null", "r");
 	    redirected = TRUE;
@@ -268,7 +279,7 @@ main(int argc, char *argv[])
 	short bg = COLOR_BLACK;
 	start_color();
 #if HAVE_USE_DEFAULT_COLORS
-	if (use_default_colors() == OK)
+	if (d_option && (use_default_colors() == OK))
 	    bg = -1;
 #endif
 	init_pair(PAIR_DIGITS, COLOR_BLACK, COLOR_RED);
@@ -435,6 +446,6 @@ main(int argc, char *argv[])
 	}
     } while (--count);
     (void) standend();
-    endwin();
+    exit_curses();
     ExitProgram(EXIT_SUCCESS);
 }

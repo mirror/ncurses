@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.75 2017/08/20 16:50:04 tom Exp $
+# $Id: ncurses_defs,v 1.80 2017/09/04 15:01:23 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -52,8 +52,11 @@ HAVE_BUILTIN_H
 HAVE_CHGAT	1
 HAVE_COLOR_CONTENT	1
 HAVE_COLOR_SET	1
+HAVE_COPYWIN	1
 HAVE_CURSCR	1
+HAVE_DERWIN	1
 HAVE_DIRENT_H
+HAVE_DUPWIN	1
 HAVE_ERRNO
 HAVE_FCNTL_H
 HAVE_FILTER	1
@@ -73,6 +76,7 @@ HAVE_GETWIN	1
 HAVE_GPM_H
 HAVE_GPP_BUILTIN_H
 HAVE_GXX_BUILTIN_H
+HAVE_HALFDELAY	1
 HAVE_HAS_KEY
 HAVE_INIT_EXTENDED_COLOR
 HAVE_INTTYPES_H
@@ -105,6 +109,7 @@ HAVE_MVVLINE	1
 HAVE_MVWVLINE	1
 HAVE_NANOSLEEP
 HAVE_NC_ALLOC_H
+HAVE_NEWPAD	1
 HAVE_PANEL_H
 HAVE_POLL
 HAVE_POLL_H

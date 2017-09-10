@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.43 2017/06/24 20:48:46 tom Exp $
+ * $Id: movewindow.c,v 1.45 2017/09/06 20:08:11 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -45,7 +45,9 @@ TODO:
  */
 
 #include <test.priv.h>
-#include <stdarg.h>
+
+#if HAVE_MVDERWIN && HAVE_MVWIN
+
 #include <popup_msg.h>
 
 #ifdef HAVE_XCURSES
@@ -767,3 +769,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 #endif
     ExitProgram(EXIT_SUCCESS);
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the curses mvderwin and mvwin functions\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

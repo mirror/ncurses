@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.13 2017/04/15 13:38:37 tom Exp $
+ * $Id: echochar.c,v 1.14 2017/09/04 11:48:15 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -45,7 +45,7 @@ static time_t started;
 static void
 cleanup(void)
 {
-    endwin();
+    exit_curses();
 
     printf("\n\n%ld total chars, rate %.2f/sec\n",
 	   total_chars,

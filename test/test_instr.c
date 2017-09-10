@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_instr.c,v 1.7 2017/04/15 14:08:40 tom Exp $
+ * $Id: test_instr.c,v 1.9 2017/09/06 09:27:45 tom Exp $
  *
  * Author: Thomas E Dickey
  *

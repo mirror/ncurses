@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.15 2017/06/26 00:20:23 tom Exp $
+ * $Id: demo_new_pair.c,v 1.16 2017/09/04 11:47:44 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -334,7 +334,7 @@ main(int argc, char *argv[])
 	total_cells += 1 + (use_wide ? 1 : 0);
 	++current;
     }
-    endwin();
+    exit_curses();
     fclose(output);
 
     printf("%.1f cells/second\n",

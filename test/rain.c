@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.43 2017/04/30 01:08:14 tom Exp $
+ * $Id: rain.c,v 1.46 2017/09/09 00:37:51 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -70,8 +70,7 @@ static STATS drop_threads[MAX_THREADS];
 static void
 onsig(int n GCC_UNUSED)
 {
-    curs_set(1);
-    endwin();
+    exit_curses();
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -289,9 +288,28 @@ get_input(void)
     return USING_WINDOW(stdscr, wgetch);
 }
 
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: rain [options]"
+	,""
+	,"Options:"
+#if HAVE_USE_DEFAULT_COLORS
+	," -d       invoke use_default_colors"
+#endif
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(EXIT_FAILURE);
+}
+
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     static const char *help[] =
     {
@@ -309,6 +327,25 @@ main(int argc GCC_UNUSED,
     DATA last[MAX_DROP];
 #endif
     int j = 0;
+    int ch;
+#if HAVE_USE_DEFAULT_COLORS
+    bool d_option = FALSE;
+#endif
+
+    while ((ch = getopt(argc, argv, "d")) != -1) {
+	switch (ch) {
+#if HAVE_USE_DEFAULT_COLORS
+	case 'd':
+	    d_option = TRUE;
+	    break;
+#endif
+	default:
+	    usage();
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage();
 
     setlocale(LC_ALL, "");
 
@@ -319,7 +356,7 @@ main(int argc GCC_UNUSED,
 	int bg = COLOR_BLACK;
 	start_color();
 #if HAVE_USE_DEFAULT_COLORS
-	if (use_default_colors() == OK)
+	if (d_option && (use_default_colors() == OK))
 	    bg = -1;
 #endif
 	init_pair(1, COLOR_BLUE, (short) bg);
@@ -394,8 +431,7 @@ main(int argc GCC_UNUSED,
 	}
 	napms(50);
     }
-    curs_set(1);
-    endwin();
+    exit_curses();
 #ifdef USE_PTHREADS
     printf("Counts per thread:\n");
     for (j = 0; j < MAX_THREADS; ++j)

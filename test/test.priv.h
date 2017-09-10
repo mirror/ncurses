@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.148 2017/08/20 16:51:33 tom Exp $ */
+/* $Id: test.priv.h,v 1.154 2017/09/06 20:07:40 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -86,8 +86,20 @@
 #define HAVE_COLOR_CONTENT 0
 #endif
 
+#ifndef HAVE_COPYWIN
+#define HAVE_COPYWIN 0
+#endif
+
 #ifndef HAVE_COLOR_SET
 #define HAVE_COLOR_SET 0
+#endif
+
+#ifndef HAVE_DELSCREEN
+#define HAVE_DELSCREEN 0
+#endif
+
+#ifndef HAVE_DUPWIN
+#define HAVE_DUPWIN 0
 #endif
 
 #ifndef HAVE_FILTER
@@ -122,6 +134,10 @@
 #define HAVE_GETWIN 0
 #endif
 
+#ifndef HAVE_HALFDELAY
+#define HAVE_HALFDELAY 0
+#endif
+
 #ifndef HAVE_INIT_EXTENDED_COLOR
 #define HAVE_INIT_EXTENDED_COLOR 0
 #endif
@@ -154,8 +170,16 @@
 #define HAVE_MENU_H 0
 #endif
 
+#ifndef HAVE_MVDERWIN
+#define HAVE_MVDERWIN 0
+#endif
+
 #ifndef HAVE_MVVLINE
 #define HAVE_MVVLINE 0
+#endif
+
+#ifndef HAVE_MVWIN
+#define HAVE_MVWIN 0
 #endif
 
 #ifndef HAVE_MVWVLINE
@@ -168,6 +192,10 @@
 
 #ifndef HAVE_NC_ALLOC_H
 #define HAVE_NC_ALLOC_H 0
+#endif
+
+#ifndef HAVE_NEWPAD
+#define HAVE_NEWPAD 0
 #endif
 
 #ifndef HAVE_PANEL_H
@@ -292,6 +320,10 @@
 
 #ifndef HAVE_VID_PUTS
 #define HAVE_VID_PUTS 0
+#endif
+
+#ifndef HAVE_WINSDELLN
+#define HAVE_WINSDELLN 0
 #endif
 
 #ifndef HAVE_WRESIZE
@@ -695,18 +727,18 @@ extern char *strnames[], *strcodes[], *strfnames[];
  * These usually are implemented as macros, but may be functions.
  */
 #if !defined(getcurx) && !HAVE_GETCURX
-#define getcurx(win)            ((win)?(win)->_curx:ERR)
-#define getcury(win)            ((win)?(win)->_cury:ERR)
+#define getcurx(win)            ((win) ? ((int)(win)->_curx) : ERR)
+#define getcury(win)            ((win) ? ((int)(win)->_cury) : ERR)
 #endif
 
 #if !defined(getbegx) && !HAVE_GETBEGX
-#define getbegx(win)            ((win)?(win)->_begx:ERR)
-#define getbegy(win)            ((win)?(win)->_begy:ERR)
+#define getbegx(win)            ((win) ? ((int)(win)->_begx) : ERR)
+#define getbegy(win)            ((win) ? ((int)(win)->_begy) : ERR)
 #endif
 
 #if !defined(getmaxx) && !HAVE_GETMAXX
-#define getmaxx(win)            ((win)?((win)->_maxx + 1):ERR)
-#define getmaxy(win)            ((win)?((win)->_maxy + 1):ERR)
+#define getmaxx(win)            ((win) ? ((int)(win)->_maxx + 1) : ERR)
+#define getmaxy(win)            ((win) ? ((int)(win)->_maxy + 1) : ERR)
 #endif
 
 /*
@@ -758,6 +790,15 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define NCURSES_XNAMES 1
 #else
 #define NCURSES_XNAMES 0
+#endif
+
+/*
+ * ncurses restores the cursor in endwin().  Other libraries may not.
+ */
+#ifdef NCURSES_VERSION
+#define exit_curses() endwin()
+#else
+#define exit_curses() do { endwin(); curs_set(1); } while (0)
 #endif
 
 /* ncurses implements tparm() with varargs, X/Open with a fixed-parameter list

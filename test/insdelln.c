@@ -26,12 +26,15 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.10 2017/04/15 17:40:11 tom Exp $
+ * $Id: insdelln.c,v 1.12 2017/09/07 08:24:24 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
 
 #include <test.priv.h>
+
+#if HAVE_WINSDELLN
+
 #include <popup_msg.h>
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
@@ -379,3 +382,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(void)
+{
+    printf("This program requires the curses winsdelln function\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif
