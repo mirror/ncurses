@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.58 2017/06/26 00:43:07 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.59 2017/09/10 21:08:46 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -213,7 +213,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
     _nc_free_termtype2(&TerminalType(termp))
 #endif
 
-	if (generic_type) {
+    if (generic_type) {
 	/*
 	 * BSD 4.3's termcap contains mis-typed "gn" for wy99.  Do a sanity
 	 * check before giving up.
@@ -1024,12 +1024,18 @@ drv_setfilter(TERMINAL_CONTROL_BLOCK * TCB)
 {
     AssertTCB();
 
-    clear_screen = 0;
-    cursor_down = parm_down_cursor = 0;
-    cursor_address = 0;
-    cursor_up = parm_up_cursor = 0;
-    row_address = 0;
-    cursor_home = carriage_return;
+    /* *INDENT-EQLS* */
+    clear_screen     = ABSENT_STRING;
+    cursor_address   = ABSENT_STRING;
+    cursor_down      = ABSENT_STRING;
+    cursor_up        = ABSENT_STRING;
+    parm_down_cursor = ABSENT_STRING;
+    parm_up_cursor   = ABSENT_STRING;
+    row_address      = ABSENT_STRING;
+    cursor_home      = carriage_return;
+
+    if (back_color_erase)
+	clr_eos = ABSENT_STRING;
 }
 
 static void

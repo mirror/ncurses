@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.49 2017/05/30 21:09:21 tom Exp $
+.\" $Id: curs_util.3x,v 1.50 2017/09/10 21:20:35 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -124,10 +124,23 @@ the latter returns null where the former would display a meta character.
 .PP
 The \fBfilter\fR routine, if used, must be called before \fBinitscr\fR or
 \fBnewterm\fR are called.
-The effect is that, during those calls, \fBLINES\fR
-is set to 1; the capabilities \fBclear\fR, \fBcup\fR, \fBcud\fR, \fBcud1\fR,
-\fBcuu1\fR, \fBcuu\fR, \fBvpa\fR are disabled; and the \fBhome\fR string is
-set to the value of \fBcr\fR.
+Calling \fBfilter\fP causes these changes in initialization:
+.bP
+\fBLINES\fR is set to 1;
+.bP
+the capabilities
+\fBclear\fR,
+\fBcud1\fR,
+\fBcud\fR,
+\fBcup\fR,
+\fBcuu1\fR,
+\fBcuu\fR,
+\fBvpa\fR
+are disabled;
+.bP
+the capability \fBed\fP is disabled if \fBbce\fP is set;
+.bP
+and the \fBhome\fR string is set to the value of \fBcr\fR.
 .PP
 The \fBnofilter\fP routine cancels the effect of a preceding \fBfilter\fP
 call.

@@ -46,7 +46,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.166 2017/07/01 16:37:24 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.167 2017/09/10 21:09:16 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -369,13 +369,19 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 #ifdef USE_TERM_DRIVER
 	CallDriver(sp, td_setfilter);
 #else
-	clear_screen = 0;
-	cursor_down = parm_down_cursor = 0;
-	cursor_address = 0;
-	cursor_up = parm_up_cursor = 0;
-	row_address = 0;
+	/* *INDENT-EQLS* */
+	clear_screen     = ABSENT_STRING;
+	cursor_address   = ABSENT_STRING;
+	cursor_down      = ABSENT_STRING;
+	cursor_up        = ABSENT_STRING;
+	parm_down_cursor = ABSENT_STRING;
+	parm_up_cursor   = ABSENT_STRING;
+	row_address      = ABSENT_STRING;
+	cursor_home      = carriage_return;
 
-	cursor_home = carriage_return;
+	if (back_color_erase)
+	    clr_eos = ABSENT_STRING;
+
 #endif
 	T(("filter screensize %dx%d", slines, scolumns));
     }

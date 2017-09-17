@@ -29,7 +29,7 @@
 /*
  * Author:  Thomas E. Dickey 1998
  *
- * $Id: filter.c,v 1.30 2017/09/08 22:34:05 tom Exp $
+ * $Id: filter.c,v 1.31 2017/09/10 19:49:55 tom Exp $
  *
  * An example of the 'filter()' function in ncurses, this program prompts
  * for commands and executes them (like a command shell).  It illustrates
@@ -253,7 +253,7 @@ new_command(char *buffer, int length, int underline, bool clocked, bool polled)
     }
     attroff(underline);
     attroff(A_BOLD);
-    printw("\n");
+    refresh();
 
     return code;
 }
