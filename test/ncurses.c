@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.460 2017/09/09 22:52:38 tom Exp $
+$Id: ncurses.c,v 1.465 2017/09/23 15:42:49 tom Exp $
 
 ***************************************************************************/
 
@@ -985,8 +985,8 @@ finish_getch_test(void)
     endwin();
 }
 
-static void
-getch_test(void)
+static int
+getch_test(bool recur GCC_UNUSED)
 {
     int delay = begin_getch_test();
 
@@ -995,6 +995,7 @@ getch_test(void)
     forget_boxes();
     finish_getch_test();
     slk_clear();
+    return OK;
 }
 
 #if USE_WIDEC_SUPPORT
@@ -1202,8 +1203,8 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	init_getch(win, flags, delay);
 }
 
-static void
-get_wch_test(void)
+static int
+x_getch_test(bool recur GCC_UNUSED)
 {
     int delay = begin_getch_test();
 
@@ -1212,6 +1213,7 @@ get_wch_test(void)
     forget_boxes();
     finish_getch_test();
     slk_clear();
+    return OK;
 }
 #endif
 
@@ -1606,8 +1608,8 @@ attr_getc(int *skip,
     return result;
 }
 
-static void
-attr_test(void)
+static int
+attr_test(bool recur GCC_UNUSED)
 /* test text attributes */
 {
     int n;
@@ -1691,8 +1693,10 @@ attr_test(void)
 	bkgdset(A_NORMAL | BLANK);
 	erase();
 	endwin();
+	return OK;
     } else {
 	Cannot("does not support video attributes.");
+	return ERR;
     }
 }
 
@@ -1964,8 +1968,8 @@ wide_attr_getc(int *skip,
     return result;
 }
 
-static void
-wide_attr_test(void)
+static int
+x_attr_test(bool recur GCC_UNUSED)
 /* test text attributes using wide-character calls */
 {
     int n;
@@ -2043,8 +2047,10 @@ wide_attr_test(void)
 	set_wide_background(0);
 	erase();
 	endwin();
+	return OK;
     } else {
 	Cannot("does not support extended video attributes.");
+	return ERR;
     }
 }
 #endif
@@ -2177,8 +2183,8 @@ color_cycle(int current, int step)
 }
 
 /* generate a color test pattern */
-static void
-color_test(void)
+static int
+color_test(bool recur GCC_UNUSED)
 {
     NCURSES_PAIRS_T i;
     int top = 0, width;
@@ -2199,6 +2205,11 @@ color_test(void)
     bool opt_nums = FALSE;
     bool opt_wide = FALSE;
     WINDOW *helpwin;
+
+    if (!use_colors) {
+	Cannot("does not support color.");
+	return ERR;
+    }
 
     numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
     done = ((COLS < 16) || (numbered == 0));
@@ -2393,12 +2404,13 @@ color_test(void)
     endwin();
 
     free(numbered);
+    return OK;
 }
 
 #if USE_WIDEC_SUPPORT
 /* generate a color test pattern */
-static void
-wide_color_test(void)
+static int
+x_color_test(bool recur GCC_UNUSED)
 {
     int i;
     int top = 0, width;
@@ -2422,6 +2434,10 @@ wide_color_test(void)
     wchar_t *buffer = 0;
     WINDOW *helpwin;
 
+    if (!use_colors) {
+	Cannot("does not support color.");
+	return ERR;
+    }
     numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
     buffer = (wchar_t *) calloc((size_t) (COLS + 1), sizeof(wchar_t));
     done = ((COLS < 16) || (numbered == 0) || (buffer == 0));
@@ -2630,6 +2646,7 @@ wide_color_test(void)
 
     free(numbered);
     free(buffer);
+    return OK;
 }
 #endif /* USE_WIDEC_SUPPORT */
 
@@ -2751,8 +2768,8 @@ init_all_colors(bool xterm_colors, char *palette_file)
 
 #define scaled_rgb(n) ((255 * (n)) / 1000)
 
-static void
-color_edit(void)
+static int
+color_edit(bool recur GCC_UNUSED)
 /* display the color test pattern, without trying to edit colors */
 {
     int i;
@@ -2761,6 +2778,14 @@ color_edit(void)
     int last_c;
     int top_color;
     int page_size;
+
+    if (!use_colors) {
+	Cannot("does not support color.");
+	return ERR;
+    } else if (!can_change_color()) {
+	Cannot("has hardwired color values.");
+	return ERR;
+    }
 
     reset_all_colors();
 #ifdef KEY_RESIZE
@@ -2979,6 +3004,7 @@ color_edit(void)
     reset_all_colors();
 
     endwin();
+    return OK;
 }
 #endif /* HAVE_COLOR_CONTENT */
 
@@ -3115,8 +3141,8 @@ call_slk_color(int fg, int bg)
 }
 #endif
 
-static void
-slk_test(void)
+static int
+slk_test(bool recur GCC_UNUSED)
 /* exercise the soft keys */
 {
     int c, fmt = 1;
@@ -3236,12 +3262,13 @@ slk_test(void)
     slk_clear();
     erase();
     endwin();
+    return OK;
 }
 
 #if USE_WIDEC_SUPPORT
 #define SLKLEN 8
-static void
-wide_slk_test(void)
+static int
+x_slk_test(bool recur GCC_UNUSED)
 /* exercise the soft keys */
 {
     int c, fmt = 1;
@@ -3390,6 +3417,7 @@ wide_slk_test(void)
     slk_clear();
     erase();
     endwin();
+    return OK;
 }
 #endif
 #endif /* SLK_INIT */
@@ -3614,10 +3642,11 @@ show_acs_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     n = show_1_acs(n, repeat, BOTH(ACS_S7));
     (void) show_1_acs(n, repeat, BOTH(ACS_S9));
 #endif
+#undef BOTH
 }
 
-static void
-acs_display(void)
+static int
+acs_test(bool recur GCC_UNUSED)
 {
     int c = 'a';
     int pagesize = 32;
@@ -3729,6 +3758,7 @@ acs_display(void)
     Pause();
     erase();
     endwin();
+    return OK;
 }
 
 #if USE_WIDEC_SUPPORT
@@ -4163,8 +4193,8 @@ show_utf8_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
 }
 
 /* display the wide-ACS character set */
-static void
-wide_acs_display(void)
+static int
+x_acs_test(bool recur GCC_UNUSED)
 {
     int c = 'a';
     int digit = 0;
@@ -4266,6 +4296,7 @@ wide_acs_display(void)
     Pause();
     erase();
     endwin();
+    return OK;
 }
 
 #endif
@@ -4273,8 +4304,8 @@ wide_acs_display(void)
 /*
  * Graphic-rendition test (adapted from vttest)
  */
-static void
-test_sgr_attributes(void)
+static int
+sgr_attr_test(bool recur GCC_UNUSED)
 {
     int pass;
 
@@ -4348,6 +4379,7 @@ test_sgr_attributes(void)
     bkgdset(A_NORMAL | BLANK);
     erase();
     endwin();
+    return OK;
 }
 
 /****************************************************************************
@@ -4649,8 +4681,8 @@ delete_framed(FRAME * fp, bool showit)
     return np;
 }
 
-static void
-acs_and_scroll(void)
+static int
+scroll_test(bool recur GCC_UNUSED)
 /* Demonstrate windows */
 {
     int c;
@@ -4672,11 +4704,11 @@ acs_and_scroll(void)
 	switch (c) {
 	case CTRL('C'):
 	    if ((neww = typeCalloc(FRAME, (size_t) 1)) == 0) {
-		failed("acs_and_scroll");
+		failed("scroll_test");
 		goto breakout;
 	    }
 	    if ((neww->wind = getwindow()) == (WINDOW *) 0) {
-		failed("acs_and_scroll");
+		failed("scroll_test");
 		free(neww);
 		goto breakout;
 	    }
@@ -4770,7 +4802,7 @@ acs_and_scroll(void)
 
 		    wrefresh(neww->wind);
 		} else {
-		    failed("acs_and_scroll");
+		    failed("scroll_test");
 		}
 		(void) fclose(fp);
 	    }
@@ -4892,6 +4924,7 @@ acs_and_scroll(void)
     noraw();
     erase();
     endwin();
+    return OK;
 }
 
 /****************************************************************************
@@ -5098,7 +5131,7 @@ canned_panel(PANEL *px[MAX_PANELS + 1], NCURSES_CONST char *cmd)
     wait_a_while(nap_msec);
 }
 
-static void
+static int
 demo_panels(void (*InitPanel) (WINDOW *), void (*FillPanel) (PANEL *))
 {
     int count;
@@ -5237,7 +5270,24 @@ demo_panels(void (*InitPanel) (WINDOW *), void (*FillPanel) (PANEL *))
 
     erase();
     endwin();
+    return OK;
 }
+
+#if USE_LIBPANEL
+static int
+panel_test(bool recur GCC_UNUSED)
+{
+    return demo_panels(init_panel, fill_panel);
+}
+#endif
+
+#if USE_WIDEC_SUPPORT && USE_LIBPANEL
+static int
+x_panel_test(bool recur GCC_UNUSED)
+{
+    return demo_panels(init_wide_panel, fill_wide_panel);
+}
+#endif
 #endif /* USE_LIBPANEL */
 
 /****************************************************************************
@@ -5677,24 +5727,24 @@ padgetch(WINDOW *win)
 #define PAD_HIGH 200
 #define PAD_WIDE 200
 
-static void
-demo_pad(bool colored)
+static int
+pad_test(bool recur GCC_UNUSED)
 /* Demonstrate pads. */
 {
     WINDOW *panpad = newpad(PAD_HIGH, PAD_WIDE);
 
     if (panpad == 0) {
 	Cannot("cannot create requested pad");
-	return;
+	return ERR;
     }
 #ifdef A_COLOR
-    if (colored && use_colors) {
+    if (use_colors) {
 	init_pair(1, COLOR_BLACK, COLOR_GREEN);
 	init_pair(2, COLOR_CYAN, COLOR_BLUE);
 	wbkgd(panpad, (chtype) (COLOR_PAIR(2) | ' '));
     }
 #endif
-    fill_pad(panpad, FALSE, colored);
+    fill_pad(panpad, FALSE, TRUE);
 
     panner_legend(LINES - 4);
     panner_legend(LINES - 3);
@@ -5707,11 +5757,12 @@ demo_pad(bool colored)
      * We'll still be able to widen it during a test, since that's required
      * for testing boundaries.
      */
-    panner(panpad, 2, 2, LINES - 5, COLS - 15, padgetch, colored);
+    panner(panpad, 2, 2, LINES - 5, COLS - 15, padgetch, TRUE);
 
     delwin(panpad);
     endwin();
     erase();
+    return OK;
 }
 #endif /* HAVE_NEWPAD */
 
@@ -5731,10 +5782,11 @@ Continue(WINDOW *win)
     wGetchar(win);
 }
 
-static void
-flushinp_test(WINDOW *win)
+static int
+flushinp_test(bool recur GCC_UNUSED)
 /* Input test, adapted from John Burnell's PDCurses tester */
 {
+    WINDOW *win = stdscr;
     int w, h, bx, by, sw, sh, i;
 
     WINDOW *subWin;
@@ -5745,7 +5797,7 @@ flushinp_test(WINDOW *win)
     sw = w / 3;
     sh = h / 3;
     if ((subWin = subwin(win, sh, sw, by + h - sh - 2, bx + w - sw - 2)) == 0)
-	return;
+	return ERR;
 
 #ifdef A_COLOR
     if (use_colors) {
@@ -5812,6 +5864,7 @@ flushinp_test(WINDOW *win)
     Continue(win);
 
     cbreak();
+    return OK;
 }
 
 /****************************************************************************
@@ -5869,8 +5922,8 @@ static CONST_MENUS char *animals[] =
     (char *) 0
 };
 
-static void
-menu_test(void)
+static int
+menu_test(bool recur GCC_UNUSED)
 {
     MENU *m;
     ITEM *items[SIZEOF(animals)];
@@ -5932,6 +5985,7 @@ menu_test(void)
 #ifdef NCURSES_MOUSE_VERSION
     mousemask(0, (mmask_t *) 0);
 #endif
+    return OK;
 }
 
 #ifdef TRACE
@@ -6032,8 +6086,8 @@ run_trace_menu(MENU * m)
     }
 }
 
-static void
-trace_set(void)
+static int
+trace_set(bool recur GCC_UNUSED)
 /* interactively set the trace level */
 {
     MENU *m;
@@ -6103,6 +6157,8 @@ trace_set(void)
     free_menu(m);
     for (ip = items; *ip; ip++)
 	free_item(*ip);
+
+    return OK;
 }
 #endif /* TRACE */
 #endif /* USE_LIBMENU */
@@ -6427,8 +6483,8 @@ CHAR_CHECK_CB(pw_char_check)
     return (isgraph(ch) ? TRUE : FALSE);
 }
 
-static void
-demo_forms(void)
+static int
+form_test(bool recur GCC_UNUSED)
 {
     WINDOW *w;
     FORM *form;
@@ -6521,6 +6577,7 @@ demo_forms(void)
 #ifdef NCURSES_MOUSE_VERSION
     mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
 #endif
+    return OK;
 }
 #endif /* USE_LIBFORM */
 
@@ -6784,8 +6841,8 @@ overlap_test_4(int flavor, WINDOW *a, WINDOW *b)
 }
 
 /* test effects of overlapping windows */
-static void
-overlap_test(void)
+static int
+overlap_test(bool recur GCC_UNUSED)
 {
     int ch;
     int state, flavor[OVERLAP_FLAVORS];
@@ -6874,6 +6931,7 @@ overlap_test(void)
     delwin(win1);
     erase();
     exit_curses();
+    return OK;
 }
 
 #endif /* HAVE_COPYWIN */
@@ -6926,8 +6984,8 @@ show_boolean_setting(const char *name, int value)
     AddCh('\n');
 }
 
-static void
-show_settings(void)
+static int
+settings_test(bool recur GCC_UNUSED)
 {
 #if USE_WIDEC_SUPPORT
     wchar_t ch;
@@ -6958,6 +7016,7 @@ show_settings(void)
     Pause();
     erase();
     exit_curses();
+    return OK;
 }
 
 /****************************************************************************
@@ -6965,152 +7024,6 @@ show_settings(void)
  * Main sequence
  *
  ****************************************************************************/
-
-static bool
-do_single_test(const char c)
-/* perform a single specified test */
-{
-    switch (c) {
-    case 'a':
-	getch_test();
-	break;
-
-#if USE_WIDEC_SUPPORT
-    case 'A':
-	get_wch_test();
-	break;
-#endif
-
-    case 'b':
-	attr_test();
-	break;
-
-#if USE_WIDEC_SUPPORT
-    case 'B':
-	wide_attr_test();
-	break;
-#endif
-
-    case 'c':
-	if (!use_colors)
-	    Cannot("does not support color.");
-	else
-	    color_test();
-	break;
-
-#if USE_WIDEC_SUPPORT
-    case 'C':
-	if (!use_colors)
-	    Cannot("does not support color.");
-	else
-	    wide_color_test();
-	break;
-#endif
-
-#if HAVE_COLOR_CONTENT
-    case 'd':
-	if (!use_colors)
-	    Cannot("does not support color.");
-	else if (!can_change_color())
-	    Cannot("has hardwired color values.");
-	else
-	    color_edit();
-	break;
-#endif
-
-#if USE_SOFTKEYS
-    case 'e':
-	slk_test();
-	break;
-
-#if USE_WIDEC_SUPPORT
-    case 'E':
-	wide_slk_test();
-	break;
-#endif
-#endif
-
-    case 'f':
-	acs_display();
-	break;
-
-#if USE_WIDEC_SUPPORT
-    case 'F':
-	wide_acs_display();
-	break;
-#endif
-
-#if USE_LIBPANEL
-    case 'o':
-	demo_panels(init_panel, fill_panel);
-	break;
-#endif
-
-#if USE_WIDEC_SUPPORT && USE_LIBPANEL
-    case 'O':
-	demo_panels(init_wide_panel, fill_wide_panel);
-	break;
-#endif
-
-    case 'g':
-	acs_and_scroll();
-	break;
-
-    case 'i':
-	flushinp_test(stdscr);
-	break;
-
-    case 'k':
-	test_sgr_attributes();
-	break;
-
-#if USE_LIBMENU
-    case 'm':
-	menu_test();
-	break;
-#endif
-
-#if HAVE_NEWPAD
-    case 'p':
-	demo_pad(FALSE);
-	break;
-
-    case 'P':
-	demo_pad(TRUE);
-	break;
-#endif
-
-#if USE_LIBFORM
-    case 'r':
-	demo_forms();
-	break;
-#endif
-
-#if HAVE_COPYWIN
-    case 's':
-	overlap_test();
-	break;
-#endif
-
-#if USE_LIBMENU && defined(TRACE)
-    case 't':
-	trace_set();
-	break;
-#endif
-
-    case 'v':
-	show_settings();
-	break;
-
-    case '?':
-	break;
-
-    default:
-	return FALSE;
-    }
-
-    return TRUE;
-}
 
 static void
 usage(void)
@@ -7203,64 +7116,85 @@ rip_header(WINDOW *win, int cols)
 static void
 main_menu(bool top)
 {
-    char command;
-
-    do {
-	(void) puts("This is the ncurses main menu");
-	(void) puts("a = keyboard and mouse input test");
 #if USE_WIDEC_SUPPORT
-	(void) puts("A = wide-character keyboard and mouse input test");
+    typedef struct {
+	bool recur;
+	int (*narrow_func) (bool);
+	int (*wide_func) (bool);
+	int code;
+	const char *help;
+    } MyCmds;
+#define BOTH(a)   a, x_ ## a
+#define ONLY(a)   a, NULL
+#define CMDS(recur, funcs,code,help) { recur, funcs, code, help }
+#else
+    typedef struct {
+	bool recur;
+	int (*narrow_func) (bool);
+	int code;
+	const char *help;
+    } MyCmds;
+#define BOTH(a)   a
+#define ONLY(a)   a
+#define CMDS(recur, funcs,code,help) { recur, funcs, code, help }
 #endif
-	(void) puts("b = character attribute test");
-#if USE_WIDEC_SUPPORT
-	(void) puts("B = wide-character attribute test");
-#endif
-	(void) puts("c = color test pattern");
-#if USE_WIDEC_SUPPORT
-	(void) puts("C = color test pattern using wide-character calls");
-#endif
+    /* *INDENT-OFF* */
+    static MyCmds cmds[] =
+    {
+	CMDS(TRUE, BOTH(getch_test),	'a', "keyboard and mouse input test"),
+	CMDS(TRUE, BOTH(attr_test),	'b', "character attribute test"),
+	CMDS(TRUE, BOTH(color_test),	'c', "color test pattern"),
 #if HAVE_COLOR_CONTENT
-	if (top)
-	    (void) puts("d = edit RGB color values");
+	CMDS(FALSE, ONLY(color_edit),	'd', "edit RGB color values"),
 #endif
 #if USE_SOFTKEYS
-	(void) puts("e = exercise soft keys");
-#if USE_WIDEC_SUPPORT
-	(void) puts("E = exercise soft keys using wide-characters");
+	CMDS(TRUE, BOTH(slk_test),	'e', "exercise soft keys"),
 #endif
-#endif
-	(void) puts("f = display ACS characters");
-#if USE_WIDEC_SUPPORT
-	(void) puts("F = display Wide-ACS characters");
-#endif
-	(void) puts("g = display windows and scrolling");
-	(void) puts("i = test of flushinp()");
-	(void) puts("k = display character attributes");
+	CMDS(TRUE, BOTH(acs_test),	'f', "display ACS characters"),
+	CMDS(TRUE, ONLY(scroll_test),   'g', "display windows and scrolling"),
+	CMDS(TRUE, ONLY(flushinp_test),	'i', "test flushinp()"),
+	CMDS(TRUE, ONLY(sgr_attr_test),	'k', "display character attributes"),
 #if USE_LIBMENU
-	(void) puts("m = menu code test");
+	CMDS(TRUE, ONLY(menu_test),	'm', "exercise menu library"),
 #endif
-#if USE_LIBPANEL
-	(void) puts("o = exercise panels library");
-#if USE_WIDEC_SUPPORT
-	(void) puts("O = exercise panels with wide-characters");
-#endif
+#if USE_LIBMENU
+	CMDS(TRUE, BOTH(panel_test),	'o', "exercise panel library"),
 #endif
 #if HAVE_NEWPAD
-	(void) puts("p = exercise pad features");
-	(void) puts("P = exercise pad features, using color");
+	CMDS(TRUE, ONLY(pad_test),	'p', "exercise pad features"),
 #endif
-	(void) puts("q = quit");
-#if USE_LIBFORM
-	(void) puts("r = exercise forms code");
+	CMDS(TRUE, ONLY(NULL),		'q', "quit"),
+#if USE_LIBMENU
+	CMDS(TRUE, ONLY(form_test),	'r', "exercise form library"),
 #endif
 #if HAVE_COPYWIN
-	(void) puts("s = overlapping-refresh test");
+	CMDS(TRUE, ONLY(overlap_test),	's', "overlapping-refresh test"),
 #endif
 #if USE_LIBMENU && defined(TRACE)
-	(void) puts("t = set trace level");
+	CMDS(TRUE, ONLY(trace_set),	't', "set trace level"),
 #endif
-	(void) puts("v = show terminal name and settings");
-	(void) puts("? = repeat this command summary");
+	CMDS(TRUE, ONLY(settings_test),	'v', "show terminal name and settings"),
+	CMDS(FALSE, ONLY(NULL),		'?', "repeat this command summary")
+    };
+    /* *INDENT-ON* */
+
+    int (*doit) (bool);
+    char command;
+    unsigned n;
+
+    do {
+	printf("This is the ncurses main menu (uppercase for wide-characters)\n");
+	for (n = 0; n < SIZEOF(cmds); ++n) {
+	    if (top || cmds[n].recur) {
+		putchar(' ');
+#if USE_WIDEC_SUPPORT
+		if (cmds[n].wide_func) {
+		    printf("%c,", toupper(cmds[n].code));
+		}
+#endif
+		printf("%c\t= %s\n", cmds[n].code, cmds[n].help);
+	    }
+	}
 
 	(void) fputs("> ", stdout);
 	(void) fflush(stdout);	/* necessary under SVr4 curses */
@@ -7291,7 +7225,21 @@ main_menu(bool top)
 	    }
 	}
 
-	if (do_single_test(command)) {
+	doit = NULL;
+	for (n = 0; n < SIZEOF(cmds); ++n) {
+	    if (cmds[n].code == command) {
+		doit = cmds[n].narrow_func;
+		break;
+	    }
+#if USE_WIDEC_SUPPORT
+	    if (toupper(cmds[n].code) == command) {
+		doit = cmds[n].wide_func;
+		break;
+	    }
+#endif
+	}
+
+	if (doit != NULL && doit(FALSE) == OK) {
 	    /*
 	     * This may be overkill; it's intended to reset everything back
 	     * to the initial terminal modes so that tests don't get in

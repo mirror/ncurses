@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.584 2017/08/04 09:02:33 tom Exp $
+ * $Id: curses.priv.h,v 1.585 2017/09/20 00:34:16 tom Exp $
  *
  *	curses.priv.h
  *
@@ -425,10 +425,11 @@ typedef union {
 /*
  * Simplify ifdef's for the "*_ATTR" macros in case italics are not configured.
  */
-#ifdef A_ITALIC
+#if defined(A_ITALIC) && defined(exit_italics_mode)
 #define USE_ITALIC 1
 #else
 #define USE_ITALIC 0
+#undef  A_ITALIC
 #define A_ITALIC 0
 #endif
 

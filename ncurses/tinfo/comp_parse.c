@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.99 2017/08/26 16:15:50 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.100 2017/09/20 00:37:08 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -537,7 +537,9 @@ sanity_check2(TERMTYPE2 *tp, bool literal)
 #endif /* __UNUSED__ */
 	PAIRED(enter_standout_mode, exit_standout_mode);
 	PAIRED(enter_underline_mode, exit_underline_mode);
+#if defined(enter_italics_mode) && defined(exit_italics_mode)
 	PAIRED(enter_italics_mode, exit_italics_mode);
+#endif
     }
 
     /* we do this check/fix in postprocess_termcap(), but some packagers
@@ -568,7 +570,9 @@ sanity_check2(TERMTYPE2 *tp, bool literal)
     PAIRED(enter_xon_mode, exit_xon_mode);
     PAIRED(enter_am_mode, exit_am_mode);
     ANDMISSING(label_off, label_on);
+#if defined(display_clock) && defined(remove_clock)
     PAIRED(display_clock, remove_clock);
+#endif
     ANDMISSING(set_color_pair, initialize_pair);
 }
 
