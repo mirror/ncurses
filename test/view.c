@@ -50,7 +50,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.102 2017/09/04 00:39:24 tom Exp $
+ * $Id: view.c,v 1.104 2017/09/30 17:50:38 tom Exp $
  */
 
 #include <test.priv.h>
@@ -259,6 +259,7 @@ main(int argc, char *argv[])
     int value = 0;
     bool done = FALSE;
     bool got_number = FALSE;
+    bool ignore_sigs = FALSE;
     bool single_step = FALSE;
 #if CAN_RESIZE
     bool nonposix_resize = FALSE;
@@ -281,7 +282,7 @@ main(int argc, char *argv[])
 	    try_color = TRUE;
 	    break;
 	case 'i':
-	    CATCHALL(SIG_IGN);
+	    ignore_sigs = TRUE;
 	    break;
 	case 'n':
 	    if ((MAXLINES = atoi(optarg)) < 1 ||
@@ -388,7 +389,11 @@ main(int argc, char *argv[])
     (void) fclose(fp);
     num_lines = (int) (lptr - vec_lines);
 
-    (void) initscr();		/* initialize the curses library */
+    if (ignore_sigs) {
+	InitAndCatch(initscr(), SIG_IGN);
+    } else {
+	initscr();
+    }
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
@@ -641,7 +646,7 @@ show_all(const char *tag)
 	    }
 #if defined(NCURSES_VERSION) || defined(HAVE_WCHGAT)
 	    if (try_color)
-		wchgat(stdscr, -1, A_NORMAL, my_pair, NULL);
+		wchgat(stdscr, -1, WA_NORMAL, my_pair, NULL);
 #endif
 	}
     }

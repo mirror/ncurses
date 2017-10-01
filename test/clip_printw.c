@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.14 2017/04/15 17:28:10 tom Exp $
+ * $Id: clip_printw.c,v 1.15 2017/09/28 23:07:23 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -133,11 +133,11 @@ video_params(unsigned state, attr_t *attr)
 	attr_t attr;
 	const char *msg;
     } table[] = {
-	{ A_NORMAL,	"normal" },
-	{ A_BOLD,	"bold" },
-	{ A_REVERSE,	"reverse" },
-	{ A_UNDERLINE,	"underline" },
-	{ A_BLINK, 	"blink" },
+	{ WA_NORMAL,	"normal" },
+	{ WA_BOLD,	"bold" },
+	{ WA_REVERSE,	"reverse" },
+	{ WA_UNDERLINE,	"underline" },
+	{ WA_BLINK, 	"blink" },
     };
     /* *INDENT-ON* */
 

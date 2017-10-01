@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.11 2017/06/17 18:25:30 tom Exp $
+ * $Id: dots_mvcur.c,v 1.13 2017/09/30 21:34:15 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -110,13 +110,16 @@ main(int argc GCC_UNUSED,
     SCREEN *sp;
     int my_colors;
 
-    CATCHALL(onsig);
+    InitAndCatch((sp = newterm((char *) 0, stdout, stdin)), onsig);
+    refresh();			/* needed with Solaris curses to cancel endwin */
 
-    srand((unsigned) time(0));
-    if ((sp = newterm((char *) 0, stdout, stdin)) == 0) {
+    if (sp == 0) {
 	fprintf(stderr, "Cannot initialize terminal\n");
 	ExitProgram(EXIT_FAILURE);
     }
+
+    srand((unsigned) time(0));
+
     outs(clear_screen);
     outs(cursor_home);
     outs(cursor_invisible);

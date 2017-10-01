@@ -30,7 +30,7 @@
  *
  * Generate timing statistics for vertical-motion optimization.
  *
- * $Id: hashtest.c,v 1.33 2017/04/15 14:13:40 tom Exp $
+ * $Id: hashtest.c,v 1.34 2017/09/30 15:42:53 tom Exp $
  */
 
 #include <test.priv.h>
@@ -225,9 +225,7 @@ main(int argc, char *argv[])
     trace(TRACE_TIMES);
 #endif
 
-    CATCHALL(finish);		/* arrange interrupts to terminate */
-
-    (void) initscr();		/* initialize the curses library */
+    InitAndCatch(initscr(), finish);
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
     (void) cbreak();		/* take input chars one at a time, no wait for \n */

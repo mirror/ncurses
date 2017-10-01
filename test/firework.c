@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: firework.c,v 1.34 2017/09/09 00:35:56 tom Exp $
+ * $Id: firework.c,v 1.35 2017/09/30 15:42:24 tom Exp $
  */
 #include <test.priv.h>
 
@@ -183,9 +183,7 @@ main(int argc, char *argv[])
     if (optind < argc)
 	usage();
 
-    CATCHALL(onsig);
-
-    initscr();
+    InitAndCatch(initscr(), onsig);
     noecho();
     cbreak();
     keypad(stdscr, TRUE);

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.16 2017/04/15 14:13:30 tom Exp $
+ * $Id: background.c,v 1.17 2017/09/29 22:54:33 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -65,7 +65,7 @@ test_background(void)
     printw("Initializing pair 3 to %s/cyan (ACS_HLINE)\n", color_name(default_fg));
     init_pair(3, (NCURSES_COLOR_T) default_fg, COLOR_CYAN);
     printw("...and drawing a box which should be followed by lines\n");
-    bkgdset(ACS_HLINE | (attr_t) COLOR_PAIR(3));
+    bkgdset(ACS_HLINE | (chtype) COLOR_PAIR(3));
     /*
      * Characters from vt100 line-drawing should be mapped to line-drawing,
      * since A_ALTCHARSET is set in the background, and the character part

@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.68 2017/06/17 18:45:40 tom Exp $
+ * $Id: bs.c,v 1.70 2017/09/30 15:40:39 tom Exp $
  */
 
 #include <test.priv.h>
@@ -63,6 +63,8 @@ static int getcoord(int);
 #define MARK_MISS	'o'
 #define CTRLC		'\003'	/* used as terminate command */
 #define FF		'\014'	/* used as redraw command */
+
+#define is_QUIT(c) ((c) == CTRLC || (c) == QUIT)
 
 /* coordinate handling */
 #define BWIDTH		10
@@ -145,6 +147,7 @@ static bool checkplace(int b, ship_t * ss, int vis);
 
 #define SHIPIT(name, symbol, length) { name, 0, symbol, length, 0,0, 0, FALSE }
 
+/* "ply=player", "cpu=computer" */
 static ship_t plyship[SHIPTYPES] =
 {
     SHIPIT(carrier, 'A', 5),
@@ -219,8 +222,7 @@ intro(void)
 
     srand((unsigned) (time(0L) + getpid()));	/* Kick the random number generator */
 
-    CATCHALL(uninitgame);
-    (void) initscr();
+    InitAndCatch(initscr(), uninitgame);
 
     if ((tmpname = getlogin()) != 0 &&
 	(your_name = strdup(tmpname)) != 0) {
@@ -462,9 +464,11 @@ initgame(void)
 	do {
 	    c = (char) getch();
 	} while
-	    (!(strchr("hjkl8462rR", c) || c == FF));
+	    (!(strchr("hjkl8462rR", c) || c == FF || is_QUIT(c)));
 
-	if (c == FF) {
+	if (is_QUIT(c)) {
+	    uninitgame(0);
+	} else if (c == FF) {
 	    (void) clearok(stdscr, TRUE);
 	    (void) refresh();
 	} else if (ss == 0) {
@@ -885,7 +889,7 @@ sgetc(const char *s)
 	ch = getch();
 	if (islower(ch))
 	    ch = toupper(ch);
-	if (ch == CTRLC)
+	if (is_QUIT(ch))
 	    uninitgame(0);
 	for (s1 = s; *s1 && ch != *s1; ++s1)
 	    continue;

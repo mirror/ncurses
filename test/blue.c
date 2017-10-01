@@ -36,7 +36,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.49 2017/04/15 13:36:36 tom Exp $
+ * $Id: blue.c,v 1.51 2017/09/30 17:43:18 tom Exp $
  */
 
 #include <test.priv.h>
@@ -202,7 +202,7 @@ printcard(int value)
     } else {
 	int which = (value / SUIT_LENGTH);
 	int isuit = (value % SUIT_LENGTH);
-	attr_t color = (attr_t) COLOR_PAIR(((which % 2) == 0)
+	chtype color = (chtype) COLOR_PAIR(((which % 2) == 0)
 					   ? RED_ON_WHITE
 					   : BLACK_ON_WHITE);
 
@@ -467,13 +467,11 @@ use_pc_display(void)
 int
 main(int argc, char *argv[])
 {
-    CATCHALL(die);
-
     setlocale(LC_ALL, "");
 
     use_pc_display();
 
-    initscr();
+    InitAndCatch(initscr(), die);
 
     start_color();
     init_pair(RED_ON_WHITE, COLOR_RED, COLOR_WHITE);

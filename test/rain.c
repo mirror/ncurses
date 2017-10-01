@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.46 2017/09/09 00:37:51 tom Exp $
+ * $Id: rain.c,v 1.47 2017/09/30 18:10:05 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -349,9 +349,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    CATCHALL(onsig);
-
-    initscr();
+    InitAndCatch(initscr(), onsig);
     if (has_colors()) {
 	int bg = COLOR_BLACK;
 	start_color();

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_getstr.c,v 1.12 2017/07/01 20:34:55 tom Exp $
+ * $Id: test_getstr.c,v 1.13 2017/09/28 23:11:12 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -87,14 +87,14 @@ Remainder(WINDOW *txtwin)
 static void
 ShowPrompt(WINDOW *txtwin, int limit)
 {
-    wchgat(txtwin, limit, A_REVERSE, 0, NULL);
+    wchgat(txtwin, limit, WA_REVERSE, 0, NULL);
     wnoutrefresh(txtwin);
 }
 
 static void
 MovePrompt(WINDOW *txtwin, int limit, int y, int x)
 {
-    wchgat(txtwin, Remainder(txtwin), A_NORMAL, 0, NULL);
+    wchgat(txtwin, Remainder(txtwin), WA_NORMAL, 0, NULL);
     wmove(txtwin, y, x);
     ShowPrompt(txtwin, limit);
 }

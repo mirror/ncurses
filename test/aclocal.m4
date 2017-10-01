@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.144 2017/09/07 21:08:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.146 2017/09/30 19:41:21 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -386,7 +386,7 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CC_ENV_FLAGS version: 7 updated: 2017/02/25 18:57:40
+dnl CF_CC_ENV_FLAGS version: 8 updated: 2017/09/23 08:50:24
 dnl ---------------
 dnl Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
 dnl into CC.  This will not help with broken scripts that wrap the compiler
@@ -410,7 +410,7 @@ case "$CC" in
 	AC_MSG_WARN(your environment misuses the CC variable to hold CFLAGS/CPPFLAGS options)
 	# humor him...
 	cf_prog=`echo "$CC" | sed -e 's/	/ /g' -e 's/[[ ]]* / /g' -e 's/[[ ]]*[[ ]]-[[^ ]].*//'`
-	cf_flags=`echo "$CC" | ${AWK:-awk} -v prog="$cf_prog" '{ printf("%s", substr([$]0,1+length(prog))); }'`
+	cf_flags=`echo "$CC" | ${AWK:-awk} -v prog="$cf_prog" '{ printf("%s", [substr]([$]0,1+length(prog))); }'`
 	CC="$cf_prog"
 	for cf_arg in $cf_flags
 	do
@@ -1178,7 +1178,7 @@ if test "x$with_string_hacks" = "xyes"; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_WARNINGS version: 4 updated: 2009/07/26 17:53:03
+dnl CF_ENABLE_WARNINGS version: 5 updated: 2017/09/29 20:01:16
 dnl ------------------
 dnl Configure-option to enable gcc warnings
 AC_DEFUN([CF_ENABLE_WARNINGS],[
@@ -1193,7 +1193,7 @@ AC_MSG_RESULT($with_warnings)
 if test "$with_warnings" = "yes"
 then
 	CF_GCC_ATTRIBUTES
-	CF_GCC_WARNINGS
+	CF_GCC_WARNINGS($1)
 fi
 fi
 ])dnl

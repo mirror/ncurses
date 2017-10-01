@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013,2014 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2013-2014,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.9 2014/09/25 09:00:56 tom Exp $
+ * $Id: dots_termcap.c,v 1.10 2017/09/30 17:55:22 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -177,14 +177,14 @@ main(int argc GCC_UNUSED,
     char area[1024];
     char *name;
 
-    CATCHALL(onsig);
-
     srand((unsigned) time(0));
 
     if ((name = getenv("TERM")) == 0) {
 	fprintf(stderr, "TERM is not set\n");
 	ExitProgram(EXIT_FAILURE);
-    } else if (tgetent(buffer, name) < 0) {
+    }
+    InitAndCatch(z = tgetent(buffer, name), onsig);
+    if (z < 0) {
 	fprintf(stderr, "terminal description not found\n");
 	ExitProgram(EXIT_FAILURE);
     } else {

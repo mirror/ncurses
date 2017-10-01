@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.4 2017/04/15 14:13:30 tom Exp $
+ * $Id: dots_curses.c,v 1.5 2017/09/30 15:41:17 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -95,11 +95,9 @@ main(int argc GCC_UNUSED,
     double r;
     double c;
 
-    CATCHALL(onsig);
-
     srand((unsigned) time(0));
 
-    initscr();
+    InitAndCatch(initscr(), onsig);
     if (has_colors()) {
 	start_color();
 	for (fg = 0; fg < COLORS; fg++) {

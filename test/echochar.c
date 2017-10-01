@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.14 2017/09/04 11:48:15 tom Exp $
+ * $Id: echochar.c,v 1.15 2017/09/30 15:42:10 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -103,8 +103,7 @@ main(int argc GCC_UNUSED,
 	}
     }
 
-    CATCHALL(onsig);
-    initscr();
+    InitAndCatch(initscr(), onsig);
 
     use_colors = has_colors();
     if (use_colors) {

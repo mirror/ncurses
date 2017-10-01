@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.34 2017/09/04 15:01:45 tom Exp $
+ * $Id: savescreen.c,v 1.35 2017/09/29 23:42:22 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -475,7 +475,7 @@ main(int argc, char *argv[])
 		continue;
 	    }
 	    if (!done) {
-		attr_t attr = (A_REVERSE | (attr_t) COLOR_PAIR(color * COLORS));
+		chtype attr = (A_REVERSE | (chtype) COLOR_PAIR(color * COLORS));
 		chtype ch2 = (altchars ? MyMarker : '#');
 		move(y, x);
 		AddCh(ch2 | attr);

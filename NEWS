@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2955 2017/09/23 15:13:23 tom Exp $
+-- $Id: NEWS,v 1.2961 2017/09/30 23:18:33 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20170930
+	+ fix a symbol conflict that made ncurses.c C/c menu not work with
+	  Solaris xpg4 curses.
+	+ add refresh() call to dots_mvcur.c, needed to use mvcur() with
+	  Solaris xpg4 curses after calling newterm().
+	+ minor fixes for configure script from work on ncurses-examples and
+	  tin.
+	+ improve animation in test/xmas.c by adding a time-delay in blinkit().
+	+ modify several test programs to reflect that ncurses honors existing
+	  signal handlers in initscr(), while other implementations do not.
+	+ modify bs.c to make it easier to quit.
+	+ change ncurses-examples to use attr_t vs chtype to follow X/Open
+	  documentation more closely since Solaris xpg4-curses uses different
+	  values for WA_xxx vs A_xxx that rely on attr_t being an unsigned
+	  short.  Tru64 aka OSF1, HPUX, AIX did as ncurses does, equating the
+	  two sets.
 
 20170923
 	+ modify menu for test/ncurses.c to fit on 24-line screen.

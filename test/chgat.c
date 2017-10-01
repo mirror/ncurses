@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.16 2017/04/16 15:15:34 tom Exp $
+ * $Id: chgat.c,v 1.17 2017/09/28 23:04:14 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -103,11 +103,11 @@ video_params(size_t state, attr_t *attr)
 	attr_t attr;
 	const char *msg;
     } table[] = {
-	{ A_NORMAL,	"normal" },
-	{ A_BOLD,	"bold" },
-	{ A_REVERSE,	"reverse" },
-	{ A_UNDERLINE,	"underline" },
-	{ A_BLINK, 	"blink" },
+	{ WA_NORMAL,	"normal" },
+	{ WA_BOLD,	"bold" },
+	{ WA_REVERSE,	"reverse" },
+	{ WA_UNDERLINE,	"underline" },
+	{ WA_BLINK, 	"blink" },
     };
     /* *INDENT-ON* */
 

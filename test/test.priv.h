@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.154 2017/09/06 20:07:40 tom Exp $ */
+/* $Id: test.priv.h,v 1.158 2017/09/30 17:58:37 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -683,7 +683,15 @@ extern char *numnames[], *numcodes[], *numfnames[];
 extern char *strnames[], *strcodes[], *strfnames[];
 #endif
 
-#ifdef DECL_CURSES_DATA_TTYTYPE
+#ifndef HAVE_CURSES_DATA_TTYTYPE
+#define HAVE_CURSES_DATA_TTYTYPE 0
+#endif
+
+#ifndef DECL_CURSES_DATA_TTYTYPE
+#define DECL_CURSES_DATA_TTYTYPE 0
+#endif
+
+#if !HAVE_CURSES_DATA_TTYTYPE || DECL_CURSES_DATA_TTYTYPE
 #define ttytype termname()
 #endif
 
@@ -890,12 +898,18 @@ extern char *strnames[], *strcodes[], *strfnames[];
 
 #define VT_ACSC "``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~"
 
-#define CATCHALL(handler) { \
+#define CATCHALL(handler) do { \
 		int nsig; \
 		for (nsig = SIGHUP; nsig < SIGTERM; ++nsig) \
 		    if (nsig != SIGKILL) \
 			signal(nsig, handler); \
-	    }
+	    } while(0)
+
+#ifdef NCURSES_VERSION
+#define InitAndCatch(init,handler) do { CATCHALL(handler); init; } while (0)
+#else
+#define InitAndCatch(init,handler) do { init; CATCHALL(handler); } while (0)
+#endif
 
 /*
  * Workaround for clean(er) compile with Solaris's legacy curses.
@@ -1018,9 +1032,9 @@ extern int _nc_getenv_num(const char *);
  * The macro likely uses unsigned values, while X/Open prototype uses int.
  */
 #if defined(wattrset) || defined(PDCURSES)
-#define AttrArg(p,a)    (attr_t) ((attr_t)(p) | (attr_t)(a))
+#define AttrArg(p,a)    (chtype) ((chtype)(p) | (chtype)(a))
 #else
-#define AttrArg(p,a)    (int) ((attr_t)(p) | (attr_t)(a))
+#define AttrArg(p,a)    (int) ((chtype)(p) | (chtype)(a))
 #endif
 
 /*

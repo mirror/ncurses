@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.50 2017/09/09 20:23:09 tom Exp $
+ * $Id: gdc.c,v 1.51 2017/09/30 18:10:05 tom Exp $
  */
 
 #include <test.priv.h>
@@ -227,8 +227,6 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    CATCHALL(sighndl);
-
     while ((k = getopt(argc, argv, "dnst:")) != -1) {
 	switch (k) {
 #if HAVE_USE_DEFAULT_COLORS
@@ -257,17 +255,20 @@ main(int argc, char *argv[])
     if (optind < argc)
 	usage();
 
-    if (redirected) {
-	char *name = getenv("TERM");
-	if (name == 0
-	    || newterm(name, ofp, ifp) == 0) {
-	    fprintf(stderr, "cannot open terminal\n");
-	    ExitProgram(EXIT_FAILURE);
+    InitAndCatch({
+	if (redirected) {
+	    char *name = getenv("TERM");
+	    if (name == 0
+		|| newterm(name, ofp, ifp) == 0) {
+		fprintf(stderr, "cannot open terminal\n");
+		ExitProgram(EXIT_FAILURE);
+	    }
+	} else {
+	    initscr();
 	}
-
-    } else {
-	initscr();
     }
+    ,sighndl);
+
     cbreak();
     noecho();
     nodelay(stdscr, 1);

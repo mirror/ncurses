@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.16 2017/09/04 11:47:44 tom Exp $
+ * $Id: demo_new_pair.c,v 1.17 2017/09/28 23:17:56 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -63,19 +63,19 @@ next_attr(int now)
 	attr_t bits[MAX_BITS];
 
 	init = TRUE;
-	bits[limit++] = A_NORMAL;
+	bits[limit++] = WA_NORMAL;
 	if (valid_cap("smso"))
-	    bits[limit++] = A_STANDOUT;
+	    bits[limit++] = WA_STANDOUT;
 	if (valid_cap("smul"))
-	    bits[limit++] = A_UNDERLINE;
+	    bits[limit++] = WA_UNDERLINE;
 	if (valid_cap("rev"))
-	    bits[limit++] = A_REVERSE;
+	    bits[limit++] = WA_REVERSE;
 	if (valid_cap("blink"))
-	    bits[limit++] = A_BLINK;
+	    bits[limit++] = WA_BLINK;
 	if (valid_cap("dim"))
-	    bits[limit++] = A_DIM;
+	    bits[limit++] = WA_DIM;
 	if (valid_cap("bold"))
-	    bits[limit++] = A_BOLD;
+	    bits[limit++] = WA_BOLD;
 	for (j = 0; j < limit; ++j) {
 	    for (k = 0; k < limit; ++k) {
 		table[j * limit + k] = bits[j] | bits[k];

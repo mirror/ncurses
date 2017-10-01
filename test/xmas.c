@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.31 2017/09/08 09:21:02 tom Exp $
+ * $Id: xmas.c,v 1.33 2017/09/30 19:14:13 tom Exp $
  */
 #include <test.priv.h>
 
@@ -454,37 +454,31 @@ blinkit(void)
     switch (cycle) {
     case 0:
 	overlay(treescrn3, treescrn8);
-	wrefresh(treescrn8);
-	wrefresh(w_del_msg);
 	break;
     case 1:
 	overlay(treescrn4, treescrn8);
-	wrefresh(treescrn8);
-	wrefresh(w_del_msg);
 	break;
     case 2:
 	overlay(treescrn5, treescrn8);
-	wrefresh(treescrn8);
-	wrefresh(w_del_msg);
 	break;
     case 3:
 	overlay(treescrn6, treescrn8);
-	wrefresh(treescrn8);
-	wrefresh(w_del_msg);
 	break;
     case 4:
 	overlay(treescrn7, treescrn8);
-	wrefresh(treescrn8);
-	wrefresh(w_del_msg);
 	break;
     }
     touchwin(treescrn8);
+    wrefresh(treescrn8);
+    wrefresh(w_del_msg);
+    look_out(50);
 
     /*ALL ON************************************************** */
 
     overlay(treescrn, treescrn8);
     wrefresh(treescrn8);
     wrefresh(w_del_msg);
+    look_out(50);
 
     ++cycle;
     return (0);
@@ -642,8 +636,6 @@ reindeer(void)
 static void
 done(int sig GCC_UNUSED)
 {
-    CATCHALL(done);
-
     move(LINES - 1, 0);
     refresh();
     exit_curses();
@@ -705,12 +697,10 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    initscr();
+    InitAndCatch(initscr(), done);
     noecho();
     nonl();
     refresh();
-
-    CATCHALL(done);
 
     if (has_colors()) {
 	start_color();

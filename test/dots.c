@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2011,2013 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2013,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.25 2013/09/28 22:12:09 tom Exp $
+ * $Id: dots.c,v 1.26 2017/09/30 17:55:22 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -107,10 +107,8 @@ main(int argc GCC_UNUSED,
     double c;
     int my_colors;
 
-    CATCHALL(onsig);
-
     srand((unsigned) time(0));
-    setupterm((char *) 0, 1, (int *) 0);
+    InitAndCatch(setupterm((char *) 0, 1, (int *) 0), onsig);
     outs(clear_screen);
     outs(cursor_invisible);
     my_colors = max_colors;

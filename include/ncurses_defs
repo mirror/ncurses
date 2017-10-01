@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.80 2017/09/04 15:01:23 tom Exp $
+# $Id: ncurses_defs,v 1.81 2017/09/29 23:56:38 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -54,6 +54,7 @@ HAVE_COLOR_CONTENT	1
 HAVE_COLOR_SET	1
 HAVE_COPYWIN	1
 HAVE_CURSCR	1
+HAVE_CURSES_DATA_TTYTYPE	1
 HAVE_DERWIN	1
 HAVE_DIRENT_H
 HAVE_DUPWIN	1
