@@ -97,7 +97,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.118 2017/08/19 13:16:03 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.120 2017/10/08 00:01:29 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -760,7 +760,7 @@ main(int argc, char **argv)
     int terasechar = -1;	/* new erase character */
     int intrchar = -1;		/* new interrupt character */
     int tkillchar = -1;		/* new kill character */
-    int my_fd = -1;
+    int my_fd;
     bool opt_c = FALSE;		/* set control-chars */
     bool opt_w = FALSE;		/* set window-size */
     TTY mode, oldmode;
@@ -834,7 +834,7 @@ main(int argc, char **argv)
     if (!opt_c && !opt_w)
 	opt_c = opt_w = TRUE;
 
-    my_fd = save_tty_settings(&mode);
+    my_fd = save_tty_settings(&mode, TRUE);
     oldmode = mode;
 #ifdef TERMIOS
     ospeed = (NCURSES_OSPEED) cfgetospeed(&mode);

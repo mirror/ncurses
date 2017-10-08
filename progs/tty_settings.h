@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tty_settings.h,v 1.1 2016/12/24 18:17:44 tom Exp $
+ * $Id: tty_settings.h,v 1.2 2017/10/07 19:11:31 tom Exp $
  *
  * Utility functions for saving/restoring terminal settings.
  */
@@ -41,7 +41,7 @@
 
 #include <progs.priv.h>
 
-extern int save_tty_settings(TTY * /* tty_settings */ );
+extern int save_tty_settings(TTY * /* tty_settings */, bool /* need_tty */ );
 extern void restore_tty_settings(void);
 extern void update_tty_settings(TTY * /* old_settings */, TTY * /* new_settings */ );
 

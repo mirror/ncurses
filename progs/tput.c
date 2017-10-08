@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.72 2017/09/02 21:03:26 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.77 2017/10/07 23:51:01 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -96,7 +96,7 @@ usage(void)
 #undef KEEP
     (void) fprintf(stderr, "Usage: %s [options] [command]\n", prg_name);
     fputs(msg, stderr);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ErrUsage);
 }
 
 static char *
@@ -135,6 +135,9 @@ exit_code(int token, int value)
     return result;
 }
 
+/*
+ * Returns nonzero on error.
+ */
 static int
 tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 {
@@ -183,7 +186,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
   retry:
 #endif
     if (strcmp(name, "clear") == 0) {
-	return clear_cmd(opt_x);
+	return (clear_cmd(opt_x) == ERR) ? ErrUsage : 0;
     } else if ((status = tigetflag(name)) != -1) {
 	return exit_code(BOOLEAN, status);
     } else if ((status = tigetnum(name)) != CANCELLED_NUMERIC) {
@@ -213,7 +216,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 	    }
 	}
 #endif
-	quit(4, "unknown terminfo capability '%s'", name);
+	quit(ErrCapName, "unknown terminfo capability '%s'", name);
     } else if (VALID_STRING(s)) {
 	if (argc > 1) {
 	    int k;
@@ -283,6 +286,8 @@ main(int argc, char **argv)
     int fd;
     TTY tty_settings;
     bool opt_x = FALSE;		/* clear scrollback if possible */
+    bool is_alias;
+    bool need_tty;
 
     prg_name = check_aliases(_nc_rootname(argv[0]), TRUE);
 
@@ -295,6 +300,7 @@ main(int argc, char **argv)
 	    break;
 	case 'T':
 	    use_env(FALSE);
+	    use_tioctl(TRUE);
 	    term = optarg;
 	    break;
 	case 'V':
@@ -309,10 +315,13 @@ main(int argc, char **argv)
 	}
     }
 
+    is_alias = (is_clear || is_reset || is_init);
+    need_tty = (is_reset || is_init);
+
     /*
      * Modify the argument list to omit the options we processed.
      */
-    if (is_clear || is_reset || is_init) {
+    if (is_alias) {
 	if (optind-- < argc) {
 	    argc -= optind;
 	    argv += optind;
@@ -324,15 +333,15 @@ main(int argc, char **argv)
     }
 
     if (term == 0 || *term == '\0')
-	quit(2, "No value for $TERM and no -T specified");
+	quit(ErrUsage, "No value for $TERM and no -T specified");
 
-    fd = save_tty_settings(&tty_settings);
+    fd = save_tty_settings(&tty_settings, need_tty);
 
     if (setupterm(term, fd, &errret) != OK && errret <= 0)
-	quit(3, "unknown terminal \"%s\"", term);
+	quit(ErrTermType, "unknown terminal \"%s\"", term);
 
     if (cmdline) {
-	if ((argc <= 0) && !(is_clear || is_reset || is_init))
+	if ((argc <= 0) && !is_alias)
 	    usage();
 	ExitProgram(tput_cmd(fd, &tty_settings, opt_x, argc, argv));
     }
@@ -357,7 +366,7 @@ main(int argc, char **argv)
 	if (argnum != 0
 	    && tput_cmd(fd, &tty_settings, opt_x, argnum, argvec) != 0) {
 	    if (result == 0)
-		result = 4;	/* will return value >4 */
+		result = ErrSystem(0);	/* will return value >4 */
 	    ++result;
 	}
     }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,31 +35,21 @@
 
 #include <fcntl.h>
 
-MODULE_ID("$Id: tty_settings.c,v 1.2 2016/12/24 19:31:11 tom Exp $")
+MODULE_ID("$Id: tty_settings.c,v 1.5 2017/10/07 20:55:57 tom Exp $")
 
 static int my_fd;
 static TTY original_settings;
 static bool can_restore = FALSE;
 
 static void
-exit_error(void)
-{
-    restore_tty_settings();
-    (void) fprintf(stderr, "\n");
-    ExitProgram(EXIT_FAILURE);
-    /* NOTREACHED */
-}
-
-static void
 failed(const char *msg)
 {
-    char temp[BUFSIZ];
+    int code = errno;
 
-    _nc_STRCPY(temp, _nc_progname, sizeof(temp));
-    _nc_STRCAT(temp, ": ", sizeof(temp));
-    _nc_STRNCAT(temp, msg, sizeof(temp), sizeof(temp) - strlen(temp) - 2);
-    perror(temp);
-    exit_error();
+    (void) fprintf(stderr, "%s: %s: %s\n", _nc_progname, msg, strerror(code));
+    restore_tty_settings();
+    (void) fprintf(stderr, "\n");
+    ExitProgram(ErrSystem(code));
     /* NOTREACHED */
 }
 
@@ -79,16 +69,21 @@ get_tty_settings(int fd, TTY * tty_settings)
  * stderr is less likely to be redirected than stdout; try that first.
  */
 int
-save_tty_settings(TTY * tty_settings)
+save_tty_settings(TTY * tty_settings, bool need_tty)
 {
     if (!get_tty_settings(STDERR_FILENO, tty_settings) &&
 	!get_tty_settings(STDOUT_FILENO, tty_settings) &&
 	!get_tty_settings(STDIN_FILENO, tty_settings) &&
 	!get_tty_settings(open("/dev/tty", O_RDWR), tty_settings)) {
-	failed("terminal attributes");
+	if (need_tty) {
+	    failed("terminal attributes");
+	} else {
+	    my_fd = fileno(stdout);
+	}
+    } else {
+	can_restore = TRUE;
+	original_settings = *tty_settings;
     }
-    can_restore = TRUE;
-    original_settings = *tty_settings;
     return my_fd;
 }
 

@@ -52,7 +52,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.12 2017/09/20 00:49:25 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.13 2017/10/07 20:56:03 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -80,25 +80,15 @@ static bool use_reset = FALSE;	/* invoked as reset */
 static bool use_init = FALSE;	/* invoked as init */
 
 static void
-exit_error(void)
+failed(const char *msg)
 {
+    int code = errno;
+
+    (void) fprintf(stderr, "%s: %s: %s\n", _nc_progname, msg, strerror(code));
     restore_tty_settings();
     (void) fprintf(my_file, "\n");
     fflush(my_file);
-    ExitProgram(EXIT_FAILURE);
-    /* NOTREACHED */
-}
-
-static void
-failed(const char *msg)
-{
-    char temp[BUFSIZ];
-
-    _nc_STRCPY(temp, _nc_progname, sizeof(temp));
-    _nc_STRCAT(temp, ": ", sizeof(temp));
-    _nc_STRNCAT(temp, msg, sizeof(temp), sizeof(temp) - strlen(temp) - 2);
-    perror(temp);
-    exit_error();
+    ExitProgram(ErrSystem(code));
     /* NOTREACHED */
 }
 

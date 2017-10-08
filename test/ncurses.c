@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.468 2017/10/01 00:14:01 tom Exp $
+$Id: ncurses.c,v 1.469 2017/10/01 18:22:48 tom Exp $
 
 ***************************************************************************/
 
@@ -221,7 +221,7 @@ wGetchar(WINDOW *win)
 }
 #define Getchar() wGetchar(stdscr)
 
-#if HAVE_SLK_COLOR
+#if USE_SOFTKEYS
 /* replaces wgetnstr(), since we want to be able to edit values */
 static void
 wGetstring(WINDOW *win, char *buffer, int limit)

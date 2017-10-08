@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -38,7 +38,7 @@
 #include <progs.priv.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tabs.c,v 1.38 2016/12/31 15:10:52 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.40 2017/10/07 19:34:58 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -387,7 +387,7 @@ main(int argc, char *argv[])
 
     _nc_progname = _nc_rootname(argv[0]);
 
-    fd = save_tty_settings(&tty_settings);
+    fd = save_tty_settings(&tty_settings, FALSE);
 
     if ((term_name = getenv("TERM")) == 0)
 	term_name = "ansi+tabs";

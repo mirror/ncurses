@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.50 2017/09/10 21:20:35 tom Exp $
+.\" $Id: curs_util.3x,v 1.51 2017/10/07 21:47:25 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -161,7 +161,7 @@ Normally \fBncurses\fP looks first at the terminal database for the screen size.
 .IP
 If \fBuse_env\fP was called with \fBFALSE\fP for parameter,
 it stops here unless
-If \fBuse_tioctl\fP was also called with \fBTRUE\fP for parameter.
+\fBuse_tioctl\fP was also called with \fBTRUE\fP for parameter.
 .bP
 Then it asks for the screen size via operating system calls.
 If successful,
