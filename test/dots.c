@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.26 2017/09/30 17:55:22 tom Exp $
+ * $Id: dots.c,v 1.28 2017/10/11 08:15:27 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -39,8 +39,6 @@
 #if HAVE_SETUPTERM
 
 #include <time.h>
-
-#define valid(s) ((s != 0) && s != (char *)-1)
 
 static bool interrupted = FALSE;
 static long total_chars = 0;
@@ -64,7 +62,7 @@ TPUTS_PROTO(outc, c)
 static bool
 outs(const char *s)
 {
-    if (valid(s)) {
+    if (VALID_STRING(s)) {
 	tputs(s, 1, outc);
 	return TRUE;
     }
@@ -80,7 +78,7 @@ cleanup(void)
     outs(clear_screen);
     outs(cursor_normal);
 
-    printf("\n\n%ld total chars, rate %.2f/sec\n",
+    printf("\n\n%ld total cells, rate %.2f/sec\n",
 	   total_chars,
 	   ((double) (total_chars) / (double) (time((time_t *) 0) - started)));
 }
@@ -113,9 +111,9 @@ main(int argc GCC_UNUSED,
     outs(cursor_invisible);
     my_colors = max_colors;
     if (my_colors > 1) {
-	if (!valid(set_a_foreground)
-	    || !valid(set_a_background)
-	    || (!valid(orig_colors) && !valid(orig_pair)))
+	if (!VALID_STRING(set_a_foreground)
+	    || !VALID_STRING(set_a_background)
+	    || (!VALID_STRING(orig_colors) && !VALID_STRING(orig_pair)))
 	    my_colors = -1;
     }
 
@@ -137,8 +135,8 @@ main(int argc GCC_UNUSED,
 		tputs(tparm2(set_a_background, z), 1, outc);
 		napms(1);
 	    }
-	} else if (valid(exit_attribute_mode)
-		   && valid(enter_reverse_mode)) {
+	} else if (VALID_STRING(exit_attribute_mode)
+		   && VALID_STRING(enter_reverse_mode)) {
 	    if (ranf() <= 0.01) {
 		outs((ranf() > 0.6)
 		     ? enter_reverse_mode

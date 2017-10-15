@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.244 2017/09/20 00:39:37 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.247 2017/10/09 15:16:15 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -673,8 +673,6 @@ add_digit(int *target, int source)
 {
     *target = (*target * 10) + (source - '0');
 }
-
-#define VtoTrace(opt) (unsigned) ((opt > 0) ? opt : (opt == 0))
 
 int
 main(int argc, char *argv[])
@@ -1925,7 +1923,7 @@ skip_DECSCNM(const char *value, int *flag)
 }
 
 static void
-check_delays(const char *name, const char *value)
+check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 {
     const char *p, *q;
     const char *first = 0;
@@ -1975,6 +1973,14 @@ check_delays(const char *name, const char *value)
 		    _nc_warning("function-key %s has delay", name);
 		} else if (proportional && !line_capability(name)) {
 		    _nc_warning("non-line capability using proportional delay: %s", name);
+		} else if (!xon_xoff &&
+			   !mandatory &&
+			   strchr(_nc_first_name(tp->term_names), '+') == 0) {
+		    _nc_warning("%s in %s is used since no xon/xoff",
+				(proportional
+				 ? "proportional delay"
+				 : "delay"),
+				name);
 		}
 	    } else {
 		p = q - 1;	/* restart scan */
@@ -2703,7 +2709,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 		parametrized[j] > 0) {
 		check_params(tp, name, a, (j >= STRCOUNT));
 	    }
-	    check_delays(ExtStrname(tp, (int) j, strnames), a);
+	    check_delays(tp, ExtStrname(tp, (int) j, strnames), a);
 	    if (capdump) {
 		check_infotocap(tp, (int) j, a);
 	    }

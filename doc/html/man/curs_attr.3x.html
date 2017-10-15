@@ -27,13 +27,22 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.53 2017/03/28 23:31:39 tom Exp @
+  * @Id: curs_attr.3x,v 1.60 2017/10/14 20:01:13 tom Exp @
+  * ---------------------------------------------------------------------------
   * attr_get
   * .br
   * .br
   * .br
   * .br
   * .br
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
+  * ---------------------------------------------------------------------------
   * ---------------------------------------------------------------------------
   * ---------------------------------------------------------------------------
   * ---------------------------------------------------------------------------
@@ -240,6 +249,126 @@
        support more than 256 color pairs.
 
 
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+       X/Open Curses is largely based  on  SVr4  curses,  adding  support  for
+       "wide-characters"  (not  specific to Unicode).  Some of the X/Open dif-
+       ferences from SVr4 curses address the way video attributes can  be  ap-
+       plied  to  wide-characters.   But aside from that, <STRONG>attrset</STRONG> and <STRONG>attr_set</STRONG>
+       are similar.  SVr4 curses provided the basic features for  manipulating
+       video  attributes.  However, earlier versions of curses provided a part
+       of these features.
+
+       As seen in 2.8BSD, curses assumed 7-bit characters,  using  the  eighth
+       bit  of  a byte to represent the <EM>standout</EM> feature (often implemented as
+       bold and/or reverse video).  The BSD curses library provided  functions
+       <STRONG>standout</STRONG>  and  <STRONG>standend</STRONG> which were carried along into X/Open Curses due
+       to their pervasive use in legacy applications.
+
+       Some terminals in the 1980s  could  support  a  variety  of  video  at-
+       tributes,  although the BSD curses library could do nothing with those.
+       System V (1983) provided an improved curses library.  It defined the <STRONG>A_</STRONG>
+       symbols  for  use  by  applications to manipulate the other attributes.
+       There are few useful references for the chronology.
+
+       Goodheart's book <EM>UNIX</EM> <EM>Curses</EM> <EM>Explained</EM> (1991)  describes  SVr3  (1987),
+       commenting on several functions:
+
+       <STRONG>o</STRONG>   the  <STRONG>attron</STRONG>,  <STRONG>attroff</STRONG>, <STRONG>attrset</STRONG> functions (and most of the functions
+           found in SVr4 but not in BSD curses) were introduced by System V,
+
+       <STRONG>o</STRONG>   the alternate character set feature with <STRONG>A_ALTCHARSET</STRONG> was added  in
+           SVr2 and improved in SVr3 (by adding <STRONG>acs_map[]</STRONG>),
+
+       <STRONG>o</STRONG>   <STRONG>start_color</STRONG>  and  related color-functions were introduced by System
+           V.3.2,
+
+       <STRONG>o</STRONG>   pads, soft-keys were added in SVr3, and
+
+       Goodheart did not mention the background character or the <STRONG>cchar_t</STRONG> type.
+       Those are respectively SVr4 and X/Open features.  He did mention the <STRONG>A_</STRONG>
+       constants, but did not indicate their values.  Those were not the  same
+       in different systems, even for those marked as System V.
+
+       Different  Unix  systems  used  different  sizes  for the bit-fields in
+       <STRONG>chtype</STRONG> for <EM>characters</EM> and <EM>colors</EM>, and took into account  the  different
+       integer sizes (32-bit versus 64-bit).
+
+       This  table  showing  the number of bits for <STRONG>A_COLOR</STRONG> and <STRONG>A_CHARTEXT</STRONG> was
+       gleaned from the curses header files for various operating systems  and
+       architectures.   The inferred architecture and notes reflect the format
+       and size of the defined constants as well as clues such as  the  alter-
+       nate  character  set implementation.  A 32-bit library can be used on a
+       64-bit system, but not necessarily the reverse.
+
+              <EM>Year</EM>   <EM>System</EM>        <EM>Arch</EM>    <EM>Color</EM>   <EM>Char</EM>   <EM>Notes</EM>
+              ----------------------------------------------------------------
+              1992   Solaris 5.2   32      6       17     SVr4 curses
+              1992   HPUX 9        32      no      8      SVr2 curses
+              1992   AIX 3.2       32      no      23     SVr2 curses
+              1994   OSF/1 r3      32      no      23     SVr2 curses
+              1995   HP-UX 10.00   32      6       16     SVr3 "curses_colr"
+              1995   HP-UX 10.00   32      6       8      SVr4, X/Open curses
+              1995   Solaris 5.4   32/64   7       16     X/Open curses
+              1996   AIX 4.2       32      7       16     X/Open curses
+              1996   OSF/1 r4      32      6       16     X/Open curses
+              1997   HP-UX 11.00   32      6       8      X/Open curses
+              2000   U/Win         32/64   7/31    16     uses <STRONG>chtype</STRONG>
+
+       Notes:
+
+          Regarding HP-UX,
+
+          <STRONG>o</STRONG>   HP-UX 10.20 (1996) added support for 64-bit  PA-RISC  processors
+              in 1996.
+
+          <STRONG>o</STRONG>   HP-UX  10.30 (1997) marked "curses_colr" obsolete.  That version
+              of curses was dropped with HP-UX 11.30 in 2006.
+
+          Regarding OSF/1 (and Tru64),
+
+          <STRONG>o</STRONG>   These used 64-bit hardware.  Like ncurses, the OSF/1 curses  in-
+              terface is not customized for 32-bit and 64-bit versions.
+
+          <STRONG>o</STRONG>   Unlike other systems which evolved from AT&amp;T code, OSF/1 provid-
+              ed a new implementation for X/Open curses.
+
+          Regarding Solaris,
+
+          <STRONG>o</STRONG>   The initial release of Solaris was in 1992.
+
+          <STRONG>o</STRONG>   The <EM>xpg4</EM> (X/Open) curses was developed by MKS from 1990 to 1995.
+              Sun's copyright began in 1996.
+
+          <STRONG>o</STRONG>   Sun updated the X/Open curses interface after 64-bit support was
+              introduced in 1997, but did not modify the  SVr4  curses  inter-
+              face.
+
+          Regarding U/Win,
+
+          <STRONG>o</STRONG>   Development  of  the  curses  library  began in 1991, stopped in
+              2000.
+
+          <STRONG>o</STRONG>   Color support was added in 1998.
+
+          <STRONG>o</STRONG>   The library uses only <STRONG>chtype</STRONG> (no <STRONG>cchar_t</STRONG>).
+
+       Once X/Open curses was adopted in the mid-1990s, the  constraint  of  a
+       32-bit interface with many colors and wide-characters for <STRONG>chtype</STRONG> became
+       a moot point.  The <STRONG>cchar_t</STRONG> structure (whose size and  members  are  not
+       specified in X/Open Curses) could be extended as needed.
+
+       Other interfaces are rarely used now:
+
+       <STRONG>o</STRONG>   BSD  curses was improved slightly in 1993/1994 using Keith Bostic's
+           modification to make the library 8-bit clean  for  <STRONG>nvi</STRONG>.   He  moved
+           <EM>standout</EM> attribute to a structure member.
+
+           The  resulting  4.4BSD curses was replaced by ncurses over the next
+           ten years.
+
+       <STRONG>o</STRONG>   U/Win is rarely used now.
+
+
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
        This implementation provides the <STRONG>A_ITALIC</STRONG> attribute for terminals which
        have  the  <STRONG>enter_italics_mode</STRONG> (<STRONG>sitm</STRONG>) and <STRONG>exit_italics_mode</STRONG> (<STRONG>ritm</STRONG>) capa-
@@ -305,9 +434,25 @@
               <STRONG>WA_BOLD</STRONG>         Extra bright or bold
               <STRONG>WA_ALTCHARSET</STRONG>   Alternate character set
 
-       The  XSI  curses  standard specifies that each pair of corresponding <STRONG>A_</STRONG>
-       and <STRONG>WA_</STRONG>-using functions operates on the same current-highlight informa-
-       tion.
+       XSI  curses  does not assign values to these symbols, nor does it state
+       whether or not they are related to the similarly-named A_NORMAL, etc.:
+
+       <STRONG>o</STRONG>   The XSI curses standard specifies that each pair  of  corresponding
+           <STRONG>A_</STRONG>  and  <STRONG>WA_</STRONG>-using functions operates on the same current-highlight
+           information.
+
+       <STRONG>o</STRONG>   However, in some implementations, those symbols have unrelated val-
+           ues.
+
+           For example, the Solaris <EM>xpg4</EM> (X/Open) curses declares <STRONG>attr_t</STRONG> to be
+           an unsigned short integer (16-bits), while <STRONG>chtype</STRONG> is a unsigned in-
+           teger  (32-bits).   The <STRONG>WA_</STRONG> symbols in this case are different from
+           the <STRONG>A_</STRONG> symbols because they are used for a smaller  datatype  which
+           does not represent <STRONG>A_CHARTEXT</STRONG> or <STRONG>A_COLOR</STRONG>.
+
+           In this implementation (as in many others), the values happen to be
+           the same because it simplifies copying information  between  <STRONG>chtype</STRONG>
+           and <STRONG>cchar_t</STRONG> variables.
 
        The XSI standard extended conformance level adds new highlights <STRONG>A_HORI-</STRONG>
        <STRONG>ZONTAL</STRONG>, <STRONG>A_LEFT</STRONG>, <STRONG>A_LOW</STRONG>, <STRONG>A_RIGHT</STRONG>, <STRONG>A_TOP</STRONG>,  <STRONG>A_VERTICAL</STRONG>  (and  corresponding
@@ -358,6 +503,7 @@
 </li>
 <li><a href="#h2-VIDEO-ATTRIBUTES">VIDEO ATTRIBUTES</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-HISTORY">HISTORY</a></li>
 <li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>

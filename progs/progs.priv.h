@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.45 2017/10/07 20:42:10 tom Exp $
+ * $Id: progs.priv.h,v 1.46 2017/10/09 00:30:38 tom Exp $
  *
  *	progs.priv.h
  *
@@ -137,6 +137,8 @@ extern int optind;
 #define ExitProgram(code) _nc_free_tic(code)
 #endif
 #endif
+
+#define VtoTrace(opt) (unsigned) ((opt > 0) ? opt : (opt == 0))
 
 /* error-returns for tput */
 #define ErrUsage	2

@@ -1110,6 +1110,7 @@
 ./test/dots_curses.c
 ./test/dots_mvcur.c
 ./test/dots_termcap.c
+./test/dots_xcurses.c
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h

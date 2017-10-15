@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.15 2017/09/30 15:42:10 tom Exp $
+ * $Id: echochar.c,v 1.17 2017/10/11 08:16:12 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -35,8 +35,6 @@
 #include <test.priv.h>
 
 #include <time.h>
-
-#define valid(s) ((s != 0) && s != (char *)-1)
 
 static bool interrupted = FALSE;
 static long total_chars = 0;
@@ -47,7 +45,7 @@ cleanup(void)
 {
     exit_curses();
 
-    printf("\n\n%ld total chars, rate %.2f/sec\n",
+    printf("\n\n%ld total cells, rate %.2f/sec\n",
 	   total_chars,
 	   ((double) (total_chars) / (double) (time((time_t *) 0) - started)));
 }

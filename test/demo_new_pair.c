@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.17 2017/09/28 23:17:56 tom Exp $
+ * $Id: demo_new_pair.c,v 1.18 2017/10/11 22:16:14 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -323,7 +323,9 @@ main(int argc, char *argv[])
 	    break;
 	wch[0] = use_wide ? 0xff03 : '#';
 	wch[1] = 0;
-	setcchar(&temp, wch, my_attrs, (short) my_pair, NULL);
+	setcchar(&temp, wch, my_attrs,
+		 (short) my_pair,
+		 (use_init ? NULL : (void *) &my_pair));
 	/*
 	 * At the end of a page, move the cursor to the home position.
 	 */

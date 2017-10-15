@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_vid_puts.c,v 1.9 2017/06/24 17:48:04 tom Exp $
+ * $Id: test_vid_puts.c,v 1.10 2017/10/11 08:16:24 tom Exp $
  *
  * Demonstrate the vid_puts and vid_attr functions.
  * Thomas Dickey - 2013/01/12
@@ -36,8 +36,6 @@
 #include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT && HAVE_SETUPTERM && HAVE_VID_PUTS
-
-#define valid(s) ((s != 0) && s != (char *)-1)
 
 static FILE *my_fp;
 static bool p_opt = FALSE;
@@ -54,7 +52,7 @@ TPUTS_PROTO(outc, c)
 static bool
 outs(const char *s)
 {
-    if (valid(s)) {
+    if (VALID_STRING(s)) {
 	tputs(s, 1, outc);
 	return TRUE;
     }

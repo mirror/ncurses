@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.158 2017/09/30 17:58:37 tom Exp $ */
+/* $Id: test.priv.h,v 1.160 2017/10/12 01:00:59 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -571,38 +571,46 @@ extern int optind;
 #undef	WACS_NEQUAL
 #undef	WACS_STERLING
 
-#define	WACS_RARROW     &(CURSES_WACS_ARRAY['+'])
-#define	WACS_LARROW     &(CURSES_WACS_ARRAY[','])
-#define	WACS_UARROW     &(CURSES_WACS_ARRAY['-'])
-#define	WACS_DARROW     &(CURSES_WACS_ARRAY['.'])
-#define	WACS_BLOCK      &(CURSES_WACS_ARRAY['0'])
-#define	WACS_DIAMOND    &(CURSES_WACS_ARRAY['`'])
-#define	WACS_CKBOARD    &(CURSES_WACS_ARRAY['a'])
-#define	WACS_DEGREE     &(CURSES_WACS_ARRAY['f'])
-#define	WACS_PLMINUS    &(CURSES_WACS_ARRAY['g'])
-#define	WACS_BOARD      &(CURSES_WACS_ARRAY['h'])
-#define	WACS_LANTERN    &(CURSES_WACS_ARRAY['i'])
-#define	WACS_LRCORNER   &(CURSES_WACS_ARRAY['j'])
-#define	WACS_URCORNER   &(CURSES_WACS_ARRAY['k'])
-#define	WACS_ULCORNER   &(CURSES_WACS_ARRAY['l'])
-#define	WACS_LLCORNER   &(CURSES_WACS_ARRAY['m'])
-#define	WACS_PLUS       &(CURSES_WACS_ARRAY['n'])
-#define	WACS_HLINE      &(CURSES_WACS_ARRAY['q'])
-#define	WACS_S1         &(CURSES_WACS_ARRAY['o'])
-#define	WACS_S9         &(CURSES_WACS_ARRAY['s'])
-#define	WACS_LTEE       &(CURSES_WACS_ARRAY['t'])
-#define	WACS_RTEE       &(CURSES_WACS_ARRAY['u'])
-#define	WACS_BTEE       &(CURSES_WACS_ARRAY['v'])
-#define	WACS_TTEE       &(CURSES_WACS_ARRAY['w'])
-#define	WACS_VLINE      &(CURSES_WACS_ARRAY['x'])
-#define	WACS_BULLET     &(CURSES_WACS_ARRAY['~'])
-#define	WACS_S3		&(CURSES_WACS_ARRAY['p'])
-#define	WACS_S7		&(CURSES_WACS_ARRAY['r'])
-#define	WACS_LEQUAL	&(CURSES_WACS_ARRAY['y'])
-#define	WACS_GEQUAL	&(CURSES_WACS_ARRAY['z'])
-#define	WACS_PI		&(CURSES_WACS_ARRAY['{'])
-#define	WACS_NEQUAL	&(CURSES_WACS_ARRAY['|'])
-#define	WACS_STERLING	&(CURSES_WACS_ARRAY['}'])
+#define WACS_RARROW     &(CURSES_WACS_ARRAY['+'])
+#define WACS_LARROW     &(CURSES_WACS_ARRAY[','])
+#define WACS_UARROW     &(CURSES_WACS_ARRAY['-'])
+#define WACS_DARROW     &(CURSES_WACS_ARRAY['.'])
+#define WACS_BLOCK      &(CURSES_WACS_ARRAY['0'])
+#define WACS_DIAMOND    &(CURSES_WACS_ARRAY['`'])
+#define WACS_CKBOARD    &(CURSES_WACS_ARRAY['a'])
+#define WACS_DEGREE     &(CURSES_WACS_ARRAY['f'])
+#define WACS_PLMINUS    &(CURSES_WACS_ARRAY['g'])
+#define WACS_BOARD      &(CURSES_WACS_ARRAY['h'])
+#define WACS_LANTERN    &(CURSES_WACS_ARRAY['i'])
+#define WACS_LRCORNER   &(CURSES_WACS_ARRAY['j'])
+#define WACS_URCORNER   &(CURSES_WACS_ARRAY['k'])
+#define WACS_ULCORNER   &(CURSES_WACS_ARRAY['l'])
+#define WACS_LLCORNER   &(CURSES_WACS_ARRAY['m'])
+#define WACS_PLUS       &(CURSES_WACS_ARRAY['n'])
+#define WACS_HLINE      &(CURSES_WACS_ARRAY['q'])
+#define WACS_S1         &(CURSES_WACS_ARRAY['o'])
+#define WACS_S9         &(CURSES_WACS_ARRAY['s'])
+#define WACS_LTEE       &(CURSES_WACS_ARRAY['t'])
+#define WACS_RTEE       &(CURSES_WACS_ARRAY['u'])
+#define WACS_BTEE       &(CURSES_WACS_ARRAY['v'])
+#define WACS_TTEE       &(CURSES_WACS_ARRAY['w'])
+#define WACS_VLINE      &(CURSES_WACS_ARRAY['x'])
+#define WACS_BULLET     &(CURSES_WACS_ARRAY['~'])
+#define WACS_S3         &(CURSES_WACS_ARRAY['p'])
+#define WACS_S7         &(CURSES_WACS_ARRAY['r'])
+#define WACS_LEQUAL     &(CURSES_WACS_ARRAY['y'])
+#define WACS_GEQUAL     &(CURSES_WACS_ARRAY['z'])
+#define WACS_PI         &(CURSES_WACS_ARRAY['{'])
+#define WACS_NEQUAL     &(CURSES_WACS_ARRAY['|'])
+#define WACS_STERLING   &(CURSES_WACS_ARRAY['}'])
+#endif
+
+#ifndef WA_NORMAL
+#define WA_NORMAL       A_NORMAL
+#define WA_BOLD         A_BOLD
+#define WA_REVERSE      A_REVERSE
+#define WA_UNDERLINE    A_UNDERLINE
+#define WA_BLINK        A_BLINK
 #endif
 
 #ifndef OK
@@ -691,7 +699,7 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #define DECL_CURSES_DATA_TTYTYPE 0
 #endif
 
-#if !HAVE_CURSES_DATA_TTYTYPE || DECL_CURSES_DATA_TTYTYPE
+#if !defined(ttytype) && (!HAVE_CURSES_DATA_TTYTYPE || DECL_CURSES_DATA_TTYTYPE)
 #define ttytype termname()
 #endif
 

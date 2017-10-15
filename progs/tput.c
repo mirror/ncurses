@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.77 2017/10/07 23:51:01 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.78 2017/10/14 20:46:43 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -316,7 +316,10 @@ main(int argc, char **argv)
     }
 
     is_alias = (is_clear || is_reset || is_init);
-    need_tty = (is_reset || is_init);
+    need_tty = ((is_reset || is_init) ||
+		(optind < argc &&
+		 (!strcmp(argv[optind], "reset") ||
+		  !strcmp(argv[optind], "init"))));
 
     /*
      * Modify the argument list to omit the options we processed.

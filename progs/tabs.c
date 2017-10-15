@@ -38,7 +38,7 @@
 #include <progs.priv.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tabs.c,v 1.40 2017/10/07 19:34:58 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.41 2017/10/12 22:42:08 tom Exp $")
 
 static void usage(void) GCC_NORETURN;
 
@@ -458,7 +458,7 @@ main(int argc, char *argv[])
 		    if (*++option != '\0') {
 			term_name = option;
 		    } else {
-			term_name = argv[n++];
+			term_name = argv[n];
 			option--;
 		    }
 		    option += ((int) strlen(option)) - 1;

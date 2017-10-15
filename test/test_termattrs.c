@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_termattrs.c,v 1.1 2017/06/24 18:26:15 tom Exp $
+ * $Id: test_termattrs.c,v 1.2 2017/10/11 08:16:02 tom Exp $
  *
  * Demonstrate the termattrs and term_attrs functions.
  */
@@ -35,8 +35,6 @@
 #include <test.priv.h>
 
 #if HAVE_SETUPTERM
-
-#define valid(s) ((s != 0) && s != (char *)-1)
 
 static FILE *my_fp;
 

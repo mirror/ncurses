@@ -50,16 +50,19 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.104 2017/09/30 17:50:38 tom Exp $
+ * $Id: view.c,v 1.111 2017/10/15 00:56:58 tom Exp $
  */
 
 #include <test.priv.h>
 #include <widechars.h>
 #include <popup_msg.h>
 
+#include <sys/stat.h>
 #include <time.h>
 
 #undef CTRL			/* conflict on AIX 5.2 with <sys/ioctl.h> */
+
+static void finish(int sig) GCC_NORETURN;
 
 #if HAVE_TERMIOS_H
 # include <termios.h>
@@ -86,9 +89,6 @@
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
 
-static void finish(int sig) GCC_NORETURN;
-static void show_all(const char *tag);
-
 #if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZE_TERM
 #define CAN_RESIZE 1
 #else
@@ -96,7 +96,6 @@ static void show_all(const char *tag);
 #endif
 
 #if CAN_RESIZE
-static void adjust(int sig);
 static int interrupted;
 static bool waiting = FALSE;
 #endif
@@ -112,6 +111,13 @@ static int num_lines;
 static void usage(void) GCC_NORETURN;
 
 static void
+failed(const char *msg)
+{
+    fprintf(stderr, "%s\n", msg);
+    ExitProgram(EXIT_FAILURE);
+}
+
+static void
 usage(void)
 {
     static const char *msg[] =
@@ -121,7 +127,6 @@ usage(void)
 	,"Options:"
 	," -c       use color if terminal supports it"
 	," -i       ignore INT, QUIT, TERM signals"
-	," -n NUM   specify maximum number of lines (default 1000)"
 #if defined(KEY_RESIZE)
 	," -r       use old-style sigwinch handler rather than KEY_RESIZE"
 #endif
@@ -225,121 +230,182 @@ ch_dup(char *src)
     return dst;
 }
 
-int
-main(int argc, char *argv[])
+static void
+finish(int sig)
 {
-    static const char *help[] =
-    {
-	"Commands:",
-	"  q,^Q,ESC       - quit this program",
-	"",
-	"  p,<Up>         - scroll the viewport up by one row",
-	"  n,<Down>       - scroll the viewport down by one row",
-	"  l,<Left>       - scroll the viewport left by one column",
-	"  r,<Right>      - scroll the viewport right by one column",
-	"",
-	"  h,<Home>       - scroll the viewport to top of file",
-	"  e,<End>        - scroll the viewport to end of file",
-	"",
-	"  ^L             - repaint using redrawwin()",
-	"",
-	"  0 through 9    - enter digits for count",
-	"  s              - use entered count for halfdelay() parameter",
-	"                 - if no entered count, stop nodelay()",
-	"  <space>        - begin nodelay()",
-	0
-    };
+    endwin();
+#if NO_LEAKS
+    if (vec_lines != 0) {
+	int n;
+	for (n = 0; n < num_lines; ++n) {
+	    free(vec_lines[n]);
+	}
+	free(vec_lines);
+    }
+#endif
+    ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
+}
 
-    int MAXLINES = 1000;
-    FILE *fp;
-    char buf[BUFSIZ];
+static void
+show_all(const char *tag)
+{
     int i;
-    int my_delay = 0;
-    NCURSES_CH_T **olptr;
-    int value = 0;
-    bool done = FALSE;
-    bool got_number = FALSE;
-    bool ignore_sigs = FALSE;
-    bool single_step = FALSE;
+    char temp[BUFSIZ];
+    NCURSES_CH_T *s;
+    time_t this_time;
+
 #if CAN_RESIZE
-    bool nonposix_resize = FALSE;
+    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+		"%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
+    i = (int) strlen(temp);
+    if ((i + 7) < (int) sizeof(temp)) {
+	_nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
+		    "view %.*s",
+		    (int) (sizeof(temp) - 7 - (size_t) i),
+		    fname);
+    }
+#else
+    (void) tag;
+    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+		"view %.*s", (int) sizeof(temp) - 7, fname);
 #endif
-    const char *my_label = "Input";
+    move(0, 0);
+    printw("%.*s", COLS, temp);
+    clrtoeol();
+    this_time = time((time_t *) 0);
+    _nc_STRNCPY(temp, ctime(&this_time), (size_t) 30);
+    if ((i = (int) strlen(temp)) != 0) {
+	temp[--i] = 0;
+	if (move(0, COLS - i - 2) != ERR)
+	    printw("  %s", temp);
+    }
 
-    setlocale(LC_ALL, "");
-
-#ifndef NCURSES_VERSION
-    /*
-     * We know ncurses will catch SIGINT if we don't establish our own handler.
-     * Other versions of curses may/may not catch it.
-     */
-    (void) signal(SIGINT, finish);	/* arrange interrupts to terminate */
+    scrollok(stdscr, FALSE);	/* prevent screen from moving */
+    for (i = 1; i < LINES; i++) {
+	int len;
+	int actual = (int) (lptr + i - vec_lines);
+	if (actual >= num_lines) {
+	    clrtobot();
+	    break;
+	}
+	move(i, 0);
+	printw("%3d:", actual);
+	clrtoeol();
+	if ((s = lptr[i - 1]) == 0) {
+	    continue;
+	}
+	len = ch_len(s);
+	if (len > shift) {
+#if USE_WIDEC_SUPPORT
+	    add_wchstr(s + shift);
+#else
+	    addchstr(s + shift);
 #endif
+	}
+#if defined(NCURSES_VERSION) || defined(HAVE_WCHGAT)
+	if (try_color)
+	    wchgat(stdscr, -1, WA_NORMAL, my_pair, NULL);
+#endif
+    }
+    setscrreg(1, LINES - 1);
+    scrollok(stdscr, TRUE);
+    refresh();
+}
 
-    while ((i = getopt(argc, argv, "cin:rstT:")) != -1) {
-	switch (i) {
-	case 'c':
-	    try_color = TRUE;
-	    break;
-	case 'i':
-	    ignore_sigs = TRUE;
-	    break;
-	case 'n':
-	    if ((MAXLINES = atoi(optarg)) < 1 ||
-		(MAXLINES + 2) <= 1)
-		usage();
-	    break;
 #if CAN_RESIZE
-	case 'r':
-	    nonposix_resize = TRUE;
-	    break;
-#endif
-	case 's':
-	    single_step = TRUE;
-	    break;
-#ifdef TRACE
-	case 'T':
-	    {
-		char *next = 0;
-		int tvalue = (int) strtol(optarg, &next, 0);
-		if (tvalue < 0 || (next != 0 && *next != 0))
-		    usage();
-		trace((unsigned) tvalue);
+/*
+ * This uses functions that are "unsafe", but it seems to work on SunOS. 
+ * Usually: the "unsafe" refers to the functions that POSIX lists which may be
+ * called from a signal handler.  Those do not include buffered I/O, which is
+ * used for instance in wrefresh().  To be really portable, you should use the
+ * KEY_RESIZE return (which relies on ncurses' sigwinch handler).
+ *
+ * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
+ * of the screen -- some xterms mangle the bitmap while resizing.
+ */
+static void
+adjust(int sig)
+{
+    if (waiting || sig == 0) {
+	struct winsize size;
+
+	if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
+	    resize_term(size.ws_row, size.ws_col);
+	    wrefresh(curscr);
+	    show_all(sig ? "SIGWINCH" : "interrupt");
+	}
+	interrupted = FALSE;
+    } else {
+	interrupted = TRUE;
+    }
+    (void) signal(SIGWINCH, adjust);	/* some systems need this */
+}
+#endif /* CAN_RESIZE */
+
+static void
+read_file(const char *filename)
+{
+    FILE *fp;
+    int pass;
+    int k;
+    size_t j;
+    size_t len;
+    struct stat sb;
+    char *my_blob;
+    char **my_vec = 0;
+
+    if (stat(filename, &sb) != 0
+	|| (sb.st_mode & S_IFMT) != S_IFREG) {
+	failed("input is not a file");
+    }
+
+    if (sb.st_size == 0) {
+	failed("input is empty");
+    }
+
+    if ((fp = fopen(filename, "r")) == 0) {
+	failed("cannot open input-file");
+    }
+
+    if ((my_blob = malloc((size_t) sb.st_size + 1)) == 0) {
+	failed("cannot allocate memory for input-file");
+    }
+
+    len = fread(my_blob, sizeof(char), (size_t) sb.st_size, fp);
+    my_blob[sb.st_size] = '\0';
+    fclose(fp);
+
+    for (pass = 0; pass < 2; ++pass) {
+	char *base = my_blob;
+	k = 0;
+	for (j = 0; j < len; ++j) {
+	    if (my_blob[j] == '\n') {
+		if (pass) {
+		    my_vec[k] = base;
+		    my_blob[j] = '\0';
+		}
+		base = my_blob + j + 1;
+		++k;
 	    }
-	    break;
-	case 't':
-	    trace(TRACE_CALLS);
-	    break;
-#endif
-	default:
-	    usage();
+	}
+	num_lines = k;
+	if (base != (my_blob + j))
+	    ++num_lines;
+	if (!pass &&
+	    ((my_vec = typeCalloc(char *, (size_t) k + 2)) == 0)) {
+	    failed("cannot allocate line-vector #1");
 	}
     }
-    if (optind + 1 != argc)
-	usage();
-
-    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) MAXLINES + 2)) == 0)
-	usage();
-
-    assert(vec_lines != 0);
-
-    fname = argv[optind];
-    if ((fp = fopen(fname, "r")) == 0) {
-	perror(fname);
-	ExitProgram(EXIT_FAILURE);
-    }
-#if CAN_RESIZE
-    if (nonposix_resize)
-	(void) signal(SIGWINCH, adjust);	/* arrange interrupts to resize */
-#endif
+    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) num_lines + 2)) == 0)
+	failed("cannot allocate line-vector #2");
 
     Trace(("slurp the file"));
-    for (lptr = &vec_lines[0]; (lptr - vec_lines) < MAXLINES; lptr++) {
+    for (k = 0; k < num_lines; ++k) {
+	char *buf = my_vec[k];
 	char temp[BUFSIZ], *s, *d;
 	int col;
 
-	if (fgets(buf, sizeof(buf), fp) == 0)
-	    break;
+	lptr = &vec_lines[k];
 
 #if USE_WIDEC_SUPPORT
 	if (lptr == vec_lines) {
@@ -386,14 +452,98 @@ main(int argc, char *argv[])
 	}
 	*lptr = ch_dup(temp);
     }
-    (void) fclose(fp);
-    num_lines = (int) (lptr - vec_lines);
 
-    if (ignore_sigs) {
-	InitAndCatch(initscr(), SIG_IGN);
-    } else {
-	initscr();
+    free(my_vec);
+    free(my_blob);
+}
+
+int
+main(int argc, char *argv[])
+{
+    static const char *help[] =
+    {
+	"Commands:",
+	"  q,^Q,ESC       - quit this program",
+	"",
+	"  p,<Up>         - scroll the viewport up by one row",
+	"  n,<Down>       - scroll the viewport down by one row",
+	"  l,<Left>       - scroll the viewport left by one column",
+	"  r,<Right>      - scroll the viewport right by one column",
+	"",
+	"  h,<Home>       - scroll the viewport to top of file",
+	"  ^F,<PageDn>    - scroll to the next page",
+	"  ^B,<PageUp>    - scroll to the previous page",
+	"  e,<End>        - scroll the viewport to end of file",
+	"",
+	"  ^L             - repaint using redrawwin()",
+	"",
+	"  0 through 9    - enter digits for count",
+	"  s              - use entered count for halfdelay() parameter",
+	"                 - if no entered count, stop nodelay()",
+	"  <space>        - begin nodelay()",
+	0
+    };
+
+    int i;
+    int my_delay = 0;
+    NCURSES_CH_T **olptr;
+    int value = 0;
+    bool done = FALSE;
+    bool got_number = FALSE;
+    bool ignore_sigs = FALSE;
+    bool single_step = FALSE;
+#if CAN_RESIZE
+    bool nonposix_resize = FALSE;
+#endif
+    const char *my_label = "Input";
+
+    setlocale(LC_ALL, "");
+
+    while ((i = getopt(argc, argv, "cirstT:")) != -1) {
+	switch (i) {
+	case 'c':
+	    try_color = TRUE;
+	    break;
+	case 'i':
+	    ignore_sigs = TRUE;
+	    break;
+#if CAN_RESIZE
+	case 'r':
+	    nonposix_resize = TRUE;
+	    break;
+#endif
+	case 's':
+	    single_step = TRUE;
+	    break;
+#ifdef TRACE
+	case 'T':
+	    {
+		char *next = 0;
+		int tvalue = (int) strtol(optarg, &next, 0);
+		if (tvalue < 0 || (next != 0 && *next != 0))
+		    usage();
+		trace((unsigned) tvalue);
+	    }
+	    break;
+	case 't':
+	    trace(TRACE_CALLS);
+	    break;
+#endif
+	default:
+	    usage();
+	}
     }
+    if (optind + 1 != argc)
+	usage();
+
+    read_file(fname = argv[optind]);
+
+#if CAN_RESIZE
+    if (nonposix_resize)
+	(void) signal(SIGWINCH, adjust);	/* arrange interrupts to resize */
+#endif
+
+    InitAndCatch(initscr(), ignore_sigs ? SIG_IGN : finish);
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
@@ -473,15 +623,41 @@ main(int argc, char *argv[])
 	    scrl((int) (lptr - olptr));
 	    break;
 
+	case '<':
+	    shift = 0;
+	    /* FALLTHRU */
 	case 'h':
+	    /* FALLTHRU */
 	case KEY_HOME:
 	    lptr = vec_lines;
 	    break;
 
+	case '>':
+	    shift = 0;
+	    /* FALLTHRU */
 	case 'e':
+	    /* FALLTHRU */
 	case KEY_END:
 	    if (num_lines > LINES)
-		lptr = vec_lines + num_lines - LINES + 1;
+		lptr = (vec_lines + num_lines - LINES + 1);
+	    else
+		lptr = (vec_lines + (num_lines - 2));
+	    break;
+
+	case CTRL('F'):
+	    /* FALLTHRU */
+	case KEY_NPAGE:
+	    if ((lptr - vec_lines) < (num_lines - 5))
+		lptr += (LINES - 1);
+	    else
+		lptr = (vec_lines + num_lines - 2);
+	    break;
+
+	case CTRL('B'):
+	    /* FALLTHRU */
+	case KEY_PPAGE:
+	    if ((lptr - vec_lines) >= LINES)
+		lptr -= (LINES - 1);
 	    else
 		lptr = vec_lines;
 	    break;
@@ -548,109 +724,4 @@ main(int argc, char *argv[])
     }
 
     finish(0);			/* we're done */
-}
-
-static void
-finish(int sig)
-{
-    endwin();
-#if NO_LEAKS
-    if (vec_lines != 0) {
-	int n;
-	for (n = 0; n < num_lines; ++n) {
-	    free(vec_lines[n]);
-	}
-	free(vec_lines);
-    }
-#endif
-    ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
-}
-
-#if CAN_RESIZE
-/*
- * This uses functions that are "unsafe", but it seems to work on SunOS. 
- * Usually: the "unsafe" refers to the functions that POSIX lists which may be
- * called from a signal handler.  Those do not include buffered I/O, which is
- * used for instance in wrefresh().  To be really portable, you should use the
- * KEY_RESIZE return (which relies on ncurses' sigwinch handler).
- *
- * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
- * of the screen -- some xterms mangle the bitmap while resizing.
- */
-static void
-adjust(int sig)
-{
-    if (waiting || sig == 0) {
-	struct winsize size;
-
-	if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
-	    resize_term(size.ws_row, size.ws_col);
-	    wrefresh(curscr);
-	    show_all(sig ? "SIGWINCH" : "interrupt");
-	}
-	interrupted = FALSE;
-    } else {
-	interrupted = TRUE;
-    }
-    (void) signal(SIGWINCH, adjust);	/* some systems need this */
-}
-#endif /* CAN_RESIZE */
-
-static void
-show_all(const char *tag)
-{
-    int i;
-    char temp[BUFSIZ];
-    NCURSES_CH_T *s;
-    time_t this_time;
-
-#if CAN_RESIZE
-    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-		"%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
-    i = (int) strlen(temp);
-    if ((i + 7) < (int) sizeof(temp)) {
-	_nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
-		    "view %.*s",
-		    (int) (sizeof(temp) - 7 - (size_t) i),
-		    fname);
-    }
-#else
-    (void) tag;
-    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-		"view %.*s", (int) sizeof(temp) - 7, fname);
-#endif
-    move(0, 0);
-    printw("%.*s", COLS, temp);
-    clrtoeol();
-    this_time = time((time_t *) 0);
-    _nc_STRNCPY(temp, ctime(&this_time), (size_t) 30);
-    if ((i = (int) strlen(temp)) != 0) {
-	temp[--i] = 0;
-	if (move(0, COLS - i - 2) != ERR)
-	    printw("  %s", temp);
-    }
-
-    scrollok(stdscr, FALSE);	/* prevent screen from moving */
-    for (i = 1; i < LINES; i++) {
-	move(i, 0);
-	printw("%3ld:", (long) (lptr + i - vec_lines));
-	clrtoeol();
-	if ((s = lptr[i - 1]) != 0) {
-	    int len = ch_len(s);
-	    if (len > shift) {
-#if USE_WIDEC_SUPPORT
-		add_wchstr(s + shift);
-#else
-		addchstr(s + shift);
-#endif
-	    }
-#if defined(NCURSES_VERSION) || defined(HAVE_WCHGAT)
-	    if (try_color)
-		wchgat(stdscr, -1, WA_NORMAL, my_pair, NULL);
-#endif
-	}
-    }
-    setscrreg(1, LINES - 1);
-    scrollok(stdscr, TRUE);
-    refresh();
 }

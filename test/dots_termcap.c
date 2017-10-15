@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.10 2017/09/30 17:55:22 tom Exp $
+ * $Id: dots_termcap.c,v 1.12 2017/10/11 08:15:07 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -43,8 +43,6 @@
 #if HAVE_TGETENT
 
 #include <time.h>
-
-#define valid(s) ((s != 0) && s != (char *)-1)
 
 static bool interrupted = FALSE;
 static long total_chars = 0;
@@ -116,7 +114,7 @@ TPUTS_PROTO(outc, c)
 static bool
 outs(char *s)
 {
-    if (valid(s)) {
+    if (VALID_STRING(s)) {
 	tputs(s, 1, outc);
 	return TRUE;
     }
@@ -132,7 +130,7 @@ cleanup(void)
     outs(t_cl);
     outs(t_ve);
 
-    printf("\n\n%ld total chars, rate %.2f/sec\n",
+    printf("\n\n%ld total cells, rate %.2f/sec\n",
 	   total_chars,
 	   ((double) (total_chars) / (double) (time((time_t *) 0) - started)));
 }
@@ -203,9 +201,9 @@ main(int argc GCC_UNUSED,
     outs(t_cl);
     outs(t_vi);
     if (num_colors > 1) {
-	if (!valid(t_AF)
-	    || !valid(t_AB)
-	    || (!valid(t_oc) && !valid(t_op)))
+	if (!VALID_STRING(t_AF)
+	    || !VALID_STRING(t_AB)
+	    || (!VALID_STRING(t_oc) && !VALID_STRING(t_op)))
 	    num_colors = -1;
     }
 
@@ -227,8 +225,8 @@ main(int argc GCC_UNUSED,
 		tputs(tgoto(t_AB, 0, z), 1, outc);
 		my_napms(1);
 	    }
-	} else if (valid(t_me)
-		   && valid(t_mr)) {
+	} else if (VALID_STRING(t_me)
+		   && VALID_STRING(t_mr)) {
 	    if (ranf() <= 0.01) {
 		outs((ranf() > 0.6)
 		     ? t_mr

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2966 2017/10/07 23:37:31 tom Exp $
+-- $Id: NEWS,v 1.2975 2017/10/14 23:49:52 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171014
+	+ minor cleanup to test/view.c:
+	  + eliminate "-n" option by simply reading the whole file.
+	  + implement page up/down commands.
+	+ add check in tput for init/reset operands to ensure those use a
+	  terminal.
+	+ improve manual pages which discuss chtype, cchar_t types and the
+	  attribute values which can be stored in those types.
+	+ correct array-index when parsing "-T" command-line option in tabs
+	  program.
+	+ modify demo_new_pair.c to pass extended pairs to setcchar().
+	+ add test/dots_xcurses.c to illustrate a different approach used for
+	  extended colors which can be contrasted with dots_curses.c.
+	+ add a check in tic to note when a description uses non-mandatory
+	  delays without xon_xoff.  This is not an error, but some descriptions
+	  for a terminal emulator may use the combination incorrectly.
 
 20171007
 	+ modify "-T" option of clear and tput to call use_tioctl() to obtain
