@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.23 2017/04/08 22:14:03 tom Exp $
+ * $Id: ins_wide.c,v 1.24 2017/10/18 23:03:57 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -458,7 +458,7 @@ usage(void)
 {
     static const char *tbl[] =
     {
-	"Usage: inserts [options]"
+	"Usage: ins_wide [options]"
 	,""
 	,"Options:"
 	,"  -f FILE read data from given file"

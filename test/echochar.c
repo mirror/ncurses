@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.17 2017/10/11 08:16:12 tom Exp $
+ * $Id: echochar.c,v 1.18 2017/10/18 23:04:52 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -96,7 +96,7 @@ main(int argc GCC_UNUSED,
 	    opt_r = TRUE;
 	    break;
 	default:
-	    fprintf(stderr, "usage: echochar [-r]\n");
+	    fprintf(stderr, "Usage: echochar [-r]\n");
 	    ExitProgram(EXIT_FAILURE);
 	}
     }

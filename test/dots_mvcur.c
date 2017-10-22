@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.15 2017/10/11 08:15:46 tom Exp $
+ * $Id: dots_mvcur.c,v 1.17 2017/10/22 00:44:39 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -97,6 +97,40 @@ ranf(void)
     return ((double) r / 32768.);
 }
 
+static int
+get_number(const char *cap, int map)
+{
+    int result = map;
+    if (cap != 0) {
+	int check = tigetnum(cap);
+	if (check > 0)
+	    result = check;
+    }
+    return result;
+}
+
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: dots_termcap [options]"
+	,""
+	,"Options:"
+	," -T TERM  override $TERM"
+	," -e       allow environment $LINES / $COLUMNS"
+	," -f       use tigetnum rather than <term.h> mapping"
+	," -m SIZE  set margin (default: 2)"
+	," -s MSECS delay 1% of the time (default: 1 msecs)"
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(EXIT_FAILURE);
+}
+
 int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
@@ -107,6 +141,32 @@ main(int argc GCC_UNUSED,
     double c;
     SCREEN *sp;
     int my_colors;
+    int f_option = 0;
+    int m_option = 2;
+    int s_option = 1;
+
+    while ((x = getopt(argc, argv, "T:efm:s:")) != -1) {
+	switch (x) {
+	case 'T':
+	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    break;
+	case 'e':
+	    use_env(TRUE);
+	    break;
+	case 'f':
+	    f_option = 1;
+	    break;
+	case 'm':
+	    m_option = atoi(optarg);
+	    break;
+	case 's':
+	    s_option = atoi(optarg);
+	    break;
+	default:
+	    usage();
+	    break;
+	}
+    }
 
     InitAndCatch((sp = newterm((char *) 0, stdout, stdin)), onsig);
     refresh();			/* needed with Solaris curses to cancel endwin */
@@ -121,7 +181,9 @@ main(int argc GCC_UNUSED,
     outs(clear_screen);
     outs(cursor_home);
     outs(cursor_invisible);
-    my_colors = max_colors;
+
+#define GetNumber(ln,sn) get_number(f_option ? #sn : 0, ln)
+    my_colors = GetNumber(max_colors, colors);
     if (my_colors > 1) {
 	if (!VALID_STRING(set_a_foreground)
 	    || !VALID_STRING(set_a_background)
@@ -129,13 +191,13 @@ main(int argc GCC_UNUSED,
 	    my_colors = -1;
     }
 
-    r = (double) (lines - 4);
-    c = (double) (columns - 4);
+    r = (double) (GetNumber(lines, lines) - (m_option * 2));
+    c = (double) (GetNumber(columns, cols) - (m_option * 2));
     started = time((time_t *) 0);
 
     while (!interrupted) {
-	x = (int) (c * ranf()) + 2;
-	y = (int) (r * ranf()) + 2;
+	x = (int) (c * ranf()) + m_option;
+	y = (int) (r * ranf()) + m_option;
 	p = (ranf() > 0.9) ? '*' : ' ';
 
 	if (mvcur(y0, x0, y, x) != ERR) {
@@ -149,7 +211,7 @@ main(int argc GCC_UNUSED,
 		tputs(tparm2(set_a_foreground, z), 1, outc);
 	    } else {
 		tputs(tparm2(set_a_background, z), 1, outc);
-		napms(1);
+		napms(s_option);
 	    }
 	} else if (VALID_STRING(exit_attribute_mode)
 		   && VALID_STRING(enter_reverse_mode)) {
@@ -157,7 +219,7 @@ main(int argc GCC_UNUSED,
 		outs((ranf() > 0.6)
 		     ? enter_reverse_mode
 		     : exit_attribute_mode);
-		napms(1);
+		napms(s_option);
 	    }
 	}
 	outc(p);

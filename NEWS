@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2975 2017/10/14 23:49:52 tom Exp $
+-- $Id: NEWS,v 1.2979 2017/10/21 20:29:16 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171021
+	+ modify test/view.c to expand tabs using the ncurses library rather
+	  than in the test-program.
+	+ remove very old SIGWINCH example in test/view.c, just use KEY_RESIZE.
+	+ add -T, -e, -f -m options to "dots" test-programs.
+	+ fix a few typos in usage-messages for test-programs.
 
 20171014
 	+ minor cleanup to test/view.c:

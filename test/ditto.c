@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.46 2017/09/06 09:19:14 tom Exp $
+ * $Id: ditto.c,v 1.47 2017/10/18 23:04:42 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -114,7 +114,7 @@ failed(const char *s)
 static void
 usage(void)
 {
-    fprintf(stderr, "usage: ditto [terminal1 ...]\n");
+    fprintf(stderr, "Usage: ditto [terminal1 ...]\n");
     ExitProgram(EXIT_FAILURE);
 }
 

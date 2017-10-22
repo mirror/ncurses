@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.469 2017/10/01 18:22:48 tom Exp $
+$Id: ncurses.c,v 1.470 2017/10/20 21:20:47 tom Exp $
 
 ***************************************************************************/
 
@@ -1840,7 +1840,7 @@ get_wide_background(void)
     attr_t attr;
     cchar_t ch;
     NCURSES_PAIRS_T pair;
-    wchar_t wch[10];
+    wchar_t wch[CCHARW_MAX];
 
     memset(&ch, 0, sizeof(ch));
     if (getbkgrnd(&ch) != ERR) {

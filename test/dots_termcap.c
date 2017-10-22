@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.12 2017/10/11 08:15:07 tom Exp $
+ * $Id: dots_termcap.c,v 1.15 2017/10/22 00:49:45 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -151,36 +151,96 @@ ranf(void)
 static void
 my_napms(int ms)
 {
+    if (ms > 0) {
 #if defined(__MINGW32__) || !HAVE_GETTIMEOFDAY
-    Sleep((DWORD) ms);
+	Sleep((DWORD) ms);
 #else
-    struct timeval data;
-    data.tv_sec = 0;
-    data.tv_usec = ms * 1000;
-    select(0, NULL, NULL, NULL, &data);
+	struct timeval data;
+	data.tv_sec = 0;
+	data.tv_usec = ms * 1000;
+	select(0, NULL, NULL, NULL, &data);
 #endif
+    }
+}
+
+static int
+get_number(const char *cap, const char *env)
+{
+    int result = tgetnum(cap);
+    char *value = env ? getenv(env) : 0;
+    if (value != 0 && *value != 0) {
+	char *next = 0;
+	long check = strtol(value, &next, 10);
+	if (check > 0 && *next == '\0')
+	    result = (int) check;
+    }
+    return result;
+}
+
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: dots_termcap [options]"
+	,""
+	,"Options:"
+	," -T TERM  override $TERM"
+	," -e       allow environment $LINES / $COLUMNS"
+	," -m SIZE  set margin (default: 2)"
+	," -s MSECS delay 1% of the time (default: 1 msecs)"
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(EXIT_FAILURE);
 }
 
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int x, y, z, p;
     int num_colors;
     int num_lines;
     int num_columns;
+    int e_option = 0;
+    int m_option = 2;
+    int s_option = 1;
     double r;
     double c;
     char buffer[1024];
     char area[1024];
     char *name;
 
-    srand((unsigned) time(0));
+    while ((x = getopt(argc, argv, "T:em:s:")) != -1) {
+	switch (x) {
+	case 'T':
+	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    break;
+	case 'e':
+	    e_option = 1;
+	    break;
+	case 'm':
+	    m_option = atoi(optarg);
+	    break;
+	case 's':
+	    s_option = atoi(optarg);
+	    break;
+	default:
+	    usage();
+	    break;
+	}
+    }
 
     if ((name = getenv("TERM")) == 0) {
 	fprintf(stderr, "TERM is not set\n");
 	ExitProgram(EXIT_FAILURE);
     }
+
+    srand((unsigned) time(0));
+
     InitAndCatch(z = tgetent(buffer, name), onsig);
     if (z < 0) {
 	fprintf(stderr, "terminal description not found\n");
@@ -195,8 +255,9 @@ main(int argc GCC_UNUSED,
     }
 
     num_colors = tgetnum("Co");
-    num_lines = tgetnum("li");
-    num_columns = tgetnum("co");
+#define GetNumber(cap,env) get_number(cap, e_option ? env : 0)
+    num_lines = GetNumber("li", "LINES");
+    num_columns = GetNumber("co", "COLUMNS");
 
     outs(t_cl);
     outs(t_vi);
@@ -207,13 +268,13 @@ main(int argc GCC_UNUSED,
 	    num_colors = -1;
     }
 
-    r = (double) (num_lines - 4);
-    c = (double) (num_columns - 4);
+    r = (double) (num_lines - (2 * m_option));
+    c = (double) (num_columns - (2 * m_option));
     started = time((time_t *) 0);
 
     while (!interrupted) {
-	x = (int) (c * ranf()) + 2;
-	y = (int) (r * ranf()) + 2;
+	x = (int) (c * ranf()) + m_option;
+	y = (int) (r * ranf()) + m_option;
 	p = (ranf() > 0.9) ? '*' : ' ';
 
 	tputs(tgoto(t_cm, x, y), 1, outc);
@@ -223,7 +284,7 @@ main(int argc GCC_UNUSED,
 		tputs(tgoto(t_AF, 0, z), 1, outc);
 	    } else {
 		tputs(tgoto(t_AB, 0, z), 1, outc);
-		my_napms(1);
+		my_napms(s_option);
 	    }
 	} else if (VALID_STRING(t_me)
 		   && VALID_STRING(t_mr)) {
@@ -231,7 +292,7 @@ main(int argc GCC_UNUSED,
 		outs((ranf() > 0.6)
 		     ? t_mr
 		     : t_me);
-		my_napms(1);
+		my_napms(s_option);
 	    }
 	}
 	outc(p);

@@ -1086,6 +1086,7 @@
 ./test/blue.c
 ./test/bs.6
 ./test/bs.c
+./test/bulgarian-utf8-tabs.txt
 ./test/bulgarian-utf8.txt
 ./test/cardfile.c
 ./test/cardfile.dat
@@ -1205,6 +1206,7 @@
 ./test/tput-initc
 ./test/tracemunch
 ./test/view.c
+./test/widechars-utf8-tabs.txt
 ./test/widechars-utf8.txt
 ./test/widechars.h
 ./test/worm.c

@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.70 2017/09/30 15:40:39 tom Exp $
+ * $Id: bs.c,v 1.71 2017/10/18 23:03:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -1162,7 +1162,7 @@ do_options(int c, char *op[])
 	    switch (op[i][0]) {
 	    default:
 	    case '?':
-		(void) fprintf(stderr, "Usage: battle [-s | -b] [-c]\n");
+		(void) fprintf(stderr, "Usage: bs [-s | -b] [-c]\n");
 		(void) fprintf(stderr, "\tWhere the options are:\n");
 		(void) fprintf(stderr, "\t-s : play a salvo game\n");
 		(void) fprintf(stderr, "\t-b : play a blitz game\n");

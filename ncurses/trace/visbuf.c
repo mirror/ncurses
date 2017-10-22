@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.48 2016/09/05 00:43:08 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.49 2017/10/21 23:34:20 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -334,9 +334,9 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 					       buf[j].chars[PUTC_i], &PUT_st);
 			if (PUTC_n <= 0 || buf[j].chars[PUTC_i] > 255) {
 			    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-					"{%d:\\u%x}",
+					"{%d:\\u%lx}",
 					wcwidth(buf[j].chars[PUTC_i]),
-					buf[j].chars[PUTC_i]);
+					(unsigned long) buf[j].chars[PUTC_i]);
 			    (void) _nc_trace_bufcat(bufnum, temp);
 			    break;
 			}

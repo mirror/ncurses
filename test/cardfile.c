@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2013,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.43 2016/09/10 21:36:46 tom Exp $
+ * $Id: cardfile.c,v 1.45 2017/10/19 21:14:25 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -549,7 +549,7 @@ usage(void)
 {
     static const char *msg[] =
     {
-	"Usage: view [options] file"
+	"Usage: cardfile [options] file"
 	,""
 	,"Options:"
 	," -c       use color if terminal supports it"

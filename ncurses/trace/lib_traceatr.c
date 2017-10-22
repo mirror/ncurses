@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.88 2017/03/01 00:04:04 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.89 2017/10/21 23:12:09 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -362,9 +362,9 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 		    } else if (ch->chars[PUTC_i] > 255) {
 			char temp[80];
 			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-				    "{%d:\\u%x}",
+				    "{%d:\\u%lx}",
 				    wcwidth(ch->chars[PUTC_i]),
-				    ch->chars[PUTC_i]);
+				    (unsigned long) ch->chars[PUTC_i]);
 			(void) _nc_trace_bufcat(bufnum, temp);
 			break;
 		    }

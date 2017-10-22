@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.8 2017/10/12 00:20:41 tom Exp $
+ * $Id: dots_xcurses.c,v 1.11 2017/10/22 00:44:39 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -55,8 +55,7 @@ static bool interrupted = FALSE;
 static long total_chars = 0;
 static time_t started;
 
-#ifdef NCURSES_VERSION
-static bool d_option = FALSE;
+#if HAVE_ALLOC_PAIR
 static bool x_option = FALSE;
 #endif
 
@@ -108,18 +107,21 @@ set_colors(int fg, int bg)
     }
 }
 
-#if defined(NCURSES_VERSION)
 static void
 usage(void)
 {
     static const char *msg[] =
     {
-	"Usage: firework [options]"
+	"Usage: dots_xcurses [options]"
 	,""
 	,"Options:"
+	," -T TERM  override $TERM"
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors()"
 #endif
+	," -e       allow environment $LINES / $COLUMNS"
+	," -m SIZE  set margin (default: 2)"
+	," -s MSECS delay 1% of the time (default: 1 msecs)"
 #if HAVE_ALLOC_PAIR
 	," -x       use alloc_pair() rather than init_pair()"
 #endif
@@ -131,25 +133,40 @@ usage(void)
 
     ExitProgram(EXIT_FAILURE);
 }
-#endif
 
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
-    int margin = 2;
     int x, y, z, p;
     int fg, bg, ch;
     wchar_t wch[2];
     int pair;
     double r;
     double c;
+#if HAVE_USE_DEFAULT_COLORS
+    bool d_option = FALSE;
+#endif
+    int m_option = 2;
+    int s_option = 1;
 
-#if defined(NCURSES_VERSION)
-    while ((ch = getopt(argc, argv, "dx")) != -1) {
+    while ((ch = getopt(argc, argv, "T:dem:s:x")) != -1) {
 	switch (ch) {
+	case 'T':
+	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    break;
+#if HAVE_USE_DEFAULT_COLORS
 	case 'd':
 	    d_option = TRUE;
+	    break;
+#endif
+	case 'e':
+	    use_env(TRUE);
+	    break;
+	case 'm':
+	    m_option = atoi(optarg);
+	    break;
+	case 's':
+	    s_option = atoi(optarg);
 	    break;
 #if HAVE_ALLOC_PAIR
 	case 'x':
@@ -161,7 +178,6 @@ main(int argc GCC_UNUSED,
 	    break;
 	}
     }
-#endif
 
     srand((unsigned) time(0));
 
@@ -172,9 +188,12 @@ main(int argc GCC_UNUSED,
 	if (d_option)
 	    use_default_colors();
 #endif
+#if HAVE_ALLOC_PAIR
 	if (x_option) {
 	    ;			/* nothing */
-	} else {
+	} else
+#endif
+	{
 	    for (fg = 0; fg < COLORS; fg++) {
 		for (bg = 0; bg < COLORS; bg++) {
 		    pair = mypair(fg, bg);
@@ -186,8 +205,8 @@ main(int argc GCC_UNUSED,
 	}
     }
 
-    r = (double) (LINES - (2 * margin));
-    c = (double) (COLS - (2 * margin));
+    r = (double) (LINES - (2 * m_option));
+    c = (double) (COLS - (2 * m_option));
     started = time((time_t *) 0);
 
     fg = COLOR_WHITE;
@@ -195,8 +214,8 @@ main(int argc GCC_UNUSED,
     pair = 0;
     wch[1] = 0;
     while (!interrupted) {
-	x = (int) (c * ranf()) + margin;
-	y = (int) (r * ranf()) + margin;
+	x = (int) (c * ranf()) + m_option;
+	y = (int) (r * ranf()) + m_option;
 	p = (ranf() > 0.9) ? '*' : ' ';
 
 	move(y, x);
@@ -206,7 +225,7 @@ main(int argc GCC_UNUSED,
 		set_colors(fg = z, bg);
 	    } else {
 		set_colors(fg, bg = z);
-		napms(1);
+		napms(s_option);
 	    }
 	} else {
 	    if (ranf() <= 0.01) {
@@ -215,7 +234,7 @@ main(int argc GCC_UNUSED,
 		} else {
 		    attr_off(WA_REVERSE, NULL);
 		}
-		napms(1);
+		napms(s_option);
 	    }
 	}
 	wch[0] = p;

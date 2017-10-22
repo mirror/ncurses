@@ -33,7 +33,8 @@
  *
  * modified by Thomas Dickey <dickey@clark.net> July 1995 to demonstrate
  * the use of 'resizeterm()', and May 2000 to illustrate wide-character
- * handling.
+ * handling.  This program intentionally does not use pads, to allow testing
+ * with less-capable implementations of curses.
  *
  * Takes a filename argument.  It's a simple file-viewer with various
  * scroll-up and scroll-down commands.
@@ -50,7 +51,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.111 2017/10/15 00:56:58 tom Exp $
+ * $Id: view.c,v 1.129 2017/10/22 00:49:23 tom Exp $
  */
 
 #include <test.priv.h>
@@ -64,41 +65,10 @@
 
 static void finish(int sig) GCC_NORETURN;
 
-#if HAVE_TERMIOS_H
-# include <termios.h>
-#else
-#if !defined(__MINGW32__)
-# include <sgtty.h>
-#endif
-#endif
-
-#if !defined(sun) || !HAVE_TERMIOS_H
-# if HAVE_SYS_IOCTL_H
-#  include <sys/ioctl.h>
-# endif
-#endif
-
 #define my_pair 1
-
-/* This is needed to compile 'struct winsize' */
-#if NEED_PTEM_H
-#include <sys/stream.h>
-#include <sys/ptem.h>
-#endif
 
 #undef CTRL
 #define CTRL(x)	((x) & 0x1f)
-
-#if defined(SIGWINCH) && defined(TIOCGWINSZ) && HAVE_RESIZE_TERM
-#define CAN_RESIZE 1
-#else
-#define CAN_RESIZE 0
-#endif
-
-#if CAN_RESIZE
-static int interrupted;
-static bool waiting = FALSE;
-#endif
 
 static int shift = 0;
 static bool try_color = FALSE;
@@ -108,37 +78,17 @@ static NCURSES_CH_T **vec_lines;
 static NCURSES_CH_T **lptr;
 static int num_lines;
 
+#if USE_WIDEC_SUPPORT
+static bool n_option = FALSE;
+#endif
+
 static void usage(void) GCC_NORETURN;
 
 static void
 failed(const char *msg)
 {
+    endwin();
     fprintf(stderr, "%s\n", msg);
-    ExitProgram(EXIT_FAILURE);
-}
-
-static void
-usage(void)
-{
-    static const char *msg[] =
-    {
-	"Usage: view [options] file"
-	,""
-	,"Options:"
-	," -c       use color if terminal supports it"
-	," -i       ignore INT, QUIT, TERM signals"
-#if defined(KEY_RESIZE)
-	," -r       use old-style sigwinch handler rather than KEY_RESIZE"
-#endif
-	," -s       start in single-step mode, waiting for input"
-#ifdef TRACE
-	," -t       trace screen updates"
-	," -T NUM   specify trace mask"
-#endif
-    };
-    size_t n;
-    for (n = 0; n < SIZEOF(msg); n++)
-	fprintf(stderr, "%s\n", msg[n]);
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -153,7 +103,8 @@ ch_len(NCURSES_CH_T * src)
 #if USE_WIDEC_SUPPORT
     for (;;) {
 	TEST_CCHAR(src, count, {
-	    ++result;
+	    int len = wcwidth(test_wch[0]);
+	    result += (len > 0) ? len : 1;
 	    ++src;
 	}
 	, {
@@ -165,69 +116,6 @@ ch_len(NCURSES_CH_T * src)
 	result++;
 #endif
     return result;
-}
-
-/*
- * Allocate a string into an array of chtype's.  If UTF-8 mode is
- * active, translate the string accordingly.
- */
-static NCURSES_CH_T *
-ch_dup(char *src)
-{
-    unsigned len = (unsigned) strlen(src);
-    NCURSES_CH_T *dst = typeMalloc(NCURSES_CH_T, len + 1);
-    size_t j, k;
-#if USE_WIDEC_SUPPORT
-    wchar_t wstr[CCHARW_MAX + 1];
-    wchar_t wch;
-    int l = 0;
-    size_t rc;
-    int width;
-#ifndef state_unused
-    mbstate_t state;
-#endif
-#endif /* USE_WIDEC_SUPPORT */
-
-#if USE_WIDEC_SUPPORT
-    reset_mbytes(state);
-#endif
-    for (j = k = 0; j < len; j++) {
-#if USE_WIDEC_SUPPORT
-	rc = (size_t) check_mbytes(wch, src + j, len - j, state);
-	if (rc == (size_t) -1 || rc == (size_t) -2) {
-	    break;
-	}
-	j += rc - 1;
-	width = wcwidth(wch);
-	if (width == 0) {
-	    if (l == 0) {
-		wstr[l++] = L' ';
-	    }
-	} else if ((l > 0) || (l == CCHARW_MAX)) {
-	    wstr[l] = L'\0';
-	    l = 0;
-	    if (setcchar(dst + k, wstr, 0, 0, NULL) != OK) {
-		break;
-	    }
-	    ++k;
-	}
-	wstr[l++] = wch;
-#else
-	dst[k++] = (chtype) UChar(src[j]);
-#endif
-    }
-#if USE_WIDEC_SUPPORT
-    if (l > 0) {
-	wstr[l] = L'\0';
-	if (setcchar(dst + k, wstr, 0, 0, NULL) == OK)
-	    ++k;
-    }
-    wstr[0] = L'\0';
-    setcchar(dst + k, wstr, 0, 0, NULL);
-#else
-    dst[k] = 0;
-#endif
-    return dst;
 }
 
 static void
@@ -254,21 +142,11 @@ show_all(const char *tag)
     NCURSES_CH_T *s;
     time_t this_time;
 
-#if CAN_RESIZE
     _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-		"%.20s (%3dx%3d) col %d ", tag, LINES, COLS, shift);
+		"view %.*s", (int) strlen(tag), tag);
     i = (int) strlen(temp);
-    if ((i + 7) < (int) sizeof(temp)) {
-	_nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
-		    "view %.*s",
-		    (int) (sizeof(temp) - 7 - (size_t) i),
-		    fname);
-    }
-#else
-    (void) tag;
-    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
-		"view %.*s", (int) sizeof(temp) - 7, fname);
-#endif
+    _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - i)
+		" %.*s", (int) sizeof(temp) - i - 2, fname);
     move(0, 0);
     printw("%.*s", COLS, temp);
     clrtoeol();
@@ -284,8 +162,14 @@ show_all(const char *tag)
     for (i = 1; i < LINES; i++) {
 	int len;
 	int actual = (int) (lptr + i - vec_lines);
-	if (actual >= num_lines) {
-	    clrtobot();
+	if (actual > num_lines) {
+	    if (i < LINES - 1) {
+		int y, x;
+		getyx(stdscr, y, x);
+		move(i, 0);
+		clrtobot();
+		move(y, x);
+	    }
 	    break;
 	}
 	move(i, 0);
@@ -297,7 +181,35 @@ show_all(const char *tag)
 	len = ch_len(s);
 	if (len > shift) {
 #if USE_WIDEC_SUPPORT
-	    add_wchstr(s + shift);
+	    /*
+	     * An index into an array of cchar_t's is not necessarily the same
+	     * as the column-offset.  A pad would do this directly.  Here we
+	     * must translate (or compute a table of offsets).
+	     */
+	    {
+		int j;
+		int width = 1, count;
+		for (j = actual = 0; j < shift; ++j) {
+		    TEST_CCHAR(s + j, count, {
+			width = wcwidth(test_wch[0]);
+		    }
+		    , {
+			width = 1;
+		    });
+		    actual += width;
+		    if (actual > shift) {
+			break;
+		    } else if (actual == shift) {
+			++j;
+			break;
+		    }
+		}
+		if (actual < len) {
+		    if (actual > shift)
+			addch('<');
+		    add_wchstr(s + j + (actual > shift));
+		}
+	    }
 #else
 	    addchstr(s + shift);
 #endif
@@ -312,47 +224,19 @@ show_all(const char *tag)
     refresh();
 }
 
-#if CAN_RESIZE
-/*
- * This uses functions that are "unsafe", but it seems to work on SunOS. 
- * Usually: the "unsafe" refers to the functions that POSIX lists which may be
- * called from a signal handler.  Those do not include buffered I/O, which is
- * used for instance in wrefresh().  To be really portable, you should use the
- * KEY_RESIZE return (which relies on ncurses' sigwinch handler).
- *
- * The 'wrefresh(curscr)' is needed to force the refresh to start from the top
- * of the screen -- some xterms mangle the bitmap while resizing.
- */
-static void
-adjust(int sig)
-{
-    if (waiting || sig == 0) {
-	struct winsize size;
-
-	if (ioctl(fileno(stdout), TIOCGWINSZ, &size) == 0) {
-	    resize_term(size.ws_row, size.ws_col);
-	    wrefresh(curscr);
-	    show_all(sig ? "SIGWINCH" : "interrupt");
-	}
-	interrupted = FALSE;
-    } else {
-	interrupted = TRUE;
-    }
-    (void) signal(SIGWINCH, adjust);	/* some systems need this */
-}
-#endif /* CAN_RESIZE */
-
 static void
 read_file(const char *filename)
 {
     FILE *fp;
     int pass;
     int k;
+    int width;
     size_t j;
     size_t len;
     struct stat sb;
     char *my_blob;
     char **my_vec = 0;
+    WINDOW *my_win;
 
     if (stat(filename, &sb) != 0
 	|| (sb.st_mode & S_IFMT) != S_IFREG) {
@@ -396,65 +280,110 @@ read_file(const char *filename)
 	    failed("cannot allocate line-vector #1");
 	}
     }
+
+#if USE_WIDEC_SUPPORT
+    if (!memcmp("﻿", my_blob, 3)) {
+	char *s = my_blob + 3;
+	char *d = my_blob;
+	Trace(("trim BOM"));
+	do {
+	} while ((*d++ = *s++) != '\0');
+    }
+#endif
+
+    width = (int) strlen(my_vec[0]);
+    for (k = 1; my_vec[k]; ++k) {
+	int check = (int) (my_vec[k] - my_vec[k - 1]);
+	if (width < check)
+	    width = check;
+    }
+    width = (width + 1) * 5;
+    my_win = newwin(2, width, 0, 0);
+    if (my_win == 0)
+	failed("cannot allocate temporary window");
+
     if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) num_lines + 2)) == 0)
 	failed("cannot allocate line-vector #2");
 
+    /*
+     * Use the curses library for rendering, including tab-conversion.  This
+     * will not make the resulting array's indices correspond to column for
+     * lines containing double-width cells because the "in_wch" functions will
+     * ignore the skipped cells.  Use pads for that sort of thing.
+     */
     Trace(("slurp the file"));
-    for (k = 0; k < num_lines; ++k) {
-	char *buf = my_vec[k];
-	char temp[BUFSIZ], *s, *d;
-	int col;
-
-	lptr = &vec_lines[k];
-
+    for (k = 0; my_vec[k]; ++k) {
+	char *s;
+	int y, x;
 #if USE_WIDEC_SUPPORT
-	if (lptr == vec_lines) {
-	    if (!memcmp("﻿", buf, 3)) {
-		Trace(("trim BOM"));
-		s = buf + 3;
-		d = buf;
-		do {
-		} while ((*d++ = *s++) != '\0');
-	    }
-	}
+	char *last = my_vec[k] + (int) strlen(my_vec[k]);
+	wchar_t wch[2];
+	size_t rc;
+#ifndef state_unused
+	mbstate_t state;
 #endif
+#endif /* USE_WIDEC_SUPPORT */
 
-	/* convert tabs and nonprinting chars so that shift will work properly */
-	for (s = buf, d = temp, col = 0; (*d = *s) != '\0'; s++) {
-	    if (*d == '\r') {
-		if (s[1] == '\n') {
-		    continue;
-		} else {
+	werase(my_win);
+	wmove(my_win, 0, 0);
+#if USE_WIDEC_SUPPORT
+	wch[1] = 0;
+	reset_mbytes(state);
+#endif
+	for (s = my_vec[k]; *s != '\0'; ++s) {
+#if USE_WIDEC_SUPPORT
+	    if (!n_option) {
+		rc = (size_t) check_mbytes(wch[0], s, (size_t) (last - s), state);
+		if ((long) rc == -1 || (long) rc == -2) {
 		    break;
 		}
-	    }
-	    if (*d == '\n') {
-		*d = '\0';
-		break;
-	    } else if (*d == '\t') {
-		col = (col | 7) + 1;
-		while ((d - temp) != col)
-		    *d++ = ' ';
+		s += rc - 1;
+		waddwstr(my_win, wch);
 	    } else
-#if USE_WIDEC_SUPPORT
-		col++, d++;
-#else
-	    if (isprint(UChar(*d))) {
-		col++;
-		d++;
-	    } else {
-		_nc_SPRINTF(d, _nc_SLIMIT(sizeof(temp) - (d - buf))
-			    "\\%03o", UChar(*s));
-		d += strlen(d);
-		col = (int) (d - temp);
-	    }
 #endif
+		waddch(my_win, *s & 0xff);
 	}
-	*lptr = ch_dup(temp);
+	getyx(my_win, y, x);
+	if (y)
+	    x = width - 1;
+	wmove(my_win, 0, 0);
+	if ((vec_lines[k] = typeCalloc(NCURSES_CH_T, (size_t) x + 1)) == 0)
+	    failed("cannot allocate line-vector #3");
+#if USE_WIDEC_SUPPORT
+	win_wchnstr(my_win, vec_lines[k], x);
+#else
+	winchnstr(my_win, vec_lines[k], x);
+#endif
     }
 
+    delwin(my_win);
     free(my_vec);
     free(my_blob);
+}
+
+static void
+usage(void)
+{
+    static const char *msg[] =
+    {
+	"Usage: view [options] file"
+	,""
+	,"Options:"
+	," -c       use color if terminal supports it"
+	," -i       ignore INT, QUIT, TERM signals"
+#if USE_WIDEC_SUPPORT
+	," -n       use waddch (bytes) rather then wadd_wch (wide-chars)"
+#endif
+	," -s       start in single-step mode, waiting for input"
+#ifdef TRACE
+	," -t       trace screen updates"
+	," -T NUM   specify trace mask"
+#endif
+    };
+    size_t n;
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+    ExitProgram(EXIT_FAILURE);
 }
 
 int
@@ -492,9 +421,6 @@ main(int argc, char *argv[])
     bool got_number = FALSE;
     bool ignore_sigs = FALSE;
     bool single_step = FALSE;
-#if CAN_RESIZE
-    bool nonposix_resize = FALSE;
-#endif
     const char *my_label = "Input";
 
     setlocale(LC_ALL, "");
@@ -507,11 +433,6 @@ main(int argc, char *argv[])
 	case 'i':
 	    ignore_sigs = TRUE;
 	    break;
-#if CAN_RESIZE
-	case 'r':
-	    nonposix_resize = TRUE;
-	    break;
-#endif
 	case 's':
 	    single_step = TRUE;
 	    break;
@@ -536,13 +457,6 @@ main(int argc, char *argv[])
     if (optind + 1 != argc)
 	usage();
 
-    read_file(fname = argv[optind]);
-
-#if CAN_RESIZE
-    if (nonposix_resize)
-	(void) signal(SIGWINCH, adjust);	/* arrange interrupts to resize */
-#endif
-
     InitAndCatch(initscr(), ignore_sigs ? SIG_IGN : finish);
     keypad(stdscr, TRUE);	/* enable keyboard mapping */
     (void) nonl();		/* tell curses not to do NL->CR/NL on output */
@@ -551,6 +465,8 @@ main(int argc, char *argv[])
     if (!single_step)
 	nodelay(stdscr, TRUE);
     idlok(stdscr, TRUE);	/* allow use of insert/delete line */
+
+    read_file(fname = argv[optind]);
 
     if (try_color) {
 	if (has_colors()) {
@@ -570,17 +486,7 @@ main(int argc, char *argv[])
 	    show_all(my_label);
 
 	for (;;) {
-#if CAN_RESIZE
-	    if (interrupted) {
-		adjust(0);
-		my_label = "interrupt";
-	    }
-	    waiting = TRUE;
 	    c = getch();
-	    waiting = FALSE;
-#else
-	    c = getch();
-#endif
 	    if ((c < 127) && isdigit(c)) {
 		if (!got_number) {
 		    MvPrintw(0, 0, "Count: ");
@@ -647,19 +553,23 @@ main(int argc, char *argv[])
 	case CTRL('F'):
 	    /* FALLTHRU */
 	case KEY_NPAGE:
-	    if ((lptr - vec_lines) < (num_lines - 5))
-		lptr += (LINES - 1);
-	    else
-		lptr = (vec_lines + num_lines - 2);
+	    for (i = 0; i < n; i++) {
+		if ((lptr - vec_lines) < (num_lines - 5))
+		    lptr += (LINES - 1);
+		else
+		    lptr = (vec_lines + num_lines - 2);
+	    }
 	    break;
 
 	case CTRL('B'):
 	    /* FALLTHRU */
 	case KEY_PPAGE:
-	    if ((lptr - vec_lines) >= LINES)
-		lptr -= (LINES - 1);
-	    else
-		lptr = vec_lines;
+	    for (i = 0; i < n; i++) {
+		if ((lptr - vec_lines) >= LINES)
+		    lptr -= (LINES - 1);
+		else
+		    lptr = vec_lines;
+	    }
 	    break;
 
 	case 'r':
