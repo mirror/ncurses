@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.9 2017/10/22 00:44:39 tom Exp $
+ * $Id: dots_curses.c,v 1.10 2017/10/23 08:42:40 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -131,9 +131,11 @@ main(int argc, char *argv[])
 	    d_option = TRUE;
 	    break;
 #endif
+#if HAVE_USE_ENV
 	case 'e':
 	    use_env(TRUE);
 	    break;
+#endif
 	case 'm':
 	    m_option = atoi(optarg);
 	    break;

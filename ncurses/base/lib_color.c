@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.135 2017/08/19 23:48:19 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.136 2017/10/22 15:19:37 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -547,7 +547,7 @@ _nc_reserve_pairs(SCREEN *sp, int want)
 	    TYPE_REALLOC(colorpair_t, have, sp->_color_pairs);
 	    if (sp->_color_pairs != 0) {
 		memset(sp->_color_pairs + sp->_pair_alloc, 0,
-		       sizeof(colorpair_t) * (have - sp->_pair_alloc));
+		       sizeof(colorpair_t) * (size_t) (have - sp->_pair_alloc));
 	    }
 #endif
 	}

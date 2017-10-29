@@ -1,4 +1,4 @@
-# $Id: programs,v 1.40 2017/10/11 08:08:41 tom Exp $
+# $Id: programs,v 1.41 2017/10/22 16:06:57 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -74,6 +74,7 @@ list_keys	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	list_keys
 lrtest		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	lrtest
 movewindow	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	movewindow popup_msg
 ncurses		$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	ncurses
+padview		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	padview popup_msg
 picsmap		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	picsmap
 newdemo		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	newdemo
 railroad	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	railroad

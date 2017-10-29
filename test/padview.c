@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2017 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,32 +26,9 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * view.c -- a silly little viewer program
+ * clone of view.c, using pads
  *
- * written by Eric S. Raymond <esr@snark.thyrsus.com> December 1994
- * to test the scrolling code in ncurses.
- *
- * modified by Thomas Dickey <dickey@clark.net> July 1995 to demonstrate
- * the use of 'resizeterm()', and May 2000 to illustrate wide-character
- * handling.  This program intentionally does not use pads, to allow testing
- * with less-capable implementations of curses.
- *
- * Takes a filename argument.  It's a simple file-viewer with various
- * scroll-up and scroll-down commands.
- *
- * n	-- scroll one line forward
- * p	-- scroll one line back
- *
- * Either command accepts a numeric prefix interpreted as a repeat count.
- * Thus, typing `5n' should scroll forward 5 lines in the file.
- *
- * The way you can tell this is working OK is that, in the trace file,
- * there should be one scroll operation plus a small number of line
- * updates, as opposed to a whole-page update.  This means the physical
- * scroll operation worked, and the refresh() code only had to do a
- * partial repaint.
- *
- * $Id: view.c,v 1.135 2017/10/23 09:18:01 tom Exp $
+ * $Id: padview.c,v 1.12 2017/10/23 00:37:21 tom Exp $
  */
 
 #include <test.priv.h>
@@ -61,6 +38,8 @@
 #include <sys/stat.h>
 #include <time.h>
 
+#if HAVE_NEWPAD
+
 static void finish(int sig) GCC_NORETURN;
 
 #define my_pair 1
@@ -69,8 +48,6 @@ static int shift = 0;
 static bool try_color = FALSE;
 
 static char *fname;
-static NCURSES_CH_T **vec_lines;
-static NCURSES_CH_T **lptr;
 static int num_lines;
 
 #if USE_WIDEC_SUPPORT
@@ -87,156 +64,66 @@ failed(const char *msg)
     ExitProgram(EXIT_FAILURE);
 }
 
-static int
-ch_len(NCURSES_CH_T * src)
-{
-    int result = 0;
-#if USE_WIDEC_SUPPORT
-    int count;
-#endif
-
-#if USE_WIDEC_SUPPORT
-    for (;;) {
-	TEST_CCHAR(src, count, {
-	    int len = wcwidth(test_wch[0]);
-	    result += (len > 0) ? len : 1;
-	    ++src;
-	}
-	, {
-	    break;
-	})
-    }
-#else
-    while (*src++)
-	result++;
-#endif
-    return result;
-}
-
 static void
 finish(int sig)
 {
     endwin();
-#if NO_LEAKS
-    if (vec_lines != 0) {
-	int n;
-	for (n = 0; n < num_lines; ++n) {
-	    free(vec_lines[n]);
-	}
-	free(vec_lines);
-    }
-#endif
     ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
 static void
-show_all(const char *tag)
+show_all(const char *tag, WINDOW *my_pad, int my_row)
 {
     int i;
     int digits;
     char temp[BUFSIZ];
-    NCURSES_CH_T *s;
     time_t this_time;
 
     for (digits = 1, i = num_lines; i > 0; i /= 10) {
 	++digits;
     }
 
+    wattrset(stdscr, COLOR_PAIR(my_pair));
+    clear();
+
     _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 		"view %.*s", (int) strlen(tag), tag);
     i = (int) strlen(temp);
     _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - i)
 		" %.*s", (int) sizeof(temp) - i - 2, fname);
-    move(0, 0);
-    printw("%.*s", COLS, temp);
-    clrtoeol();
+    mvprintw(0, 0, "%.*s", COLS, temp);
     this_time = time((time_t *) 0);
     _nc_STRNCPY(temp, ctime(&this_time), (size_t) 30);
     if ((i = (int) strlen(temp)) != 0) {
 	temp[--i] = 0;
-	if (move(0, COLS - i - 2) != ERR)
-	    printw("  %s", temp);
+	mvprintw(0, COLS - i - 2, "  %s", temp);
     }
 
-    scrollok(stdscr, FALSE);	/* prevent screen from moving */
     for (i = 1; i < LINES; i++) {
-	int len;
-	int actual = (int) (lptr + i - vec_lines);
+	int actual = my_row + i;
 	if (actual > num_lines) {
-	    if (i < LINES - 1) {
-		int y, x;
-		getyx(stdscr, y, x);
-		move(i, 0);
-		clrtobot();
-		move(y, x);
-	    }
 	    break;
 	}
-	move(i, 0);
-	printw("%*d:", digits, actual);
-	clrtoeol();
-	if ((s = lptr[i - 1]) == 0) {
-	    continue;
-	}
-	len = ch_len(s);
-	if (len > shift) {
-#if USE_WIDEC_SUPPORT
-	    /*
-	     * An index into an array of cchar_t's is not necessarily the same
-	     * as the column-offset.  A pad would do this directly.  Here we
-	     * must translate (or compute a table of offsets).
-	     */
-	    {
-		int j;
-		int width = 1, count;
-		for (j = actual = 0; j < shift; ++j) {
-		    TEST_CCHAR(s + j, count, {
-			width = wcwidth(test_wch[0]);
-		    }
-		    , {
-			width = 1;
-		    });
-		    actual += width;
-		    if (actual > shift) {
-			break;
-		    } else if (actual == shift) {
-			++j;
-			break;
-		    }
-		}
-		if (actual < len) {
-		    if (actual > shift)
-			addch('<');
-		    add_wchstr(s + j + (actual > shift));
-		}
-	    }
-#else
-	    addchstr(s + shift);
-#endif
-	}
-#if defined(NCURSES_VERSION) || defined(HAVE_WCHGAT)
-	if (try_color)
-	    wchgat(stdscr, -1, WA_NORMAL, my_pair, NULL);
-#endif
+	mvprintw(i, 0, "%*d:", digits, actual);
     }
-    setscrreg(1, LINES - 1);
-    scrollok(stdscr, TRUE);
-    refresh();
+    wnoutrefresh(stdscr);
+    pnoutrefresh(my_pad, my_row, shift, 1, digits + 1, LINES - 1, COLS - 1);
+    doupdate();
 }
 
-static void
+static WINDOW *
 read_file(const char *filename)
 {
     FILE *fp;
     int pass;
     int k;
-    int width;
+    int height, width;
     size_t j;
     size_t len;
     struct stat sb;
     char *my_blob;
     char **my_vec = 0;
-    WINDOW *my_win;
+    WINDOW *my_pad;
 
     if (stat(filename, &sb) != 0
 	|| (sb.st_mode & S_IFMT) != S_IFREG) {
@@ -291,6 +178,7 @@ read_file(const char *filename)
     }
 #endif
 
+    height = num_lines;
     width = (int) strlen(my_vec[0]);
     for (k = 1; my_vec[k]; ++k) {
 	int check = (int) (my_vec[k] - my_vec[k - 1]);
@@ -298,23 +186,20 @@ read_file(const char *filename)
 	    width = check;
     }
     width = (width + 1) * 5;
-    my_win = newwin(2, width, 0, 0);
-    if (my_win == 0)
-	failed("cannot allocate temporary window");
-
-    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) num_lines + 2)) == 0)
-	failed("cannot allocate line-vector #2");
+    my_pad = newpad(height, width);
+    if (my_pad == 0)
+	failed("cannot allocate pad workspace");
+    if (try_color) {
+	wattrset(my_pad, COLOR_PAIR(my_pair));
+	wbkgd(my_pad, (chtype) COLOR_PAIR(my_pair));
+    }
 
     /*
-     * Use the curses library for rendering, including tab-conversion.  This
-     * will not make the resulting array's indices correspond to column for
-     * lines containing double-width cells because the "in_wch" functions will
-     * ignore the skipped cells.  Use pads for that sort of thing.
+     * Use the curses library for rendering, including tab-conversion.
      */
     Trace(("slurp the file"));
     for (k = 0; my_vec[k]; ++k) {
 	char *s;
-	int y, x;
 #if USE_WIDEC_SUPPORT
 	char *last = my_vec[k] + (int) strlen(my_vec[k]);
 	wchar_t wch[2];
@@ -324,8 +209,7 @@ read_file(const char *filename)
 #endif
 #endif /* USE_WIDEC_SUPPORT */
 
-	werase(my_win);
-	wmove(my_win, 0, 0);
+	wmove(my_pad, k, 0);
 #if USE_WIDEC_SUPPORT
 	wch[1] = 0;
 	reset_mbytes(state);
@@ -338,28 +222,17 @@ read_file(const char *filename)
 		    break;
 		}
 		s += rc - 1;
-		waddwstr(my_win, wch);
+		waddwstr(my_pad, wch);
 	    } else
 #endif
-		waddch(my_win, *s & 0xff);
+		waddch(my_pad, *s & 0xff);
 	}
-	getyx(my_win, y, x);
-	if (y)
-	    x = width - 1;
-	wmove(my_win, 0, 0);
-	/* "x + 1" works with standard curses; some implementations are buggy */
-	if ((vec_lines[k] = typeCalloc(NCURSES_CH_T, x + width + 1)) == 0)
-	    failed("cannot allocate line-vector #3");
-#if USE_WIDEC_SUPPORT
-	win_wchnstr(my_win, vec_lines[k], x);
-#else
-	winchnstr(my_win, vec_lines[k], x);
-#endif
     }
 
-    delwin(my_win);
     free(my_vec);
     free(my_blob);
+
+    return my_pad;
 }
 
 static void
@@ -417,7 +290,8 @@ main(int argc, char *argv[])
 
     int i;
     int my_delay = 0;
-    NCURSES_CH_T **olptr;
+    WINDOW *my_pad;
+    int my_row = 0;
     int value = 0;
     bool done = FALSE;
     bool got_number = FALSE;
@@ -473,7 +347,7 @@ main(int argc, char *argv[])
 	nodelay(stdscr, TRUE);
     idlok(stdscr, TRUE);	/* allow use of insert/delete line */
 
-    read_file(fname = argv[optind]);
+    my_pad = read_file(fname = argv[optind]);
 
     if (try_color) {
 	if (has_colors()) {
@@ -485,12 +359,12 @@ main(int argc, char *argv[])
 	}
     }
 
-    lptr = vec_lines;
+    my_row = 0;
     while (!done) {
 	int n, c;
 
 	if (!got_number)
-	    show_all(my_label);
+	    show_all(my_label, my_pad, my_row);
 
 	for (;;) {
 	    c = getch();
@@ -516,30 +390,26 @@ main(int argc, char *argv[])
 	switch (c) {
 	case KEY_DOWN:
 	case 'n':
-	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if ((lptr - vec_lines) < (num_lines - LINES + 1))
-		    lptr++;
+		if (my_row < (num_lines - LINES + 1))
+		    my_row++;
 		else
 		    break;
-	    scrl((int) (lptr - olptr));
 	    break;
 
 	case KEY_UP:
 	case 'p':
-	    olptr = lptr;
 	    for (i = 0; i < n; i++)
-		if (lptr > vec_lines)
-		    lptr--;
+		if (my_row > 0)
+		    my_row--;
 		else
 		    break;
-	    scrl((int) (lptr - olptr));
 	    break;
 
 	case 'h':
 	    /* FALLTHRU */
 	case KEY_HOME:
-	    lptr = vec_lines;
+	    my_row = 0;
 	    break;
 
 	case '<':
@@ -554,19 +424,19 @@ main(int argc, char *argv[])
 	    /* FALLTHRU */
 	case KEY_END:
 	    if (num_lines > LINES)
-		lptr = (vec_lines + num_lines - LINES + 1);
+		my_row = (num_lines - LINES + 1);
 	    else
-		lptr = (vec_lines + (num_lines - 2));
+		my_row = (num_lines - 2);
 	    break;
 
 	case CTRL('F'):
 	    /* FALLTHRU */
 	case KEY_NPAGE:
 	    for (i = 0; i < n; i++) {
-		if ((lptr - vec_lines) < (num_lines - 5))
-		    lptr += (LINES - 1);
+		if (my_row < (num_lines - 5))
+		    my_row += (LINES - 1);
 		else
-		    lptr = (vec_lines + num_lines - 2);
+		    my_row = (num_lines - 2);
 	    }
 	    break;
 
@@ -574,10 +444,10 @@ main(int argc, char *argv[])
 	    /* FALLTHRU */
 	case KEY_PPAGE:
 	    for (i = 0; i < n; i++) {
-		if ((lptr - vec_lines) >= LINES)
-		    lptr -= (LINES - 1);
+		if (my_row >= LINES)
+		    my_row -= (LINES - 1);
 		else
-		    lptr = vec_lines;
+		    my_row = 0;
 	    }
 	    break;
 
@@ -644,3 +514,11 @@ main(int argc, char *argv[])
 
     finish(0);			/* we're done */
 }
+#else
+int
+main(void)
+{
+    printf("This program requires the curses pad functions\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif

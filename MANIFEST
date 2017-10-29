@@ -1171,6 +1171,7 @@
 ./test/package/debian/watch
 ./test/package/mingw-ncurses-examples.spec
 ./test/package/ncurses-examples.spec
+./test/padview.c
 ./test/picsmap.c
 ./test/popup_msg.c
 ./test/popup_msg.h

@@ -44,7 +44,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.14 2017/06/23 23:53:13 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.15 2017/10/23 21:19:54 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -328,7 +328,7 @@ main(int argc, char **argv)
     free(hash_table);
 #if NO_LEAKS
     for (n = 0; (n < CAPTABSIZE); ++n) {
-	free((char *) name_table[n].nte_name);
+	free((void *) name_table[n].nte_name);
     }
     free(name_table);
 #endif

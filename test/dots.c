@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.31 2017/10/22 00:44:06 tom Exp $
+ * $Id: dots.c,v 1.32 2017/10/22 15:20:57 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -97,7 +97,7 @@ ranf(void)
 }
 
 static int
-get_number(const char *cap, int map)
+get_number(NCURSES_CONST char *cap, int map)
 {
     int result = map;
     if (cap != 0) {

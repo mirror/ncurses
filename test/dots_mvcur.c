@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.17 2017/10/22 00:44:39 tom Exp $
+ * $Id: dots_mvcur.c,v 1.18 2017/10/22 15:22:43 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -98,7 +98,7 @@ ranf(void)
 }
 
 static int
-get_number(const char *cap, int map)
+get_number(NCURSES_CONST char *cap, int map)
 {
     int result = map;
     if (cap != 0) {

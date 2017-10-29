@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2010,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,6 +29,8 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
+ *     and: Thomas E. Dickey                        1996-on                 *
+ *     and: Sven Verdoolaege                        2001                    *
  ****************************************************************************/
 
 /*
@@ -40,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_hline.c,v 1.14 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_hline.c,v 1.15 2017/10/28 19:57:42 tom Exp $")
 
 NCURSES_EXPORT(int)
 whline(WINDOW *win, chtype ch, int n)
@@ -66,6 +68,14 @@ whline(WINDOW *win, chtype ch, int n)
 	    SetChar2(wch, ch);
 	wch = _nc_render(win, wch);
 
+#if USE_WIDEC_SUPPORT
+	if (start > 0 && isWidecExt(line->text[start])) {
+	    SetChar2(line->text[start - 1], ' ');
+	}
+	if (end < win->_maxx && isWidecExt(line->text[end + 1])) {
+	    SetChar2(line->text[end + 1], ' ');
+	}
+#endif
 	while (end >= start) {
 	    line->text[end] = wch;
 	    end--;

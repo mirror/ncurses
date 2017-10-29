@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.15 2017/10/22 00:49:45 tom Exp $
+ * $Id: dots_termcap.c,v 1.16 2017/10/22 15:21:34 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -60,7 +60,7 @@ static char *t_ve;
 static char *t_vi;
 
 static struct {
-    const char *name;
+    NCURSES_CONST char *name;
     char **value;
 } my_caps[] = {
 
@@ -164,7 +164,7 @@ my_napms(int ms)
 }
 
 static int
-get_number(const char *cap, const char *env)
+get_number(NCURSES_CONST char *cap, const char *env)
 {
     int result = tgetnum(cap);
     char *value = env ? getenv(env) : 0;

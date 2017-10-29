@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2979 2017/10/21 20:29:16 tom Exp $
+-- $Id: NEWS,v 1.2991 2017/10/28 23:46:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171028
+	+ improve man/curs_inwstr.3x, correct end-logic for lib_inwstr.c
+	  (report by Midolikawa H).
+	+ fix typo in a few places for "improvements" (patch by Sven Joachim).
+	+ clear the other half of a double-width character on which a line
+	  drawing character is drawn.
+	+ make test/ncurses.c "s" test easier to understand which subtests are
+	  available; add a "S" wide-character overlap test-screen.
+	+ modify test/ncurses.c C/c tests to allow for extended color pairs.
+	+ add endwin() call in error-returns from test/ncurses.c omitted in
+	  recent redesign of its menu (cf: 20170923).
+	+ improve install of hashed-db by removing the ".db" file as done for
+	  directory-tree terminal databases.
+	+ repair a few overlooked items in include/ncurses_defs from recent
+	  port/refactoring of test-programs (cf: 20170909).
+	+ add test/padview.c, to compare pads with direct updates in view.c
 
 20171021
 	+ modify test/view.c to expand tabs using the ncurses library rather
@@ -2742,7 +2759,7 @@ it is not possible to add this information.
 	+ regenerated html manpages.
 
 20120107
-	+ various improvments for MinGW (Juergen Pfeifer):
+	+ various improvements for MinGW (Juergen Pfeifer):
 	  + modify stat() calls to ignore the st_size member
 	  + drop mk-dlls.sh script.
 	  + change recommended regular expression library.
@@ -5193,7 +5210,7 @@ it is not possible to add this information.
 	+ fix ifdef in c++/internal.h for QNX 6.1
 	+ test-compiled with (old) egcs-1.1.2, modified configure script to
 	  not unset the $CXX and related variables which would prevent this.
-	+ fix a few terminfo.src typos exposed by improvments to "-f" option.
+	+ fix a few terminfo.src typos exposed by improvements to "-f" option.
 	+ improve infocmp/tic "-f" option formatting.
 
 20060923
