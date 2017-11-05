@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.11 2017/10/22 00:44:39 tom Exp $
+ * $Id: dots_xcurses.c,v 1.12 2017/10/30 22:06:10 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -196,6 +196,10 @@ main(int argc, char *argv[])
 	{
 	    for (fg = 0; fg < COLORS; fg++) {
 		for (bg = 0; bg < COLORS; bg++) {
+		    if (interrupted) {
+			cleanup();
+			ExitProgram(EXIT_FAILURE);
+		    }
 		    pair = mypair(fg, bg);
 		    if (pair > 0) {
 			InitPair(pair, fg, bg);

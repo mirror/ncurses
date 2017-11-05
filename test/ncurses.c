@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.487 2017/10/28 00:54:41 tom Exp $
+$Id: ncurses.c,v 1.502 2017/11/02 20:46:06 tom Exp $
 
 ***************************************************************************/
 
@@ -2124,16 +2124,26 @@ static NCURSES_CONST char *the_color_names[] =
 };
 
 static void
-show_color_name(int y, int x, int color, bool wide)
+show_color_name(int y, int x, int color, bool wide, int zoom)
 {
     if (move(y, x) != ERR) {
 	char temp[80];
 	int width = 8;
 
-	if (wide) {
+	if (wide || zoom) {
+	    int have;
+
 	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 			"%02d", color);
-	    width = 4;
+	    if (wide)
+		width = 4;
+	    if ((have = (int) strlen(temp)) >= width) {
+		int pwr2 = 0;
+		while ((1 << pwr2) < color)
+		    ++pwr2;
+		_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			    width > 4 ? "2^%d" : "^%d", pwr2);
+	    }
 	} else if (color >= 8) {
 	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 			"[%02d]", color);
@@ -2180,7 +2190,9 @@ color_legend(WINDOW *helpwin, bool wide)
     MvWPrintw(helpwin, row++, col,
 	      "  r/R     toggle reverse on/off");
     MvWPrintw(helpwin, row++, col,
-	      "  w/W     toggle width between 8/16 colors");
+	      "  w/W     switch width between 4/8 columns");
+    MvWPrintw(helpwin, row++, col,
+	      "  z/Z     zoom out (or in)");
 #if USE_WIDEC_SUPPORT
     if (wide) {
 	MvWPrintw(helpwin, row++, col,
@@ -2246,6 +2258,7 @@ color_test(bool recur GCC_UNUSED)
     bool opt_revs = FALSE;
     bool opt_nums = FALSE;
     bool opt_wide = FALSE;
+    int opt_zoom = 0;
     WINDOW *helpwin;
 
     if (!UseColors) {
@@ -2253,7 +2266,7 @@ color_test(bool recur GCC_UNUSED)
 	return ERR;
     }
 
-    numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
+    numbered = typeCalloc(char, COLS + 1);
     done = ((COLS < 16) || (numbered == 0));
 
     /*
@@ -2262,28 +2275,33 @@ color_test(bool recur GCC_UNUSED)
      */
     for (col_limit = 1; col_limit * 2 < COLS; col_limit *= 2) ;
 
+  reloop:
     while (!done) {
 	int shown = 0;
-	double colors_max2 = (double) colors_max * (double) colors_max;
+	int zoom_size = (1 << opt_zoom);
+	int colors_max1 = colors_max / zoom_size;
+	double colors_max2 = (double) colors_max1 * (double) colors_max1;
 
 	pairs_max = PAIR_NUMBER(A_COLOR) + 1;
 	if (colors_max2 <= COLOR_PAIRS) {
-	    int limit = (colors_max - MinColors) * (colors_max - MinColors);
+	    int limit = (colors_max1 - MinColors) * (colors_max1 - MinColors);
 	    if (pairs_max > limit)
 		pairs_max = limit;
 	}
-	if (pairs_max < COLOR_PAIRS)
+	if (pairs_max > COLOR_PAIRS)
 	    pairs_max = COLOR_PAIRS;
+	if (pairs_max < colors_max1)
+	    pairs_max = colors_max1;
 
 	/* this assumes an 80-column line */
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (col_limit / ((colors_max > 8) ? 4 : 8));
+	    per_row = (col_limit / ((colors_max1 > 8) ? width : 8));
 	} else {
 	    width = 8;
 	    hello = "Hello";
-	    per_row = (col_limit / 8);
+	    per_row = (col_limit / width);
 	}
 	per_row -= MinColors;
 
@@ -2292,10 +2310,12 @@ color_test(bool recur GCC_UNUSED)
 	move(0, 0);
 	(void) printw("There are %d color pairs and %d colors",
 		      pairs_max, COLORS);
-	if (colors_max != COLORS)
-	    (void) printw(" (using %d colors)", colors_max);
+	if (colors_max1 != COLORS)
+	    (void) printw(" (using %d colors)", colors_max1);
 	if (MinColors)
 	    (void) addstr(" besides 'default'");
+	if (opt_zoom)
+	    (void) printw(" zoom:%d", opt_zoom);
 
 	clrtobot();
 	MvPrintw(top + 1, 0,
@@ -2305,8 +2325,13 @@ color_test(bool recur GCC_UNUSED)
 		 opt_bold ? "on" : "off");
 
 	/* show color names/numbers across the top */
-	for (i = 0; i < per_row; i++)
-	    show_color_name(top + 2, (i + 1) * width, i + MinColors, opt_wide);
+	for (i = 0; i < per_row; i++) {
+	    show_color_name(top + 2,
+			    (i + 1) * width,
+			    (int) i * zoom_size + MinColors,
+			    opt_wide,
+			    opt_zoom);
+	}
 
 	/* show a grid of colors, with color names/ numbers on the left */
 	for (i = (NCURSES_PAIRS_T) (base_row * per_row); i < pairs_max; i++) {
@@ -2317,11 +2342,11 @@ color_test(bool recur GCC_UNUSED)
 	    if ((i / per_row) > row_limit)
 		break;
 
-#define InxToFG(i) (NCURSES_COLOR_T) ((i % (colors_max - MinColors)) + MinColors)
-#define InxToBG(i) (NCURSES_COLOR_T) ((i / (colors_max - MinColors)) + MinColors)
+#define InxToFG(i) (int)((((unsigned long)(i) * (unsigned long)zoom_size) % (unsigned long)(colors_max1 - MinColors)) + (unsigned long)MinColors)
+#define InxToBG(i) (int)((((unsigned long)(i) * (unsigned long)zoom_size) / (unsigned long)(colors_max1 - MinColors)) + (unsigned long)MinColors)
 	    if (row >= 0 && move(row, col) != ERR) {
-		NCURSES_COLOR_T fg = InxToFG(i);
-		NCURSES_COLOR_T bg = InxToBG(i);
+		NCURSES_COLOR_T fg = (NCURSES_COLOR_T) InxToFG(i);
+		NCURSES_COLOR_T bg = (NCURSES_COLOR_T) InxToBG(i);
 
 		init_pair(pair, fg, bg);
 		attron(COLOR_PAIR(pair));
@@ -2341,7 +2366,10 @@ color_test(bool recur GCC_UNUSED)
 		(void) attrset(A_NORMAL);
 
 		if ((i % per_row) == 0 && InxToFG(i) == MinColors) {
-		    show_color_name(row, 0, InxToBG(i), opt_wide);
+		    show_color_name(row, 0,
+				    InxToBG(i),
+				    opt_wide,
+				    opt_zoom);
 		}
 		++shown;
 	    } else if (shown) {
@@ -2388,6 +2416,22 @@ color_test(bool recur GCC_UNUSED)
 	    break;
 	case 'W':
 	    set_color_test(opt_wide, TRUE);
+	    break;
+	case 'z':
+	    if (opt_zoom <= 0) {
+		beep();
+	    } else {
+		--opt_zoom;
+		goto reloop;
+	    }
+	    break;
+	case 'Z':
+	    if ((1 << opt_zoom) >= colors_max) {
+		beep();
+	    } else {
+		++opt_zoom;
+		goto reloop;
+	    }
 	    break;
 	case CTRL('p'):
 	case KEY_UP:
@@ -2450,11 +2494,22 @@ color_test(bool recur GCC_UNUSED)
 }
 
 #if USE_WIDEC_SUPPORT
+
+#if HAVE_INIT_EXTENDED_COLOR
+#define InitExtendedPair(p,f,g) init_extended_pair((p),(f),(g))
+#define ExtendedColorSet(p)     color_set((NCURSES_PAIRS_T) (p), &(p))
+#define EXTENDED_PAIRS_T int
+#else
+#define InitExtendedPair(p,f,g) init_pair((NCURSES_PAIRS_T) (p),(f),(g))
+#define ExtendedColorSet(p)     color_set((NCURSES_PAIRS_T) (p), NULL)
+#define EXTENDED_PAIRS_T NCURSES_PAIRS_T
+#endif
+
 /* generate a color test pattern */
 static int
 x_color_test(bool recur GCC_UNUSED)
 {
-    int i;
+    long i;
     int top = 0, width;
     int base_row = 0;
     int grid_top = top + 3;
@@ -2473,6 +2528,7 @@ x_color_test(bool recur GCC_UNUSED)
     bool opt_wide = FALSE;
     bool opt_nums = FALSE;
     bool opt_xchr = FALSE;
+    int opt_zoom = 0;
     wchar_t *buffer = 0;
     WINDOW *helpwin;
 
@@ -2480,8 +2536,8 @@ x_color_test(bool recur GCC_UNUSED)
 	Cannot("does not support color.");
 	return ERR;
     }
-    numbered = (char *) calloc((size_t) (COLS + 1), sizeof(char));
-    buffer = (wchar_t *) calloc((size_t) (COLS + 1), sizeof(wchar_t));
+    numbered = typeCalloc(char, COLS + 1);
+    buffer = typeCalloc(wchar_t, COLS + 1);
     done = ((COLS < 16) || (numbered == 0) || (buffer == 0));
 
     /*
@@ -2490,27 +2546,32 @@ x_color_test(bool recur GCC_UNUSED)
      */
     for (col_limit = 1; col_limit * 2 < COLS; col_limit *= 2) ;
 
+  reloop:
     while (!done) {
 	int shown = 0;
-	double colors_max2 = (double) colors_max * (double) colors_max;
+	int zoom_size = (1 << opt_zoom);
+	int colors_max1 = colors_max / zoom_size;
+	double colors_max2 = (double) colors_max1 * (double) colors_max1;
 
 	pairs_max = ((unsigned) (-1)) / 2;
 	if (colors_max2 <= COLOR_PAIRS) {
-	    int limit = (colors_max - MinColors) * (colors_max - MinColors);
+	    int limit = (colors_max1 - MinColors) * (colors_max1 - MinColors);
 	    if (pairs_max > limit)
 		pairs_max = limit;
 	}
 	if (pairs_max > COLOR_PAIRS)
 	    pairs_max = COLOR_PAIRS;
+	if (pairs_max < colors_max1)
+	    pairs_max = colors_max1;
 
 	if (opt_wide) {
 	    width = 4;
 	    hello = "Test";
-	    per_row = (col_limit / ((colors_max > 8) ? 4 : 8));
+	    per_row = (col_limit / ((colors_max1 > 8) ? width : 8));
 	} else {
 	    width = 8;
 	    hello = "Hello";
-	    per_row = (col_limit / 8);
+	    per_row = (col_limit / width);
 	}
 	per_row -= MinColors;
 
@@ -2527,10 +2588,12 @@ x_color_test(bool recur GCC_UNUSED)
 	move(0, 0);
 	(void) printw("There are %d color pairs and %d colors",
 		      pairs_max, COLORS);
-	if (colors_max != COLORS)
-	    (void) printw(" (using %d colors)", colors_max);
+	if (colors_max1 != COLORS)
+	    (void) printw(" (using %d colors)", colors_max1);
 	if (MinColors)
 	    (void) addstr(" besides 'default'");
+	if (opt_zoom)
+	    (void) printw(" zoom:%d", opt_zoom);
 
 	clrtobot();
 	MvPrintw(top + 1, 0,
@@ -2540,21 +2603,26 @@ x_color_test(bool recur GCC_UNUSED)
 		 opt_bold ? "on" : "off");
 
 	/* show color names/numbers across the top */
-	for (i = 0; i < per_row; i++)
-	    show_color_name(top + 2, (i + 1) * width, i + MinColors, opt_wide);
+	for (i = 0; i < per_row; i++) {
+	    show_color_name(top + 2,
+			    ((int) i + 1) * width,
+			    (int) i * zoom_size + MinColors,
+			    opt_wide,
+			    opt_zoom);
+	}
 
 	/* show a grid of colors, with color names/ numbers on the left */
 	for (i = (base_row * per_row); i < pairs_max; i++) {
-	    int row = grid_top + (i / per_row) - base_row;
-	    int col = (i % per_row + 1) * width;
-	    NCURSES_PAIRS_T pair = (NCURSES_PAIRS_T) i;
+	    int row = grid_top + ((int) i / per_row) - base_row;
+	    int col = ((int) i % per_row + 1) * width;
+	    int pair = (int) i;
 
 	    if ((i / per_row) > row_limit)
 		break;
 
 	    if (row >= 0 && move(row, col) != ERR) {
-		init_pair(pair, InxToFG(i), InxToBG(i));
-		(void) color_set(pair, NULL);
+		InitExtendedPair(pair, InxToFG(i), InxToBG(i));
+		(void) ExtendedColorSet(pair);
 		if (opt_acsc)
 		    attr_on(WA_ALTCHARSET, NULL);
 		if (opt_bold)
@@ -2565,7 +2633,7 @@ x_color_test(bool recur GCC_UNUSED)
 		if (opt_nums) {
 		    _nc_SPRINTF(numbered,
 				_nc_SLIMIT((size_t) (COLS + 1) * sizeof(wchar_t))
-				"{%02X}", i);
+				"{%02X}", (unsigned) i);
 		    if (opt_xchr) {
 			make_fullwidth_text(buffer, numbered);
 		    } else {
@@ -2576,7 +2644,10 @@ x_color_test(bool recur GCC_UNUSED)
 		(void) attr_set(A_NORMAL, 0, NULL);
 
 		if ((i % per_row) == 0 && InxToFG(i) == MinColors) {
-		    show_color_name(row, 0, InxToBG(i), opt_wide);
+		    show_color_name(row, 0,
+				    InxToBG(i),
+				    opt_wide,
+				    opt_zoom);
 		}
 		++shown;
 	    } else if (shown) {
@@ -2629,6 +2700,22 @@ x_color_test(bool recur GCC_UNUSED)
 	    break;
 	case 'X':
 	    opt_xchr = TRUE;
+	    break;
+	case 'z':
+	    if (opt_zoom <= 0) {
+		beep();
+	    } else {
+		--opt_zoom;
+		goto reloop;
+	    }
+	    break;
+	case 'Z':
+	    if ((1 << opt_zoom) >= colors_max) {
+		beep();
+	    } else {
+		++opt_zoom;
+		goto reloop;
+	    }
 	    break;
 	case CTRL('p'):
 	case KEY_UP:
@@ -6658,6 +6745,9 @@ form_test(bool recur GCC_UNUSED)
 
 #if HAVE_COPYWIN		/* ...and overlay, overwrite */
 
+static const int overlap_HEAD = 1;
+static const int overlap_FOOT = 6;
+
 static WINDOW *
 make_overlap(int n)
 {
@@ -6669,9 +6759,7 @@ make_overlap(int n)
 	Cannot("The screen is too small for this test");
 	result = 0;
     } else {
-	const int H_SIZE = 1;	/* header-size */
-	const int F_SIZE = 6;	/* footer-size */
-	int ymax = y - (H_SIZE + F_SIZE);
+	int ymax = y - (overlap_HEAD + overlap_FOOT);
 	int high = ymax / 5;	/* equal-sized parts for cross */
 	int xmax = x - 2;	/* margin */
 	int wide = (xmax / 5) & ~1;
@@ -6683,7 +6771,7 @@ make_overlap(int n)
 	if (wide > 8)
 	    wide = 8;
 
-	tmar = (ymax - (5 * high)) / 2 + H_SIZE;
+	tmar = (ymax - (5 * high)) / 2 + overlap_HEAD;
 	lmar = (xmax - (5 * wide)) / 2;
 
 	if (n == 0) {
@@ -6693,6 +6781,35 @@ make_overlap(int n)
 	}
     }
     return result;
+}
+
+static void
+clear_overlap(void)
+{
+    int row;
+
+    for (row = overlap_HEAD; row < LINES - overlap_FOOT; ++row) {
+	move(row, 0);
+	clrtoeol();
+    }
+}
+
+static int
+move_overlap(int shift, WINDOW *win1)
+{
+    int ymax = getmaxy(stdscr) - (overlap_HEAD + overlap_FOOT);
+    int high = ymax / 5;	/* equal-sized parts for cross */
+    int tmar;
+    int xmax1 = getmaxx(win1) + 1;
+    int lmar1 = (COLS - (5 * (xmax1) / 3)) / 2;
+    int rc = ERR;
+
+    if (high > 8)
+	high = 8;
+    tmar = (ymax - (5 * high)) / 2 + overlap_HEAD;
+
+    rc = mvwin(win1, tmar, lmar1 + shift);
+    return rc;
 }
 
 static void
@@ -6965,7 +7082,7 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 	wbkgdset(stdscr, ' ' | A_NORMAL);
     }
     move(LINES - 1, 0);
-    printw("^Q/ESC = terminate test.  Up/down/space select tests (row %d",
+    printw("^Q/ESC = terminate test. </> shift. Up/down/space select (row %d",
 	   state + 1);
     if (limit[state] > 1)
 	printw(" test %d:%d", 1 + flavors[state], limit[state]);
@@ -7048,6 +7165,7 @@ overlap_test(bool recur GCC_UNUSED)
 {
     WINDOW *win1, *win2;
     int ch;
+    int shift = 0, last_refresh = -1;
     int state, flavor[OVERLAP_FLAVORS];
 
     if ((win1 = make_overlap(0)) == 0
@@ -7124,8 +7242,42 @@ overlap_test(bool recur GCC_UNUSED)
 	    state = overlap_help(state, flavor);
 	    break;
 
+	case '<':
+	    /* FALLTHRU */
+	case '>':
+	    /* see below */
+	    break;
+
 	default:
 	    beep();
+	    break;
+	}
+
+	switch (ch) {
+	case 'a':
+	    /* FALLTHRU */
+	case 'b':
+	    last_refresh = ch;
+	    break;
+	case '<':
+	    shift -= 2;
+	    /* FALLTHRU */
+	case '>':
+	    shift += 1;
+	    if (move_overlap(shift, win1) != OK) {
+		flash();
+		shift += (ch == '>') ? -1 : 1;
+	    } else if (last_refresh > 0) {
+		clear_overlap();
+		wnoutrefresh(stdscr);
+		if (last_refresh == 'a')
+		    overlap_test_0(win1, win2);
+		else
+		    overlap_test_0(win2, win1);
+	    }
+	    break;
+	default:
+	    last_refresh = -1;
 	    break;
 	}
     }
@@ -7210,6 +7362,7 @@ x_overlap_test(bool recur GCC_UNUSED)
     const wchar_t WIDE_B = 0xff22;
     WINDOW *win1, *win2;
     int ch;
+    int shift = 0, last_refresh = -1;
     int state, flavor[OVERLAP_FLAVORS];
 
     if ((win1 = make_overlap(0)) == 0
@@ -7286,8 +7439,42 @@ x_overlap_test(bool recur GCC_UNUSED)
 	    state = overlap_help(state, flavor);
 	    break;
 
+	case '<':
+	    /* FALLTHRU */
+	case '>':
+	    /* see below */
+	    break;
+
 	default:
 	    beep();
+	    break;
+	}
+
+	switch (ch) {
+	case 'a':
+	    /* FALLTHRU */
+	case 'b':
+	    last_refresh = ch;
+	    break;
+	case '<':
+	    shift -= 2;
+	    /* FALLTHRU */
+	case '>':
+	    shift += 1;
+	    if (move_overlap(shift, win1) != OK) {
+		flash();
+		shift += (ch == '>') ? -1 : 1;
+	    } else if (last_refresh > 0) {
+		clear_overlap();
+		wnoutrefresh(stdscr);
+		if (last_refresh == 'a')
+		    overlap_test_0(win1, win2);
+		else
+		    overlap_test_0(win2, win1);
+	    }
+	    break;
+	default:
+	    last_refresh = -1;
 	    break;
 	}
     }
