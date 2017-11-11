@@ -1,8 +1,8 @@
-ncurses6 (6.0+20171104) unstable; urgency=low
+ncurses6 (6.0+20171111) unstable; urgency=low
 
   * latest weekly patch
 
- -- Thomas E. Dickey <dickey@invisible-island.net>  Sun, 29 Oct 2017 12:32:06 -0400
+ -- Thomas E. Dickey <dickey@invisible-island.net>  Sun, 05 Nov 2017 06:30:20 -0500
 
 ncurses6 (5.9-20131005) unstable; urgency=low
 

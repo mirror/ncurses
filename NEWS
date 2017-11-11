@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.2995 2017/10/30 22:20:57 tom Exp $
+-- $Id: NEWS,v 1.2998 2017/11/11 20:35:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171111
+	+ add "op" to xterm+256setaf -TD
+	+ reviewed terminology 1.0.0 -TD
+	+ reviewed st 0.7 -TD
+	+ suppress debug-package for ncurses-examples rpm build.
 
 20171104
 	+ check for interrupt in color-pair initialization of dots_curses.c,

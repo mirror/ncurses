@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.617 $
-#	$Date: 2017/08/26 21:07:47 $
+#	$Revision: 1.623 $
+#	$Date: 2017/11/11 20:24:40 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4521,7 +4521,7 @@ xterm+256color|xterm 256-color feature,
 xterm+256setaf|xterm 256-color (set-only),
 	ccc@,
 	colors#0x100, pairs#0x7fff,
-	initc@,
+	initc@, op=\E[39;49m,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
 	      5;%p1%d%;m,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
@@ -5944,6 +5944,31 @@ mgr-linux|Mgr window with Linux keyboard,
 
 #### SIMPLETERM
 # st.suckless.org
+
+st|stterm| simpleterm,
+	use=st-0.7,
+
+# Reviewed 0.7:
+#	dim is intermittent, sometimes works, sometimes does not
+#	italics may show up with yellow color 
+#	has control cursor-keys, alt cursor-keys, still no combinations
+#	has control pageup/down
+st-0.7|simpleterm 0.7,
+	ccc, Se, Ss,
+	dim=\E[2m,
+	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
+	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
+	kcbt@, kent@, oc=\E]104\007,
+	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
+	     %=%t3%e%p1%d%;m,
+	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
+	     %=%t3%e%p1%d%;m,
+	Ss=\E]52;%p1%s;%p2%s\007, kDN3=\E[1;3B, kDN5=\E[1;5B,
+	kLFT3=\E[1;3D, kLFT5=\E[1;5D, kNXT3=\E[6;3~,
+	kNXT5=\E[6;5~, kPRV3=\E[5;3~, kPRV5=\E[5;5~,
+	kRIT3=\E[1;3C, kRIT5=\E[1;5C, kUP3=\E[1;3A, kUP5=\E[1;5A,
+	rmxx=\E[29m, smxx=\E[9m, use=st-0.6,
+
 # st-0.4.1
 #
 # This version uses a table which supports a single modifier (a subset of
@@ -5972,7 +5997,7 @@ mgr-linux|Mgr window with Linux keyboard,
 # Tmux unofficial extensions, see TERMINFO EXTENSIONS in tmux(1)
 # still has no function keys past kf36 (no combinations of modifiers)
 # no application keypad mode, e.g, kent.
-st|stterm| simpleterm 0.4.1,
+st-0.6|simpleterm 0.6,
 	am, bce, hs, mir, msgr, npc, xenl, Tc, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=+C\,D-A.B0E``aaffgghFiGjjkkllmmnnooppqqrrssttuuvvwwxxyy
@@ -6025,8 +6050,8 @@ st|stterm| simpleterm 0.4.1,
 	    %t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E[0m, smacs=\E(0, smcup=\E[?1049h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	tsl=\E]0;, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
-	vpa=\E[%i%p1%dd, Se=\E[2 q, Ss=\E[%p1%d q,
+	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
+	vpa=\E[%i%p1%dd, Se=\E[2 q, Ss=\E[%p1%d q, use=xterm+sl,
 	use=ecma+italics,
 #
 # st-0.1.1
@@ -6198,7 +6223,7 @@ terminator|Terminator no line wrap,
 # This description uses xterm+pcf0, which is misleading because the program
 # does not handle combinations of modifiers - but listing them all would
 # involve more effort than its developers spent -TD
-terminology|EFL-based terminal emulator,
+terminology-0.6.1|EFL-based terminal emulator,
 	mc5i@, xon@,
 	blink@, ed@, el@, el1@, invis=\E[8m, kLFT=\E[1;2D,
 	kRIT=\E[1;2C, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
@@ -6215,6 +6240,32 @@ terminology|EFL-based terminal emulator,
 	kRIT4=\E[1;4C, kRIT5=\E[1;5C, kRIT6=\E[1;6C,
 	kRIT7=\E[1;7C, kUP=\E[1;2A, use=xterm+pcf0, use=vt100,
 	use=xterm+256setaf,
+
+# Tested terminology 1.0.0
+#
+# tack -
+#	Shifted cursor-keys send nothing, but xterm modifiers for control+shift
+#	and control+alt were added like xterm+pcc2
+#	Editing keys have some features from xterm+pce2
+#	Changed from xterm+pcf0 to xterm+pcf2
+#
+# vttest -
+#	REP, SL, SR fail
+#
+# Aside from the partial fixes for function/cursor/editing keys, no improvement
+# in other tests versus 0.6.1
+terminology-1.0.0|EFL-based terminal emulator,
+	civis=\E[?25l, cnorm=\E[?12l\E[?25h, dim=\E[2m,
+	flash=\E[?5h$<100/>\E[?5l, kend=\E[OF, khome=\E[OH,
+	rmacs=\E(B,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
+	    %?%p1%p3%|%t;7%;%?%p7%t;8%;m$<2>,
+	sgr0=\E(B\E[m, smacs=\E(0, use=ecma+italics,
+	use=xterm+x11mouse, use=xterm+pce2, use=xterm+pcf2,
+	use=xterm+pcc2, use=terminology-0.6.1,
+
+terminology|EFL-based terminal emulator,
+	use=terminology-1.0.0,
 
 ######## UNIX VIRTUAL TERMINALS, VIRTUAL CONSOLES, AND TELNET CLIENTS
 #
@@ -25250,5 +25301,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2017-08-26
 #	+ fixes for "iterm2" (report by Leonardo Brondani Schenkel) -TD
+#
+# 2017-11-11
+#	+ add "op" to xterm+256setaf -TD
+#	+ reviewed terminology 1.0.0 -TD
+#	+ reviewed st 0.7 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
