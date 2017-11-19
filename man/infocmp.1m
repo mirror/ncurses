@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.66 2017/08/13 00:21:55 tom Exp $
+.\" $Id: infocmp.1m,v 1.67 2017/11/18 23:51:17 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -35,7 +35,8 @@
 .el       .ds '' ''
 .ds n 5
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
 .ds d @TERMINFO@
 .SH NAME

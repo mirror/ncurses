@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.46 2017/05/20 14:42:41 Sven.Joachim Exp @
+  * @Id: curs_mouse.3x,v 1.47 2017/11/18 23:52:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -250,21 +250,21 @@
        <STRONG>o</STRONG>   the  "libcurses" manual page lists functions for this feature which
            are prototyped in <STRONG>curses.h</STRONG>:
 
-             extern int mouse_set(long int);
-             extern int mouse_on(long int);
-             extern int mouse_off(long int);
-             extern int request_mouse_pos(void);
-             extern int map_button(unsigned long);
-             extern void wmouse_position(WINDOW *, int *, int *);
-             extern unsigned long getmouse(void), getbmap(void);
+               extern int mouse_set(long int);
+               extern int mouse_on(long int);
+               extern int mouse_off(long int);
+               extern int request_mouse_pos(void);
+               extern int map_button(unsigned long);
+               extern void wmouse_position(WINDOW *, int *, int *);
+               extern unsigned long getmouse(void), getbmap(void);
 
        <STRONG>o</STRONG>   the "terminfo" manual page lists capabilities for the feature
 
-             buttons           btns    BT       Number of buttons on the mouse
-             get_mouse         getm    Gm       Curses should get button events
-             key_mouse         kmous   Km       0631, Mouse event has occurred
-             mouse_info        minfo   Mi       Mouse status information
-             req_mouse_pos     reqmp   RQ       Request mouse position report
+               buttons           btns    BT       Number of buttons on the mouse
+               get_mouse         getm    Gm       Curses should get button events
+               key_mouse         kmous   Km       0631, Mouse event has occurred
+               mouse_info        minfo   Mi       Mouse status information
+               req_mouse_pos     reqmp   RQ       Request mouse position report
 
        <STRONG>o</STRONG>   the interface made assumptions (as does ncurses) about  the  escape
            sequences sent to and received from the terminal.

@@ -52,7 +52,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.75 2017/09/08 20:00:50 tom Exp $
+  $Id: worm.c,v 1.76 2017/11/18 22:41:08 tom Exp $
 */
 
 #include <test.priv.h>
@@ -97,6 +97,7 @@ static unsigned long sequence = 0;
 static bool quitting = FALSE;
 
 static WORM worm[MAX_WORMS];
+static int max_refs;
 static int **refs;
 static int last_x, last_y;
 
@@ -290,6 +291,7 @@ draw_worm(WINDOW *win, void *data)
     switch (op->nopts) {
     case 0:
 	done = TRUE;
+	Trace(("done - draw_worm"));
 	break;
     case 1:
 	w->orientation = op->opts[0];
@@ -404,6 +406,7 @@ update_refs(WINDOW *win)
     if (last_y != LINES - 1) {
 	for (y = LINES; y <= last_y; y++)
 	    free(refs[y]);
+	max_refs = LINES;
 	refs = typeRealloc(int *, (size_t) LINES, refs);
 	for (y = last_y + 1; y < LINES; y++) {
 	    refs[y] = typeMalloc(int, (size_t) COLS);
@@ -455,7 +458,6 @@ main(int argc, char *argv[])
     struct worm *w;
     int *ip;
     bool done = FALSE;
-    int max_refs;
 #if HAVE_USE_DEFAULT_COLORS
     bool opt_d = FALSE;
 #endif
@@ -616,6 +618,7 @@ main(int argc, char *argv[])
 	    if (ch == 'q') {
 		quitting = TRUE;
 		done = TRUE;
+		Trace(("done - quitting"));
 		continue;
 	    } else if (ch == 's') {
 		nodelay(stdscr, FALSE);

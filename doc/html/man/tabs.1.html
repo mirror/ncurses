@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2008-2013,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.15 2016/12/31 16:07:39 tom Exp @
+  * @Id: tabs.1,v 1.16 2017/11/18 23:56:00 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,7 +59,7 @@
        absent,  <STRONG>tabs</STRONG> is unable to clear/set tab-stops.  The terminal should be
        configured to use hard tabs, e.g.,
 
-         stty tab0
+           stty tab0
 
        Like <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>tabs</STRONG> writes to the standard output.   You  can  redirect
        the standard output to a file (which prevents <STRONG>tabs</STRONG> from actually chang-
@@ -107,13 +107,13 @@
        greater than zero.  They are separated by a comma or a blank, for exam-
        ple,
 
-         tabs 1,6,11,16,21
-         tabs 1 6 11 16 21
+           tabs 1,6,11,16,21
+           tabs 1 6 11 16 21
 
        Use  a  "+"  to treat a number as an increment relative to the previous
        value, e.g.,
 
-         tabs 1,+5,+5,+5,+5
+           tabs 1,+5,+5,+5,+5
 
        which is equivalent to the 1,6,11,16,21 example.
 
@@ -164,7 +164,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171028).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171118).
 
 
 

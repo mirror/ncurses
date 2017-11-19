@@ -27,14 +27,15 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.41 2017/05/05 18:15:29 tom Exp $
+.\" $Id: curs_addch.3x,v 1.43 2017/11/19 01:54:00 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
 .SH NAME
 \fBaddch\fR,
@@ -175,6 +176,7 @@ Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 .SH PORTABILITY
 All these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for forms-drawing characters apply in the POSIX locale.
+.SS ACS Symbols
 .LP
 X/Open Curses states that the \fIACS_\fP definitions are \fBchar\fP constants.
 For the wide-character implementation (see \fBcurs_add_wch\fP),
@@ -205,6 +207,44 @@ whether the \fIlocale\fP uses UTF-8 encoding.
 In certain cases, the terminal is unable to display line-drawing characters
 except by using UTF-8 (see the discussion of \fBNCURSES_NO_UTF8_ACS\fP in
 ncurses(3X)).
+.SS Character Set
+X/Open Curses assumes that the parameter passed to \fBwaddch\fP contains
+a single character.
+As discussed in \fBcurs_attr(3X)\fP, that character may have been
+more than eight bits in an SVr3 or SVr4 implementation,
+but in the X/Open Curses model, the details are not given.
+The important distinction between SVr4 curses and X/Open Curses is
+that the non-character information (attributes and color) was
+separated from the character information which is packed in a \fBchtype\fP
+to pass to \fBwaddch\fP.
+.PP
+In this implementation, \fBchtype\fP holds eight bits.
+But ncurses allows multibyte characters to be passed in a succession
+of calls to \fBwaddch\fP.
+The other implementations do not do this;
+a call to \fBwaddch\fP passes exactly one character
+which may be rendered as one or more cells on the screen
+depending on whether it is printable.
+.PP
+Depending on the locale settings,
+ncurses will inspect the byte passed in each call to \fBwaddch\fP,
+and check if the latest call will continue a multibyte sequence.
+When a character is \fIcomplete\fP,
+ncurses displays the character and moves to the next position in the screen.
+.PP
+If the calling application interrupts the succession of bytes in
+a multibyte character by moving the current location (e.g., using \fBwmove\fP),
+ncurses discards the partially built character,
+starting over again.
+.PP
+For portability to other implementations,
+do not rely upon this behavior:
+.bP
+check if a character can be represented as a single byte in the current locale
+before attempting call \fBwaddch\fP, and
+.bP
+call \fBwadd_wch\fP for characters which cannot be handled by \fBwaddch\fP.
+.SS TABSIZE
 .LP
 The \fBTABSIZE\fR variable is implemented in some versions of curses,
 but is not part of X/Open curses.

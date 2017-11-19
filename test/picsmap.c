@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.103 2017/09/06 09:21:38 tom Exp $
+ * $Id: picsmap.c,v 1.108 2017/11/19 02:56:12 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -78,38 +78,7 @@
 
 #define RGB_PATH "/etc/X11/rgb.txt"
 
-typedef int NUM_COLOR;
-typedef unsigned short NUM_COUNT;
-
-typedef struct {
-    char ch;			/* nominal character to display */
-    NUM_COLOR fg;		/* foreground color */
-} PICS_CELL;
-
-typedef struct {
-    NUM_COLOR fgcol;
-    NUM_COUNT count;
-} FG_NODE;
-
-typedef struct {
-    char *name;
-    short high;
-    short wide;
-    int colors;
-    FG_NODE *fgcol;
-    PICS_CELL *cells;
-} PICS_HEAD;
-
-typedef struct {
-    const char *name;
-    int value;
-} RGB_NAME;
-
-typedef struct {
-    short red;
-    short green;
-    short blue;
-} RGB_DATA;
+#include <picsmap.h>
 
 typedef struct {
     size_t file;
@@ -528,7 +497,10 @@ usage(void)
 	,"Read/display one or more xbm/xpm files (possibly use \"convert\")"
 	,""
 	,"Options:"
-	,"  -d           add debugging information to logfile"
+#if HAVE_USE_DEFAULT_COLORS
+	,"  -d           invoke use_default_colors"
+#endif
+	,"  -L           add debugging information to logfile"
 	,"  -l logfile   write informational messages to logfile"
 	,"  -p palette   color-palette file (default \"$TERM.dat\")"
 	,"  -q           less verbose"
@@ -653,17 +625,19 @@ init_palette(const char *palette_file)
 {
     if (palette_file != 0) {
 	char **data = read_palette(palette_file);
-	int cp;
 
 	all_colors = typeMalloc(RGB_DATA, (unsigned) COLORS);
 	how_much.data += (sizeof(RGB_DATA) * (unsigned) COLORS);
 
 #if HAVE_COLOR_CONTENT
-	for (cp = 0; cp < COLORS; ++cp) {
-	    color_content((short) cp,
-			  &all_colors[cp].red,
-			  &all_colors[cp].green,
-			  &all_colors[cp].blue);
+	{
+	    int cp;
+	    for (cp = 0; cp < COLORS; ++cp) {
+		color_content((short) cp,
+			      &all_colors[cp].red,
+			      &all_colors[cp].green,
+			      &all_colors[cp].blue);
+	    }
 	}
 #else
 	memset(all_colors, 0, sizeof(RGB_DATA) * (size_t) COLORS);
@@ -1463,6 +1437,29 @@ dump_picture(PICS_HEAD * pics)
     }
 }
 
+#ifndef USE_DISPLAY_DRIVER
+static void
+init_display(const char *palette_path, int opt_d)
+{
+    if (isatty(fileno(stdout))) {
+	in_curses = TRUE;
+	initscr();
+	cbreak();
+	noecho();
+	curs_set(0);
+	if (has_colors()) {
+	    start_color();
+#if HAVE_USE_DEFAULT_COLORS
+	    if (opt_d)
+		use_default_colors();
+#endif
+	    init_palette(palette_path);
+	}
+	scrollok(stdscr, FALSE);
+	exit_curses();
+    }
+}
+
 static void
 show_picture(PICS_HEAD * pics)
 {
@@ -1537,6 +1534,7 @@ show_picture(PICS_HEAD * pics)
     if (!quiet)
 	endwin();
 }
+#endif
 
 static int
 compare_fg_counts(const void *a, const void *b)
@@ -1635,12 +1633,18 @@ int
 main(int argc, char *argv[])
 {
     int n;
+    int opt_d = FALSE;
     const char *palette_path = 0;
     const char *rgb_path = "/etc/X11/rgb.txt";
 
-    while ((n = getopt(argc, argv, "dl:p:qr:s:x:")) != -1) {
+    while ((n = getopt(argc, argv, "dLl:p:qr:s:x:")) != -1) {
 	switch (n) {
+#if HAVE_USE_DEFAULT_COLORS
 	case 'd':
+	    opt_d = TRUE;
+	    break;
+#endif
+	case 'L':
 	    debugging = TRUE;
 	    break;
 	case 'l':
@@ -1691,19 +1695,7 @@ main(int argc, char *argv[])
 	if (rgb_data)
 	    rgb_table = parse_rgb(rgb_data);
 
-	if (isatty(fileno(stdout))) {
-	    in_curses = TRUE;
-	    initscr();
-	    cbreak();
-	    noecho();
-	    curs_set(0);
-	    if (has_colors()) {
-		start_color();
-		init_palette(palette_path);
-	    }
-	    scrollok(stdscr, FALSE);
-	    exit_curses();
-	}
+	init_display(palette_path, opt_d);
 	if (optind >= argc)
 	    giveup("expected at least one image filename");
 

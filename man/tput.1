@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.55 2017/08/19 14:26:42 tom Exp $
+.\" $Id: tput.1,v 1.56 2017/11/18 23:51:17 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -36,7 +36,8 @@
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
 .SH NAME
 \fB@TPUT@\fR, \fBreset\fR \- initialize a terminal or query terminfo database

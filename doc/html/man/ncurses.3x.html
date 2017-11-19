@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.135 2017/08/12 22:27:43 tom Exp @
+  * @Id: ncurses.3x,v 1.136 2017/11/18 23:48:44 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,7 +59,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171028).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171118).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -92,7 +92,7 @@
        The  library uses the locale which the calling program has initialized.
        That is normally done with <STRONG>setlocale</STRONG>:
 
-         <STRONG>setlocale(LC_ALL,</STRONG> <STRONG>"");</STRONG>
+           <STRONG>setlocale(LC_ALL,</STRONG> <STRONG>"");</STRONG>
 
        If the locale is not initialized, the library assumes  that  characters
        are  printable  as in ISO-8859-1, to work with certain legacy programs.
@@ -108,13 +108,13 @@
        screen  oriented  programs want this), the following sequence should be
        used:
 
-         <STRONG>initscr();</STRONG> <STRONG>cbreak();</STRONG> <STRONG>noecho();</STRONG>
+           <STRONG>initscr();</STRONG> <STRONG>cbreak();</STRONG> <STRONG>noecho();</STRONG>
 
        Most programs would additionally use the sequence:
 
-         <STRONG>nonl();</STRONG>
-         <STRONG>intrflush(stdscr,</STRONG> <STRONG>FALSE);</STRONG>
-         <STRONG>keypad(stdscr,</STRONG> <STRONG>TRUE);</STRONG>
+           <STRONG>nonl();</STRONG>
+           <STRONG>intrflush(stdscr,</STRONG> <STRONG>FALSE);</STRONG>
+           <STRONG>keypad(stdscr,</STRONG> <STRONG>TRUE);</STRONG>
 
        Before a <STRONG>curses</STRONG> program is run, the tab stops of the terminal should be
        set  and  its initialization strings, if defined, must be output.  This
@@ -176,17 +176,17 @@
        standard  place.  For example, if <STRONG>TERM</STRONG> is set to <STRONG>att4424</STRONG>, then the com-
        piled terminal definition is found in
 
-         <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
+           <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
 
        (The <STRONG>a</STRONG> is copied from the first letter of <STRONG>att4424</STRONG> to avoid creation  of
        huge  directories.)   However,  if  <STRONG>TERMINFO</STRONG>  is  set to <STRONG>$HOME/myterms</STRONG>,
        <STRONG>curses</STRONG> first checks
 
-         <STRONG>$HOME/myterms/a/att4424</STRONG>,
+           <STRONG>$HOME/myterms/a/att4424</STRONG>,
 
        and if that fails, it then checks
 
-         <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
+           <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
 
        This is useful for developing experimental definitions  or  when  write
        permission in <STRONG>/usr/share/terminfo</STRONG> is not available.
@@ -835,8 +835,8 @@
        Tells  <STRONG>ncurses</STRONG> where your home directory is.  That is where it may read
        and write auxiliary terminal descriptions:
 
-         $HOME/.termcap
-         $HOME/.terminfo
+           $HOME/.termcap
+           $HOME/.terminfo
 
 
 </PRE><H3><a name="h3-LINES">LINES</a></H3><PRE>
@@ -849,9 +849,9 @@
        tons on the mouse.  OS/2 numbers a 3-button mouse  inconsistently  from
        other platforms:
 
-         1 = left
-         2 = right
-         3 = middle.
+           1 = left
+           2 = right
+           3 = middle.
 
        This variable lets you customize the mouse.  The variable must be three
        numeric digits 1-3 in any order, e.g., 123 or 321.  If it is not speci-
@@ -1047,11 +1047,11 @@
        <STRONG>o</STRONG>   If  <STRONG>ncurses</STRONG>  is  built  to use hashed databases, then each entry in
            this list may be the path of a hashed database file, e.g.,
 
-             /usr/share/terminfo.db
+               /usr/share/terminfo.db
 
            rather than
 
-             /usr/share/terminfo/
+               /usr/share/terminfo/
 
            The hashed database uses less disk-space and  is  a  little  faster
            than  the  directory  tree.   However, some applications assume the
@@ -1066,8 +1066,8 @@
            the remainder of that variable as a compiled terminal  description.
            You might produce the base64 format using <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>:
 
-             TERMINFO="$(infocmp -0 -Q2 -q)"
-             export TERMINFO
+               TERMINFO="$(infocmp -0 -Q2 -q)"
+               export TERMINFO
 
            The  compiled description is used if it corresponds to the terminal
            identified by the <STRONG>TERM</STRONG> variable.
@@ -1112,7 +1112,7 @@
        If  the  <STRONG>TERMPATH</STRONG> environment variable is not set, <STRONG>ncurses</STRONG> looks in the
        files
 
-         /etc/termcap, /usr/share/misc/termcap and $HOME/.termcap,
+           /etc/termcap, /usr/share/misc/termcap and $HOME/.termcap,
 
        in that order.
 
@@ -1120,7 +1120,7 @@
        the  current  user  is the superuser (root), or if the application uses
        setuid or setgid permissions:
 
-         $TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
+           $TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
 
 
 </PRE><H2><a name="h2-ALTERNATE-CONFIGURATIONS">ALTERNATE CONFIGURATIONS</a></H2><PRE>
@@ -1132,14 +1132,14 @@
        --disable-overwrite
             The standard include for <STRONG>ncurses</STRONG> is as noted in <STRONG>SYNOPSIS</STRONG>:
 
-              <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+                <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
             This  option  is  used to avoid filename conflicts when <STRONG>ncurses</STRONG> is
             not the main implementation of curses of the computer.  If <STRONG>ncurses</STRONG>
             is  installed disabling overwrite, it puts its headers in a subdi-
             rectory, e.g.,
 
-              <STRONG>#include</STRONG> <STRONG>&lt;ncurses/curses.h&gt;</STRONG>
+                <STRONG>#include</STRONG> <STRONG>&lt;ncurses/curses.h&gt;</STRONG>
 
             It also omits a  symbolic  link  which  would  allow  you  to  use
             <STRONG>-lcurses</STRONG> to build executables.
@@ -1150,11 +1150,11 @@
             ent subdirectory.  All of the library names have a "w" appended to
             them, i.e., instead of
 
-              <STRONG>-lncurses</STRONG>
+                <STRONG>-lncurses</STRONG>
 
             you link with
 
-              <STRONG>-lncursesw</STRONG>
+                <STRONG>-lncursesw</STRONG>
 
             You must also define <STRONG>_XOPEN_SOURCE_EXTENDED</STRONG> when compiling for the
             wide-character  library to use the extended (wide-character) func-
