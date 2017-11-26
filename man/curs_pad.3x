@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_pad.3x,v 1.23 2017/11/19 01:29:46 tom Exp $
+.\" $Id: curs_pad.3x,v 1.24 2017/11/21 01:16:26 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -192,7 +192,9 @@ and is not checked by the vendor Unix implementations:
 SVr4 curses sets a flag in the \fBWINDOW\fP structure in \fBnewpad\fP
 which tells if the window is a \fIpad\fP.
 .IP
-However, it uses this information only in \fBwscrl\fP,
+However, it uses this information only in
+\fBwaddch\fP (to decide if it should call \fBwrefresh\fP) and
+\fBwscrl\fP (to avoid scrolling a pad),
 and does not check in \fBwrefresh\fP to ensure that the pad
 is refreshed properly.
 .bP

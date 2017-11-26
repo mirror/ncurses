@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.56 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.57 2017/11/21 00:46:31 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -503,7 +503,7 @@ In System V Release 4, the third argument of \fBtputs\fR has the type
 \fBint (*putc)(char)\fR.
 .PP
 At least one implementation of X/Open Curses (Solaris) returns a value
-other than OK/ERR from \fBtputs\fP.
+other than \fBOK\fP/\fBERR\fP from \fBtputs\fP.
 That returns the length of the string, and does no error-checking.
 .PP
 X/Open notes that after calling \fBmvcur\fR, the curses state may not match the

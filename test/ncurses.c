@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.502 2017/11/02 20:46:06 tom Exp $
+$Id: ncurses.c,v 1.504 2017/11/24 20:51:18 tom Exp $
 
 ***************************************************************************/
 
@@ -355,6 +355,7 @@ wGet_wchar(WINDOW *win, wint_t *result)
 #define Get_wchar(result) wGet_wchar(stdscr, result)
 
 /* replaces wgetn_wstr(), since we want to be able to edit values */
+#if USE_SOFTKEYS
 static void
 wGet_wstring(WINDOW *win, wchar_t *buffer, int limit)
 {
@@ -460,8 +461,9 @@ wGet_wstring(WINDOW *win, wchar_t *buffer, int limit)
     wmove(win, y0, x0);
     noecho();
 }
+#endif /* USE_SOFTKEYS */
 
-#endif
+#endif /* USE_WIDEC_SUPPORT */
 
 static void
 Pause(void)
@@ -7714,7 +7716,7 @@ main_menu(bool top)
 #if USE_LIBMENU
 	CMDS(TRUE, ONLY(menu_test),	'm', "exercise menu library"),
 #endif
-#if USE_LIBMENU
+#if USE_LIBPANEL
 	CMDS(TRUE, BOTH(panel_test),	'o', "exercise panel library"),
 #endif
 #if HAVE_NEWPAD

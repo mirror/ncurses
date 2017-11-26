@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: panel.3x,v 1.21 2017/02/18 16:53:23 tom Exp @
+  * @Id: panel.3x,v 1.24 2017/11/25 20:31:13 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -112,7 +112,7 @@
 
        <STRONG>panel_hidden(pan)</STRONG>
               returns  <STRONG>TRUE</STRONG> if the panel is in the panel stack, <STRONG>FALSE</STRONG> if it is
-              not.  If the panel is a null pointer, return ERR.
+              not.  If the panel is a null pointer, return <STRONG>ERR</STRONG>.
 
        <STRONG>show_panel(pan)</STRONG>
               makes a hidden panel visible by placing it on top of the  panels
@@ -165,7 +165,7 @@
 
 </PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
        Reasonable care has been taken  to   ensure   compatibility  with   the
-       native   panel  facility  introduced  in SVr3.2 (inspection of the SVr4
+       native   panel  facility introduced in System V (inspection of the SVr4
        manual pages suggests the programming  interface  is  unchanged).   The
        <STRONG>PANEL</STRONG> data structures are merely  similar. The  programmer is cautioned
        not to directly use <STRONG>PANEL</STRONG> fields.
@@ -185,6 +185,16 @@
        would give a link-error with static libraries).
 
 
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       The panel facility was documented in SVr4.2 in <EM>Character</EM> <EM>User</EM> <EM>Interface</EM>
+       <EM>Programming</EM> <EM>(UNIX</EM> <EM>SVR4.2)</EM>.
+
+       It is not part of X/Open Curses.
+
+       Aside  from  ncurses,  only  systems  based  on SVr4 source code, e.g.,
+       Solaris provide this library.
+
+
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        panel.h interface for the panels library
 
@@ -194,7 +204,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
 
-       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171118).
+       This describes <STRONG>ncurses</STRONG> version 6.0 (patch 20171125).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -215,6 +225,7 @@
 <li><a href="#h2-DIAGNOSTICS">DIAGNOSTICS</a></li>
 <li><a href="#h2-COMPATIBILITY">COMPATIBILITY</a></li>
 <li><a href="#h2-NOTE">NOTE</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-FILES">FILES</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHOR">AUTHOR</a></li>

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.64 2017/06/24 14:21:52 tom Exp $
+ * $Id: demo_menus.c,v 1.65 2017/11/24 21:03:30 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -192,9 +192,9 @@ menu_offset(MenuNo number)
     int result = 0;
 
     if (okMenuNo(number)) {
-	int spc_desc, spc_rows, spc_cols;
-
+	int spc_rows;
 #ifdef NCURSES_VERSION
+	int spc_desc, spc_cols;
 	menu_spacing(mpBanner, &spc_desc, &spc_rows, &spc_cols);
 #else
 	spc_rows = 0;

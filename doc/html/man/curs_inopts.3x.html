@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.25 2017/02/18 16:39:44 tom Exp @
+  * @Id: curs_inopts.3x,v 1.26 2017/11/21 00:47:10 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -112,7 +112,7 @@
        The <STRONG>halfdelay</STRONG> routine is used for half-delay mode, which is similar  to
        <STRONG>cbreak</STRONG> mode in that characters typed by the user are immediately avail-
        able to the program.  However, after blocking for <EM>tenths</EM> tenths of sec-
-       onds,  ERR  is returned if nothing has been typed.  The value of <EM>tenths</EM>
+       onds,  <STRONG>ERR</STRONG>  is returned if nothing has been typed.  The value of <EM>tenths</EM>
        must be a number between 1 and 255.  Use <STRONG>nocbreak</STRONG> to  leave  half-delay
        mode.
 
@@ -207,7 +207,7 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure  and  OK
+       All routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure  and  <STRONG>OK</STRONG>
        (SVr4 specifies only "an integer value other than <STRONG>ERR</STRONG>") upon successful
        completion, unless otherwise noted in the  preceding  routine  descrip-
        tions.

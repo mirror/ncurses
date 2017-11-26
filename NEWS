@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3004 2017/11/19 01:32:47 tom Exp $
+-- $Id: NEWS,v 1.3014 2017/11/25 23:04:42 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171125
+	+ modify MKlib_gen.sh to avoid tracing result from getstr/getnstr
+	  before initialized.
+	+ add "-a" aspect-ratio option to picsmap.
+	+ add configure check for default path of rgb.txt, used in picsmap.
+	+ modify _nc_write_entry() to truncate too-long filename (report by
+	  Hosein Askari, Debian #882620).
+	+ build-fix for ncurses-examples with NetBSD curses:
+	  + it lacks the use_env() function.
+	  + it lacks libpanel; a recent change used the wrong ifdef symbol.
+	+ add a macro for is_linetouched() and adjust the function's return
+	  value to make it possible for most applications to check for an
+	  error-return (report by Midolikawa H).
+	+ additional manpage cleanup.
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20171118
 	+ add a note to curs_addch.3x on portability.

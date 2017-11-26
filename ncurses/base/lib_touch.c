@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,16 +43,19 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_touch.c,v 1.13 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_touch.c,v 1.15 2017/11/21 00:14:26 tom Exp $")
+
+#undef is_linetouched
 
 NCURSES_EXPORT(bool)
 is_linetouched(WINDOW *win, int line)
 {
     T((T_CALLED("is_linetouched(%p,%d)"), (void *) win, line));
 
-    /* XSI doesn't define any error */
-    if (!win || (line > win->_maxy) || (line < 0))
-	returnCode((bool) ERR);
+    /* XSI doesn't define any error, and gcc ultimately made it impossible */
+    if (!win || (line > win->_maxy) || (line < 0)) {
+	returnCode(FALSE);
+    }
 
     returnCode(win->_line[line].firstchar != _NOCHANGE ? TRUE : FALSE);
 }

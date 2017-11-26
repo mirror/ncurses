@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.11 2017/01/07 17:33:15 tom Exp $
+.\" $Id: curs_print.3x,v 1.12 2017/11/20 01:27:30 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
 \fBmcprint\fR \- ship binary data to printer
@@ -48,7 +48,7 @@ rule of thumb is to sleep for a second after shipping each 80-character line.
 .SH RETURN VALUE
 The \fBmcprint\fR function returns \fBERR\fR if the write operation aborted
 for some reason.  In this case, errno will contain either an error associated
-with \fBwrite(2)\fR or one of the following:
+with \fBwrite\fP(2) or one of the following:
 .TP 5
 ENODEV
 Capabilities for printer redirection do not exist.

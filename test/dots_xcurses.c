@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.12 2017/10/30 22:06:10 tom Exp $
+ * $Id: dots_xcurses.c,v 1.13 2017/11/24 19:25:45 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -119,7 +119,9 @@ usage(void)
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors()"
 #endif
+#if HAVE_USE_ENV
 	," -e       allow environment $LINES / $COLUMNS"
+#endif
 	," -m SIZE  set margin (default: 2)"
 	," -s MSECS delay 1% of the time (default: 1 msecs)"
 #if HAVE_ALLOC_PAIR
@@ -159,9 +161,11 @@ main(int argc, char *argv[])
 	    d_option = TRUE;
 	    break;
 #endif
+#if HAVE_USE_ENV
 	case 'e':
 	    use_env(TRUE);
 	    break;
+#endif
 	case 'm':
 	    m_option = atoi(optarg);
 	    break;

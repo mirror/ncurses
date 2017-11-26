@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.50 2017/11/18 23:56:00 tom Exp @
+  * @Id: curs_getch.3x,v 1.51 2017/11/21 00:45:48 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -283,10 +283,10 @@
        other than <STRONG>ERR</STRONG> (<STRONG>OK</STRONG> in the case of <STRONG>ungetch</STRONG>) upon successful completion.
 
           <STRONG>ungetch</STRONG>
-               returns ERR if there is no more room in the FIFO.
+               returns <STRONG>ERR</STRONG> if there is no more room in the FIFO.
 
           <STRONG>wgetch</STRONG>
-               returns ERR if the window pointer is null, or  if  its  timeout
+               returns <STRONG>ERR</STRONG> if the window pointer is null, or  if  its  timeout
                expires without having any data, or if the execution was inter-
                rupted by a signal (<STRONG>errno</STRONG> will be set to <STRONG>EINTR</STRONG>).
 
@@ -362,7 +362,7 @@
 
        Programmers concerned about portability should be prepared  for  either
        of  two  cases: (a) signal receipt does not interrupt <STRONG>getch</STRONG>; (b) signal
-       receipt interrupts <STRONG>getch</STRONG> and causes it to return ERR with <STRONG>errno</STRONG> set  to
+       receipt interrupts <STRONG>getch</STRONG> and causes it to return <STRONG>ERR</STRONG> with <STRONG>errno</STRONG> set  to
        <STRONG>EINTR</STRONG>.
 
        The  <STRONG>has_key</STRONG> function is unique to <STRONG>ncurses</STRONG>.  We recommend that any code

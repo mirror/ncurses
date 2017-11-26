@@ -31,7 +31,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.51 2017/06/24 22:05:30 tom Exp $
+// $Id: cursesw.h,v 1.53 2017/11/21 00:37:23 tom Exp $
 
 extern "C" {
 #  include   <curses.h>
@@ -322,6 +322,12 @@ inline int UNDEF(instr)(char *_str)  { return instr(_str); }
 inline void UNDEF(intrflush)(WINDOW *win, bool bf) { intrflush(); }
 #undef intrflush
 #define intrflush UNDEF(intrflush)
+#endif
+
+#ifdef is_linetouched
+inline int UNDEF(is_linetouched)(WINDOW *w, int l)  { return is_linetouched(w,l); }
+#undef is_linetouched
+#define is_linetouched UNDEF(is_linetouched)
 #endif
 
 #ifdef leaveok
@@ -1241,7 +1247,7 @@ public:
   // on the value of the changed flag.
 
   bool           is_linetouched(int line) const {
-    return (::is_linetouched(w, line) ? TRUE:FALSE); }
+    return (::is_linetouched(w, line) == TRUE ? TRUE:FALSE); }
   // Return TRUE if line is marked as changed, FALSE otherwise
 
   bool           is_wintouched() const {

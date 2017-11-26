@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.18 2017/10/22 15:22:43 tom Exp $
+ * $Id: dots_mvcur.c,v 1.19 2017/11/24 19:26:31 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -118,7 +118,9 @@ usage(void)
 	,""
 	,"Options:"
 	," -T TERM  override $TERM"
+#if HAVE_USE_ENV
 	," -e       allow environment $LINES / $COLUMNS"
+#endif
 	," -f       use tigetnum rather than <term.h> mapping"
 	," -m SIZE  set margin (default: 2)"
 	," -s MSECS delay 1% of the time (default: 1 msecs)"
@@ -150,9 +152,11 @@ main(int argc GCC_UNUSED,
 	case 'T':
 	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
 	    break;
+#if HAVE_USE_ENV
 	case 'e':
 	    use_env(TRUE);
 	    break;
+#endif
 	case 'f':
 	    f_option = 1;
 	    break;

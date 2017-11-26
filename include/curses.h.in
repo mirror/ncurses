@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.256 2017/08/11 17:47:51 tom Exp $ */
+/* $Id: curses.h.in,v 1.257 2017/11/21 00:11:37 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -883,6 +883,12 @@ extern NCURSES_EXPORT(char *) tparm_varargs (NCURSES_CONST char *, ...);	/* spec
 #endif
 
 extern NCURSES_EXPORT(char *) tiparm (const char *, ...);		/* special */
+
+/*
+ * X/Open says this returns a bool; SVr4 also checked for out-of-range line.
+ * The macro provides compatibility:
+ */
+#define is_linetouched(w,l) ((!(w) || ((l) > getmaxy(w)) || ((l) < 0)) ? ERR : (is_linetouched)((w),(l)))
 
 /*
  * These functions are not in X/Open, but we use them in macro definitions:

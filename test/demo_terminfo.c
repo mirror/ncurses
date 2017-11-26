@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.47 2017/04/09 00:27:42 tom Exp $
+ * $Id: demo_terminfo.c,v 1.48 2017/11/24 20:49:11 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -69,8 +69,10 @@ static bool f_opt = FALSE;
 static bool n_opt = FALSE;
 static bool q_opt = FALSE;
 static bool s_opt = FALSE;
+#ifdef NCURSES_VERSION
 static bool x_opt = FALSE;
 static bool y_opt = FALSE;
+#endif
 
 static char *d_opt;
 static char *e_opt;

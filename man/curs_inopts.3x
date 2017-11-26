@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.25 2017/02/18 16:39:44 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.26 2017/11/21 00:47:10 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -140,7 +140,7 @@ The \fBhalfdelay\fR routine is used for half-delay mode, which is similar to
 \fBcbreak\fR mode in that characters typed by the user are immediately
 available to the program.
 However, after blocking for \fItenths\fR tenths of
-seconds, ERR is returned if nothing has been typed.
+seconds, \fBERR\fP is returned if nothing has been typed.
 The value of \fItenths\fR
 must be a number between 1 and 255.
 Use \fBnocbreak\fR to leave half-delay
@@ -266,9 +266,10 @@ If \fIfd\fR is
 \-1, then no typeahead checking is done.
 .\"
 .SH RETURN VALUE
-All routines that return an integer return \fBERR\fR upon failure and OK (SVr4
-specifies only \*(``an integer value other than \fBERR\fR\*('') upon successful
-completion, unless otherwise noted in the preceding routine descriptions.
+All routines that return an integer return \fBERR\fR upon failure and \fBOK\fP
+(SVr4 specifies only \*(``an integer value other than \fBERR\fR\*('')
+upon successful completion,
+unless otherwise noted in the preceding routine descriptions.
 .PP
 X/Open does not define any error conditions.
 In this implementation,

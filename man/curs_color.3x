@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.52 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_color.3x,v 1.53 2017/11/20 01:03:45 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -174,7 +174,7 @@ background color for all terminals.
       \fBCOLOR_WHITE\fR
 .fi
 .PP
-Some terminals support more than the eight (8) \*(lqANSI\*(rq colors.
+Some terminals support more than the eight (8) \*(``ANSI\*('' colors.
 There are no standard names for those additional colors. 
 .SH VARIABLES
 .SS COLORS
@@ -208,7 +208,7 @@ initializes its internal table representing the
 red, green and blue components of the color palette.
 .IP
 The components depend on whether the terminal uses
-CGA (aka \*(lqANSI\*(rq) or
+CGA (aka \*(``ANSI\*('') or
 HLS (i.e., the \fBhls\fP (\fBhue_lightness_saturation\fP) capability is set).
 The table is initialized first for eight basic colors
 (black, red, green, yellow, blue, magenta, cyan, and white),
@@ -346,7 +346,7 @@ The routines \fBcan_change_color\fR and \fBhas_colors\fR return \fBTRUE\fR
 or \fBFALSE\fR.
 .PP
 All other routines return the integer \fBERR\fR upon failure and an \fBOK\fR
-(SVr4 specifies only \*(lqan integer value other than \fBERR\fR\*(rq) upon successful
+(SVr4 specifies only \*(``an integer value other than \fBERR\fR\*('') upon successful
 completion.
 .PP
 X/Open defines no error conditions.
@@ -392,7 +392,7 @@ The A_BLINK attribute should in theory cause the background to go bright.
 This often fails to work, and even some cards for which it mostly works
 (such as the
 Paradise and compatibles) do the wrong thing when you try to set a bright
-\*(lqyellow\*(rq background (you get a blinking yellow foreground instead).
+\*(``yellow\*('' background (you get a blinking yellow foreground instead).
 .bP
 Color RGB values are not settable.
 .SH PORTABILITY

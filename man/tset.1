@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.50 2017/11/18 23:51:17 tom Exp $
+.\" $Id: tset.1,v 1.52 2017/11/20 01:27:53 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -56,7 +56,7 @@ standard output,
 .bP
 standard input and
 .bP
-ultimately \*(lq/dev/tty\*(rq
+ultimately \*(``/dev/tty\*(''
 .PP
 to obtain terminal settings.
 Having retrieved these settings, \fB@TSET@\fP remembers which
@@ -297,7 +297,7 @@ that he began work in October 1977,
 continuing development over the next few years.
 .PP
 In September 1980, Eric Allman modified \fBtset\fP,
-adding the code from the existing \*(lqreset\*(rq
+adding the code from the existing \*(``reset\*(''
 feature when \fBtset\fP was invoked as \fBreset\fP.
 Rather than simply copying the existing program,
 in this merged version, \fBtset\fP used the termcap database
@@ -325,7 +325,7 @@ In fact, the commonly-used \fBreset\fP utility
 is always an alias for \fBtset\fP.
 .PP
 The \fB@TSET@\fR utility provides for backward-compatibility with BSD
-environments (under most modern UNIXes, \fB/etc/inittab\fR and \fIgetty\fR(1)
+environments (under most modern UNIXes, \fB/etc/inittab\fR and \fBgetty\fR(1)
 can set \fBTERM\fR appropriately for each dial-up line; this obviates what was
 \fB@TSET@\fR's most important use).  This implementation behaves like 4.4BSD
 \fBtset\fP, with a few exceptions specified here.

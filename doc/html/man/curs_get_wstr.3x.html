@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wstr.3x,v 1.11 2017/03/04 21:24:04 tom Exp @
+  * @Id: curs_get_wstr.3x,v 1.12 2017/11/21 00:45:48 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -124,9 +124,9 @@
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are described in The Single Unix Specification, Version
-       2.   No  error conditions are defined.  This implementation returns ERR
+       2.   No  error conditions are defined.  This implementation returns <STRONG>ERR</STRONG>
        if the window pointer is null, or if the lower-level <STRONG>wget_wch</STRONG> call  re-
-       turns  an ERR.  In the latter case, an ERR return without other data is
+       turns  an <STRONG>ERR</STRONG>.  In the latter case, an <STRONG>ERR</STRONG> return without other data is
        treated as an end-of-file condition, and the returned array contains  a
        <STRONG>WEOF</STRONG> followed by a null <STRONG>wchar_t</STRONG>.
 

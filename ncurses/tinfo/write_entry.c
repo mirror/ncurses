@@ -47,7 +47,7 @@
 #define TRACE_OUT(p)		/*nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.99 2017/04/09 23:35:01 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.100 2017/11/25 02:06:43 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -269,6 +269,9 @@ _nc_write_entry(TERMTYPE2 *const tp)
 #endif
 #endif /* USE_SYMLINKS */
 
+    unsigned limit2 = sizeof(filename) - (2 + LEAF_LEN);
+    char saved = '\0';
+
     static int call_count;
     static time_t start_time;	/* time at start of writes */
 
@@ -371,11 +374,17 @@ _nc_write_entry(TERMTYPE2 *const tp)
 	start_time = 0;
     }
 
-    if (strlen(first_name) >= sizeof(filename) - (2 + LEAF_LEN))
+    if (strlen(first_name) >= sizeof(filename) - (2 + LEAF_LEN)) {
 	_nc_warning("terminal name too long.");
+	saved = first_name[limit2];
+	first_name[limit2] = '\0';
+    }
 
     _nc_SPRINTF(filename, _nc_SLIMIT(sizeof(filename))
 		LEAF_FMT "/%s", first_name[0], first_name);
+
+    if (saved)
+	first_name[limit2] = saved;
 
     /*
      * Has this primary name been written since the first call to

@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_pad.3x,v 1.23 2017/11/19 01:29:46 tom Exp @
+  * @Id: curs_pad.3x,v 1.24 2017/11/21 01:16:26 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -185,8 +185,10 @@
        <STRONG>o</STRONG>   SVr4 curses sets a flag in the <STRONG>WINDOW</STRONG>  structure  in  <STRONG>newpad</STRONG>  which
            tells if the window is a <EM>pad</EM>.
 
-           However, it uses this information only in <STRONG>wscrl</STRONG>, and does not check
-           in <STRONG>wrefresh</STRONG> to ensure that the pad is refreshed properly.
+           However,  it  uses this information only in <STRONG>waddch</STRONG> (to decide if it
+           should call <STRONG>wrefresh</STRONG>) and <STRONG>wscrl</STRONG> (to avoid  scrolling  a  pad),  and
+           does  not  check  in  <STRONG>wrefresh</STRONG>  to ensure that the pad is refreshed
+           properly.
 
        <STRONG>o</STRONG>   Solaris X/Open Curses checks if a window is a pad in  <STRONG>wnoutrefresh</STRONG>,
            returning <STRONG>ERR</STRONG> in that case.

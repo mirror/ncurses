@@ -27,12 +27,16 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu.3x,v 1.23 2017/02/18 16:49:46 tom Exp $
+.\" $Id: menu.3x,v 1.24 2017/11/25 20:24:22 tom Exp $
 .TH menu 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .SH NAME
 \fBmenu\fR \- curses extension for programming menus
 .SH SYNOPSIS
@@ -180,6 +184,17 @@ you should say \*(``\-lmenu \-lncurses\*('', not the other way around
 .SH PORTABILITY
 These routines emulate the System V menu library.  They were not supported on
 Version 7 or BSD versions.
+.PP
+The menu facility was documented in SVr4.2 in
+\fICharacter User Interface Programming (UNIX SVR4.2)\fP.
+.PP
+It is not part of X/Open Curses.
+.PP
+Aside from ncurses, there are few implementations:
+.bP
+systems based on SVr4 source code, e.g., Solaris.
+.bP
+NetBSD curses.
 .SH AUTHORS
 Juergen Pfeifer.  Manual pages and adaptation for ncurses by Eric
 S. Raymond.

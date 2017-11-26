@@ -26,14 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.21 2017/02/18 16:53:23 tom Exp $
+.\" $Id: panel.3x,v 1.24 2017/11/25 20:31:13 tom Exp $
 .TH panel 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
-.ds n 5
-.ds d @TERMINFO@
 .SH NAME
 panel \- panel stack extension for curses
 .SH SYNOPSIS
@@ -115,7 +113,7 @@ view. The \fBPANEL\fR structure is not lost, merely removed from the stack.
 .B panel_hidden(pan)
 returns \fBTRUE\fP if the panel is in the panel stack,
 \fBFALSE\fP if it is not.
-If the panel is a null pointer, return ERR.
+If the panel is a null pointer, return \fBERR\fP.
 .TP
 .B show_panel(pan)
 makes a hidden panel visible by placing it on top of the panels in the
@@ -162,7 +160,7 @@ occurs. Each routine that returns an int value returns \fBOK\fR if it
 executes successfully and \fBERR\fR if not.
 .SH COMPATIBILITY
 Reasonable care has been taken to  ensure  compatibility
-with  the  native  panel facility introduced in SVr3.2 (inspection of
+with  the  native  panel facility introduced in System V (inspection of
 the SVr4 manual pages suggests the programming interface is unchanged).
 The \fBPANEL\fR data structures are merely  similar. The  programmer
 is cautioned not to directly use \fBPANEL\fR fields.
@@ -178,6 +176,15 @@ function to ensure compatibility with native panel libraries.
 In your library list, libpanel.a should be before libncurses.a; that is,
 you should say \*(``\-lpanel \-lncurses\*('', not the other way around
 (which would give a link-error with static libraries).
+.SH PORTABILITY
+.PP
+The panel facility was documented in SVr4.2 in
+\fICharacter User Interface Programming (UNIX SVR4.2)\fP.
+.PP
+It is not part of X/Open Curses.
+.PP
+Aside from ncurses, only systems based on SVr4 source code,
+e.g., Solaris provide this library.
 .SH FILES
 .P
 panel.h

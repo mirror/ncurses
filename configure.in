@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.646 2017/08/07 23:27:56 tom Exp $
+dnl $Id: configure.in,v 1.647 2017/11/25 21:07:54 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.646 $)
+AC_REVISION($Revision: 1.647 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -955,6 +955,8 @@ else
 	AC_MSG_RESULT(no)
 fi
 AC_SUBST(NCURSES_WATTR_MACROS)
+
+CF_WITH_X11_RGB
 
 ###   use option --with-bool to override bool's type
 AC_MSG_CHECKING(for type of bool)

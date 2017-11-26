@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.56 2017/11/18 23:51:17 tom Exp $
+.\" $Id: tput.1,v 1.57 2017/11/20 01:07:02 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -155,7 +155,7 @@ standard output,
 .bP
 standard input and
 .bP
-ultimately \*(lq/dev/tty\*(rq
+ultimately \*(``/dev/tty\*(''
 .RE
 .IP
 to obtain terminal settings.
@@ -283,7 +283,7 @@ terminal in the environmental variable \fBTERM\fR.
 .TP 5
 \fB@TPUT@ cup 0 0\fR
 Send the sequence to move the cursor to row \fB0\fR, column \fB0\fR
-(the upper left corner of the screen, usually known as the \*(lqhome\*(rq
+(the upper left corner of the screen, usually known as the \*(``home\*(''
 cursor position).
 .TP 5
 \fB@TPUT@ clear\fR
@@ -423,11 +423,11 @@ it accepted \fItermcap names\fP for other capabilities.
 Also, Bostic's BSD \fBtput\fP did not modify the terminal I/O modes
 as the earlier BSD \fBtset\fP had done.
 .PP
-At the same time, Bostic added a shell script named \*(lqclear\*(rq,
+At the same time, Bostic added a shell script named \*(``clear\*('',
 which used \fBtput\fP to clear the screen.
 .PP
 Both of these appeared in 4.4BSD,
-becoming the \*(lqmodern\*(rq BSD implementation of \fBtput\fP.
+becoming the \*(``modern\*('' BSD implementation of \fBtput\fP.
 .PP
 This implementation of \fBtput\fP began from a different source than
 AT&T or BSD: Ross Ridge's \fImytinfo\fP package, published on
@@ -453,7 +453,7 @@ may not use the standard output.
 The AT&T implementation's \fBinit\fP and \fBreset\fP commands
 use the BSD (4.1c) \fBtset\fP source, which manipulates terminal modes.
 It successively tries standard output, standard error, standard input
-before falling back to \*(lq/dev/tty\*(rq and finally just assumes
+before falling back to \*(``/dev/tty\*('' and finally just assumes
 a 1200Bd terminal.
 When updating terminal modes, it ignores errors.
 .IP

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.43 2017/11/19 01:54:00 tom Exp $
+.\" $Id: curs_addch.3x,v 1.44 2017/11/20 01:27:20 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -210,7 +210,7 @@ ncurses(3X)).
 .SS Character Set
 X/Open Curses assumes that the parameter passed to \fBwaddch\fP contains
 a single character.
-As discussed in \fBcurs_attr(3X)\fP, that character may have been
+As discussed in \fBcurs_attr\fP(3X), that character may have been
 more than eight bits in an SVr3 or SVr4 implementation,
 but in the X/Open Curses model, the details are not given.
 The important distinction between SVr4 curses and X/Open Curses is

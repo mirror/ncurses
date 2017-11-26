@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.143 2017/09/30 00:00:56 tom Exp $
+dnl $Id: configure.in,v 1.144 2017/11/25 21:24:23 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -136,6 +136,8 @@ case $cf_cv_screen in
 	cf_cv_libtype=`echo "$cf_cv_screen" | sed -e 's/^ncurses//'`
 	;;
 esac
+
+CF_WITH_X11_RGB
 
 dnl If we've not specified a library, assume we're using sysvr4 libraries
 dnl installed conventionally (e.g., SunOS 5.x - solaris).

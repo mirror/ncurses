@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.50 2017/11/18 23:56:00 tom Exp $
+.\" $Id: curs_getch.3x,v 1.51 2017/11/21 00:45:48 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -295,11 +295,11 @@ completion.
 .RS 3
 .TP 5
 \fBungetch\fP
-returns ERR
+returns \fBERR\fP
 if there is no more room in the FIFO.
 .TP
 \fBwgetch\fP
-returns ERR
+returns \fBERR\fP
 if the window pointer is null, or
 if its timeout expires without having any data, or
 if the execution was interrupted by a signal (\fBerrno\fR will be set to
@@ -386,7 +386,7 @@ NetBSD curses later added this extension.
 .PP
 Programmers concerned about portability should be prepared for either of two
 cases: (a) signal receipt does not interrupt \fBgetch\fR; (b) signal receipt
-interrupts \fBgetch\fR and causes it to return ERR with \fBerrno\fR set to
+interrupts \fBgetch\fR and causes it to return \fBERR\fP with \fBerrno\fR set to
 \fBEINTR\fR.
 .PP
 The \fBhas_key\fR function is unique to \fBncurses\fR.
