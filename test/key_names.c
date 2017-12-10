@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: key_names.c,v 1.6 2017/09/29 09:16:42 tom Exp $
+ * $Id: key_names.c,v 1.7 2017/12/09 21:05:01 tom Exp $
  */
 
 #include <test.priv.h>
@@ -77,7 +77,7 @@ main(int argc, char *argv[])
 	endwin();
     }
     for (n = -1; n < KEY_MAX + 512; n++) {
-	int check = wcwidth(n);
+	int check = wcwidth((wchar_t) n);
 	const char *result = check >= 0 ? key_name((wchar_t) n) : "?";
 	if (result != 0)
 	    printf("%d(%5o):%s\n", n, n, result);

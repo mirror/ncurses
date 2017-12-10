@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.13 2017/11/24 19:25:45 tom Exp $
+ * $Id: dots_xcurses.c,v 1.14 2017/12/09 21:04:41 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -245,7 +245,7 @@ main(int argc, char *argv[])
 		napms(s_option);
 	    }
 	}
-	wch[0] = p;
+	wch[0] = (wchar_t) p;
 	addnwstr(wch, 1);
 	refresh();
 	++total_chars;

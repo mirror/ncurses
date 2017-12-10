@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3014 2017/11/25 23:04:42 tom Exp $
+-- $Id: NEWS,v 1.3021 2017/12/09 22:45:01 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171209
+	+ modify misc/ncurses-config.in to make output with --includedir
+	  consistent with --cflags, i.e., when --disable-overwrite option was
+	  configured the output should show the subdirectory where headers
+	  are.
+	+ modify MKlib_gen.sh to suppress macros when calling an "implemented"
+	  function in link_test.c
+	+ updated ftp-url used in test-packages, etc.
+	+ modify order of -pie/-shared options in configure script in case
+	  LDFLAGS uses "-pie", working around a defect or limitation in the GNU
+	  linker (prompted by patch by Yogesh Prasad, forwarded by Jay Shah).
+	+ add entry in man_db.renames for user_caps.5
 
 20171125
 	+ modify MKlib_gen.sh to avoid tracing result from getstr/getnstr

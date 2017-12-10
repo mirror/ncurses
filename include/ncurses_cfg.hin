@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey      1997-on                                   *
  ****************************************************************************/
 /*
- * $Id: ncurses_cfg.hin,v 1.10 2017/07/22 17:01:10 tom Exp $
+ * $Id: ncurses_cfg.hin,v 1.11 2017/12/09 20:41:54 tom Exp $
  *
  * Both ncurses_cfg.h and ncurses_def.h are internal header-files used when
  * building ncurses.
@@ -43,7 +43,7 @@
  *
  * See:
  *	http://invisible-island.net/autoconf/
- *	ftp://invisible-island.net/autoconf/
+ *	ftp://ftp.invisible-island.net/autoconf/
  */
 #ifndef NC_CONFIG_H
 #define NC_CONFIG_H

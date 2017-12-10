@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.99 2016/12/31 17:04:34 tom Exp $
+# $Id: mk-1st.awk,v 1.100 2017/12/02 23:29:29 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -170,7 +170,7 @@ function removelinks(directory) {
 		}
 	}
 function make_shlib(objs, shlib_list) {
-		printf "\t$(MK_SHARED_LIB) $(%s_OBJS) $(%s) $(LDFLAGS)\n", objs, shlib_list
+		printf "\t$(MK_SHARED_LIB) $(%s_OBJS) $(%s)\n", objs, shlib_list
 	}
 function sharedlinks(directory) {
 		if ( ShlibVer != "auto" && ShlibVer != "cygdll" && ShlibVer != "msysdll" && ShlibVer != "mingw" ) {

@@ -2,13 +2,13 @@ Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
 %define AppVersion 6.0
 %define AppRelease 20171111
-# $Id: ncurses-examples.spec,v 1.7 2017/11/11 15:21:19 tom Exp $
+# $Id: ncurses-examples.spec,v 1.8 2017/12/09 20:41:16 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
 License: MIT
 Group: Applications/Development
-URL: ftp://invisible-island.net/%{AppProgram}
+URL: ftp://ftp.invisible-island.net/%{AppProgram}
 Source0: %{AppProgram}-%{AppRelease}.tgz
 Packager: Thomas Dickey <dickey@invisible-island.net>
 
