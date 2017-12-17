@@ -1,8 +1,8 @@
 Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
-%define AppVersion 6.0
-%define AppRelease 20171111
-# $Id: ncurses-examples.spec,v 1.8 2017/12/09 20:41:16 tom Exp $
+%define AppVersion MAJOR.MINOR
+%define AppRelease YYYYMMDD
+# $Id: ncurses-examples.spec,v 1.9 2017/12/17 00:12:42 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -13,8 +13,8 @@ Source0: %{AppProgram}-%{AppRelease}.tgz
 Packager: Thomas Dickey <dickey@invisible-island.net>
 
 %description
-These are the example/test programs from the ncurses 6.0 distribution,
-for patch-date 20171111.
+These are the example/test programs from the ncurses MAJOR.MINOR distribution,
+for patch-date YYYYMMDD.
 
 This package installs in "bin/ncurses-examples" to avoid conflict with other
 packages.

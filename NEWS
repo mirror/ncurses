@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3021 2017/12/09 22:45:01 tom Exp $
+-- $Id: NEWS,v 1.3025 2017/12/17 00:14:16 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171216
+	+ repair template in test/package/ncurses-examples.spec (cf: 20171111).
+	+ improve tic's warning about the number of parameters tparm might use
+	  for u1-u9 by making a special case for u6.
+	+ improve curs_attr.3x discussion of color pairs.
 
 20171209
 	+ modify misc/ncurses-config.in to make output with --includedir

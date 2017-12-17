@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.112 2017/11/26 00:10:57 tom Exp $
+ * $Id: picsmap.c,v 1.114 2017/12/16 23:49:40 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1160,6 +1160,7 @@ parse_xpm(char **data)
 		break;
 	    }
 	    num_colors++;
+	    free(list[reading_last]);
 	    list[reading_last] = strdup(arg1);
 	    if ((by_name = lookup_rgb(arg3)) != 0) {
 		found = gather_c_values(by_name->value);
@@ -1473,6 +1474,7 @@ show_picture(PICS_HEAD * pics)
     int my_pair, my_color;
 
     debugmsg("called show_picture");
+    logmsg("...using %dx%d screen", LINES, COLS);
 #if USE_EXTENDED_COLORS
     reset_color_pairs();
 #elif HAVE_CURSCR

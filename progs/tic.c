@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.247 2017/10/09 15:16:15 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.248 2017/12/16 23:05:21 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1755,14 +1755,22 @@ expected_params(const char *name)
     return result;
 }
 
+/*
+ * ncurses assumes that u6 could be used for getting the cursor-position, but
+ * that is not implemented.  Make a special case for that, to quiet needless
+ * warnings.
+ *
+ * There are other string-capability extensions (see terminfo.src) which could
+ * have parameters such as "Ss", "%u", but are not used by ncurses.
+ */
 static int
 is_user_capability(const char *name)
 {
-    int result = 0;
+    int result = -1;
     if (name[0] == 'u' &&
 	(name[1] >= '0' && name[1] <= '9') &&
 	name[2] == '\0')
-	result = 1;
+	result = (name[1] == '6') ? 2 : 0;
     return result;
 }
 
@@ -1844,7 +1852,10 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	    analyzed = popcount;
 	}
 	if (actual != analyzed && expected != analyzed) {
-	    if (is_user_capability(name)) {
+	    int user_cap = is_user_capability(name);
+	    if ((user_cap == analyzed) && using_extensions) {
+		;		/* ignore */
+	    } else if (user_cap >= 0) {
 		_nc_warning("tparm will use %d parameters for %s",
 			    analyzed, name);
 	    } else {
@@ -2705,7 +2716,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	     * check for consistent number of parameters.
 	     */
 	    if (j >= SIZEOF(parametrized) ||
-		is_user_capability(name) ||
+		is_user_capability(name) > 0 ||
 		parametrized[j] > 0) {
 		check_params(tp, name, a, (j >= STRCOUNT));
 	    }

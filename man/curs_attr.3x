@@ -27,12 +27,25 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.61 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_attr.3x,v 1.62 2017/12/16 20:16:07 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de NS
+.ie n  .sp
+.el    .sp .5
+.ie n  .in +4
+.el    .in +2
+.nf
+.ft C			\" Courier
+..
+.de NE
+.fi
+.ft R
+.in -4
+..
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -172,10 +185,42 @@ again values OR'd together in \fIattr\fP,
 without affecting other attributes.
 .\" ---------------------------------------------------------------------------
 .SS Legacy window attributes
-Most of the window attribute routines are extensions of older routines
+The X/Open window attribute routines which \fIset\fP or \fIget\fP,
+turn \fIon\fP or \fIoff\fP
+are extensions of older routines
 which assume that color pairs are OR'd into the attribute parameter.
-These older routines use the same name, omitting an underscore (\fB_\fP).
-
+These newer routines use similar names, because
+X/Open simply added an underscore (\fB_\fP) for the newer names.
+.PP
+The \fBint\fP datatype used in the legacy routines is treated as if
+it is the same size as \fBchtype\fP (used by \fBaddch\fP(3X)).
+It holds the common video attributes (such as bold, reverse),
+as well as a few bits for color.
+Those bits correspond to the \fBA_COLOR\fP symbol.
+The \fBCOLOR_PAIR\fP macro provides a value which can be OR'd into 
+the attribute parameter.
+For example,
+as long as that value fits into the \fBA_COLOR\fP mask,
+then these calls produce similar results:
+.NS
+attrset(A_BOLD | COLOR_PAIR(\fIpair\fP));
+attr_set(A_BOLD, \fIpair\fP, NULL);
+.NE
+.PP
+However, if the value does not fit, then the \fBCOLOR_PAIR\fP macro
+uses only the bits that fit.
+For example, because in ncurses \fBA_COLOR\fP has eight (8) bits,
+then \fBCOLOR_PAIR(259)\fP is 4 (259\-255).
+.PP
+The \fBPAIR_NUMBER\fP macro extracts a pair number from an \fBint\fP
+(or \fBchtype\fP).
+For example, the \fIinput\fP and \fIoutput\fP values in these statements
+would be the same:
+.NS
+int value = A_BOLD | COLOR_PAIR(\fIinput\fP);
+int \fIoutput\fP = PAIR_NUMBER(value);
+.NE
+.PP
 The \fBattrset\fP routine is a legacy feature predating SVr4 curses
 but kept in X/Open Curses for the same reason that SVr4 curses kept it:
 compatibility.
@@ -245,6 +290,7 @@ l l .
 \fBA_ALTCHARSET\fR	Alternate character set
 \fBA_ITALIC\fR	Italics (non-X/Open extension)
 \fBA_CHARTEXT\fR	Bit-mask to extract a character
+\fBA_COLOR\fR	Bit-mask to extract a color (legacy routines)
 .TE
 .RE
 .PP
