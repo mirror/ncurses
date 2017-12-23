@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.45 2017/09/06 20:08:11 tom Exp $
+ * $Id: movewindow.c,v 1.46 2017/12/23 21:36:59 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -54,7 +54,7 @@ TODO:
 #undef derwin
 #endif
 
-#ifdef NCURSES_VERSION
+#if defined(NCURSES_VERSION) || defined(PDCURSES)
 #define CONST_FMT const
 #else
 #define CONST_FMT		/* nothing */

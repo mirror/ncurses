@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.75 2017/04/05 23:19:24 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.77 2017/12/23 19:23:40 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -440,11 +440,8 @@ typelist(int eargc, char *eargv[],
 			(void) fprintf(stderr,
 				       "%s: couldn't open terminfo file %s.\n",
 				       _nc_progname, name_2);
-			free(cwd_buf);
 			free(name_2);
-			closedir(entrydir);
-			closedir(termdir);
-			return (EXIT_FAILURE);
+			continue;
 		    }
 
 		    /* only visit things once, by primary name */
@@ -489,7 +486,7 @@ typelist(int eargc, char *eargv[],
 				cn = _nc_first_name(lterm.term_names);
 				/* apply the selected hook function */
 				hook(i, eargc, cn, &lterm);
-				_nc_free_termtype(&lterm);
+				_nc_free_termtype2(&lterm);
 			    }
 			}
 			code = _nc_db_next(capdbp, &key, &data);

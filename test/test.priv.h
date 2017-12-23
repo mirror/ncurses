@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.160 2017/10/12 01:00:59 tom Exp $ */
+/* $Id: test.priv.h,v 1.161 2017/12/23 21:40:21 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -887,7 +887,11 @@ extern char *strnames[], *strcodes[], *strfnames[];
  * that XSI shows.
  */
 #ifndef NCURSES_CONST
+#ifdef PDCURSES
+#define NCURSES_CONST		const /* close enough */
+#else
 #define NCURSES_CONST		/* nothing */
+#endif
 #endif
 
 /* out-of-band values for representing absent capabilities */
@@ -974,7 +978,7 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 /*
  * ncurses uses const in some places where X/Open does (or did) not allow.
  */
-#ifdef NCURSES_VERSION
+#if defined(NCURSES_VERSION) || defined(PDCURSES)
 #define CONST_MENUS const
 #else
 #define CONST_MENUS		/* nothing */

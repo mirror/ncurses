@@ -6,13 +6,13 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.52 2017/09/04 11:49:55 tom Exp $
+ * $Id: testcurs.c,v 1.53 2017/12/23 21:38:26 tom Exp $
  */
 
 #include <test.priv.h>
 
 #if defined(XCURSES)
-char *XCursesProgramName = "testcurs";
+const char *XCursesProgramName = "testcurs";
 #endif
 
 static int initTest(WINDOW **);
