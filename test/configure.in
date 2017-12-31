@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.144 2017/11/25 21:24:23 tom Exp $
+dnl $Id: configure.in,v 1.145 2017/12/26 22:55:15 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -252,6 +252,17 @@ tdestroy \
 tsearch \
 )
 
+# use a compile-check to work with ncurses*-config and subdirectory includes
+AC_CACHE_CHECK(if we can use termcap.h,cf_cv_have_termcap_h,[
+	AC_TRY_COMPILE([
+#include <curses.h>
+#include <termcap.h>
+],
+	[return 0;],
+	[cf_cv_have_termcap_h=yes],
+	[cf_cv_have_termcap_h=no])])
+test "x$cf_cv_have_termcap_h" = xyes && AC_DEFINE(HAVE_TERMCAP_H)
+
 if test "x$ac_cv_func_getopt" = xno; then
 	AC_MSG_ERROR(getopt is required for building programs)
 fi
@@ -294,6 +305,7 @@ mvwvline \
 napms \
 newpad \
 putwin \
+reset_color_pairs \
 resize_term \
 resizeterm \
 restartterm \

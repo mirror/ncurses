@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.0
-Release: 20171223
+Release: 20171230
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -42,6 +42,7 @@ RPATH_LIST=../lib:%{_prefix}/lib \
 	--with-default-terminfo-dir=%{MYDATA} \
 	--with-install-prefix=$RPM_BUILD_ROOT \
 	--with-terminfo-dirs=%{MYDATA}:/usr/share/terminfo \
+	--with-config-suffix=dev \
 	--disable-echo \
 	--disable-getcap \
 	--disable-leaks \
@@ -91,6 +92,9 @@ rm -rf $RPM_BUILD_ROOT
 %{MY_PKG}/*.pc
 
 %changelog
+
+* Tue Dec 26 2017 Thomas E. Dickey
+- add --with-config-suffix option
 
 * Sun Apr 26 2015 Thomas E. Dickey
 - move package to /usr

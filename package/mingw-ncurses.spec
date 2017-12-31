@@ -3,7 +3,7 @@
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
 Version: 6.0
-Release: 20171223
+Release: 20171230
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -42,6 +42,7 @@ This package is used for testing ABI 6 with cross-compiles to MinGW.
 %prep
 
 %define CFG_OPTS \\\
+	--with-config-suffix=dev \\\
 	--disable-echo \\\
 	--disable-db-install \\\
 	--disable-getcap \\\
@@ -135,6 +136,9 @@ rm -rf $RPM_BUILD_ROOT
 %{mingw64_libdir}/*
 
 %changelog
+
+* Tue Dec 26 2017 Thomas E. Dickey
+- add --with-config-suffix option
 
 * Sat Sep 20 2014 Thomas E. Dickey
 - adjust install-rules for ncurses*-config

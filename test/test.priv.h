@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.161 2017/12/23 21:40:21 tom Exp $ */
+/* $Id: test.priv.h,v 1.162 2017/12/26 22:20:42 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -204,6 +204,10 @@
 
 #ifndef HAVE_PUTWIN
 #define HAVE_PUTWIN 0
+#endif
+
+#ifndef HAVE_RESET_COLOR_PAIRS
+#define HAVE_RESET_COLOR_PAIRS 0
 #endif
 
 #ifndef HAVE_RESIZE_TERM

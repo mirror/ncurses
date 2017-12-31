@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.83 2017/10/22 23:53:00 tom Exp $
+# $Id: ncurses_defs,v 1.84 2017/12/26 22:43:14 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -125,6 +125,7 @@ HAVE_REGEXPR_H_FUNCS
 HAVE_REGEXP_H_FUNCS
 HAVE_REGEX_H_FUNCS
 HAVE_REMOVE
+HAVE_RESET_COLOR_PAIRS
 HAVE_RESIZETERM
 HAVE_RESIZE_TERM
 HAVE_RESTARTTERM	1
@@ -163,6 +164,7 @@ HAVE_TCGETPGRP
 HAVE_TDESTROY
 HAVE_TELL
 HAVE_TERMATTRS	1
+HAVE_TERMCAP_H	1
 HAVE_TERMIOS_H
 HAVE_TERMIO_H
 HAVE_TERMNAME	1

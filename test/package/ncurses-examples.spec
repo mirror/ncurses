@@ -2,7 +2,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.9 2017/12/17 00:12:42 tom Exp $
+# $Id: ncurses-examples.spec,v 1.10 2017/12/26 23:54:06 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -27,6 +27,7 @@ packages.
 %build
 
 INSTALL_PROGRAM='${INSTALL}' \
+NCURSES_CONFIG_SUFFIX=dev \
 %configure \
 	--target %{_target_platform} \
 	--prefix=%{_prefix} \

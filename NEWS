@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3030 2017/12/23 21:44:36 tom Exp $
+-- $Id: NEWS,v 1.3035 2017/12/30 23:12:52 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20171230
+	+ build-fix for ncurses-examples with Fedora27, adding check for
+	  reset_color_pairs() -- not yet in Fedora's package.
+	+ consistently add $CFLAGS to $MK_SHARED_LIB symbol in configure
+	  script when the latter happens to use the C compiler rather than
+	  directly using the loader (report by Jeffrey Walton).
+	+ set ABI for upcoming 6.1 release in "*.map" files.  While there are
+	  some remaining internals to apply, no ABI-related changes are
+	  anticipated.
+	+ add configure --with-config-suffix option to work around filename
+	  conflict with Redhat packages versus test-packages.
 
 20171223
 	+ modify ncurses-examples to quiet const-warnings when building with

@@ -4,7 +4,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: mingw-ncurses-examples.spec,v 1.3 2013/10/26 23:30:21 tom Exp $
+# $Id: mingw-ncurses-examples.spec,v 1.4 2017/12/26 22:19:12 tom Exp $
 Name: mingw32-ncurses6-examples
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -66,8 +66,9 @@ mkdir BUILD-W32
 pushd BUILD-W32
 CFLAGS="%{CC_NORMAL}" \
 CC=%{mingw32_cc} \
+NCURSES_CONFIG_SUFFIX=dev \
 %mingw32_configure %{CFG_OPTS}
-cp config.status /tmp/ming32-config.status
+# cp config.status /tmp/ming32-config.status
 make
 popd
 
@@ -76,7 +77,7 @@ pushd BUILD-W64
 CFLAGS="%{CC_NORMAL}" \
 CC=%{mingw64_cc} \
 %mingw64_configure %{CFG_OPTS}
-cp config.status /tmp/ming64-config.status
+# cp config.status /tmp/ming64-config.status
 make
 popd
 

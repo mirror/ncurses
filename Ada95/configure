@@ -9500,11 +9500,11 @@ echo "${ECHO_T}$CC_SHARED_OPTS" >&6
 	(aix4.3-9*|aix[5-7]*)
 		if test "$GCC" = yes; then
 			CC_SHARED_OPTS='-Wl,-brtl'
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -shared -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
 		else
 			CC_SHARED_OPTS='-brtl'
 			# as well as '-qpic=large -G' or perhaps "-bM:SRE -bnoentry -bexpall"
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -G -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -G -Wl,-brtl -Wl,-blibpath:${RPATH_LIST}:/usr/lib -o $@'
 		fi
 		;;
 	(beos*)
@@ -9636,7 +9636,7 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 			cf_shared_soname='`basename $@`'
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB='${CC} ${LDFLAGS} -shared -Wl,-rpath,${RPATH_LIST} -Wl,-h,'$cf_shared_soname' -o $@'
+		MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-rpath,${RPATH_LIST} -Wl,-h,'$cf_shared_soname' -o $@'
 		;;
 	(irix*)
 		if test "$cf_cv_enable_rpath" = yes ; then
@@ -9645,9 +9645,9 @@ echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 		# tested with IRIX 5.2 and 'cc'.
 		if test "$GCC" != yes; then
 			CC_SHARED_OPTS='-KPIC'
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -shared -rdata_shared -soname `basename $@` -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -rdata_shared -soname `basename $@` -o $@'
 		else
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -shared -Wl,-soname,`basename $@` -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-soname,`basename $@` -o $@'
 		fi
 		cf_cv_rm_so_locs=yes
 		;;
@@ -9760,7 +9760,7 @@ CF_EOF
 
 			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname' -o $@'
 		else
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -Wl,-shared -Wl,-Bshareable -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -Wl,-shared -Wl,-Bshareable -o $@'
 		fi
 		;;
 	(osf*|mls+*)
@@ -9858,9 +9858,9 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 			done
 			CFLAGS="$cf_save_CFLAGS"
 			CC_SHARED_OPTS=$cf_shared_opts
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -dy -G -h '$cf_cv_shared_soname' -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -dy -G -h '$cf_cv_shared_soname' -o $@'
 		else
-			MK_SHARED_LIB='${CC} ${LDFLAGS} -shared -dy -G -h '$cf_cv_shared_soname' -o $@'
+			MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -dy -G -h '$cf_cv_shared_soname' -o $@'
 		fi
 		;;
 	(sysv5uw7*|unix_sv*)

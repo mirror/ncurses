@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.647 2017/11/25 21:07:54 tom Exp $
+dnl $Id: configure.in,v 1.649 2017/12/26 22:23:59 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See http://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.647 $)
+AC_REVISION($Revision: 1.649 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -223,7 +223,21 @@ CF_PROG_LN_S
 
 AC_SYS_LONG_FILE_NAMES
 
-# if we find pkg-config, check if we should install the ".pc" files.
+# Provide for renaming "ncurses5-config" to "ncurses5X-config", etc., in case
+# of package conflict.
+cf_config_suffix=
+AC_ARG_WITH(config-suffix,
+	[  --with-config-suffix=X  suffixes pc-files],
+	[case "x$withval" in
+	(xyes|xno)
+		AC_MSG_WARN(expected a value for config-suffix option)
+		;;
+	(*)	cf_config_suffix="$withval"
+		;;
+	esac])
+AC_SUBST(cf_config_suffix)
+
+# If we find pkg-config, check if we should install the ".pc" files.
 CF_PKG_CONFIG
 CF_WITH_PKG_CONFIG_LIBDIR
 CF_ENABLE_PC_FILES
@@ -1129,6 +1143,7 @@ if test "x$with_ext_colors" = xyes ; then
 		AC_DEFINE(NCURSES_EXT_COLORS,1,[Define to 1 to compile for 256-color support])
 		AC_DEFINE(HAVE_ALLOC_PAIR,1,[Define to 1 to enable alloc_pair() function])
 		AC_DEFINE(HAVE_INIT_EXTENDED_COLOR,1,[Define to 1 to enable init_extended_color() function in test-programs])
+		AC_DEFINE(HAVE_RESET_COLOR_PAIRS,1,[Define to 1 to enable reset_color_pairs() function in test-programs])
 	fi
 fi
 AC_SUBST(NCURSES_EXT_COLORS)

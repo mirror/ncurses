@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.114 2017/12/16 23:49:40 tom Exp $
+ * $Id: picsmap.c,v 1.115 2017/12/26 22:20:11 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1475,7 +1475,7 @@ show_picture(PICS_HEAD * pics)
 
     debugmsg("called show_picture");
     logmsg("...using %dx%d screen", LINES, COLS);
-#if USE_EXTENDED_COLORS
+#if HAVE_RESET_COLOR_PAIRS
     reset_color_pairs();
 #elif HAVE_CURSCR
     wclear(curscr);

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.55 2017/09/04 13:28:44 tom Exp $
+ * $Id: demo_termcap.c,v 1.56 2017/12/26 22:41:47 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -46,7 +46,7 @@
 #endif
 #endif
 
-#ifdef NCURSES_VERSION
+#if defined(NCURSES_VERSION) && HAVE_TERMCAP_H
 #include <termcap.h>
 #endif
 
