@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.145 2017/12/26 22:55:15 tom Exp $
+dnl $Id: configure.in,v 1.148 2018/01/02 23:39:26 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -37,8 +37,8 @@ dnl If you're configuring ncurses, you shouldn't need to use this script.
 dnl It's only for testing purposes.
 dnl
 dnl For additional information, see
-dnl		http://invisible-island.net/autoconf/
-dnl		http://invisible-island.net/ncurses/ncurses-examples.html
+dnl		https://invisible-island.net/autoconf/
+dnl		https://invisible-island.net/ncurses/ncurses-examples.html
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
 AC_INIT(ncurses.c)
@@ -181,7 +181,7 @@ CF_ARG_DISABLE(panel,
 AC_MSG_RESULT($cf_enable_panel)
 if test $cf_enable_panel = yes
 then
-	CF_CHECK_CURSES_LIB(panel,$cf_cv_libtype,new_panel)
+	CF_CHECK_CURSES_LIB(panel,$cf_cv_libtype,new_panel,0)
 	cf_curses_headers="$cf_curses_headers panel.h"
 fi
 
@@ -201,7 +201,7 @@ then
 		CF_NETBSD_MENU_H
 		;;
 	esac
-	CF_CHECK_CURSES_LIB(menu,$cf_cv_libtype,menu_driver)
+	CF_CHECK_CURSES_LIB(menu,$cf_cv_libtype,menu_driver,[0,0])
 	cf_curses_headers="$cf_curses_headers menu.h"
 fi
 
@@ -221,7 +221,7 @@ then
 		CF_NETBSD_FORM_H
 		;;
 	esac
-	CF_CHECK_CURSES_LIB(form,$cf_cv_libtype,form_driver)
+	CF_CHECK_CURSES_LIB(form,$cf_cv_libtype,form_driver,[0,0])
 	cf_curses_headers="$cf_curses_headers form.h"
 fi
 

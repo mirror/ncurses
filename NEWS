@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3035 2017/12/30 23:12:52 tom Exp $
+-- $Id: NEWS,v 1.3046 2018/01/06 22:12:47 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,30 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180106
+	+ fixes for writing extended color pairs in putwin.
+	+ modify test/savescreen.c to add test patterns that exercise 88-,
+	  256-, etc., colors.
+	+ modify configure option --with-build-cc, adding clang, c89 and c99
+	  as possible default values.
+	+ modify ncurses-examples configure script to use pkg-config for the
+	  extra form/menu/panel libraries, to be more consistent with the
+	  handling of the curses/ncurses library.
+	+ modify test-packages for mingw to supply "pc" files.
+	+ modify gen-pkgconfig.in to list -lpthread as a private library when
+	  configured to access it via weak symbols.
+	+ simplify gen-pkgconfig.in, adding -ltinfo without the special linker
+	  checks because some versions of the linker simply hard-code the
+	  behavior.
+	+ update URLs for ncurses website to use https.
+	+ modify CF_CURSES_LIBS to fill in $cf_nculib_root in case the
+	  ncurses-examples are built with a system ncurses that lacks the
+	  standard "curses" symbolic link, as done by SuSE.  The symbol is
+	  needed to make a followup check for the pthread library work, and
+	  would be set properly using the options "--with-screen", etc.
+	+ generate misc/*.pc with "all" rule, as done for "sources" rule
+	  (report by Jeffrey Walton).
 
 20171230
 	+ build-fix for ncurses-examples with Fedora27, adding check for
@@ -1236,7 +1260,7 @@ it is not possible to add this information.
 20150810
 	+ workaround for Debian #65617, which was fixed in mawk's upstream
 	  releases in 2009 (report by Sven Joachim).  See
-	  	http://invisible-island.net/mawk/CHANGES.html#t20090727
+	  	https://invisible-island.net/mawk/CHANGES.html#t20090727
 
 20150808 6.0 release for upload to ftp.gnu.org
 
@@ -1950,7 +1974,7 @@ it is not possible to add this information.
 20131221
 	+ further improved man2html, used this to fix broken links in html
 	  manpages.  See
-	  ftp://invisible-island.net/ncurses/patches/man2html
+	  ftp://ftp.invisible-island.net/ncurses/patches/man2html
 
 20131214
 	+ modify configure-script/ifdef's to allow OLD_TTY feature to be
@@ -5908,7 +5932,7 @@ it is not possible to add this information.
 	+ document error conditions for ncurses library functions (report by
 	  Stanislav Ievlev).
 	+ regenerated html documentation for ada binding.
-	  see ftp://invisible-island.net/ncurses/patches/gnathtml
+	  see ftp://ftp.invisible-island.net/ncurses/patches/gnathtml
 
 20050507
 	+ regenerated html documentation for manpages.

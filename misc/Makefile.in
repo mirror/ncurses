@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.67 2017/12/26 19:13:24 tom Exp $
+# $Id: Makefile.in,v 1.68 2017/12/31 20:34:42 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -75,11 +75,10 @@ INSTALL_DATA	= @INSTALL_DATA@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 
 ################################################################################
-all :	terminfo.tmp
+all \
+sources :: terminfo.tmp 
 
 depend :
-
-sources :: terminfo.tmp 
 
 install : @MISC_INSTALL_DATA@ install.libs
 
@@ -127,6 +126,7 @@ install.libs :: $(DESTDIR)$(bindir) ncurses-config
 @MAKE_PC_FILES@			;; \
 @MAKE_PC_FILES@		esac'
 
+@MAKE_PC_FILES@all \
 @MAKE_PC_FILES@sources :: pc-files
 @MAKE_PC_FILES@pc-files :
 @MAKE_PC_FILES@	$(SHELL) ./gen-pkgconfig

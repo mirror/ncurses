@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.198 2017/07/27 08:34:34 tom Exp $
+-- $Id: INSTALL,v 1.201 2018/01/01 15:07:35 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -973,7 +973,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	macros for libtool, e.g., AC_PROG_LIBTOOL.  See the comments in
 	aclocal.m4 for CF_PROG_LIBTOOL, and ensure that you build configure
 	using the appropriate patch for autoconf from
-		http://invisible-island.net/autoconf/
+		https://invisible-island.net/autoconf/
 
     --with-libtool-opts=XXX
 	Specify additional libtool options.
@@ -2107,7 +2107,7 @@ USING NCURSES WITH GPM:
 	but the linker may not cooperate, producing mysterious errors.
 	See the FAQ, as well as the discussion under the --with-gpm option:
 
-	http://invisible-island.net/ncurses/ncurses.faq.html#using_gpm_lib
+	https://invisible-island.net/ncurses/ncurses.faq.html#using_gpm_lib
 
 BUILDING NCURSES WITH A CROSS-COMPILER
 	Ncurses can be built with a cross-compiler.  Some parts must be built

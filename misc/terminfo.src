@@ -23471,7 +23471,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # Beginning in 2010, NetBSD curses has also provided a "-x" option for
 # tic/infocmp, and uses this database (with a few changes).  There are a few
 # differences, noted in
-#	http://invisible-island.net/ncurses/ncurses-netbsd.html
+#	https://invisible-island.net/ncurses/ncurses-netbsd.html
 #
 # ncurses makes explicit checks for a few user-definable capabilities:  AX,
 # RGB, U8, XM, which are documented in the user_caps(5) manual page.

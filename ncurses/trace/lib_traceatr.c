@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.89 2017/10/21 23:12:09 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.91 2018/01/07 02:22:01 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -382,6 +382,18 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 		(void) _nc_trace_bufcat(bufnum, " | ");
 		(void) _nc_trace_bufcat(bufnum, _traceattr2(bufnum + 20, attr));
 	    }
+#if NCURSES_EXT_COLORS
+	    /*
+	     * Just in case the extended color is different from the chtype
+	     * value, trace both.
+	     */
+	    if (ch->ext_color != PairNumber(attr)) {
+		char temp[80];
+		_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
+			    " X_COLOR{%d:%d}", ch->ext_color, PairNumber(attr));
+		(void) _nc_trace_bufcat(bufnum, temp);
+	    }
+#endif
 	}
 
 	result = _nc_trace_bufcat(bufnum, r_brace);

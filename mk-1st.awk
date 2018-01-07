@@ -1,6 +1,6 @@
-# $Id: mk-1st.awk,v 1.100 2017/12/02 23:29:29 tom Exp $
+# $Id: mk-1st.awk,v 1.101 2017/12/02 23:29:29 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2014,2016 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #

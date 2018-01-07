@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.63 2017/10/23 00:00:21 tom Exp $
+-- $Id: README,v 1.65 2018/01/01 15:08:44 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -392,7 +392,7 @@ init_color			test: ncurses
 init_color_sp			-
 init_extended_color		test: extended_color
 init_extended_color_sp		test: extended_color
-init_extended_pair		test: extended_color picsmap
+init_extended_pair		test: extended_color ncurses picsmap
 init_extended_pair_sp		test: extended_color
 init_pair			test: background blue bs cardfile chgat clip_printw color_set demo_forms demo_menus demo_new_pair demo_panels dots_curses dots_xcurses echochar filter firework gdc hanoi ins_wide insdelln inserts knight ncurses newdemo padview picsmap rain savescreen tclock test_add_wchstr test_addchstr test_addstr test_addwstr testaddch testcurs view worm xmas
 init_pair_sp			-
@@ -500,7 +500,7 @@ mvvline_set			test: ncurses
 mvwadd_wch			test: test_add_wchstr test_addwstr
 mvwadd_wchnstr			test: test_add_wchstr
 mvwadd_wchstr			test: inch_wide test_add_wchstr
-mvwaddch			test: movewindow newdemo test_add_wchstr test_addchstr test_addstr test_addwstr testcurs xmas
+mvwaddch			test: movewindow ncurses newdemo test_add_wchstr test_addchstr test_addstr test_addwstr testcurs xmas
 mvwaddchnstr			test: test_addchstr
 mvwaddchstr			test: inchs test_addchstr
 mvwaddnstr			test: newdemo test_addstr testcurs
@@ -515,9 +515,9 @@ mvwgetch			test: inch_wide inchs test_get_wstr test_getstr test_instr test_inwst
 mvwgetn_wstr			test: test_get_wstr
 mvwgetnstr			test: test_getstr
 mvwgetstr			test: test_getstr
-mvwhline			test: movewindow
+mvwhline			test: movewindow ncurses
 mvwhline_set			-
-mvwin				test: cardfile demo_menus movewindow testcurs xmas
+mvwin				test: cardfile demo_menus movewindow ncurses testcurs xmas
 mvwin_wch			test: inch_wide
 mvwin_wchnstr			test: inch_wide
 mvwin_wchstr			test: inch_wide
@@ -536,7 +536,7 @@ mvwinstr			test: test_instr
 mvwinwstr			test: test_inwstr
 mvwprintw			test: demo_menus demo_panels inch_wide inchs ncurses test_instr test_inwstr testcurs
 mvwscanw			test: testcurs
-mvwvline			test: ins_wide inserts movewindow test_add_wchstr test_addchstr test_addstr test_addwstr
+mvwvline			test: ins_wide inserts movewindow ncurses test_add_wchstr test_addchstr test_addstr test_addwstr
 mvwvline_set			-
 napms				test: demo_panels ditto dots dots_curses dots_mvcur dots_xcurses echochar extended_color firework firstlast gdc hanoi lrtest ncurses padview picsmap railroad rain tclock test_opaque testcurs view worm xmas progs: tset
 napms_sp			test: sp_tinfo
@@ -708,7 +708,7 @@ ungetch_sp			lib: ncurses
 ungetmouse			lib: menu
 ungetmouse_sp			-
 untouchwin			lib: form
-use_default_colors		test: background dots_curses dots_xcurses filter firework gdc hanoi knight ncurses rain tclock worm xmas
+use_default_colors		test: background dots_curses dots_xcurses filter firework gdc hanoi knight ncurses picsmap rain tclock worm xmas
 use_default_colors_sp		-
 use_env				test: dots dots_curses dots_mvcur dots_xcurses ncurses progs: clear tput
 use_env_sp			test: sp_tinfo
