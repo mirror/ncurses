@@ -2,7 +2,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %define AppProgram ncurses-examples
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.10 2017/12/26 23:54:06 tom Exp $
+# $Id: ncurses-examples.spec,v 1.11 2018/01/15 16:14:16 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -42,8 +42,6 @@ make
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 make install               DESTDIR=$RPM_BUILD_ROOT
-
-strip $RPM_BUILD_ROOT%{_bindir}/%{AppProgram}/*
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT

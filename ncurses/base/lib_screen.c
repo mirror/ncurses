@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.92 2018/01/07 02:22:55 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.93 2018/01/14 17:39:47 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -832,7 +832,7 @@ putwin(WINDOW *win, FILE *filep)
 		encode_attr(buffer, TOP_SLIMIT
 			    (*(const attr_t *) dp) & ~A_CHARTEXT,
 			    A_NORMAL,
-			    (int) COLOR_PAIR(attr),
+			    COLOR_PAIR((int) attr),
 			    0);
 		break;
 	    case pBOOL:
@@ -847,7 +847,7 @@ putwin(WINDOW *win, FILE *filep)
 		encode_attr(buffer, TOP_SLIMIT
 			    * (const attr_t *) dp,
 			    A_NORMAL,
-			    (int) COLOR_PAIR(attr),
+			    COLOR_PAIR((int) attr),
 			    0);
 		break;
 	    case pINT:

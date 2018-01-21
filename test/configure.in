@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.148 2018/01/02 23:39:26 tom Exp $
+dnl $Id: configure.in,v 1.149 2018/01/15 16:13:05 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -50,12 +50,15 @@ CF_CHECK_CACHE
 
 AC_ARG_PROGRAM
 
+CF_HELP_MESSAGE(General Options:)
+
 AC_PROG_MAKE_SET
 CF_PROG_CC
 AC_C_INLINE
 AC_PROG_CPP
 AC_PROG_AWK
 CF_PROG_INSTALL
+CF_INSTALL_OPTS
 CF_PROG_LINT
 CF_MAKE_TAGS
 
@@ -111,7 +114,6 @@ CF_SIGWINCH
 AM_LANGINFO_CODESET
 
 dnl ---------------------------------------------------------------------------
-CF_HELP_MESSAGE(General Options:)
 CF_PKG_CONFIG
 CF_DISABLE_ECHO
 

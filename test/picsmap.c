@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.115 2017/12/26 22:20:11 tom Exp $
+ * $Id: picsmap.c,v 1.116 2018/01/16 09:14:52 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -52,7 +52,7 @@
 #include <sys/types.h>
 #include <sys/stat.h>
 
-#ifdef HAVE_STDINT_H
+#if HAVE_STDINT_H
 #include <stdint.h>
 #define my_intptr_t	intptr_t
 #else

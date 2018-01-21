@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3046 2018/01/06 22:12:47 tom Exp $
+-- $Id: NEWS,v 1.3061 2018/01/16 09:15:38 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180120
+	+ build-fix in picsmap.c for stdint.h existence.
+	+ add --disable-stripping option to configure scripts.
+	+ modify ncurses-examples to install test-scripts in the data directory.
+	+ work around tool-breakage in Debian 9 and later by invoking
+	  gprconfig to specify the C compiler to be used by gnatmake,
+	  and conditionally suppressing Library_Options line for static
+	  libraries.
+	+ bump the compat level for test-packages to 7, i.e., Debian 5.
 
 20180106
 	+ fixes for writing extended color pairs in putwin.
@@ -309,7 +319,7 @@ it is not possible to add this information.
 	+ add options -T and -V to clear command for compatibility with tput.
 	+ add usage message to clear command (Debian #371855).
 	+ improve usage messages for tset and tput.
-	+ minor fixes to "RDGB" extension and reset_color_pairs().
+	+ minor fixes to "RGB" extension and reset_color_pairs().
 
 20170812
 	+ improve description of -R option in infocmp manual page (report by
@@ -736,7 +746,7 @@ it is not possible to add this information.
 		http://git.savannah.gnu.org/cgit/config.git
 
 20161224
-	+ correct parmeters for copywin call in _nc_Synchronize_Attributes()
+	+ correct parameters for copywin call in _nc_Synchronize_Attributes()
 	  (patch by Leon Winter).
 	+ improve color-handling section in terminfo manual page (prompted by
 	  patch by Mihail Konev).
@@ -925,7 +935,7 @@ it is not possible to add this information.
 	  for special keys, based on xterm.
 
 20160702
-	+ improve test/list_keys.c, using $TERM if no parameters areg given.
+	+ improve test/list_keys.c, using $TERM if no parameters are given.
 
 20160625
 	+ build-fixes for ncurses "test_progs" rule.
@@ -1163,7 +1173,7 @@ it is not possible to add this information.
 	  to incorrect attribute-masking.
 
 20151024
-	+ modify MKexpanded.c to update the expansion of a temporary filename
+	+ modify MKexpanded.sh to update the expansion of a temporary filename
 	  to "expanded.c", for use in trace statements.
 	+ modify layout of b/B tests in test/ncurses.c to allow for additional
 	  annotation on the right margin; some terminals with partial support

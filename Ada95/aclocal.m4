@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.125 2018/01/05 01:33:10 tom Exp $
+dnl $Id: aclocal.m4,v 1.131 2018/01/16 21:49:43 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1258,7 +1258,7 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 8 updated: 2015/04/17 21:13:04
+dnl CF_GNAT_PROJECTS version: 9 updated: 2018/01/14 15:46:09
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
 dnl GNAT libraries are a further development, using the project feature.
@@ -1280,10 +1280,12 @@ case $cf_gnat_version in
 	(cygwin*|msys*)
 		;;
 	(*)
-		mkdir conftest.src conftest.bin conftest.lib
-		cd conftest.src
 		rm -rf conftest* *~conftest*
-		cat >>library.gpr <<CF_EOF
+		if mkdir conftest.src conftest.bin conftest.lib
+		then
+			cd conftest.src
+			rm -rf conftest* *~conftest*
+			cat >>library.gpr <<CF_EOF
 project Library is
   Kind := External ("LIB_KIND");
   for Library_Name use "ConfTest";
@@ -1296,12 +1298,12 @@ project Library is
   for Source_Dirs use (Source_Dir);
 end Library;
 CF_EOF
-		cat >>confpackage.ads <<CF_EOF
+			cat >>confpackage.ads <<CF_EOF
 package ConfPackage is
    procedure conftest;
 end ConfPackage;
 CF_EOF
-		cat >>confpackage.adb <<CF_EOF
+			cat >>confpackage.adb <<CF_EOF
 with Text_IO;
 package body ConfPackage is
    procedure conftest is
@@ -1311,16 +1313,17 @@ package body ConfPackage is
    end conftest;
 end ConfPackage;
 CF_EOF
-		if ( $cf_ada_make $ADAFLAGS \
-				-Plibrary.gpr \
-				-XBUILD_DIR=`cd ../conftest.bin;pwd` \
-				-XLIBRARY_DIR=`cd ../conftest.lib;pwd` \
-				-XSOURCE_DIR=`pwd` \
-				-XSONAME=libConfTest.so.1 \
-				-XLIB_KIND=static 1>&AC_FD_CC 2>&1 ) ; then
-			cf_gnat_projects=yes
+			if ( $cf_ada_make $ADAFLAGS \
+					-Plibrary.gpr \
+					-XBUILD_DIR=`cd ../conftest.bin;pwd` \
+					-XLIBRARY_DIR=`cd ../conftest.lib;pwd` \
+					-XSOURCE_DIR=`pwd` \
+					-XSONAME=libConfTest.so.1 \
+					-XLIB_KIND=static 1>&AC_FD_CC 2>&1 ) ; then
+				cf_gnat_projects=yes
+			fi
+			cd ..
 		fi
-		cd ..
 		if test -f conftest.lib/confpackage.ali
 		then
 			cf_gnat_libraries=yes
@@ -1598,6 +1601,64 @@ if test "$srcdir" != "."; then
 fi
 CPPFLAGS="-I. $CPPFLAGS"
 AC_SUBST(CPPFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_INSTALL_OPTS version: 1 updated: 2014/07/21 18:19:51
+dnl ---------------
+dnl prompt for/fill-in useful install-program options
+AC_DEFUN([CF_INSTALL_OPTS],
+[
+CF_INSTALL_OPT_S
+CF_INSTALL_OPT_O
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_INSTALL_OPT_O version: 2 updated: 2015/05/15 19:45:35
+dnl ----------------
+dnl Almost all "install" programs default to the current user's ownership.
+dnl Almost - MINIX is an exception.
+AC_DEFUN([CF_INSTALL_OPT_O],
+[
+AC_MSG_CHECKING(if install needs to be told about ownership)
+case `$ac_config_guess` in
+(*minix)
+	with_install_o=yes
+	;;
+(*)
+	with_install_o=no
+	;;
+esac
+
+AC_MSG_RESULT($with_install_o)
+if test "x$with_install_o" = xyes
+then
+	INSTALL_OPT_O=`id root|sed -e 's/uid=[[0-9]]*(/ -o /' -e 's/gid=[[0-9]]*(/ -g /' -e 's/ [[^=[:space:]]][[^=[:space:]]]*=.*/ /' -e 's/)//g'`
+else
+	INSTALL_OPT_O=
+fi
+
+AC_SUBST(INSTALL_OPT_O)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_INSTALL_OPT_S version: 1 updated: 2014/07/21 18:19:51
+dnl ----------------
+dnl By default, we should strip executables which are installed, but leave the
+dnl ability to suppress that for unit-testing.
+AC_DEFUN([CF_INSTALL_OPT_S],
+[
+AC_MSG_CHECKING(if you want to install stripped executables)
+CF_ARG_DISABLE(stripping,
+	[  --disable-stripping     do not strip installed executables],
+	[with_stripping=no],
+	[with_stripping=yes])
+AC_MSG_RESULT($with_stripping)
+
+if test "$with_stripping" = yes
+then
+	INSTALL_OPT_S="-s"
+else
+	INSTALL_OPT_S=
+fi
+AC_SUBST(INSTALL_OPT_S)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_INTEL_COMPILER version: 7 updated: 2015/04/12 15:39:00
@@ -2225,7 +2286,7 @@ printf("old\n");
 	,[$1=no])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_NCURSES_CONFIG version: 19 updated: 2017/12/26 17:17:17
+dnl CF_NCURSES_CONFIG version: 20 updated: 2018/01/03 04:47:33
 dnl -----------------
 dnl Tie together the configure-script macros for ncurses, preferring these in
 dnl order:
@@ -2272,8 +2333,8 @@ if test "x${PKG_CONFIG:=none}" != xnone; then
 		else
 			AC_DEFINE(NCURSES,1,[Define to 1 if we are using ncurses headers/libraries])
 			NCURSES_CONFIG_PKG=$cf_ncuconfig_root
+			CF_TERM_HEADER
 		fi
-		CF_TERM_HEADER
 
 	else
 		AC_MSG_RESULT(no)
@@ -2858,25 +2919,75 @@ AC_SUBST(PROG_EXT)
 test -n "$PROG_EXT" && AC_DEFINE_UNQUOTED(PROG_EXT,"$PROG_EXT",[Define to the program extension (normally blank)])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 3 updated: 2015/04/18 08:56:57
+dnl CF_PROG_INSTALL version: 7 updated: 2015/04/18 08:56:57
+dnl ---------------
+dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
+dnl misc/tabset install won't work properly.  Usually this happens only when
+dnl using the fallback mkinstalldirs script
+AC_DEFUN([CF_PROG_INSTALL],
+[AC_PROG_INSTALL
+case $INSTALL in
+(/*)
+	;;
+(*)
+	CF_DIRNAME(cf_dir,$INSTALL)
+	test -z "$cf_dir" && cf_dir=.
+	INSTALL=`cd $cf_dir && pwd`/`echo $INSTALL | sed -e 's%^.*/%%'`
+	;;
+esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_GNAT version: 5 updated: 2018/01/15 15:28:49
 dnl ------------
 dnl Check for gnatmake, ensure that it is complete.
 AC_DEFUN([CF_PROG_GNAT],[
 cf_ada_make=gnatmake
-AC_CHECK_PROG(gnat_exists, $cf_ada_make, yes, no)
-if test "$ac_cv_prog_gnat_exists" = no; then
+cf_ada_config="#"
+AC_CHECK_PROG(gnatmake_exists, $cf_ada_make, yes, no)
+if test "$ac_cv_prog_gnatmake_exists" = no; then
 	cf_ada_make=
 	cf_cv_prog_gnat_correct=no
 else
-	CF_GNAT_VERSION
-	AC_CHECK_PROG(M4_exists, m4, yes, no)
-	if test "$ac_cv_prog_M4_exists" = no; then
-		cf_cv_prog_gnat_correct=no
-		echo Ada95 binding required program m4 not found. Ada95 binding disabled.
+	AC_CHECK_PROG(gprconfig_exists, gprconfig, yes, no)
+	if test "$ac_cv_prog_gprconfig_exists" = yes
+	then
+		rm -rf conftest* *~conftest*
+		if mkdir conftest.src
+		then
+			cf_ada_config=""
+			cd conftest.src
+			for cf_gprconfig in Ada C
+			do
+				AC_MSG_CHECKING(for gprconfig name for $cf_gprconfig)
+				cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+				if test -n "$cf_gprconfig_value"
+				then
+					eval cf_ada_config_[$]cf_gprconfig=[$]cf_gprconfig_value
+					AC_MSG_RESULT($cf_gprconfig_value)
+				else
+					AC_MSG_RESULT(missing)
+					cf_ada_config="#"
+					break
+				fi
+			done
+			cd ..
+			rm -rf conftest* *~conftest*
+		fi
+	else
+		# gprconfig is newer than gnatmake; we can continue...
+		cf_ada_config="##"
 	fi
-	if test "$cf_cv_prog_gnat_correct" = yes; then
-		AC_MSG_CHECKING(if GNAT works)
-		CF_GNAT_TRY_RUN([procedure conftest;],
+	if test "x$cf_ada_config" != "x#"
+	then
+		CF_GNAT_VERSION
+		AC_CHECK_PROG(M4_exists, m4, yes, no)
+		if test "$ac_cv_prog_M4_exists" = no; then
+			cf_cv_prog_gnat_correct=no
+			echo Ada95 binding required program m4 not found. Ada95 binding disabled.
+		fi
+		if test "$cf_cv_prog_gnat_correct" = yes; then
+			AC_MSG_CHECKING(if GNAT works)
+			CF_GNAT_TRY_RUN([procedure conftest;],
 [with Text_IO;
 with GNAT.OS_Lib;
 procedure conftest is
@@ -2885,11 +2996,17 @@ begin
    Text_IO.New_Line;
    GNAT.OS_Lib.OS_Exit (0);
 end conftest;],[cf_cv_prog_gnat_correct=yes],[cf_cv_prog_gnat_correct=no])
-		AC_MSG_RESULT($cf_cv_prog_gnat_correct)
+			AC_MSG_RESULT($cf_cv_prog_gnat_correct)
+		fi
+	else
+		cf_cv_prog_gnat_correct=no
 	fi
 fi
 
 AC_SUBST(cf_ada_make)
+AC_SUBST(cf_ada_config)
+AC_SUBST(cf_ada_config_Ada)
+AC_SUBST(cf_ada_config_C)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PROG_LN_S version: 2 updated: 2010/08/14 18:25:37

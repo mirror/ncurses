@@ -1,6 +1,6 @@
-# $Id: mk-test.awk,v 1.17 2017/09/04 00:50:49 tom Exp $
+# $Id: mk-test.awk,v 1.21 2018/01/15 15:59:25 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2015,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -67,7 +67,14 @@ END	{
 		}
 		print "";
 	}
-	print	"DATAFILES = $(srcdir)/*.x* $(srcdir)/*.dat"
+	print	"SCRIPTS = \\"
+	print	"	$(srcdir)/savescreen.sh \\"
+	print	"	$(srcdir)/tput-colorcube \\"
+	print	"	$(srcdir)/tput-initc \\"
+	print	"	$(srcdir)/tracemunch"
+	print	"DATAFILES = \\"
+	print	"	$(srcdir)/*.x* \\"
+	print	"	$(srcdir)/*.dat"
 	print	""
 	print	"all: $(TESTS)"
 	print	""
@@ -85,11 +92,19 @@ END	{
 		print	"# we might install the test-programs"
 		print	"install \\"
 		print	"install.test: $(BINDIR) $(DATADIR) $(TESTS)"
+
 		print	"	@$(SHELL) -c 'for src in $(TESTS); do \\"
 		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
 		print	"	echo \"installing $$src -> $(BINDIR)/$$dst\"; \\"
 		print	"	$(INSTALL_PROG) $$src $(BINDIR)/$$dst; \\"
 		print	"	done'"
+
+		print	"	@$(SHELL) -c 'for src in $(SCRIPTS); do \\"
+		print	"	dst=`echo $$src | sed -e 's,^.*/,,' | $(TRANSFORM)`; \\"
+		print	"	echo \"installing $$src -> $(BINDIR)/$$dst\"; \\"
+		print	"	$(INSTALL_SCRIPT) $$src $(BINDIR)/$$dst; \\"
+		print	"	done'"
+
 		print	"	@$(SHELL) -c 'for src in $(DATAFILES); do \\"
 		print	"	dst=`echo $$src | sed -e 's,^.*/,,'`; \\"
 		print	"	echo \"installing $$src -> $(DATADIR)/$$dst\"; \\"
@@ -98,10 +113,17 @@ END	{
 		print	""
 		print	"uninstall \\"
 		print	"uninstall.test:"
+
 		print	"	@$(SHELL) -c 'for src in $(TESTS); do \\"
 		print	"	dst=`echo $$src | $(TRANSFORM)`; \\"
 		print	"	rm -f $(BINDIR)/$$dst; \\"
 		print	"	done'"
+
+		print	"	@$(SHELL) -c 'for src in $(SCRIPTS); do \\"
+		print	"	dst=`echo $$src | sed -e 's,^.*/,,' | $(TRANSFORM)`; \\"
+		print	"	rm -f $(BINDIR)/$$dst; \\"
+		print	"	done'"
+
 		print	"	@$(SHELL) -c 'for src in $(DATAFILES); do \\"
 		print	"	dst=`echo $$src | sed -e 's,^.*/,,'`; \\"
 		print	"	rm -f $(DATADIR)/$$dst; \\"
