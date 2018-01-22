@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.585 2017/09/20 00:34:16 tom Exp $
+ * $Id: curses.priv.h,v 1.587 2018/01/21 02:13:41 tom Exp $
  *
  *	curses.priv.h
  *
@@ -396,12 +396,16 @@ typedef union {
 #if NCURSES_EXT_COLORS && HAVE_INIT_EXTENDED_COLOR
 #define NCURSES_EXT_NUMBERS  1
 #define NCURSES_INT2         int
+#define SIZEOF_INT2          4
 #define TerminalType(tp)     (tp)->type2
 #else
 #define NCURSES_EXT_NUMBERS  0
 #define NCURSES_INT2         short
+#define SIZEOF_INT2          2
 #define TerminalType(tp)     (tp)->type
 #endif
+
+#define SIZEOF_SHORT         2
 
 #ifdef CUR
 #undef CUR
@@ -1742,7 +1746,7 @@ typedef void VoidFunc(void);
 #define returnVoidPtr(code)	TRACE_RETURN1(code,void_ptr)
 #define returnWin(code)		TRACE_RETURN1(code,win)
 
-#define returnDB(code)		do { TR(TRACE_DATABASE,(T_RETURN("code %d"), (code))); return (code); } while (0)
+#define returnDB(rc)		do { TR(TRACE_DATABASE,(T_RETURN("code %d"), (rc))); return (rc); } while (0)
 
 extern NCURSES_EXPORT(NCURSES_BOOL)     _nc_retrace_bool (int);
 extern NCURSES_EXPORT(NCURSES_CONST void *) _nc_retrace_cvoid_ptr (NCURSES_CONST void *);

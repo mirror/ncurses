@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.74 2017/07/22 16:25:10 tom Exp $
+ * $Id: tic.h,v 1.75 2017/07/29 23:21:06 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -49,7 +49,7 @@ extern "C" {
 #include <curses.h>	/* for the _tracef() prototype, ERR/OK, bool defs */
 
 /*
-** The format of compiled terminfo files is as follows:
+** The format of SVr2 compiled terminfo files is as follows:
 **
 **		Header (12 bytes), containing information given below
 **		Names Section, containing the names of the terminal
@@ -65,6 +65,11 @@ extern "C" {
 **		String Table, containing the actual characters of the string
 **				capabilities.
 **
+** In the SVr2 format, "short" means signed 16-bit numbers, which is sometimes
+** inconvenient.  The numbers are signed, to provide for absent and canceled
+** values.  ncurses6.1 introduced an extension to this compiled format, by
+** making the Number Section a list of signed 32-bit integers.
+**
 **	NOTE that all short integers in the file are stored using VAX/PDP-style
 **	byte-order, i.e., least-significant byte first.
 **
@@ -77,6 +82,7 @@ extern "C" {
 */
 
 #define MAGIC		0432	/* first two bytes of a compiled entry */
+#define MAGIC2		01036	/* first two bytes of a compiled 32-bit entry */
 
 #undef  BYTE
 #define BYTE(p,n)	(unsigned char)((p)[n])
@@ -85,7 +91,7 @@ extern "C" {
 #define IS_NEG2(p)	((BYTE(p,0) == 0376) && (BYTE(p,1) == 0377))
 #define LOW_MSB(p)	(BYTE(p,0) + 256*BYTE(p,1))
 
-#define IS_TIC_MAGIC(p)	(LOW_MSB(p) == MAGIC)
+#define IS_TIC_MAGIC(p)	(LOW_MSB(p) == MAGIC || LOW_MSB(p) == MAGIC2)
 
 #define quick_prefix(s) (!strncmp((s), "b64:", 4) || !strncmp((s), "hex:", 4))
 
@@ -94,7 +100,14 @@ extern "C" {
  * given implementation may exceed.
  */
 #define MAX_NAME_SIZE	512	/* maximum legal name field size (XSI:127) */
-#define MAX_ENTRY_SIZE	4096	/* maximum legal entry size */
+#define MAX_ENTRY_SIZE1	4096	/* maximum legal entry size (SVr2) */
+#define MAX_ENTRY_SIZE2	32768	/* maximum legal entry size (ncurses6.1) */
+
+#if NCURSES_EXT_COLORS && HAVE_INIT_EXTENDED_COLOR
+#define MAX_ENTRY_SIZE MAX_ENTRY_SIZE2
+#else
+#define MAX_ENTRY_SIZE MAX_ENTRY_SIZE1
+#endif
 
 /*
  * The maximum size of individual name or alias is guaranteed in XSI to be at
@@ -121,7 +134,8 @@ extern "C" {
 #define DEBUG_LEVEL(n)	((n) << TRACE_SHIFT)
 
 #define set_trace_level(n) \
-	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL), \
+	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL) \
+		     + DEBUG_LEVEL(MAX_DEBUG_LEVEL) - 1, \
 	_nc_tracing |= DEBUG_LEVEL(n)
 
 #ifdef TRACE

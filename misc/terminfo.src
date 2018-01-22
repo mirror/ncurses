@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.644 $
-#	$Date: 2017/11/18 21:38:11 $
+#	$Revision: 1.650 $
+#	$Date: 2018/01/22 01:14:23 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1413,7 +1413,7 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	tbc=\E[3g, tsl=\E]2;, u6=\E[%i%d;%dR, u7=\E[6n,
 	u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, TS=\E]2;,
 	kEND5=\E[1;5F, kHOM5=\E[1;5H, use=vt100+keypad,
-	use=xterm+256setaf,
+	use=xterm+x11mouse, use=xterm+256setaf,
 
 # iTerm2 3.0.15
 #
@@ -1444,6 +1444,8 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 # Italic text did not work initially, apparently because upgrading did not
 # add/change that preference (set in Preferences, Profiles, Text).  A new
 # install of iTerm 3.0.15 provides italics by default (blinking text:no).
+#
+# 2018/01/21: found xterm+sm+1006 did not work with version 3.1.5
 iTerm2.app|iterm2|terminal emulator for Mac OS X,
 	blink@, dim=\E[2m, kEND=\E[1;2F, kHOM=\E[1;2H, ka1@, ka3@,
 	kb2@, kc1@, kc3@, kent@, kf13=\E[1;2P, kf14=\E[1;2Q,
@@ -1948,7 +1950,7 @@ kon|kon2|jfbterm|Kanji ON Linux console,
 # Not used here, the program recognizes escapes for italic, underline and
 # dim, rendering those as green, cyan and gray respectively.
 fbterm|FbTerm for Linux with framebuffer,
-	colors#0x100, pairs#0x7fff,
+	colors#0x100, pairs#0x10000,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i
 	     \316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u
 	     \264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
@@ -3813,7 +3815,10 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 #
 # Several features such as backspace/delete are optional; this entry documents
 # the default behavior -TD
-
+#
+# PuTTY recognizes xterm's 1049 mode for switching to/from alternate screen,
+# but implements it incorrectly as mentioned here:
+#	http://stackoverflow.com/questions/24613237/terminal-retains-bg-color-after-closing-vim-using-color-scheme-and-putty-256co/37869114#37869114
 putty|PuTTY terminal emulator,
 	am, bce, bw, ccc, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64, U8#1,
@@ -4135,21 +4140,20 @@ xterm-r5|xterm R5 version,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J,
 	el=\E[K, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@,
-	il=\E[%p1%dL, il1=\E[L, ind=\n, kbs=^H, kcub1=\EOD,
-	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kdch1=\E[3~,
-	kdl1=\E[31~, kel=\E[8~, kend=\E[4~, kf0=\EOq, kf1=\E[11~,
-	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf2=\E[12~,
-	kf3=\E[13~, kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~,
-	kf8=\E[19~, kf9=\E[20~, khome=\E[1~, kich1=\E[2~,
-	kil1=\E[30~, kmous=\E[M, knp=\E[6~, kpp=\E[5~, rc=\E8,
-	rev=\E[7m, ri=\EM, rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[m,
-	rmul=\E[m,
+	il=\E[%p1%dL, il1=\E[L, ind=\n, kcub1=\EOD, kcud1=\EOB,
+	kcuf1=\EOC, kcuu1=\EOA, kdch1=\E[3~, kdl1=\E[31~,
+	kel=\E[8~, kend=\E[4~, kf0=\EOq, kf1=\E[11~, kf10=\E[21~,
+	kf11=\E[23~, kf12=\E[24~, kf2=\E[12~, kf3=\E[13~,
+	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
+	kf9=\E[20~, khome=\E[1~, kich1=\E[2~, kil1=\E[30~,
+	kmous=\E[M, knp=\E[6~, kpp=\E[5~, rc=\E8, rev=\E[7m, ri=\EM,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?1;3;4;5;6l\E[4l\E[?7h\E[m\E[r\E[2J\E[H,
 	sc=\E7,
 	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1
 	    %;m,
 	sgr0=\E[m, smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, use=vt100+enq,
+	smul=\E[4m, tbc=\E[3g, use=vt100+enq, use=xterm+kbs,
 # Compatible with the R6 xterm
 # (from XFree86 3.2 distribution, <acsc> and <it> added, <blink@> removed)
 # added khome/kend, hts based on the R6 xterm code - TD
@@ -4166,7 +4170,7 @@ xterm-r6|xterm X11R6 version,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J,
 	el=\E[K, enacs=\E)0, home=\E[H, ht=^I, hts=\EH, il=\E[%p1%dL,
 	il1=\E[L, ind=\n,
-	is2=\E[m\E[?7h\E[4l\E>\E7\E[r\E[?1;3;4;6l\E8, kbs=^H,
+	is2=\E[m\E[?7h\E[4l\E>\E7\E[r\E[?1;3;4;6l\E8,
 	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
 	kdch1=\E[3~, kf1=\E[11~, kf10=\E[21~, kf11=\E[23~,
 	kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, kf15=\E[28~,
@@ -4180,7 +4184,7 @@ xterm-r6|xterm X11R6 version,
 	rs2=\E[m\E[?7h\E[4l\E>\E7\E[r\E[?1;3;4;6l\E8, sc=\E7,
 	sgr0=\E[m, smacs=^N, smcup=\E7\E[?47h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	use=vt100+enq,
+	use=xterm+kbs, use=vt100+enq,
 xterm-old|antique xterm version,
 	use=xterm-r6,
 # This is the base xterm entry for the xterm supplied with XFree86 3.2 & up.
@@ -4200,18 +4204,18 @@ xterm-xf86-v32|xterm terminal emulator (XFree86 3.2 Window System),
 	ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL,
 	il1=\E[L, ind=\n,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;3;4;6l\E[4l\E8\E>,
-	kbeg=\EOE, kbs=^H, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
-	kcuu1=\EOA, kdch1=^?, kend=\EOF, kf1=\E[11~, kf10=\E[21~,
-	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~,
-	kf15=\E[28~, kf16=\E[29~, kf17=\E[31~, kf18=\E[32~,
-	kf19=\E[33~, kf2=\E[12~, kf20=\E[34~, kf3=\E[13~,
-	kf4=\E[14~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
-	kf9=\E[20~, kfnd=\E[1~, khome=\EOH, kich1=\E[2~,
-	kmous=\E[M, knp=\E[6~, kpp=\E[5~, kslt=\E[4~, meml=\El,
-	memu=\Em, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l,
-	rmcup=\E[2J\E[?47l\E8, rmir=\E[4l, rmkx=\E[?1l\E>,
-	rmso=\E[27m, rmul=\E[24m, rs1=^O,
-	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>, sc=\E7,
+	kbeg=\EOE, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
+	kdch1=^?, kend=\EOF, kf1=\E[11~, kf10=\E[21~, kf11=\E[23~,
+	kf12=\E[24~, kf13=\E[25~, kf14=\E[26~, kf15=\E[28~,
+	kf16=\E[29~, kf17=\E[31~, kf18=\E[32~, kf19=\E[33~,
+	kf2=\E[12~, kf20=\E[34~, kf3=\E[13~, kf4=\E[14~,
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	kfnd=\E[1~, khome=\EOH, kich1=\E[2~, kmous=\E[M, knp=\E[6~,
+	kpp=\E[5~, kslt=\E[4~, meml=\El, memu=\Em, rc=\E8, rev=\E[7m,
+	ri=\EM, rmacs=^O, rmam=\E[?7l, rmcup=\E[2J\E[?47l\E8,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[27m, rmul=\E[24m,
+	rs1=^O, rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>,
+	sc=\E7,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
 	     %=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
@@ -4220,7 +4224,7 @@ xterm-xf86-v32|xterm terminal emulator (XFree86 3.2 Window System),
 	    %;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E7\E[?47h,
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, use=vt100+enq,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, use=xterm+kbs, use=vt100+enq,
 	use=ecma+color, use=vt220+keypad,
 
 # This is the stock xterm entry supplied with XFree86 3.3, which uses VT100
@@ -4284,8 +4288,8 @@ xterm-xfree86|xterm terminal emulator (XFree86),
 xterm-new|modern xterm terminal emulator,
 	npc,
 	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
-	rin=\E[%p1%dT, use=ansi+rep, use=ansi+enq,
-	use=xterm+pcfkeys, use=xterm+tmux, use=ecma+strikeout,
+	rin=\E[%p1%dT, use=ansi+rep, use=ecma+strikeout,
+	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
 	use=xterm-basic,
 
 # This fragment is for people who cannot agree on what the backspace key
@@ -4442,6 +4446,19 @@ xterm+pc+edit|fragment for pc-style editing keypad,
 xterm+vt+edit|fragment for vt220-style editing keypad,
 	kfnd=\E[1~, kslt=\E[4~,
 
+# These variations for alternate-screen and title-stacking were introduced by
+# xterm patch #331:
+xterm+noalt|xterm without altscreen,
+	rmcup@, smcup@,
+
+xterm+alt1049|xterm 90 feature,
+	rmcup=\E[?1049l, smcup=\E[?1049h,
+
+xterm+titlestack|xterm 251 feature,
+	rmcup=\E[23;0;0t, smcup=\E[22;0;0t,
+
+xterm+alt+title|xterm 90 and 251 features combined,
+	rmcup=\E[?1049l\E[23;0;0t, smcup=\E[?1049h\E[22;0;0t,
 #
 # Those chunks use the new-style (the xterm oldFunctionKeys resource is false).
 # Alternatively, the same scheme with old-style function keys as in xterm-r6
@@ -4472,21 +4489,21 @@ xterm-basic|modern xterm terminal emulator - common,
 	il=\E[%p1%dL, il1=\E[L, ind=\n, invis=\E[8m,
 	is2=\E[!p\E[?3;4l\E[4l\E>, kmous=\E[M, meml=\El,
 	memu=\Em, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
-	rmacs=\E(B, rmam=\E[?7l, rmcup=\E[?1049l, rmir=\E[4l,
-	rmkx=\E[?1l\E>, rmm=\E[?1034l, rmso=\E[27m, rmul=\E[24m,
-	rs1=\Ec, rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7,
-	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+	rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l\E>,
+	rmm=\E[?1034l, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
+	rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
 	     %=%t3%e%p1%d%;m,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
 	     %=%t3%e%p1%d%;m,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
 	    %?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
-	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smcup=\E[?1049h,
-	smir=\E[4h, smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J,
-	use=ecma+italics, use=ansi+pp, use=xterm+kbs,
-	use=vt100+enq,
+	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
+	smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m, smul=\E[4m,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J, use=ecma+italics,
+	use=ansi+pp, use=xterm+kbs, use=xterm+alt+title,
+	use=ansi+enq,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
 # In retrospect, something like xterm-r6 was intended here -TD
@@ -4509,7 +4526,7 @@ xterm-16color|xterm with 16 colors like aixterm,
 # xterm patch #111 (1999/7/10) -TD
 xterm+256color|xterm 256-color feature,
 	ccc,
-	colors#0x100, pairs#0x7fff,
+	colors#0x100, pairs#0x10000,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
 	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
 	oc=\E]104\007,
@@ -4522,7 +4539,7 @@ xterm+256color|xterm 256-color feature,
 # palette is hardcoded...
 xterm+256setaf|xterm 256-color (set-only),
 	ccc@,
-	colors#0x100, pairs#0x7fff,
+	colors#0x100, pairs#0x10000,
 	initc@, op=\E[39;49m,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
 	      5;%p1%d%;m,
@@ -4555,6 +4572,61 @@ xterm-256color|xterm with 256 colors,
 xterm-88color|xterm with 88 colors,
 	rs1=\Ec\E]104\007, use=xterm+88color,
 	use=xterm-256color,
+
+# Emacs 26.1 and later support direct color mode in terminals, using a
+# combination of user-defined capabilities and ncurses-dependent function
+# calls.  We will not include that here.  
+#
+# Here is a first revision, which (disregarding the reuse of colors 1-7 which
+# is of interest only to the numerically illiterate), is compatible with other
+# terminal descriptions written for curses.  It relies upon the extended range
+# for numeric capabilities provided in ncurses 6.1:
+xterm+direct2|xterm with direct-color indexing,
+	RGB,
+	colors#0x1000000, pairs#0x10000,
+	initc@, op=\E[39;49m,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e48\:2\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e38\:2\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	setb@, setf@,
+xterm-direct2|xterm with direct-color indexing (old),
+	use=xterm+direct2, use=xterm+titlestack, use=xterm,
+
+# That in turn had a problem: in the original patch submitted for KDE konsole
+# in 2006, the submitter and the developer alike overlooked a "color space
+# identifier" parameter.  This version provides for that parameter:
+xterm+direct|xterm with direct-color indexing,
+	RGB,
+	colors#0x1000000, pairs#0x10000,
+	initc@, op=\E[39;49m,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e48\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e38\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	setb@, setf@,
+xterm-direct|xterm with direct-color indexing,
+	use=xterm+direct, use=xterm,
+
+# Meanwhile, in KDE #107487, the patch submitter and the developer both saw
+# that xterm's original implementation should have used colons for the
+# subparameter separators, but chose not to correct this in konsole.  As of
+# late 2017, konsole still accepts only the nonstandard semicolon delimiters.
+xterm+indirect|xterm with direct-color indexing (old),
+	RGB,
+	colors#0x1000000, pairs#0x10000,
+	initc@, op=\E[39;49m,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e48;2;%p1%{65536}%/%d;%p1%{256}
+	      %/%{255}%&%d;%p1%{255}%&%d%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e38;2;%p1%{65536}%/%d;%p1%{256}
+	      %/%{255}%&%d;%p1%{255}%&%d%;m,
+	setb@, setf@,
+konsole-direct|konsole with direct-color indexing,
+	use=xterm+indirect, use=konsole,
+st-direct|st with direct-color indexing,
+	use=xterm+indirect, use=st,
+vte-direct|vte with direct-color indexing,
+	use=xterm+direct, use=vte,
 
 # This chunk is based on suggestions by Ailin Nemui and Nicholas Marriott, who
 # asked for some of xterm's advanced features to be added to its terminfo
@@ -4630,8 +4702,8 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	sgr0=\2330m\E(B, smacs=\E(0, smam=\233?7h,
 	smcup=\233?1049h, smir=\2334h, smkx=\233?1h\E=,
 	smso=\2337m, smul=\2334m, tbc=\2333g, u6=\233[%i%d;%dR,
-	u7=\E[6n, u8=\233[?1;2c, u9=\E[c, vpa=\233%i%p1%dd,
-	use=xterm+kbs,
+	u7=\E[6n, u8=\233[?%[;0123456789]c, u9=\E[c,
+	vpa=\233%i%p1%dd, use=xterm+kbs,
 
 xterm-hp|xterm with hpterm function keys,
 	kclr=\EJ, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
@@ -5178,7 +5250,7 @@ vte-2014|VTE 0.35.1,
 	ncv@,
 	cbt=\E[Z, el1=\E[1K, flash=\E[?5h$<100/>\E[?5l,
 	ich=\E[%p1%d@, indn=\E[%p1%dS, kent=\EOM, rin=\E[%p1%dT,
-	use=xterm+pcfkeys, use=vte-2012,
+	use=xterm+sm+1006, use=xterm+pcfkeys, use=vte-2012,
 
 vte|VTE aka GNOME Terminal,
 	use=vte-2014,
@@ -5196,6 +5268,52 @@ gnome-256color|GNOME Terminal with xterm 256-colors,
 # the terminfo is the same as gnome-terminal.
 xfce|Xfce Terminal,
 	use=vte-2008,
+
+# TERMITE
+#
+# https://github.com/thestinger/termite
+#
+# A review requires install of Arch Linux since Fedora and Debian don't have
+# this program.  It uses "vte3-ng" (a conflicting package), which is here:
+#	https://github.com/thestinger/vte-ng
+# which (based on the default branch setting) seems to be a fork of vte
+# 0.48.2, and is noted as such in Arch:
+#	https://www.archlinux.org/packages/community/x86_64/vte3-ng/
+# It won't be merged:
+#	https://bugzilla.gnome.org/show_bug.cgi?id=679658#c10
+#	https://bugzilla.gnome.org/show_bug.cgi?id=78291
+# but perhaps made obsolete.
+#
+# The entry as given was mislabeled "xterm-termite" (it is not xterm), and
+# was mostly cut/paste from xterm-256color, but since VTE does not actually
+# implement several of the features in that terminal description, this one is
+# trimmed to eliminate those.  Also, since it is a slightly older version of
+# VTE, it lacks a few more features (again, trimmed).
+termite|VTE-based terminal,
+	am, ccc, km, mir, msgr, npc, xenl,
+	cols#80, it#8, lines#24, ncv@,
+	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
+	     yzz{{||}}~~,
+	bel=^G, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
+	clear=\E[H\E[2J, cnorm=\E[?12l\E[?25h, cr=\r,
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
+	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
+	dch=\E[%p1%dP, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
+	flash=\E[?5h$<100/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
+	ht=^I, hts=\EH, ind=\n, indn=\E[%p1%dS, invis=\E[8m,
+	is2=\E[!p\E[?3;4l\E[4l\E>, kb2=\EOE, kbs=^?, kcbt=\E[Z,
+	kent=\EOM, kmous=\E[M, rc=\E8, rev=\E[7m, ri=\EM,
+	rin=\E[%p1%dT, ritm=\E[23m, rmacs=\E(B, rmam=\E[?7l,
+	rmcup=\E[?1049l, rmkx=\E[?1l\E>, rmso=\E[27m,
+	rmul=\E[24m, rs1=\Ec, rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
+	    %t;7%;%?%p7%t;8%;m,
+	sgr0=\E(B\E[m, sitm=\E[3m, smacs=\E(0, smam=\E[?7h,
+	smcup=\E[?1049h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, use=ansi+idc, use=ansi+idl,
+	use=ansi+enq, use=xterm+256color, use=ecma+color,
+	use=xterm+pcfkeys, use=xterm+sl-twm,
 
 #### Other GNOME
 # Multi-Gnome-Terminal 1.6.2
@@ -5314,11 +5432,13 @@ mlterm|multi lingual terminal emulator,
 
 # Tested mlterm 3.2.2:
 # mlterm 3.x has made changes, but they are not reflected in the included
-# mlterm.ti; this entry is based on testing with tack and vttest -TD
+# mlterm.ti; this entry is based on testing with ncurses, tack and vttest -TD
+# 2018/01/21: found xterm+sm+1006 did not work with version 3.3.8
 mlterm3|multi lingual terminal emulator,
 	kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
 	use=ecma+italics, use=xterm+app, use=xterm+pcf0,
-	use=xterm+pcc2, use=xterm+pce2, use=mlterm2,
+	use=xterm+pcc2, use=xterm+pce2, use=xterm+x11mouse,
+	use=mlterm2,
 
 # This is mlterm 2.9.3's mlterm.ti, with some additions/corrections -TD
 #
@@ -5676,7 +5796,7 @@ aterm|AfterStep terminal,
 # xiterm  0.5-5.2
 # This is not based on xterm's source...
 # vttest shows several problems with keyboard, cursor-movements.
-# see also http://invisible-island.net/xterm/xterm.faq.html#bug_xiterm
+# see also https://invisible-island.net/xterm/xterm.faq.html#bug_xiterm
 xiterm|internationalized terminal emulator for X,
 	km@,
 	kbs=^?, kdch1=\E[3~, use=klone+color, use=xterm-r6,
@@ -5957,7 +6077,7 @@ st|stterm| simpleterm,
 #	has control cursor-keys, alt cursor-keys, still no combinations
 #	has control pageup/down
 st-0.7|simpleterm 0.7,
-	ccc, Se, Ss,
+	ccc,
 	dim=\E[2m,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
 	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
@@ -6003,7 +6123,7 @@ st-0.7|simpleterm 0.7,
 # still has no function keys past kf36 (no combinations of modifiers)
 # no application keypad mode, e.g, kent.
 st-0.6|simpleterm 0.6,
-	am, bce, hs, mir, msgr, npc, xenl, Tc, XT,
+	am, bce, hs, mir, msgr, npc, xenl, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=+C\,D-A.B0E``aaffgghFiGjjkkllmmnnooppqqrrssttuuvvwwxxyy
 	     zz{{||}}~~,
@@ -6150,7 +6270,7 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 # e) removed km
 terminator|Terminator no line wrap,
 	eo, mir, msgr, xenl, xon,
-	colors#0x100, cols#80, it#8, lines#24, lm#0, pairs#0x7fff,
+	colors#0x100, cols#80, it#8, lines#24, lm#0, pairs#0x10000,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bold=\E[1m, civis=\E[?25l, clear=\E[H\E[2J,
 	cnorm=\E[?25h, cr=\r, csr=\E[%i%p1%d;%p2%dr,
@@ -6423,7 +6543,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 # sgr are not impacted (because that usually resets all capabilities before
 # setting any), but termcap applications do not use sgr -TD
 screen|VT 100/ANSI X3.64 virtual terminal,
-	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
+	OTbs, OTpt, am, km, mir, msgr, xenl, G0, XT,
 	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64, U8#1,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
 	     yzz{{||}}~~,
@@ -6434,10 +6554,11 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\EM,
 	cvvis=\E[34l, dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m,
 	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
-	enacs=\E(B\E)0, flash=\Eg, home=\E[H, ht=^I, hts=\EH,
-	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=\n, is2=\E)0,
-	kbs=^H, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
-	kcuu1=\EOA, kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~,
+	enacs=\E(B\E)0, flash=\Eg, home=\E[H, hpa=\E[%i%p1%dG,
+	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
+	ind=\n, indn=\E[%p1%dS, is2=\E)0, kbs=^H, kcbt=\E[Z,
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
+	kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, kpp=\E[5~,
@@ -6447,8 +6568,8 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;
 	    5%;%?%p5%t;2%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smcup=\E[?1049h, smir=\E[4h,
-	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g, E0=\E(B,
-	S0=\E(%p1%c, use=ecma+color,
+	smkx=\E[?1h\E=, smso=\E[3m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%i%p1%dd, E0=\E(B, S0=\E(%p1%c, use=ecma+color,
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
 screen-bce|VT 100/ANSI X3.64 virtual terminal with bce,
@@ -6552,7 +6673,8 @@ screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 	invis@, kIC@, kNXT@, kPRV@, meml@, memu@, rep@,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;m,
-	E3@, use=screen+italics, use=screen+fkeys, use=xterm-new,
+	E3@, use=screen+italics, use=screen+fkeys,
+	use=xterm+x11mouse, use=xterm-new,
 #:screen.xterm|screen for modern xterm,
 #:	use=screen.xterm-new,
 # xterm-r6 does not really support khome/kend unless it is propped up by
@@ -6665,13 +6787,13 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 # tmux is compatible with screen, but has support for italics, and some of the
 # xterm cursor bits.
 tmux|tmux terminal multiplexer,
-	rmso=\E[27m,
+	invis=\E[8m, rmso=\E[27m,
 	sgr=\E[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;
 	    \s\s\s\s\s\s\s\s\s\s\s\s5%;%?%p5%t;2%;m%?%p9%t\016%e
 	    \017%;,
-	smso=\E[7m, use=ecma+italics, use=ecma+strikeout,
-	use=xterm+edit, use=xterm+pcfkeys, use=xterm+sl,
-	use=xterm+tmux, use=screen,
+	smso=\E[7m, E3=\E[3J, use=ecma+italics,
+	use=ecma+strikeout, use=xterm+edit, use=xterm+pcfkeys,
+	use=xterm+sl, use=xterm+tmux, use=screen,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
@@ -6738,7 +6860,7 @@ dvtm|dynamic virtual terminal manager,
 	use=ecma+italics,
 
 dvtm-256color|dynamic virtual terminal manager with 256 colors,
-	colors#0x100, pairs#0x7fff,
+	colors#0x100, pairs#0x10000,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48;
 	      5;%p1%d%;m,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
@@ -25336,5 +25458,33 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  jaixterm, aixterm, att5420_2, att4424, att500, decansi, d410-7b,
 #	  dm80, hpterm, emu-220, hp2, iTerm2.app, mterm-ansi, ncrvt100an,
 #	  st-0.7, vi603, vwmterm -TD
+#
+# 2017-12-30
+#	+ add xterm+noalt, xterm+titlestack, xterm+alt1049, xterm+alt+title
+#	  blocks from xterm #331 -TD
+#	+ add xterm+direct, xterm+indirect, xterm-direct entries from xterm
+#	  #331 -TD
+#	+ modify xterm+256color and xterm+256setaf to use correct number of
+#	  color pairs, for ncurses 6.1 -TD
+#	+ add rs1 capability to xterm-256color -TD
+#	+ modify xterm-r5, xterm-r6 and xterm-xf86-v32 to use xterm+kbs to
+#	  match xterm #272, reflecting packager's changes -TD
+#	+ remove "boolean" Se, Ss from st-0.7 -TD
+#
+# 2017-01-04
+#	+ add konsole-direct and st-direct -TD
+#	+ remove unsupported "Tc" capability from st-0.7; use st-direct if
+#	  direct-colors are wanted -TD
+#
+# 2017-01-17
+#	+ add vte-direct -TD
+#	+ add XT, hpa, indn, and vpa to screen, and invis, E3 to tmux (patch by
+#	  Pierre Carru)
+#
+# 2017-01-21
+#	+ use xterm+sm+1006 in xterm-new, vte-2014 -TD
+#	+ use xterm+x11mouse in iterm, iterm2, mlterm3 because xterm's 1006
+#	  mode does not work with those programs.  konsole is debatable -TD
+#	+ add "termite" entry (report by Markus Pfeiffer) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

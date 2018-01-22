@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3061 2018/01/16 09:15:38 tom Exp $
+-- $Id: NEWS,v 1.3065 2018/01/22 01:18:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,47 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180121 pre-release
+	> terminfo changes:
+	+ add xterm+noalt, xterm+titlestack, xterm+alt1049, xterm+alt+title
+	  blocks from xterm #331 -TD
+	+ add xterm+direct, xterm+indirect, xterm-direct entries from xterm
+	  #331 -TD
+	+ modify xterm+256color and xterm+256setaf to use correct number of
+	  color pairs, for ncurses 6.1 -TD
+	+ add rs1 capability to xterm-256color -TD
+	+ modify xterm-r5, xterm-r6 and xterm-xf86-v32 to use xterm+kbs to
+	  match xterm #272, reflecting packager's changes -TD
+	+ remove "boolean" Se, Ss from st-0.7 -TD
+	+ add konsole-direct and st-direct -TD
+	+ remove unsupported "Tc" capability from st-0.7; use st-direct if
+	  direct-colors are wanted -TD
+	+ add vte-direct -TD
+	+ add XT, hpa, indn, and vpa to screen, and invis, E3 to tmux (patch by
+	  Pierre Carru)
+	+ use xterm+sm+1006 in xterm-new, vte-2014 -TD
+	+ use xterm+x11mouse in iterm, iterm2, mlterm3 because xterm's 1006
+	  mode does not work with those programs.  konsole is debatable -TD
+	+ add "termite" entry (report by Markus Pfeiffer) -TD
+	> merge branch begun April 2, 2017 which provides these features:
+	+ support read/write new binary-format for terminfo which stores
+	  numeric capabilities as a signed 32-bit integer.  The test programs
+	  such as picsmap, ncurses were created or updated during 2017 to use
+	  this feature.
+	+ the new format is written by the wide-character configuration of
+	  tic when it finds a numeric capability larger than 32767.
+	+ other applications such as infocmp built with the wide-character
+	  ncurses library work as expected.
+	+ applications built with the "narrow" (8-bit) configuration will
+	  read the new format, but will limit those extended values to 32767.
+	+ in either wide/narrow configuration, the structure defined in
+	  term.h still uses signed 16-bit values.
+	+ because it is incompatible with the legacy (mid-1980s) binary format,
+	  a new magic value is provided for the "file" program.
+	+ the term.5 manual page is updated to describe this new format.
+	+ the limit on file-size for compiled terminfo is increased in the
+	  wide-character configuration to 32768.
 
 20180120
 	+ build-fix in picsmap.c for stdint.h existence.

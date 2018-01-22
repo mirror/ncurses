@@ -41,15 +41,89 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.143 2017/04/06 22:19:06 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.144 2017/10/23 21:20:06 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
 #define MyNumber(n) (short) LOW_MSB(n)
 
+#define SIZEOF_32BITS 4
+
 #if NCURSES_USE_DATABASE
-static void
-convert_numbers(char *buf, NCURSES_INT2 *Numbers, int count)
+#if NCURSES_EXT_NUMBERS
+static size_t
+convert_16bits(char *buf, NCURSES_INT2 *Numbers, int count)
+{
+    int i;
+    size_t j;
+    size_t size = SIZEOF_SHORT;
+    unsigned char ch;
+    for (i = 0; i < count; i++) {
+	unsigned mask = 0xff;
+	Numbers[i] = 0;
+	for (j = 0; j < size; ++j) {
+	    ch = UChar(*buf++);
+	    Numbers[i] |= (ch << (8 * j));
+	    mask <<= 8;
+	}
+	if (ch & 0x80) {
+	    while (mask != 0) {
+		Numbers[i] |= (int) mask;
+		mask <<= 8;
+	    }
+	}
+	TR(TRACE_DATABASE, ("get Numbers[%d]=%d", i, Numbers[i]));
+    }
+    return size;
+}
+
+static size_t
+convert_32bits(char *buf, NCURSES_INT2 *Numbers, int count)
+{
+    int i;
+    size_t j;
+    size_t size = SIZEOF_INT2;
+    unsigned char ch;
+
+    assert(sizeof(NCURSES_INT2) == size);
+    for (i = 0; i < count; i++) {
+	Numbers[i] = 0;
+	for (j = 0; j < size; ++j) {
+	    ch = UChar(*buf++);
+	    Numbers[i] |= (ch << (8 * j));
+	}
+	/* "unsigned" and NCURSES_INT2 are the same size - no sign-extension */
+	TR(TRACE_DATABASE, ("get Numbers[%d]=%d", i, Numbers[i]));
+    }
+    return size;
+}
+#else
+static size_t
+convert_32bits(char *buf, NCURSES_INT2 *Numbers, int count)
+{
+    int i, j;
+    unsigned char ch;
+    for (i = 0; i < count; i++) {
+	int value = 0;
+	for (j = 0; j < SIZEOF_32BITS; ++j) {
+	    ch = UChar(*buf++);
+	    value |= (ch << (8 * j));
+	}
+	if (value == -1)
+	    Numbers[i] = ABSENT_NUMERIC;
+	else if (value == -2)
+	    Numbers[i] = CANCELLED_NUMERIC;
+	else if (value > MAX_OF_TYPE(NCURSES_INT2))
+	    Numbers[i] = MAX_OF_TYPE(NCURSES_INT2);
+	else
+	    Numbers[i] = (short) value;
+	TR(TRACE_DATABASE, ("get Numbers[%d]=%d", i, Numbers[i]));
+    }
+    return SIZEOF_SHORT;
+}
+
+static size_t
+convert_16bits(char *buf, NCURSES_INT2 *Numbers, int count)
 {
     int i;
     for (i = 0; i < count; i++) {
@@ -61,7 +135,9 @@ convert_numbers(char *buf, NCURSES_INT2 *Numbers, int count)
 	    Numbers[i] = MyNumber(buf + 2 * i);
 	TR(TRACE_DATABASE, ("get Numbers[%d]=%d", i, Numbers[i]));
     }
+    return SIZEOF_SHORT;
 }
+#endif
 
 static void
 convert_strings(char *buf, char **Strings, int count, int size, char *table)
@@ -112,7 +188,10 @@ fake_read(char *src, int *offset, int limit, char *dst, unsigned want)
 #define Read(buf, count) fake_read(buffer, &offset, limit, (char *) buf, (unsigned) count)
 
 #define read_shorts(buf, count) \
-	(Read(buf, (count)*2) == (int) (count)*2)
+	(Read(buf, (count)*SIZEOF_SHORT) == (int) (count)*SIZEOF_SHORT)
+
+#define read_numbers(buf, count) \
+	(Read(buf, (count)*(unsigned)size_of_numbers) == (int) (count)*size_of_numbers)
 
 #define even_boundary(value) \
     if ((value) % 2 != 0) Read(buf, 1)
@@ -177,6 +256,10 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
     char buf[MAX_ENTRY_SIZE + 2];
     char *string_table;
     unsigned want, have;
+    bool need_ints;
+    size_t (*convert_numbers) (char *, NCURSES_INT2 *, int);
+    int size_of_numbers;
+    int max_entry_size = MAX_ENTRY_SIZE;
 
     TR(TRACE_DATABASE,
        (T_CALLED("_nc_read_termtype(ptr=%p, buffer=%p, limit=%d)"),
@@ -191,6 +274,24 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	|| !IS_TIC_MAGIC(buf)) {
 	returnDB(TGETENT_NO);
     }
+#if NCURSES_EXT_NUMBERS
+    if ((need_ints = (LOW_MSB(buf) == MAGIC2))) {
+	convert_numbers = convert_32bits;
+	size_of_numbers = SIZEOF_INT2;
+    } else {
+	max_entry_size = MAX_ENTRY_SIZE1;
+	convert_numbers = convert_16bits;
+	size_of_numbers = SIZEOF_SHORT;
+    }
+#else
+    if ((need_ints = (LOW_MSB(buf) == MAGIC2))) {
+	convert_numbers = convert_32bits;
+	size_of_numbers = SIZEOF_32BITS;
+    } else {
+	convert_numbers = convert_16bits;
+	size_of_numbers = SIZEOF_INT2;
+    }
+#endif
 
     /* *INDENT-EQLS* */
     name_size  = MyNumber(buf + 2);
@@ -213,7 +314,7 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 
     want = (unsigned) (str_size + name_size + 1);
     /* try to allocate space for the string table */
-    if (str_count * 2 >= MAX_ENTRY_SIZE
+    if (str_count * SIZEOF_SHORT >= max_entry_size
 	|| (string_table = typeMalloc(char, want)) == 0) {
 	returnDB(TGETENT_NO);
     }
@@ -248,7 +349,7 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 
     /* grab the numbers */
     if (!(ptr->Numbers = TYPE_CALLOC(NCURSES_INT2, max(NUMCOUNT, num_count)))
-	|| !read_shorts(buf, num_count)) {
+	|| !read_numbers(buf, num_count)) {
 	returnDB(TGETENT_NO);
     }
     convert_numbers(buf, ptr->Numbers, num_count);
@@ -288,9 +389,9 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	unsigned need = (unsigned) (ext_bool_count + ext_num_count + ext_str_count);
 	int base = 0;
 
-	if (need >= (MAX_ENTRY_SIZE / 2)
-	    || ext_str_size >= MAX_ENTRY_SIZE
-	    || ext_str_limit >= MAX_ENTRY_SIZE
+	if ((int) need >= (max_entry_size / 2)
+	    || ext_str_size >= max_entry_size
+	    || ext_str_limit >= max_entry_size
 	    || ext_bool_count < 0
 	    || ext_num_count < 0
 	    || ext_str_count < 0
@@ -324,7 +425,7 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	TR(TRACE_DATABASE, ("READ %d extended-numbers @%d",
 			    ext_num_count, offset));
 	if ((ptr->ext_Numbers = UShort(ext_num_count)) != 0) {
-	    if (!read_shorts(buf, ext_num_count)) {
+	    if (!read_numbers(buf, ext_num_count)) {
 		returnDB(TGETENT_NO);
 	    }
 	    TR(TRACE_DATABASE, ("Before converting extended-numbers"));
@@ -332,7 +433,7 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	}
 
 	TR(TRACE_DATABASE, ("READ extended-offsets @%d", offset));
-	if ((unsigned) (ext_str_count + (int) need) >= (MAX_ENTRY_SIZE / 2)) {
+	if ((ext_str_count + (int) need) >= (max_entry_size / 2)) {
 	    returnDB(TGETENT_NO);
 	}
 	if ((ext_str_count || need)
@@ -374,7 +475,7 @@ _nc_read_termtype(TERMTYPE2 *ptr, char *buffer, int limit)
 	}
 
 	if (need) {
-	    if (ext_str_count >= (MAX_ENTRY_SIZE / 2)) {
+	    if (ext_str_count >= (max_entry_size / 2)) {
 		returnDB(TGETENT_NO);
 	    }
 	    if ((ptr->ext_Names = TYPE_CALLOC(char *, need)) == 0) {
@@ -670,7 +771,7 @@ _nc_read_tic_entry(char *filename,
 		    && IS_TIC_MAGIC(have)) {
 		    code = _nc_read_termtype(tp, have, used);
 		    if (code == TGETENT_NO) {
-			_nc_free_termtype(tp);
+			_nc_free_termtype2(tp);
 		    }
 		}
 		break;

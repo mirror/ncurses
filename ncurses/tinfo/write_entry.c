@@ -43,11 +43,14 @@
 
 #if 1
 #define TRACE_OUT(p) DEBUG(2, p)
+#define TRACE_NUM(n) if (VALID_NUMERIC(Numbers[n])) { \
+	TRACE_OUT(("put Numbers[%u]=%d", (unsigned) (n), Numbers[n])); }
 #else
 #define TRACE_OUT(p)		/*nothing */
+#define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.100 2017/11/25 02:06:43 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.101 2017/11/25 19:56:06 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -557,7 +560,7 @@ compute_offsets(char **Strings, size_t strmax, short *offsets)
     return nextfree;
 }
 
-static void
+static size_t
 convert_shorts(unsigned char *buf, short *Numbers, size_t count)
 {
     size_t i;
@@ -572,28 +575,41 @@ convert_shorts(unsigned char *buf, short *Numbers, size_t count)
 	    TRACE_OUT(("put Numbers[%u]=%d", (unsigned) i, Numbers[i]));
 	}
     }
+    return SIZEOF_SHORT;
 }
 
 #if NCURSES_EXT_NUMBERS
-static void
-convert_numbers(unsigned char *buf, NCURSES_INT2 *Numbers, size_t count)
+static size_t
+convert_16bit(unsigned char *buf, NCURSES_INT2 *Numbers, size_t count)
 {
-    size_t i;
+    size_t i, j;
+    size_t size = SIZEOF_SHORT;
     for (i = 0; i < count; i++) {
-	if (Numbers[i] == ABSENT_NUMERIC) {	/* HI/LO won't work */
-	    buf[2 * i] = buf[2 * i + 1] = 0377;
-	} else if (Numbers[i] == CANCELLED_NUMERIC) {	/* HI/LO won't work */
-	    buf[2 * i] = 0376;
-	    buf[2 * i + 1] = 0377;
-	} else {
-	    LITTLE_ENDIAN(buf + 2 * i, Numbers[i]);
-	    TRACE_OUT(("put Numbers[%u]=%d", (unsigned) i, Numbers[i]));
+	unsigned value = (unsigned) Numbers[i];
+	TRACE_NUM(i);
+	for (j = 0; j < size; ++j) {
+	    *buf++ = value & 0xff;
+	    value >>= 8;
 	}
     }
+    return size;
 }
 
-#else
-#define convert_numbers(buf,vec,len) convert_shorts(buf,vec,len)
+static size_t
+convert_32bit(unsigned char *buf, NCURSES_INT2 *Numbers, size_t count)
+{
+    size_t i, j;
+    size_t size = SIZEOF_INT2;
+    for (i = 0; i < count; i++) {
+	unsigned value = (unsigned) Numbers[i];
+	TRACE_NUM(i);
+	for (j = 0; j < size; ++j) {
+	    *buf++ = value & 0xff;
+	    value >>= 8;
+	}
+    }
+    return size;
+}
 #endif
 
 #define even_boundary(value) \
@@ -661,7 +677,7 @@ NCURSES_EXPORT(int)
 _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
 {
     char *namelist;
-    size_t namelen, boolmax, nummax, strmax;
+    size_t namelen, boolmax, nummax, strmax, numlen;
     char zero = '\0';
     size_t i;
     int nextfree;
@@ -670,6 +686,12 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
     unsigned last_bool = BOOLWRITE;
     unsigned last_num = NUMWRITE;
     unsigned last_str = STRWRITE;
+#if NCURSES_EXT_NUMBERS
+    bool need_ints = FALSE;
+    size_t (*convert_numbers) (unsigned char *, NCURSES_INT2 *, size_t) = convert_32bit;
+#else
+#define convert_numbers convert_shorts
+#endif
 
 #if NCURSES_XNAMES
     /*
@@ -690,14 +712,21 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
 
     boolmax = 0;
     for (i = 0; i < last_bool; i++) {
-	if (tp->Booleans[i] == TRUE)
+	if (tp->Booleans[i] == TRUE) {
 	    boolmax = i + 1;
+	}
     }
 
     nummax = 0;
     for (i = 0; i < last_num; i++) {
-	if (tp->Numbers[i] != ABSENT_NUMERIC)
+	if (tp->Numbers[i] != ABSENT_NUMERIC) {
 	    nummax = i + 1;
+#if NCURSES_EXT_NUMBERS
+	    if (tp->Numbers[i] > MAX_OF_TYPE(NCURSES_COLOR_T)) {
+		need_ints = TRUE;
+	    }
+#endif
+	}
     }
 
     strmax = 0;
@@ -709,7 +738,17 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
     nextfree = compute_offsets(tp->Strings, strmax, offsets);
 
     /* fill in the header */
+#if NCURSES_EXT_NUMBERS
+    if (need_ints) {
+	convert_numbers = convert_32bit;
+	LITTLE_ENDIAN(buf, MAGIC2);
+    } else {
+	convert_numbers = convert_16bit;
+	LITTLE_ENDIAN(buf, MAGIC);
+    }
+#else
     LITTLE_ENDIAN(buf, MAGIC);
+#endif
     LITTLE_ENDIAN(buf + 2, min(namelen, MAX_NAME_SIZE + 1));
     LITTLE_ENDIAN(buf + 4, boolmax);
     LITTLE_ENDIAN(buf + 6, nummax);
@@ -736,15 +775,15 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
     TRACE_OUT(("Numerics begin at %04x", *offset));
 
     /* the numerics */
-    convert_numbers(buf, tp->Numbers, nummax);
-    if (Write(buf, 2, nummax) != nummax)
+    numlen = convert_numbers(buf, tp->Numbers, nummax);
+    if (Write(buf, numlen, nummax) != nummax)
 	return (ERR);
 
     TRACE_OUT(("String offsets begin at %04x", *offset));
 
     /* the string offsets */
     convert_shorts(buf, offsets, strmax);
-    if (Write(buf, 2, strmax) != strmax)
+    if (Write(buf, SIZEOF_SHORT, strmax) != strmax)
 	return (ERR);
 
     TRACE_OUT(("String table begins at %04x", *offset));
@@ -799,8 +838,8 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
 
 	TRACE_OUT(("WRITE %d numbers @%d", tp->ext_Numbers, *offset));
 	if (tp->ext_Numbers) {
-	    convert_numbers(buf, tp->Numbers + NUMCOUNT, (size_t) tp->ext_Numbers);
-	    if (Write(buf, 2, tp->ext_Numbers) != tp->ext_Numbers)
+	    numlen = convert_numbers(buf, tp->Numbers + NUMCOUNT, (size_t) tp->ext_Numbers);
+	    if (Write(buf, numlen, tp->ext_Numbers) != tp->ext_Numbers)
 		return (ERR);
 	}
 
@@ -810,7 +849,7 @@ _nc_write_object(TERMTYPE2 *tp, char *buffer, unsigned *offset, unsigned limit)
 	 */
 	convert_shorts(buf, offsets, strmax);
 	TRACE_OUT(("WRITE offsets @%d", *offset));
-	if (Write(buf, 2, strmax) != strmax)
+	if (Write(buf, SIZEOF_SHORT, strmax) != strmax)
 	    return (ERR);
 
 	/*

@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.91 2017/08/26 16:13:34 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.92 2017/08/26 19:49:50 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -217,7 +217,7 @@ valid_entryname(const char *name)
  	{ bad_tc_usage = TRUE; \
 	 _nc_warning("Legacy termcap allows only a trailing tc= clause"); }
 
-#define MAX_NUMBER 0x7fff	/* positive shorts only */
+#define MAX_NUMBER MAX_OF_TYPE(NCURSES_INT2)
 
 NCURSES_EXPORT(int)
 _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
@@ -493,7 +493,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 		    entryp->tterm.Numbers[entry_ptr->nte_index] = MAX_NUMBER;
 		} else {
 		    entryp->tterm.Numbers[entry_ptr->nte_index] =
-			(short) _nc_curr_token.tk_valnumber;
+ 			(NCURSES_INT2) _nc_curr_token.tk_valnumber;
 		}
 		break;
 
