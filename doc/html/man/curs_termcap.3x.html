@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termcap.3x,v 1.36 2018/01/01 15:13:16 tom Exp @
+  * @Id: curs_termcap.3x,v 1.37 2018/01/23 10:14:38 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -149,80 +149,83 @@
        <STRONG>o</STRONG>   Normally the ncurses library is compiled with terminfo support.  In
            that case, <STRONG>tgoto</STRONG> uses <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG> (a more capable formatter).
 
-       The  <STRONG>tputs</STRONG>  routine  is described on the <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG> manual page.
+           However,  <STRONG>tparm</STRONG>  is not a <EM>termcap</EM> feature, and portable <EM>termcap</EM> ap-
+           plications should not rely upon its availability.
+
+       The <STRONG>tputs</STRONG> routine is described on the  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>  manual  page.
        It can retrieve capabilities by either termcap or terminfo name.
 
 
 </PRE><H3><a name="h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></H3><PRE>
-       The variables <STRONG>PC</STRONG>, <STRONG>UP</STRONG> and <STRONG>BC</STRONG> are set by <STRONG>tgetent</STRONG> to the terminfo  entry's
+       The  variables <STRONG>PC</STRONG>, <STRONG>UP</STRONG> and <STRONG>BC</STRONG> are set by <STRONG>tgetent</STRONG> to the terminfo entry's
        data for <STRONG>pad_char</STRONG>, <STRONG>cursor_up</STRONG> and <STRONG>backspace_if_not_bs</STRONG>, respectively.  <STRONG>UP</STRONG>
-       is not used by ncurses.  <STRONG>PC</STRONG> is used in the <STRONG>tdelay_output</STRONG> function.   <STRONG>BC</STRONG>
-       is  used in the <STRONG>tgoto</STRONG> emulation.  The variable <STRONG>ospeed</STRONG> is set by ncurses
+       is  not used by ncurses.  <STRONG>PC</STRONG> is used in the <STRONG>tdelay_output</STRONG> function.  <STRONG>BC</STRONG>
+       is used in the <STRONG>tgoto</STRONG> emulation.  The variable <STRONG>ospeed</STRONG> is set by  ncurses
        in a system-specific coding to reflect the terminal speed.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except where explicitly noted, routines that return an  integer  return
-       <STRONG>ERR</STRONG>  upon  failure  and <STRONG>OK</STRONG> (SVr4 only specifies "an integer value other
+       Except  where  explicitly noted, routines that return an integer return
+       <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4 only specifies "an  integer  value  other
        than <STRONG>ERR</STRONG>") upon successful completion.
 
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
 
 
 </PRE><H2><a name="h2-BUGS">BUGS</a></H2><PRE>
-       If you call <STRONG>tgetstr</STRONG> to fetch <STRONG>ca</STRONG> or any other parameterized  string,  be
-       aware  that it will be returned in terminfo notation, not the older and
+       If  you  call <STRONG>tgetstr</STRONG> to fetch <STRONG>ca</STRONG> or any other parameterized string, be
+       aware that it will be returned in terminfo notation, not the older  and
        not-quite-compatible termcap notation.  This will not cause problems if
-       all  you do with it is call <STRONG>tgoto</STRONG> or <STRONG>tparm</STRONG>, which both expand terminfo-
-       style strings as terminfo.  (The <STRONG>tgoto</STRONG> function, if configured to  sup-
-       port  termcap,  will  check  if  the string is indeed terminfo-style by
-       looking for "%p" parameters or "$&lt;..&gt;" delays, and  invoke  a  termcap-
+       all you do with it is call <STRONG>tgoto</STRONG> or <STRONG>tparm</STRONG>, which both expand  terminfo-
+       style  strings as terminfo.  (The <STRONG>tgoto</STRONG> function, if configured to sup-
+       port termcap, will check if the  string  is  indeed  terminfo-style  by
+       looking  for  "%p"  parameters or "$&lt;..&gt;" delays, and invoke a termcap-
        style parser if the string does not appear to be terminfo).
 
-       Because  terminfo  conventions for representing padding in string capa-
-       bilities differ from termcap's, <STRONG>tputs("50");</STRONG> will  put  out  a  literal
+       Because terminfo conventions for representing padding in  string  capa-
+       bilities  differ  from  termcap's,  <STRONG>tputs("50");</STRONG> will put out a literal
        "50" rather than busy-waiting for 50 milliseconds.  Cope with it.
 
-       Note  that termcap has nothing analogous to terminfo's <STRONG>sgr</STRONG> string.  One
-       consequence of this is that termcap applications  assume  me  (terminfo
-       <STRONG>sgr0</STRONG>)  does not reset the alternate character set.  This implementation
+       Note that termcap has nothing analogous to terminfo's <STRONG>sgr</STRONG> string.   One
+       consequence  of  this  is that termcap applications assume me (terminfo
+       <STRONG>sgr0</STRONG>) does not reset the alternate character set.  This  implementation
        checks for, and modifies the data shown to the termcap interface to ac-
        commodate termcap's limitation in this respect.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  XSI  Curses standard, Issue 4 describes these functions.  However,
+       The XSI Curses standard, Issue 4 describes these  functions.   However,
        they are marked TO BE WITHDRAWN and may be removed in future versions.
 
-       Neither the XSI Curses standard nor the SVr4 man pages  documented  the
-       return  values  of <STRONG>tgetent</STRONG> correctly, though all three were in fact re-
-       turned ever since SVr1.  In particular, an omission in the  XSI  Curses
-       documentation  has  been misinterpreted to mean that <STRONG>tgetent</STRONG> returns <STRONG>OK</STRONG>
-       or <STRONG>ERR</STRONG>.  Because the purpose of these functions is to provide  compati-
-       bility  with the <EM>termcap</EM> library, that is a defect in XCurses, Issue 4,
+       Neither  the  XSI Curses standard nor the SVr4 man pages documented the
+       return values of <STRONG>tgetent</STRONG> correctly, though all three were in  fact  re-
+       turned  ever  since SVr1.  In particular, an omission in the XSI Curses
+       documentation has been misinterpreted to mean that <STRONG>tgetent</STRONG>  returns  <STRONG>OK</STRONG>
+       or  <STRONG>ERR</STRONG>.  Because the purpose of these functions is to provide compati-
+       bility with the <EM>termcap</EM> library, that is a defect in XCurses, Issue  4,
        Version 2 rather than in ncurses.
 
        External variables are provided for support of certain termcap applica-
        tions.  However, termcap applications' use of those variables is poorly
        documented, e.g., not distinguishing between input and output.  In par-
-       ticular,  some  applications  are reported to declare and/or modify <STRONG>os-</STRONG>
+       ticular, some applications are reported to declare  and/or  modify  <STRONG>os-</STRONG>
        <STRONG>peed</STRONG>.
 
-       The comment that only the first two characters of the <STRONG>id</STRONG> parameter  are
+       The  comment that only the first two characters of the <STRONG>id</STRONG> parameter are
        used escapes many application developers.  The original BSD 4.2 termcap
        library (and historical relics thereof) did not require a trailing null
-       NUL  on  the  parameter  name  passed to <STRONG>tgetstr</STRONG>, <STRONG>tgetnum</STRONG> and <STRONG>tgetflag</STRONG>.
-       Some applications assume that the termcap interface  does  not  require
+       NUL on the parameter name passed  to  <STRONG>tgetstr</STRONG>,  <STRONG>tgetnum</STRONG>  and  <STRONG>tgetflag</STRONG>.
+       Some  applications  assume  that the termcap interface does not require
        the trailing NUL for the parameter name.  Taking into account these is-
        sues:
 
-       <STRONG>o</STRONG>   As a special case,  <STRONG>tgetflag</STRONG>  matched  against  a  single-character
-           identifier  provided  that  was at the end of the terminal descrip-
+       <STRONG>o</STRONG>   As  a  special  case,  <STRONG>tgetflag</STRONG>  matched against a single-character
+           identifier provided that was at the end of  the  terminal  descrip-
            tion.  You should not rely upon this behavior in portable programs.
-           This  implementation disallows matches against single-character ca-
+           This implementation disallows matches against single-character  ca-
            pability names.
 
-       <STRONG>o</STRONG>   This implementation disallows  matches  by  the  termcap  interface
+       <STRONG>o</STRONG>   This  implementation  disallows  matches  by  the termcap interface
            against extended capability names which are longer than two charac-
            ters.
 

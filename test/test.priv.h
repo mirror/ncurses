@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.162 2017/12/26 22:20:42 tom Exp $ */
+/* $Id: test.priv.h,v 1.164 2018/01/27 20:27:16 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -442,6 +442,9 @@ extern int optind;
 #ifndef GCC_PRINTFLIKE
 #define GCC_PRINTFLIKE(a,b)	/* nothing */
 #endif
+#ifndef GCC_SCANFLIKE
+#define GCC_SCANFLIKE(a,b)	/* nothing */
+#endif
 #ifndef GCC_UNUSED
 #define GCC_UNUSED		/* nothing */
 #endif
@@ -611,9 +614,17 @@ extern int optind;
 
 #ifndef WA_NORMAL
 #define WA_NORMAL       A_NORMAL
+#endif
+#ifndef WA_BOLD
 #define WA_BOLD         A_BOLD
+#endif
+#ifndef WA_REVERSE
 #define WA_REVERSE      A_REVERSE
+#endif
+#ifndef WA_UNDERLINE
 #define WA_UNDERLINE    A_UNDERLINE
+#endif
+#ifndef WA_BLINK
 #define WA_BLINK        A_BLINK
 #endif
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.248 2017/12/16 23:05:21 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.252 2018/01/25 19:16:50 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1614,6 +1614,9 @@ check_screen(TERMTYPE2 *tp)
 	bool have_kmouse = FALSE;
 	bool use_sgr_39_49 = FALSE;
 	char *name = _nc_first_name(tp->term_names);
+	bool is_screen = !strncmp(name, "screen", 6);
+	bool screen_base = (is_screen
+			    && strchr(name, '.') == 0);
 
 	if (!VALID_BOOLEAN(have_bce)) {
 	    have_bce = FALSE;
@@ -1635,12 +1638,10 @@ check_screen(TERMTYPE2 *tp)
 
 	if (have_XM && have_XT) {
 	    _nc_warning("Screen's XT capability conflicts with XM");
-	} else if (have_XT
-		   && strstr(name, "screen") != 0
-		   && strchr(name, '.') != 0) {
+	} else if (have_XT && screen_base) {
 	    _nc_warning("Screen's \"screen\" entries should not have XT set");
 	} else if (have_XT) {
-	    if (!have_kmouse && have_bce) {
+	    if (!have_kmouse && is_screen) {
 		if (VALID_STRING(key_mouse)) {
 		    _nc_warning("Value of kmous inconsistent with screen's usage");
 		} else {
@@ -1654,8 +1655,11 @@ check_screen(TERMTYPE2 *tp)
 	    if (VALID_STRING(to_status_line))
 		_nc_warning("\"tsl\" capability is redundant, given XT");
 	} else {
-	    if (have_kmouse && !have_XM)
+	    if (have_kmouse
+		&& !have_XM
+		&& !screen_base && strchr(name, '+') == 0) {
 		_nc_warning("Expected XT to be set, given kmous");
+	    }
 	}
     }
 #endif

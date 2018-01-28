@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.650 $
-#	$Date: 2018/01/22 01:14:23 $
+#	$Revision: 1.675 $
+#	$Date: 2018/01/27 15:14:08 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -334,52 +334,53 @@ vanilla|dumb tty,
 
 # ANSI capabilities are broken up into pieces, so that a terminal
 # implementing some ANSI subset can use many of them.
-ansi+local1,
+ansi+local1|ANSI normal-mode cursor-keys,
 	cub1=\E[D, cud1=\E[B, cuf1=\E[C, cuu1=\E[A,
-ansi+local,
+ansi+local|ANSI normal-mode parameterized cursor-keys,
 	cub=\E[%p1%dD, cud=\E[%p1%dB, cuf=\E[%p1%dC,
 	cuu=\E[%p1%dA, use=ansi+local1,
-ansi+tabs,
+ansi+tabs|ANSI tab-stops,
 	cbt=\E[Z, ht=^I, hts=\EH, tbc=\E[3g,
-ansi+inittabs,
+ansi+inittabs|ANSI initial tab-stops,
 	it#8, use=ansi+tabs,
-ansi+erase,
+ansi+erase|ANSI clear screen/line,
 	clear=\E[H\E[J, ed=\E[J, el=\E[K,
-ansi+rca,
+ansi+rca|ANSI relative cursor-addressing,
 	hpa=\E[%p1%{1}%+%dG, vpa=\E[%p1%{1}%+%dd,
-ansi+cup,
+ansi+cup|ANSI absolute cursor-addressing,
 	cup=\E[%i%p1%d;%p2%dH, home=\E[H,
-ansi+rep,
+ansi+rep|ANSI repeat-character,
 	rep=%p1%c\E[%p2%{1}%-%db,
-ansi+idl1,
+ansi+idl1|ANSI insert/delete one line,
 	dl1=\E[M, il1=\E[L,
-ansi+idl,
+ansi+idl|ANSI insert/delete lines,
 	dl=\E[%p1%dM, il=\E[%p1%dL, use=ansi+idl1,
-ansi+idc,
-	dch1=\E[P, ich=\E[%p1%d@, ich1=\E[@, rmir=\E[4l,
-	smir=\E[4h,
-ansi+arrows,
+ansi+idc1|ANSI insert/delete one character,
+	dch1=\E[P, ich1=\E[@, rmir=\E[4l, smir=\E[4h,
+ansi+idc|ANSI insert/delete characters,
+	dch=\E[%p1%dP, ich=\E[%p1%d@, use=ansi+idc1,
+ansi+arrows|ANSI normal-mode cursor-keys,
 	kbs=^H, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	khome=\E[H,
-ansi+sgr|ansi graphic renditions,
+ansi+sgr|ANSI graphic renditions,
 	blink=\E[5m, invis=\E[8m, rev=\E[7m,
 	sgr=\E[0%?%p3%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E[0m,
-ansi+sgrso|ansi standout only,
+ansi+sgrso|ANSI standout only,
 	rmso=\E[m, smso=\E[7m,
 ansi+sgrul|ansi underline only,
 	rmul=\E[m, smul=\E[4m,
-ansi+sgrbold|ansi graphic renditions; assuming terminal has bold; not dim,
+ansi+sgrbold|ANSI graphic renditions; assuming terminal has bold; not dim,
 	bold=\E[1m,
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p6%t1;
 	    %;%?%p7%t8;%;m,
 	use=ansi+sgr, use=ansi+sgrso, use=ansi+sgrul,
-ansi+sgrdim|ansi graphic renditions; assuming terminal has dim; not bold,
+ansi+sgrdim|ANSI graphic renditions; assuming terminal has dim; not bold,
 	dim=\E[2m,
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p5%t2;
 	    %;%?%p7%t8;%;m,
 	use=ansi+sgr, use=ansi+sgrso, use=ansi+sgrul,
-ansi+csr|ansi scroll-region plus cursor save & restore,
+ansi+csr|ANSI scroll-region plus cursor save & restore,
 	csr=\E[%i%p1%d;%p2%dr, rc=\E8, sc=\E7,
 
 # The normal (ANSI) flavor of "media copy" building block asserts that
@@ -1292,11 +1293,11 @@ nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (b
 nsterm-256color|Terminal.app in OS X 10.8,
 	use=xterm+256setaf, use=nsterm-bce,
 
+# removed bogus kDC7 -TD
 nsterm-build326|Terminal.app in OS X 10.9,
 	kDC=\E[3;2~, kLFT=\E[1;2D, kRIT=\E[1;2C, kcbt=\E[Z,
-	kf18=\E[32~, kDC5=\E[3;5~, kDC7=\E[3;5~, kLFT3=\Eb,
-	kLFT5=\E[1;5D, kRIT3=\Ef, kRIT5=\E[1;5C,
-	use=nsterm-256color,
+	kf18=\E[32~, kDC5=\E[3;5~, kLFT3=\Eb, kLFT5=\E[1;5D,
+	kRIT3=\Ef, kRIT5=\E[1;5C, use=nsterm-256color,
 
 # actually "343.7"
 nsterm-build343|Terminal.app in OS X 10.10,
@@ -1341,11 +1342,21 @@ nsterm-build343|Terminal.app in OS X 10.10,
 # + no support for "dynamic colors"
 # + no support for tcap-query.
 nsterm-build361|Terminal.app in OS X 10.11,
+	XT,
 	kmous=\E[M, use=nsterm-build343,
+
+# reviewed Terminal.app in High Sierra (version 2.8 build 400) -TD
+# Comparing with build361, little has changed, except that italics work.
+# Direct-color is not supported, by the way.
+#
+# Improved rmso/rmul -TD
+nsterm-build400|Terminal.app in OS X 10.13,
+	rmso=\E[27m, rmul=\E[24m, use=xterm+sm+1006,
+	use=ecma+italics, use=nsterm-build361,
 
 # This is an alias which should always point to the "current" version
 nsterm|Apple_Terminal|AppKit Terminal.app,
-	use=nsterm-build361,
+	use=nsterm-build400,
 
 ######## iTerm, iTerm2
 
@@ -1361,7 +1372,7 @@ nsterm|Apple_Terminal|AppKit Terminal.app,
 # According to its documentation, iTerm uses terminfo to obtain function key
 # definitions.  For example, if it is started with TERM=xterm, it uses key
 # definitons from that terminal description from the local OSX machine.  Those
-# $TERM settings may be augmented using the bookmark and profile dialogs. 
+# $TERM settings may be augmented using the bookmark and profile dialogs.
 # However, the behavior seen with tack does not agree with either the terminfo
 # description or the function keys in its "xterm" profile.
 #
@@ -1392,17 +1403,17 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
-	dsl=\E]2;\007, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E(B\E)0,
-	flash=\E[?5h$<200/>\E[?5l, fsl=^G, home=\E[H,
-	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@,
-	il=\E[%p1%dL, il1=\E[L, ind=\n, kLFT=\E[1;2D, kRIT=\E[1;2C,
-	kbs=^?, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
-	kcuu1=\EOA, kdch1=\E[3~, kend=\EOF, kent=\EOM, kf1=\EOP,
-	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR,
-	kf4=\EOS, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
-	kf9=\E[20~, khome=\EOH, knp=\E[6~, kpp=\E[5~, op=\E[0m,
-	rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l,
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J,
+	el=\E[K, el1=\E[1K, enacs=\E(B\E)0,
+	flash=\E[?5h$<200/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
+	ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL,
+	il1=\E[L, ind=\n, kLFT=\E[1;2D, kRIT=\E[1;2C, kbs=^?,
+	kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
+	kdch1=\E[3~, kend=\EOF, kent=\EOM, kf1=\EOP, kf10=\E[21~,
+	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	khome=\EOH, knp=\E[6~, kpp=\E[5~, op=\E[0m, rc=\E8,
+	rev=\E[7m, ri=\EM, rmacs=^O, rmam=\E[?7l,
 	rmcup=\E[2J\E[?47l\E8, rmir=\E[4l, rmkx=\E[?1l\E>,
 	rmso=\E[m, rmul=\E[m,
 	rs2=\E>\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h, sc=\E7,
@@ -1410,10 +1421,10 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	    %p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E7\E[?47h,
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, tsl=\E]2;, u6=\E[%i%d;%dR, u7=\E[6n,
-	u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, TS=\E]2;,
-	kEND5=\E[1;5F, kHOM5=\E[1;5H, use=vt100+keypad,
-	use=xterm+x11mouse, use=xterm+256setaf,
+	tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
+	vpa=\E[%i%p1%dd, kEND5=\E[1;5F, kHOM5=\E[1;5H,
+	use=xterm+sl-twm, use=vt100+keypad, use=xterm+x11mouse,
+	use=xterm+256setaf,
 
 # iTerm2 3.0.15
 #
@@ -2716,7 +2727,7 @@ rcons-color|BSD rasterconsole with ANSI color,
 # for PocketBSD,PocketLinux,NetBSD/{hpcmips,mac68k}
 # -- the setf/setb are probably incorrect, more likely setaf/setab -TD
 # -- compare with cons25w
-mgterm,
+mgterm|MGL/MGL2 MobileGear Graphic Library,
 	OTbs, OTpt, am, bce, bw, eo, km, msgr, npc,
 	colors#8, cols#80, it#8, lines#18, pairs#64,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, clear=\E[H\E[J,
@@ -4017,8 +4028,37 @@ teraterm4.59|Tera Term Pro,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	kmous=\E[M, use=teraterm2.3,
 
+# Version 4.97
+#
+# Testing with tack:
+#	- no bell (flash works)
+#	- bold is yellow, blink is red.
+#	- default keyboard sends ^? for Delete, can be configured for kdch1
+#	- no meta mode
+# Testing with vttest:
+#	+ autowrap has problems...
+#	+ color-tests for bce feature match xterm's behavior
+#	+ handles most of xterm's mouse-controls other than highlight-tracking.
+#	  xterm's SGR 1006 works.
+#	+ partial support for DEC locator-events
+#	+ implements ECMA-48 SD/SU, but not REP, SL/SR.
+#	+ has a "Tek" window, but does not work with vttest's examples
+#	+ supports the dtterm window modify/report controls
+#	+ responds to DECRQM and DECRQSS controls, but not consistent with DSR
+#	  e.g., for VT220
+#	+ VT220 screen-display tests are ok
+#	+ no VT52 support
+# Other tests:
+#	+ recognizes xterm's original direct-colors sequences, but result is
+#	  poor.
+#	+ no UTF-8 apparent when UTF-8 is set, with font Lucida Control
+teraterm4.97|Tera Term Pro,
+	XT, use=ecma+color, use=xterm+sm+1006, use=teraterm4.59,
+teraterm-256color|TeraTerm with xterm 256-colors,
+	use=xterm+256setaf, use=teraterm,
+
 teraterm|Tera Term,
-	use=teraterm4.59,
+	use=teraterm4.97,
 
 # Tested with WinNT 4.0, the telnet application assumes the screensize is
 # 25x80.  This entry uses the 'Terminal' font, to get line-drawing characters.
@@ -4343,6 +4383,18 @@ xterm+app|fragment with cursor keys in application mode,
 # compatibility reasons, they are still available as a setting of xterm's
 # modifyCursorKeys resource.  These fragments list the modified cursor-keys
 # that might apply to xterm+pcfkeys with different values of that resource.
+#
+# These entries will have warnings when checking with tic because the kri/kind
+# capabilities duplicate the kUP/kDN extensions.  This is intentional, though
+# not part of the original plan.  The changes for xterm patch #206 (2005/11/3)
+# show that kri/kind were seen much later as part of a set including kLFT/kRIT:
+#
+#   * modify  xterm-new  terminfo  entry to use capabilities for shifted       
+#     scroll forward/reverse as shifted cursor up/down.
+#
+# In the 1980s when terminfo was defined, the developers made more of
+# a distinction between shifted up/down versus shifted left/right since most
+# terminals can index (scroll up/down), while few can scroll left/right.
 xterm+pcc3|fragment with modifyCursorKeys:3,
 	kLFT=\E[>1;2D, kRIT=\E[>1;2C, kind=\E[>1;2B,
 	kri=\E[>1;2A, kDN=\E[>1;2B, kDN3=\E[>1;3B, kDN4=\E[>1;4B,
@@ -4510,6 +4562,8 @@ xterm-basic|modern xterm terminal emulator - common,
 xterm-xi|xterm on XI Graphics Accelerated X under BSD/OS 3.1,
 	rmso=\E[m, rmul=\E[m, use=xterm-xf86-v33,
 
+#### XTERM Colors
+
 # 16-colors is one of the variants of XFree86 3.3 xterm, updated for 4.0
 # (T.Dickey)
 #
@@ -4575,7 +4629,7 @@ xterm-88color|xterm with 88 colors,
 
 # Emacs 26.1 and later support direct color mode in terminals, using a
 # combination of user-defined capabilities and ncurses-dependent function
-# calls.  We will not include that here.  
+# calls.  We will not include that here.
 #
 # Here is a first revision, which (disregarding the reuse of colors 1-7 which
 # is of interest only to the numerically illiterate), is compatible with other
@@ -4608,6 +4662,12 @@ xterm+direct|xterm with direct-color indexing,
 xterm-direct|xterm with direct-color indexing,
 	use=xterm+direct, use=xterm,
 
+# Here are corresponding flavors for terminals which could use the feature:
+iterm2-direct|iTerm2 with direct-color indexing,
+	use=xterm+direct, use=iterm2,
+mlterm-direct|mlterm with direct-color indexing,
+	use=xterm+direct, use=mlterm,
+
 # Meanwhile, in KDE #107487, the patch submitter and the developer both saw
 # that xterm's original implementation should have used colons for the
 # subparameter separators, but chose not to correct this in konsole.  As of
@@ -4626,7 +4686,21 @@ konsole-direct|konsole with direct-color indexing,
 st-direct|st with direct-color indexing,
 	use=xterm+indirect, use=st,
 vte-direct|vte with direct-color indexing,
-	use=xterm+direct, use=vte,
+	use=xterm+indirect, use=vte,
+
+# As for others:
+# + Apple's Terminal.app does not recognize either form of the direct-color
+#   sequences.
+# + Cygwin's mintty recognizes xterm's original implementation, does okay with
+#   the colors.  Like vte, it is a subset of xterm, although different
+#   omissions/reservations of modified-keys are seen in testing.
+# + PuTTY 0.70 seems to recognize xterm's original implementation but does
+#   nothing useful with the colors.
+# + Teraterm 4.97, like PuTTY (no good).
+# + terminology 0.91 recognizes xterm's original implementation, but does
+#   nothing useful with it.
+
+#### XTERM Features
 
 # This chunk is based on suggestions by Ailin Nemui and Nicholas Marriott, who
 # asked for some of xterm's advanced features to be added to its terminfo
@@ -4983,6 +5057,7 @@ kterm-color|kterm-co|kterm with ANSI colors,
 	ncv@, use=kterm, use=ecma+color,
 
 #### Other XTERM
+
 # These (xtermc and xtermm) are distributed with Solaris.  They refer to a
 # variant of xterm which is apparently no longer supported, but are interesting
 # because they illustrate SVr4 curses mouse controls - T.Dickey
@@ -5214,12 +5289,12 @@ vte-2012|VTE 0.34.1,
 gnome-2012|GNOME Terminal 3.6.0,
 	use=vte-2012,
 
-# GNOME terminal may automatically use the contents of the "xterm" terminfo to
-# supply key information which is not built into the program.  With 2.22.3,
-# this list is built into the program (which addresses the inadvertent use of
-# random terminfo data, though using a set of values which does not correspond
-# to any that xterm produces - still not solving the problem that GNOME
-# terminal hardcodes the $TERM variable as "xterm").
+# Before 2008, GNOME terminal could automatically use the contents of the
+# "xterm" terminfo to supply key information which is not built into the
+# program.  With 2.22.3, this list was built into the program (which addressed
+# the inadvertent use of random terminfo data, though using a set of values
+# which did not correspond to any that xterm produced - still not solving the
+# problem that GNOME terminal hardcoded the $TERM variable as "xterm").
 #
 #	terminfo	modifier	code	keys
 #	kf13-kf24	shift		2	F1 to F12
@@ -5246,14 +5321,35 @@ gnome|GNOME Terminal,
 	use=vte-2012,
 
 # relevant changes were made in January 2014, and later.
+#
+# Originally VTE was promoted as a library able to emulate any terminal by
+# reading its terminal description.  In practice, that never got beyond the
+# ability to read definitions of special keys (function-, editing-, cursor).
+#
+# Before 2014, VTE had a termcap reader (originally pointing to a private copy
+# of a termcap file derived from xterm).  That was incomplete because it did
+# not have any of the modifier-key information used for xterm's function-,
+# editing-, and cursor-keys.  Having its own reader was unnecessary since
+# ncurses provides that information; used since xterm patch #225 in 2007.
+#
+# During April/May 2014, a few bug reports (e.g., gnome #169295, gnome #728900,
+# gnome #730137) dealt with attempts to recast that termcap reader as library
+# calls, then attempting to adapt a chunk of code from ncurses (src/vteti.c),
+# abandoning that and finally constructing a table to match xterm's default
+# behavior, e.g., for "xterm+pcfkeys".
 vte-2014|VTE 0.35.1,
 	ncv@,
 	cbt=\E[Z, el1=\E[1K, flash=\E[?5h$<100/>\E[?5l,
 	ich=\E[%p1%d@, indn=\E[%p1%dS, kent=\EOM, rin=\E[%p1%dT,
 	use=xterm+sm+1006, use=xterm+pcfkeys, use=vte-2012,
 
+# As of January 2018, this is the  most recent release,
+# e.g., with gnome-terminal 3.26.2
+vte-2017|VTE 0.50.2,
+	use=ecma+strikeout, use=vte-2014,
+
 vte|VTE aka GNOME Terminal,
-	use=vte-2014,
+	use=vte-2017,
 
 vte-256color|VTE with xterm 256-colors,
 	use=xterm+256color, use=vte,
@@ -5330,7 +5426,7 @@ kvt|KDE terminal,
 	bce, km@,
 	kdch1=^?, kend=\E[F, khome=\E[H, use=xterm-color,
 
-# Konsole 1.0.1
+# Konsole 1.0.1 (2001/11/25)
 # (formerly known as kvt)
 #
 # This program hardcodes $TERM to 'xterm', which is not accurate.  However, to
@@ -5364,27 +5460,91 @@ kvt|KDE terminal,
 # Updated for konsole 1.6.6:
 #    add control-key modifiers for function-keys, etc.
 #
-# Updated for konsole 2.12.4:
+# Updated for konsole 2.3 (October 2008):
+#    vttest menu 1 shows that both konsole and gnome terminal do wrapping
+#    different from xterm (and vt100's).  They have the same behavior in
+#    this detail, but it is unclear which copies the other.
+#
+# Updated for konsole 2.12.4 (late 2013):
 #    add sitm/ritm
 #
-# vttest menu 1 shows that both konsole and gnome terminal do wrapping
-# different from xterm (and vt100's).  They have the same behavior in this
-# detail, but it is unclear which copies the other.
+# Updated for konsole 16.07 (mid 2016):
+#    add dim, invis, strikeout
+#    (also overline, which is too rarely used to provide as an extension)
+#
+# Updated for konsole 17.12.0 (late 2017):
 konsole-base|KDE console window,
 	bce, km@, npc, XT,
 	ncv@,
-	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h,
+	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h, dim=\E[2m,
 	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l,
-	hpa=\E[%i%p1%dG, indn=\E[%p1%dS, kbs=^?, kdch1=\E[3~,
-	kend=\E[4~, kf1@, kf10@, kf11@, kf12@, kf13@, kf14@, kf15@, kf16@,
-	kf17@, kf18@, kf19@, kf2@, kf20@, kf3@, kf4@, kf5@, kf6@, kf7@, kf8@,
-	kf9@, kfnd@, khome=\E[1~, kslt@, rin=\E[%p1%dT, rmam=\E[?7l,
-	rmso=\E[27m, rmul=\E[24m,
+	hpa=\E[%i%p1%dG, indn=\E[%p1%dS, invis=\E[8m, kbs=^?,
+	kdch1=\E[3~, kend=\E[4~, kf1@, kf10@, kf11@, kf12@, kf13@, kf14@,
+	kf15@, kf16@, kf17@, kf18@, kf19@, kf2@, kf20@, kf3@, kf4@, kf5@, kf6@,
+	kf7@, kf8@, kf9@, kfnd@, khome=\E[1~, kslt@, rin=\E[%p1%dT,
+	rmam=\E[?7l, rmso=\E[27m, rmul=\E[24m,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>\E[?1000l\E[?25h,
-	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;m%?
-	    %p9%t\016%e\017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
+	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[0m\017, smam=\E[?7h, vpa=\E[%i%p1%dd,
-	use=ecma+italics, use=ecma+color, use=xterm-r6,
+	use=ecma+strikeout, use=ecma+italics, use=ecma+color,
+	use=xterm-r6,
+
+# The keytab feature was introduced in 0.9.12 (February 2000) with "linux" and
+# "vt100" key-table files along with a compiled-in default key-table.
+#
+# The main difference between the two keytabs was that the developer equated
+# "vt100" with xterm, and noticed that the Linux console's F1-F5 differed from
+# that.  For the same reason, the home/end keys differ.  A VT100 had none of
+# that.  The otherwise identical keytabs have definitions to model the VT52
+# cursor-keys and the VT100 cursor-keys with application versus normal modes.
+#
+# An "x11r5" keytab (displayed in the menu as "X11 R5") was added in January
+# 2001, and shortly after retitled to "XFree 3.x.x".  Both it and "vt100" were
+# dropped from the install in June 2008.
+#
+# The default keytab added in January 2000 was originally titled "X11 R6",
+# and likewise retitled to "XFree 4".
+#
+# A "solaris" keytab was added in Febrary 2005, copying the "vt100" keytab
+# and changing backspace to ^H, removing that keytab's attempt to model the
+# VT100 keypad and VT52 (KDE #20459).
+#
+# The developers made changes to the default and linux keytabs.  Comparing
+# the original and 2018 versions using diffstat:
+#	default: 119 added, 147 deleted, 28 unchanged
+#	linux:   47 added, 28 deleted, 104 unchanged
+#
+# Most of the change for the default keytab was to make konsole act more like
+# xterm.  That was a feature named AnyMod which came in May 2005 for KDE #92749
+# (see also Redhat #122815).  Later, in June 2007 the compiled-in keytab was
+# made an external file (like "linux" and "solaris"), and some further
+# refinement made.  But there are still flaws in the scheme.
+#
+# Essentially AnyMod maps the xterm "PC-style" modifier codes such as 2 for
+# Shift into a placeholder in the table entries.  That works well if all of the
+# modified keys are modified in the same way.  But xterm does not do that.  The
+# first 4 function keys are used in xterm to support the VT100 PF1-PF4 keypad
+# keys.  For example, F2 sends \EOQ in both terminals because of this feature.
+# But a shifted F2 (F14=F2+12) differs like this, in infocmp's listing:
+#	kf14: '\E[1;2Q', '\EO2Q'.
+#
+# In effect, a quarter of konsole's function-keys are different from xterm.
+#
+# It is not a simple blunder:
+# a) xterm patch #121 (November 1999), providing the first version of the
+#    PC-style modifiers would send \EO2Q
+# b) xterm patch #216 (July 2006) amended this and other details, provided
+#    better documentation for the modifiers and made the behavior configurable,
+#    e.g., using the modifyFunctionKeys resource.  The reason why it sends
+#    \E[1;2Q is that \E[O2Q is not a legal ECMA-48 control sequence.  The
+#    changelog points this out as "avoid sending SS3 with parameters".
+# c) That came after AnyMod was introduced, but still early enough that one
+#    might expect konsole's developers to followup.  Twelve years later that
+#    has yet to happen.
+#
+# As of 2018, konsole still provides 3 keyboard profiles ("XFree 4", "linux",
+# "solaris").
 konsole-linux|KDE console window with linux keyboard,
 	kf1=\E[[A, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13@,
 	kf14@, kf15@, kf16@, kf17@, kf18@, kf19@, kf2=\E[[B, kf20@,
@@ -5392,35 +5552,47 @@ konsole-linux|KDE console window with linux keyboard,
 	kf8=\E[19~, kf9=\E[20~, use=konsole-base,
 konsole-solaris|KDE console window with Solaris keyboard,
 	kbs=^H, kend=\E[4~, khome=\E[1~, use=konsole-vt100,
-# KDE's "XFree86 3.x.x" keyboard is based on reading the xterm terminfo rather
-# than testing the code.
+
+# Obsolete: x11r5.keymap
+# KDE's "XFree86 3.x.x" keyboard was obviously based on reading the xterm
+# terminfo at the time rather than testing the code.
 konsole-xf3x|KDE console window with keyboard for XFree86 3.x xterm,
 	kend=\E[4~, khome=\E[1~, use=konsole-vt100,
-# The value for kbs reflects local customization rather than the settings used
-# for XFree86 xterm.
+
+# The value for kbs (see konsole-vt100) reflects local customization rather
+# than the settings used for XFree86 xterm.
 konsole-xf4x|KDE console window with keyboard for XFree86 4.x xterm,
 	kend=\EOF, khome=\EOH, use=konsole+pcfkeys,
 	use=konsole-vt100,
-# Konsole does not implement shifted cursor-keys.
+
 konsole+pcfkeys|konsole subset of xterm+pcfkeys,
-	kLFT@, kRIT@, kcbt=\E[Z, kind@, kri@, kDN@, kUP@, use=xterm+pcc2,
-	use=xterm+pcf0,
+	kcbt=\E[Z, use=xterm+pcc2, use=xterm+pcf0,
+	use=xterm+pce2,
+
+# Obsolete: vt100.keymap
 # KDE's "vt100" keyboard has no relationship to any terminal that DEC made, but
-# it is still useful for deriving the other entries.
+# it is still useful for deriving the other entries, since the developer
+# provided function-keys based on xterm.
 konsole-vt100|KDE console window with vt100 (sic) keyboard,
 	kbs=^?, kdch1=\E[3~, kend=\E[F, kf1=\E[11~, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf13@, kf14@, kf15@, kf16@, kf17@,
 	kf18@, kf19@, kf2=\E[12~, kf20@, kf3=\E[13~, kf4=\E[14~,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[H, use=konsole-base,
+
+# Obsolete: vt420pc.keytab was added in June 2000, dropped from the install in
+# September 2008 and removed in June 2016.  The developer who removed it stated
+# that it was never installed.
 konsole-vt420pc|KDE console window with vt420 pc keyboard,
 	kbs=^H, kdch1=^?, use=konsole-vt100,
-konsole-16color|klone of xterm-16color,
-	ncv#32, use=ibm+16color, use=konsole,
+
 # make a default entry for konsole
 konsole|KDE console window,
 	use=konsole-xf4x,
 
+# These were written for ncurses:
+konsole-16color|klone of xterm-16color,
+	ncv#32, use=ibm+16color, use=konsole,
 konsole-256color|KDE console window with xterm 256-colors,
 	use=xterm+256setaf, use=konsole,
 
@@ -6073,7 +6245,7 @@ st|stterm| simpleterm,
 
 # Reviewed 0.7:
 #	dim is intermittent, sometimes works, sometimes does not
-#	italics may show up with yellow color 
+#	italics may show up with yellow color
 #	has control cursor-keys, alt cursor-keys, still no combinations
 #	has control pageup/down
 st-0.7|simpleterm 0.7,
@@ -6092,7 +6264,7 @@ st-0.7|simpleterm 0.7,
 	kLFT3=\E[1;3D, kLFT5=\E[1;5D, kNXT3=\E[6;3~,
 	kNXT5=\E[6;5~, kPRV3=\E[5;3~, kPRV5=\E[5;5~,
 	kRIT3=\E[1;3C, kRIT5=\E[1;5C, kUP3=\E[1;3A, kUP5=\E[1;5A,
-	rmxx=\E[29m, smxx=\E[9m, use=st-0.6,
+	use=ecma+strikeout, use=st-0.6,
 
 # st-0.4.1
 #
@@ -6543,7 +6715,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 # sgr are not impacted (because that usually resets all capabilities before
 # setting any), but termcap applications do not use sgr -TD
 screen|VT 100/ANSI X3.64 virtual terminal,
-	OTbs, OTpt, am, km, mir, msgr, xenl, G0, XT,
+	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
 	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64, U8#1,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
 	     yzz{{||}}~~,
@@ -6680,7 +6852,7 @@ screen.xterm-xfree86|screen.xterm-new|screen customized for modern xterm,
 # xterm-r6 does not really support khome/kend unless it is propped up by
 # the translations resource.
 screen.xterm-r6|screen customized for X11R6 xterm,
-	bw, use=screen+fkeys, use=xterm-r6,
+	bw, use=xterm+x11mouse, use=screen+fkeys, use=xterm-r6,
 # Color applications running in screen and TeraTerm do not play well together
 # on Solaris because Sun's curses implementation gets confused.
 screen.teraterm|disable ncv in teraterm,
@@ -6688,31 +6860,36 @@ screen.teraterm|disable ncv in teraterm,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i
 	     \316j\331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u
 	     \264v\301w\302x\263y\363z\362{\343|\330}\234~\376,
-	use=screen+fkeys, use=screen,
+	use=screen+fkeys, use=xterm+x11mouse, use=screen,
 # Other terminals
 screen.rxvt|screen in rxvt,
 	bw, XT,
 	cvvis@, flash@, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
 	kcuu1=\EOA, use=screen+fkeys, use=vt100+enq,
-	use=rxvt+pcfkeys, use=vt220+keypad, use=screen,
+	use=rxvt+pcfkeys, use=xterm+x11mouse, use=vt220+keypad,
+	use=screen,
 screen.Eterm|screen in Eterm,
-	use=screen+fkeys, use=Eterm,
+	use=xterm+x11mouse, use=screen+fkeys, use=Eterm,
 screen.mrxvt|screen in mrxvt,
-	use=screen+fkeys, use=mrxvt,
+	use=xterm+x11mouse, use=screen+fkeys, use=mrxvt,
 screen.vte|screen in any VTE-based terminal,
-	use=screen+italics, use=screen+fkeys, use=vte,
+	use=xterm+x11mouse, use=screen+italics,
+	use=screen+fkeys, use=vte,
 screen.gnome|screen in GNOME Terminal,
-	use=screen+italics, use=screen+fkeys, use=gnome,
+	use=xterm+x11mouse, use=screen+italics,
+	use=screen+fkeys, use=gnome,
 screen.konsole|screen in KDE console window,
-	use=screen+italics, use=screen+fkeys, use=konsole,
+	use=xterm+x11mouse, use=screen+italics,
+	use=screen+fkeys, use=konsole,
 # fix the backspace key
 screen.linux|screen in linux console,
 	bw,
-	kbs=^?, kcbt@, use=screen+fkeys, use=screen,
+	kbs=^?, kcbt@, use=xterm+x11mouse, use=screen+fkeys,
+	use=screen,
 screen.mlterm|screen in mlterm,
-	use=screen+fkeys, use=mlterm,
+	use=xterm+x11mouse, use=screen+fkeys, use=mlterm,
 screen.putty|screen in putty,
-	use=screen+fkeys, use=putty,
+	use=xterm+x11mouse, use=screen+fkeys, use=putty,
 
 # The default "screen" entry is reasonably portable, but not optimal for the
 # most widely-used terminal emulators.  The "bce" capability is supported in
@@ -6784,8 +6961,14 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 
 #### Tmux
 
-# tmux is compatible with screen, but has support for italics, and some of the
-# xterm cursor bits.
+# tmux is mostly compatible with screen, but has support for italics, and some
+# of the xterm cursor bits.
+#
+# However, unlike screen, tmux has no provision for using derived terminal
+# descriptions.  When screen starts, it looks for a suitable "inner" terminal
+# such as "screen.$TERM" to correspond to the outer terminal's quirks.  The
+# various entries such as screen.xterm-new provide a way to more closely
+# match the terminal.
 tmux|tmux terminal multiplexer,
 	invis=\E[8m, rmso=\E[27m,
 	sgr=\E[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;
@@ -7231,33 +7414,33 @@ news-unk|SONY NEWS vt100 emulator common entry,
 	sgr0=\E[m, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
 #
 # (news-29: this had :TY=ascii: --esr)
-news-29,
+news-29|SONY NEWS vt100 emulator with 29 lines,
 	lines#29, use=news-unk,
 # (news-29-euc: this had :TY=euc: --esr)
-news-29-euc,
+news-29-euc|SONY NEWS vt100 emulator with 29 lines and EUC,
 	use=news-29,
 # (news-29-sjis: this had :TY=sjis: --esr)
-news-29-sjis,
+news-29-sjis|SONY NEWS vt100 emulator with 29 lines and SJIS,
 	use=news-29,
 #
 # (news-33: this had :TY=ascii: --esr)
-news-33,
+news-33|SONY NEWS vt100 with 33 lines,
 	lines#33, use=news-unk,
 # (news-33-euc: this had :TY=euc: --esr)
-news-33-euc,
+news-33-euc|SONY NEWS vt100 with 33 lines and EUC,
 	use=news-33,
 # (news-33-sjis: this had :TY=sjis: --esr)
-news-33-sjis,
+news-33-sjis|SONY NEWS vt100 with 33 lines and SJIS,
 	use=news-33,
 #
 # (news-42: this had :TY=ascii: --esr)
-news-42,
+news-42|SONY NEWS vt100 with 42 lines,
 	lines#42, use=news-unk,
 # (news-42-euc: this had :TY=euc: --esr)
-news-42-euc,
+news-42-euc|SONY NEWS vt100 with 42 lines and EUC,
 	use=news-42,
 # (news-42-sjis: this had :TY=sjis: --esr)
-news-42-sjis,
+news-42-sjis|SONY NEWS vt100 with 42 lines and SJIS,
 	use=news-42,
 #
 #	NEWS-OS old termcap entry
@@ -7861,16 +8044,16 @@ pcmw|PC running Microsoft Works,
 # the documentation dated from 1.9.9e) -TD
 #
 # For a US keyboard, with 12 function-kecbt=\E[Z, ys,
-#	kf1-kf12 are unmodifiedcbt=\E[Z, cbt=\E[Z, 
+#	kf1-kf12 are unmodifiedcbt=\E[Z, cbt=\E[Z,
 #	kf13-kf24 use the shift-key
 #	kf25-kf36 use the left alt-key
 #	kf37-kf38 use the control-key
 #	kf49-kf60 use the shift- and control-keys
 # The shifted cursor keys send the sequences originally used for kf61-kf64:
 #	down=\EF+	(kf61)
-#	up=\EF-		(kf62) 
+#	up=\EF-		(kf62)
 #	left=\EF^	(unassigned)
-#	right=\EF$	(kf64) 
+#	right=\EF$	(kf64)
 
 interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with color,
 	am, bce, msgr,
@@ -19448,7 +19631,7 @@ amiga-vnc|Amiga using VNC console (black on light gray),
 
 # MorphOS on Genesi Pegasos
 # By Pavel Fedin <sonic_amiga@rambler.ru>
-morphos,
+morphos|MorphOS on Genesi Pegasos,
 	acsc=, dl=\233%p1%dM, dl1=\233M, il=\233%p1%dL, il1=\233L,
 	ind=\204, indn@, kend=\23345~, kf11=\23320~, kf12=\23321~,
 	khome=\23344~, kich1=\23340~, knp=\23342~, kpp=\23341~,
@@ -19945,7 +20128,7 @@ screen.minitel1|Screen specific for minitel1,
 	     yzz||}}~~,
 	bel=\007\E\^ \E\\, bold@, csr@, flash=\Eg\E\^ \E\\, kmous@,
 	rmul@, smul@, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\EZ,
-	use=screen,
+	use=xterm+x11mouse, use=screen,
 
 screen.minitel1b|Screen specific for minitel1b,
 	kclr=\E[2J, kdl1=\E[M, kf13=^Y{1, kf14=^Y{2, kf15=^Y{3,
@@ -20073,7 +20256,7 @@ screen.linux-m1|Linux m1 specific for screen,
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n,
-	use=screen,
+	use=xterm+x11mouse, use=screen,
 
 screen.linux-m1b|Linux m1b specific for screen,
 	colors@, pairs@,
@@ -23616,7 +23799,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # "default".
 #
 # XT is harder, since screen's manpage does not give more details.  For that,
-# we must read screen's source-code.  When XT is set, screen assumes
+# we must read screen's source-code.  For example, when XT is set, screen
+# assumes
 #
 # a) OSC 1 sets the title string, e.g., for the icon.  Recent versions of
 #    screen may also set the terminal's name, which is (for xterm) distinct
@@ -23631,8 +23815,16 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #    sequence.  However, because screen uses only termcap, the values returned
 #    by Af/Ab are not usable because they rely on expressions that termcap
 #    does not support.  Therefore, screen uses a hardcoded string to work
-#    around the limitation.
+#    around the limitation.  In a few cases, screen also uses tparm, which
+#    is a terminfo function rather than termcap.
 # f) all entries named "*xterm*" or "*rxvt*" have the bce flag set.
+# g) screen also uses the feature to decide whether to pay attention to other
+#    xterm-related features which are unrelated to the description in the
+#    manual page.
+#
+# Since XT is useful only when the outer terminal matches screen's assumptions,
+# it is appropriate to use it in the derived terminal descriptions such as
+# "screen.xterm", but not in the generic "screen", "screen-bce" entries.
 #
 # The other ISO-2022 features are rarely used, but provided here to make
 # screen's termcap features available.
@@ -25486,5 +25678,23 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ use xterm+x11mouse in iterm, iterm2, mlterm3 because xterm's 1006
 #	  mode does not work with those programs.  konsole is debatable -TD
 #	+ add "termite" entry (report by Markus Pfeiffer) -TD
+#
+# 2017-01-27
+#	+ trim "XT" from screen entry -TD
+#	+ modify iterm to use xterm+sl-twm building block -TD
+#	+ mark konsole-420pc, konsole-vt100, konsole-xf3x obsolete reflecting
+#	  konsole's removal in 2008 -TD
+#	+ expanded the history section of konsole to explain its flawed
+#	  imitation of xterm's keyboard -TD
+#	+ use xterm+x11mouse in screen.* entries because screen does not yet
+#	  support xterm's 1006 mode -TD
+#	+ add nsterm-build400 for macOS 10.13 -TD
+#	+ add ansi+idc1, use that in ansi+idc adding dch for consistency -TD
+#	+ update vte to vte-2017 -TD
+#	+ add ecma+strikeout to vte-2017 -TD
+#	+ add iterm2-direct -TD
+#	+ updated teraterm, added teraterm-256color -TD
+#	+ add mlterm-direct -TD
+#	+ add descriptions for ANSI building-blocks -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

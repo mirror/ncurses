@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.69 2018/01/01 15:12:48 tom Exp $
+.\" $Id: infocmp.1m,v 1.70 2018/01/23 10:10:17 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -37,6 +37,19 @@
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
+..
+.de NS
+.ie n  .sp
+.el    .sp .5
+.ie n  .in +4
+.el    .in +2
+.nf
+.ft C			\" Courier
+..
+.de NE
+.fi
+.ft R
+.in -4
 ..
 .ds d @TERMINFO@
 .SH NAME
@@ -436,6 +449,12 @@ base64
 3
 hexadecimal and base64
 .RE
+.IP
+For example, this prints the compiled terminfo value as a string
+which could be assigned to the \fBTERMINFO\fP environment variable:
+.NS
+@INFOCMP@ -0 -q -Q2
+.NE
 .TP 5
 \fB\-q\fR
 This makes the output a little shorter:

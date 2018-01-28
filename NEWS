@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3065 2018/01/22 01:18:36 tom Exp $
+-- $Id: NEWS,v 1.3069 2018/01/27 15:28:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,29 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180127
+	+ updated release notes
+	+ amend a warning message from tic which should have flagged misuse
+	  of "XT" capability in "screen" terminal description.
+	> terminfo changes:
+	+ trim "XT" from screen entry, add comments to explain why it was
+	  not suitable -TD
+	+ modify iterm to use xterm+sl-twm building block -TD
+	+ mark konsole-420pc, konsole-vt100, konsole-xf3x obsolete reflecting
+	  konsole's removal in 2008 -TD
+	+ expanded the history section of konsole to explain its flawed
+	  imitation of xterm's keyboard -TD
+	+ use xterm+x11mouse in screen.* entries because screen does not yet
+	  support xterm's 1006 mode -TD
+	+ add nsterm-build400 for macOS 10.13 -TD
+	+ add ansi+idc1, use that in ansi+idc adding dch for consistency -TD
+	+ update vte to vte-2017 -TD
+	+ add ecma+strikeout to vte-2017 -TD
+	+ add iterm2-direct -TD
+	+ updated teraterm, added teraterm-256color -TD
+	+ add mlterm-direct -TD
+	+ add descriptions for ANSI building-blocks -TD
 
 20180121 pre-release
 	> terminfo changes:
