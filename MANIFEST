@@ -1172,6 +1172,7 @@
 ./test/package/mingw-ncurses-examples.spec
 ./test/package/ncurses-examples.spec
 ./test/padview.c
+./test/parse_rgb.h
 ./test/picsmap.c
 ./test/picsmap.h
 ./test/popup_msg.c

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3071 2018/01/30 00:35:11 tom Exp $
+-- $Id: NEWS,v 1.3076 2018/02/04 01:14:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180203
+	+ minor fixes to test/*.h to make them idempotent.
+	+ add/use test/parse_rgb.h to show how the "RGB" capability works.
+	+ add a clarification in user_caps.5 regarding "RGB" capability.
+	+ add extended_slk_color{,_sp} symbols to the appropriate
+	  package/*.{map,sym} files (report by Sven Joachim, cf: 20170401).
 
 20180129
 	+ update "VERSION" file, used in shared-library naming.

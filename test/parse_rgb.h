@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2018 Free Software Foundation, Inc.                        *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,17 +26,73 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: popup_msg.h,v 1.4 2018/02/03 21:07:55 tom Exp $
+ * $Id: parse_rgb.h,v 1.4 2018/02/03 23:40:53 tom Exp $
  *
- * Utility functions for a popup-message or help-screen.
+ * Sample implementation of ncurses RGB extension from user_caps(5).
  */
-
-#ifndef POPUP_MSG_H_incl
-#define POPUP_MSG_H_incl 1
+#ifndef PARSE_RBG_H_incl
+#define PARSE_RBG_H_incl 1
 
 #include <test.priv.h>
 
-extern void popup_msg(WINDOW *parent, const char *const *msg);
-extern void popup_msg2(WINDOW *parent, char **msg);
+#if HAVE_TIGETSTR && USE_WIDEC_SUPPORT
+static int
+parse_rgb(int *r_max, int *g_max, int *b_max)
+{
+    int colors = tigetnum("colors");
+    int result = ERR;
 
-#endif /* POPUP_MSG_H_incl */
+    *r_max = *g_max = *b_max = 0;
+
+    if (colors > 0) {
+	int max_bits;
+	int bits;
+	int pwr2;
+	int r = 0, g = 0, b = 0;
+	char *data;
+	char ch;
+
+	for (max_bits = 0, pwr2 = 1;
+	     pwr2 < colors;
+	     ++max_bits, pwr2 <<= 1) {
+	    ;
+	}
+
+	if (tigetflag("RGB") > 0) {
+	    result = OK;
+	    r = g = b = (max_bits + 2) / 3;
+	} else if ((bits = tigetnum("RGB")) > 0) {
+	    result = OK;
+	    r = g = b = bits;
+	} else if ((data = tigetstr("RGB")) != ABSENT_STRING
+		   && data != CANCELLED_STRING
+		   && sscanf(data, "%d/%d/%d%c", &r, &g, &b, &ch) == 3) {
+	    result = OK;
+	}
+
+	if ((r + g + b) < max_bits) {
+	    result = ERR;
+	} else if (result == 0) {
+	    if (r > max_bits) {
+		r = max_bits;
+		g = b = 0;
+	    }
+	    *r_max = r;
+	    if (g > (max_bits -= r)) {
+		g = max_bits;
+		b = 0;
+	    }
+	    *g_max = g;
+	    if (b > (max_bits -= g)) {
+		b = max_bits;
+	    }
+	    *b_max = b;
+	}
+    }
+    return result;
+}
+#else
+#define parse_rgb(r,g,b) (ERR)
+#endif
+
+#endif /* PARSE_RBG_H_incl */
