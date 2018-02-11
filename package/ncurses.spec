@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.1
-Release: 20180203
+Release: 20180210
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -27,70 +27,122 @@ updating character screens with reasonable optimization.
 
 This package is used for testing ABI %{MY_ABI}.
 
+%package -n ncursest6
+Summary:        Curses library with POSIX thread support.
+
+%description -n ncursest6
+The ncurses library routines are a terminal-independent method of
+updating character screens with reasonable optimization.
+
+This package is used for testing ABI %{MY_ABI} with POSIX threads.
+
 %prep
+
+%define CFG_OPTS \\\
+	--target %{_target_platform} \\\
+	--prefix=%{_prefix} \\\
+	--bindir=%{_bindir} \\\
+	--includedir=%{_includedir} \\\
+	--libdir=%{_libdir} \\\
+	--includedir='${prefix}/include' \\\
+	--disable-echo \\\
+	--disable-getcap \\\
+	--disable-leaks \\\
+	--disable-macros  \\\
+	--disable-overwrite  \\\
+	--disable-termcap \\\
+	--enable-hard-tabs \\\
+	--enable-opaque-curses \\\
+	--enable-opaque-form \\\
+	--enable-opaque-menu \\\
+	--enable-opaque-panel \\\
+	--enable-pc-files \\\
+	--enable-rpath \\\
+	--enable-warnings \\\
+	--enable-wgetch-events \\\
+	--enable-widec \\\
+	--enable-xmc-glitch \\\
+	--program-suffix=%{MY_ABI} \\\
+	--verbose \\\
+	--with-abi-version=%{MY_ABI} \\\
+	--with-config-suffix=dev \\\
+	--with-cxx-shared \\\
+	--with-default-terminfo-dir=%{MYDATA} \\\
+	--with-develop \\\
+	--with-extra-suffix=%{MY_ABI} \\\
+	--with-install-prefix=$RPM_BUILD_ROOT \\\
+	--with-pkg-config-libdir=%{MY_PKG} \\\
+	--with-shared \\\
+	--with-terminfo-dirs=%{MYDATA}:/usr/share/terminfo \\\
+	--with-termlib \\\
+	--with-ticlib \\\
+	--with-trace \\\
+	--with-versioned-syms \\\
+	--with-xterm-kbs=DEL \\\
+	--without-ada \\\
+	--without-debug \\\
+	--without-normal
 
 %define debug_package %{nil}
 %setup -q -n ncurses-%{version}-%{release}
 
 %build
+
+mkdir BUILD-ncurses6
+pushd BUILD-ncurses6
 CFLAGS="%{CC_NORMAL}" \
 RPATH_LIST=../lib:%{_prefix}/lib \
-%configure \
-	--target %{_target_platform} \
-	--prefix=%{_prefix} \
-	--includedir='${prefix}/include' \
-	--with-default-terminfo-dir=%{MYDATA} \
-	--with-install-prefix=$RPM_BUILD_ROOT \
-	--with-terminfo-dirs=%{MYDATA}:/usr/share/terminfo \
-	--with-config-suffix=dev \
-	--disable-echo \
-	--disable-getcap \
-	--disable-leaks \
-	--disable-macros  \
-	--disable-overwrite  \
-	--disable-termcap \
-	--enable-hard-tabs \
-	--enable-pc-files \
-	--enable-rpath \
-	--enable-warnings \
-	--enable-wgetch-events \
-	--enable-widec \
-	--verbose \
-	--program-suffix=%{MY_ABI} \
-	--with-abi-version=%{MY_ABI} \
-	--with-develop \
-	--with-shared \
-	--with-termlib \
-	--with-ticlib \
-	--with-trace \
-	--with-cxx-shared \
-	--with-extra-suffix=%{MY_ABI} \
-	--with-pkg-config-libdir=%{MY_PKG} \
-	--with-versioned-syms \
-	--with-xterm-kbs=DEL \
-	--without-ada \
-	--without-debug \
-	--without-normal
-
+../configure %{CFG_OPTS}
 make
+popd
+
+mkdir BUILD-ncursest6
+pushd BUILD-ncursest6
+CFLAGS="%{CC_NORMAL}" \
+RPATH_LIST=../lib:%{_prefix}/lib \
+../configure %{CFG_OPTS} \
+	--enable-interop \
+	--enable-sp-funcs \
+	--program-suffix=t%{MY_ABI} \
+	--with-pthread
+make
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
+pushd BUILD-ncurses6
 make install.libs install.progs
 rm -f test/ncurses
 ( cd test && make ncurses LOCAL_LIBDIR=%{_libdir} && mv ncurses $RPM_BUILD_ROOT/%{_bindir}/ncurses%{MY_ABI} )
+popd
+
+pushd BUILD-ncursest6
+make install.libs install.progs
+rm -f test/ncurses
+( cd test && make ncurses LOCAL_LIBDIR=%{_libdir} && mv ncurses $RPM_BUILD_ROOT/%{_bindir}/ncursest%{MY_ABI} )
+popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n ncurses6
+%defattr(-,root,root,-)
+%{_bindir}/*
+%{_includedir}/*
+%{_libdir}/*
+
+%files -n ncursest6
 %defattr(-,root,root,-)
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/*
 
 %changelog
+
+* Sat Feb 10 2018 Thomas E. Dickey
+- add ncursest6 package
+- add several development features
 
 * Mon Jan 01 2018 Thomas E. Dickey
 - drop redundant files pattern for "*.pc"

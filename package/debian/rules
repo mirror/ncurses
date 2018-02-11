@@ -56,8 +56,6 @@ configure = \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=$(MY_DIR) \
-		--with-default-terminfo-dir=$(MYDATA) \
-		--with-terminfo-dirs=$(MYDATA):/usr/share/terminfo \
 		--disable-echo \
 		--disable-getcap \
 		--disable-leaks \
@@ -65,21 +63,27 @@ configure = \
 		--disable-overwrite  \
 		--disable-termcap \
 		--enable-hard-tabs \
+		--enable-opaque-curses \
+		--enable-opaque-form \
+		--enable-opaque-menu \
+		--enable-opaque-panel \
 		--enable-pc-files \
 		--enable-warnings \
 		--enable-wgetch-events \
 		--enable-widec \
+		--enable-xmc-glitch \
 		--program-suffix=$(MY_ABI) \
 		--verbose \
 		--with-abi-version=$(MY_ABI) \
+		--with-cxx-shared \
+		--with-default-terminfo-dir=$(MYDATA) \
 		--with-develop \
 		--with-extra-suffix=$(MY_ABI) \
 		--with-shared \
+		--with-terminfo-dirs=$(MYDATA):/usr/share/terminfo \
 		--with-termlib \
 		--with-ticlib \
 		--with-trace \
-		--with-cxx-shared \
-		--with-terminfo-dirs=/lib/terminfo:/usr/share/terminfo \
 		--with-versioned-syms \
 		--with-xterm-kbs=DEL \
 		--without-ada \

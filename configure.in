@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.653 2018/01/19 22:45:56 tom Exp $
+dnl $Id: configure.in,v 1.656 2018/02/10 18:19:38 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.653 $)
+AC_REVISION($Revision: 1.656 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1024,6 +1024,21 @@ AC_ARG_WITH(ccharw-max,
 AC_MSG_RESULT($NCURSES_CCHARW_MAX)
 AC_SUBST(NCURSES_CCHARW_MAX)
 
+AC_CHECK_SIZEOF([signed char], 0)
+if test "$ac_cv_sizeof_signed_char" = 1 ; then
+	NCURSES_SBOOL="signed char"
+else
+	NCURSES_SBOOL="char"
+fi
+AC_MSG_CHECKING(if you want to use signed Boolean array in term.h)
+AC_ARG_ENABLE(signed-char,
+	[  --enable-signed-char    compile using signed Boolean's in term.h],
+	[with_signed_char=$enableval],
+	[with_signed_char=no])
+AC_MSG_RESULT($with_signed_char)
+test "x$with_signed_char" != xyes && NCURSES_SBOOL="char"
+AC_SUBST(NCURSES_SBOOL)
+
 ###   use option --with-tparm-arg to override tparm's argument type
 AC_MSG_CHECKING(for type of tparm args)
 AC_ARG_WITH(tparm-arg,
@@ -1181,21 +1196,6 @@ AC_ARG_ENABLE(no-padding,
 AC_MSG_RESULT($with_no_padding)
 test "x$with_no_padding" = xyes && AC_DEFINE(NCURSES_NO_PADDING,1,[Define to 1 to compile with $NCURSES_NO_PADDING code])
 
-AC_CHECK_SIZEOF([signed char], 0)
-if test "$ac_cv_sizeof_signed_char" = 1 ; then
-	NCURSES_SBOOL="signed char"
-else
-	NCURSES_SBOOL="char"
-fi
-AC_MSG_CHECKING(if you want to use signed Boolean array in term.h)
-AC_ARG_ENABLE(signed-char,
-	[  --enable-signed-char    compile using signed Boolean's in term.h],
-	[with_signed_char=$enableval],
-	[with_signed_char=no])
-AC_MSG_RESULT($with_signed_char)
-test "x$with_signed_char" != xyes && NCURSES_SBOOL="char"
-AC_SUBST(NCURSES_SBOOL)
-
 ###   use option --enable-sigwinch to turn on use of SIGWINCH logic
 AC_MSG_CHECKING(if you want SIGWINCH handler)
 AC_ARG_ENABLE(sigwinch,
@@ -1217,6 +1217,7 @@ test "x$with_tcap_names" = xyes && NCURSES_XNAMES=1
 AC_SUBST(NCURSES_XNAMES)
 
 ##############################################################################
+CF_HELP_MESSAGE(Reentrant Code:)
 CF_WITH_PTHREAD
 
 if test "x$with_pthread" != xno; then
@@ -1437,7 +1438,6 @@ AC_ARG_ENABLE(safe-sprintf,
 	[with_safe_sprintf=$enableval],
 	[with_safe_sprintf=no])
 AC_MSG_RESULT($with_safe_sprintf)
-test "x$with_safe_sprintf" = xyes && AC_DEFINE(USE_SAFE_SPRINTF,1,[Define to 1 to compile with experimental safe-sprintf code])
 
 ###   use option --disable-scroll-hints to turn off use of scroll-hints scrolling logic
 # when hashmap is used scroll hints are useless
@@ -1672,6 +1672,16 @@ vsnprintf \
 if test "x$ac_cv_func_getopt" = xno && \
    test "x$cf_with_progs$cf_with_tests" != xnono; then
 	AC_MSG_ERROR(getopt is required for building programs)
+fi
+
+if test "x$with_safe_sprintf" = xyes
+then
+	if test "x$ac_cv_func_vsnprintf" = xyes
+	then
+		AC_MSG_WARN(will use vsnprintf instead of safe-sprintf option)
+	else
+		AC_DEFINE(USE_SAFE_SPRINTF,1,[Define to 1 to compile with experimental safe-sprintf code])
+	fi
 fi
 
 if test "x$with_getcap" = "xyes" ; then

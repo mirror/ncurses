@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -75,7 +75,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.71 2016/05/28 23:32:40 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.72 2018/02/10 17:00:09 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)
@@ -196,6 +196,10 @@ _nc_timed_wait(SCREEN *sp MAYBE_UNUSED,
 #endif
 
     long starttime, returntime;
+
+#ifdef NCURSES_WGETCH_EVENTS
+    (void) timeout_is_event;
+#endif
 
     TR(TRACE_IEVENT, ("start twait: %d milliseconds, mode: %d",
 		      milliseconds, mode));

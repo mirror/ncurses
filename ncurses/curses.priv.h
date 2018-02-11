@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.587 2018/01/21 02:13:41 tom Exp $
+ * $Id: curses.priv.h,v 1.588 2018/02/10 16:13:31 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2522,7 +2522,7 @@ extern NCURSES_EXPORT(int) _nc_mingw_console_read(
 extern NCURSES_EXPORT(int) _nc_mingw_testmouse(
     SCREEN * sp,
     HANDLE fd,
-    int delay);
+    int delay EVENTLIST_2nd(_nc_eventlist*));
 #else
 #endif
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;

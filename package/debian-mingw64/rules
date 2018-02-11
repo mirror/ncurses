@@ -28,8 +28,8 @@ CFLAGS = $(CC_NORMAL)
 verbose = # -v
 
 CONFIG_OPTIONS = \
-	--disable-echo \
 	--disable-db-install \
+	--disable-echo \
 	--disable-getcap \
 	--disable-hard-tabs \
 	--disable-leaks \
@@ -37,6 +37,10 @@ CONFIG_OPTIONS = \
 	--disable-overwrite \
 	--disable-termcap \
 	--enable-interop \
+	--enable-opaque-curses \
+	--enable-opaque-form \
+	--enable-opaque-menu \
+	--enable-opaque-panel \
 	--enable-pc-files \
 	--enable-term-driver \
 	--enable-warnings \

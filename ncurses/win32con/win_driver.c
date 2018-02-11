@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -54,7 +54,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.59 2017/07/22 21:10:28 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.60 2018/02/10 17:01:16 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW
@@ -1316,7 +1316,9 @@ wcon_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 }
 
 static int
-wcon_testmouse(TERMINAL_CONTROL_BLOCK * TCB, int delay)
+wcon_testmouse(TERMINAL_CONTROL_BLOCK * TCB,
+	       int delay
+	       EVENTLIST_2nd(_nc_eventlist * evl))
 {
     int rc = 0;
     SCREEN *sp;
@@ -1528,6 +1530,10 @@ console_twait(
     int diff;
     bool isImmed = (milliseconds == 0);
 
+#ifdef NCURSES_WGETCH_EVENTS
+    (void) evl;			/* TODO: implement wgetch-events */
+#endif
+
 #define CONSUME() ReadConsoleInput(fd,&inp_rec,1,&nRead)
 
     assert(sp);
@@ -1635,7 +1641,7 @@ wcon_twait(TERMINAL_CONTROL_BLOCK * TCB,
 			     CON.inp,
 			     mode,
 			     milliseconds,
-			     timeleft EVENTLIST_2nd(_nc_eventlist * evl));
+			     timeleft EVENTLIST_2nd(evl));
     }
     return code;
 }
@@ -2069,7 +2075,8 @@ int
 _nc_mingw_testmouse(
 		       SCREEN *sp,
 		       HANDLE fd,
-		       int delay)
+		       int delay
+		       EVENTLIST_2nd(_nc_eventlist * evl))
 {
     int rc = 0;
 
