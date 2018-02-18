@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3080 2018/02/10 20:36:21 tom Exp $
+-- $Id: NEWS,v 1.3085 2018/02/17 21:27:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180217
+	+ remove incorrect free() from 20170617 changes (report by David Macek).
+	+ correct type for "U8" in user_caps.5; it is a number not boolean.
+	+ add a null-pointer check in safe_sprintf.c (report by Steven Noonan).
+	+ improve fix for Debian #882620 by reusing limit2 variable (report
+	  Julien Cristau, Sven Cristau).
 
 20180210
 	+ modify misc/Makefile.in to install/uninstall explicit list in case

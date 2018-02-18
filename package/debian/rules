@@ -80,7 +80,7 @@ configure = \
 		--with-develop \
 		--with-extra-suffix=$(MY_ABI) \
 		--with-shared \
-		--with-terminfo-dirs=$(MYDATA):/usr/share/terminfo \
+		--with-terminfo-dirs=$(MYDATA):/lib/terminfo:/usr/share/terminfo \
 		--with-termlib \
 		--with-ticlib \
 		--with-trace \

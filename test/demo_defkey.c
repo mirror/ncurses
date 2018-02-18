@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.27 2017/04/09 23:57:56 tom Exp $
+ * $Id: demo_defkey.c,v 1.28 2018/02/12 09:57:31 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -187,9 +187,9 @@ duplicate(WINDOW *win, NCURSES_CONST char *name, int code)
 	const char *prefix = 0;
 	char temp[BUFSIZ];
 
-	if (!strncmp(value, "\033[", (size_t) 2)) {
+	if (!(strncmp) (value, "\033[", (size_t) 2)) {
 	    prefix = "\033O";
-	} else if (!strncmp(value, "\033O", (size_t) 2)) {
+	} else if (!(strncmp) (value, "\033O", (size_t) 2)) {
 	    prefix = "\033[";
 	}
 	if (prefix != 0) {

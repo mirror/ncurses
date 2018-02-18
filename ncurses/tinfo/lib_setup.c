@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.188 2017/07/01 18:24:50 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.189 2018/02/17 21:23:32 tom Exp $")
 
 /****************************************************************************
  *
@@ -722,8 +722,6 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	    termp->Filedes = (short) Filedes;
 	    termp->_termname = strdup(tname);
 	} else {
-	    _nc_free_termtype2(&TerminalType(termp));
-	    free(my_tcb);
 	    ret_error0(errret ? *errret : TGETENT_ERR,
 		       "Could not find any driver to handle this terminal.\n");
 	}

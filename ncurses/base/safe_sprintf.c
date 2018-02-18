@@ -33,7 +33,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: safe_sprintf.c,v 1.29 2018/02/10 17:52:19 tom Exp $")
+MODULE_ID("$Id: safe_sprintf.c,v 1.31 2018/02/17 21:19:41 tom Exp $")
 
 #if USE_SAFE_SPRINTF
 
@@ -224,11 +224,7 @@ NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_DCLx
 {
     char *result = 0;
 
-#if NCURSES_SP_FUNCS
-    (void) sp;
-#endif
-
-    if (fmt != 0) {
+    if (SP_PARM != 0 && fmt != 0) {
 #if USE_SAFE_SPRINTF
 	va_list ap2;
 	int len;

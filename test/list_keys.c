@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2016-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.22 2017/08/12 17:28:23 tom Exp $
+ * $Id: list_keys.c,v 1.23 2018/02/12 09:57:31 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -298,7 +298,7 @@ list_keys(TERMINAL **terms, int count)
 	Type(j) = ktOther;
 	if (sscanf(strnames[j], "kf%d", &k) == 1) {
 	    Type(j) = ktFunction;
-	} else if (!strncmp(strnames[j], "kcu", 3)) {
+	} else if (!(strncmp) (strnames[j], "kcu", 3)) {
 	    Type(j) = ktCursor;
 	}
 	Name(j) = strnames[j];

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.101 2017/11/25 19:56:06 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.102 2018/02/11 20:24:28 Julien.Cristau Exp $")
 
 static int total_written;
 static int total_parts;
@@ -377,7 +377,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
 	start_time = 0;
     }
 
-    if (strlen(first_name) >= sizeof(filename) - (2 + LEAF_LEN)) {
+    if (strlen(first_name) >= limit2) {
 	_nc_warning("terminal name too long.");
 	saved = first_name[limit2];
 	first_name[limit2] = '\0';

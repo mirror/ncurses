@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: user_caps.5,v 1.6 2018/02/03 22:38:17 tom Exp $
+.\" $Id: user_caps.5,v 1.7 2018/02/17 19:07:01 tom Exp $
 .TH user_caps 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -211,7 +211,7 @@ As a trivial case, for example, one could define \fBRGB#1\fP
 to represent the standard eight ANSI colors, i.e., one bit per color.
 .TP 3
 U8
-\fIboolean\fP,
+\fInumber\fP,
 asserts that ncurses must use Unicode values for line-drawing characters,
 and that it should ignore the alternate character set capabilities
 when the locale uses UTF-8 encoding.

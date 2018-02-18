@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.116 2018/01/16 09:14:52 tom Exp $
+ * $Id: picsmap.c,v 1.117 2018/02/12 09:57:31 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -589,7 +589,7 @@ read_palette(const char *filename)
 		    if (*t == '-') {
 			if (sscanf(t, "-%d%c", &num, &chr) == 2 &&
 			    chr == 'c' &&
-			    !strncmp(strchr(t, chr), "color", 5)) {
+			    !(strncmp) (strchr(t, chr), "color", 5)) {
 			    found = 1;
 			}
 			break;
@@ -597,7 +597,7 @@ read_palette(const char *filename)
 		    ++t;
 		}
 		if (found && (t != s)
-		    && strncmp(s, "xterm", (size_t) (t - s))) {
+		    && (strncmp) (s, "xterm", (size_t) (t - s))) {
 		    sprintf(s, "xterm%s", filename + (t - s));
 		} else {
 		    continue;
@@ -1204,7 +1204,7 @@ parse_xpm(char **data)
 			    /* should not happen... */
 			    continue;
 			}
-			if (!strncmp(cs, list[c], (size_t) cpp)) {
+			if (!(strncmp) (cs, list[c], (size_t) cpp)) {
 			    result->cells[which].ch = list[c][0];
 			    result->cells[which].fg = c;
 			    result->fgcol[c].count++;
@@ -1279,7 +1279,7 @@ parse_img(const char *filename)
 	    size_t n = strlen(filename);
 	    debugmsg2("...read %s", buffer);
 	    if (strlen(buffer) > n &&
-		!strncmp(buffer, filename, n) &&
+		!(strncmp) (buffer, filename, n) &&
 		isspace(UChar(buffer[n])) &&
 		sscanf(skip_word(buffer + n), " %dx%d ", &pic_x, &pic_y) == 2) {
 		/* distort image to make it show normally on terminal */
