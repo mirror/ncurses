@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.100 2017/09/20 00:37:08 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.101 2018/02/24 22:33:40 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -265,6 +265,114 @@ _nc_read_entry_source(FILE *fp, char *buf,
     _nc_suppress_warnings = oldsuppress;
 }
 
+#if NCURSES_XNAMES
+static unsigned
+find_capname(TERMTYPE2 *p, const char *name)
+{
+    unsigned num_names = NUM_EXT_NAMES(p);
+    unsigned n;
+    for (n = 0; n < num_names; ++n) {
+	if (!strcmp(p->ext_Names[n], name))
+	    break;
+    }
+    return n;
+}
+
+static int
+extended_captype(TERMTYPE2 *p, unsigned which)
+{
+    int result = UNDEF;
+    unsigned limit = 0;
+    limit += p->ext_Booleans;
+    if (limit != 0 && which < limit) {
+	result = BOOLEAN;
+    } else {
+	limit += p->ext_Numbers;
+	if (limit != 0 && which < limit) {
+	    result = NUMBER;
+	} else {
+	    limit += p->ext_Strings;
+	    if (limit != 0 && which < limit) {
+		result = STRING;
+	    } else if (which >= limit) {
+		result = CANCEL;
+	    }
+	}
+    }
+    return result;
+}
+
+static const char *
+name_of_captype(int which)
+{
+    const char *result = "?";
+    switch (which) {
+    case BOOLEAN:
+	result = "boolean";
+	break;
+    case NUMBER:
+	result = "number";
+	break;
+    case STRING:
+	result = "string";
+	break;
+    }
+    return result;
+}
+
+/*
+ * Disallow changing the type of an extended capability when doing a "use"
+ * if one or the other is a string.
+ */
+static int
+invalid_merge(TERMTYPE2 *to, TERMTYPE2 *from)
+{
+    int rc = FALSE;
+    char *to_name = _nc_first_name(to->term_names);
+    char *from_name = strdup(_nc_first_name(from->term_names));
+    unsigned num_names = NUM_EXT_NAMES(from);
+    unsigned n;
+
+    for (n = 0; n < num_names; ++n) {
+	const char *capname = from->ext_Names[n];
+	int tt = extended_captype(to, find_capname(to, capname));
+	int tf = extended_captype(from, n);
+
+	if (tt <= STRING
+	    && tf <= STRING
+	    && (tt == STRING) != (tf == STRING)) {
+	    if (from_name != 0 && strcmp(to_name, from_name)) {
+		DEBUG(2,
+		      ("merge of %s to %s changes type of %s from %s to %s",
+		       from_name,
+		       to_name,
+		       from->ext_Names[n],
+		       name_of_captype(tf),
+		       name_of_captype(tt)));
+	    } else {
+		DEBUG(2, ("merge of %s changes type of %s from %s to %s",
+			  to_name,
+			  from->ext_Names[n],
+			  name_of_captype(tf),
+			  name_of_captype(tt)));
+	    }
+	    _nc_warning("merge changes type of %s from %s to %s",
+			from->ext_Names[n],
+			name_of_captype(tf),
+			name_of_captype(tt));
+	    rc = TRUE;
+	}
+    }
+    free(from_name);
+    return rc;
+}
+#define validate_merge(p, q) \
+	if (invalid_merge(&((p)->tterm), &((q)->tterm))) \
+		return FALSE
+#else
+#define validate_merge(p, q)	/* nothing */
+#endif
+
 NCURSES_EXPORT(int)
 _nc_resolve_uses2(bool fullresolve, bool literal)
 /* try to resolve all use capabilities */
@@ -412,13 +520,17 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		     * Now merge in each use entry in the proper
 		     * (reverse) order.
 		     */
-		    for (; qp->nuses; qp->nuses--)
+		    for (; qp->nuses; qp->nuses--) {
+			validate_merge(&merged,
+				       qp->uses[qp->nuses - 1].link);
 			_nc_merge_entry(&merged,
 					qp->uses[qp->nuses - 1].link);
+		    }
 
 		    /*
 		     * Now merge in the original entry.
 		     */
+		    validate_merge(&merged, qp);
 		    _nc_merge_entry(&merged, qp);
 
 		    /*

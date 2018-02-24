@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.93 2017/04/22 16:11:03 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.94 2018/02/24 22:36:15 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -1141,7 +1141,8 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 	return (TGETENT_ERR);
 
     /* resolve all use references */
-    _nc_resolve_uses2(TRUE, FALSE);
+    if (_nc_resolve_uses2(TRUE, FALSE) != TRUE)
+	return (TGETENT_ERR);
 
     /* find a terminal matching tn, if we can */
 #if USE_GETCAP_CACHE

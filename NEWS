@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3085 2018/02/17 21:27:10 tom Exp $
+-- $Id: NEWS,v 1.3089 2018/02/24 22:39:32 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,12 +45,21 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20180224
+	+ modify _nc_resolve_uses2() to detect incompatible types when merging
+	  a "use=" clause of extended capabilities.  The problem was seen in a
+	  defective terminfo integrated from simpleterm sources in 20171111,
+	  compounded by repair in 20180121.
+	+ correct Ss/Ms interchange in st-0.7 entry (tmux #1264) -TD
+	+ fix remaining flash capabilities with trailing mandatory delays -TD
+	+ correct cut/paste in NEWS (report by Sven Joachim).
+
 20180217
 	+ remove incorrect free() from 20170617 changes (report by David Macek).
 	+ correct type for "U8" in user_caps.5; it is a number not boolean.
 	+ add a null-pointer check in safe_sprintf.c (report by Steven Noonan).
-	+ improve fix for Debian #882620 by reusing limit2 variable (report
-	  Julien Cristau, Sven Cristau).
+	+ improve fix for Debian #882620 by reusing limit2 variable (report by
+	  Julien Cristau, Sven Joachim).
 
 20180210
 	+ modify misc/Makefile.in to install/uninstall explicit list in case

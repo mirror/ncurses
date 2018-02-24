@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.675 $
-#	$Date: 2018/01/27 15:14:08 $
+#	$Revision: 1.682 $
+#	$Date: 2018/02/24 14:23:54 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -368,7 +368,7 @@ ansi+sgr|ANSI graphic renditions,
 	sgr0=\E[0m,
 ansi+sgrso|ANSI standout only,
 	rmso=\E[m, smso=\E[7m,
-ansi+sgrul|ansi underline only,
+ansi+sgrul|ANSI underline only,
 	rmul=\E[m, smul=\E[4m,
 ansi+sgrbold|ANSI graphic renditions; assuming terminal has bold; not dim,
 	bold=\E[1m,
@@ -387,7 +387,7 @@ ansi+csr|ANSI scroll-region plus cursor save & restore,
 # characters sent to the printer do not echo on the screen. DEC terminals
 # can also be put into autoprinter mode, where each line is sent to the
 # printer as you move off that line, e.g., by a carriage return.
-ansi+pp|ansi printer port,
+ansi+pp|ANSI printer port,
 	mc5i,
 	mc0=\E[i, mc4=\E[4i, mc5=\E[5i,
 dec+pp|DEC autoprinter mode,
@@ -544,7 +544,7 @@ ansi-mtabs|any ansi terminal with pessimistic assumptions,
 # USENET {akgua,msdc,sb1,sb6,gatech}!emory!mlhhh.
 #
 # (Added vt100 <rc>,<sc> to quiet a tic warning --esr)
-ansi77|ansi 3.64 standard 1977 version,
+ansi77|ANSI 3.64 standard 1977 version,
 	OTbs, am, mir,
 	cols#80, it#8, lines#24,
 	bel=^G, clear=\E[;H\E[2J, cr=\r, csr=\E[%i%p1%d;%p2%dr,
@@ -3578,7 +3578,7 @@ vt340|dec-vt340|vt330|dec-vt330|dec vt340 graphics terminal with 24 line page,
 	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH,
 	cuu=\E[%p1%dA, cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P,
 	dl=\E[%p1%dM, dl1=\E[M, dsl=\E[2$~\r\E[1$}\E[K\E[$},
-	ed=\E[J, el=\E[K, flash=\E[?5h\E[?5l$<200/>, fsl=\E[$},
+	ed=\E[J, el=\E[K, flash=\E[?5h$<200/>\E[?5l, fsl=\E[$},
 	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL,
 	il1=\E[L, ind=\ED,
 	is2=\E<\E\sF\E>\E[?1h\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;24r
@@ -3628,7 +3628,7 @@ vt400|vt400-24|dec-vt400|dec vt400 24x80 column autowrap,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
 	dsl=\E[2$~\r\E[1$}\E[K\E[$}, ed=\E[J$<10/>,
-	el=\E[K$<4/>, flash=\E[?5h\E[?5l$<200/>, fsl=\E[$},
+	el=\E[K$<4/>, flash=\E[?5h$<200/>\E[?5l, fsl=\E[$},
 	home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@,
 	il=\E[%p1%dL, il1=\E[L, ind=\ED,
 	is2=\E<\E\sF\E>\E[?1h\E[?3l\E[?4l\E[?5l\E[?7h\E[?8h\E[1;24r
@@ -5400,16 +5400,16 @@ termite|VTE-based terminal,
 	ht=^I, hts=\EH, ind=\n, indn=\E[%p1%dS, invis=\E[8m,
 	is2=\E[!p\E[?3;4l\E[4l\E>, kb2=\EOE, kbs=^?, kcbt=\E[Z,
 	kent=\EOM, kmous=\E[M, rc=\E8, rev=\E[7m, ri=\EM,
-	rin=\E[%p1%dT, ritm=\E[23m, rmacs=\E(B, rmam=\E[?7l,
-	rmcup=\E[?1049l, rmkx=\E[?1l\E>, rmso=\E[27m,
-	rmul=\E[24m, rs1=\Ec, rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7,
+	rin=\E[%p1%dT, rmacs=\E(B, rmam=\E[?7l, rmcup=\E[?1049l,
+	rmkx=\E[?1l\E>, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
+	rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p7%t;8%;m,
-	sgr0=\E(B\E[m, sitm=\E[3m, smacs=\E(0, smam=\E[?7h,
-	smcup=\E[?1049h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, use=ansi+idc, use=ansi+idl,
-	use=ansi+enq, use=xterm+256color, use=ecma+color,
-	use=xterm+pcfkeys, use=xterm+sl-twm,
+	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smcup=\E[?1049h,
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%i%p1%dd, use=ansi+idc, use=ansi+idl,
+	use=ansi+enq, use=ecma+italics, use=xterm+256color,
+	use=ecma+color, use=xterm+pcfkeys, use=xterm+sl-twm,
 
 #### Other GNOME
 # Multi-Gnome-Terminal 1.6.2
@@ -5829,7 +5829,37 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 	kPRV6=\E[5@, kRIT5=\EOc, kUP=\E[a, kUP5=\EOa,
 
 # rxvt was originally "xvt", first announced in April 1993:
-#	http://www.informatica.co.cr/linux-desktops/research/1993/0416.html
+#	http://www.krsaborio.net/linux-desktops/research/1993/0416.html
+#------------------------------------------------------------------------------
+# Article: 567 of comp.os.linux.announce
+# Path: pavo.csi.cam.ac.uk!warwick!uknet!pipex!uunet!zaphod.mps.ohio-state.edu!
+# caen!batcomputer!theory.TC.Cornell.EDU!mdw
+# From: nation@rocket.sanders.com (Robert Nation)
+# Newsgroups: comp.os.linux.announce
+# Subject: xvt upload
+# Date: 16 Apr 1993 18:13:07 GMT
+# Organization: Cornell Theory Center
+# Lines: 13
+# Approved: linux-announce@tc.cornell.edu (Matt Welsh)
+# Message-ID: <1qmsvj$pvj@fitz.TC.Cornell.EDU>
+# NNTP-Posting-Host: theory.tc.cornell.edu
+# Keywords: xvt, xterm, Xwindows
+# Originator: mdw@theory.TC.Cornell.EDU
+# 
+# Rxvt has been uploaded to /pub/Linux/Incoming/rxvt.tar.z and
+# rxvt.README on sunsite.unc.edu.
+# 
+# Xvt is an xterm replacement which uses a little less memory, and is 
+# suitable for use on machines with small memories. Tek4010 support
+# is removed.
+# 
+# Modifications were made by Rob Nation (nation@rocket.sanders.lockheed.com) 
+# to make it a little more compact, and to add and remove certain features.
+# 
+# 
+# -- 
+# Send submissions for comp.os.linux.announce to: linux-announce@tc.cornell.edu
+#------------------------------------------------------------------------------
 #
 # Though its change-log does not mention this, John Davis has stated that he
 # was the author of the changes to use the bce ("new color model") which was
@@ -5840,7 +5870,7 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 # rxvt had usable color support with 2.16 (April 2, 1996), with some help by my
 # work on vttest, as well as bug reports to Mark Olesen.  For instance, the fix
 # mentioned here
-#	http://web.archiveorange.com/archive/v/6ETvLb5wHtbbzCaS4S9J
+#	https://web.archive.org/web/20141016124430/http://web.archiveorange.com/archive/v/6ETvLb5wHtbbzCaS4S9J
 # was from one of my bug-reports -TD
 #
 # While the color model both for xterm and rxvt was based on Linux console,
@@ -6248,6 +6278,10 @@ st|stterm| simpleterm,
 #	italics may show up with yellow color
 #	has control cursor-keys, alt cursor-keys, still no combinations
 #	has control pageup/down
+# tmux extensions, see TERMINFO EXTENSIONS in tmux(1)
+#	Se and Ss are implemented in the source-code, but the terminfo
+#	provided with the source is incorrect, since Se/Ss are mis-coded
+#	as booleans rather than strings.
 st-0.7|simpleterm 0.7,
 	ccc,
 	dim=\E[2m,
@@ -6260,11 +6294,12 @@ st-0.7|simpleterm 0.7,
 	     %=%t3%e%p1%d%;m,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m,
-	Ss=\E]52;%p1%s;%p2%s\007, kDN3=\E[1;3B, kDN5=\E[1;5B,
-	kLFT3=\E[1;3D, kLFT5=\E[1;5D, kNXT3=\E[6;3~,
-	kNXT5=\E[6;5~, kPRV3=\E[5;3~, kPRV5=\E[5;5~,
-	kRIT3=\E[1;3C, kRIT5=\E[1;5C, kUP3=\E[1;3A, kUP5=\E[1;5A,
-	use=ecma+strikeout, use=st-0.6,
+	Ms=\E]52;%p1%s;%p2%s\007, Se=\E[2 q, Ss=\E[%p1%d q,
+	kDN3=\E[1;3B, kDN5=\E[1;5B, kLFT3=\E[1;3D, kLFT5=\E[1;5D,
+	kNXT3=\E[6;3~, kNXT5=\E[6;5~, kPRV3=\E[5;3~,
+	kPRV5=\E[5;5~, kRIT3=\E[1;3C, kRIT5=\E[1;5C,
+	kUP3=\E[1;3A, kUP5=\E[1;5A, use=ecma+strikeout,
+	use=st-0.6,
 
 # st-0.4.1
 #
@@ -6402,7 +6437,8 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 	initc@, oc@, use=xterm+256color, use=st,
 
 #### TERMINATOR
-# https://code.google.com/p/jessies/
+# https://github.com/software-jessies-org/jessies/wiki/Terminator
+#
 # Tested using their Debian package org.jessies.terminator 6.104.3256 on 64-bit
 # Debian/current -TD (2011/8/20)
 #
@@ -6473,7 +6509,7 @@ terminator|Terminator no line wrap,
 	use=xterm+sl-twm,
 
 #### TERMINOLOGY
-# http://enlightenment.org
+# https://www.enlightenment.org/about-terminology
 #
 # Tested terminology-0.3.0, 0.6.1, using tack and vttest.  This is not a vt100
 # emulator, nor is it compatible with xterm, but it uses a few features from
@@ -7646,7 +7682,7 @@ mono-emx|stupid monochrome ansi terminal with only one kind of emphasis,
 # Use this for cygwin32 (tested with beta 19.1)
 # underline is colored bright magenta
 # shifted kf1-kf12 are kf11-kf22
-cygwinB19|ansi emulation for cygwin32,
+cygwinB19|ANSI emulation for cygwin32,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kdch1=\E[3~, kend=\E[4~, kf1=\E[[A, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~,
@@ -7707,7 +7743,7 @@ cygwinB19|ansi emulation for cygwin32,
 # 2005/11/12 -TD
 #	Remove cbt since it does not work in current cygwin
 #	Add 'mir' and 'in' flags based on tack
-cygwin|ansi emulation for Cygwin,
+cygwin|ANSI emulation for Cygwin,
 	am, hs, mir, msgr, xon,
 	colors#8, it#8, pairs#64,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j
@@ -7755,7 +7791,7 @@ cygwinDBG|Debug Version for Cygwin,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m, dl=\E[%p1%dM,
 	dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
-	flash=\E[?5h\E[?5l$<200/>, home=\E[H, hpa=\E[%i%p1%dG,
+	flash=\E[?5h$<200/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
 	ht=^I, hts=\EH, ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL,
 	il1=\E[L, ind=\n, invis=\E[8m, kNXT=\E[6$, kPRV=\E[5$,
 	kb2=\E[G, kbs=^H, kcbt=\E[Z, kcub1=\E[D, kcud1=\E[B,
@@ -7894,7 +7930,7 @@ cygwinDBG|Debug Version for Cygwin,
 #	Alt-X			\E[104~
 #	Alt-Y			\E[105~
 #	Alt-Z			\E[106~
-djgpp|ansi emulation for DJGPP alpha,
+djgpp|ANSI emulation for DJGPP alpha,
 	am, bce, msgr, xhp, xon, xt,
 	colors#8, it#8, pairs#64,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j
@@ -14217,7 +14253,7 @@ cit101e-rv|Citoh CIT-101e (sets reverse video),
 	cud=\E[%p1%dB, cud1=\E[B, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
 	cvvis=\E[3;5v, dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM,
-	dl1=\E[M, ed=\E[J, el=\E[K, flash=\E[?5l\E[?5h$<200/>,
+	dl1=\E[M, ed=\E[J, el=\E[K, flash=\E[?5l$<200/>\E[?5h,
 	home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@,
 	ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=\n, indn=\E[%p1%dS,
 	is2=\E<\E>\E[?1l\E[?3l\E[?4l\E[?5h\E[?7h\E[?8h\E[3g\E[>5g\E(
@@ -19754,7 +19790,7 @@ minix-3.0|minix console (v3.0),
 	use=ecma+color, use=minix-1.7,
 
 # See
-#	http://www.minix-vmd.org/pub/Minix-vmd/1.7.0/wwwman/man4/console.4.html
+#	https://web.archive.org/web/20030914201935/http://www.minix-vmd.org/pub/Minix-vmd/1.7.0/wwwman/man4/console.4.html
 # This is the entry provided with minix 1.7.4, with bogus :ri: removed.
 minix-1.7|minix console (v1.7),
 	am, xenl,
@@ -25696,5 +25732,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ updated teraterm, added teraterm-256color -TD
 #	+ add mlterm-direct -TD
 #	+ add descriptions for ANSI building-blocks -TD
+#
+# 2018-02-24
+#	+ correct Ss/Ms interchange in st-0.7 entry (tmux #1264) -TD
+#	+ fix remaining flash capabilities with trailing mandatory delays -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
