@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.155 2018/01/15 19:28:45 tom Exp $
+# $Id: Makefile.in,v 1.156 2018/03/01 17:37:19 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -241,6 +241,7 @@ make_hash$(BUILD_EXEEXT) : \
 	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 report_offsets$(BUILD_EXEEXT) : \
+		$(srcdir)/curses.priv.h \
 		$(srcdir)/report_offsets.c
 	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(srcdir)/report_offsets.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 	./report_offsets$(BUILD_EXEEXT)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,17 +36,24 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_vid_attr.c,v 1.25 2017/06/24 13:22:27 tom Exp $")
+MODULE_ID("$Id: lib_vid_attr.c,v 1.26 2018/03/03 22:03:18 tom Exp $")
 
 #define doPut(mode) \
 	TPUTS_TRACE(#mode); \
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc)
 
 #define TurnOn(mask, mode) \
-	if ((turn_on & mask) && mode) { doPut(mode); }
+	if ((turn_on & mask) && mode) { \
+	    TPUTS_TRACE(#mode); \
+	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc); \
+	}
 
 #define TurnOff(mask, mode) \
-	if ((turn_off & mask) && mode) { doPut(mode); turn_off &= ~mask; }
+	if ((turn_off & mask) && mode) { \
+	    TPUTS_TRACE(#mode); \
+	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx mode, 1, outc); \
+	    turn_off &= ~mask; \
+	}
 
 	/* if there is no current screen, assume we *can* do color */
 #define SetColorsIf(why, old_attr, old_pair) \

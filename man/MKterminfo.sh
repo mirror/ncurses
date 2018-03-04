@@ -1,10 +1,10 @@
 #!/bin/sh
-# $Id: MKterminfo.sh,v 1.13 2017/08/12 12:22:06 tom Exp $
+# $Id: MKterminfo.sh,v 1.15 2018/03/03 19:25:58 tom Exp $
 #
 # MKterminfo.sh -- generate terminfo.5 from Caps tabular data
 #
 #***************************************************************************
-# Copyright (c) 1998-2003,2017 Free Software Foundation, Inc.              *
+# Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 #                                                                          *
 # Permission is hereby granted, free of charge, to any person obtaining a  *
 # copy of this software and associated documentation files (the            *
@@ -65,10 +65,13 @@ cat $head
 temp=temp$$
 sorted=sorted$$
 unsorted=unsorted$$
-trap "rm -f $sorted $temp $unsorted; exit 99" 1 2 3 15
+trap "code=\$?; rm -f $sorted $temp $unsorted; exit \$code" EXIT HUP INT QUIT TERM
+rm -f $sorted $temp $unsorted
 
 sed -n <$caps "\
 /%%-STOP-HERE-%%/q
+/^#%center/s, expand,,
+/^#%lw[1-9]/s, lw[1-9][0-9]*\., l.,
 /^#%/s/#%//p
 /^#/d
 s/[	][	]*/	/g
@@ -105,6 +108,7 @@ done <$unsorted
 test $saved = yes && sort $temp >>$sorted
 
 sed -e 's/^\.\.$//' $sorted | tr "\005\006" "\012\134"
-cat $tail
 
-rm -f $sorted $temp $unsorted
+sed	-e '/^center expand;/s, expand,,' \
+	-e '/^\.TS/,/^\\/s, lw[1-9][0-9]*\., l.,' \
+	$tail

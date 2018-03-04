@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define MaxColors      max_colors
 #endif
 
-#if USE_NEW_PAIR
+#if NCURSES_EXT_COLORS
 
 /* fix redefinition versys tic.h */
 #undef entry
@@ -60,9 +60,9 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.14 2017/08/11 18:20:22 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.15 2018/03/01 15:02:12 tom Exp $")
 
-#if USE_NEW_PAIR
+#if NCURSES_EXT_COLORS
 
 #ifdef NEW_PAIR_DEBUG
 
@@ -376,4 +376,4 @@ void
 _nc_new_pair(void)
 {
 }
-#endif /* USE_NEW_PAIR */
+#endif /* NCURSES_EXT_COLORS */

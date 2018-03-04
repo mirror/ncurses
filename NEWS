@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3089 2018/02/24 22:39:32 tom Exp $
+-- $Id: NEWS,v 1.3096 2018/03/03 22:07:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180303
+	+ modify TurnOn/TurnOff macros in lib_vidattr.c and lib_vid_attr.c to
+	  avoid expansion of "CUR" in trace.
+	+ improve a few lintian warnings in test-packages.
+	+ modify lib_setup to avoid calling pthread_self() without first
+	  verifying that the address is valid, i.e., for weak symbols
+	  (report/patch by Werner Fink).
+	+ modify generated terminfo.5 to not use "expand" and related width
+	  on the last column of tables, making layout on wide terminals look
+	  better (adapted from patch by Kir Kolyshkin).
+	+ add a category to report_offsets, e.g., "w" for wide-character, "t"
+	  for threads to make the report more readable.  Reorganized the
+	  structures reported to make the categories more apparent.
+	+ simplify some ifdef's for extended-colors.
+	+ add NCURSES_GLOBALS and NCURSES_PRESCREEN to report_offsets, to show
+	  how similar the different tinfo configurations are.
 
 20180224
 	+ modify _nc_resolve_uses2() to detect incompatible types when merging

@@ -1016,7 +1016,9 @@
 ./package/debian/control
 ./package/debian/copyright
 ./package/debian/ncurses6.lintian-overrides
+./package/debian/ncurses6.triggers
 ./package/debian/ncursest6.lintian-overrides
+./package/debian/ncursest6.triggers
 ./package/debian/rules
 ./package/debian/source/format
 ./package/debian/watch

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.75 2017/08/04 08:59:48 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.78 2018/03/01 18:09:21 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -152,6 +152,10 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     0,				/* dbd_time */
     { { 0, 0 } },		/* dbd_vars */
 
+#ifdef USE_TERM_DRIVER
+    0,				/* term_driver */
+#endif
+
 #ifndef USE_SP_WINDOWLIST
     0,				/* _nc_windowlist */
 #endif
@@ -165,10 +169,22 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
     0,				/* safeprint_rows */
 #endif
 
-#ifdef USE_TERM_DRIVER
-    0,				/* term_driver */
+#ifdef USE_PTHREADS
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_curses */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_prescreen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_screen */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_update */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
+    PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
+    0,				/* nested_tracef */
+    0,				/* use_pthreads */
+#if USE_PTHREADS_EINTR
+    0,				/* read_thread */
 #endif
-
+#endif
+#if USE_WIDEC_SUPPORT
+    CHARS_0s,			/* key_name */
+#endif
 #ifdef TRACE
     FALSE,			/* trace_opened */
     CHARS_0s,			/* trace_fname */
@@ -200,22 +216,6 @@ NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals = {
 #if NO_LEAKS
     FALSE,			/* leak_checking */
 #endif
-#ifdef USE_PTHREADS
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_curses */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_prescreen */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_screen */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_update */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_tst_tracef */
-    PTHREAD_MUTEX_INITIALIZER,	/* mutex_tracef */
-    0,				/* nested_tracef */
-    0,				/* use_pthreads */
-#endif
-#if USE_PTHREADS_EINTR
-    0,				/* read_thread */
-#endif
-#if USE_WIDEC_SUPPORT
-    CHARS_0s,			/* key_name */
-#endif
 };
 
 #define STACK_FRAME_0	{ { 0 }, 0 }
@@ -230,14 +230,7 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
     TRUE,			/* use_env */
     FALSE,			/* filter_mode */
     A_NORMAL,			/* previous_attr */
-#ifndef USE_SP_RIPOFF
-    RIPOFF_0s,			/* ripoff */
-    NULL,			/* rsp */
-#endif
     {				/* tparm_state */
-#ifdef TRACE
-	NULL,			/* tname */
-#endif
 	NULL,			/* tparam_base */
 
 	STACK_FRAME_0s,		/* stack */
@@ -252,12 +245,20 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
 
 	NUM_VARS_0s,		/* dynamic_var */
 	NUM_VARS_0s,		/* static_vars */
+#ifdef TRACE
+	NULL,			/* tname */
+#endif
     },
     NULL,			/* saved_tty */
+    FALSE,			/* use_tioctl */
+    0,				/* _outch */
+#ifndef USE_SP_RIPOFF
+    RIPOFF_0s,			/* ripoff */
+    NULL,			/* rsp */
+#endif
 #if NCURSES_NO_PADDING
     FALSE,			/* flag to set if padding disabled  */
 #endif
-    0,				/* _outch */
 #if BROKEN_LINKER || USE_REENTRANT
     NULL,			/* real_acs_map */
     0,				/* LINES */
@@ -265,12 +266,13 @@ NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen = {
     8,				/* TABSIZE */
     1000,			/* ESCDELAY */
     0,				/* cur_term */
+#endif
 #ifdef TRACE
+#if BROKEN_LINKER || USE_REENTRANT
     0L,				/* _outchars */
     NULL,			/* _tputs_trace */
 #endif
 #endif
-    FALSE,			/* use_tioctl */
 };
 /* *INDENT-ON* */
 

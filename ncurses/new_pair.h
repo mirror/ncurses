@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,14 +33,12 @@
 /*
  * Common type definitions and macros for new_pair.c, lib_color.c
  *
- * $Id: new_pair.h,v 1.8 2017/08/11 18:15:11 tom Exp $
+ * $Id: new_pair.h,v 1.9 2018/03/01 15:02:12 tom Exp $
  */
 
 #ifndef NEW_PAIR_H
 #define NEW_PAIR_H 1
 /* *INDENT-OFF* */
-
-#define USE_NEW_PAIR NCURSES_EXT_COLORS
 
 #define LIMIT_TYPED(n,t) \
 	(t)(((n) > MAX_OF_TYPE(t)) \
@@ -54,9 +52,8 @@
 
 #define MAX_XCURSES_PAIR MAX_OF_TYPE(NCURSES_PAIRS_T)
 
-#if USE_NEW_PAIR
+#if NCURSES_EXT_COLORS
 #define OPTIONAL_PAIR	GCC_UNUSED
-#define USE_NEW_PAIR NCURSES_EXT_COLORS
 #define get_extended_pair(opts, color_pair) \
 	if ((opts) != NULL) { \
 	    *(int*)(opts) = color_pair; \
@@ -67,7 +64,6 @@
 	}
 #else
 #define OPTIONAL_PAIR	/* nothing */
-#define USE_NEW_PAIR NCURSES_EXT_COLORS
 #define get_extended_pair(opts, color_pair) /* nothing */
 #define set_extended_pair(opts, color_pair) \
 	if ((opts) != NULL) { \
@@ -88,7 +84,7 @@ typedef struct _color_pairs
 {
     int fg;
     int bg;
-#if USE_NEW_PAIR
+#if NCURSES_EXT_COLORS
     int mode;			/* tells if the entry is allocated or free */
     int prev;			/* index of previous item */
     int next;			/* index of next item */
@@ -108,7 +104,7 @@ colorpair_t;
 #define ValidPair(sp,pair) \
     ((sp != 0) && (pair >= 0) && (pair < sp->_pair_limit) && sp->_coloron)
 
-#if USE_NEW_PAIR
+#if NCURSES_EXT_COLORS
 extern NCURSES_EXPORT(void)     _nc_copy_pairs(SCREEN*, colorpair_t*, colorpair_t*, int);
 extern NCURSES_EXPORT(void)     _nc_free_ordered_pairs(SCREEN*);
 extern NCURSES_EXPORT(void)     _nc_reset_color_pair(SCREEN*, int, colorpair_t*);

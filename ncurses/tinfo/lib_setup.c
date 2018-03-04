@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.189 2018/02/17 21:23:32 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.191 2018/03/04 01:06:34 tom Exp $")
 
 /****************************************************************************
  *
@@ -827,8 +827,9 @@ _nc_find_prescr(void)
 {
     SCREEN *result = 0;
     PRESCREEN_LIST *p;
+    pthread_t id = GetThreadID();
     for (p = _nc_prescreen.allocated; p != 0; p = p->next) {
-	if (p->id == pthread_self()) {
+	if (p->id == id) {
 	    result = p->sp;
 	    break;
 	}
@@ -845,8 +846,9 @@ NCURSES_EXPORT(void)
 _nc_forget_prescr(void)
 {
     PRESCREEN_LIST *p, *q;
+    pthread_t id = GetThreadID();
     for (p = _nc_prescreen.allocated, q = 0; p != 0; q = p, p = p->next) {
-	if (p->id == pthread_self()) {
+	if (p->id == id) {
 	    if (q) {
 		q->next = p->next;
 	    } else {
@@ -882,7 +884,7 @@ new_prescr(void)
 #ifdef USE_PTHREADS
 	    PRESCREEN_LIST *p = typeCalloc(PRESCREEN_LIST, 1);
 	    if (p != 0) {
-		p->id = pthread_self();
+		p->id = GetThreadID();
 		p->sp = sp;
 		p->next = _nc_prescreen.allocated;
 		_nc_prescreen.allocated = p;
