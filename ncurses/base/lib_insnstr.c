@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2004-2009,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2004-2016,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insnstr.c,v 1.5 2016/05/28 21:03:33 tom Exp $")
+MODULE_ID("$Id: lib_insnstr.c,v 1.6 2018/03/10 20:13:59 Gyorgy.Jeney Exp $")
 
 NCURSES_EXPORT(int)
 winsnstr(WINDOW *win, const char *s, int n)
@@ -81,7 +81,7 @@ winsnstr(WINDOW *win, const char *s, int n)
 	    NCURSES_SIZE_T ox = win->_curx;
 	    const unsigned char *cp;
 
-	    for (cp = str; *cp && (n <= 0 || (cp - str) < n); cp++) {
+	    for (cp = str; (n <= 0 || (cp - str) < n) && *cp; cp++) {
 		_nc_insert_ch(sp, win, (chtype) UChar(*cp));
 	    }
 	    win->_curx = ox;

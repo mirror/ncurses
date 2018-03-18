@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: MKterminfo.sh,v 1.15 2018/03/03 19:25:58 tom Exp $
+# $Id: MKterminfo.sh,v 1.16 2018/03/17 18:03:51 Kir.Kolyshkin Exp $
 #
 # MKterminfo.sh -- generate terminfo.5 from Caps tabular data
 #
@@ -71,7 +71,7 @@ rm -f $sorted $temp $unsorted
 sed -n <$caps "\
 /%%-STOP-HERE-%%/q
 /^#%center/s, expand,,
-/^#%lw[1-9]/s, lw[1-9][0-9]*\., l.,
+/^#%lw25/s, lw6 , lw7 ,
 /^#%/s/#%//p
 /^#/d
 s/[	][	]*/	/g

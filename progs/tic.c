@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.252 2018/01/25 19:16:50 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.256 2018/03/18 00:05:10 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1129,6 +1129,27 @@ check_acs(TERMTYPE2 *tp)
     }
 }
 
+static bool
+same_color(NCURSES_CONST char *oldcap, NCURSES_CONST char *newcap, int limit)
+{
+    bool result = FALSE;
+    if (limit > 16)
+	limit = 16;
+    if (limit >= 8) {
+	int n;
+	int same;
+	for (n = same = 0; n < limit; ++n) {
+	    char *oldvalue = strdup(TPARM_1(oldcap, n));
+	    char *newvalue = strdup(TPARM_1(newcap, n));
+	    same += !strcmp(oldvalue, newvalue);
+	    free(oldvalue);
+	    free(newvalue);
+	}
+	result = (same == limit);
+    }
+    return result;
+}
+
 /*
  * Check if the color capabilities are consistent
  */
@@ -1145,21 +1166,29 @@ check_colors(TERMTYPE2 *tp)
     PAIRED(set_color_pair, initialize_pair);
 
     if (VALID_STRING(set_foreground)
-	&& VALID_STRING(set_a_foreground)
-	&& !_nc_capcmp(set_foreground, set_a_foreground))
-	_nc_warning("expected setf/setaf to be different");
+	&& VALID_STRING(set_a_foreground)) {
+	if (!_nc_capcmp(set_foreground, set_a_foreground)) {
+	    _nc_warning("expected setf/setaf to be different");
+	} else if (same_color(set_foreground, set_a_foreground, max_colors)) {
+	    _nc_warning("setf/setaf are equivalent");
+	}
+    }
 
     if (VALID_STRING(set_background)
-	&& VALID_STRING(set_a_background)
-	&& !_nc_capcmp(set_background, set_a_background))
-	_nc_warning("expected setb/setab to be different");
+	&& VALID_STRING(set_a_background)) {
+	if (!_nc_capcmp(set_background, set_a_background)) {
+	    _nc_warning("expected setb/setab to be different");
+	} else if (same_color(set_background, set_a_background, max_colors)) {
+	    _nc_warning("setb/setab are equivalent");
+	}
+    }
 
     /* see: has_colors() */
     if (VALID_NUMERIC(max_colors) && VALID_NUMERIC(max_pairs)
-	&& (((set_foreground != NULL)
-	     && (set_background != NULL))
-	    || ((set_a_foreground != NULL)
-		&& (set_a_background != NULL))
+	&& ((VALID_STRING(set_foreground)
+	     && VALID_STRING(set_background))
+	    || (VALID_STRING(set_a_foreground)
+		&& VALID_STRING(set_a_background))
 	    || set_color_pair)) {
 	if (!VALID_STRING(orig_pair) && !VALID_STRING(orig_colors))
 	    _nc_warning("expected either op/oc string for resetting colors");
@@ -2075,7 +2104,7 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 			 myParam(9));
 	break;
     }
-    return result;
+    return strdup(result);
 }
 
 #define IsDelay(ch) ((ch) == '.' || isdigit(UChar(ch)))
@@ -2227,7 +2256,8 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 	    || !strcmp(name, "setb")
 	    || !strcmp(name, "setaf")
 	    || !strcmp(name, "setab")) {
-	    limit = max_colors;
+	    if ((limit = max_colors) > 16)
+		limit = 16;
 	}
 	for (count = 0; count < limit; ++count) {
 	    char *ti_check = check_1_infotocap(name, ti_value, count);
@@ -2243,6 +2273,8 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 		_nc_warning("tparm-conversion of %s(%d) differs between\n\tterminfo %s\n\ttermcap  %s",
 			    name, count, ti_check, tc_check);
 	    }
+	    free(ti_check);
+	    free(tc_check);
 	}
     } else if (params == 0 && !same_ti_tc(ti_value, tc_value, &embedded)) {
 	if (embedded) {

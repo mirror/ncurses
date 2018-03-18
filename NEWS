@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3096 2018/03/03 22:07:39 tom Exp $
+-- $Id: NEWS,v 1.3102 2018/03/17 19:47:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180317
+	+ fix a check in infotocap which may not have detected a problem when
+	  it should have.
+	+ add a check in tic for the case where setf/setb are given using
+	  different strings, but provide identical results to setaf/setab.
+	+ further improve fix for terminfo.5 (patch by Kir Kolyshkin).
+	+ reorder loop-limit checks in winsnstr() in case the string has no
+	  terminating null and only the number of characters is used (patch
+	  by Gyorgy Jeney).
 
 20180303
 	+ modify TurnOn/TurnOff macros in lib_vidattr.c and lib_vid_attr.c to
