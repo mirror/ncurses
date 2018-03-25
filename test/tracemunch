@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.17 2017/12/23 17:51:31 tom Exp $
+# $Id: tracemunch,v 1.18 2018/03/22 08:50:15 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2005,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -62,19 +62,19 @@ sub transaddr {
     $arg =~ s/\b$stdscr\b/stdscr/g if ($stdscr);
     foreach my $addr ( keys %scr_addr ) {
         $n = $scr_addr{$addr};
-        $arg =~ s/\b$addr\b/screen$n/g;
+        $arg =~ s/\b$addr\b/screen$n/g if ( defined $n );
     }
     foreach my $addr ( keys %thr_addr ) {
         $n = $thr_addr{$addr};
-        $arg =~ s/\b$addr\b/thread$n/g;
+        $arg =~ s/\b$addr\b/thread$n/g if ( defined $n );
     }
     foreach my $addr ( keys %try_addr ) {
         $n = $try_addr{$addr};
-        $arg =~ s/\b$addr\b/tries_$n/g;
+        $arg =~ s/\b$addr\b/tries_$n/g if ( defined $n );
     }
     foreach my $addr ( keys %win_addr ) {
         $n = $win_addr{$addr};
-        $arg =~ s/\b$addr\b/window$n/g;
+        $arg =~ s/\b$addr\b/window$n/g if ( defined $n );
     }
     if ( $arg =~ /add_wch\((window\d+,)?0x[[:xdigit:]]+\)/i ) {
         $arg =~ s/(0x[[:xdigit:]]+)[)]/\&wch)/i;

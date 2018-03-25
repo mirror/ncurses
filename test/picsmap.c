@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.117 2018/02/12 09:57:31 tom Exp $
+ * $Id: picsmap.c,v 1.118 2018/03/24 22:37:42 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -71,10 +71,12 @@
 #define  L_CURLY '{'
 #define  R_CURLY '}'
 
+#define MaxSCALE	1000	/* input curses ranges 0..1000 */
+#define MaxRGB		255	/* output color ranges 0..255 */
 #define okCOLOR(n)	((n) >= 0 && (n) < COLORS)
-#define okRGB(n)	((n) >= 0 && (n) <= 1000)
-#define Scaled256(n)	(NCURSES_COLOR_T) (int)(((n) * 1000.0) / 256)
-#define ScaledColor(n)	(NCURSES_COLOR_T) (int)(((n) * 1000.0) / scale)
+#define okSCALE(n)	((n) >= 0 && (n) <= MaxSCALE)
+#define Scaled256(n)	(NCURSES_COLOR_T) (int)(((double)(n) * MaxSCALE) / 255)
+#define ScaledColor(n)	(NCURSES_COLOR_T) (int)(((double)(n) * MaxSCALE) / scale)
 
 #ifndef RGB_PATH
 #define RGB_PATH "/etc/X11/rgb.txt"
@@ -650,7 +652,7 @@ init_palette(const char *palette_file)
 	if (data != 0) {
 	    int n;
 	    int red, green, blue;
-	    int scale = 1000;
+	    int scale = MaxSCALE;
 	    int c;
 	    for (n = 0; data[n] != 0; ++n) {
 		if (sscanf(data[n], "scale:%d", &c) == 1) {
@@ -661,9 +663,9 @@ init_palette(const char *palette_file)
 				  &green,
 				  &blue) == 4
 			   && okCOLOR(c)
-			   && okRGB(red)
-			   && okRGB(green)
-			   && okRGB(blue)) {
+			   && okSCALE(red)
+			   && okSCALE(green)
+			   && okSCALE(blue)) {
 		    /* *INDENT-EQLS* */
 		    all_colors[c].red   = ScaledColor(red);
 		    all_colors[c].green = ScaledColor(green);
@@ -1043,7 +1045,7 @@ parse_xbm(char **data)
 		if (isdigit(UChar(*s))) {
 		    long value = strtol(s, &t, 0);
 		    int b;
-		    if (t != s || value > 255 || value < 0) {
+		    if (t != s || value > MaxRGB || value < 0) {
 			s = t;
 		    } else {
 			state = -1;
@@ -1347,9 +1349,9 @@ parse_img(const char *filename)
 			    &check)) {
 		    if ((s - t) > 8)	/* 6 hex digits vs 8 */
 			check /= 256;
-		    if (r > 255 ||
-			g > 255 ||
-			b > 255 ||
+		    if (r > MaxRGB ||
+			g > MaxRGB ||
+			b > MaxRGB ||
 			check != (unsigned) ((r << 16) | (g << 8) | b)) {
 			okay = FALSE;
 			break;
