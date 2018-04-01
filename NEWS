@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3105 2018/03/24 22:56:36 tom Exp $
+-- $Id: NEWS,v 1.3107 2018/03/31 22:45:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180331
+	+ improve terminfo write/read by modifying the fourth item of the
+	  extended header to denote the number of valid strings in the extended
+	  string table (prompted by a comment in unibilium's sources).
 
 20180324
 	+ amend Scaled256() macro in test/picsmap.c to cover the full range

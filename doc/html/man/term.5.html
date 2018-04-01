@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: term.5,v 1.27 2017/12/16 21:27:20 tom Exp @
+  * @Id: term.5,v 1.28 2018/03/31 22:41:29 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -58,7 +58,7 @@
 </PRE><H3><a name="h3-STORAGE-LOCATION">STORAGE LOCATION</a></H3><PRE>
        Compiled   terminfo   descriptions   are  placed  under  the  directory
        <STRONG>/usr/share/terminfo</STRONG>.  Two configurations are supported  (when  building
-       the ncurses libraries):
+       the <STRONG>ncurses</STRONG> libraries):
 
        <STRONG>directory</STRONG> <STRONG>tree</STRONG>
             A two-level scheme is used to avoid a linear search of a huge UNIX
@@ -74,12 +74,12 @@
             the terminfo's primary name as a key, and records containing  only
             aliases pointing to the primary name.
 
-            If  built  to  write hashed databases, ncurses can still read ter-
+            If  built  to  write hashed databases, <STRONG>ncurses</STRONG> can still read ter-
             minfo databases organized as a directory tree,  but  cannot  write
             entries  into  the  directory  tree.   It  can  write (or rewrite)
             entries in the hashed database.
 
-            ncurses distinguishes the two  cases  in  the  TERMINFO  and  TER-
+            <STRONG>ncurses</STRONG> distinguishes the two  cases  in  the  TERMINFO  and  TER-
             MINFO_DIRS  environment  variable by assuming a directory tree for
             entries that correspond to an existing directory, and hashed data-
             base otherwise.
@@ -113,7 +113,7 @@
        the least significant 8 bits of the value, and the second byte contains
        the most significant 8 bits.  (Thus, the value represented is  256*sec-
        ond+first.)   The  value -1 is represented by the two bytes 0377, 0377;
-       other negative values are illegal. This value generally means that  the
+       other negative values are illegal.  This value generally means that the
        corresponding capability is missing from this terminal.  Note that this
        format corresponds to the hardware of the VAX and PDP-11 (that is, lit-
        tle-endian  machines).   Machines where this does not correspond to the
@@ -159,11 +159,11 @@
        binary  format  is used in all modern UNIX systems.  Each system uses a
        predefined set of boolean, number or string capabilities.
 
-       The ncurses libraries and applications support extended terminfo binary
+       The <STRONG>ncurses</STRONG> libraries and applications support extended terminfo binary
        format,  allowing users to define capabilities which are loaded at run-
        time.  This extension is made possible by using the fact that the other
        implementations  stop  reading the terminfo data when they have reached
-       the end of the size given in the header.  ncurses checks the size,  and
+       the end of the size given in the header.  <STRONG>ncurses</STRONG> checks the size,  and
        if  it  exceeds  that  due  to  the predefined data, continues to parse
        according to its own scheme.
 
@@ -175,69 +175,72 @@
 
             (3)  count of extended string capabilities
 
-            (4)  size of the extended string table in bytes.
+            (4)  count of the items in extended string table
 
-            (5)  last offset of the extended string table in bytes.
+            (5)  size of the extended string table in bytes
 
-       Using the counts and sizes, ncurses allocates arrays and reads data for
+       The count- and size-values for the extended string  table  include  the
+       extended capability <EM>names</EM> as well as extended capability <EM>values</EM>.
+
+       Using the counts and sizes, <STRONG>ncurses</STRONG> allocates arrays and reads data for
        the extended capabilities in the same order as the header information.
 
-       The  extended  string  table  contains  values for string capabilities.
-       After the end of these values, it contains the names for  each  of  the
-       extended  capabilities  in  order,  e.g.,  booleans,  then  numbers and
+       The extended string table  contains  values  for  string  capabilities.
+       After  the  end  of these values, it contains the names for each of the
+       extended capabilities  in  order,  e.g.,  booleans,  then  numbers  and
        finally strings.
 
-       Applications which manipulate terminal data  can  use  the  definitions
-       described  in  <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>  which  associate the long capability
+       Applications  which  manipulate  terminal  data can use the definitions
+       described in <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG> which  associate  the  long  capability
        names with members of a <STRONG>TERMTYPE</STRONG> structure.
 
 
 </PRE><H3><a name="h3-EXTENDED-NUMBER-FORMAT">EXTENDED NUMBER FORMAT</a></H3><PRE>
-       On occasion, 16-bit signed integers are not large enough.  With ncurses
-       6.1,  a  new format is introduced by making a few changes to the legacy
+       On occasion, 16-bit signed integers are not large enough.  With <STRONG>ncurses</STRONG>
+       6.1, a new format was introduced by making a few changes to the  legacy
        format:
 
        <STRONG>o</STRONG>   a different magic number (0542)
 
-       <STRONG>o</STRONG>   changing the type for the <EM>number</EM> array from signed 16-bit  integers
+       <STRONG>o</STRONG>   changing  the type for the <EM>number</EM> array from signed 16-bit integers
            to signed 32-bit integers.
 
-       To  maintain  compatibility,  the library presents the same data struc-
+       To maintain compatibility, the library presents the  same  data  struc-
        tures to direct users of the <STRONG>TERMTYPE</STRONG> structure as in previous formats.
-       However,  that  cannot  provide callers with the extended numbers.  The
-       library uses a similar but hidden data structure <STRONG>TERMTYPE2</STRONG>  to  provide
+       However, that cannot provide callers with the  extended  numbers.   The
+       library  uses  a similar but hidden data structure <STRONG>TERMTYPE2</STRONG> to provide
        data for the terminfo functions.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       Note  that  it  is  possible for <STRONG>setupterm</STRONG> to expect a different set of
-       capabilities than are actually present in the file.  Either  the  data-
+       Note that it is possible for <STRONG>setupterm</STRONG> to expect  a  different  set  of
+       capabilities  than  are actually present in the file.  Either the data-
        base may have been updated since <STRONG>setupterm</STRONG> has been recompiled (result-
-       ing in extra unrecognized entries in the file) or the program may  have
-       been  recompiled more recently than the database was updated (resulting
-       in missing entries).  The routine <STRONG>setupterm</STRONG> must be prepared  for  both
-       possibilities  - this is why the numbers and sizes are included.  Also,
-       new capabilities must always be added at the end of the lists of  bool-
+       ing  in extra unrecognized entries in the file) or the program may have
+       been recompiled more recently than the database was updated  (resulting
+       in  missing  entries).  The routine <STRONG>setupterm</STRONG> must be prepared for both
+       possibilities - this is why the numbers and sizes are included.   Also,
+       new  capabilities must always be added at the end of the lists of bool-
        ean, number, and string capabilities.
 
-       Despite  the consistent use of little-endian for numbers and the other-
-       wise self-describing format, it is not wise to count on portability  of
-       binary  terminfo entries between commercial UNIX versions.  The problem
-       is that there are at least three versions  of  terminfo  (under  HP-UX,
-       AIX,  and  OSF/1) which diverged from System V terminfo after SVr1, and
-       have added extension capabilities to the  string  table  that  (in  the
-       binary  format)  collide  with System V and XSI Curses extensions.  See
-       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for detailed discussion of  terminfo  source  compatibility
+       Despite the consistent use of little-endian for numbers and the  other-
+       wise  self-describing format, it is not wise to count on portability of
+       binary terminfo entries between commercial UNIX versions.  The  problem
+       is  that  there  are  at least three versions of terminfo (under HP-UX,
+       AIX, and OSF/1) which diverged from System V terminfo after  SVr1,  and
+       have  added  extension  capabilities  to  the string table that (in the
+       binary format) collide with System V and XSI  Curses  extensions.   See
+       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  for  detailed  discussion of terminfo source compatibility
        issues.
 
        Direct access to the <STRONG>TERMTYPE</STRONG> structure is provided for legacy applica-
-       tions.  Portable applications should  use  the  <STRONG>tigetflag</STRONG>  and  related
+       tions.   Portable  applications  should  use  the <STRONG>tigetflag</STRONG> and related
        functions described in <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG> for reading terminal capabili-
        ties.
 
-       A small number of terminal descriptions  use  uppercase  characters  in
-       their  names.   If  the  underlying  filesystem  ignores the difference
-       between uppercase and lowercase, ncurses represents the "first  charac-
+       A  small  number  of  terminal descriptions use uppercase characters in
+       their names.  If  the  underlying  filesystem  ignores  the  difference
+       between  uppercase and lowercase, <STRONG>ncurses</STRONG> represents the "first charac-
        ter" of the terminal name used as the intermediate level of a directory
        tree in (two-character) hexadecimal form.
 
@@ -284,10 +287,10 @@
 </PRE><H2><a name="h2-LIMITS">LIMITS</a></H2><PRE>
        Some limitations:
 
-       <STRONG>o</STRONG>   total  compiled entries cannot exceed 4096 bytes in the legacy for-
+       <STRONG>o</STRONG>   total compiled entries cannot exceed 4096 bytes in the legacy  for-
            mat.
 
-       <STRONG>o</STRONG>   total compiled entries cannot exceed 32768 bytes  in  the  extended
+       <STRONG>o</STRONG>   total  compiled  entries  cannot exceed 32768 bytes in the extended
            format.
 
        <STRONG>o</STRONG>   the name field cannot exceed 128 bytes.
