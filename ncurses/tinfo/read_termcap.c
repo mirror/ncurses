@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.94 2018/02/24 22:36:15 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.95 2018/04/07 21:12:50 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -66,10 +66,10 @@ MODULE_ID("$Id: read_termcap.c,v 1.94 2018/02/24 22:36:15 tom Exp $")
 #define TC_REF_LOOP   -3
 #define TC_UNRESOLVED -4	/* this is not returned by BSD cgetent */
 
-static NCURSES_CONST char *
+static const char *
 get_termpath(void)
 {
-    NCURSES_CONST char *result;
+    const char *result;
 
     if (!use_terminfo_vars() || (result = getenv("TERMPATH")) == 0)
 	result = TERMPATH;
@@ -791,7 +791,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     int i;
     char pathbuf[PBUFSIZ];	/* holds raw path of filenames */
     CGETENT_CONST char *pathvec[PVECSIZ];	/* point to names in pathbuf */
-    NCURSES_CONST char *termpath;
+    const char *termpath;
     string_desc desc;
 
     *lineno = 1;

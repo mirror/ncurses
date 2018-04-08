@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2009,2011 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2011,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,21 +40,25 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_scanw.c,v 1.13 2011/10/22 16:31:35 tom Exp $")
+MODULE_ID("$Id: lib_scanw.c,v 1.15 2018/04/07 21:28:27 tom Exp $")
 
 NCURSES_EXPORT(int)
-vwscanw(WINDOW *win, NCURSES_CONST char *fmt, va_list argp)
+vwscanw(WINDOW *win, const char *fmt, va_list argp)
 {
     char buf[BUFSIZ];
+    int code = ERR;
 
-    if (wgetnstr(win, buf, (int) sizeof(buf) - 1) == ERR)
-	return (ERR);
+    if (wgetnstr(win, buf, (int) sizeof(buf) - 1) != ERR) {
+	if ((code = vsscanf(buf, fmt, argp)) == EOF) {
+	    code = ERR;
+	}
+    }
 
-    return (vsscanf(buf, fmt, argp));
+    return code;
 }
 
 NCURSES_EXPORT(int)
-scanw(NCURSES_CONST char *fmt,...)
+scanw(const char *fmt,...)
 {
     int code;
     va_list ap;
@@ -68,7 +72,7 @@ scanw(NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-wscanw(WINDOW *win, NCURSES_CONST char *fmt,...)
+wscanw(WINDOW *win, const char *fmt,...)
 {
     int code;
     va_list ap;
@@ -82,7 +86,7 @@ wscanw(WINDOW *win, NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvscanw(int y, int x, NCURSES_CONST char *fmt,...)
+mvscanw(int y, int x, const char *fmt,...)
 {
     int code;
     va_list ap;
@@ -94,7 +98,7 @@ mvscanw(int y, int x, NCURSES_CONST char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvwscanw(WINDOW *win, int y, int x, NCURSES_CONST char *fmt,...)
+mvwscanw(WINDOW *win, int y, int x, const char *fmt,...)
 {
     int code;
     va_list ap;

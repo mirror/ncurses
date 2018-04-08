@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.37 2018/01/23 10:14:38 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.39 2018/04/07 20:51:27 tom Exp $
 .TH curs_termcap 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -61,13 +61,13 @@
 .br
 \fBextern @NCURSES_OSPEED@ ospeed;\fR
 .sp
-\fBint tgetent(char *bp, const char *name);\fR
+\fBint tgetent(const char *bp, const char *name);\fR
 .br
-\fBint tgetflag(char *id);\fR
+\fBint tgetflag(const char *id);\fR
 .br
-\fBint tgetnum(char *id);\fR
+\fBint tgetnum(const char *id);\fR
 .br
-\fBchar *tgetstr(char *id, char **area);\fR
+\fBchar *tgetstr(const char *id, char **area);\fR
 .br
 \fBchar *tgoto(const char *cap, int col, int row);\fR
 .br
@@ -218,8 +218,14 @@ One consequence of this is that termcap applications assume \fRme\fR
 This implementation checks for, and modifies the data shown to the
 termcap interface to accommodate termcap's limitation in this respect.
 .SH PORTABILITY
+These functions are provided for supporting legacy applications,
+and should not be used in new programs:
+.bP
 The XSI Curses standard, Issue 4 describes these functions.  However, they
 are marked TO BE WITHDRAWN and may be removed in future versions.
+.bP
+X/Open Curses, Issue 5 (December 2007) marked the termcap interface
+(along with \fBvwprintw\fP and \fBvwscanw\fP) as withdrawn.
 .PP
 Neither the XSI Curses standard nor the SVr4 man pages documented the return
 values of \fBtgetent\fR correctly, though all three were in fact returned ever

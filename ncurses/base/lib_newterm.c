@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_newterm.c,v 1.100 2017/07/22 23:19:00 tom Exp $")
+MODULE_ID("$Id: lib_newterm.c,v 1.101 2018/04/07 20:36:22 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define NumLabels      InfoOf(SP_PARM).numlabels
@@ -163,7 +163,7 @@ nofilter(void)
 
 NCURSES_EXPORT(SCREEN *)
 NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
-			  NCURSES_CONST char *name,
+			  const char *name,
 			  FILE *ofp,
 			  FILE *ifp)
 {
@@ -347,7 +347,7 @@ NCURSES_SP_NAME(newterm) (NCURSES_SP_DCLx
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(SCREEN *)
-newterm(NCURSES_CONST char *name, FILE *ofp, FILE *ifp)
+newterm(const char *name, FILE *ofp, FILE *ifp)
 {
     SCREEN *rc;
     _nc_lock_global(prescreen);

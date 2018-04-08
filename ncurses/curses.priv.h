@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.597 2018/03/04 01:06:04 tom Exp $
+ * $Id: curses.priv.h,v 1.599 2018/04/07 21:47:46 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2078,7 +2078,7 @@ extern NCURSES_EXPORT(bool) _nc_has_mouse (SCREEN *);
 extern NCURSES_EXPORT(char *) _nc_get_locale(void);
 extern NCURSES_EXPORT(int)    _nc_unicode_locale(void);
 extern NCURSES_EXPORT(int)    _nc_locale_breaks_acs(TERMINAL *);
-extern NCURSES_EXPORT(int)    _nc_setupterm(NCURSES_CONST char *, int, int *, int);
+extern NCURSES_EXPORT(int)    _nc_setupterm(const char *, int, int *, int);
 extern NCURSES_EXPORT(void)   _nc_tinfo_cmdch(TERMINAL *, int);
 
 #ifdef USE_PTHREADS
@@ -2511,7 +2511,7 @@ extern NCURSES_EXPORT(int)      TINFO_MVCUR(SCREEN*, int, int, int, int);
  */
 #ifdef USE_TERM_DRIVER
 extern NCURSES_EXPORT(void)   _nc_get_screensize(SCREEN *, TERMINAL *, int *, int *);
-extern NCURSES_EXPORT(int)    _nc_setupterm_ex(TERMINAL **, NCURSES_CONST char *, int , int *, int);
+extern NCURSES_EXPORT(int)    _nc_setupterm_ex(TERMINAL **, const char *, int , int *, int);
 #define TINFO_GET_SIZE(sp, tp, lp, cp) \
 	_nc_get_screensize(sp, tp, lp, cp)
 #define TINFO_SET_CURTERM(sp, tp) \

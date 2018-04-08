@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3107 2018/03/31 22:45:41 tom Exp $
+-- $Id: NEWS,v 1.3111 2018/04/08 00:56:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,16 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20180407
+	+ clarify in manual pages that vwprintw and vwscanw are obsolete,
+	  not part of X/Open Curses since 2007.
+	+ use "const" in some prototypes rather than NCURSES_CONST where X/Open
+	  Curses was updated to do this, e.g., wscanw, newterm, the terminfo
+	  interface.  Also use "const" for consistency in the termcap
+	  interface, which was withdrawn by X/Open Curses in Issue 5 (2007). 
+	  As of Issue 7, X/Open Curses still lacks "const" for certain return
+	  values, e.g., keyname().
+
 20180331
 	+ improve terminfo write/read by modifying the fourth item of the
 	  extended header to denote the number of valid strings in the extended
@@ -54,6 +64,8 @@ it is not possible to add this information.
 	+ amend Scaled256() macro in test/picsmap.c to cover the full range
 	  0..1000 (report by Roger Pau Monne).
 	+ add some checks in tracemunch for undefined variables.
+	+ trim some redundant capabilities from st-0.7 -TD
+	+ trim unnecessary setf/setb from interix -TD
 
 20180317
 	+ fix a check in infotocap which may not have detected a problem when

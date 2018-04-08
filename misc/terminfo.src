@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.682 $
-#	$Date: 2018/02/24 14:23:54 $
+#	$Revision: 1.684 $
+#	$Date: 2018/03/18 00:08:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -6288,18 +6288,13 @@ st-0.7|simpleterm 0.7,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
 	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
 	kcbt@, kent@, oc=\E]104\007,
-	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
-	     %=%t3%e%p1%d%;m,
-	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
-	     %=%t3%e%p1%d%;m,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m,
-	Ms=\E]52;%p1%s;%p2%s\007, Se=\E[2 q, Ss=\E[%p1%d q,
-	kDN3=\E[1;3B, kDN5=\E[1;5B, kLFT3=\E[1;3D, kLFT5=\E[1;5D,
-	kNXT3=\E[6;3~, kNXT5=\E[6;5~, kPRV3=\E[5;3~,
-	kPRV5=\E[5;5~, kRIT3=\E[1;3C, kRIT5=\E[1;5C,
-	kUP3=\E[1;3A, kUP5=\E[1;5A, use=ecma+strikeout,
-	use=st-0.6,
+	Ms=\E]52;%p1%s;%p2%s\007, kDN3=\E[1;3B, kDN5=\E[1;5B,
+	kLFT3=\E[1;3D, kLFT5=\E[1;5D, kNXT3=\E[6;3~,
+	kNXT5=\E[6;5~, kPRV3=\E[5;3~, kPRV5=\E[5;5~,
+	kRIT3=\E[1;3C, kRIT5=\E[1;5C, kUP3=\E[1;3A, kUP5=\E[1;5A,
+	use=ecma+strikeout, use=st-0.6,
 
 # st-0.4.1
 #
@@ -8120,9 +8115,8 @@ interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with colo
 	kll=\E[U, knp=\E[T, kpp=\E[S, kri=\EF-, ll=\E[U, nel=\r\n,
 	op=\E[m, rc=\E[u, rev=\E[7m, ri=\E[T, rin=\E[%p1%dT,
 	rmcup=\E[2b\E[u\r\E[K, rmso=\E[m, rmul=\E[m, rs1=\Ec,
-	sc=\E[s, setb=\E[%p1%{40}%+%dm, setf=\E[%p1%{30}%+%dm,
-	sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m, smul=\E[4m,
-	use=ansi+rep, use=klone+color,
+	sc=\E[s, sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m,
+	smul=\E[4m, use=ansi+rep, use=klone+color,
 
 opennt-35|ntconsole-35|OpenNT-term35 compatible with color,
 	lines#35, use=opennt,
@@ -25736,5 +25730,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2018-02-24
 #	+ correct Ss/Ms interchange in st-0.7 entry (tmux #1264) -TD
 #	+ fix remaining flash capabilities with trailing mandatory delays -TD
+#
+# 2018-03-17
+#	+ trim some redundant capabilities from st-0.7 -TD
+#	+ trim unnecessary setf/setb from interix -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

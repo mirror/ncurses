@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termcap.3x,v 1.37 2018/01/23 10:14:38 tom Exp @
+  * @Id: curs_termcap.3x,v 1.39 2018/04/07 20:51:27 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,10 +59,10 @@
        <STRONG>extern</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>BC;</STRONG>
        <STRONG>extern</STRONG> <STRONG>short</STRONG> <STRONG>ospeed;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>tgetent(char</STRONG> <STRONG>*bp,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*name);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetflag(char</STRONG> <STRONG>*id);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetnum(char</STRONG> <STRONG>*id);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*tgetstr(char</STRONG> <STRONG>*id,</STRONG> <STRONG>char</STRONG> <STRONG>**area);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetent(const</STRONG> <STRONG>char</STRONG> <STRONG>*bp,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*name);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetflag(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetnum(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tgetstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*id,</STRONG> <STRONG>char</STRONG> <STRONG>**area);</STRONG>
        <STRONG>char</STRONG> <STRONG>*tgoto(const</STRONG> <STRONG>char</STRONG> <STRONG>*cap,</STRONG> <STRONG>int</STRONG> <STRONG>col,</STRONG> <STRONG>int</STRONG> <STRONG>row);</STRONG>
        <STRONG>int</STRONG> <STRONG>tputs(const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>affcnt,</STRONG> <STRONG>int</STRONG> <STRONG>(*putc)(int));</STRONG>
 
@@ -194,38 +194,45 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The XSI Curses standard, Issue 4 describes these  functions.   However,
-       they are marked TO BE WITHDRAWN and may be removed in future versions.
+       These functions are provided for supporting  legacy  applications,  and
+       should not be used in new programs:
 
-       Neither  the  XSI Curses standard nor the SVr4 man pages documented the
-       return values of <STRONG>tgetent</STRONG> correctly, though all three were in  fact  re-
-       turned  ever  since SVr1.  In particular, an omission in the XSI Curses
-       documentation has been misinterpreted to mean that <STRONG>tgetent</STRONG>  returns  <STRONG>OK</STRONG>
-       or  <STRONG>ERR</STRONG>.  Because the purpose of these functions is to provide compati-
-       bility with the <EM>termcap</EM> library, that is a defect in XCurses, Issue  4,
+       <STRONG>o</STRONG>   The XSI Curses standard, Issue 4 describes these functions.  Howev-
+           er, they are marked TO BE WITHDRAWN and may be  removed  in  future
+           versions.
+
+       <STRONG>o</STRONG>   X/Open Curses, Issue 5 (December 2007) marked the termcap interface
+           (along with <STRONG>vwprintw</STRONG> and <STRONG>vwscanw</STRONG>) as withdrawn.
+
+       Neither the XSI Curses standard nor the SVr4 man pages  documented  the
+       return  values  of <STRONG>tgetent</STRONG> correctly, though all three were in fact re-
+       turned ever since SVr1.  In particular, an omission in the  XSI  Curses
+       documentation  has  been misinterpreted to mean that <STRONG>tgetent</STRONG> returns <STRONG>OK</STRONG>
+       or <STRONG>ERR</STRONG>.  Because the purpose of these functions is to provide  compati-
+       bility  with the <EM>termcap</EM> library, that is a defect in XCurses, Issue 4,
        Version 2 rather than in ncurses.
 
        External variables are provided for support of certain termcap applica-
        tions.  However, termcap applications' use of those variables is poorly
        documented, e.g., not distinguishing between input and output.  In par-
-       ticular, some applications are reported to declare  and/or  modify  <STRONG>os-</STRONG>
+       ticular,  some  applications  are reported to declare and/or modify <STRONG>os-</STRONG>
        <STRONG>peed</STRONG>.
 
-       The  comment that only the first two characters of the <STRONG>id</STRONG> parameter are
+       The comment that only the first two characters of the <STRONG>id</STRONG> parameter  are
        used escapes many application developers.  The original BSD 4.2 termcap
        library (and historical relics thereof) did not require a trailing null
-       NUL on the parameter name passed  to  <STRONG>tgetstr</STRONG>,  <STRONG>tgetnum</STRONG>  and  <STRONG>tgetflag</STRONG>.
-       Some  applications  assume  that the termcap interface does not require
+       NUL  on  the  parameter  name  passed to <STRONG>tgetstr</STRONG>, <STRONG>tgetnum</STRONG> and <STRONG>tgetflag</STRONG>.
+       Some applications assume that the termcap interface  does  not  require
        the trailing NUL for the parameter name.  Taking into account these is-
        sues:
 
-       <STRONG>o</STRONG>   As  a  special  case,  <STRONG>tgetflag</STRONG>  matched against a single-character
-           identifier provided that was at the end of  the  terminal  descrip-
+       <STRONG>o</STRONG>   As a special case,  <STRONG>tgetflag</STRONG>  matched  against  a  single-character
+           identifier  provided  that  was at the end of the terminal descrip-
            tion.  You should not rely upon this behavior in portable programs.
-           This implementation disallows matches against single-character  ca-
+           This  implementation disallows matches against single-character ca-
            pability names.
 
-       <STRONG>o</STRONG>   This  implementation  disallows  matches  by  the termcap interface
+       <STRONG>o</STRONG>   This implementation disallows  matches  by  the  termcap  interface
            against extended capability names which are longer than two charac-
            ters.
 

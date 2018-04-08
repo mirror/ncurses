@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: lib_ti.c,v 1.32 2017/04/11 01:15:42 tom Exp $")
+MODULE_ID("$Id: lib_ti.c,v 1.33 2018/04/07 20:36:41 tom Exp $")
 
 #if 0
 static bool
@@ -50,7 +50,7 @@ same_name(const char *a, const char *b)
 #endif
 
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(tigetflag) (NCURSES_SP_DCLx NCURSES_CONST char *str)
+NCURSES_SP_NAME(tigetflag) (NCURSES_SP_DCLx const char *str)
 {
     int result = ABSENT_BOOLEAN;
 
@@ -88,14 +88,14 @@ NCURSES_SP_NAME(tigetflag) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-tigetflag(NCURSES_CONST char *str)
+tigetflag(const char *str)
 {
     return NCURSES_SP_NAME(tigetflag) (CURRENT_SCREEN, str);
 }
 #endif
 
 NCURSES_EXPORT(int)
-NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx NCURSES_CONST char *str)
+NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx const char *str)
 {
     int result = CANCELLED_NUMERIC;	/* Solaris returns a -1 on error */
 
@@ -135,14 +135,14 @@ NCURSES_SP_NAME(tigetnum) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(int)
-tigetnum(NCURSES_CONST char *str)
+tigetnum(const char *str)
 {
     return NCURSES_SP_NAME(tigetnum) (CURRENT_SCREEN, str);
 }
 #endif
 
 NCURSES_EXPORT(char *)
-NCURSES_SP_NAME(tigetstr) (NCURSES_SP_DCLx NCURSES_CONST char *str)
+NCURSES_SP_NAME(tigetstr) (NCURSES_SP_DCLx const char *str)
 {
     char *result = CANCELLED_STRING;
 
@@ -180,7 +180,7 @@ NCURSES_SP_NAME(tigetstr) (NCURSES_SP_DCLx NCURSES_CONST char *str)
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(char *)
-tigetstr(NCURSES_CONST char *str)
+tigetstr(const char *str)
 {
     return NCURSES_SP_NAME(tigetstr) (CURRENT_SCREEN, str);
 }

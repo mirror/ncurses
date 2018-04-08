@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.191 2018/03/04 01:06:34 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.192 2018/04/07 21:10:20 tom Exp $")
 
 /****************************************************************************
  *
@@ -618,7 +618,7 @@ _nc_locale_breaks_acs(TERMINAL *termp)
 
 NCURSES_EXPORT(int)
 TINFO_SETUP_TERM(TERMINAL **tp,
-		 NCURSES_CONST char *tname,
+		 const char *tname,
 		 int Filedes,
 		 int *errret,
 		 int reuse)
@@ -921,7 +921,7 @@ new_prescr(void)
  * the same TERMINAL data (see comment).
  */
 NCURSES_EXPORT(int)
-_nc_setupterm(NCURSES_CONST char *tname,
+_nc_setupterm(const char *tname,
 	      int Filedes,
 	      int *errret,
 	      int reuse)
@@ -949,7 +949,7 @@ _nc_setupterm(NCURSES_CONST char *tname,
  *	Make cur_term point to the structure.
  */
 NCURSES_EXPORT(int)
-setupterm(NCURSES_CONST char *tname, int Filedes, int *errret)
+setupterm(const char *tname, int Filedes, int *errret)
 {
     START_TRACE();
     return _nc_setupterm(tname, Filedes, errret, FALSE);

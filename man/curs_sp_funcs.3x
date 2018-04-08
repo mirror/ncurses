@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2010-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2010-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.9 2017/03/27 08:35:44 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.10 2018/04/07 20:58:41 tom Exp $
 .TH curs_sp_funcs 3X ""
 .na
 .hy 0
@@ -144,7 +144,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBSCREEN* new_prescr(void);\fR
 .br
-\fBSCREEN* newterm_sp(SCREEN*, NCURSES_CONST char *, FILE *, FILE *);\fR
+\fBSCREEN* newterm_sp(SCREEN*, const char *, FILE *, FILE *);\fR
 .br
 \fBWINDOW* newwin_sp(SCREEN*, int, int, int, int);\fR
 .br
@@ -286,15 +286,15 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint tgetent_sp(SCREEN*, char *, const char *);\fR
 .br
-\fBint tgetnum_sp(SCREEN*, NCURSES_CONST char *);\fR
+\fBint tgetnum_sp(SCREEN*, const char *);\fR
 .br
-\fBchar* tgetstr_sp(SCREEN*, NCURSES_CONST char *, char **);\fR
+\fBchar* tgetstr_sp(SCREEN*, const char *, char **);\fR
 .br
-\fBint tigetflag_sp(SCREEN*, NCURSES_CONST char *);\fR
+\fBint tigetflag_sp(SCREEN*, const char *);\fR
 .br
-\fBint tigetnum_sp(SCREEN*, NCURSES_CONST char *);\fR
+\fBint tigetnum_sp(SCREEN*, const char *);\fR
 .br
-\fBchar* tigetstr_sp(SCREEN*, NCURSES_CONST char *);\fR
+\fBchar* tigetstr_sp(SCREEN*, const char *);\fR
 .br
 \fBint tputs_sp(SCREEN*, const char *, int, NCURSES_SP_OUTC);\fR
 .ad

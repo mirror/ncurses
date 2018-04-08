@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.21 2017/01/07 17:33:45 tom Exp $
+.\" $Id: curs_printw.3x,v 1.22 2018/04/07 20:18:55 tom Exp $
 .TH curs_printw 3X ""
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .na
 .hy 0
 .SH NAME
@@ -49,10 +53,11 @@
 .br
 \fBint mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...);\fR
 .br
-\fBint vwprintw(WINDOW *win, const char *fmt, va_list varglist);\fR
-.br
 \fBint vw_printw(WINDOW *win, const char *fmt, va_list varglist);\fR
+.sp
+/* obsolete */
 .br
+\fBint vwprintw(WINDOW *win, const char *fmt, va_list varglist);\fR
 .SH DESCRIPTION
 The \fBprintw\fR, \fBwprintw\fR, \fBmvprintw\fR and \fBmvwprintw\fR
 routines are analogous to \fBprintf\fR [see \fBprintf\fR(3)].  In
@@ -79,14 +84,28 @@ Functions with a "mv" prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH PORTABILITY
-The XSI Curses standard, Issue 4 describes these functions.  The function
+In this implementation, \fBvw_printw\fP and \fBvwprintw\fP are equivalent,
+to support legacy applications.
+However, the latter (\fBvwprintw\fP) is obsolete:
+.bP
+The XSI Curses standard, Issue 4 described these functions.  The function
 \fBvwprintw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function
 \fBvw_printw\fR using the \fB<stdarg.h>\fR interface.
+.bP
 The Single Unix Specification, Version 2 states that
 \fBvw_printw\fR  is preferred to \fBvwprintw\fR since the latter requires
 including \fB<varargs.h>\fR, which
 cannot be used in the same file as \fB<stdarg.h>\fR.
-This implementation uses \fB<stdarg.h>\fR for both, because that header
-is included in \fB<curses.h\fR>.
+This implementation uses \fB<stdarg.h>\fR for both,
+because that header is included in \fB<curses.h\fR>.
+.bP
+X/Open Curses, Issue 5 (December 2007) marked \fBvwprintw\fP (along with
+\fBvwscanw\fP and the termcap interface) as withdrawn.
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBprintf\fR(3), \fBvprintf\fR(3).
+.na
+\fBcurses\fR(3X),
+\fBcurs_addstr\fR(3X),
+\fBcurs_scanw\fR(3X),
+\fBcurs_termcap\fP(3X),
+\fBprintf\fR(3),
+\fBvprintf\fR(3).

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_printw.3x,v 1.21 2017/01/07 17:33:45 tom Exp @
+  * @Id: curs_printw.3x,v 1.22 2018/04/07 20:18:55 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -57,8 +57,10 @@
        <STRONG>int</STRONG> <STRONG>wprintw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvprintw(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwprintw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vwprintw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
        <STRONG>int</STRONG> <STRONG>vw_printw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
+
+       /* obsolete */
+       <STRONG>int</STRONG> <STRONG>vwprintw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -89,17 +91,26 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  XSI Curses standard, Issue 4 describes these functions.  The func-
-       tion <STRONG>vwprintw</STRONG> is marked TO BE WITHDRAWN, and is to  be  replaced  by  a
-       function  <STRONG>vw_printw</STRONG>  using  the  <STRONG>&lt;stdarg.h&gt;</STRONG> interface.  The Single Unix
-       Specification, Version 2 states that <STRONG>vw_printw</STRONG>   is  preferred  to  <STRONG>vw-</STRONG>
-       <STRONG>printw</STRONG> since the latter requires including <STRONG>&lt;varargs.h&gt;</STRONG>, which cannot be
-       used  in  the  same  file  as  <STRONG>&lt;stdarg.h&gt;</STRONG>.   This  implementation  uses
-       <STRONG>&lt;stdarg.h&gt;</STRONG> for both, because that header is included in <STRONG>&lt;curses.h</STRONG>&gt;.
+       In  this implementation, <STRONG>vw_printw</STRONG> and <STRONG>vwprintw</STRONG> are equivalent, to sup-
+       port legacy applications.  However, the latter (<STRONG>vwprintw</STRONG>) is obsolete:
+
+       <STRONG>o</STRONG>   The XSI Curses standard, Issue 4 described  these  functions.   The
+           function  <STRONG>vwprintw</STRONG> is marked TO BE WITHDRAWN, and is to be replaced
+           by a function <STRONG>vw_printw</STRONG> using the <STRONG>&lt;stdarg.h&gt;</STRONG> interface.
+
+       <STRONG>o</STRONG>   The Single Unix Specification, Version 2 states that <STRONG>vw_printw</STRONG>   is
+           preferred   to   <STRONG>vwprintw</STRONG>   since  the  latter  requires  including
+           <STRONG>&lt;varargs.h&gt;</STRONG>, which cannot be used in the same file  as  <STRONG>&lt;stdarg.h&gt;</STRONG>.
+           This  implementation  uses <STRONG>&lt;stdarg.h&gt;</STRONG> for both, because that header
+           is included in <STRONG>&lt;curses.h</STRONG>&gt;.
+
+       <STRONG>o</STRONG>   X/Open Curses, Issue 5 (December 2007) marked <STRONG>vwprintw</STRONG> (along  with
+           <STRONG>vwscanw</STRONG> and the termcap interface) as withdrawn.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG>printf(3)</STRONG>, <STRONG>vprintf(3)</STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addstr.3x.html">curs_addstr(3x)</A></STRONG>, <STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3x)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>,
+       <STRONG>printf(3)</STRONG>, <STRONG>vprintf(3)</STRONG>.
 
 
 

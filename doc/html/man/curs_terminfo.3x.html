@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1999-2016,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1999-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.57 2017/11/21 00:46:31 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.58 2018/04/07 21:09:12 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -248,8 +248,12 @@
        The  <STRONG>tputs</STRONG>  routine  applies  padding information to the string <EM>str</EM> and
        outputs it:
 
-       <STRONG>o</STRONG>   The <EM>str</EM> must be a terminfo string variable or the return value from
-           <STRONG>tparm</STRONG>, <STRONG>tgetstr</STRONG>, or <STRONG>tgoto</STRONG>.
+       <STRONG>o</STRONG>   The <EM>str</EM> parameter must be a terminfo string variable or the  return
+           value from <STRONG>tparm</STRONG>, <STRONG>tiparm</STRONG>, <STRONG>tgetstr</STRONG>, or <STRONG>tgoto</STRONG>.
+
+           The  <STRONG>tgetstr</STRONG> and <STRONG>tgoto</STRONG> functions are part of the <EM>termcap</EM> interface,
+           which happens to share this function name with the <EM>terminfo</EM>  inter-
+           face.
 
        <STRONG>o</STRONG>   <EM>affcnt</EM> is the number of lines affected, or 1 if not applicable.
 

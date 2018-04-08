@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.257 2017/11/21 00:11:37 tom Exp $ */
+/* $Id: curses.h.in,v 1.258 2018/04/07 20:36:11 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -701,7 +701,7 @@ extern NCURSES_EXPORT(int) mvinsstr (int, int, const char *);		/* generated */
 extern NCURSES_EXPORT(int) mvinstr (int, int, char *);			/* generated */
 extern NCURSES_EXPORT(int) mvprintw (int,int, const char *,...)		/* implemented */
 		GCC_PRINTFLIKE(3,4);
-extern NCURSES_EXPORT(int) mvscanw (int,int, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) mvscanw (int,int, const char *,...)		/* implemented */
 		GCC_SCANFLIKE(3,4);
 extern NCURSES_EXPORT(int) mvvline (int, int, chtype, int);		/* generated */
 extern NCURSES_EXPORT(int) mvwaddch (WINDOW *, int, int, const chtype);	/* generated */
@@ -726,12 +726,12 @@ extern NCURSES_EXPORT(int) mvwinsstr (WINDOW *, int, int, const char *);	/* gene
 extern NCURSES_EXPORT(int) mvwinstr (WINDOW *, int, int, char *);		/* generated */
 extern NCURSES_EXPORT(int) mvwprintw (WINDOW*,int,int, const char *,...)	/* implemented */
 		GCC_PRINTFLIKE(4,5);
-extern NCURSES_EXPORT(int) mvwscanw (WINDOW *,int,int, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) mvwscanw (WINDOW *,int,int, const char *,...)	/* implemented */
 		GCC_SCANFLIKE(4,5);
 extern NCURSES_EXPORT(int) mvwvline (WINDOW *,int, int, chtype, int);	/* generated */
 extern NCURSES_EXPORT(int) napms (int);					/* implemented */
 extern NCURSES_EXPORT(WINDOW *) newpad (int,int);			/* implemented */
-extern NCURSES_EXPORT(SCREEN *) newterm (NCURSES_CONST char *,FILE *,FILE *);	/* implemented */
+extern NCURSES_EXPORT(SCREEN *) newterm (const char *,FILE *,FILE *);	/* implemented */
 extern NCURSES_EXPORT(WINDOW *) newwin (int,int,int,int);		/* implemented */
 extern NCURSES_EXPORT(int) nl (void);					/* implemented */
 extern NCURSES_EXPORT(int) nocbreak (void);				/* implemented */
@@ -760,7 +760,7 @@ extern NCURSES_EXPORT(int) reset_prog_mode (void);			/* implemented */
 extern NCURSES_EXPORT(int) reset_shell_mode (void);			/* implemented */
 extern NCURSES_EXPORT(int) ripoffline (int, int (*)(WINDOW *, int));	/* implemented */
 extern NCURSES_EXPORT(int) savetty (void);				/* implemented */
-extern NCURSES_EXPORT(int) scanw (NCURSES_CONST char *,...)		/* implemented */
+extern NCURSES_EXPORT(int) scanw (const char *,...)			/* implemented */
 		GCC_SCANFLIKE(1,2);
 extern NCURSES_EXPORT(int) scr_dump (const char *);			/* implemented */
 extern NCURSES_EXPORT(int) scr_init (const char *);			/* implemented */
@@ -808,8 +808,8 @@ extern NCURSES_EXPORT(int) vidputs (chtype, NCURSES_OUTC);		/* implemented */
 extern NCURSES_EXPORT(int) vline (chtype, int);				/* generated */
 extern NCURSES_EXPORT(int) vwprintw (WINDOW *, const char *,va_list);	/* implemented */
 extern NCURSES_EXPORT(int) vw_printw (WINDOW *, const char *,va_list);	/* generated */
-extern NCURSES_EXPORT(int) vwscanw (WINDOW *, NCURSES_CONST char *,va_list);	/* implemented */
-extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, NCURSES_CONST char *,va_list);	/* generated */
+extern NCURSES_EXPORT(int) vwscanw (WINDOW *, const char *,va_list);	/* implemented */
+extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, const char *,va_list);	/* generated */
 extern NCURSES_EXPORT(int) waddch (WINDOW *, const chtype);		/* implemented */
 extern NCURSES_EXPORT(int) waddchnstr (WINDOW *,const chtype *,int);	/* implemented */
 extern NCURSES_EXPORT(int) waddchstr (WINDOW *,const chtype *);		/* generated */
@@ -855,7 +855,7 @@ extern NCURSES_EXPORT(int) wprintw (WINDOW *, const char *,...)		/* implemented 
 		GCC_PRINTFLIKE(2,3);
 extern NCURSES_EXPORT(int) wredrawln (WINDOW *,int,int);		/* implemented */
 extern NCURSES_EXPORT(int) wrefresh (WINDOW *);				/* implemented */
-extern NCURSES_EXPORT(int) wscanw (WINDOW *, NCURSES_CONST char *,...)	/* implemented */
+extern NCURSES_EXPORT(int) wscanw (WINDOW *, const char *,...)		/* implemented */
 		GCC_SCANFLIKE(2,3);
 extern NCURSES_EXPORT(int) wscrl (WINDOW *,int);			/* implemented */
 extern NCURSES_EXPORT(int) wsetscrreg (WINDOW *,int,int);		/* implemented */
@@ -870,16 +870,16 @@ extern NCURSES_EXPORT(int) wvline (WINDOW *,chtype,int);		/* implemented */
 /*
  * These are also declared in <term.h>:
  */
-extern NCURSES_EXPORT(int) tigetflag (NCURSES_CONST char *);		/* implemented */
-extern NCURSES_EXPORT(int) tigetnum (NCURSES_CONST char *);		/* implemented */
-extern NCURSES_EXPORT(char *) tigetstr (NCURSES_CONST char *);		/* implemented */
+extern NCURSES_EXPORT(int) tigetflag (const char *);			/* implemented */
+extern NCURSES_EXPORT(int) tigetnum (const char *);			/* implemented */
+extern NCURSES_EXPORT(char *) tigetstr (const char *);			/* implemented */
 extern NCURSES_EXPORT(int) putp (const char *);				/* implemented */
 
 #if NCURSES_TPARM_VARARGS
-extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, ...);	/* special */
+extern NCURSES_EXPORT(char *) tparm (const char *, ...);		/* special */
 #else
-extern NCURSES_EXPORT(char *) tparm (NCURSES_CONST char *, NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG);	/* special */
-extern NCURSES_EXPORT(char *) tparm_varargs (NCURSES_CONST char *, ...);	/* special */
+extern NCURSES_EXPORT(char *) tparm (const char *, NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG,NCURSES_TPARM_ARG);	/* special */
+extern NCURSES_EXPORT(char *) tparm_varargs (const char *, ...);	/* special */
 #endif
 
 extern NCURSES_EXPORT(char *) tiparm (const char *, ...);		/* special */
@@ -1017,7 +1017,7 @@ extern NCURSES_EXPORT(char *) NCURSES_SP_NAME(longname) (SCREEN*); /* implemente
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(mvcur) (SCREEN*, int, int, int, int); /* implemented:SP_FUNC */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(napms) (SCREEN*, int); /* implemented:SP_FUNC */
 extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(newpad) (SCREEN*, int, int); /* implemented:SP_FUNC */
-extern NCURSES_EXPORT(SCREEN *) NCURSES_SP_NAME(newterm) (SCREEN*, NCURSES_CONST char *, FILE *, FILE *); /* implemented:SP_FUNC */
+extern NCURSES_EXPORT(SCREEN *) NCURSES_SP_NAME(newterm) (SCREEN*, const char *, FILE *, FILE *); /* implemented:SP_FUNC */
 extern NCURSES_EXPORT(WINDOW *) NCURSES_SP_NAME(newwin) (SCREEN*, int, int, int, int); /* implemented:SP_FUNC */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(nl) (SCREEN*); /* implemented:SP_FUNC */
 extern NCURSES_EXPORT(int) NCURSES_SP_NAME(nocbreak) (SCREEN*); /* implemented:SP_FUNC */
