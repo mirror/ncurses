@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.101 2018/02/24 22:33:40 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.105 2018/04/14 20:33:44 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -271,9 +271,13 @@ find_capname(TERMTYPE2 *p, const char *name)
 {
     unsigned num_names = NUM_EXT_NAMES(p);
     unsigned n;
-    for (n = 0; n < num_names; ++n) {
-	if (!strcmp(p->ext_Names[n], name))
-	    break;
+    if (name != 0) {
+	for (n = 0; n < num_names; ++n) {
+	    if (!strcmp(p->ext_Names[n], name))
+		break;
+	}
+    } else {
+	n = num_names + 1;
     }
     return n;
 }
@@ -320,6 +324,11 @@ name_of_captype(int which)
     return result;
 }
 
+#define valid_TERMTYPE2(p) \
+	((p) != 0 && \
+	 (p)->term_names != 0 && \
+	 (p)->ext_Names != 0)
+
 /*
  * Disallow changing the type of an extended capability when doing a "use"
  * if one or the other is a string.
@@ -328,42 +337,45 @@ static int
 invalid_merge(TERMTYPE2 *to, TERMTYPE2 *from)
 {
     int rc = FALSE;
-    char *to_name = _nc_first_name(to->term_names);
-    char *from_name = strdup(_nc_first_name(from->term_names));
-    unsigned num_names = NUM_EXT_NAMES(from);
-    unsigned n;
+    if (valid_TERMTYPE2(to)
+	&& valid_TERMTYPE2(from)) {
+	char *to_name = _nc_first_name(to->term_names);
+	char *from_name = strdup(_nc_first_name(from->term_names));
+	unsigned num_names = NUM_EXT_NAMES(from);
+	unsigned n;
 
-    for (n = 0; n < num_names; ++n) {
-	const char *capname = from->ext_Names[n];
-	int tt = extended_captype(to, find_capname(to, capname));
-	int tf = extended_captype(from, n);
+	for (n = 0; n < num_names; ++n) {
+	    const char *capname = from->ext_Names[n];
+	    int tt = extended_captype(to, find_capname(to, capname));
+	    int tf = extended_captype(from, n);
 
-	if (tt <= STRING
-	    && tf <= STRING
-	    && (tt == STRING) != (tf == STRING)) {
-	    if (from_name != 0 && strcmp(to_name, from_name)) {
-		DEBUG(2,
-		      ("merge of %s to %s changes type of %s from %s to %s",
-		       from_name,
-		       to_name,
-		       from->ext_Names[n],
-		       name_of_captype(tf),
-		       name_of_captype(tt)));
-	    } else {
-		DEBUG(2, ("merge of %s changes type of %s from %s to %s",
-			  to_name,
-			  from->ext_Names[n],
-			  name_of_captype(tf),
-			  name_of_captype(tt)));
+	    if (tt <= STRING
+		&& tf <= STRING
+		&& (tt == STRING) != (tf == STRING)) {
+		if (from_name != 0 && strcmp(to_name, from_name)) {
+		    DEBUG(2,
+			  ("merge of %s to %s changes type of %s from %s to %s",
+			   from_name,
+			   to_name,
+			   from->ext_Names[n],
+			   name_of_captype(tf),
+			   name_of_captype(tt)));
+		} else {
+		    DEBUG(2, ("merge of %s changes type of %s from %s to %s",
+			      to_name,
+			      from->ext_Names[n],
+			      name_of_captype(tf),
+			      name_of_captype(tt)));
+		}
+		_nc_warning("merge changes type of %s from %s to %s",
+			    from->ext_Names[n],
+			    name_of_captype(tf),
+			    name_of_captype(tt));
+		rc = TRUE;
 	    }
-	    _nc_warning("merge changes type of %s from %s to %s",
-			from->ext_Names[n],
-			name_of_captype(tf),
-			name_of_captype(tt));
-	    rc = TRUE;
 	}
+	free(from_name);
     }
-    free(from_name);
     return rc;
 }
 #define validate_merge(p, q) \
@@ -424,6 +436,9 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	    char *child = _nc_first_name(qp->tterm.term_names);
 	    char *lookfor = qp->uses[i].name;
 	    long lookline = qp->uses[i].line;
+
+	    if (lookfor == 0)
+		continue;
 
 	    foundit = FALSE;
 
@@ -502,7 +517,8 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		     * subsequent pass.
 		     */
 		    for (i = 0; i < qp->nuses; i++)
-			if (qp->uses[i].link->nuses) {
+			if (qp->uses[i].link
+			    && qp->uses[i].link->nuses) {
 			    DEBUG(2, ("%s: use entry %d unresolved",
 				      _nc_first_name(qp->tterm.term_names), i));
 			    goto incomplete;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.123 2017/09/09 22:35:49 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.125 2018/04/14 21:18:03 Leon.Winter Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -830,6 +830,7 @@ _nc_Position_Form_Cursor(FORM *form)
 {
   FIELD *field;
   WINDOW *formwin;
+  int row, col;
 
   if (!form)
     return (E_BAD_ARGUMENT);
@@ -840,14 +841,17 @@ _nc_Position_Form_Cursor(FORM *form)
   field = form->current;
   formwin = Get_Form_Window(form);
 
-  wmove(form->w, form->currow, form->curcol);
+  col = Field_Has_Option(field, O_PUBLIC) ? form->curcol : form->begincol;
+  row = Field_Has_Option(field, O_PUBLIC) ? form->currow : form->toprow;
+
+  wmove(form->w, row, col);
   if (Has_Invisible_Parts(field))
     {
       /* in this case fieldwin isn't derived from formwin, so we have
          to move the cursor in formwin by hand... */
       wmove(formwin,
-	    field->frow + form->currow - form->toprow,
-	    field->fcol + form->curcol - form->begincol);
+	    field->frow + row - form->toprow,
+	    field->fcol + col - form->begincol);
       wcursyncup(formwin);
     }
   else
@@ -866,6 +870,7 @@ _nc_Position_Form_Cursor(FORM *form)
 |                    E_BAD_ARGUMENT    - invalid form pointer
 |                    E_SYSTEM_ERROR    - general error
 +--------------------------------------------------------------------------*/
+static bool move_after_insert = true;
 NCURSES_EXPORT(int)
 _nc_Refresh_Current_Field(FORM *form)
 {
@@ -897,7 +902,8 @@ _nc_Refresh_Current_Field(FORM *form)
 	      else
 		{
 		  if (form->curcol >= (form->begincol + field->cols))
-		    form->begincol = form->curcol - field->cols + 1;
+		    form->begincol = form->curcol - field->cols
+		      + (move_after_insert ? 1 : 0);
 		}
 	      copywin(form->w,
 		      formwin,
@@ -4184,6 +4190,12 @@ Data_Entry(FORM *form, int c)
 	  bool End_Of_Field = (((field->drows - 1) == form->currow) &&
 			       ((field->dcols - 1) == form->curcol));
 
+	  if (Field_Has_Option(field, O_EDGE_INSERT_STAY))
+	    move_after_insert = !!(form->curcol
+				   - form->begincol
+				   - field->cols
+				   + 1);
+
 	  SetStatus(form, _WINDOW_MODIFIED);
 	  if (End_Of_Field && !Growable(field) && (Field_Has_Option(field, O_AUTOSKIP)))
 	    result = Inter_Field_Navigation(FN_Next_Field, form);
@@ -4347,6 +4359,8 @@ form_driver(FORM *form, int c)
 {
   const Binding_Info *BI = (Binding_Info *) 0;
   int res = E_UNKNOWN_COMMAND;
+
+  move_after_insert = true;
 
   T((T_CALLED("form_driver(%p,%d)"), (void *)form, c));
 

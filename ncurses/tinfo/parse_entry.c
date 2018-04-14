@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.92 2017/08/26 19:49:50 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.93 2018/04/14 17:41:12 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -493,7 +493,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 		    entryp->tterm.Numbers[entry_ptr->nte_index] = MAX_NUMBER;
 		} else {
 		    entryp->tterm.Numbers[entry_ptr->nte_index] =
- 			(NCURSES_INT2) _nc_curr_token.tk_valnumber;
+			(NCURSES_INT2) _nc_curr_token.tk_valnumber;
 		}
 		break;
 
@@ -543,9 +543,11 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 		 * Otherwise, look for a base entry that will already
 		 * have picked up defaults via translation.
 		 */
-		for (i = 0; i < entryp->nuses; i++)
-		    if (!strchr((char *) entryp->uses[i].name, '+'))
+		for (i = 0; i < entryp->nuses; i++) {
+		    if (entryp->uses[i].name != 0
+			&& !strchr(entryp->uses[i].name, '+'))
 			has_base_entry = TRUE;
+		}
 	    }
 
 	    postprocess_termcap(&entryp->tterm, has_base_entry);

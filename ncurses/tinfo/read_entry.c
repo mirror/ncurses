@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.147 2018/04/01 01:32:39 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.148 2018/04/14 17:43:37 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -836,6 +836,9 @@ NCURSES_EXPORT(int)
 _nc_read_entry2(const char *const name, char *const filename, TERMTYPE2 *const tp)
 {
     int code = TGETENT_NO;
+
+    if (name == 0)
+	return _nc_read_entry2("", filename, tp);
 
     _nc_SPRINTF(filename, _nc_SLIMIT(PATH_MAX)
 		"%.*s", PATH_MAX - 1, name);

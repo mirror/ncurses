@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.29 2017/04/09 23:15:34 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.30 2018/04/14 19:24:54 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -388,12 +388,16 @@ adjust_cancels(TERMTYPE2 *to, TERMTYPE2 *from)
 NCURSES_EXPORT(void)
 _nc_align_termtype(TERMTYPE2 *to, TERMTYPE2 *from)
 {
-    int na = (int) NUM_EXT_NAMES(to);
-    int nb = (int) NUM_EXT_NAMES(from);
+    int na;
+    int nb;
     char **ext_Names;
 
-    DEBUG(2, ("align_termtype to(%d:%s), from(%d:%s)", na, to->term_names,
-	      nb, from->term_names));
+    na = to ? ((int) NUM_EXT_NAMES(to)) : 0;
+    nb = from ? ((int) NUM_EXT_NAMES(from)) : 0;
+
+    DEBUG(2, ("align_termtype to(%d:%s), from(%d:%s)",
+	      na, to ? NonNull(to->term_names) : "?",
+	      nb, from ? NonNull(from->term_names) : "?"));
 
     if (na != 0 || nb != 0) {
 	int ext_Booleans, ext_Numbers, ext_Strings;
@@ -591,13 +595,5 @@ _nc_export_termtype2(TERMTYPE *dst, const TERMTYPE2 *src)
 {
     DEBUG(2, ("_nc_export_termtype2..."));
     copy_termtype((TERMTYPE2 *) dst, src, srcINT);
-}
-
-/* FIXME - this will go away when conversion is complete */
-NCURSES_EXPORT(void)
-_nc_import_termtype2(TERMTYPE2 *dst, const TERMTYPE *src)
-{
-    DEBUG(2, ("_nc_import_termtype2..."));
-    copy_termtype(dst, (const TERMTYPE2 *) src, dstINT);
 }
 #endif /* NCURSES_EXT_NUMBERS */

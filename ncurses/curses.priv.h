@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.599 2018/04/07 21:47:46 tom Exp $
+ * $Id: curses.priv.h,v 1.600 2018/04/14 19:28:44 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2209,11 +2209,9 @@ extern NCURSES_EXPORT(const TERMTYPE2 *) _nc_fallback2 (const char *);
 #if NCURSES_EXT_NUMBERS
 extern NCURSES_EXPORT(void) _nc_copy_termtype2 (TERMTYPE2 *, const TERMTYPE2 *);
 extern NCURSES_EXPORT(void) _nc_export_termtype2(TERMTYPE *, const TERMTYPE2 *);
-extern NCURSES_EXPORT(void) _nc_import_termtype2(TERMTYPE2 *, const TERMTYPE *);
 #else
 #define _nc_copy_termtype2(dst,src) _nc_copy_termtype((dst),(src))
 #define _nc_export_termtype2(dst,src) /* nothing */
-#define _nc_import_termtype2(dst,src) /* nothing */
 #define _nc_free_termtype2(t) _nc_free_termtype(t)
 /* also... */
 #define _nc_read_entry2 _nc_read_entry
