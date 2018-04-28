@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2014,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_opts.3x,v 1.20 2015/12/05 23:53:43 tom Exp $
+.\" $Id: form_field_opts.3x,v 1.21 2018/04/28 21:24:57 tom Exp $
 .TH form_field_opts 3X ""
 .SH NAME
 \fBset_field_opts\fP,
@@ -101,6 +101,15 @@ Permit dynamic fields to be justified, like static fields.
 .TP 5
 O_NO_LEFT_STRIP
 Preserve leading whitespace in the field buffer, which is normally discarded.
+.TP 5
+O_EDGE_INSERT_STAY
+When inserting into a field up to the boundary position,
+optionally delay the scrolling,
+so that the last inserted character remains visible,
+but advance the cursor to reflect the insertion.
+This allows the form library to display the
+inserted character in one-character fields
+as well as allowing the library to maintain consistent state.
 .SH RETURN VALUE
 Except for \fBfield_opts\fR, each routine returns one of the following:
 .TP 5

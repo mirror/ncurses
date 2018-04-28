@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.125 2018/04/14 21:18:03 Leon.Winter Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.126 2018/04/28 19:03:36 Leon.Winter Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -4367,7 +4367,7 @@ form_driver(FORM *form, int c)
   if (!form)
     RETURN(E_BAD_ARGUMENT);
 
-  if (!(form->field))
+  if (!(form->field) || !(form->current))
     RETURN(E_NOT_CONNECTED);
 
   assert(form->page);
