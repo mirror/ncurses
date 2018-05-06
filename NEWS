@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3119 2018/04/28 21:26:58 tom Exp $
+-- $Id: NEWS,v 1.3124 2018/05/05 21:05:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180505
+	+ add deprecation warnings for internal functions called by older
+	  versions of tack.
+	+ fix a special case in PutAttrChar() where a cell is marked as
+	  alternate-character set, but the terminal does not actually support
+	  the given graphic character.  This would happen in an older terminal
+	  such as vt52, which lacks most line-drawing capability.
+	+ use configure --with-config-suffix option to work around filename
+	  conflict with Debian packages versus test-packages.
+	+ update tracemunch to work with perl 5.26.2, which changed the rules
+	  for escaping regular expressions.
 
 20180428
 	+ document new form-extension O_EDGE_INSERT_STAY (report by Leon

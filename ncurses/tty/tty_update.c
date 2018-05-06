@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.297 2017/09/02 21:45:44 Jeb.Rosen Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.298 2018/05/05 19:11:55 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -344,7 +344,9 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 	    || is_wacs_value(CharOfD(ch))
 #endif
 	)) {
+	int c8;
 	my_ch = CHDEREF(ch);	/* work around const param */
+	c8 = CharOf(my_ch);
 #if USE_WIDEC_SUPPORT
 	/*
 	 * This is crude & ugly, but works most of the time.  It checks if the
@@ -368,8 +370,14 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 		chlen = 1;
 	    }
 #endif /* !NCURSES_WCWIDTH_GRAPHICS */
-	}
+	} else
 #endif
+	if (!SP_PARM->_screen_acs_map[c8]) {
+	    chtype temp = UChar(SP_PARM->_acs_map[c8]);
+	    RemAttr(attr, A_ALTCHARSET);
+	    SetChar(my_ch, temp, AttrOf(attr));
+	}
+
 	/*
 	 * If we (still) have alternate character set, it is the normal 8bit
 	 * flavor.  The _screen_acs_map[] array tells if the character was

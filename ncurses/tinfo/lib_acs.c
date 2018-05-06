@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_acs.c,v 1.46 2017/09/20 00:48:55 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.47 2018/05/05 17:35:53 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -205,8 +205,13 @@ NCURSES_SP_NAME(_nc_init_acs) (NCURSES_SP_DCL0)
 	while (i + 1 < length) {
 	    if (acs_chars[i] != 0 && UChar(acs_chars[i]) < ACS_LEN) {
 		real_map[UChar(acs_chars[i])] = UChar(acs_chars[i + 1]) | A_ALTCHARSET;
-		if (SP != 0)
+		T(("#%d real_map[%s] = %s",
+		   (int) i,
+		   _tracechar(UChar(acs_chars[i])),
+		   _tracechtype(real_map[UChar(acs_chars[i])])));
+		if (SP != 0) {
 		    SP->_screen_acs_map[UChar(acs_chars[i])] = TRUE;
+		}
 	    }
 	    i += 2;
 	}

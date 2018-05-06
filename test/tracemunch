@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.19 2018/04/07 20:37:08 tom Exp $
+# $Id: tracemunch,v 1.20 2018/05/02 00:14:29 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -37,9 +37,10 @@ use strict;
 use warnings;
 
 our $putattr =
-  "PutAttrChar\\({{ '(.)' = 0[0-7]+ }}\\) at \\(([0-9]+), ([0-9]+)\\)";
+    'PutAttrChar\(\{\{ ' . "'(.)'"
+  . ' = 0[0-7]+ \}\}\) at \(([0-9]+), ([0-9]+)\)';
 our $waddnstr =
-  "waddnstr\\(0x([[:xdigit:]]+),\"([^\"]+)\",[0-9]+\\) called {A_NORMAL}";
+  'waddnstr\(0x([[:xdigit:]]+),"([^\"]+)",[0-9]+\) called \{A_NORMAL\}';
 
 our $scr_nums = 0;
 our $thr_nums = 0;
@@ -107,7 +108,7 @@ while (<STDIN>) {
         $awaiting = "curscr" if ( $_ =~ /creating curscr/ );
         $awaiting = "newscr" if ( $_ =~ /creating newscr/ );
         $awaiting = "stdscr" if ( $_ =~ /creating stdscr/ );
-        $awaiting = "screen" if ( $_ =~ /^(\+ )*called {new_prescr\(\)/ );
+        $awaiting = "screen" if ( $_ =~ /^(\+ )*called \{new_prescr\(\)/ );
         if ( $_ =~ /^create :window 0x([[:xdigit:]]+)/ ) {
             $addr = "0x$1";
             if ( $awaiting eq "curscr" ) {
@@ -124,7 +125,7 @@ while (<STDIN>) {
             }
             $awaiting = "";
         }
-        elsif ( $_ =~ /^(\+ )*called {_nc_add_to_try\((0x[[:xdigit:]]+),/ ) {
+        elsif ( $_ =~ /^(\+ )*called \{_nc_add_to_try\((0x[[:xdigit:]]+),/ ) {
             $try_addr{$2} = ++$try_nums unless defined $try_addr{$2};
         }
         elsif ( $_ =~ /^(\+ )*_nc_alloc_screen_sp 0x([[:xdigit:]]+)/ ) {

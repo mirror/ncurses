@@ -75,6 +75,7 @@ configure = \
 		--program-suffix=$(MY_ABI) \
 		--verbose \
 		--with-abi-version=$(MY_ABI) \
+		--with-config-suffix=dev \
 		--with-cxx-shared \
 		--with-default-terminfo-dir=$(MYDATA) \
 		--with-develop \

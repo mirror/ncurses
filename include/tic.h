@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.75 2017/07/29 23:21:06 tom Exp $
+ * $Id: tic.h,v 1.76 2018/05/06 00:19:34 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -343,19 +343,26 @@ extern NCURSES_EXPORT(int) _nc_tic_written (void);
  * These entrypoints are used by tack.
  */
 
+#undef  NCURSES_TACK_1_08
+#ifdef  NCURSES_INTERNALS
+#define NCURSES_TACK_1_08 /* nothing */
+#else
+#define NCURSES_TACK_1_08 GCC_DEPRECATED("upgrade to tack 1.08")
+#endif
+
 /* comp_hash.c: name lookup */
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_entry
-	(const char *, const HashValue *);
-extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool);
+	(const char *, const HashValue *) NCURSES_TACK_1_08;
+extern NCURSES_EXPORT(const HashValue *) _nc_get_hash_table (bool) NCURSES_TACK_1_08;
 
 /* comp_scan.c: lexical analysis */
-extern NCURSES_EXPORT(void) _nc_reset_input (FILE *, char *);
+extern NCURSES_EXPORT(void) _nc_reset_input (FILE *, char *) NCURSES_TACK_1_08;
 
 /* comp_expand.c: expand string into readable form */
-extern NCURSES_EXPORT(char *) _nc_tic_expand (const char *, bool, int);
+extern NCURSES_EXPORT(char *) _nc_tic_expand (const char *, bool, int) NCURSES_TACK_1_08;
 
 /* comp_scan.c: decode string from readable form */
-extern NCURSES_EXPORT(int) _nc_trans_string (char *, char *);
+extern NCURSES_EXPORT(int) _nc_trans_string (char *, char *) NCURSES_TACK_1_08;
 
 #endif /* NCURSES_TERM_ENTRY_H_incl */
 

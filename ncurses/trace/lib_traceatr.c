@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.91 2018/01/07 02:22:01 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.92 2018/05/05 17:49:17 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -285,19 +285,21 @@ _tracechtype2(int bufnum, chtype ch)
 
     if (result != 0) {
 	const char *found;
+	attr_t attr = ChAttrOf(ch);
 
 	_nc_STRCPY(result, l_brace, TRACE_BUF_SIZE(bufnum));
-	if ((found = _nc_altcharset_name(ChAttrOf(ch), ch)) != 0) {
+	if ((found = _nc_altcharset_name(attr, ch)) != 0) {
 	    (void) _nc_trace_bufcat(bufnum, found);
+	    attr &= ~A_ALTCHARSET;
 	} else
 	    (void) _nc_trace_bufcat(bufnum,
 				    _nc_tracechar(CURRENT_SCREEN,
 						  (int) ChCharOf(ch)));
 
-	if (ChAttrOf(ch) != A_NORMAL) {
+	if (attr != A_NORMAL) {
 	    (void) _nc_trace_bufcat(bufnum, " | ");
 	    (void) _nc_trace_bufcat(bufnum,
-				    _traceattr2(bufnum + 20, ChAttrOf(ch)));
+				    _traceattr2(bufnum + 20, attr));
 	}
 
 	result = _nc_trace_bufcat(bufnum, r_brace);
