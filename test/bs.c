@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.71 2017/10/18 23:03:07 tom Exp $
+ * $Id: bs.c,v 1.73 2018/05/12 15:07:51 tom Exp $
  */
 
 #include <test.priv.h>
@@ -116,17 +116,20 @@ static char *your_name;
 static char dftname[] = "stranger";
 
 /* direction constants */
-#define E	0
-#define SE	1
-#define S	2
-#define SW	3
-#define W	4
-#define NW	5
-#define N	6
-#define NE	7
-static int xincr[8] =
+typedef enum {
+    dir_E = 0
+    ,dir_SE
+    ,dir_S
+    ,dir_SW
+    ,dir_W
+    ,dir_NW
+    ,dir_N
+    ,dir_NE
+    ,dir_MAX
+} DIRECTIONS;
+static int xincr[dir_MAX + 2] =
 {1, 1, 0, -1, -1, -1, 0, 1};
-static int yincr[8] =
+static int yincr[dir_MAX + 2] =
 {0, 1, 1, 1, 0, -1, -1, -1};
 
 /* current ship position and direction */
@@ -327,9 +330,9 @@ randomplace(int b, ship_t * ss)
 {
 
     do {
-	ss->dir = rnd(2) ? E : S;
-	ss->x = rnd(BWIDTH - (ss->dir == E ? ss->length : 0));
-	ss->y = rnd(BDEPTH - (ss->dir == S ? ss->length : 0));
+	ss->dir = rnd(2) ? dir_E : dir_S;
+	ss->x = rnd(BWIDTH - (ss->dir == dir_E ? ss->length : 0));
+	ss->y = rnd(BDEPTH - (ss->dir == dir_S ? ss->length : 0));
     } while
 	(!checkplace(b, ss, FALSE));
 }
@@ -495,19 +498,19 @@ initgame(void)
 	    switch (c) {
 	    case 'k':
 	    case '8':
-		ss->dir = N;
+		ss->dir = dir_N;
 		break;
 	    case 'j':
 	    case '2':
-		ss->dir = S;
+		ss->dir = dir_S;
 		break;
 	    case 'h':
 	    case '4':
-		ss->dir = W;
+		ss->dir = dir_W;
 		break;
 	    case 'l':
 	    case '6':
-		ss->dir = E;
+		ss->dir = dir_E;
 		break;
 	    }
 
@@ -665,7 +668,7 @@ collidecheck(int b, int y, int x)
     if (!closepack) {
 	int i;
 
-	for (i = 0; i < 8; i++) {
+	for (i = 0; i < dir_MAX; i++) {
 	    int xend, yend;
 
 	    yend = y + yincr[i];
@@ -762,8 +765,8 @@ hitship(int x, int y)
 
 		if (!closepack)
 		    for (j = -1; j <= 1; j++) {
-			int bx = ss->x + j * xincr[(ss->dir + 2) % 8];
-			int by = ss->y + j * yincr[(ss->dir + 2) % 8];
+			int bx = ss->x + j * xincr[(ss->dir + 2) % dir_MAX];
+			int by = ss->y + j * yincr[(ss->dir + 2) % dir_MAX];
 
 			for (i = -1; i <= ss->length; ++i) {
 			    int x1, y1;
@@ -1027,11 +1030,14 @@ cputurn(void)
 	break;
 
     case RANDOM_HIT:		/* last shot was random and hit */
-	used[E / 2] = used[S / 2] = used[W / 2] = used[N / 2] = FALSE;
+	used[dir_E / 2] =
+	    used[dir_S / 2] =
+	    used[dir_W / 2] =
+	    used[dir_N / 2] = FALSE;
 	/* FALLTHROUGH */
 
     case HUNT_DIRECT:		/* last shot hit, we're looking for ship's long axis */
-	for (d = navail = 0; d < 4; d++) {
+	for (d = navail = 0; d < (dir_MAX) / 2; d++) {
 	    x = ts.x + xincr[d * 2];
 	    y = ts.y + yincr[d * 2];
 	    if (!used[d] && POSSIBLE(x, y))
@@ -1043,13 +1049,13 @@ cputurn(void)
 	    goto refire;	/* ...so we must random-fire */
 	else {
 	    n = rnd(navail) + 1;
-	    for (d = 0; d < 4 && used[d]; d++) ;
+	    for (d = 0; d < (dir_MAX) / 2 && used[d]; d++) ;
 	    /* used[d] is first that == 0 */
 	    for (; n > 1; n--)
-		while (d < 4 && used[++d]) ;
+		while (d < (dir_MAX) / 2 && used[++d]) ;
 	    /* used[d] is next that == 0 */
 
-	    assert(d < 4);
+	    assert(d < (dir_MAX) / 2);
 	    assert(used[d] == FALSE);
 
 	    used[d] = TRUE;
@@ -1083,7 +1089,7 @@ cputurn(void)
 	break;
 
     case REVERSE_JUMP:		/* nail down the ship's other end */
-	d = (ts.dir + 4) % 8;
+	d = (ts.dir + (dir_MAX) / 2) % dir_MAX;
 	x = ts.x + ts.hits * xincr[d];
 	y = ts.y + ts.hits * yincr[d];
 	if (POSSIBLE(x, y) && (hit = cpufire(x, y))) {

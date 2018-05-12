@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.52 2018/02/03 23:18:50 tom Exp $
+ * $Id: savescreen.c,v 1.53 2018/05/12 15:11:16 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -69,10 +69,12 @@ static wchar_t
 BaseChar(cchar_t data)
 {
     wchar_t my_wchar[CCHARW_MAX];
+    wchar_t result = 0;
     attr_t my_attr;
     short my_pair;
-    getcchar(&data, my_wchar, &my_attr, &my_pair, NULL);
-    return my_wchar[0];
+    if (getcchar(&data, my_wchar, &my_attr, &my_pair, NULL) == OK)
+	result = my_wchar[0];
+    return result;
 }
 #endif
 

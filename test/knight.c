@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.43 2017/09/10 00:13:02 tom Exp $
+ * $Id: knight.c,v 1.44 2018/05/12 13:23:24 tom Exp $
  */
 
 #include <test.priv.h>
@@ -417,7 +417,7 @@ drawMove(SQUARES squares, int count_moves, chtype tchar, int oldy, int oldx, int
 		} else {
 		    cellmove(i, j);
 		    if (winch(boardwin) == minus)
-			waddch(boardwin, count_moves ? ' ' : minus);
+			waddch(boardwin, ' ');
 		}
 	    }
 	}

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.118 2018/03/24 22:37:42 tom Exp $
+ * $Id: picsmap.c,v 1.121 2018/05/12 16:28:46 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -584,6 +584,7 @@ read_palette(const char *filename)
 	    strcpy(s, filename);
 	    if (tries & 4) {
 		char *t = s;
+		char *tc;
 		int num;
 		char chr;
 		int found = 0;
@@ -591,7 +592,8 @@ read_palette(const char *filename)
 		    if (*t == '-') {
 			if (sscanf(t, "-%d%c", &num, &chr) == 2 &&
 			    chr == 'c' &&
-			    !(strncmp) (strchr(t, chr), "color", 5)) {
+			    (tc = strchr(t, chr)) != 0 &&
+			    !(strncmp) (tc, "color", 5)) {
 			    found = 1;
 			}
 			break;
@@ -1009,6 +1011,8 @@ parse_xbm(char **data)
 		} else if ((t = strstr(buf, "_height")) != 0) {
 		    state |= 2;
 		    result->high = (short) num;
+		} else {
+		    break;
 		}
 		*t = '\0';
 		if (result->name) {
@@ -1190,7 +1194,7 @@ parse_xpm(char **data)
 	    if (num_colors >= result->colors) {
 		finish_c_values(result);
 		state = 4;
-		if (list != 0 && list[0] == 0)
+		if (list[0] == 0)
 		    list[0] = strdup("\033");
 	    }
 	    break;

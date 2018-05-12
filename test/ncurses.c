@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.504 2017/11/24 20:51:18 tom Exp $
+$Id: ncurses.c,v 1.506 2018/05/12 16:00:22 tom Exp $
 
 ***************************************************************************/
 
@@ -7170,9 +7170,12 @@ overlap_test(bool recur GCC_UNUSED)
     int shift = 0, last_refresh = -1;
     int state, flavor[OVERLAP_FLAVORS];
 
-    if ((win1 = make_overlap(0)) == 0
-	|| (win2 = make_overlap(1)) == 0)
+    if ((win1 = make_overlap(0)) == 0) {
 	return ERR;
+    } else if ((win2 = make_overlap(1)) == 0) {
+	delwin(win1);
+	return ERR;
+    }
 
     curs_set(0);
     raw();
@@ -7367,9 +7370,12 @@ x_overlap_test(bool recur GCC_UNUSED)
     int shift = 0, last_refresh = -1;
     int state, flavor[OVERLAP_FLAVORS];
 
-    if ((win1 = make_overlap(0)) == 0
-	|| (win2 = make_overlap(1)) == 0)
+    if ((win1 = make_overlap(0)) == 0) {
 	return ERR;
+    } else if ((win2 = make_overlap(1)) == 0) {
+	delwin(win1);
+	return ERR;
+    }
 
     curs_set(0);
     raw();

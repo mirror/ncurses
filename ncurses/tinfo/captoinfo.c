@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -97,7 +97,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.95 2017/06/23 22:40:22 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.96 2018/05/12 16:46:55 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -246,6 +246,8 @@ static void
 getparm(int parm, int n)
 /* push n copies of param on the terminfo stack if not already there */
 {
+    int nn;
+
     if (seenr) {
 	if (parm == 1)
 	    parm = 2;
@@ -253,7 +255,7 @@ getparm(int parm, int n)
 	    parm = 1;
     }
 
-    while (n-- > 0) {
+    for (nn = 0; nn < n; ++nn) {
 	dp = save_string(dp, "%p");
 	dp = save_char(dp, '0' + parm);
     }

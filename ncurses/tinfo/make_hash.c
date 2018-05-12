@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2013,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,6 @@
 
 /*
  *	make_hash.c --- build-time program for constructing comp_captab.c
- *
  */
 
 #include <build.priv.h>
@@ -44,7 +43,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.15 2017/10/23 21:19:54 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.17 2018/05/12 15:58:31 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -156,10 +155,12 @@ parse_columns(char *buffer)
 
     int col = 0;
 
-    if (list == 0 && (list = typeCalloc(char *, (MAX_COLUMNS + 1))) == 0)
-	  return (0);
-
     if (*buffer != '#') {
+	if (list == 0) {
+	    list = typeCalloc(char *, (MAX_COLUMNS + 1));
+	    if (list == 0)
+		return (0);
+	}
 	while (*buffer != '\0') {
 	    char *s;
 	    for (s = buffer; (*s != '\0') && !isspace(UChar(*s)); s++)
@@ -225,13 +226,16 @@ main(int argc, char **argv)
      * Read the table into our arrays.
      */
     for (n = 0; (n < CAPTABSIZE) && fgets(buffer, BUFSIZ, stdin);) {
-	char **list, *nlp = strchr(buffer, '\n');
+	char **list;
+	char *nlp = strchr(buffer, '\n');
 	if (nlp)
 	    *nlp = '\0';
+	else
+	    buffer[sizeof(buffer) - 2] = '\0';
 	list = parse_columns(buffer);
 	if (list == 0)		/* blank or comment */
 	    continue;
-	if (column > count_columns(list)) {
+	if (column < 0 || column > count_columns(list)) {
 	    fprintf(stderr, "expected %d columns, have %d:\n%s\n",
 		    column,
 		    count_columns(list),

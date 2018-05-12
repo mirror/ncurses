@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.14 2017/12/09 21:04:41 tom Exp $
+ * $Id: dots_xcurses.c,v 1.15 2018/05/12 16:08:07 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -103,7 +103,7 @@ set_colors(int fg, int bg)
 {
     int pair = mypair(fg, bg);
     if (pair > 0) {
-	color_set((short) pair, NewPair(pair));
+	(void) color_set((short) pair, NewPair(pair));
     }
 }
 

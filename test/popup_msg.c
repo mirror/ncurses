@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: popup_msg.c,v 1.8 2017/09/03 21:05:01 tom Exp $
+ * $Id: popup_msg.c,v 1.9 2018/05/12 15:08:45 tom Exp $
  *
  * Show a multi-line message in a window which may extend beyond the screen.
  *
@@ -86,8 +86,10 @@ popup_msg(WINDOW *parent, const char *const *msg)
 
     if ((help = newwin(high, wide, y0, x0)) == 0)
 	return;
-    if ((data = newpad(length + 1, width)) == 0)
+    if ((data = newpad(length + 1, width)) == 0) {
+	delwin(help);
 	return;
+    }
 
     begin_popup();
 
