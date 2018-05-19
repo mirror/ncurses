@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.684 $
-#	$Date: 2018/03/18 00:08:38 $
+#	$Revision: 1.699 $
+#	$Date: 2018/05/19 20:10:26 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1421,10 +1421,9 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 	    %p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E7\E[?47h,
 	smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
-	vpa=\E[%i%p1%dd, kEND5=\E[1;5F, kHOM5=\E[1;5H,
-	use=xterm+sl-twm, use=vt100+keypad, use=xterm+x11mouse,
-	use=xterm+256setaf,
+	tbc=\E[3g, vpa=\E[%i%p1%dd, kEND5=\E[1;5F, kHOM5=\E[1;5H,
+	use=ansi+enq, use=xterm+sl-twm, use=vt100+keypad,
+	use=xterm+x11mouse, use=xterm+256setaf,
 
 # iTerm2 3.0.15
 #
@@ -1454,16 +1453,20 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 #
 # Italic text did not work initially, apparently because upgrading did not
 # add/change that preference (set in Preferences, Profiles, Text).  A new
-# install of iTerm 3.0.15 provides italics by default (blinking text:no).
+# install of iTerm 3.0.15 provides italics by default (blinking text is an
+# option in the preferences dialog).
 #
 # 2018/01/21: found xterm+sm+1006 did not work with version 3.1.5
+# 2018/05/19: xterm+sm+1006 seems to work with 3.1.6beta -TD
 iTerm2.app|iterm2|terminal emulator for Mac OS X,
-	blink@, dim=\E[2m, kEND=\E[1;2F, kHOM=\E[1;2H, ka1@, ka3@,
-	kb2@, kc1@, kc3@, kent@, kf13=\E[1;2P, kf14=\E[1;2Q,
-	kf15=\E[1;2R, kf16=\E[1;2S, kf17=\E[15;2~, kf18=\E[17;2~,
-	kf19=\E[18;2~, kf2=\EOQ, kf20=\E[19;2~, kf21=\E[20;2~,
-	kf22=\E[21;2~, kf23=\E[23;2~, kf24=\E[24;2~,
-	kind=\E[1;2B, kri=\E[1;2A,
+	blink=\E[5m, cbt=\E[Z, dim=\E[2m, indn=\E[%p1%dS,
+	kEND=\E[1;2F, kHOM=\E[1;2H, ka1@, ka3@, kb2@, kc1@, kc3@, kent@,
+	kf13=\E[1;2P, kf14=\E[1;2Q, kf15=\E[1;2R, kf16=\E[1;2S,
+	kf17=\E[15;2~, kf18=\E[17;2~, kf19=\E[18;2~, kf2=\EOQ,
+	kf20=\E[19;2~, kf21=\E[20;2~, kf22=\E[21;2~,
+	kf23=\E[23;2~, kf24=\E[24;2~, kind=\E[1;2B, kri=\E[1;2A,
+	nel=\EE, op=\E[39;49m, rin=\E[%p1%dT, rmso=\E[27m,
+	rmul=\E[24m, rs2=\E[!p\E[?3;4l\E[4l\E>\E[?1000l,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
 	    %p5%t;2%;m%?%p9%t\016%e\017%;,
 	kDN3=\E\E[B, kDN4=\E[1;10B, kDN5=\E[1;5B, kDN6=\E[1;6B,
@@ -1474,7 +1477,8 @@ iTerm2.app|iterm2|terminal emulator for Mac OS X,
 	kLFT5=\E[1;5D, kLFT6=\E[1;6D, kNXT3=\E\E[6~,
 	kPRV3=\E\E[5~, kRIT3=\E\E[C, kRIT4=\E[1;10C,
 	kRIT5=\E[1;5C, kRIT6=\E[1;6C, kUP3=\E\E[A, kUP4=\E[1;10A,
-	kUP5=\E[1;5A, kUP6=\E[1;6A, use=ecma+italics, use=iterm,
+	kUP5=\E[1;5A, kUP6=\E[1;6A, use=xterm+alt+title,
+	use=ecma+italics, use=iterm,
 
 # xnuppc - Darwin PowerPC Console (a.k.a. "darwin")
 #
@@ -7002,9 +7006,8 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 # match the terminal.
 tmux|tmux terminal multiplexer,
 	invis=\E[8m, rmso=\E[27m,
-	sgr=\E[0%?%p6%t;1%;%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;
-	    \s\s\s\s\s\s\s\s\s\s\s\s5%;%?%p5%t;2%;m%?%p9%t\016%e
-	    \017%;,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
+	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	smso=\E[7m, E3=\E[3J, use=ecma+italics,
 	use=ecma+strikeout, use=xterm+edit, use=xterm+pcfkeys,
 	use=xterm+sl, use=xterm+tmux, use=screen,
@@ -25580,7 +25583,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  that could be returned -TD
 #	+ added a few capabilities fixed in recent vte -TD
 #
-# 20160817
+# 2016-08-17
 #	+ correct a typo in interix -TD
 #
 # 2016-09-24
@@ -25693,23 +25696,23 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  match xterm #272, reflecting packager's changes -TD
 #	+ remove "boolean" Se, Ss from st-0.7 -TD
 #
-# 2017-01-04
+# 2018-01-04
 #	+ add konsole-direct and st-direct -TD
 #	+ remove unsupported "Tc" capability from st-0.7; use st-direct if
 #	  direct-colors are wanted -TD
 #
-# 2017-01-17
+# 2018-01-17
 #	+ add vte-direct -TD
 #	+ add XT, hpa, indn, and vpa to screen, and invis, E3 to tmux (patch by
 #	  Pierre Carru)
 #
-# 2017-01-21
+# 2018-01-21
 #	+ use xterm+sm+1006 in xterm-new, vte-2014 -TD
 #	+ use xterm+x11mouse in iterm, iterm2, mlterm3 because xterm's 1006
 #	  mode does not work with those programs.  konsole is debatable -TD
 #	+ add "termite" entry (report by Markus Pfeiffer) -TD
 #
-# 2017-01-27
+# 2018-01-27
 #	+ trim "XT" from screen entry -TD
 #	+ modify iterm to use xterm+sl-twm building block -TD
 #	+ mark konsole-420pc, konsole-vt100, konsole-xf3x obsolete reflecting
@@ -25734,5 +25737,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2018-03-17
 #	+ trim some redundant capabilities from st-0.7 -TD
 #	+ trim unnecessary setf/setb from interix -TD
+#
+# 2018-05-19
+#	+ trim spurious whitespace from tmux in 2018-02-24 changes;
+#	  fix some inconsistencies in/between tmux- and iterm2-entries for SGR
+#	  (report by C Anthony Risinger)
+#	+ improve iterm2 using some xterm features which it has adapted -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.28 2018/03/31 22:41:29 tom Exp $
+.\" $Id: term.5,v 1.29 2018/05/19 21:09:25 tom Exp $
 .TH term 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -180,7 +180,8 @@ With some minor variations of the offsets (see PORTABILITY),
 the same binary format is used in all modern UNIX systems.
 Each system uses a predefined set of boolean, number or string capabilities.
 .PP
-The \fBncurses\fP libraries and applications support extended terminfo binary format,
+The \fBncurses\fP libraries and applications support
+extended terminfo binary format,
 allowing users to define capabilities which are loaded at runtime.
 This
 extension is made possible by using the fact that the other implementations
@@ -280,7 +281,8 @@ A small number of terminal descriptions use uppercase characters in
 their names.
 If the underlying filesystem ignores the difference between
 uppercase and lowercase,
-\fBncurses\fP represents the \*(``first character\*('' of the terminal name used as
+\fBncurses\fP represents the \*(``first character\*(''
+of the terminal name used as
 the intermediate level of a directory tree in (two-character) hexadecimal form.
 .SH EXAMPLE
 As an example, here is a description for the Lear-Siegler

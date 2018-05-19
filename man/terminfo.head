@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.32 2017/04/22 13:52:49 tom Exp $
+.\" $Id: terminfo.head,v 1.33 2018/05/19 20:57:27 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -35,12 +35,13 @@
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .de bP
-.IP \(bu 4
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
 ..
 .de NS
-.ie \n(.sp
+.ie n  .sp
 .el    .sp .5
-.ie \n(.in +4
+.ie n  .in +4
 .el    .in +2
 .nf
 .ft C			\" Courier
@@ -145,7 +146,7 @@ l l l.
 \-w	Wide mode (> 80 columns, usually 132)	vt100\-w
 .TE
 .PP
-For more on terminal naming conventions, see the \fBterm(7)\fR manual page.
+For more on terminal naming conventions, see the \fBterm\fP(7) manual page.
 .SS Terminfo Capabilities Syntax
 .PP
 The terminfo entry consists of several \fIcapabilities\fP,

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.16 2017/11/18 23:56:00 tom Exp $
+.\" $Id: tabs.1,v 1.17 2018/05/19 21:07:46 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -93,9 +93,10 @@ The \fB@TABS@\fP program processes a single list of tab stops.
 The last option to be processed which defines a list is the one that
 determines the list to be processed.
 .SS Implicit Lists
-Use a single number as an option, e.g., \*(``\fB\-5\fP\*('' to set tabs at the given
-interval (in this case 1, 6, 11, 16, 21, etc.).  Tabs are repeated up to
-the right margin of the screen.
+Use a single number as an option,
+e.g., \*(``\fB\-5\fP\*('' to set tabs at the given
+interval (in this case 1, 6, 11, 16, 21, etc.).
+Tabs are repeated up to the right margin of the screen.
 .PP
 Use \*(``\fB\-0\fP\*('' to clear all tabs.
 .PP
@@ -112,7 +113,8 @@ tabs 1,6,11,16,21
 tabs 1 6 11 16 21
 .NE
 .PP
-Use a \*(``+\*('' to treat a number as an increment relative to the previous value,
+Use a \*(``+\*('' to treat a number
+as an increment relative to the previous value,
 e.g.,
 .NS
 tabs 1,+5,+5,+5,+5
@@ -150,8 +152,9 @@ SNOBOL
 UNIVAC 1100 Assembler
 .SH PORTABILITY
 .PP
-IEEE Std 1003.1/The Open Group  Base Specifications Issue 7 (POSIX.1-2008) describes
-a \fBtabs\fP utility.  However
+\fIIEEE Std 1003.1/The Open Group Base Specifications Issue 7\fP (POSIX.1-2008)
+describes a \fBtabs\fP utility.
+However
 .bP
 This standard describes a \fB+m\fP option, to set a terminal's left-margin.
 Very few of the entries in the terminal database provide this capability.

@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.88 2017/08/12 22:26:02 tom Exp $
+.\" $Id: terminfo.tail,v 1.89 2018/05/19 21:01:52 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -370,7 +370,7 @@ it may still be possible to craft a working
 .B nel
 out of one or both of them.
 .PP
-These capabilities suffice to describe hard-copy and \*(lqglass-tty\*(rq terminals.
+These capabilities suffice to describe hard-copy and \*(``glass-tty\*('' terminals.
 Thus the model 33 teletype is described as
 .PP
 .DT
@@ -516,12 +516,12 @@ to be sent \eE&a12c03Y padded for 6 milliseconds.
 Note that the order
 of the rows and columns is inverted here, and that the row and column
 are printed as two digits.
-Thus its \fBcup\fR capability is \*(lqcup=6\eE&%p2%2dc%p1%2dY\*(rq.
+Thus its \fBcup\fR capability is \*(``cup=6\eE&%p2%2dc%p1%2dY\*(''.
 .PP
 The Microterm \s-1ACT-IV\s0 needs the current row and column sent
 preceded by a \fB^T\fR, with the row and column simply encoded in binary,
-\*(lqcup=^T%p1%c%p2%c\*(rq.
-Terminals which use \*(lq%c\*(rq need to be able to
+\*(``cup=^T%p1%c%p2%c\*(''.
+Terminals which use \*(``%c\*('' need to be able to
 backspace the cursor (\fBcub1\fR),
 and to move the cursor up one line on the screen (\fBcuu1\fR).
 This is necessary because it is not always safe to transmit \fB\en\fR
@@ -531,7 +531,7 @@ tabs are never expanded, so \et is safe to send.
 This turns out to be essential for the Ann Arbor 4080.)
 .PP
 A final example is the \s-1LSI ADM\s0-3a, which uses row and column
-offset by a blank character, thus \*(lqcup=\eE=%p1%' '%+%c%p2%' '%+%c\*(rq.
+offset by a blank character, thus \*(``cup=\eE=%p1%' '%+%c%p2%' '%+%c\*(''.
 After sending \*(``\eE=\*('', this pushes the first parameter, pushes the
 ASCII value for a space (32), adds them (pushing the sum on the stack
 in place of the two previous values) and outputs that value as a character.
@@ -569,7 +569,7 @@ spaces to the right) these can be given as
 .BR cub ,
 .BR cuf ,
 and
-.BR cuu
+.B cuu
 with a single parameter indicating how many spaces to move.
 These are primarily useful if the terminal does not have
 .BR cup ,
@@ -700,18 +700,18 @@ either eliminated, or expanded to two untyped blanks.
 You can determine the
 kind of terminal you have by clearing the screen and then typing
 text separated by cursor motions.
-Type \*(lqabc\ \ \ \ def\*(rq using local
-cursor motions (not spaces) between the \*(lqabc\*(rq and the \*(lqdef\*(rq.
-Then position the cursor before the \*(lqabc\*(rq and put the terminal in insert
+Type \*(``abc\ \ \ \ def\*('' using local
+cursor motions (not spaces) between the \*(``abc\*('' and the \*(``def\*(''.
+Then position the cursor before the \*(``abc\*('' and put the terminal in insert
 mode.
 If typing characters causes the rest of the line to shift
 rigidly and characters to fall off the end, then your terminal does
 not distinguish between blanks and untyped positions.
-If the \*(lqabc\*(rq
-shifts over to the \*(lqdef\*(rq which then move together around the end of the
+If the \*(``abc\*(''
+shifts over to the \*(``def\*('' which then move together around the end of the
 current line and onto the next as you insert, you have the second type of
 terminal, and should give the capability \fBin\fR, which stands for
-\*(lqinsert null\*(rq.
+\*(``insert null\*(''.
 .PP
 While these are two logically separate attributes (one line versus multi-line
 insert mode, and special treatment of untyped spaces) we have seen no
@@ -959,7 +959,7 @@ give this sequence as
 If there is a way to make the cursor completely invisible, give that as
 .BR civis .
 The capability
-.BR cnorm
+.B cnorm
 should be given which undoes the effects of both of these modes.
 .PP
 If your terminal correctly generates underlined characters
@@ -1128,25 +1128,25 @@ They will be printed in the following order:
 .RS
 .TP
 run the program
-.BR iprog
+.B iprog
 .TP
 output
-.BR is1
-.BR is2
+.B is1
+.B is2
 .TP
 set the margins using
 .BR mgc ,
-.BR smgl
+.B smgl
 and
-.BR smgr
+.B smgr
 .TP
 set tabs using
 .B tbc
 and
-.BR hts
+.B hts
 .TP
 print the file
-.BR if
+.B if
 .TP
 and finally
 output
@@ -1167,7 +1167,7 @@ A set of sequences that does a harder reset from a totally unknown state
 can be given as
 .BR rs1 ,
 .BR rs2 ,
-.BR rf
+.B rf
 and
 .BR rs3 ,
 analogous to
@@ -1175,13 +1175,13 @@ analogous to
 .B is2 ,
 .B if
 and
-.BR is3
+.B is3
 respectively.
 These strings are output by the \fB@RESET@\fP program,
 which is used when the terminal gets into a wedged state.
 Commands are normally placed in
 .BR rs1 ,
-.BR rs2
+.B rs2
 .B rs3
 and
 .B rf
@@ -1196,7 +1196,7 @@ needed since the terminal is usually already in 80 column mode.
 The \fB@RESET@\fP program writes strings including
 .BR iprog ,
 etc., in the same order as the
-.IR init
+.I init
 program, using 
 .BR rs1 ,
 etc., instead of
@@ -1207,7 +1207,7 @@ If any of
 .BR rs2 ,
 .BR rs3 ,
 or
-.BR rf
+.B rf
 reset capability strings are missing, the \fB@RESET@\fP 
 program falls back upon the corresponding initialization capability string.
 .PP

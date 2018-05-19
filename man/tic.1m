@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.66 2017/11/18 23:51:17 tom Exp $
+.\" $Id: tic.1m,v 1.67 2018/05/19 21:07:46 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -172,8 +172,8 @@ the string will not convert completely.
 .RE
 .TP
 \fB\-c\fR
-tells \fB@TIC@\fP to only check \fIfile\fR for errors, including syntax problems and
-bad use links.
+tells \fB@TIC@\fP to only check \fIfile\fR for errors,
+including syntax problems and bad use-links.
 If you specify \fB\-C\fR (\fB\-I\fR) with this option, the code
 will print warnings about entries which, after use resolution, are more than
 1023 (4096) bytes long.
@@ -205,7 +205,8 @@ the list, the entry will be written or translated as normal.
 Otherwise no output will be generated for it.
 The option value is interpreted as a file containing the list if it
 contains a '/'.
-(Note: depending on how tic was compiled, this option may require \fB\-I\fR or \fB\-C\fR.)
+(Note: depending on how tic was compiled,
+this option may require \fB\-I\fR or \fB\-C\fR.)
 .TP
 \fB\-f\fR
 Display complex terminfo strings which contain if/then/else/endif expressions
@@ -273,7 +274,8 @@ versions of terminfo like those on SVr1, Ultrix, or HP/UX that do not support
 the full set of SVR4/XSI Curses terminfo; and outright broken ports like AIX 3.x
 that have their own extensions incompatible with SVr4/XSI.
 Available subsets
-are "SVr1", "Ultrix", "HP", "BSD" and "AIX"; see \fBterminfo\fR(\*n) for details.
+are "SVr1", "Ultrix", "HP", "BSD" and "AIX";
+see \fBterminfo\fR(\*n) for details.
 .TP
 \fB\-r\fR
 Force entry resolution (so there are no remaining tc capabilities) even
@@ -398,7 +400,8 @@ The name field cannot
 exceed 512 bytes.
 Terminal names exceeding the maximum alias length
 (32 characters on systems with long filenames, 14 characters otherwise)
-will be truncated to the maximum alias length and a warning message will be printed.
+will be truncated to the maximum alias length
+and a warning message will be printed.
 .SH COMPATIBILITY
 There is some evidence that historic \fB@TIC@\fR implementations treated
 description fields with no whitespace in them as additional aliases or

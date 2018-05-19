@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: clear.1,v 1.19 2017/11/18 23:51:59 tom Exp $
+.\" $Id: clear.1,v 1.20 2018/05/19 21:03:03 tom Exp $
 .TH @CLEAR@ 1 ""
 .\" these would be fallbacks for DS/DE,
 .\" but groff changed the meaning of the macros.
@@ -59,7 +59,8 @@
 .br
 .SH DESCRIPTION
 \fB@CLEAR@\fR clears your screen if this is possible,
-including its scrollback buffer (if the extended \*(``E3\*('' capability is defined).
+including its scrollback buffer
+(if the extended \*(``E3\*('' capability is defined).
 \fB@CLEAR@\fR looks in the environment for the terminal type
 given by the environment variable \fBTERM\fP,
 and then in the

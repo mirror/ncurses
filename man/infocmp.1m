@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.70 2018/01/23 10:10:17 tom Exp $
+.\" $Id: infocmp.1m,v 1.71 2018/05/19 21:07:17 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -207,9 +207,9 @@ Mandatory padding is not supported.
 Because
 \fBtermcap\fR strings are not as flexible, it is not always possible to convert
 a \fBterminfo\fR string capability into an equivalent \fBtermcap\fR format.
-A subsequent conversion of the \fBtermcap\fR file back into \fBterminfo\fR format
-will not necessarily reproduce the original \fBterminfo\fR
-source.
+A subsequent conversion of the \fBtermcap\fR file
+back into \fBterminfo\fR format
+will not necessarily reproduce the original \fBterminfo\fR source.
 .PP
 Some common \fBterminfo\fR parameter sequences, their \fBtermcap\fR
 equivalents, and some terminal types which commonly have such sequences, are:
@@ -239,7 +239,8 @@ In this manner, it is possible to retrofit generic terminfo
 entries into a terminal's description.
 Or, if two similar terminals exist, but
 were coded at different times or by different people so that each description
-is a full description, using \fB@INFOCMP@\fR will show what can be done to change
+is a full description, using \fB@INFOCMP@\fR
+will show what can be done to change
 one description to be relative to the other.
 .PP
 A capability will get printed with an at-sign (@) if it no longer exists in the
@@ -303,12 +304,13 @@ the fields will be printed several to a line to a maximum width
 of 60 characters.
 .TP
 \fB\-a\fR
-tells \fB@INFOCMP@\fP to retain commented-out capabilities rather than discarding
-them.
+tells \fB@INFOCMP@\fP to retain commented-out capabilities
+rather than discarding them.
 Capabilities are commented by prefixing them with a period.
 .TP
 \fB\-D\fR
-tells \fB@INFOCMP@\fP to print the database locations that it knows about, and exit.
+tells \fB@INFOCMP@\fP to print the database locations that it knows about,
+and exit.
 .TP 5
 \fB\-E\fR
 Dump the capabilities of the given terminal as tables, needed in
@@ -461,7 +463,8 @@ This makes the output a little shorter:
 .RS
 .bP
 Make the comparison listing shorter by omitting subheadings, and using
-\*(``\-\*('' for absent capabilities, \*(``@\*('' for canceled rather than \*(``NULL\*(''.
+\*(``\-\*('' for absent capabilities, \*(``@\*(''
+for canceled rather than \*(``NULL\*(''.
 .bP
 However, show differences between absent and cancelled capabilities.
 .bP
@@ -477,8 +480,8 @@ that have their own extensions incompatible with SVr4/XSI.
 .RS
 .bP
 Available terminfo
-subsets are \*(``SVr1\*('', \*(``Ultrix\*('', \*(``HP\*('', and \*(``AIX\*(''; see \fBterminfo\fR(\*n) for
-details.
+subsets are \*(``SVr1\*('', \*(``Ultrix\*('', \*(``HP\*('', and \*(``AIX\*('';
+see \fBterminfo\fR(\*n) for details.
 .bP
 You can also choose the subset \*(``BSD\*('' which selects only capabilities
 with termcap equivalents recognized by 4.4BSD.
@@ -525,7 +528,8 @@ Normally when translating from terminfo to termcap,
 untranslatable capabilities are commented-out.
 .TP 5
 \fB\-U\fR
-tells \fB@INFOCMP@\fP to not post-process the data after parsing the source file.
+tells \fB@INFOCMP@\fP to not post-process the data
+after parsing the source file.
 This feature helps when comparing the actual contents of two source files,
 since it excludes the inferences that \fB@INFOCMP@\fP makes to fill in missing
 data.
@@ -583,7 +587,8 @@ Also, it shows missing integer capabilities as \fB\-1\fP
 This implementation shows those as \*(``NULL\*('',
 for consistency with missing strings.
 .PP
-The \fB\-r\fR option's notion of \*(``termcap\*('' capabilities is System V Release 4's.
+The \fB\-r\fR option's notion of \*(``termcap\*('' capabilities
+is System V Release 4's.
 Actual BSD curses versions will have a more restricted set.
 To see only the
 4.4BSD set, use \fB\-r\fR \fB\-RBSD\fR.

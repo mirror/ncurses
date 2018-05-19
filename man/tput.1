@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.57 2017/11/20 01:07:02 tom Exp $
+.\" $Id: tput.1,v 1.58 2018/05/19 21:07:46 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -244,7 +244,8 @@ Before ncurses 6.1, the two utilities were different from each other:
 (not done with \fB@TPUT@\fP).
 .bP
 On the other hand, \fB@TSET@\fP's repertoire of terminal capabilities for
-resetting the terminal was more limited, i.e., only \fBreset_1string\fP, \fBreset_2string\fP and \fBreset_file\fP
+resetting the terminal was more limited,
+i.e., only \fBreset_1string\fP, \fBreset_2string\fP and \fBreset_file\fP
 in contrast to the tab-stops and margins which are set by this utility.
 .bP
 The \fBreset\fP program is usually an alias for \fB@TSET@\fP,
@@ -328,7 +329,8 @@ variable \fBTERM\fR.
 .RE
 .TP 5
 \&
-This example shows \fB@TPUT@\fR processing several capabilities in one invocation.
+This example shows \fB@TPUT@\fR processing several capabilities
+in one invocation.
 It clears the screen,
 moves the cursor to position 10, 10
 and turns on bold (extra bright) mode.
@@ -413,7 +415,8 @@ whose \fBinit\fP and \fBreset\fP  subcommands
 (more than half the program) were incorporated from
 the \fBreset\fP feature of BSD \fBtset\fP written by Eric Allman.
 .PP
-Keith Bostic replaced the BSD \fBtput\fP command in 1989 with a new implementation
+Keith Bostic replaced the BSD \fBtput\fP command in 1989
+with a new implementation
 based on the AT&T System V program \fBtput\fP.
 Like the AT&T program, Bostic's version
 accepted some parameters named for \fIterminfo capabilities\fP
@@ -457,7 +460,8 @@ before falling back to \*(``/dev/tty\*('' and finally just assumes
 a 1200Bd terminal.
 When updating terminal modes, it ignores errors.
 .IP
-Until changes made after ncurses 6.0, \fB@TPUT@\fP did not modify terminal modes.
+Until changes made after ncurses 6.0,
+\fB@TPUT@\fP did not modify terminal modes.
 \fB@TPUT@\fP now uses a similar scheme,
 using functions shared with \fB@TSET@\fP
 (and ultimately based on the 4.4BSD \fBtset\fP).
@@ -525,11 +529,13 @@ only a few may not be apparent.
 X/Open Curses Issue 7 documents \fBtput\fP differently, with \fIcapname\fP
 and the other features used in this implementation.
 .bP
-That is, there are two standards for \fBtput\fP: POSIX (a subset) and X/Open Curses (the full implementation).
+That is, there are two standards for \fBtput\fP:
+POSIX (a subset) and X/Open Curses (the full implementation).
 POSIX documents a subset to avoid the complication of including X/Open Curses
 and the terminal capabilities database.
 .bP
-While it is certainly possible to write a \fBtput\fP program without using curses,
+While it is certainly possible to write a \fBtput\fP program
+without using curses,
 none of the systems which have a curses implementation provide
 a \fBtput\fP utility which does not provide the \fIcapname\fP feature.
 .SH SEE ALSO
