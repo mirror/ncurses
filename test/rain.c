@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.47 2017/09/30 18:10:05 tom Exp $
+ * $Id: rain.c,v 1.48 2018/05/20 19:55:30 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -65,6 +65,14 @@ typedef struct {
 } STATS;
 
 static STATS drop_threads[MAX_THREADS];
+#endif
+
+#if HAVE_USE_WINDOW
+static int
+safe_wgetch(WINDOW *w, void *data GCC_UNUSED)
+{
+    return wgetch(w);
+}
 #endif
 
 static void
@@ -285,7 +293,7 @@ start_drop(DATA * data)
 static int
 get_input(void)
 {
-    return USING_WINDOW(stdscr, wgetch);
+    return USING_WINDOW1(stdscr, wgetch, safe_wgetch);
 }
 
 static void

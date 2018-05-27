@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.52 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_util.3x,v 1.53 2018/05/26 13:39:03 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -233,8 +233,8 @@ There are a few caveats:
 .bP
 the data written is a copy of the \fBWINDOW\fP structure,
 and its associated character cells.
-The format differs between the wide-character (ncursesw) and
-non-wide (ncurses) libraries.
+The format differs between the wide-character (\fBncursesw\fP) and
+non-wide (\fBncurses\fP) libraries.
 You can transfer data between the two, however.
 .bP
 the retrieved window is always created as a top-level window (or pad),
@@ -376,6 +376,12 @@ X/Open Curses does not document the treatment of codes 128 to 159.
 When treating them as \*(``meta\*('' keys
 (or if \fBkeyname\fP is called before initializing curses),
 this implementation returns strings \*(``M\-^@\*('', \*(``M\-^A\*('', etc.
+.PP
+X/Open Curses documents \fBunctrl\fP as declared in \fB<unctrl.h>\fP,
+which \fBncurses\fP does.
+However, \fBncurses\fP' \fB<curses.h>\fP includes \fB<unctrl.h>\fP,
+matching the behavior of SVr4 curses.
+Other implementations may not do that.
 .SS use_env/use_tioctl
 .PP
 If \fBncurses\fP is configured to provide the sp-functions extension,

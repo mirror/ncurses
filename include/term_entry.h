@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.56 2018/05/06 00:19:41 tom Exp $ */
+/* $Id: term_entry.h,v 1.57 2018/05/26 13:50:53 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -46,6 +46,7 @@
 extern "C" {
 #endif
 
+#include <curses.h>
 #include <term.h>
 
 /*

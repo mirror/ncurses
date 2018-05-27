@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.1
-Release: 20180519
+Release: 20180526
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -38,6 +38,11 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 
 %prep
 
+%define debug_package %{nil}
+%setup -q -n ncurses-%{version}-%{release}
+
+%build
+%define my_srcdir ..
 %define CFG_OPTS \\\
 	--target %{_target_platform} \\\
 	--prefix=%{_prefix} \\\
@@ -83,24 +88,23 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 	--without-debug \\\
 	--without-normal
 
-%define debug_package %{nil}
-%setup -q -n ncurses-%{version}-%{release}
-
-%build
+%global _configure ../configure
 
 mkdir BUILD-ncurses6
 pushd BUILD-ncurses6
 CFLAGS="%{CC_NORMAL}" \
-RPATH_LIST=../lib:%{_prefix}/lib \
-../configure %{CFG_OPTS}
+RPATH_LIST=../lib:%{_libdir} \
+CONFIGURE_TOP=%{my_srcdir} \
+%configure %{CFG_OPTS}
 make
 popd
 
 mkdir BUILD-ncursest6
 pushd BUILD-ncursest6
 CFLAGS="%{CC_NORMAL}" \
-RPATH_LIST=../lib:%{_prefix}/lib \
-../configure %{CFG_OPTS} \
+RPATH_LIST=../lib:%{_libdir} \
+CONFIGURE_TOP=%{my_srcdir} \
+%configure %{CFG_OPTS} \
 	--enable-interop \
 	--enable-sp-funcs \
 	--program-suffix=t%{MY_ABI} \
@@ -131,14 +135,35 @@ rm -rf $RPM_BUILD_ROOT
 %{_bindir}/*
 %{_includedir}/*
 %{_libdir}/*
+%exclude %{_bindir}/tict6
+%exclude %{_bindir}/toet6
+%exclude %{_bindir}/tabst6
+%exclude %{_bindir}/resett6
+%exclude %{_bindir}/???*tt6
+%exclude %{_bindir}/?????*t6
+%exclude %{_bindir}/*tw6*
+%exclude %dir %{_includedir}/*tw6*
+%exclude %{_includedir}/*tw6*/*
+%exclude %{_libdir}/*tw6*
+%exclude %{_libdir}/pkgconfig/*tw6*
 
 %files -n ncursest6
 %defattr(-,root,root,-)
-%{_bindir}/*
-%{_includedir}/*
-%{_libdir}/*
+%{_bindir}/tict6
+%{_bindir}/toet6
+%{_bindir}/tabst6
+%{_bindir}/???*tt6
+%{_bindir}/?????*t6
+%{_bindir}/*tw6*
+%{_includedir}/*tw6*
+%{_libdir}/*tw6*
+%{_libdir}/pkgconfig/*tw6*
 
 %changelog
+
+* Sat May 26 2018 Thomas E. Dickey
+- use predefined configure-macro
+- separate ncurses6/ncursest6 packages
 
 * Sat Feb 10 2018 Thomas E. Dickey
 - add ncursest6 package

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.164 2018/01/27 20:27:16 tom Exp $ */
+/* $Id: test.priv.h,v 1.165 2018/05/20 19:55:18 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -903,7 +903,7 @@ extern char *strnames[], *strcodes[], *strfnames[];
  */
 #ifndef NCURSES_CONST
 #ifdef PDCURSES
-#define NCURSES_CONST		const /* close enough */
+#define NCURSES_CONST		const	/* close enough */
 #else
 #define NCURSES_CONST		/* nothing */
 #endif
@@ -1005,10 +1005,12 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 
 #if HAVE_USE_WINDOW
 #define USING_WINDOW(w,func) use_window(w, (NCURSES_WINDOW_CB) func, w)
+#define USING_WINDOW1(w,func,safe) use_window(w, (NCURSES_WINDOW_CB) safe, NULL)
 #define USING_WINDOW2(w,func,data) use_window(w, (NCURSES_WINDOW_CB) func, data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #else
 #define USING_WINDOW(w,func) func(w)
+#define USING_WINDOW1(w,func,safe) func(w,func)
 #define USING_WINDOW2(w,func,data) func(w,data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #endif

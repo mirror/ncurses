@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.41 2017/04/15 18:39:29 tom Exp $
+ * $Id: demo_panels.c,v 1.42 2018/05/20 19:21:18 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -204,7 +204,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 {
     WINDOW *win;
     PANEL *pan = 0;
-    char *userdata = typeMalloc(char, 3);
+    char *userdata = typeMalloc(char, 5);
 
     if ((win = newwin(rows, cols, tly, tlx)) != 0) {
 	keypad(win, TRUE);
@@ -228,7 +228,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 }
 
 static void
-my_remove_panel(PANEL ** pans, int which)
+my_remove_panel(PANEL **pans, int which)
 {
     if (pans[which] != 0) {
 	PANEL *pan = pans[which];
@@ -248,7 +248,7 @@ my_remove_panel(PANEL ** pans, int which)
 #define ABS(a)   ((a) < 0 ? -(a) : (a))
 
 static void
-my_create_panel(PANEL ** pans, int which, FillPanel myFill)
+my_create_panel(PANEL **pans, int which, FillPanel myFill)
 {
     PANEL *pan = 0;
     int code;
@@ -292,7 +292,7 @@ my_create_panel(PANEL ** pans, int which, FillPanel myFill)
 }
 
 static void
-my_move_panel(PANEL ** pans, int which, bool continuous)
+my_move_panel(PANEL **pans, int which, bool continuous)
 {
     if (pans[which] != 0) {
 	int code;
@@ -317,7 +317,7 @@ my_move_panel(PANEL ** pans, int which, bool continuous)
 }
 
 static void
-my_resize_panel(PANEL ** pans, int which, FillPanel myFill)
+my_resize_panel(PANEL **pans, int which, FillPanel myFill)
 {
     if (pans[which] != 0) {
 	int code;
@@ -365,7 +365,7 @@ init_panel(void)
 }
 
 static void
-fill_panel(PANEL * pan)
+fill_panel(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     const char *userptr = (const char *) panel_userptr(pan);
@@ -385,7 +385,7 @@ fill_panel(PANEL * pan)
 }
 
 static void
-fill_unboxed(PANEL * pan)
+fill_unboxed(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     const char *userptr = (const char *) panel_userptr(pan);
@@ -428,7 +428,7 @@ init_wide_panel(void)
 }
 
 static void
-fill_wide_panel(PANEL * pan)
+fill_wide_panel(PANEL *pan)
 {
     WINDOW *win = panel_window(pan);
     int num = ((const char *) panel_userptr(pan))[1];
@@ -450,7 +450,7 @@ fill_wide_panel(PANEL * pan)
 #define MAX_PANELS 5
 
 static int
-which_panel(PANEL * px[MAX_PANELS + 1], PANEL * pan)
+which_panel(PANEL *px[MAX_PANELS + 1], PANEL *pan)
 {
     int result = 0;
     int j;
@@ -465,7 +465,7 @@ which_panel(PANEL * px[MAX_PANELS + 1], PANEL * pan)
 }
 
 static void
-show_panels(PANEL * px[MAX_PANELS + 1])
+show_panels(PANEL *px[MAX_PANELS + 1])
 {
     static const char *help[] =
     {
@@ -556,7 +556,7 @@ wrapper(top_panel)
 /* *INDENT-ON* */
 
 static void
-do_panel(PANEL * px[MAX_PANELS + 1],
+do_panel(PANEL *px[MAX_PANELS + 1],
 	 NCURSES_CONST char *cmd,
 	 FillPanel myFill)
 {
@@ -622,7 +622,7 @@ ok_digit(int ch)
  * End the command with a newline.  Reject other characters.
  */
 static bool
-get_command(PANEL * px[MAX_PANELS + 1], char *buffer, int limit)
+get_command(PANEL *px[MAX_PANELS + 1], char *buffer, int limit)
 {
     int length = 0;
     int y0, x0;

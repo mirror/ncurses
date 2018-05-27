@@ -737,15 +737,15 @@ Options to Specify the Libraries Built/Used:
   --with-lib-prefix       override library-prefix
   --with-termlib          generate separate terminfo library
   --with-ticlib           generate separate tic library
-  --with-gpm              use Alessandro Rubini's GPM library
-  --without-dlsym         do not use dlsym() to load GPM dynamically
-  --with-sysmouse         use sysmouse (FreeBSD console)
   --enable-rpath          use rpath option when generating shared libraries
   --disable-relink        relink shared libraries during install
   --with-shlib-version=X  Specify rel or abi version for shared libs
   --with-libtool-opts=XXX specify additional libtool options
   --with-export-syms=XXX  limit exported symbols using libtool
   --with-versioned-syms=X markup versioned symbols using ld
+  --with-gpm              use Alessandro Rubini's GPM library
+  --without-dlsym         do not use dlsym() to load GPM dynamically
+  --with-sysmouse         use sysmouse (FreeBSD console)
   --disable-lib-suffixes  disable library suffixes
   --disable-rpath-hack    don't add rpath options for additional libraries
 Fine-Tuning Your Configuration:
@@ -5279,631 +5279,6 @@ fi;
 echo "$as_me:5279: result: $with_ticlib" >&5
 echo "${ECHO_T}$with_ticlib" >&6
 
-### Checks for special libraries, must be done up-front.
-SHLIB_LIST=""
-
-echo "$as_me:5285: checking if you want to link with the GPM mouse library" >&5
-echo $ECHO_N "checking if you want to link with the GPM mouse library... $ECHO_C" >&6
-
-# Check whether --with-gpm or --without-gpm was given.
-if test "${with_gpm+set}" = set; then
-  withval="$with_gpm"
-  with_gpm=$withval
-else
-  with_gpm=maybe
-fi;
-echo "$as_me:5295: result: $with_gpm" >&5
-echo "${ECHO_T}$with_gpm" >&6
-
-if test "$with_gpm" != no ; then
-	echo "$as_me:5299: checking for gpm.h" >&5
-echo $ECHO_N "checking for gpm.h... $ECHO_C" >&6
-if test "${ac_cv_header_gpm_h+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-#line 5305 "configure"
-#include "confdefs.h"
-#include <gpm.h>
-_ACEOF
-if { (eval echo "$as_me:5309: \"$ac_cpp conftest.$ac_ext\"") >&5
-  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
-  ac_status=$?
-  egrep -v '^ *\+' conftest.er1 >conftest.err
-  rm -f conftest.er1
-  cat conftest.err >&5
-  echo "$as_me:5315: \$? = $ac_status" >&5
-  (exit $ac_status); } >/dev/null; then
-  if test -s conftest.err; then
-    ac_cpp_err=$ac_c_preproc_warn_flag
-  else
-    ac_cpp_err=
-  fi
-else
-  ac_cpp_err=yes
-fi
-if test -z "$ac_cpp_err"; then
-  ac_cv_header_gpm_h=yes
-else
-  echo "$as_me: failed program was:" >&5
-  cat conftest.$ac_ext >&5
-  ac_cv_header_gpm_h=no
-fi
-rm -f conftest.err conftest.$ac_ext
-fi
-echo "$as_me:5334: result: $ac_cv_header_gpm_h" >&5
-echo "${ECHO_T}$ac_cv_header_gpm_h" >&6
-if test $ac_cv_header_gpm_h = yes; then
-
-cat >>confdefs.h <<\EOF
-#define HAVE_GPM_H 1
-EOF
-
-		if test "$with_gpm" != yes && test "$with_gpm" != maybe ; then
-			test -n "$verbose" && echo "	assuming we really have GPM library" 1>&6
-
-echo "${as_me:-configure}:5345: testing assuming we really have GPM library ..." 1>&5
-
-cat >>confdefs.h <<\EOF
-#define HAVE_LIBGPM 1
-EOF
-
-			with_gpm=yes
-		else
-			echo "$as_me:5353: checking for Gpm_Open in -lgpm" >&5
-echo $ECHO_N "checking for Gpm_Open in -lgpm... $ECHO_C" >&6
-if test "${ac_cv_lib_gpm_Gpm_Open+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lgpm  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-#line 5361 "configure"
-#include "confdefs.h"
-
-/* Override any gcc2 internal prototype to avoid an error.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-/* We use char because int might match the return type of a gcc2
-   builtin and then its argument prototype would still apply.  */
-char Gpm_Open ();
-int
-main (void)
-{
-Gpm_Open ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5380: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5383: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5386: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5389: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ac_cv_lib_gpm_Gpm_Open=yes
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-ac_cv_lib_gpm_Gpm_Open=no
-fi
-rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-echo "$as_me:5400: result: $ac_cv_lib_gpm_Gpm_Open" >&5
-echo "${ECHO_T}$ac_cv_lib_gpm_Gpm_Open" >&6
-if test $ac_cv_lib_gpm_Gpm_Open = yes; then
-  with_gpm=yes
-else
-
-				if test "$with_gpm" = maybe; then
-					{ echo "$as_me:5407: WARNING: Cannot link with GPM library" >&5
-echo "$as_me: WARNING: Cannot link with GPM library" >&2;}
-					with_gpm=no
-				else
-					{ { echo "$as_me:5411: error: Cannot link with GPM library" >&5
-echo "$as_me: error: Cannot link with GPM library" >&2;}
-   { (exit 1); exit 1; }; }
-				fi
-
-fi
-
-		fi
-
-else
-
-		test "$with_gpm" != maybe && { echo "$as_me:5422: WARNING: Cannot find GPM header" >&5
-echo "$as_me: WARNING: Cannot find GPM header" >&2;}
-		with_gpm=no
-
-fi
-
-fi
-
-if test "$with_gpm" != no ; then
-	echo "$as_me:5431: checking if you want to load GPM dynamically" >&5
-echo $ECHO_N "checking if you want to load GPM dynamically... $ECHO_C" >&6
-
-# Check whether --with-dlsym or --without-dlsym was given.
-if test "${with_dlsym+set}" = set; then
-  withval="$with_dlsym"
-  with_dlsym=$withval
-else
-  with_dlsym=yes
-fi;
-	echo "$as_me:5441: result: $with_dlsym" >&5
-echo "${ECHO_T}$with_dlsym" >&6
-	if test "x$with_dlsym" = xyes ; then
-
-cf_have_dlsym=no
-echo "$as_me:5446: checking for dlsym" >&5
-echo $ECHO_N "checking for dlsym... $ECHO_C" >&6
-if test "${ac_cv_func_dlsym+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  cat >conftest.$ac_ext <<_ACEOF
-#line 5452 "configure"
-#include "confdefs.h"
-/* System header to define __stub macros and hopefully few prototypes,
-    which can conflict with char dlsym (); below.  */
-#include <assert.h>
-/* Override any gcc2 internal prototype to avoid an error.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-/* We use char because int might match the return type of a gcc2
-   builtin and then its argument prototype would still apply.  */
-char dlsym ();
-char (*f) ();
-
-int
-main (void)
-{
-/* The GNU C library defines this for functions which it implements
-    to always fail with ENOSYS.  Some functions are actually named
-    something starting with __ and the normal name is an alias.  */
-#if defined (__stub_dlsym) || defined (__stub___dlsym)
-choke me
-#else
-f = dlsym; /* workaround for ICC 12.0.3 */ if (f == 0) return 1;
-#endif
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5483: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5486: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5489: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5492: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ac_cv_func_dlsym=yes
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-ac_cv_func_dlsym=no
-fi
-rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-fi
-echo "$as_me:5502: result: $ac_cv_func_dlsym" >&5
-echo "${ECHO_T}$ac_cv_func_dlsym" >&6
-if test $ac_cv_func_dlsym = yes; then
-  cf_have_dlsym=yes
-else
-
-cf_have_libdl=no
-echo "$as_me:5509: checking for dlsym in -ldl" >&5
-echo $ECHO_N "checking for dlsym in -ldl... $ECHO_C" >&6
-if test "${ac_cv_lib_dl_dlsym+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-ldl  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-#line 5517 "configure"
-#include "confdefs.h"
-
-/* Override any gcc2 internal prototype to avoid an error.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-/* We use char because int might match the return type of a gcc2
-   builtin and then its argument prototype would still apply.  */
-char dlsym ();
-int
-main (void)
-{
-dlsym ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5536: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5539: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5542: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5545: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ac_cv_lib_dl_dlsym=yes
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-ac_cv_lib_dl_dlsym=no
-fi
-rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-echo "$as_me:5556: result: $ac_cv_lib_dl_dlsym" >&5
-echo "${ECHO_T}$ac_cv_lib_dl_dlsym" >&6
-if test $ac_cv_lib_dl_dlsym = yes; then
-
-	cf_have_dlsym=yes
-	cf_have_libdl=yes
-fi
-
-fi
-
-if test "$cf_have_dlsym" = yes ; then
-	test "$cf_have_libdl" = yes && {
-cf_add_libs="-ldl"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
-			cf_add_1lib=
-			break
-		fi
-	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
-done
-LIBS="$cf_add_libs"
- }
-
-	echo "$as_me:5585: checking whether able to link to dl*() functions" >&5
-echo $ECHO_N "checking whether able to link to dl*() functions... $ECHO_C" >&6
-	cat >conftest.$ac_ext <<_ACEOF
-#line 5588 "configure"
-#include "confdefs.h"
-#include <dlfcn.h>
-int
-main (void)
-{
-
-		void *obj;
-		if ((obj = dlopen("filename", 0)) != 0) {
-			if (dlsym(obj, "symbolname") == 0) {
-			dlclose(obj);
-			}
-		}
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5606: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5609: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5612: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5615: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-
-cat >>confdefs.h <<\EOF
-#define HAVE_LIBDL 1
-EOF
-
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-
-		{ { echo "$as_me:5626: error: Cannot link test program for libdl" >&5
-echo "$as_me: error: Cannot link test program for libdl" >&2;}
-   { (exit 1); exit 1; }; }
-fi
-rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-	echo "$as_me:5631: result: ok" >&5
-echo "${ECHO_T}ok" >&6
-else
-	{ { echo "$as_me:5634: error: Cannot find dlsym function" >&5
-echo "$as_me: error: Cannot find dlsym function" >&2;}
-   { (exit 1); exit 1; }; }
-fi
-
-		if test "x$with_gpm" != xyes ; then
-			test -n "$verbose" && echo "	assuming soname for gpm is $with_gpm" 1>&6
-
-echo "${as_me:-configure}:5642: testing assuming soname for gpm is $with_gpm ..." 1>&5
-
-			cf_cv_gpm_soname="$with_gpm"
-		else
-
-echo "$as_me:5647: checking for soname of gpm library" >&5
-echo $ECHO_N "checking for soname of gpm library... $ECHO_C" >&6
-if test "${cf_cv_gpm_soname+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-cf_cv_gpm_soname=unknown
-if test "$cross_compiling" != yes ; then
-cat >conftest.$ac_ext <<CF_EOF
-#include <gpm.h>
-int main(void)
-{
-if (Gpm_Open(0,0)) Gpm_Close();
-	${cf_cv_main_return:-return}(0);
-}
-CF_EOF
-cf_save_LIBS="$LIBS"
-
-cf_add_libs="-lgpm"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
-			cf_add_1lib=
-			break
-		fi
-	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
-done
-LIBS="$cf_add_libs"
-
-	if { (eval echo "$as_me:5681: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:5684: \$? = $ac_status" >&5
-  (exit $ac_status); } ; then
-		if { (eval echo "$as_me:5686: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5689: \$? = $ac_status" >&5
-  (exit $ac_status); } ; then
-			cf_cv_gpm_soname=`ldd conftest$ac_exeext 2>/dev/null | sed -e 's,^.*/,,' -e 's, .*$,,' | fgrep libgpm.`
-			test -z "$cf_cv_gpm_soname" && cf_cv_gpm_soname=unknown
-		fi
-	fi
-rm -rf conftest*
-LIBS="$cf_save_LIBS"
-fi
-
-fi
-echo "$as_me:5700: result: $cf_cv_gpm_soname" >&5
-echo "${ECHO_T}$cf_cv_gpm_soname" >&6
-
-		fi
-		test "$cf_cv_gpm_soname" != "unknown" &&
-cat >>confdefs.h <<EOF
-#define LIBGPM_SONAME "$cf_cv_gpm_soname"
-EOF
-
-		SHLIB_LIST="-ldl $SHLIB_LIST"
-	else
-		SHLIB_LIST="-lgpm $SHLIB_LIST"
-
-cf_add_libs="-lgpm"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $TEST_LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
-			cf_add_1lib=
-			break
-		fi
-	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
-done
-TEST_LIBS="$cf_add_libs"
-
-	fi
-
-cat >>confdefs.h <<\EOF
-#define HAVE_LIBGPM 1
-EOF
-
-echo "$as_me:5735: checking for Gpm_Wgetch in -lgpm" >&5
-echo $ECHO_N "checking for Gpm_Wgetch in -lgpm... $ECHO_C" >&6
-if test "${ac_cv_lib_gpm_Gpm_Wgetch+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-  ac_check_lib_save_LIBS=$LIBS
-LIBS="-lgpm  $LIBS"
-cat >conftest.$ac_ext <<_ACEOF
-#line 5743 "configure"
-#include "confdefs.h"
-
-/* Override any gcc2 internal prototype to avoid an error.  */
-#ifdef __cplusplus
-extern "C"
-#endif
-/* We use char because int might match the return type of a gcc2
-   builtin and then its argument prototype would still apply.  */
-char Gpm_Wgetch ();
-int
-main (void)
-{
-Gpm_Wgetch ();
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:5762: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5765: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:5768: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5771: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  ac_cv_lib_gpm_Gpm_Wgetch=yes
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-ac_cv_lib_gpm_Gpm_Wgetch=no
-fi
-rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-LIBS=$ac_check_lib_save_LIBS
-fi
-echo "$as_me:5782: result: $ac_cv_lib_gpm_Gpm_Wgetch" >&5
-echo "${ECHO_T}$ac_cv_lib_gpm_Gpm_Wgetch" >&6
-if test $ac_cv_lib_gpm_Gpm_Wgetch = yes; then
-
-echo "$as_me:5786: checking if GPM is weakly bound to curses library" >&5
-echo $ECHO_N "checking if GPM is weakly bound to curses library... $ECHO_C" >&6
-if test "${cf_cv_check_gpm_wgetch+set}" = set; then
-  echo $ECHO_N "(cached) $ECHO_C" >&6
-else
-
-cf_cv_check_gpm_wgetch=unknown
-if test "$cross_compiling" != yes ; then
-
-cat >conftest.$ac_ext <<CF_EOF
-#include <gpm.h>
-int main(void)
-{
-	Gpm_Wgetch();
-	${cf_cv_main_return:-return}(0);
-}
-CF_EOF
-
-	cf_save_LIBS="$LIBS"
-	# This only works if we can look at the symbol table.  If a shared
-	# library is stripped for install, we cannot use that.  So we're forced
-	# to rely on the static library, noting that some packagers may not
-	# include it.
-	LIBS="-static -lgpm -dynamic $LIBS"
-	if { (eval echo "$as_me:5810: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:5813: \$? = $ac_status" >&5
-  (exit $ac_status); } ; then
-		if { (eval echo "$as_me:5815: \"$ac_link\"") >&5
-  (eval $ac_link) 2>&5
-  ac_status=$?
-  echo "$as_me:5818: \$? = $ac_status" >&5
-  (exit $ac_status); } ; then
-			cf_cv_check_gpm_wgetch=`nm conftest$ac_exeext | egrep '\<wgetch\>' | egrep '\<[vVwW]\>'`
-			test -n "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=yes
-			test -z "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=no
-		fi
-	fi
-	rm -rf conftest*
-	LIBS="$cf_save_LIBS"
-fi
-
-fi
-echo "$as_me:5830: result: $cf_cv_check_gpm_wgetch" >&5
-echo "${ECHO_T}$cf_cv_check_gpm_wgetch" >&6
-
-if test "$cf_cv_check_gpm_wgetch" != yes ; then
-	{ echo "$as_me:5834: WARNING: GPM library is already linked with curses - read the FAQ" >&5
-echo "$as_me: WARNING: GPM library is already linked with curses - read the FAQ" >&2;}
-fi
-
-fi
-
-fi
-
-# not everyone has "test -c"
-if test -c /dev/sysmouse 2>/dev/null ; then
-echo "$as_me:5844: checking if you want to use sysmouse" >&5
-echo $ECHO_N "checking if you want to use sysmouse... $ECHO_C" >&6
-
-# Check whether --with-sysmouse or --without-sysmouse was given.
-if test "${with_sysmouse+set}" = set; then
-  withval="$with_sysmouse"
-  cf_with_sysmouse=$withval
-else
-  cf_with_sysmouse=maybe
-fi;
-	if test "$cf_with_sysmouse" != no ; then
-	cat >conftest.$ac_ext <<_ACEOF
-#line 5856 "configure"
-#include "confdefs.h"
-
-#include <osreldate.h>
-#if (__FreeBSD_version >= 400017)
-#include <sys/consio.h>
-#include <sys/fbio.h>
-#else
-#include <machine/console.h>
-#endif
-
-int
-main (void)
-{
-
-	struct mouse_info the_mouse;
-	ioctl(0, CONS_MOUSECTL, &the_mouse);
-
-  ;
-  return 0;
-}
-_ACEOF
-rm -f conftest.$ac_objext
-if { (eval echo "$as_me:5879: \"$ac_compile\"") >&5
-  (eval $ac_compile) 2>&5
-  ac_status=$?
-  echo "$as_me:5882: \$? = $ac_status" >&5
-  (exit $ac_status); } &&
-         { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:5885: \"$ac_try\"") >&5
-  (eval $ac_try) 2>&5
-  ac_status=$?
-  echo "$as_me:5888: \$? = $ac_status" >&5
-  (exit $ac_status); }; }; then
-  cf_with_sysmouse=yes
-else
-  echo "$as_me: failed program was:" >&5
-cat conftest.$ac_ext >&5
-cf_with_sysmouse=no
-fi
-rm -f conftest.$ac_objext conftest.$ac_ext
-	fi
-echo "$as_me:5898: result: $cf_with_sysmouse" >&5
-echo "${ECHO_T}$cf_with_sysmouse" >&6
-test "$cf_with_sysmouse" = yes &&
-cat >>confdefs.h <<\EOF
-#define USE_SYSMOUSE 1
-EOF
-
-fi
-
 if test X"$CC_G_OPT" = X"" ; then
 	CC_G_OPT='-g'
 	test -n "$GCC" && test "x${ac_cv_prog_cc_g}" != xyes && CC_G_OPT=''
@@ -5914,7 +5289,7 @@ if test X"$CXX_G_OPT" = X"" ; then
 	test -n "$GXX" && test "x${ac_cv_prog_cxx_g}" != xyes && CXX_G_OPT=''
 fi
 
-echo "$as_me:5917: checking for default loader flags" >&5
+echo "$as_me:5292: checking for default loader flags" >&5
 echo $ECHO_N "checking for default loader flags... $ECHO_C" >&6
 case $DFT_LWR_MODEL in
 (libtool) LD_MODEL=''   ;;
@@ -5923,13 +5298,13 @@ case $DFT_LWR_MODEL in
 (profile) LD_MODEL='-pg';;
 (shared)  LD_MODEL=''   ;;
 esac
-echo "$as_me:5926: result: $LD_MODEL" >&5
+echo "$as_me:5301: result: $LD_MODEL" >&5
 echo "${ECHO_T}$LD_MODEL" >&6
 
 case $DFT_LWR_MODEL in
 (shared)
 
-echo "$as_me:5932: checking if rpath option should be used" >&5
+echo "$as_me:5307: checking if rpath option should be used" >&5
 echo $ECHO_N "checking if rpath option should be used... $ECHO_C" >&6
 
 # Check whether --enable-rpath or --disable-rpath was given.
@@ -5939,10 +5314,10 @@ if test "${enable_rpath+set}" = set; then
 else
   cf_cv_enable_rpath=no
 fi;
-echo "$as_me:5942: result: $cf_cv_enable_rpath" >&5
+echo "$as_me:5317: result: $cf_cv_enable_rpath" >&5
 echo "${ECHO_T}$cf_cv_enable_rpath" >&6
 
-echo "$as_me:5945: checking if shared libraries should be relinked during install" >&5
+echo "$as_me:5320: checking if shared libraries should be relinked during install" >&5
 echo $ECHO_N "checking if shared libraries should be relinked during install... $ECHO_C" >&6
 
 # Check whether --enable-relink or --disable-relink was given.
@@ -5952,7 +5327,7 @@ if test "${enable_relink+set}" = set; then
 else
   cf_cv_do_relink=yes
 fi;
-echo "$as_me:5955: result: $cf_cv_do_relink" >&5
+echo "$as_me:5330: result: $cf_cv_do_relink" >&5
 echo "${ECHO_T}$cf_cv_do_relink" >&6
 	;;
 esac
@@ -5961,7 +5336,7 @@ esac
 rel_builddir=..
 
 LD_RPATH_OPT=
-echo "$as_me:5964: checking for an rpath option" >&5
+echo "$as_me:5339: checking for an rpath option" >&5
 echo $ECHO_N "checking for an rpath option... $ECHO_C" >&6
 case $cf_cv_system_name in
 (irix*)
@@ -5992,12 +5367,12 @@ case $cf_cv_system_name in
 (*)
 	;;
 esac
-echo "$as_me:5995: result: $LD_RPATH_OPT" >&5
+echo "$as_me:5370: result: $LD_RPATH_OPT" >&5
 echo "${ECHO_T}$LD_RPATH_OPT" >&6
 
 case "x$LD_RPATH_OPT" in
 (x-R*)
-	echo "$as_me:6000: checking if we need a space after rpath option" >&5
+	echo "$as_me:5375: checking if we need a space after rpath option" >&5
 echo $ECHO_N "checking if we need a space after rpath option... $ECHO_C" >&6
 	cf_save_LIBS="$LIBS"
 
@@ -6018,7 +5393,7 @@ done
 LIBS="$cf_add_libs"
 
 	cat >conftest.$ac_ext <<_ACEOF
-#line 6021 "configure"
+#line 5396 "configure"
 #include "confdefs.h"
 
 int
@@ -6030,16 +5405,16 @@ main (void)
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:6033: \"$ac_link\"") >&5
+if { (eval echo "$as_me:5408: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:6036: \$? = $ac_status" >&5
+  echo "$as_me:5411: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:6039: \"$ac_try\"") >&5
+  { (eval echo "$as_me:5414: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:6042: \$? = $ac_status" >&5
+  echo "$as_me:5417: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   cf_rpath_space=no
 else
@@ -6049,7 +5424,7 @@ cf_rpath_space=yes
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 	LIBS="$cf_save_LIBS"
-	echo "$as_me:6052: result: $cf_rpath_space" >&5
+	echo "$as_me:5427: result: $cf_rpath_space" >&5
 echo "${ECHO_T}$cf_rpath_space" >&6
 	test "$cf_rpath_space" = yes && LD_RPATH_OPT="$LD_RPATH_OPT "
 	;;
@@ -6070,7 +5445,7 @@ esac
 	cf_ld_rpath_opt=
 	test "$cf_cv_enable_rpath" = yes && cf_ld_rpath_opt="$LD_RPATH_OPT"
 
-	echo "$as_me:6073: checking if release/abi version should be used for shared libs" >&5
+	echo "$as_me:5448: checking if release/abi version should be used for shared libs" >&5
 echo $ECHO_N "checking if release/abi version should be used for shared libs... $ECHO_C" >&6
 
 # Check whether --with-shlib-version or --without-shlib-version was given.
@@ -6085,9 +5460,9 @@ if test "${with_shlib_version+set}" = set; then
 		cf_cv_shlib_version=$withval
 		;;
 	(*)
-		echo "$as_me:6088: result: $withval" >&5
+		echo "$as_me:5463: result: $withval" >&5
 echo "${ECHO_T}$withval" >&6
-		{ { echo "$as_me:6090: error: option value must be one of: rel, abi, or auto" >&5
+		{ { echo "$as_me:5465: error: option value must be one of: rel, abi, or auto" >&5
 echo "$as_me: error: option value must be one of: rel, abi, or auto" >&2;}
    { (exit 1); exit 1; }; }
 		;;
@@ -6096,7 +5471,7 @@ echo "$as_me: error: option value must be one of: rel, abi, or auto" >&2;}
 else
   cf_cv_shlib_version=auto
 fi;
-	echo "$as_me:6099: result: $cf_cv_shlib_version" >&5
+	echo "$as_me:5474: result: $cf_cv_shlib_version" >&5
 echo "${ECHO_T}$cf_cv_shlib_version" >&6
 
 	cf_cv_rm_so_locs=no
@@ -6119,14 +5494,14 @@ echo "${ECHO_T}$cf_cv_shlib_version" >&6
 
 	if test "$cf_try_fPIC" = yes
 	then
-		echo "$as_me:6122: checking which $CC option to use" >&5
+		echo "$as_me:5497: checking which $CC option to use" >&5
 echo $ECHO_N "checking which $CC option to use... $ECHO_C" >&6
 		cf_save_CFLAGS="$CFLAGS"
 		for CC_SHARED_OPTS in -fPIC -fpic ''
 		do
 			CFLAGS="$cf_save_CFLAGS $CC_SHARED_OPTS"
 			cat >conftest.$ac_ext <<_ACEOF
-#line 6129 "configure"
+#line 5504 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 int
@@ -6138,16 +5513,16 @@ int x = 1
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:6141: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:5516: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:6144: \$? = $ac_status" >&5
+  echo "$as_me:5519: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:6147: \"$ac_try\"") >&5
+  { (eval echo "$as_me:5522: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:6150: \$? = $ac_status" >&5
+  echo "$as_me:5525: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   break
 else
@@ -6156,7 +5531,7 @@ cat conftest.$ac_ext >&5
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
 		done
-		echo "$as_me:6159: result: $CC_SHARED_OPTS" >&5
+		echo "$as_me:5534: result: $CC_SHARED_OPTS" >&5
 echo "${ECHO_T}$CC_SHARED_OPTS" >&6
 		CFLAGS="$cf_save_CFLAGS"
 	fi
@@ -6227,7 +5602,7 @@ CF_EOF
 		MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -dynamiclib -install_name ${libdir}/`basename $@` -compatibility_version ${ABI_VERSION} -current_version ${ABI_VERSION} -o $@'
 		test "$cf_cv_shlib_version" = auto && cf_cv_shlib_version=abi
 		cf_cv_shlib_version_infix=yes
-		echo "$as_me:6230: checking if ld -search_paths_first works" >&5
+		echo "$as_me:5605: checking if ld -search_paths_first works" >&5
 echo $ECHO_N "checking if ld -search_paths_first works... $ECHO_C" >&6
 if test "${cf_cv_ldflags_search_paths_first+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -6236,7 +5611,7 @@ else
 			cf_save_LDFLAGS=$LDFLAGS
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 			cat >conftest.$ac_ext <<_ACEOF
-#line 6239 "configure"
+#line 5614 "configure"
 #include "confdefs.h"
 
 int
@@ -6248,16 +5623,16 @@ int i;
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:6251: \"$ac_link\"") >&5
+if { (eval echo "$as_me:5626: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:6254: \$? = $ac_status" >&5
+  echo "$as_me:5629: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:6257: \"$ac_try\"") >&5
+  { (eval echo "$as_me:5632: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:6260: \$? = $ac_status" >&5
+  echo "$as_me:5635: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   cf_cv_ldflags_search_paths_first=yes
 else
@@ -6268,7 +5643,7 @@ fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 				LDFLAGS=$cf_save_LDFLAGS
 fi
-echo "$as_me:6271: result: $cf_cv_ldflags_search_paths_first" >&5
+echo "$as_me:5646: result: $cf_cv_ldflags_search_paths_first" >&5
 echo "${ECHO_T}$cf_cv_ldflags_search_paths_first" >&6
 		if test $cf_cv_ldflags_search_paths_first = yes; then
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
@@ -6493,7 +5868,7 @@ CF_EOF
 			do
 				CFLAGS="$cf_shared_opts $cf_save_CFLAGS"
 				cat >conftest.$ac_ext <<_ACEOF
-#line 6496 "configure"
+#line 5871 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 int
@@ -6505,16 +5880,16 @@ printf("Hello\n");
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:6508: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:5883: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:6511: \$? = $ac_status" >&5
+  echo "$as_me:5886: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:6514: \"$ac_try\"") >&5
+  { (eval echo "$as_me:5889: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:6517: \$? = $ac_status" >&5
+  echo "$as_me:5892: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   break
 else
@@ -6551,7 +5926,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 			test "$cf_cv_do_symlinks" = no && cf_cv_do_symlinks=yes
 			;;
 		(*)
-			{ echo "$as_me:6554: WARNING: ignored --with-shlib-version" >&5
+			{ echo "$as_me:5929: WARNING: ignored --with-shlib-version" >&5
 echo "$as_me: WARNING: ignored --with-shlib-version" >&2;}
 			;;
 		esac
@@ -6561,7 +5936,7 @@ echo "$as_me: WARNING: ignored --with-shlib-version" >&2;}
 	if test -n "$cf_try_cflags"
 	then
 cat > conftest.$ac_ext <<EOF
-#line 6564 "${as_me:-configure}"
+#line 5939 "${as_me:-configure}"
 #include <stdio.h>
 int main(int argc, char *argv[])
 {
@@ -6573,18 +5948,18 @@ EOF
 		for cf_opt in $cf_try_cflags
 		do
 			CFLAGS="$cf_save_CFLAGS -$cf_opt"
-			echo "$as_me:6576: checking if CFLAGS option -$cf_opt works" >&5
+			echo "$as_me:5951: checking if CFLAGS option -$cf_opt works" >&5
 echo $ECHO_N "checking if CFLAGS option -$cf_opt works... $ECHO_C" >&6
-			if { (eval echo "$as_me:6578: \"$ac_compile\"") >&5
+			if { (eval echo "$as_me:5953: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:6581: \$? = $ac_status" >&5
+  echo "$as_me:5956: \$? = $ac_status" >&5
   (exit $ac_status); }; then
-				echo "$as_me:6583: result: yes" >&5
+				echo "$as_me:5958: result: yes" >&5
 echo "${ECHO_T}yes" >&6
 				cf_save_CFLAGS="$CFLAGS"
 			else
-				echo "$as_me:6587: result: no" >&5
+				echo "$as_me:5962: result: no" >&5
 echo "${ECHO_T}no" >&6
 			fi
 		done
@@ -6599,17 +5974,17 @@ echo "${ECHO_T}no" >&6
 
 	test -n "$verbose" && echo "	CC_SHARED_OPTS: $CC_SHARED_OPTS" 1>&6
 
-echo "${as_me:-configure}:6602: testing CC_SHARED_OPTS: $CC_SHARED_OPTS ..." 1>&5
+echo "${as_me:-configure}:5977: testing CC_SHARED_OPTS: $CC_SHARED_OPTS ..." 1>&5
 
 	test -n "$verbose" && echo "	MK_SHARED_LIB:  $MK_SHARED_LIB" 1>&6
 
-echo "${as_me:-configure}:6606: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
+echo "${as_me:-configure}:5981: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
 
 for model in $cf_list_models; do
 	case $model in
 	(libtool)
 
-echo "$as_me:6612: checking for additional libtool options" >&5
+echo "$as_me:5987: checking for additional libtool options" >&5
 echo $ECHO_N "checking for additional libtool options... $ECHO_C" >&6
 
 # Check whether --with-libtool-opts or --without-libtool-opts was given.
@@ -6619,7 +5994,7 @@ if test "${with_libtool_opts+set}" = set; then
 else
   with_libtool_opts=no
 fi;
-echo "$as_me:6622: result: $with_libtool_opts" >&5
+echo "$as_me:5997: result: $with_libtool_opts" >&5
 echo "${ECHO_T}$with_libtool_opts" >&6
 
 case .$with_libtool_opts in
@@ -6630,7 +6005,7 @@ case .$with_libtool_opts in
 	;;
 esac
 
-echo "$as_me:6633: checking if exported-symbols file should be used" >&5
+echo "$as_me:6008: checking if exported-symbols file should be used" >&5
 echo $ECHO_N "checking if exported-symbols file should be used... $ECHO_C" >&6
 
 # Check whether --with-export-syms or --without-export-syms was given.
@@ -6645,7 +6020,7 @@ then
 	with_export_syms='${top_srcdir}/package/${PACKAGE}.sym'
 
 fi
-echo "$as_me:6648: result: $with_export_syms" >&5
+echo "$as_me:6023: result: $with_export_syms" >&5
 echo "${ECHO_T}$with_export_syms" >&6
 if test "x$with_export_syms" != xno
 then
@@ -6656,15 +6031,15 @@ fi
 		;;
 	(shared)
 		if test "$CC_SHARED_OPTS" = "unknown"; then
-			{ { echo "$as_me:6659: error: Shared libraries are not supported in this version" >&5
+			{ { echo "$as_me:6034: error: Shared libraries are not supported in this version" >&5
 echo "$as_me: error: Shared libraries are not supported in this version" >&2;}
    { (exit 1); exit 1; }; }
 		fi
 		# workaround for inept transition to PIE vs PIC...
-		echo "$as_me:6664: checking if current CFLAGS link properly" >&5
+		echo "$as_me:6039: checking if current CFLAGS link properly" >&5
 echo $ECHO_N "checking if current CFLAGS link properly... $ECHO_C" >&6
 		cat >conftest.$ac_ext <<_ACEOF
-#line 6667 "configure"
+#line 6042 "configure"
 #include "confdefs.h"
 #include <stdio.h>
 int
@@ -6676,16 +6051,16 @@ printf("Hello work\n");
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:6679: \"$ac_link\"") >&5
+if { (eval echo "$as_me:6054: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:6682: \$? = $ac_status" >&5
+  echo "$as_me:6057: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:6685: \"$ac_try\"") >&5
+  { (eval echo "$as_me:6060: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:6688: \$? = $ac_status" >&5
+  echo "$as_me:6063: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   cf_cflags_work=yes
 else
@@ -6694,18 +6069,18 @@ cat conftest.$ac_ext >&5
 cf_cflags_work=no
 fi
 rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
-		echo "$as_me:6697: result: $cf_cflags_work" >&5
+		echo "$as_me:6072: result: $cf_cflags_work" >&5
 echo "${ECHO_T}$cf_cflags_work" >&6
 		if test "$cf_cflags_work" = no
 		then
 			test -n "$verbose" && echo "	try to work around by appending shared-options" 1>&6
 
-echo "${as_me:-configure}:6703: testing try to work around by appending shared-options ..." 1>&5
+echo "${as_me:-configure}:6078: testing try to work around by appending shared-options ..." 1>&5
 
 			CFLAGS="$CFLAGS $CC_SHARED_OPTS"
 		fi
 
-echo "$as_me:6708: checking if versioned-symbols file should be used" >&5
+echo "$as_me:6083: checking if versioned-symbols file should be used" >&5
 echo $ECHO_N "checking if versioned-symbols file should be used... $ECHO_C" >&6
 
 # Check whether --with-versioned-syms or --without-versioned-syms was given.
@@ -6720,7 +6095,7 @@ then
 	with_versioned_syms='${top_srcdir}/package/${PACKAGE}.map'
 
 fi
-echo "$as_me:6723: result: $with_versioned_syms" >&5
+echo "$as_me:6098: result: $with_versioned_syms" >&5
 echo "${ECHO_T}$with_versioned_syms" >&6
 
 RESULTING_SYMS=
@@ -6736,7 +6111,7 @@ then
 		MK_SHARED_LIB=`echo "$MK_SHARED_LIB" | sed -e "s%-Wl,%\\${VERSIONED_SYMS} -Wl,%"`
 		test -n "$verbose" && echo "	MK_SHARED_LIB:  $MK_SHARED_LIB" 1>&6
 
-echo "${as_me:-configure}:6739: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
+echo "${as_me:-configure}:6114: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
 
 		;;
 	(*-dy\ *)
@@ -6744,11 +6119,11 @@ echo "${as_me:-configure}:6739: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
 		MK_SHARED_LIB=`echo "$MK_SHARED_LIB" | sed -e "s%-dy%\\${VERSIONED_SYMS} -dy%"`
 		test -n "$verbose" && echo "	MK_SHARED_LIB:  $MK_SHARED_LIB" 1>&6
 
-echo "${as_me:-configure}:6747: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
+echo "${as_me:-configure}:6122: testing MK_SHARED_LIB:  $MK_SHARED_LIB ..." 1>&5
 
 		;;
 	(*)
-		{ echo "$as_me:6751: WARNING: this system does not support versioned-symbols" >&5
+		{ echo "$as_me:6126: WARNING: this system does not support versioned-symbols" >&5
 echo "$as_me: WARNING: this system does not support versioned-symbols" >&2;}
 		;;
 	esac
@@ -6760,7 +6135,7 @@ echo "$as_me: WARNING: this system does not support versioned-symbols" >&2;}
 	# symbols.
 	if test "x$VERSIONED_SYMS" != "x"
 	then
-		echo "$as_me:6763: checking if wildcards can be used to selectively omit symbols" >&5
+		echo "$as_me:6138: checking if wildcards can be used to selectively omit symbols" >&5
 echo $ECHO_N "checking if wildcards can be used to selectively omit symbols... $ECHO_C" >&6
 		WILDCARD_SYMS=no
 
@@ -6797,7 +6172,7 @@ local:
 } submodule_1.0;
 EOF
 		cat >conftest.$ac_ext <<EOF
-#line 6800 "configure"
+#line 6175 "configure"
 int	_ismissing(void) { return 1; }
 int	_localf1(void) { return 1; }
 int	_localf2(void) { return 2; }
@@ -6828,7 +6203,7 @@ EOF
 			cf_missing=`nm -P conftest.so 2>&5 |fgrep _ismissing | egrep '[ 	][DT][ 	]'`
 			test -n "$cf_missing" && WILDCARD_SYMS=yes
 		fi
-		echo "$as_me:6831: result: $WILDCARD_SYMS" >&5
+		echo "$as_me:6206: result: $WILDCARD_SYMS" >&5
 echo "${ECHO_T}$WILDCARD_SYMS" >&6
 		rm -f conftest.*
 	fi
@@ -6837,6 +6212,631 @@ fi
 		;;
 	esac
 done
+
+### Checks for special libraries, must be done up-front.
+SHLIB_LIST=""
+
+echo "$as_me:6219: checking if you want to link with the GPM mouse library" >&5
+echo $ECHO_N "checking if you want to link with the GPM mouse library... $ECHO_C" >&6
+
+# Check whether --with-gpm or --without-gpm was given.
+if test "${with_gpm+set}" = set; then
+  withval="$with_gpm"
+  with_gpm=$withval
+else
+  with_gpm=maybe
+fi;
+echo "$as_me:6229: result: $with_gpm" >&5
+echo "${ECHO_T}$with_gpm" >&6
+
+if test "$with_gpm" != no ; then
+	echo "$as_me:6233: checking for gpm.h" >&5
+echo $ECHO_N "checking for gpm.h... $ECHO_C" >&6
+if test "${ac_cv_header_gpm_h+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line 6239 "configure"
+#include "confdefs.h"
+#include <gpm.h>
+_ACEOF
+if { (eval echo "$as_me:6243: \"$ac_cpp conftest.$ac_ext\"") >&5
+  (eval $ac_cpp conftest.$ac_ext) 2>conftest.er1
+  ac_status=$?
+  egrep -v '^ *\+' conftest.er1 >conftest.err
+  rm -f conftest.er1
+  cat conftest.err >&5
+  echo "$as_me:6249: \$? = $ac_status" >&5
+  (exit $ac_status); } >/dev/null; then
+  if test -s conftest.err; then
+    ac_cpp_err=$ac_c_preproc_warn_flag
+  else
+    ac_cpp_err=
+  fi
+else
+  ac_cpp_err=yes
+fi
+if test -z "$ac_cpp_err"; then
+  ac_cv_header_gpm_h=yes
+else
+  echo "$as_me: failed program was:" >&5
+  cat conftest.$ac_ext >&5
+  ac_cv_header_gpm_h=no
+fi
+rm -f conftest.err conftest.$ac_ext
+fi
+echo "$as_me:6268: result: $ac_cv_header_gpm_h" >&5
+echo "${ECHO_T}$ac_cv_header_gpm_h" >&6
+if test $ac_cv_header_gpm_h = yes; then
+
+cat >>confdefs.h <<\EOF
+#define HAVE_GPM_H 1
+EOF
+
+		if test "$with_gpm" != yes && test "$with_gpm" != maybe ; then
+			test -n "$verbose" && echo "	assuming we really have GPM library" 1>&6
+
+echo "${as_me:-configure}:6279: testing assuming we really have GPM library ..." 1>&5
+
+cat >>confdefs.h <<\EOF
+#define HAVE_LIBGPM 1
+EOF
+
+			with_gpm=yes
+		else
+			echo "$as_me:6287: checking for Gpm_Open in -lgpm" >&5
+echo $ECHO_N "checking for Gpm_Open in -lgpm... $ECHO_C" >&6
+if test "${ac_cv_lib_gpm_Gpm_Open+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lgpm  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+#line 6295 "configure"
+#include "confdefs.h"
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char Gpm_Open ();
+int
+main (void)
+{
+Gpm_Open ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6314: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6317: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6320: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6323: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_gpm_Gpm_Open=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_cv_lib_gpm_Gpm_Open=no
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:6334: result: $ac_cv_lib_gpm_Gpm_Open" >&5
+echo "${ECHO_T}$ac_cv_lib_gpm_Gpm_Open" >&6
+if test $ac_cv_lib_gpm_Gpm_Open = yes; then
+  with_gpm=yes
+else
+
+				if test "$with_gpm" = maybe; then
+					{ echo "$as_me:6341: WARNING: Cannot link with GPM library" >&5
+echo "$as_me: WARNING: Cannot link with GPM library" >&2;}
+					with_gpm=no
+				else
+					{ { echo "$as_me:6345: error: Cannot link with GPM library" >&5
+echo "$as_me: error: Cannot link with GPM library" >&2;}
+   { (exit 1); exit 1; }; }
+				fi
+
+fi
+
+		fi
+
+else
+
+		test "$with_gpm" != maybe && { echo "$as_me:6356: WARNING: Cannot find GPM header" >&5
+echo "$as_me: WARNING: Cannot find GPM header" >&2;}
+		with_gpm=no
+
+fi
+
+fi
+
+if test "$with_gpm" != no ; then
+	echo "$as_me:6365: checking if you want to load GPM dynamically" >&5
+echo $ECHO_N "checking if you want to load GPM dynamically... $ECHO_C" >&6
+
+# Check whether --with-dlsym or --without-dlsym was given.
+if test "${with_dlsym+set}" = set; then
+  withval="$with_dlsym"
+  with_dlsym=$withval
+else
+  with_dlsym=yes
+fi;
+	echo "$as_me:6375: result: $with_dlsym" >&5
+echo "${ECHO_T}$with_dlsym" >&6
+	if test "x$with_dlsym" = xyes ; then
+
+cf_have_dlsym=no
+echo "$as_me:6380: checking for dlsym" >&5
+echo $ECHO_N "checking for dlsym... $ECHO_C" >&6
+if test "${ac_cv_func_dlsym+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  cat >conftest.$ac_ext <<_ACEOF
+#line 6386 "configure"
+#include "confdefs.h"
+/* System header to define __stub macros and hopefully few prototypes,
+    which can conflict with char dlsym (); below.  */
+#include <assert.h>
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char dlsym ();
+char (*f) ();
+
+int
+main (void)
+{
+/* The GNU C library defines this for functions which it implements
+    to always fail with ENOSYS.  Some functions are actually named
+    something starting with __ and the normal name is an alias.  */
+#if defined (__stub_dlsym) || defined (__stub___dlsym)
+choke me
+#else
+f = dlsym; /* workaround for ICC 12.0.3 */ if (f == 0) return 1;
+#endif
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6417: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6420: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6423: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6426: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_func_dlsym=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_cv_func_dlsym=no
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+fi
+echo "$as_me:6436: result: $ac_cv_func_dlsym" >&5
+echo "${ECHO_T}$ac_cv_func_dlsym" >&6
+if test $ac_cv_func_dlsym = yes; then
+  cf_have_dlsym=yes
+else
+
+cf_have_libdl=no
+echo "$as_me:6443: checking for dlsym in -ldl" >&5
+echo $ECHO_N "checking for dlsym in -ldl... $ECHO_C" >&6
+if test "${ac_cv_lib_dl_dlsym+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-ldl  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+#line 6451 "configure"
+#include "confdefs.h"
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char dlsym ();
+int
+main (void)
+{
+dlsym ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6470: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6473: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6476: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6479: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_dl_dlsym=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_cv_lib_dl_dlsym=no
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:6490: result: $ac_cv_lib_dl_dlsym" >&5
+echo "${ECHO_T}$ac_cv_lib_dl_dlsym" >&6
+if test $ac_cv_lib_dl_dlsym = yes; then
+
+	cf_have_dlsym=yes
+	cf_have_libdl=yes
+fi
+
+fi
+
+if test "$cf_have_dlsym" = yes ; then
+	test "$cf_have_libdl" = yes && {
+cf_add_libs="-ldl"
+# Filter out duplicates - this happens with badly-designed ".pc" files...
+for cf_add_1lib in $LIBS
+do
+	for cf_add_2lib in $cf_add_libs
+	do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"
+		then
+			cf_add_1lib=
+			break
+		fi
+	done
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+done
+LIBS="$cf_add_libs"
+ }
+
+	echo "$as_me:6519: checking whether able to link to dl*() functions" >&5
+echo $ECHO_N "checking whether able to link to dl*() functions... $ECHO_C" >&6
+	cat >conftest.$ac_ext <<_ACEOF
+#line 6522 "configure"
+#include "confdefs.h"
+#include <dlfcn.h>
+int
+main (void)
+{
+
+		void *obj;
+		if ((obj = dlopen("filename", 0)) != 0) {
+			if (dlsym(obj, "symbolname") == 0) {
+			dlclose(obj);
+			}
+		}
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6540: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6543: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6546: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6549: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+
+cat >>confdefs.h <<\EOF
+#define HAVE_LIBDL 1
+EOF
+
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+
+		{ { echo "$as_me:6560: error: Cannot link test program for libdl" >&5
+echo "$as_me: error: Cannot link test program for libdl" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+	echo "$as_me:6565: result: ok" >&5
+echo "${ECHO_T}ok" >&6
+else
+	{ { echo "$as_me:6568: error: Cannot find dlsym function" >&5
+echo "$as_me: error: Cannot find dlsym function" >&2;}
+   { (exit 1); exit 1; }; }
+fi
+
+		if test "x$with_gpm" != xyes ; then
+			test -n "$verbose" && echo "	assuming soname for gpm is $with_gpm" 1>&6
+
+echo "${as_me:-configure}:6576: testing assuming soname for gpm is $with_gpm ..." 1>&5
+
+			cf_cv_gpm_soname="$with_gpm"
+		else
+
+echo "$as_me:6581: checking for soname of gpm library" >&5
+echo $ECHO_N "checking for soname of gpm library... $ECHO_C" >&6
+if test "${cf_cv_gpm_soname+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+cf_cv_gpm_soname=unknown
+if test "$cross_compiling" != yes ; then
+cat >conftest.$ac_ext <<CF_EOF
+#include <gpm.h>
+int main(void)
+{
+if (Gpm_Open(0,0)) Gpm_Close();
+	${cf_cv_main_return:-return}(0);
+}
+CF_EOF
+cf_save_LIBS="$LIBS"
+
+cf_add_libs="-lgpm"
+# Filter out duplicates - this happens with badly-designed ".pc" files...
+for cf_add_1lib in $LIBS
+do
+	for cf_add_2lib in $cf_add_libs
+	do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"
+		then
+			cf_add_1lib=
+			break
+		fi
+	done
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+done
+LIBS="$cf_add_libs"
+
+	if { (eval echo "$as_me:6615: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  echo "$as_me:6618: \$? = $ac_status" >&5
+  (exit $ac_status); } ; then
+		if { (eval echo "$as_me:6620: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6623: \$? = $ac_status" >&5
+  (exit $ac_status); } ; then
+			cf_cv_gpm_soname=`ldd conftest$ac_exeext 2>/dev/null | sed -e 's,^.*/,,' -e 's, .*$,,' | fgrep libgpm.`
+			test -z "$cf_cv_gpm_soname" && cf_cv_gpm_soname=unknown
+		fi
+	fi
+rm -rf conftest*
+LIBS="$cf_save_LIBS"
+fi
+
+fi
+echo "$as_me:6634: result: $cf_cv_gpm_soname" >&5
+echo "${ECHO_T}$cf_cv_gpm_soname" >&6
+
+		fi
+		test "$cf_cv_gpm_soname" != "unknown" &&
+cat >>confdefs.h <<EOF
+#define LIBGPM_SONAME "$cf_cv_gpm_soname"
+EOF
+
+		SHLIB_LIST="-ldl $SHLIB_LIST"
+	else
+		SHLIB_LIST="-lgpm $SHLIB_LIST"
+
+cf_add_libs="-lgpm"
+# Filter out duplicates - this happens with badly-designed ".pc" files...
+for cf_add_1lib in $TEST_LIBS
+do
+	for cf_add_2lib in $cf_add_libs
+	do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"
+		then
+			cf_add_1lib=
+			break
+		fi
+	done
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+done
+TEST_LIBS="$cf_add_libs"
+
+	fi
+
+cat >>confdefs.h <<\EOF
+#define HAVE_LIBGPM 1
+EOF
+
+echo "$as_me:6669: checking for Gpm_Wgetch in -lgpm" >&5
+echo $ECHO_N "checking for Gpm_Wgetch in -lgpm... $ECHO_C" >&6
+if test "${ac_cv_lib_gpm_Gpm_Wgetch+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+  ac_check_lib_save_LIBS=$LIBS
+LIBS="-lgpm  $LIBS"
+cat >conftest.$ac_ext <<_ACEOF
+#line 6677 "configure"
+#include "confdefs.h"
+
+/* Override any gcc2 internal prototype to avoid an error.  */
+#ifdef __cplusplus
+extern "C"
+#endif
+/* We use char because int might match the return type of a gcc2
+   builtin and then its argument prototype would still apply.  */
+char Gpm_Wgetch ();
+int
+main (void)
+{
+Gpm_Wgetch ();
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext conftest$ac_exeext
+if { (eval echo "$as_me:6696: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6699: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest$ac_exeext'
+  { (eval echo "$as_me:6702: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6705: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  ac_cv_lib_gpm_Gpm_Wgetch=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+ac_cv_lib_gpm_Gpm_Wgetch=no
+fi
+rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+LIBS=$ac_check_lib_save_LIBS
+fi
+echo "$as_me:6716: result: $ac_cv_lib_gpm_Gpm_Wgetch" >&5
+echo "${ECHO_T}$ac_cv_lib_gpm_Gpm_Wgetch" >&6
+if test $ac_cv_lib_gpm_Gpm_Wgetch = yes; then
+
+echo "$as_me:6720: checking if GPM is weakly bound to curses library" >&5
+echo $ECHO_N "checking if GPM is weakly bound to curses library... $ECHO_C" >&6
+if test "${cf_cv_check_gpm_wgetch+set}" = set; then
+  echo $ECHO_N "(cached) $ECHO_C" >&6
+else
+
+cf_cv_check_gpm_wgetch=unknown
+if test "$cross_compiling" != yes ; then
+
+cat >conftest.$ac_ext <<CF_EOF
+#include <gpm.h>
+int main(void)
+{
+	Gpm_Wgetch();
+	${cf_cv_main_return:-return}(0);
+}
+CF_EOF
+
+	cf_save_LIBS="$LIBS"
+	# This only works if we can look at the symbol table.  If a shared
+	# library is stripped for install, we cannot use that.  So we're forced
+	# to rely on the static library, noting that some packagers may not
+	# include it.
+	LIBS="-static -lgpm -dynamic $LIBS"
+	if { (eval echo "$as_me:6744: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  echo "$as_me:6747: \$? = $ac_status" >&5
+  (exit $ac_status); } ; then
+		if { (eval echo "$as_me:6749: \"$ac_link\"") >&5
+  (eval $ac_link) 2>&5
+  ac_status=$?
+  echo "$as_me:6752: \$? = $ac_status" >&5
+  (exit $ac_status); } ; then
+			cf_cv_check_gpm_wgetch=`nm conftest$ac_exeext | egrep '\<wgetch\>' | egrep '\<[vVwW]\>'`
+			test -n "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=yes
+			test -z "$cf_cv_check_gpm_wgetch" && cf_cv_check_gpm_wgetch=no
+		fi
+	fi
+	rm -rf conftest*
+	LIBS="$cf_save_LIBS"
+fi
+
+fi
+echo "$as_me:6764: result: $cf_cv_check_gpm_wgetch" >&5
+echo "${ECHO_T}$cf_cv_check_gpm_wgetch" >&6
+
+if test "$cf_cv_check_gpm_wgetch" != yes ; then
+	{ echo "$as_me:6768: WARNING: GPM library is already linked with curses - read the FAQ" >&5
+echo "$as_me: WARNING: GPM library is already linked with curses - read the FAQ" >&2;}
+fi
+
+fi
+
+fi
+
+# not everyone has "test -c"
+if test -c /dev/sysmouse 2>/dev/null ; then
+echo "$as_me:6778: checking if you want to use sysmouse" >&5
+echo $ECHO_N "checking if you want to use sysmouse... $ECHO_C" >&6
+
+# Check whether --with-sysmouse or --without-sysmouse was given.
+if test "${with_sysmouse+set}" = set; then
+  withval="$with_sysmouse"
+  cf_with_sysmouse=$withval
+else
+  cf_with_sysmouse=maybe
+fi;
+	if test "$cf_with_sysmouse" != no ; then
+	cat >conftest.$ac_ext <<_ACEOF
+#line 6790 "configure"
+#include "confdefs.h"
+
+#include <osreldate.h>
+#if (__FreeBSD_version >= 400017)
+#include <sys/consio.h>
+#include <sys/fbio.h>
+#else
+#include <machine/console.h>
+#endif
+
+int
+main (void)
+{
+
+	struct mouse_info the_mouse;
+	ioctl(0, CONS_MOUSECTL, &the_mouse);
+
+  ;
+  return 0;
+}
+_ACEOF
+rm -f conftest.$ac_objext
+if { (eval echo "$as_me:6813: \"$ac_compile\"") >&5
+  (eval $ac_compile) 2>&5
+  ac_status=$?
+  echo "$as_me:6816: \$? = $ac_status" >&5
+  (exit $ac_status); } &&
+         { ac_try='test -s conftest.$ac_objext'
+  { (eval echo "$as_me:6819: \"$ac_try\"") >&5
+  (eval $ac_try) 2>&5
+  ac_status=$?
+  echo "$as_me:6822: \$? = $ac_status" >&5
+  (exit $ac_status); }; }; then
+  cf_with_sysmouse=yes
+else
+  echo "$as_me: failed program was:" >&5
+cat conftest.$ac_ext >&5
+cf_with_sysmouse=no
+fi
+rm -f conftest.$ac_objext conftest.$ac_ext
+	fi
+echo "$as_me:6832: result: $cf_with_sysmouse" >&5
+echo "${ECHO_T}$cf_with_sysmouse" >&6
+test "$cf_with_sysmouse" = yes &&
+cat >>confdefs.h <<\EOF
+#define USE_SYSMOUSE 1
+EOF
+
+fi
 
 # pretend that ncurses==ncursesw==ncursest
 echo "$as_me:6842: checking if you want to disable library suffixes" >&5

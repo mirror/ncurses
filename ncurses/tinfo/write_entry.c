@@ -50,7 +50,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.104 2018/04/01 00:51:04 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.105 2018/05/20 18:38:08 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -384,7 +384,9 @@ _nc_write_entry(TERMTYPE2 *const tp)
     }
 
     _nc_SPRINTF(filename, _nc_SLIMIT(sizeof(filename))
-		LEAF_FMT "/%s", first_name[0], first_name);
+		LEAF_FMT "/%.*s", UChar(first_name[0]),
+		(int) (sizeof(filename) - LEAF_LEN - 2),
+		first_name);
 
     if (saved)
 	first_name[limit2] = saved;

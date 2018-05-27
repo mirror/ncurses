@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.121 2018/05/12 16:28:46 tom Exp $
+ * $Id: picsmap.c,v 1.122 2018/05/20 19:43:40 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1583,6 +1583,8 @@ report_colors(PICS_HEAD * pics)
 	    if (j < 10)
 		++digits;
 	}
+	if (digits > 8)
+	    digits = 8;
 	logmsg("These colors were used:");
 	high = (pics->colors + wide - 1) / wide;
 	for (j = 0; j < high && j < pics->colors; ++j) {

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3131 2018/05/19 21:17:03 tom Exp $
+-- $Id: NEWS,v 1.3134 2018/05/26 20:27:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180526
+	+ add note in curs_util.3x about unctrl.h
+	+ review/improve header files to ensure that those include necessary
+	  files except for the previously-documented cases (report by Isaac
+	  Pascual Monells).
+	+ improved test-package scripts, adapted from byacc 1.9 20180525.
+	+ fix some gcc8 warnings seen in Redhat package build, but
+	  work around bug in gcc8 compiler warnings in comp_parse.c
 
 20180519
 	+ formatting fixes for manpages, regenerate man-html documentation.

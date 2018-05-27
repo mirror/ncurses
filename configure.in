@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.656 2018/02/10 18:19:38 tom Exp $
+dnl $Id: configure.in,v 1.657 2018/05/26 16:43:27 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.656 $)
+AC_REVISION($Revision: 1.657 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -423,36 +423,6 @@ AC_ARG_WITH(ticlib,
 	[with_ticlib=no])
 AC_MSG_RESULT($with_ticlib)
 
-### Checks for special libraries, must be done up-front.
-SHLIB_LIST=""
-CF_WITH_GPM
-if test "$with_gpm" != no ; then
-	AC_MSG_CHECKING(if you want to load GPM dynamically)
-	AC_ARG_WITH(dlsym,
-		[  --without-dlsym         do not use dlsym() to load GPM dynamically],
-		[with_dlsym=$withval],
-		[with_dlsym=yes])
-	AC_MSG_RESULT($with_dlsym)
-	if test "x$with_dlsym" = xyes ; then
-		CF_FUNC_DLSYM
-		if test "x$with_gpm" != xyes ; then
-			CF_VERBOSE(assuming soname for gpm is $with_gpm)
-			cf_cv_gpm_soname="$with_gpm"
-		else
-			CF_LIB_SONAME([#include <gpm.h>],[if (Gpm_Open(0,0)) Gpm_Close();],gpm)
-		fi
-		test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname",[Define as needed to set the gpm share library soname])
-		SHLIB_LIST="-ldl $SHLIB_LIST"
-	else
-		SHLIB_LIST="-lgpm $SHLIB_LIST"
-		CF_ADD_LIB(gpm,TEST_LIBS)
-	fi
-	AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
-	CF_CHECK_GPM_WGETCH
-fi
-
-CF_WITH_SYSMOUSE
-
 dnl Not all ports of gcc support the -g option
 
 if test X"$CC_G_OPT" = X"" ; then
@@ -520,6 +490,36 @@ for model in $cf_list_models; do
 		;;
 	esac
 done
+
+### Checks for special libraries, must be done up-front.
+SHLIB_LIST=""
+CF_WITH_GPM
+if test "$with_gpm" != no ; then
+	AC_MSG_CHECKING(if you want to load GPM dynamically)
+	AC_ARG_WITH(dlsym,
+		[  --without-dlsym         do not use dlsym() to load GPM dynamically],
+		[with_dlsym=$withval],
+		[with_dlsym=yes])
+	AC_MSG_RESULT($with_dlsym)
+	if test "x$with_dlsym" = xyes ; then
+		CF_FUNC_DLSYM
+		if test "x$with_gpm" != xyes ; then
+			CF_VERBOSE(assuming soname for gpm is $with_gpm)
+			cf_cv_gpm_soname="$with_gpm"
+		else
+			CF_LIB_SONAME([#include <gpm.h>],[if (Gpm_Open(0,0)) Gpm_Close();],gpm)
+		fi
+		test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname",[Define as needed to set the gpm share library soname])
+		SHLIB_LIST="-ldl $SHLIB_LIST"
+	else
+		SHLIB_LIST="-lgpm $SHLIB_LIST"
+		CF_ADD_LIB(gpm,TEST_LIBS)
+	fi
+	AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
+	CF_CHECK_GPM_WGETCH
+fi
+
+CF_WITH_SYSMOUSE
 
 # pretend that ncurses==ncursesw==ncursest
 AC_MSG_CHECKING(if you want to disable library suffixes)

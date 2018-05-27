@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.23 2018/02/12 09:57:31 tom Exp $
+ * $Id: list_keys.c,v 1.24 2018/05/20 18:56:56 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -209,8 +209,8 @@ draw_line(int width)
 static const char *
 modified_key(const char *name)
 {
-    static char result[80];
-    char buffer[sizeof(result)];
+    static char result[100];
+    char buffer[sizeof(result) - 10];
     int value;
     char chr;
     static const char *modifiers[][2] =

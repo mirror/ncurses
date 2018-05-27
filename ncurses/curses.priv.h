@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.600 2018/04/14 19:28:44 tom Exp $
+ * $Id: curses.priv.h,v 1.601 2018/05/20 19:21:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1658,7 +1658,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 /* FreeAndNull() is not a comma-separated expression because some compilers
  * do not accept a mixture of void with values.
  */
-#define FreeAndNull(p)   free(p); p = 0
+#define FreeAndNull(p)   do { free(p); p = 0; } while (0)
 
 #include <nc_alloc.h>
 
@@ -1667,14 +1667,18 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
  * tries to limp along after a failure.
  */
 #define TYPE_MALLOC(type, size, name) \
-	name = typeMalloc(type, size); \
-	if (name == 0) \
-	    _nc_err_abort(MSG_NO_MEMORY)
+	do { \
+	    name = typeMalloc(type, size); \
+	    if (name == 0) \
+		_nc_err_abort(MSG_NO_MEMORY); \
+	} while (0)
 
 #define TYPE_REALLOC(type, size, name) \
-	name = typeRealloc(type, size, name); \
-	if (name == 0) \
-	    _nc_err_abort(MSG_NO_MEMORY)
+	do { \
+	    name = typeRealloc(type, size, name); \
+	    if (name == 0) \
+		_nc_err_abort(MSG_NO_MEMORY); \
+	} while (0)
 
 /*
  * TTY bit definition for converting tabs to spaces.
@@ -1747,7 +1751,7 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 typedef void VoidFunc(void);
 
 #define TR_FUNC(value)          ((const char*) (value))
-#define NonNull(s)	        ((s) != 0 ? s : "<null>")
+#define NonNull(s)              ((s) != 0 ? s : "<null>")
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)
