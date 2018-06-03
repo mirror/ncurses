@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.1
-Release: 20180526
+Release: 20180602
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -38,7 +38,21 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 
 %prep
 
+%global is_mandriva %(test -f /etc/mandriva-release && echo 1 || echo 0)
+%global is_redhat   %(test -f /etc/redhat-release && echo 1 || echo 0)
+%global is_suse     %(test -f /etc/SuSE-release && echo 1 || echo 0)
+
+# nor are debug-symbols
 %define debug_package %{nil}
+
+%if %{is_mandriva}
+%define _disable_ld_as_needed 1
+%define _disable_ld_no_undefined 1
+# libtool is not used here...
+%define _disable_libtoolize 1
+%define _disable_ld_build_id 1
+%endif
+
 %setup -q -n ncurses-%{version}-%{release}
 
 %build
@@ -160,6 +174,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/pkgconfig/*tw6*
 
 %changelog
+
+* Sat Jun 02 2018 Thomas E. Dickey
+- build-fix for Mageia
 
 * Sat May 26 2018 Thomas E. Dickey
 - use predefined configure-macro

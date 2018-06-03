@@ -1,8 +1,9 @@
-Summary: ncurses-examples - example/test programs from ncurses
+Summary: example/test programs from ncurses
 %define AppProgram ncurses-examples
+%define AltProgram ncursest-examples
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.11 2018/01/15 16:14:16 tom Exp $
+# $Id: ncurses-examples.spec,v 1.12 2018/06/02 22:46:44 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -16,8 +17,20 @@ Packager: Thomas Dickey <dickey@invisible-island.net>
 These are the example/test programs from the ncurses MAJOR.MINOR distribution,
 for patch-date YYYYMMDD.
 
-This package installs in "bin/ncurses-examples" to avoid conflict with other
+This package installs in "bin/%{AppProgram}" to avoid conflict with other
 packages.
+
+%package -n %{AltProgram}
+Summary:  examples/test programs from ncurses with POSIX thread support
+
+%description -n %{AltProgram}
+These are the example/test programs from the ncurses MAJOR.MINOR distribution,
+for patch-date YYYYMMDD, using the "ncurseswt" library to demonstrate the
+use of POSIX threads, e.g., in ditto, rain, and worm.
+
+This package installs in "bin/%{AltProgram}" to avoid conflict with other
+packages.
+
 %prep
 
 %setup -q -n %{AppProgram}-%{AppRelease}
@@ -26,8 +39,14 @@ packages.
 
 %build
 
+%global _configure ../configure
+%define my_srcdir ..
+
+mkdir BUILD-%{AppProgram}
+pushd BUILD-%{AppProgram}
 INSTALL_PROGRAM='${INSTALL}' \
 NCURSES_CONFIG_SUFFIX=dev \
+CONFIGURE_TOP=%{my_srcdir} \
 %configure \
 	--target %{_target_platform} \
 	--prefix=%{_prefix} \
@@ -37,19 +56,47 @@ NCURSES_CONFIG_SUFFIX=dev \
 	--disable-rpath-hack
 
 make
+popd
+
+mkdir BUILD-%{AltProgram}
+pushd BUILD-%{AltProgram}
+INSTALL_PROGRAM='${INSTALL}' \
+NCURSES_CONFIG_SUFFIX=dev \
+CONFIGURE_TOP=%{my_srcdir} \
+%configure \
+	--target %{_target_platform} \
+	--prefix=%{_prefix} \
+	--bindir=%{_bindir}/%{AltProgram} \
+	--datadir=%{_datadir}/%{AltProgram} \
+	--with-screen=ncursestw6 \
+	--disable-rpath-hack
+
+make
+popd
 
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
-make install               DESTDIR=$RPM_BUILD_ROOT
+pushd BUILD-%{AppProgram}
+make install DESTDIR=$RPM_BUILD_ROOT
+popd
+
+pushd BUILD-%{AltProgram}
+make install DESTDIR=$RPM_BUILD_ROOT
+popd
 
 %clean
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n %{AppProgram}
 %defattr(-,root,root)
 %{_bindir}/%{AppProgram}/*
 %{_datadir}/%{AppProgram}/*
+
+%files -n %{AltProgram}
+%defattr(-,root,root)
+%{_bindir}/%{AltProgram}/*
+%{_datadir}/%{AltProgram}/*
 
 %changelog
 # each patch should add its ChangeLog entries here

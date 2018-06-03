@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3134 2018/05/26 20:27:35 tom Exp $
+-- $Id: NEWS,v 1.3137 2018/06/02 22:52:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180602
+	+ add RPM test-package "ncursest-examples".
+	+ modified RPM test-package to work with Mageia6.
 
 20180526
 	+ add note in curs_util.3x about unctrl.h
@@ -4126,7 +4130,6 @@ it is not possible to add this information.
 	+ improved configure macros CF_GCC_ATTRIBUTES, CF_PROG_LINT.
 
 20091114
-
 	+ updated man/curs_trace.3x
 	+ limit hashing for termcap-names to 2-characters (Ubuntu #481740).
 	+ change a variable name in lib_newwin.c to make it clearer which
