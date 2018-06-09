@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2013,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.46 2017/12/23 21:36:59 tom Exp $
+ * $Id: movewindow.c,v 1.47 2018/06/09 17:35:50 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -106,7 +106,7 @@ message(int lineno, CONST_FMT char *fmt, va_list argp)
 	addstr(buffer);
     }
 #else
-    vwprintw(stdscr, fmt, argp);
+    vw_printw(stdscr, fmt, argp);
 #endif
 
     move(y, x);

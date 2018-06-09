@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.65 2018/01/01 15:08:44 tom Exp $
+-- $Id: README,v 1.66 2018/06/09 19:03:16 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -729,10 +729,10 @@ vidputs				test: test_vidputs
 vidputs_sp			-
 vline				test: gdc ncurses
 vline_set			-
-vw_printw			test: clip_printw
-vw_scanw			-
-vwprintw			test: movewindow
-vwscanw				lib: ncurses
+vw_printw			test: clip_printw, movewindow
+vw_scanw			lib: ncurses
+vwprintw			-
+vwscanw				-
 wadd_wch			test: inch_wide ncurses test_add_wchstr test_addwstr
 wadd_wchnstr			test: savescreen test_add_wchstr
 wadd_wchstr			test: test_add_wchstr

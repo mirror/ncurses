@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.657 2018/05/26 16:43:27 tom Exp $
+dnl $Id: configure.in,v 1.658 2018/06/09 22:19:13 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.657 $)
+AC_REVISION($Revision: 1.658 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -511,9 +511,11 @@ if test "$with_gpm" != no ; then
 		fi
 		test "$cf_cv_gpm_soname" != "unknown" && AC_DEFINE_UNQUOTED(LIBGPM_SONAME,"$cf_cv_gpm_soname",[Define as needed to set the gpm share library soname])
 		SHLIB_LIST="-ldl $SHLIB_LIST"
+		CF_ADD_LIB(dl,PRIVATE_LIBS)
 	else
 		SHLIB_LIST="-lgpm $SHLIB_LIST"
 		CF_ADD_LIB(gpm,TEST_LIBS)
+		CF_ADD_LIB(gpm,PRIVATE_LIBS)
 	fi
 	AC_DEFINE(HAVE_LIBGPM,1,[Define to 1 if we have the gpm library])
 	CF_CHECK_GPM_WGETCH
@@ -1255,6 +1257,7 @@ if test "x$with_pthread" = "xyes" ; then
 	enable_reentrant=yes
 	if test "x$cf_cv_weak_symbols" = xyes ; then
 		PTHREAD=-lpthread
+		CF_ADD_LIB(pthread,PRIVATE_LIBS)
 	fi
 fi
 AC_SUBST(PTHREAD)
@@ -1277,6 +1280,7 @@ if test "x$with_reentrant" = xyes ; then
 		CF_REMOVE_LIB(LIBS,$LIBS,pthread)
 		CF_ADD_LIB(pthread,TEST_LIBS)
 		CF_ADD_LIB(pthread,TEST_LIBS2)
+		CF_ADD_LIB(pthread,PRIVATE_LIBS)
 	else
 		# when not using weak symbols but with_reentrant,
 		# add 't' to the library suffix on all platforms
@@ -2322,6 +2326,7 @@ else
 fi
 AC_SUBST(ADAGEN_LDFLAGS)
 AC_SUBST(CHECK_BUILD)
+AC_SUBST(PRIVATE_LIBS)
 
 AC_DEFINE(HAVE_CURSES_DATA_BOOLNAMES,1,[definition needed for in-tree build of tack])
 

@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.60 2017/12/09 22:27:41 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.62 2018/06/09 19:27:00 tom Exp $)
 #
 ##############################################################################
-# Copyright (c) 1998-2017,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -99,6 +99,7 @@ if test "$USE" = implemented ; then
 	cat >$ED1 <<EOF1
 /^extern.*implemented/{
 	h
+	s/GCC_DEPRECATED([^)]*)//
 	s/NCURSES_SP_NAME(\([^)]*\))/NCURSES_SP_NAME___\1/
 	h
 	s/^.*implemented:\([^ 	*]*\).*/P_POUNDCif_USE_\1_SUPPORT/p
@@ -434,11 +435,6 @@ BEGIN		{
 		print ""
 		print "#include <curses.priv.h>"
 		print ""
-		print "#undef vw_scanw"
-		print "#undef vwscanw"
-		print ""
-		print "#undef vw_printw"
-		print "#undef vwprintw"
 		}
 /^DECLARATIONS/	{start = 1; next;}
 		{

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.24 2016/05/28 23:11:26 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.26 2018/06/09 20:18:24 tom Exp $")
 
 NCURSES_EXPORT(int)
 printw(const char *fmt,...)
@@ -56,7 +56,7 @@ printw(const char *fmt,...)
 #endif
 
     va_start(argp, fmt);
-    code = vwprintw(stdscr, fmt, argp);
+    code = vw_printw(stdscr, fmt, argp);
     va_end(argp);
 
     returnCode(code);
@@ -77,7 +77,7 @@ wprintw(WINDOW *win, const char *fmt,...)
 #endif
 
     va_start(argp, fmt);
-    code = vwprintw(win, fmt, argp);
+    code = vw_printw(win, fmt, argp);
     va_end(argp);
 
     returnCode(code);
@@ -100,7 +100,7 @@ mvprintw(int y, int x, const char *fmt,...)
 	va_list argp;
 
 	va_start(argp, fmt);
-	code = vwprintw(stdscr, fmt, argp);
+	code = vw_printw(stdscr, fmt, argp);
 	va_end(argp);
     }
     returnCode(code);
@@ -123,7 +123,7 @@ mvwprintw(WINDOW *win, int y, int x, const char *fmt,...)
 	va_list argp;
 
 	va_start(argp, fmt);
-	code = vwprintw(win, fmt, argp);
+	code = vw_printw(win, fmt, argp);
 	va_end(argp);
     }
     returnCode(code);
@@ -139,6 +139,24 @@ vwprintw(WINDOW *win, const char *fmt, va_list argp)
 #endif
 
     T((T_CALLED("vwprintw(%p,%s,va_list)"), (void *) win, _nc_visbuf(fmt)));
+
+    buf = NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_ARGx fmt, argp);
+    if (buf != 0) {
+	code = waddstr(win, buf);
+    }
+    returnCode(code);
+}
+
+NCURSES_EXPORT(int)
+vw_printw(WINDOW *win, const char *fmt, va_list argp)
+{
+    char *buf;
+    int code = ERR;
+#if NCURSES_SP_FUNCS
+    SCREEN *sp = _nc_screen_of(win);
+#endif
+
+    T((T_CALLED("vw_printw(%p,%s,va_list)"), (void *) win, _nc_visbuf(fmt)));
 
     buf = NCURSES_SP_NAME(_nc_printf_string) (NCURSES_SP_ARGx fmt, argp);
     if (buf != 0) {

@@ -40,10 +40,25 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_scanw.c,v 1.15 2018/04/07 21:28:27 tom Exp $")
+MODULE_ID("$Id: lib_scanw.c,v 1.17 2018/06/09 20:19:20 tom Exp $")
 
 NCURSES_EXPORT(int)
 vwscanw(WINDOW *win, const char *fmt, va_list argp)
+{
+    char buf[BUFSIZ];
+    int code = ERR;
+
+    if (wgetnstr(win, buf, (int) sizeof(buf) - 1) != ERR) {
+	if ((code = vsscanf(buf, fmt, argp)) == EOF) {
+	    code = ERR;
+	}
+    }
+
+    return code;
+}
+
+NCURSES_EXPORT(int)
+vw_scanw(WINDOW *win, const char *fmt, va_list argp)
 {
     char buf[BUFSIZ];
     int code = ERR;
@@ -66,7 +81,7 @@ scanw(const char *fmt,...)
     T(("scanw(\"%s\",...) called", fmt));
 
     va_start(ap, fmt);
-    code = vwscanw(stdscr, fmt, ap);
+    code = vw_scanw(stdscr, fmt, ap);
     va_end(ap);
     return (code);
 }
@@ -80,7 +95,7 @@ wscanw(WINDOW *win, const char *fmt,...)
     T(("wscanw(%p,\"%s\",...) called", (void *) win, fmt));
 
     va_start(ap, fmt);
-    code = vwscanw(win, fmt, ap);
+    code = vw_scanw(win, fmt, ap);
     va_end(ap);
     return (code);
 }
@@ -92,7 +107,7 @@ mvscanw(int y, int x, const char *fmt,...)
     va_list ap;
 
     va_start(ap, fmt);
-    code = (move(y, x) == OK) ? vwscanw(stdscr, fmt, ap) : ERR;
+    code = (move(y, x) == OK) ? vw_scanw(stdscr, fmt, ap) : ERR;
     va_end(ap);
     return (code);
 }
@@ -104,7 +119,7 @@ mvwscanw(WINDOW *win, int y, int x, const char *fmt,...)
     va_list ap;
 
     va_start(ap, fmt);
-    code = (wmove(win, y, x) == OK) ? vwscanw(win, fmt, ap) : ERR;
+    code = (wmove(win, y, x) == OK) ? vw_scanw(win, fmt, ap) : ERR;
     va_end(ap);
     return (code);
 }
