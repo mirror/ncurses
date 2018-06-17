@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.658 2018/06/09 22:19:13 tom Exp $
+dnl $Id: configure.in,v 1.659 2018/06/16 21:26:41 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.658 $)
+AC_REVISION($Revision: 1.659 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -855,7 +855,7 @@ NCURSES_WINT_T=0
 
 # Check to define _XOPEN_SOURCE "automatically"
 CPPFLAGS_before_XOPEN="$CPPFLAGS"
-CF_XOPEN_SOURCE(500)
+CF_XOPEN_SOURCE(600)
 CPPFLAGS_after_XOPEN="$CPPFLAGS"
 
 # Work around breakage on OS X

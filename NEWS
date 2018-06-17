@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3140 2018/06/09 22:32:09 tom Exp $
+-- $Id: NEWS,v 1.3145 2018/06/17 02:03:12 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180616
+	+ build-fix for ncurses-examples related to gcc8-fixes (cf: 20180526).
+	+ reduce use of _GNU_SOURCE for current glibc where _DEFAULT_SOURCE
+	  combines with _XOPEN_SOURCE (Debian #900987).
+	+ change target configure level for _XOPEN_SOURCE to 600 to address
+	  use of vsscanf and setenv.
+	+ improved configure-checks CF_SIZECHANGE and CF_STRUCT_TERMIOS from
+	  work on dialog.
 
 20180609
 	+ modify generatesd ncurses*config and ncurses.pc, ncursesw.pc, etc.,

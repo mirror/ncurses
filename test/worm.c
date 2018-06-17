@@ -52,7 +52,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.77 2018/05/20 19:55:42 tom Exp $
+  $Id: worm.c,v 1.78 2018/06/17 01:40:17 tom Exp $
 */
 
 #include <test.priv.h>
@@ -401,7 +401,7 @@ get_input(void)
 
 #ifdef KEY_RESIZE
 static int
-update_refs(WINDOW *win, void *data GCC_UNUSED)
+update_refs(WINDOW *win)
 {
     int x, y;
 

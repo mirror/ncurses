@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.122 2018/05/20 19:43:40 tom Exp $
+ * $Id: picsmap.c,v 1.123 2018/06/16 22:55:45 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -61,6 +61,10 @@
 
 #if HAVE_TSEARCH
 #include <search.h>
+#if HAVE_TDESTROY && !defined(_GNU_SOURCE)
+#undef HAVE_TDESTROY
+#define HAVE_TDESTROY 0
+#endif
 #endif
 
 #undef CUR			/* use only the curses interface */
