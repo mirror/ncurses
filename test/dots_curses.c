@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2014,2017 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2014-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,13 +29,13 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.12 2017/11/24 19:25:28 tom Exp $
+ * $Id: dots_curses.c,v 1.13 2018/06/24 00:06:37 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
 #include <test.priv.h>
 
-#if !defined(__MINGW32__)
+#if !defined(_WIN32)
 #include <sys/time.h>
 #endif
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2011-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2011-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *  Author: Thomas E. Dickey                        2011                    *
  ****************************************************************************/
 
-/* $Id: nc_termios.h,v 1.5 2017/07/23 00:02:08 tom Exp $ */
+/* $Id: nc_termios.h,v 1.6 2018/06/24 00:06:37 tom Exp $ */
 
 #ifndef NC_TERMIOS_included
 #define NC_TERMIOS_included 1
@@ -71,7 +71,7 @@
 
 #else /* !HAVE_TERMIO_H */
 
-#if __MINGW32__
+#if _WIN32
 
 /* lflag bits */
 #define ISIG	0x0001
@@ -155,7 +155,7 @@
 #undef  ttyname
 #define ttyname(fd) NULL
 
-#endif /* __MINGW32__ */
+#endif /* _WIN32 */
 #endif /* HAVE_TERMIO_H */
 
 #endif /* HAVE_TERMIOS_H */

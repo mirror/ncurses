@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.601 2018/05/20 19:21:56 tom Exp $
+ * $Id: curses.priv.h,v 1.602 2018/06/23 21:35:06 tom Exp $
  *
  *	curses.priv.h
  *
@@ -184,7 +184,7 @@ extern int errno;
  * the path separator in configure doesn't work properly. So, if building
  * for MinGW, we enforce the correct Windows PATH separator
  */
-#ifdef __MINGW32__
+#ifdef _WIN32
 #  ifdef NCURSES_PATHSEP
 #    undef NCURSES_PATHSEP
 #  endif
@@ -2271,7 +2271,7 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
  */
 #if USE_WIDEC_SUPPORT
 
-#if defined(__MINGW32__)
+#if defined(_WIN32)
 /*
  * MinGW has wide-character functions, but they do not work correctly.
  */
@@ -2286,7 +2286,7 @@ extern int __MINGW_NOTHROW _nc_mbtowc(wchar_t *, const char *, size_t);
 extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
 #define mblen(s,n) _nc_mblen(s, n)
 
-#endif /* __MINGW32__ */
+#endif /* _WIN32 */
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))

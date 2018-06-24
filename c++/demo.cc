@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2012,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.42 2017/06/24 22:04:26 tom Exp $
+ * $Id: demo.cc,v 1.43 2018/06/24 00:07:22 tom Exp $
  */
 
 #include "internal.h"
@@ -43,11 +43,11 @@
 #include "cursesm.h"
 #include "cursesf.h"
 
-#ifdef __MINGW32__
+#ifdef _WIN32
 #undef KEY_EVENT
 #endif
 
-#ifndef __MINGW32__
+#ifndef _WIN32
 extern "C" unsigned int sleep(unsigned int);
 #endif
 

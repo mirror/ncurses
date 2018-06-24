@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.86 2017/01/14 17:53:42 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.87 2018/06/24 00:06:37 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -196,7 +196,7 @@ _nc_va_tracef(const char *fmt, va_list ap)
 # if USE_WEAK_SYMBOLS
 	if ((pthread_self))
 # endif
-#ifdef __MINGW32__
+#ifdef _WIN32
 	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self().p);
 #else
 	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self());

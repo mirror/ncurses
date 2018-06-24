@@ -29,13 +29,13 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.15 2018/05/12 16:08:07 tom Exp $
+ * $Id: dots_xcurses.c,v 1.16 2018/06/23 21:35:06 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
 #include <test.priv.h>
 
-#if !defined(__MINGW32__)
+#if !defined(_WIN32)
 #include <sys/time.h>
 #endif
 

@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-#ifdef __MINGW32__
+#ifdef _WIN32
 #include <tchar.h>
 #else
 #include <windows.h>
@@ -54,7 +54,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.60 2018/02/10 17:01:16 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.61 2018/06/23 21:35:06 tom Exp $")
 
 #ifndef __GNUC__
 #  error We need GCC to compile for MinGW

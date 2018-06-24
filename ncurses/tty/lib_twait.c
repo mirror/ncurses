@@ -70,12 +70,12 @@
 #  include <sys/select.h>
 # endif
 #endif
-#ifdef __MINGW32__
+#ifdef _WIN32
 #  include <sys/time.h>
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.72 2018/02/10 17:00:09 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.73 2018/06/23 21:35:06 tom Exp $")
 
 static long
 _nc_gettime(TimeType * t0, int first)

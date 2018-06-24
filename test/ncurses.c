@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.506 2018/05/12 16:00:22 tom Exp $
+$Id: ncurses.c,v 1.507 2018/06/23 21:35:06 tom Exp $
 
 ***************************************************************************/
 
@@ -488,7 +488,7 @@ ShellOut(bool message)
 	addstr("Shelling out...");
     def_prog_mode();
     endwin();
-#ifdef __MINGW32__
+#ifdef _WIN32
     system("cmd.exe");
 #else
     IGNORE_RC(system("sh"));
@@ -7619,7 +7619,7 @@ usage(void)
 #if USE_LIBPANEL
 	,"  -s msec  specify nominal time for panel-demo (default: 1, to hold)"
 #endif
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(__MINGW32__)
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(_WIN32)
 	,"  -T       call use_tioctl(TRUE) to allow SIGWINCH to override environment"
 #endif
 #ifdef TRACE
@@ -7908,7 +7908,7 @@ main(int argc, char *argv[])
 	    nap_msec = (int) atol(optarg);
 	    break;
 #endif
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(__MINGW32__)
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20120714) && !defined(_WIN32)
 	case 'T':
 	    use_tioctl(TRUE);
 	    break;

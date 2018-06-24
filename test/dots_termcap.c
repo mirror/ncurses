@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,14 +29,14 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.16 2017/10/22 15:21:34 tom Exp $
+ * $Id: dots_termcap.c,v 1.17 2018/06/24 00:06:37 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
 #define USE_TINFO
 #include <test.priv.h>
 
-#if !defined(__MINGW32__)
+#if !defined(_WIN32)
 #include <sys/time.h>
 #endif
 
@@ -152,7 +152,7 @@ static void
 my_napms(int ms)
 {
     if (ms > 0) {
-#if defined(__MINGW32__) || !HAVE_GETTIMEOFDAY
+#if defined(_WIN32) || !HAVE_GETTIMEOFDAY
 	Sleep((DWORD) ms);
 #else
 	struct timeval data;

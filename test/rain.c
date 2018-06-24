@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.48 2018/05/20 19:55:30 tom Exp $
+ * $Id: rain.c,v 1.49 2018/06/23 21:35:06 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -227,7 +227,7 @@ draw_drop(void *arg)
      * Find myself in the list of threads so we can count the number of loops.
      */
     for (mystats = 0; mystats < MAX_THREADS; ++mystats) {
-#if defined(__MINGW32__) && !defined(__WINPTHREADS_VERSION)
+#if defined(_WIN32) && !defined(__WINPTHREADS_VERSION)
 	if (drop_threads[mystats].myself.p == pthread_self().p)
 #else
 	if (drop_threads[mystats].myself == pthread_self())
