@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.699 $
-#	$Date: 2018/05/19 20:10:26 $
+#	$Revision: 1.702 $
+#	$Date: 2018/06/30 17:32:07 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -10579,18 +10579,18 @@ vi55|Visual 55,
 vi200|visual 200,
 	OTbs, OTpt, am, mir, msgr,
 	OTkn#10, cols#80, it#8, lines#24,
-	acsc=, bel=^G, cbt=\Ez, clear=\Ev, cnorm=\Ec, cr=\r, cub1=^H,
-	cud1=\n, cuf1=\EC, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
-	cuu1=\EA, cvvis=\Ed, dch1=\EO, dim=\E4, dl1=\EM, ed=\Ey,
-	el=\Ex, home=\EH, ht=^I, hts=\E1, il1=\EL, ind=\n, invis=\Ea,
-	kbs=^H, kclr=\Ev, kctab=\E2, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
-	kcuu1=\EA, kdch1=\EO, kdl1=\EM, ked=\EJ, kel=\Et, kf0=\E?p,
-	kf1=\E?q, kf2=\E?r, kf3=\E?s, kf4=\E?t, kf5=\E?u, kf6=\E?v,
-	kf7=\E?w, kf8=\E?x, kf9=\E?y, khome=\EH, khts=\E1, kich1=\Ei,
-	kil1=\EL, krmir=\Ej, mc0=\EH\E], mc4=\EX, mc5=\EW, ri=\EI,
-	rmacs=\EG, rmkx=\E>, rmso=\E3,
-	rs1=\E3\Eb\Ej\E\El\EG\Ec\Ek\EX, sgr0=\E3\Eb, smacs=\EF,
-	smkx=\E=, smso=\E4, tbc=\Eg,
+	acsc=+h.kffggjmkllsmenbq`tnuovcwdxa}r, bel=^G, cbt=\Ez,
+	clear=\Ev, cnorm=\Ec, cr=\r, cub1=^H, cud1=\n, cuf1=\EC,
+	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, cvvis=\Ed,
+	dch1=\EO, dim=\E4, dl1=\EM, ed=\Ey, el=\Ex, home=\EH, ht=^I,
+	hts=\E1, il1=\EL, ind=\n, invis=\Ea, kbs=^H, kclr=\Ev,
+	kctab=\E2, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
+	kdch1=\EO, kdl1=\EM, ked=\EJ, kel=\Et, kf0=\E?p, kf1=\E?q,
+	kf2=\E?r, kf3=\E?s, kf4=\E?t, kf5=\E?u, kf6=\E?v, kf7=\E?w,
+	kf8=\E?x, kf9=\E?y, khome=\EH, khts=\E1, kich1=\Ei, kil1=\EL,
+	krmir=\Ej, mc0=\EH\E], mc4=\EX, mc5=\EW, ri=\EI, rmacs=\EG,
+	rmkx=\E>, rmso=\E3, rs1=\E3\Eb\Ej\E\El\EG\Ec\Ek\EX,
+	sgr0=\E3\Eb, smacs=\EF, smkx=\E=, smso=\E4, tbc=\Eg,
 # The older Visuals didn't come with function keys. This entry uses
 # <smkx> and <rmkx> so that the keypad keys can be used as function keys.
 # If your version of vi doesn't support function keys you may want
@@ -25743,5 +25743,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  fix some inconsistencies in/between tmux- and iterm2-entries for SGR
 #	  (report by C Anthony Risinger)
 #	+ improve iterm2 using some xterm features which it has adapted -TD
+#
+# 2018-06-30
+#	+ add acsc string to vi200 (Nibby Nebbulous)
+#	  add right/down-arrow to vi200's acsc -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

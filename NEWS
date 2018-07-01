@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3150 2018/06/24 00:15:39 tom Exp $
+-- $Id: NEWS,v 1.3152 2018/06/30 20:45:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180630
+	+ add acsc string to vi200 (Nibby Nebbulous)
+	  add right/down-arrow to vi200's acsc -TD
+	+ add "x" to tput's getopt string so that "tput -x clear" works
+	  (Nicholas Marriott).
+	+ minor fixes prompted by anonymous report on stack overflow:
+	  + correct order of checks in _nc_get_locale(), for systems lacking
+	    locale support.
+	  + add "#error" in a few places to flag unsupported configurations
 
 20180623
 	+ use _WIN32/_WIN64 in preference to __MINGW32__/__MINGW64__ symbols

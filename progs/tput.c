@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.78 2017/10/14 20:46:43 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.79 2018/06/30 15:56:01 Nicholas.Marriott Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -293,7 +293,7 @@ main(int argc, char **argv)
 
     term = getenv("TERM");
 
-    while ((c = getopt(argc, argv, "ST:V")) != -1) {
+    while ((c = getopt(argc, argv, "ST:Vx")) != -1) {
 	switch (c) {
 	case 'S':
 	    cmdline = FALSE;
