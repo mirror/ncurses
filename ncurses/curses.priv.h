@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.603 2018/06/30 21:46:25 tom Exp $
+ * $Id: curses.priv.h,v 1.604 2018/06/30 21:59:10 tom Exp $
  *
  *	curses.priv.h
  *
@@ -71,7 +71,7 @@ extern "C" {
 #include <unistd.h>
 #endif
 
-#if HAVE_SYS_BSDTYPES_H) && !(defined(_WIN32) || defined(_WIN64))
+#if HAVE_SYS_BSDTYPES_H && !(defined(_WIN32) || defined(_WIN64))
 #include <sys/bsdtypes.h>	/* needed for ISC */
 #endif
 

@@ -7,7 +7,7 @@
 --                                 S P E C                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2009,2018 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,7 +35,7 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.12 $
+--  $Revision: 1.13 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Interfaces.C.Strings;
@@ -54,9 +54,9 @@ package Terminal_Interface.Curses.Forms.Field_Types.Enumeration is
 
    type Enumeration_Info (C : Positive) is
       record
-         Names                : Enum_Array (1 .. C);
          Case_Sensitive       : Boolean := False;
          Match_Must_Be_Unique : Boolean := False;
+         Names                : Enum_Array (1 .. C);
       end record;
 
    type Enumeration_Field is new Field_Type with private;

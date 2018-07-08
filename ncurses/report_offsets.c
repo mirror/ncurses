@@ -32,7 +32,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: report_offsets.c,v 1.19 2018/03/01 19:22:27 tom Exp $")
+MODULE_ID("$Id: report_offsets.c,v 1.20 2018/07/07 19:25:40 tom Exp $")
 
 #define show_size(type) \
 	flag = 0; \
@@ -159,8 +159,8 @@ main(void)
 #if USE_SIZECHANGE
     show_OPTION(SCREEN, _resize);
 #endif
-    show_REENTR(SCREEN, _ttytype);
     show_DRIVER(SCREEN, _windowlist);
+    show_REENTR(SCREEN, _ttytype);
     show_SPFUNC(SCREEN, use_tioctl);
     show_WIDECH(SCREEN, _screen_acs_fix);
     show_COLORS(SCREEN, _ordered_pairs);

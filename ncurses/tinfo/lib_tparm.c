@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.105 2018/04/07 21:12:12 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.106 2018/07/01 15:23:27 tom Exp $")
 
 /*
  *	char *
@@ -354,8 +354,8 @@ _nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount)
     if (cp == 0)
 	return 0;
 
-    if ((len2 = strlen(cp)) > TPS(fmt_size)) {
-	TPS(fmt_size) = len2 + TPS(fmt_size) + 2;
+    if ((len2 = strlen(cp)) + 2 > TPS(fmt_size)) {
+	TPS(fmt_size) += len2 + 2;
 	TPS(fmt_buff) = typeRealloc(char, TPS(fmt_size), TPS(fmt_buff));
 	if (TPS(fmt_buff) == 0)
 	    return 0;
@@ -485,8 +485,10 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
     bool termcap_hack;
     bool incremented_two;
 
-    if (cp == NULL)
+    if (cp == NULL) {
+	TR(TRACE_CALLS, ("%s: format is null", TPS(tname)));
 	return NULL;
+    }
 
     TPS(out_used) = 0;
     len2 = strlen(cp);
@@ -497,8 +499,10 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
      * variable-length argument list.
      */
     number = _nc_tparm_analyze(cp, p_is_s, &popcount);
-    if (TPS(fmt_buff) == 0)
+    if (TPS(fmt_buff) == 0) {
+	TR(TRACE_CALLS, ("%s: error in analysis", TPS(tname)));
 	return NULL;
+    }
 
     incremented_two = FALSE;
 

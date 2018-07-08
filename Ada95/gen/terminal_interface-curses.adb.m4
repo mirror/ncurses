@@ -9,7 +9,7 @@ include(M4MACRO)----------------------------------------------------------------
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2014,2018 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -37,8 +37,8 @@ include(M4MACRO)----------------------------------------------------------------
 ------------------------------------------------------------------------------
 --  Author: Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.14 $
---  $Date: 2014/05/24 21:31:05 $
+--  $Revision: 1.15 $
+--  $Date: 2018/07/07 23:28:45 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with System;
@@ -52,7 +52,6 @@ with Ada.Strings.Fixed;
 package body Terminal_Interface.Curses is
 
    use Aux;
-   use type System.Bit_Order;
 
    package ASF renames Ada.Strings.Fixed;
 

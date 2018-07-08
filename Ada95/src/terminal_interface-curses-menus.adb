@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 1998-2011,2014 Free Software Foundation, Inc.              --
+-- Copyright (c) 1998-2014,2018 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author:  Juergen Pfeifer, 1996
 --  Version Control:
---  $Revision: 1.32 $
---  $Date: 2014/05/24 21:31:05 $
+--  $Revision: 1.33 $
+--  $Date: 2018/07/07 23:36:44 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 with Ada.Unchecked_Deallocation;
@@ -52,7 +52,6 @@ package body Terminal_Interface.Curses.Menus is
    package I_Array is new
      Interfaces.C.Pointers (Natural, Item, C_Item_Array, Null_Item);
 
-   use type System.Bit_Order;
    subtype chars_ptr is Interfaces.C.Strings.chars_ptr;
 
 ------------------------------------------------------------------------------
