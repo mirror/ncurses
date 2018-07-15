@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.839 2018/06/21 00:23:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.841 2018/07/14 23:48:44 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -6931,6 +6931,33 @@ top_builddir=ifelse($1,,`pwd`,$1)
 AC_SUBST(top_builddir)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_TRY_PKG_CONFIG version: 5 updated: 2013/07/06 21:27:06
+dnl -----------------
+dnl This is a simple wrapper to use for pkg-config, for libraries which may be
+dnl available in that form.
+dnl
+dnl $1 = package name
+dnl $2 = extra logic to use, if any, after updating CFLAGS and LIBS
+dnl $3 = logic to use if pkg-config does not have the package
+AC_DEFUN([CF_TRY_PKG_CONFIG],[
+AC_REQUIRE([CF_PKG_CONFIG])
+
+if test "$PKG_CONFIG" != none && "$PKG_CONFIG" --exists $1; then
+	CF_VERBOSE(found package $1)
+	cf_pkgconfig_incs="`$PKG_CONFIG --cflags $1 2>/dev/null`"
+	cf_pkgconfig_libs="`$PKG_CONFIG --libs   $1 2>/dev/null`"
+	CF_VERBOSE(package $1 CFLAGS: $cf_pkgconfig_incs)
+	CF_VERBOSE(package $1 LIBS: $cf_pkgconfig_libs)
+	CF_ADD_CFLAGS($cf_pkgconfig_incs)
+	CF_ADD_LIBS($cf_pkgconfig_libs)
+	ifelse([$2],,:,[$2])
+else
+	cf_pkgconfig_incs=
+	cf_pkgconfig_libs=
+	ifelse([$3],,:,[$3])
+fi
+])
+dnl ---------------------------------------------------------------------------
 dnl CF_TRY_XOPEN_SOURCE version: 2 updated: 2018/06/20 20:23:13
 dnl -------------------
 dnl If _XOPEN_SOURCE is not defined in the compile environment, check if we
@@ -7745,6 +7772,48 @@ case "x$cf_dst_eval" in
 esac
 AC_SUBST($3)dnl
 
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_PCRE2 version: 2 updated: 2018/07/14 16:47:56
+dnl -------------
+dnl Add PCRE2 (Perl-compatible regular expressions v2) to the build if it is
+dnl available and the user requests it.  Assume the application will otherwise
+dnl use the POSIX interface.
+dnl
+dnl TODO allow $withval to specify package location
+AC_DEFUN([CF_WITH_PCRE2],
+[
+AC_REQUIRE([CF_PKG_CONFIG])
+
+AC_MSG_CHECKING(if you want to use PCRE2 for regular-expressions)
+AC_ARG_WITH(pcre2,
+	[  --with-pcre2            use PCRE2 for regular-expressions])
+test -z "$with_pcre2" && with_pcre2=no
+AC_MSG_RESULT($with_pcre2)
+
+if test "x$with_pcre2" != xno ; then
+	CF_TRY_PKG_CONFIG(libpcre2,,[
+	CF_TRY_PKG_CONFIG(libpcre,,[
+			AC_MSG_ERROR(Cannot find PCRE2 library)])])
+
+	AC_DEFINE(HAVE_LIB_PCRE2,1,[Define to 1 if we can/should compile with the PCRE2 library])
+
+	# if pkgconfig gave no results, look for the libraries directly
+	case $LIBS in
+	(*pcre2-posix*|*pcreposix*)
+		;;
+	(*)
+		AC_CHECK_LIB(pcre2-posix,regcomp,[
+			CF_ADD_LIB(pcre2-posix)],
+			[AC_CHECK_LIB(pcreposix,regcomp,[
+			 CF_ADD_LIB(pcreposix)
+			],[AC_MSG_ERROR(Cannot find PCRE2 POSIX library)])])
+		;;
+	esac
+
+	# either way, check for the library header files
+	AC_CHECK_HEADERS(pcre2-posix.h pcreposix.h)
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_PKG_CONFIG_LIBDIR version: 10 updated: 2015/08/22 17:10:56

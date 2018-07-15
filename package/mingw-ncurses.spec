@@ -3,7 +3,7 @@
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
 Version: 6.1
-Release: 20180707
+Release: 20180714
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -70,6 +70,7 @@ This package is used for testing ABI %{MY_ABI} with cross-compiles to MinGW.
 	--with-fallbacks=unknown,xterm \\\
 	--with-install-prefix=$RPM_BUILD_ROOT \\\
 	--with-pc-suffix=%{MY_ABI} \\\
+	--with-pcre2 \\\
 	--with-shared \\\
 	--with-tparm-arg=intptr_t \\\
 	--with-trace \\\

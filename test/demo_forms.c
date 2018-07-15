@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,14 +26,12 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.53 2017/04/10 00:28:54 tom Exp $
+ * $Id: demo_forms.c,v 1.55 2018/07/14 23:26:02 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
  */
 /*
-TYPE_ENUM			-
-TYPE_REGEXP			-
 dup_field			-
 field_init			-
 field_just			-
@@ -440,6 +438,8 @@ demo_forms(void)
     int pg;
     WINDOW *also;
     const char *fname;
+    static const char *my_enum[] =
+    {"first", "second", "third", 0};
 
 #ifdef NCURSES_MOUSE_VERSION
     mousemask(ALL_MOUSE_EVENTS, (mmask_t *) 0);
@@ -478,23 +478,30 @@ demo_forms(void)
 	    f[n++] = make_field(fname, 3, 34, 1, 12);
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 	    break;
+
 	case 1:
 	    fname = "Last Name";
 	    f[n++] = make_label(fname, 2, 0);
-	    f[n++] = make_field(fname, 3, 0, 1, 18);
+	    f[n++] = make_field(fname, 3, 0, 1, 12);
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 
 	    fname = "First Name";
-	    f[n++] = make_label(fname, 2, 20);
-	    f[n++] = make_field(fname, 3, 20, 1, 12);
+	    f[n++] = make_label(fname, 2, 14);
+	    f[n++] = make_field(fname, 3, 14, 1, 12);
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
 
 	    fname = "MI";
-	    f[n++] = make_label(fname, 2, 34);
-	    f[n++] = make_field(fname, 3, 34, 1, 1);
+	    f[n++] = make_label(fname, 2, 28);
+	    f[n++] = make_field(fname, 3, 28, 1, 1);
 	    set_field_pad(f[n - 1], '?');
 	    set_field_type(f[n - 1], TYPE_ALPHA, 1);
+
+	    fname = "First/Second/Third";
+	    f[n++] = make_label(fname, 2, 32);
+	    f[n++] = make_field(fname, 3, 32, 1, 12);
+	    set_field_type(f[n - 1], TYPE_ENUM, my_enum, 0, 0);
 	    break;
+
 	case 2:
 	    fname = "Host Name";
 	    f[n++] = make_label(fname, 2, 0);
@@ -507,20 +514,24 @@ demo_forms(void)
 	    f[n++] = make_field(fname, 3, 26, 1, 16);
 	    set_field_type(f[n - 1], TYPE_IPV4, 1);
 #endif
-
 	    break;
 
 	case 3:
 	    fname = "Four digits";
 	    f[n++] = make_label(fname, 2, 0);
-	    f[n++] = make_field(fname, 3, 0, 1, 18);
+	    f[n++] = make_field(fname, 3, 0, 1, 10);
 	    set_field_type(f[n - 1], TYPE_INTEGER, 4, 0, 0);
 
 	    fname = "Numeric";
-	    f[n++] = make_label(fname, 2, 20);
-	    f[n++] = make_field(fname, 3, 20, 1, 12);
+	    f[n++] = make_label(fname, 2, 13);
+	    f[n++] = make_field(fname, 3, 13, 1, 12);
 	    set_field_type(f[n - 1], TYPE_NUMERIC, 3, -10000.0, 100000000.0);
 
+	    fname = "Phone number";
+	    f[n++] = make_label(fname, 2, 27);
+	    f[n++] = make_field(fname, 3, 27, 1, 16);
+	    set_field_type(f[n - 1], TYPE_REGEXP,
+			   "^([0-9]-)?[0-9]{3}-[0-9]{3}-[0-9]{4} *$");;
 	    break;
 	}
 

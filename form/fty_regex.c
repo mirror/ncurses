@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2015 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,10 +34,17 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.26 2015/01/10 17:10:25 tom Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.27 2018/07/14 21:41:39 tom Exp $")
 
-#if HAVE_REGEX_H_FUNCS		/* We prefer POSIX regex */
+#if HAVE_REGEX_H_FUNCS || HAVE_LIB_PCRE2	/* We prefer POSIX regex */
+
+#if HAVE_PCRE2_POSIX_H
+#include <pcre2-posix.h>
+#elif HAVE_PCREPOSIX_H
+#include <pcreposix.h>
+#else
 #include <regex.h>
+#endif
 
 typedef struct
   {

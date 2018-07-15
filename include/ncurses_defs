@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.84 2017/12/26 22:43:14 tom Exp $
+# $Id: ncurses_defs,v 1.85 2018/07/14 21:20:36 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -94,6 +94,7 @@ HAVE_LIBGPM
 HAVE_LIBMENU
 HAVE_LIBMPATROL
 HAVE_LIBPANEL
+HAVE_LIB_PCRE2
 HAVE_LIMITS_H
 HAVE_LINK
 HAVE_LOCALE_H
@@ -115,6 +116,8 @@ HAVE_NANOSLEEP
 HAVE_NC_ALLOC_H
 HAVE_NEWPAD	1
 HAVE_PANEL_H
+HAVE_PCRE2_POSIX_H
+HAVE_PCREPOSIX_H
 HAVE_POLL
 HAVE_POLL_H
 HAVE_PURIFY

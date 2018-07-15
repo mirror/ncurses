@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.659 2018/06/16 21:26:41 tom Exp $
+dnl $Id: configure.in,v 1.660 2018/07/14 19:04:04 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.659 $)
+AC_REVISION($Revision: 1.660 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -521,6 +521,7 @@ if test "$with_gpm" != no ; then
 	CF_CHECK_GPM_WGETCH
 fi
 
+CF_WITH_PCRE2
 CF_WITH_SYSMOUSE
 
 # pretend that ncurses==ncursesw==ncursest
