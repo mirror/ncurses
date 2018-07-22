@@ -52,7 +52,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.78 2018/06/17 01:40:17 tom Exp $
+  $Id: worm.c,v 1.79 2018/07/21 21:40:00 tom Exp $
 */
 
 #include <test.priv.h>
@@ -401,11 +401,12 @@ get_input(void)
 
 #ifdef KEY_RESIZE
 static int
-update_refs(WINDOW *win)
+update_refs(WINDOW *win, void *data)
 {
     int x, y;
 
     (void) win;
+    (void) data;
     if (last_x != COLS - 1) {
 	for (y = 0; y <= last_y; y++) {
 	    refs[y] = typeRealloc(int, (size_t) COLS, refs[y]);

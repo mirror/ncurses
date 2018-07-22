@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.702 $
-#	$Date: 2018/06/30 17:32:07 $
+#	$Revision: 1.705 $
+#	$Date: 2018/07/21 19:02:07 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -8119,7 +8119,7 @@ interix|opennt|opennt-25|ntconsole|ntconsole-25|OpenNT-term compatible with colo
 	op=\E[m, rc=\E[u, rev=\E[7m, ri=\E[T, rin=\E[%p1%dT,
 	rmcup=\E[2b\E[u\r\E[K, rmso=\E[m, rmul=\E[m, rs1=\Ec,
 	sc=\E[s, sgr0=\E[0m, smcup=\E[s\E[1b, smso=\E[7m,
-	smul=\E[4m, use=ansi+rep, use=klone+color,
+	smul=\E[4m, use=klone+color,
 
 opennt-35|ntconsole-35|OpenNT-term35 compatible with color,
 	lines#35, use=opennt,
@@ -10757,7 +10757,7 @@ wy30-vb|wyse30-vb|wyse 30 visible bell,
 wy50|wyse50|Wyse 50,
 	am, bw, hs, mc5i, mir, msgr, xon,
 	cols#80, lh#1, lines#24, lw#8, ma#1, nlab#8, wsl#45,
-	acsc=0wa_h[jukslrmqnxqzttuyv]wpxv, bel=^G, cbt=\EI,
+	acsc=a;j5k3l2m1n8q\:t4u9v=w0x6, bel=^G, cbt=\EI,
 	civis=\E`0, clear=\E+$<20>, cnorm=\E`1, cr=\r, cub1=^H,
 	cud1=\n, cuf1=^L, cup=\E=%p1%{32}%+%c%p2%{32}%+%c,
 	cuu1=^K, dch1=\EW$<1>, dim=\E`7\E), dl1=\ER, dsl=\EF\r,
@@ -10777,7 +10777,10 @@ wy50|wyse50|Wyse 50,
 	sgr=%?%p1%p3%|%t\E`6\E)%e%p5%p8%|%t\E`7\E)%e\E(%;%?%p9%t\EH
 	    \002%e\EH\003%;,
 	sgr0=\E(\EH\003, smacs=\EH^B, smir=\Eq, smln=\EA10,
-	smso=\E`6\E), tbc=\E0, tsl=\EF,
+	smso=\E`6\E), tbc=\E0, tsl=\EF, kF1=^A`\r, kF10=^Ai\r,
+	kF11=^Aj\r, kF12=^Ak\r, kF13=^Al\r, kF14=^Am\r, kF15=^An\r,
+	kF16=^Ao\r, kF2=^Aa\r, kF3=^Ab\r, kF4=^Ac\r, kF5=^Ad\r,
+	kF6=^Ae\r, kF7=^Af\r, kF8=^Ag\r, kF9=^Ah\r,
 #
 #	This terminal description uses the non-hidden attribute mode
 #	(with magic cookie).
@@ -11004,7 +11007,10 @@ wy60|wyse60|Wyse 60,
 	    %{64}%|%;%?%p7%t%{1}%|%;%c,
 	sgr0=\E(\EH\003\EG0\EcD, smacs=\EcE, smam=\Ed/,
 	smcup=\Ew0, smir=\Eq, smln=\EA10, smso=\EGt, smxon=\Ec21,
-	tbc=\E0, tsl=\EF, use=adm+sgr,
+	tbc=\E0, tsl=\EF, kF1=^A`\r, kF10=^Ai\r, kF11=^Aj\r,
+	kF12=^Ak\r, kF13=^Al\r, kF14=^Am\r, kF15=^An\r, kF16=^Ao\r,
+	kF2=^Aa\r, kF3=^Ab\r, kF4=^Ac\r, kF5=^Ad\r, kF6=^Ae\r,
+	kF7=^Af\r, kF8=^Ag\r, kF9=^Ah\r, use=adm+sgr,
 #
 wy60-w|wyse60-w|wyse 60 132-column,
 	cols#132, lw#7, nlab#16, wsl#97,
@@ -25747,5 +25753,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2018-06-30
 #	+ add acsc string to vi200 (Nibby Nebbulous)
 #	  add right/down-arrow to vi200's acsc -TD
+#
+# 2018-07-21
+#	+ corrected acsc for wy50 -TD
+#	+ add wy50 and wy60 shifted function-keys as kF1 to kF16 -TD
+#	+ remove ansi+rep mis-added to interix in 2018-02-23 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

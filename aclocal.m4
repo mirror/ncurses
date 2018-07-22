@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.841 2018/07/14 23:48:44 tom Exp $
+dnl $Id: aclocal.m4,v 1.842 2018/07/21 23:12:32 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -7389,17 +7389,27 @@ AC_SUBST(ADA_OBJECTS)
 AC_MSG_RESULT($ADA_OBJECTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_ADA_SHAREDLIB version: 4 updated: 2014/05/31 21:08:37
+dnl CF_WITH_ADA_SHAREDLIB version: 5 updated: 2018/07/21 19:10:35
 dnl ---------------------
 dnl Command-line option to specify if an Ada95 shared-library should be built,
 dnl and optionally what its soname should be.
 AC_DEFUN([CF_WITH_ADA_SHAREDLIB],[
+AC_REQUIRE([CF_GNAT_PROJECTS])
 AC_MSG_CHECKING(if an Ada95 shared-library should be built)
 AC_ARG_WITH(ada-sharedlib,
 	[  --with-ada-sharedlib=soname build shared-library (requires GNAT projects)],
 	[with_ada_sharedlib=$withval],
 	[with_ada_sharedlib=no])
 AC_MSG_RESULT($with_ada_sharedlib)
+
+if test "x$with_ada_sharedlib" != xno
+then
+	if test "x$cf_gnat_projects" != xyes
+	then
+		AC_MSG_WARN(disabling shared-library since GNAT projects are not supported)
+		with_ada_sharedlib=no
+	fi
+fi
 
 ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
 MAKE_ADA_SHAREDLIB="#"

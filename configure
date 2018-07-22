@@ -23360,6 +23360,16 @@ fi;
 echo "$as_me:23360: result: $with_ada_sharedlib" >&5
 echo "${ECHO_T}$with_ada_sharedlib" >&6
 
+if test "x$with_ada_sharedlib" != xno
+then
+	if test "x$cf_gnat_projects" != xyes
+	then
+		{ echo "$as_me:23367: WARNING: disabling shared-library since GNAT projects are not supported" >&5
+echo "$as_me: WARNING: disabling shared-library since GNAT projects are not supported" >&2;}
+		with_ada_sharedlib=no
+	fi
+fi
+
 ADA_SHAREDLIB='lib$(LIB_NAME).so.1'
 MAKE_ADA_SHAREDLIB="#"
 
@@ -23380,13 +23390,13 @@ fi
 
 # do this "late" to avoid conflict with header-checks
 if test "x$with_widec" = xyes ; then
-	echo "$as_me:23383: checking for wchar_t" >&5
+	echo "$as_me:23393: checking for wchar_t" >&5
 echo $ECHO_N "checking for wchar_t... $ECHO_C" >&6
 if test "${ac_cv_type_wchar_t+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 23389 "configure"
+#line 23399 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23401,16 +23411,16 @@ if (sizeof (wchar_t))
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:23404: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:23414: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:23407: \$? = $ac_status" >&5
+  echo "$as_me:23417: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:23410: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23420: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23413: \$? = $ac_status" >&5
+  echo "$as_me:23423: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_cv_type_wchar_t=yes
 else
@@ -23420,10 +23430,10 @@ ac_cv_type_wchar_t=no
 fi
 rm -f conftest.$ac_objext conftest.$ac_ext
 fi
-echo "$as_me:23423: result: $ac_cv_type_wchar_t" >&5
+echo "$as_me:23433: result: $ac_cv_type_wchar_t" >&5
 echo "${ECHO_T}$ac_cv_type_wchar_t" >&6
 
-echo "$as_me:23426: checking size of wchar_t" >&5
+echo "$as_me:23436: checking size of wchar_t" >&5
 echo $ECHO_N "checking size of wchar_t... $ECHO_C" >&6
 if test "${ac_cv_sizeof_wchar_t+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -23432,7 +23442,7 @@ else
   if test "$cross_compiling" = yes; then
   # Depending upon the size, compute the lo and hi bounds.
 cat >conftest.$ac_ext <<_ACEOF
-#line 23435 "configure"
+#line 23445 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23444,21 +23454,21 @@ int _array_ [1 - 2 * !((sizeof (wchar_t)) >= 0)]
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:23447: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:23457: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:23450: \$? = $ac_status" >&5
+  echo "$as_me:23460: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:23453: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23463: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23456: \$? = $ac_status" >&5
+  echo "$as_me:23466: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_lo=0 ac_mid=0
   while :; do
     cat >conftest.$ac_ext <<_ACEOF
-#line 23461 "configure"
+#line 23471 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23470,16 +23480,16 @@ int _array_ [1 - 2 * !((sizeof (wchar_t)) <= $ac_mid)]
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:23473: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:23483: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:23476: \$? = $ac_status" >&5
+  echo "$as_me:23486: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:23479: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23489: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23482: \$? = $ac_status" >&5
+  echo "$as_me:23492: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_hi=$ac_mid; break
 else
@@ -23495,7 +23505,7 @@ cat conftest.$ac_ext >&5
 ac_hi=-1 ac_mid=-1
   while :; do
     cat >conftest.$ac_ext <<_ACEOF
-#line 23498 "configure"
+#line 23508 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23507,16 +23517,16 @@ int _array_ [1 - 2 * !((sizeof (wchar_t)) >= $ac_mid)]
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:23510: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:23520: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:23513: \$? = $ac_status" >&5
+  echo "$as_me:23523: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:23516: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23526: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23519: \$? = $ac_status" >&5
+  echo "$as_me:23529: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_lo=$ac_mid; break
 else
@@ -23532,7 +23542,7 @@ rm -f conftest.$ac_objext conftest.$ac_ext
 while test "x$ac_lo" != "x$ac_hi"; do
   ac_mid=`expr '(' $ac_hi - $ac_lo ')' / 2 + $ac_lo`
   cat >conftest.$ac_ext <<_ACEOF
-#line 23535 "configure"
+#line 23545 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23544,16 +23554,16 @@ int _array_ [1 - 2 * !((sizeof (wchar_t)) <= $ac_mid)]
 }
 _ACEOF
 rm -f conftest.$ac_objext
-if { (eval echo "$as_me:23547: \"$ac_compile\"") >&5
+if { (eval echo "$as_me:23557: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:23550: \$? = $ac_status" >&5
+  echo "$as_me:23560: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest.$ac_objext'
-  { (eval echo "$as_me:23553: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23563: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23556: \$? = $ac_status" >&5
+  echo "$as_me:23566: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_hi=$ac_mid
 else
@@ -23566,12 +23576,12 @@ done
 ac_cv_sizeof_wchar_t=$ac_lo
 else
   if test "$cross_compiling" = yes; then
-  { { echo "$as_me:23569: error: cannot run test program while cross compiling" >&5
+  { { echo "$as_me:23579: error: cannot run test program while cross compiling" >&5
 echo "$as_me: error: cannot run test program while cross compiling" >&2;}
    { (exit 1); exit 1; }; }
 else
   cat >conftest.$ac_ext <<_ACEOF
-#line 23574 "configure"
+#line 23584 "configure"
 #include "confdefs.h"
 $ac_includes_default
 int
@@ -23587,15 +23597,15 @@ fclose (f);
 }
 _ACEOF
 rm -f conftest$ac_exeext
-if { (eval echo "$as_me:23590: \"$ac_link\"") >&5
+if { (eval echo "$as_me:23600: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:23593: \$? = $ac_status" >&5
+  echo "$as_me:23603: \$? = $ac_status" >&5
   (exit $ac_status); } && { ac_try='./conftest$ac_exeext'
-  { (eval echo "$as_me:23595: \"$ac_try\"") >&5
+  { (eval echo "$as_me:23605: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:23598: \$? = $ac_status" >&5
+  echo "$as_me:23608: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
   ac_cv_sizeof_wchar_t=`cat conftest.val`
 else
@@ -23611,7 +23621,7 @@ else
   ac_cv_sizeof_wchar_t=0
 fi
 fi
-echo "$as_me:23614: result: $ac_cv_sizeof_wchar_t" >&5
+echo "$as_me:23624: result: $ac_cv_sizeof_wchar_t" >&5
 echo "${ECHO_T}$ac_cv_sizeof_wchar_t" >&6
 cat >>confdefs.h <<EOF
 #define SIZEOF_WCHAR_T $ac_cv_sizeof_wchar_t
@@ -23629,7 +23639,7 @@ fi
 ### chooses to split module lists into libraries.
 ###
 ### (see CF_LIB_RULES).
-echo "$as_me:23632: checking for library subsets" >&5
+echo "$as_me:23642: checking for library subsets" >&5
 echo $ECHO_N "checking for library subsets... $ECHO_C" >&6
 LIB_SUBSETS=
 
@@ -23671,7 +23681,7 @@ fi
 test "x$with_widec"     = xyes && LIB_SUBSETS="${LIB_SUBSETS}+widechar"
 test "x$with_ext_funcs" = xyes && LIB_SUBSETS="${LIB_SUBSETS}+ext_funcs"
 
-echo "$as_me:23674: result: $LIB_SUBSETS" >&5
+echo "$as_me:23684: result: $LIB_SUBSETS" >&5
 echo "${ECHO_T}$LIB_SUBSETS" >&6
 
 ### Construct the list of include-directories to be generated
@@ -23702,7 +23712,7 @@ elif test "$includedir" != "/usr/include"; then
 fi
 
 ### Build up pieces for makefile rules
-echo "$as_me:23705: checking default library suffix" >&5
+echo "$as_me:23715: checking default library suffix" >&5
 echo $ECHO_N "checking default library suffix... $ECHO_C" >&6
 
 	case $DFT_LWR_MODEL in
@@ -23713,10 +23723,10 @@ echo $ECHO_N "checking default library suffix... $ECHO_C" >&6
 	(shared)  DFT_ARG_SUFFIX=''   ;;
 	esac
 	test -n "$LIB_SUFFIX" && DFT_ARG_SUFFIX="${LIB_SUFFIX}${DFT_ARG_SUFFIX}"
-echo "$as_me:23716: result: $DFT_ARG_SUFFIX" >&5
+echo "$as_me:23726: result: $DFT_ARG_SUFFIX" >&5
 echo "${ECHO_T}$DFT_ARG_SUFFIX" >&6
 
-echo "$as_me:23719: checking default library-dependency suffix" >&5
+echo "$as_me:23729: checking default library-dependency suffix" >&5
 echo $ECHO_N "checking default library-dependency suffix... $ECHO_C" >&6
 
 	case X$DFT_LWR_MODEL in
@@ -23774,10 +23784,10 @@ echo $ECHO_N "checking default library-dependency suffix... $ECHO_C" >&6
 		DFT_LIB_SUFFIX="${LIB_SUFFIX}${EXTRA_SUFFIX}${DFT_LIB_SUFFIX}"
 		DFT_DEP_SUFFIX="${LIB_SUFFIX}${EXTRA_SUFFIX}${DFT_DEP_SUFFIX}"
 	fi
-echo "$as_me:23777: result: $DFT_DEP_SUFFIX" >&5
+echo "$as_me:23787: result: $DFT_DEP_SUFFIX" >&5
 echo "${ECHO_T}$DFT_DEP_SUFFIX" >&6
 
-echo "$as_me:23780: checking default object directory" >&5
+echo "$as_me:23790: checking default object directory" >&5
 echo $ECHO_N "checking default object directory... $ECHO_C" >&6
 
 	case $DFT_LWR_MODEL in
@@ -23793,11 +23803,11 @@ echo $ECHO_N "checking default object directory... $ECHO_C" >&6
 			DFT_OBJ_SUBDIR='obj_s' ;;
 		esac
 	esac
-echo "$as_me:23796: result: $DFT_OBJ_SUBDIR" >&5
+echo "$as_me:23806: result: $DFT_OBJ_SUBDIR" >&5
 echo "${ECHO_T}$DFT_OBJ_SUBDIR" >&6
 
 if test "x$cf_with_cxx" = xyes ; then
-echo "$as_me:23800: checking c++ library-dependency suffix" >&5
+echo "$as_me:23810: checking c++ library-dependency suffix" >&5
 echo $ECHO_N "checking c++ library-dependency suffix... $ECHO_C" >&6
 if test "$with_libtool" != "no"; then
 	# libtool thinks it can make c++ shared libraries (perhaps only g++)
@@ -23865,7 +23875,7 @@ else
 	fi
 
 fi
-echo "$as_me:23868: result: $CXX_LIB_SUFFIX" >&5
+echo "$as_me:23878: result: $CXX_LIB_SUFFIX" >&5
 echo "${ECHO_T}$CXX_LIB_SUFFIX" >&6
 
 fi
@@ -24041,19 +24051,19 @@ fi
 
 if test -n "$LDFLAGS_STATIC" && test -n "$LDFLAGS_SHARED"
 then
-	echo "$as_me:24044: checking if linker supports switching between static/dynamic" >&5
+	echo "$as_me:24054: checking if linker supports switching between static/dynamic" >&5
 echo $ECHO_N "checking if linker supports switching between static/dynamic... $ECHO_C" >&6
 
 	rm -f libconftest.a
 	cat >conftest.$ac_ext <<EOF
-#line 24049 "configure"
+#line 24059 "configure"
 #include <stdio.h>
 int cf_ldflags_static(FILE *fp) { return fflush(fp); }
 EOF
-	if { (eval echo "$as_me:24053: \"$ac_compile\"") >&5
+	if { (eval echo "$as_me:24063: \"$ac_compile\"") >&5
   (eval $ac_compile) 2>&5
   ac_status=$?
-  echo "$as_me:24056: \$? = $ac_status" >&5
+  echo "$as_me:24066: \$? = $ac_status" >&5
   (exit $ac_status); } ; then
 		( $AR $ARFLAGS libconftest.a conftest.o ) 2>&5 1>/dev/null
 		( eval $RANLIB libconftest.a ) 2>&5 >/dev/null
@@ -24064,10 +24074,10 @@ EOF
 
 	LIBS="$LDFLAGS_STATIC -L`pwd` -lconftest $LDFLAGS_DYNAMIC $LIBS"
 	cat >conftest.$ac_ext <<_ACEOF
-#line 24067 "configure"
+#line 24077 "configure"
 #include "confdefs.h"
 
-#line 24070 "configure"
+#line 24080 "configure"
 #include <stdio.h>
 int cf_ldflags_static(FILE *fp);
 
@@ -24082,16 +24092,16 @@ main (void)
 }
 _ACEOF
 rm -f conftest.$ac_objext conftest$ac_exeext
-if { (eval echo "$as_me:24085: \"$ac_link\"") >&5
+if { (eval echo "$as_me:24095: \"$ac_link\"") >&5
   (eval $ac_link) 2>&5
   ac_status=$?
-  echo "$as_me:24088: \$? = $ac_status" >&5
+  echo "$as_me:24098: \$? = $ac_status" >&5
   (exit $ac_status); } &&
          { ac_try='test -s conftest$ac_exeext'
-  { (eval echo "$as_me:24091: \"$ac_try\"") >&5
+  { (eval echo "$as_me:24101: \"$ac_try\"") >&5
   (eval $ac_try) 2>&5
   ac_status=$?
-  echo "$as_me:24094: \$? = $ac_status" >&5
+  echo "$as_me:24104: \$? = $ac_status" >&5
   (exit $ac_status); }; }; then
 
 	# some linkers simply ignore the -dynamic
@@ -24114,7 +24124,7 @@ rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
 	rm -f libconftest.*
 	LIBS="$cf_save_LIBS"
 
-	echo "$as_me:24117: result: $cf_ldflags_static" >&5
+	echo "$as_me:24127: result: $cf_ldflags_static" >&5
 echo "${ECHO_T}$cf_ldflags_static" >&6
 
 	if test $cf_ldflags_static != yes
@@ -24130,7 +24140,7 @@ fi
 	;;
 esac
 
-echo "$as_me:24133: checking where we will install curses.h" >&5
+echo "$as_me:24143: checking where we will install curses.h" >&5
 echo $ECHO_N "checking where we will install curses.h... $ECHO_C" >&6
 
 includesubdir=
@@ -24140,7 +24150,7 @@ if test "$with_overwrite" = no && \
 then
 	includesubdir="/ncurses${USE_LIB_SUFFIX}"
 fi
-echo "$as_me:24143: result: ${includedir}${includesubdir}" >&5
+echo "$as_me:24153: result: ${includedir}${includesubdir}" >&5
 echo "${ECHO_T}${includedir}${includesubdir}" >&6
 
 ### Resolve a conflict between normal and wide-curses by forcing applications
@@ -24148,7 +24158,7 @@ echo "${ECHO_T}${includedir}${includesubdir}" >&6
 if test "$with_overwrite" != no ; then
 if test "$NCURSES_LIBUTF8" = 1 ; then
 	NCURSES_LIBUTF8='defined(HAVE_LIBUTF8_H)'
-	{ echo "$as_me:24151: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&5
+	{ echo "$as_me:24161: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&5
 echo "$as_me: WARNING: Wide-character applications must define HAVE_LIBUTF8_H to include curses.h" >&2;}
 fi
 fi
@@ -24166,7 +24176,7 @@ EOF
 ### Construct the list of subdirectories for which we'll customize makefiles
 ### with the appropriate compile-rules.
 
-echo "$as_me:24169: checking for src modules" >&5
+echo "$as_me:24179: checking for src modules" >&5
 echo $ECHO_N "checking for src modules... $ECHO_C" >&6
 
 # dependencies and linker-arguments for test-programs
@@ -24231,7 +24241,7 @@ EOF
 		fi
 	fi
 done
-echo "$as_me:24234: result: $cf_cv_src_modules" >&5
+echo "$as_me:24244: result: $cf_cv_src_modules" >&5
 echo "${ECHO_T}$cf_cv_src_modules" >&6
 
 TEST_ARGS="-L${LIB_DIR} $TEST_ARGS"
@@ -24468,7 +24478,7 @@ fi
 
 # Extract the first word of "tic", so it can be a program name with args.
 set dummy tic; ac_word=$2
-echo "$as_me:24471: checking for $ac_word" >&5
+echo "$as_me:24481: checking for $ac_word" >&5
 echo $ECHO_N "checking for $ac_word... $ECHO_C" >&6
 if test "${ac_cv_path_TIC_PATH+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
@@ -24485,7 +24495,7 @@ for ac_dir in $ac_dummy; do
   test -z "$ac_dir" && ac_dir=.
   if $as_executable_p "$ac_dir/$ac_word"; then
    ac_cv_path_TIC_PATH="$ac_dir/$ac_word"
-   echo "$as_me:24488: found $ac_dir/$ac_word" >&5
+   echo "$as_me:24498: found $ac_dir/$ac_word" >&5
    break
 fi
 done
@@ -24497,10 +24507,10 @@ fi
 TIC_PATH=$ac_cv_path_TIC_PATH
 
 if test -n "$TIC_PATH"; then
-  echo "$as_me:24500: result: $TIC_PATH" >&5
+  echo "$as_me:24510: result: $TIC_PATH" >&5
 echo "${ECHO_T}$TIC_PATH" >&6
 else
-  echo "$as_me:24503: result: no" >&5
+  echo "$as_me:24513: result: no" >&5
 echo "${ECHO_T}no" >&6
 fi
 
@@ -24508,7 +24518,7 @@ if test -n "$FALLBACK_LIST"
 then
 	if test "$TIC_PATH" = unknown
 	then
-		{ echo "$as_me:24511: WARNING: no tic program found for fallbacks" >&5
+		{ echo "$as_me:24521: WARNING: no tic program found for fallbacks" >&5
 echo "$as_me: WARNING: no tic program found for fallbacks" >&2;}
 	fi
 fi
@@ -24544,7 +24554,7 @@ case $cf_cv_system_name in
 	(*-D_XOPEN_SOURCE_EXTENDED*)
 		test -n "$verbose" && echo "	moving _XOPEN_SOURCE_EXTENDED to work around g++ problem" 1>&6
 
-echo "${as_me:-configure}:24547: testing moving _XOPEN_SOURCE_EXTENDED to work around g++ problem ..." 1>&5
+echo "${as_me:-configure}:24557: testing moving _XOPEN_SOURCE_EXTENDED to work around g++ problem ..." 1>&5
 
 		CFLAGS="$CFLAGS -D_XOPEN_SOURCE_EXTENDED"
 		CPPFLAGS=`echo "x$CPPFLAGS" | sed -e  's/^.//' -e 's/-D_XOPEN_SOURCE_EXTENDED//'`
@@ -24555,7 +24565,7 @@ esac
 
 # Help to automatically enable the extended curses features when using either
 # the *-config or the ".pc" files by adding defines.
-echo "$as_me:24558: checking for defines to add to ncurses${USE_CFG_SUFFIX}-config script" >&5
+echo "$as_me:24568: checking for defines to add to ncurses${USE_CFG_SUFFIX}-config script" >&5
 echo $ECHO_N "checking for defines to add to ncurses${USE_CFG_SUFFIX}-config script... $ECHO_C" >&6
 PKG_CFLAGS=
 for cf_loop1 in $CPPFLAGS_after_XOPEN
@@ -24571,7 +24581,7 @@ do
 	done
 	test "$cf_found" = no && PKG_CFLAGS="$PKG_CFLAGS $cf_loop1"
 done
-echo "$as_me:24574: result: $PKG_CFLAGS" >&5
+echo "$as_me:24584: result: $PKG_CFLAGS" >&5
 echo "${ECHO_T}$PKG_CFLAGS" >&6
 
 # AC_CHECK_SIZEOF demands a literal parameter, no variables.  So we do this.
@@ -24628,7 +24638,7 @@ then
 	cf_filter_syms=$cf_dft_filter_syms
 	test -n "$verbose" && echo "	will map symbols to ABI=$cf_cv_abi_version" 1>&6
 
-echo "${as_me:-configure}:24631: testing will map symbols to ABI=$cf_cv_abi_version ..." 1>&5
+echo "${as_me:-configure}:24641: testing will map symbols to ABI=$cf_cv_abi_version ..." 1>&5
 
 fi
 
@@ -24738,7 +24748,7 @@ DEFS=-DHAVE_CONFIG_H
 : ${CONFIG_STATUS=./config.status}
 ac_clean_files_save=$ac_clean_files
 ac_clean_files="$ac_clean_files $CONFIG_STATUS"
-{ echo "$as_me:24741: creating $CONFIG_STATUS" >&5
+{ echo "$as_me:24751: creating $CONFIG_STATUS" >&5
 echo "$as_me: creating $CONFIG_STATUS" >&6;}
 cat >$CONFIG_STATUS <<_ACEOF
 #! $SHELL
@@ -24914,7 +24924,7 @@ cat >>$CONFIG_STATUS <<\EOF
     echo "$ac_cs_version"; exit 0 ;;
   --he | --h)
     # Conflict between --help and --header
-    { { echo "$as_me:24917: error: ambiguous option: $1
+    { { echo "$as_me:24927: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: ambiguous option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -24933,7 +24943,7 @@ Try \`$0 --help' for more information." >&2;}
     ac_need_defaults=false;;
 
   # This is an error.
-  -*) { { echo "$as_me:24936: error: unrecognized option: $1
+  -*) { { echo "$as_me:24946: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&5
 echo "$as_me: error: unrecognized option: $1
 Try \`$0 --help' for more information." >&2;}
@@ -25052,7 +25062,7 @@ do
   "Makefile" ) CONFIG_FILES="$CONFIG_FILES Makefile" ;;
   "default" ) CONFIG_COMMANDS="$CONFIG_COMMANDS default" ;;
   "include/ncurses_cfg.h" ) CONFIG_HEADERS="$CONFIG_HEADERS include/ncurses_cfg.h:include/ncurses_cfg.hin" ;;
-  *) { { echo "$as_me:25055: error: invalid argument: $ac_config_target" >&5
+  *) { { echo "$as_me:25065: error: invalid argument: $ac_config_target" >&5
 echo "$as_me: error: invalid argument: $ac_config_target" >&2;}
    { (exit 1); exit 1; }; };;
   esac
@@ -25542,7 +25552,7 @@ done; }
   esac
 
   if test x"$ac_file" != x-; then
-    { echo "$as_me:25545: creating $ac_file" >&5
+    { echo "$as_me:25555: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
     rm -f "$ac_file"
   fi
@@ -25560,7 +25570,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:25563: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:25573: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -25573,7 +25583,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:25576: error: cannot find input file: $f" >&5
+           { { echo "$as_me:25586: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -25589,7 +25599,7 @@ cat >>$CONFIG_STATUS <<\EOF
       if test -n "$ac_seen"; then
         ac_used=`grep '@datarootdir@' $ac_item`
         if test -z "$ac_used"; then
-          { echo "$as_me:25592: WARNING: datarootdir was used implicitly but not set:
+          { echo "$as_me:25602: WARNING: datarootdir was used implicitly but not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: datarootdir was used implicitly but not set:
 $ac_seen" >&2;}
@@ -25598,7 +25608,7 @@ $ac_seen" >&2;}
       fi
       ac_seen=`grep '${datarootdir}' $ac_item`
       if test -n "$ac_seen"; then
-        { echo "$as_me:25601: WARNING: datarootdir was used explicitly but not set:
+        { echo "$as_me:25611: WARNING: datarootdir was used explicitly but not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: datarootdir was used explicitly but not set:
 $ac_seen" >&2;}
@@ -25635,7 +25645,7 @@ s,@INSTALL@,$ac_INSTALL,;t t
             ac_init=`egrep '[ 	]*'$ac_name'[ 	]*=' $ac_file`
             if test -z "$ac_init"; then
               ac_seen=`echo "$ac_seen" |sed -e 's,^,'$ac_file':,'`
-              { echo "$as_me:25638: WARNING: Variable $ac_name is used but was not set:
+              { echo "$as_me:25648: WARNING: Variable $ac_name is used but was not set:
 $ac_seen" >&5
 echo "$as_me: WARNING: Variable $ac_name is used but was not set:
 $ac_seen" >&2;}
@@ -25646,7 +25656,7 @@ $ac_seen" >&2;}
     egrep -n '@[A-Z_][A-Z_0-9]+@' $ac_file >>$tmp/out
     if test -s $tmp/out; then
       ac_seen=`sed -e 's,^,'$ac_file':,' < $tmp/out`
-      { echo "$as_me:25649: WARNING: Some variables may not be substituted:
+      { echo "$as_me:25659: WARNING: Some variables may not be substituted:
 $ac_seen" >&5
 echo "$as_me: WARNING: Some variables may not be substituted:
 $ac_seen" >&2;}
@@ -25695,7 +25705,7 @@ for ac_file in : $CONFIG_HEADERS; do test "x$ac_file" = x: && continue
   * )   ac_file_in=$ac_file.in ;;
   esac
 
-  test x"$ac_file" != x- && { echo "$as_me:25698: creating $ac_file" >&5
+  test x"$ac_file" != x- && { echo "$as_me:25708: creating $ac_file" >&5
 echo "$as_me: creating $ac_file" >&6;}
 
   # First look for the input files in the build tree, otherwise in the
@@ -25706,7 +25716,7 @@ echo "$as_me: creating $ac_file" >&6;}
       -) echo $tmp/stdin ;;
       [\\/$]*)
          # Absolute (can't be DOS-style, as IFS=:)
-         test -f "$f" || { { echo "$as_me:25709: error: cannot find input file: $f" >&5
+         test -f "$f" || { { echo "$as_me:25719: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          echo $f;;
@@ -25719,7 +25729,7 @@ echo "$as_me: error: cannot find input file: $f" >&2;}
            echo $srcdir/$f
          else
            # /dev/null tree
-           { { echo "$as_me:25722: error: cannot find input file: $f" >&5
+           { { echo "$as_me:25732: error: cannot find input file: $f" >&5
 echo "$as_me: error: cannot find input file: $f" >&2;}
    { (exit 1); exit 1; }; }
          fi;;
@@ -25777,7 +25787,7 @@ cat >>$CONFIG_STATUS <<\EOF
   rm -f $tmp/in
   if test x"$ac_file" != x-; then
     if cmp -s $ac_file $tmp/config.h 2>/dev/null; then
-      { echo "$as_me:25780: $ac_file is unchanged" >&5
+      { echo "$as_me:25790: $ac_file is unchanged" >&5
 echo "$as_me: $ac_file is unchanged" >&6;}
     else
       ac_dir=`$as_expr X"$ac_file" : 'X\(.*[^/]\)//*[^/][^/]*/*$' \| \
@@ -26122,7 +26132,7 @@ cf_ITEM=`echo "$cf_item" | sed y%abcdefghijklmnopqrstuvwxyz./-%ABCDEFGHIJKLMNOPQ
 				(cygdll|msysdll|mingw)
 					test "x$with_shared_cxx" = xno && test -n "$verbose" && echo "	overriding CXX_MODEL to SHARED" 1>&6
 
-echo "${as_me:-configure}:26125: testing overriding CXX_MODEL to SHARED ..." 1>&5
+echo "${as_me:-configure}:26135: testing overriding CXX_MODEL to SHARED ..." 1>&5
 
 					with_shared_cxx=yes
 					;;

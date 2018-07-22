@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3159 2018/07/14 23:25:22 tom Exp $
+-- $Id: NEWS,v 1.3162 2018/07/21 21:42:07 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180721
+	+ build-fixes for gcc8.
+	+ corrected acsc for wy50 -TD
+	+ add wy50 and wy60 shifted function-keys as kF1 to kF16 -TD
+	+ remove ansi+rep mis-added to interix in 2018-02-23 -TD
 
 20180714
 	+ add enum, regex examples to test/demo_forms
