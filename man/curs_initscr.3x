@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_initscr.3x,v 1.30 2018/04/07 20:54:12 tom Exp $
+.\" $Id: curs_initscr.3x,v 1.31 2018/07/28 22:15:59 tom Exp $
 .TH curs_initscr 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -74,7 +74,8 @@ For multiple-terminal applications,
 .PP
 The initscr code determines the terminal type and initializes all \fBcurses\fR
 data structures.
-\fBinitscr\fR also causes the first call to \fBrefresh\fR(3X) to clear the screen.
+\fBinitscr\fR also causes the first call to \fBrefresh\fR(3X)
+to clear the screen.
 If errors occur, \fBinitscr\fR writes an appropriate error
 message to standard error and exits;
 otherwise, a pointer is returned to \fBstdscr\fR.
@@ -169,7 +170,8 @@ X/Open specifies that portable applications must not
 call \fBinitscr\fR more than once:
 .bP
 The portable way to use \fBinitscr\fP is once only,
-using \fBrefresh\fP (see curs_refresh(3X)) to restore the screen after \fBendwin\fP.
+using \fBrefresh\fP (see curs_refresh(3X))
+to restore the screen after \fBendwin\fP.
 .bP
 This implementation allows using \fBinitscr\fP after \fBendwin\fP.
 .PP
@@ -183,8 +185,8 @@ If the TERM variable is missing or empty, \fBinitscr\fP uses the
 value \*(``unknown\*('',
 which normally corresponds to a terminal entry with the \fIgeneric\fP
 (\fIgn\fP) capability.
-Generic entries are detected by \fBsetupterm\fP (see curs_terminfo(3X)) and cannot be
-used for full-screen operation.
+Generic entries are detected by \fBsetupterm\fP
+(see curs_terminfo(3X)) and cannot be used for full-screen operation.
 Other implementations may handle a missing/empty TERM variable differently.
 .SS Signal Handlers
 .PP
@@ -200,7 +202,8 @@ if their disposition is \fBSIG_DFL\fP at the time
 life of the process or until the process changes the disposition of
 the signal.\fP
 .PP
-\fINone of the Curses functions are required to be safe with respect to signals \fP...
+\fINone of the Curses functions are required to be safe
+with respect to signals \fP...
 .RE
 .PP
 This implementation establishes signal handlers during initialization,
@@ -233,7 +236,8 @@ This handles the \fIstop\fP signal, used in job control.
 When resuming the process, this implementation discards pending
 input with \fBflushinput\fP (see curs_util(3X)), and repaints the screen
 assuming that it has been completely altered.
-It also updates the saved terminal modes with \fBdef_shell_mode\fP (see curs_kernel(3X)).
+It also updates the saved terminal modes with \fBdef_shell_mode\fP
+(see \fBcurs_kernel\fR(3X)).
 .TP 5
 .B SIGWINCH
 This handles the window-size changes which were ignored in

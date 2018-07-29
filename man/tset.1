@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.53 2018/05/19 21:07:46 tom Exp $
+.\" $Id: tset.1,v 1.54 2018/07/28 21:30:27 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -82,7 +82,8 @@ option mappings are then applied (see the section
 .B TERMINAL TYPE MAPPING
 for more information).
 Then, if the terminal type begins with a question mark (\*(``?\*(''), the
-user is prompted for confirmation of the terminal type.  An empty
+user is prompted for confirmation of the terminal type.
+An empty
 response confirms the type, or, another type can be entered to specify
 a new type.
 Once the terminal type has been determined,
@@ -207,11 +208,13 @@ the terminal's capabilities into the shell's environment.
 This is done using the \fB\-s\fR option.
 .PP
 When the \fB\-s\fR option is specified, the commands to enter the information
-into the shell's environment are written to the standard output.  If
+into the shell's environment are written to the standard output.
+If
 the \fBSHELL\fR environmental variable ends in \*(``csh\*('', the commands
 are for \fBcsh\fR, otherwise, they are for \fBsh\fR.
 Note, the \fBcsh\fR commands set and unset the shell variable
-\fBnoglob\fR, leaving it unset.  The following line in the \fB.login\fR
+\fBnoglob\fR, leaving it unset.
+The following line in the \fB.login\fR
 or \fB.profile\fR files will initialize the environment correctly:
 .sp
     eval \`@TSET@ \-s options ... \`
@@ -232,7 +235,8 @@ guess that I'm on that kind of terminal\*(''.
 .PP
 The argument to the \fB\-m\fR option consists of an optional port type, an
 optional operator, an optional baud rate specification, an optional
-colon (\*(``:\*('') character and a terminal type.  The port type is a
+colon (\*(``:\*('') character and a terminal type.
+The port type is a
 string (delimited by either the operator or the colon character).
 The operator may be any combination of
 \*(``>\*('',
@@ -248,14 +252,17 @@ of the standard error output (which should be the control terminal).
 The terminal type is a string.
 .PP
 If the terminal type is not specified on the command line, the \fB\-m\fR
-mappings are applied to the terminal type.  If the port type and baud
+mappings are applied to the terminal type.
+If the port type and baud
 rate match the mapping, the terminal type specified in the mapping
-replaces the current type.  If more than one mapping is specified, the
+replaces the current type.
+If more than one mapping is specified, the
 first applicable mapping is used.
 .PP
 For example, consider the following mapping: \fBdialup>9600:vt100\fR.
 The port type is dialup , the operator is >, the baud rate
-specification is 9600, and the terminal type is vt100.  The result of
+specification is 9600, and the terminal type is vt100.
+The result of
 this mapping is to specify that if the terminal type is \fBdialup\fR,
 and the baud rate is greater than 9600 baud, a terminal type of
 \fBvt100\fR will be used.
@@ -328,7 +335,8 @@ is always an alias for \fBtset\fP.
 The \fB@TSET@\fR utility provides for backward-compatibility with BSD
 environments (under most modern UNIXes, \fB/etc/inittab\fR and \fBgetty\fR(1)
 can set \fBTERM\fR appropriately for each dial-up line; this obviates what was
-\fB@TSET@\fR's most important use).  This implementation behaves like 4.4BSD
+\fB@TSET@\fR's most important use).
+This implementation behaves like 4.4BSD
 \fBtset\fP, with a few exceptions specified here.
 .PP
 A few options are different
@@ -353,7 +361,8 @@ None of them were documented in 4.3BSD and all are
 of limited utility at best.
 The \fB\-a\fR, \fB\-d\fR, and \fB\-p\fR options are similarly
 not documented or useful, but were retained as they appear to be in
-widespread use.  It is strongly recommended that any usage of these
+widespread use.
+It is strongly recommended that any usage of these
 three options be changed to use the \fB\-m\fR option instead.
 The \fB\-a\fP, \fB\-d\fP, and \fB\-p\fR options
 are therefore omitted from the usage summary above.

@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_driver.3x,v 1.29 2018/04/28 19:58:58 tom Exp $
+.\" $Id: form_driver.3x,v 1.31 2018/07/28 22:08:59 tom Exp $
 .TH form_driver 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -49,7 +49,8 @@ through \fBform_driver\fR.  This routine has three major input cases:
 .bP
 The input is a form navigation request.
 Navigation request codes are constants defined in \fB<form.h>\fP,
-which are distinct from the key- and character codes returned by \fBwgetch\fP(3X).
+which are distinct from the key- and character codes returned
+by \fBwgetch\fP(3X).
 .bP
 The input is a printable character.
 Printable characters (which must be positive, less than 256) are
@@ -133,14 +134,16 @@ REQ_VALIDATION	Validate field.
 .TE
 .PP
 If the second argument is a printable character, the driver places it
-in the current position in the current field.  If it is one of the forms
+in the current position in the current field.
+If it is one of the forms
 requests listed above, that request is executed.
 .SS Field validation
-The form library makes updates to the window associated with form fields rather than
-directly to the field buffers.
+The form library makes updates to the window associated
+with form fields rather than directly to the field buffers.
 .PP
 The form driver provides low-level control over updates to the form fields.
-The form driver also provides for validating modified fields to ensure that the contents
+The form driver also provides for validating modified fields
+to ensure that the contents
 meet whatever constraints an application may attach using \fBset_field_type\fP.
 .PP
 .PP
@@ -150,7 +153,8 @@ The form driver also validates a field in these cases:
 .bP
 a call to \fBset_current_field\fP attempts to move to a different field.
 .bP
-a call to \fBset_current_page\fP attempts to move to a different page of the form.
+a call to \fBset_current_page\fP attempts to move
+to a different page of the form.
 .bP
 a request attempts to move to a different field.
 .bP
@@ -206,7 +210,8 @@ If a translation
 into a request was done, \fBform_driver\fR returns the result of this request.
 .RE
 .PP
-If you clicked outside the user window or the mouse event could not be translated
+If you clicked outside the user window
+or the mouse event could not be translated
 into a form request an \fBE_REQUEST_DENIED\fR is returned.
 .SS Application-defined commands
 .PP
@@ -257,8 +262,9 @@ The form driver code saw an unknown request code.
 The header file \fB<form.h>\fR automatically includes the header files
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V forms library.  They were not supported on
+These routines emulate the System V forms library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_opts.3x,v 1.21 2018/04/28 21:24:57 tom Exp $
+.\" $Id: form_field_opts.3x,v 1.22 2018/07/28 21:18:11 tom Exp $
 .TH form_field_opts 3X ""
 .SH NAME
 \fBset_field_opts\fP,
@@ -60,8 +60,10 @@ The function \fBfield_opts\fR returns the field's current option bits.
 The following standard options are defined (all are on by default):
 .TP 5
 O_ACTIVE
-The field is visited during processing.  If this option is off, the field will
-not be reachable by navigation keys. Please notice that an invisible field
+The field is visited during processing.
+If this option is off, the field will
+not be reachable by navigation keys.
+Please notice that an invisible field
 appears to be inactive also.
 .TP 5
 O_AUTOSKIP
@@ -87,11 +89,13 @@ Field buffers are fixed to field's original size.
 Turn this option off to create a dynamic field.
 .TP 5
 O_VISIBLE
-The field is displayed.  If this option is off, display of the field is
+The field is displayed.
+If this option is off, display of the field is
 suppressed.
 .TP 5
 O_WRAP
-Words that do not fit on a line are wrapped to the next line.  Words are
+Words that do not fit on a line are wrapped to the next line.
+Words are
 blank-separated.
 .PP
 These extension options are defined (extensions are off by default):
@@ -132,8 +136,9 @@ System error occurred (see \fBerrno\fR).
 The header file \fB<form.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V forms library.  They were not supported on
+These routines emulate the System V forms library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.53 2017/11/20 01:03:45 tom Exp $
+.\" $Id: curs_color.3x,v 1.55 2018/07/28 22:15:59 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -175,7 +175,7 @@ background color for all terminals.
 .fi
 .PP
 Some terminals support more than the eight (8) \*(``ANSI\*('' colors.
-There are no standard names for those additional colors. 
+There are no standard names for those additional colors.
 .SH VARIABLES
 .SS COLORS
 is initialized by \fBstart_color\fP to the maximum number of colors
@@ -232,7 +232,8 @@ inclusive (including \fB0\fP and \fBCOLORS\-1\fP).
 a special color value \fB\-1\fP is used in certain extended functions
 to denote the \fIdefault color\fP (see \fBuse_default_colors\fP).
 .bP
-\fBCOLOR_PAIRS\fP corresponds to the terminal database's \fBmax_pairs\fP capability,
+\fBCOLOR_PAIRS\fP corresponds to
+the terminal database's \fBmax_pairs\fP capability,
 (see \fBterminfo\fR(\*n)).
 .bP
 legal color pair values are in the range \fB1\fP to \fBCOLOR_PAIRS\-1\fP,
@@ -261,7 +262,8 @@ This routine facilitates writing terminal-independent programs.
 .SS init_pair
 .PP
 The \fBinit_pair\fR routine changes the definition of a color-pair.
-It takes three arguments: the number of the color-pair to be changed, the foreground
+It takes three arguments:
+the number of the color-pair to be changed, the foreground
 color number, and the background color number.
 For portable applications:
 .bP
@@ -288,7 +290,8 @@ switch color palettes rapidly.
 .SS init_color
 .PP
 The \fBinit_color\fR routine changes the definition of a color.
-It takes four arguments: the number of the color to be changed followed by three RGB values
+It takes four arguments:
+the number of the color to be changed followed by three RGB values
 (for the amounts of red, green, and blue components).
 .bP
 The first argument must be a legal color value;
@@ -315,7 +318,8 @@ The first argument must be a legal color value, i.e.,
 .bP
 The values that are stored at the addresses pointed to by the
 last three arguments are in the range
-\fB0\fP (no component) through \fB1000\fP (maximum amount of component), inclusive.
+\fB0\fP (no component) through \fB1000\fP
+(maximum amount of component), inclusive.
 .SS pair_content
 .PP
 The \fBpair_content\fR routine allows programmers to find out what colors a
@@ -346,15 +350,16 @@ The routines \fBcan_change_color\fR and \fBhas_colors\fR return \fBTRUE\fR
 or \fBFALSE\fR.
 .PP
 All other routines return the integer \fBERR\fR upon failure and an \fBOK\fR
-(SVr4 specifies only \*(``an integer value other than \fBERR\fR\*('') upon successful
-completion.
+(SVr4 specifies only \*(``an integer value
+other than \fBERR\fR\*('') upon successful completion.
 .PP
 X/Open defines no error conditions.
 This implementation will return \fBERR\fR on attempts to
 use color values outside the range \fB0\fP to \fBCOLORS\fP\-1
 (except for the default colors extension),
 or use color pairs outside the range \fB0\fP to \fBCOLOR_PAIRS\-1\fP.
-Color values used in \fBinit_color\fP must be in the range \fB0\fP to \fB1000\fP.
+Color values used in \fBinit_color\fP must be
+in the range \fB0\fP to \fB1000\fP.
 An error is returned from all functions
 if the terminal has not been initialized.
 An error is returned from secondary functions such as \fBinit_pair\fP
@@ -371,7 +376,8 @@ returns an error if the color table cannot be allocated.
 .RE
 .SH NOTES
 In the \fBncurses\fR implementation, there is a separate color activation flag,
-color palette, color pairs table, and associated \fBCOLORS\fP and \fBCOLOR_PAIRS\fP counts
+color palette, color pairs table,
+and associated \fBCOLORS\fP and \fBCOLOR_PAIRS\fP counts
 for each screen; the \fBstart_color\fR function only affects the current
 screen.
 The SVr4/XSI interface is not really designed with this in mind, and
@@ -383,7 +389,8 @@ To change
 the background color used when parts of a window are blanked by erasing or
 scrolling operations, see \fBcurs_bkgd\fR(3X).
 .PP
-Several caveats apply on older x86 machines (e.g., i386, i486) with VGA-compatible graphics:
+Several caveats apply on older x86 machines
+(e.g., i386, i486) with VGA-compatible graphics:
 .bP
 COLOR_YELLOW is actually brown.
 To get yellow, use COLOR_YELLOW combined with the \fBA_BOLD\fR attribute.

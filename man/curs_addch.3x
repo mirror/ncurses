@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.45 2018/05/19 21:03:18 tom Exp $
+.\" $Id: curs_addch.3x,v 1.46 2018/07/28 21:02:35 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -94,7 +94,8 @@ Tabs are considered to be at every eighth column.
 The tab interval may be altered by setting the \fBTABSIZE\fR variable.
 .PP
 If \fIch\fR is any other control character, it
-is drawn in \fB^\fR\fIX\fR notation.  Calling \fBwinch\fR after adding a
+is drawn in \fB^\fR\fIX\fR notation.
+Calling \fBwinch\fR after adding a
 control character does not return the character itself, but instead returns
 the ^-representation of the control character.
 .PP
@@ -108,13 +109,15 @@ into characters.
 .PP
 The \fBechochar\fR and \fBwechochar\fR routines are equivalent to a call to
 \fBaddch\fR followed by a call to \fBrefresh\fR(3X), or a call to \fBwaddch\fR
-followed by a call to \fBwrefresh\fR.  The knowledge that only a single
+followed by a call to \fBwrefresh\fR.
+The knowledge that only a single
 character is being output is used and, for non-control characters, a
 considerable performance gain may be seen by using these routines instead of
 their equivalents.
 .SS Line Graphics
 The following variables may be used to add line drawing characters to the
-screen with routines of the \fBaddch\fR family.  The default character listed
+screen with routines of the \fBaddch\fR family.
+The default character listed
 below is used if the \fBacsc\fR capability does not define a terminal-specific
 replacement for it,
 or if the terminal and locale configuration requires Unicode but the
@@ -192,10 +195,12 @@ ACS_PI,
 ACS_NEQUAL,
 ACS_STERLING)
 were not documented in
-any publicly released System V.  However, many publicly available terminfos
+any publicly released System V.
+However, many publicly available terminfos
 include \fBacsc\fR strings in which their key characters (pryz{|}) are
 embedded, and a second-hand list of their character descriptions has come
-to light.  The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
+to light.
+The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
 .LP
 The \fIdisplayed\fP values for the \fIACS_\fP and \fIWACS_\fP constants
 depend on 

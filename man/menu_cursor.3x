@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_cursor.3x,v 1.9 2015/12/05 23:42:45 tom Exp $
+.\" $Id: menu_cursor.3x,v 1.10 2018/07/28 21:34:06 tom Exp $
 .TH menu_cursor 3X ""
 .SH NAME
 \fBpos_menu_cursor\fR \- position a menu's cursor
@@ -38,7 +38,8 @@ int pos_menu_cursor(const MENU *menu);
 .br
 .SH DESCRIPTION
 The function \fBpos_menu_cursor\fR restores the cursor to the current position
-associated with the menu's selected item.  This is useful after \fBcurses\fR
+associated with the menu's selected item.
+This is useful after \fBcurses\fR
 routines have been called to do screen-painting in response to a menu select.
 .SH RETURN VALUE
 This routine returns one of the following:
@@ -60,8 +61,9 @@ The menu has not been posted.
 The header file \fB<menu.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V menu library.  They were not supported on
+These routines emulate the System V menu library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

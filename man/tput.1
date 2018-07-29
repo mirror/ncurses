@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.58 2018/05/19 21:07:46 tom Exp $
+.\" $Id: tput.1,v 1.59 2018/07/28 21:30:27 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -226,7 +226,8 @@ Otherwise, \fBreset\fR acts identically to \fBinit\fR.
 \fBlongname\fR
 If the terminal database is present and an entry for the
 user's terminal exists (see \fB\-T\fR\fItype\fR above), then the long name
-of the terminal will be put out.  The long name is the last
+of the terminal will be put out.
+The long name is the last
 name in the first line of the terminal's description in the
 \fBterminfo\fR database [see \fBterm\fR(5)].
 .SS Aliases
@@ -252,13 +253,14 @@ The \fBreset\fP program is usually an alias for \fB@TSET@\fP,
 because of this difference with resetting terminal modes and special characters.
 .PP
 With the changes made for ncurses 6.1, the \fIreset\fP feature of the
-two programs is (mostly) the same.  A few differences remain:
+two programs is (mostly) the same.
+A few differences remain:
 .bP
 The \fB@TSET@\fP program waits one second when resetting,
 in case it happens to be a hardware terminal.
 .bP
 The two programs write the terminal initialization strings
-to different streams (i.e.,. the standard error for \fB@TSET@\fP and the
+to different streams (i.e., the standard error for \fB@TSET@\fP and the
 standard output for \fB@TPUT@\fP).
 .IP
 \fBNote:\fP although these programs write to different streams,
@@ -299,7 +301,8 @@ Print the number of columns for the 450 terminal.
 \fBbold=`@TPUT@ smso` offbold=`@TPUT@ rmso`\fR
 Set the shell variables \fBbold\fR, to begin stand-out mode
 sequence, and \fBoffbold\fR, to end standout mode sequence,
-for the current terminal.  This might be followed by a
+for the current terminal.
+This might be followed by a
 prompt: \fBecho "${bold}Please type in your name: ${offbold}\\c"\fR
 .TP 5
 \fB@TPUT@ hc\fR
@@ -354,7 +357,8 @@ and if any errors are found, will set the exit code to 4 plus the
 number of lines with errors.
 If no errors are found, the exit code is \fB0\fR.
 No indication of which line failed can be given so
-exit code \fB1\fR will never appear.  Exit codes \fB2\fR, \fB3\fR, and
+exit code \fB1\fR will never appear.
+Exit codes \fB2\fR, \fB3\fR, and
 \fB4\fR retain their usual interpretation.
 If the \fB\-S\fR option is not used,
 the exit code depends on the type of \fIcapname\fR:

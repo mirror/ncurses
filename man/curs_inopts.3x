@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.26 2017/11/21 00:47:10 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.27 2018/07/28 22:20:54 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -335,8 +335,8 @@ Note that \fBecho\fR, \fBnoecho\fR, \fBhalfdelay\fR, \fBintrflush\fR,
 \fBqiflush\fR, \fBtimeout\fR, and \fBwtimeout\fR may be macros.
 .PP
 The \fBnoraw\fR and \fBnocbreak\fR calls follow historical practice in that
-they attempt to restore to normal (\*(``cooked\*('') mode from raw and cbreak modes
-respectively.
+they attempt to restore to normal (\*(``cooked\*('') mode
+from raw and cbreak modes respectively.
 Mixing raw/noraw and cbreak/nocbreak calls leads to tty driver
 control states that are hard to predict or understand; it is not recommended.
 .SH SEE ALSO

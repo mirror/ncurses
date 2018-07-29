@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2016 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_refresh.3x,v 1.17 2016/10/15 16:45:45 tom Exp @
+  * @Id: curs_refresh.3x,v 1.19 2018/07/28 22:59:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -67,32 +67,42 @@
        The <STRONG>refresh</STRONG> and <STRONG>wrefresh</STRONG> routines (or <STRONG>wnoutrefresh</STRONG> and  <STRONG>doupdate</STRONG>)  must
        be called to get actual output to the terminal, as other routines mere-
        ly manipulate data structures.  The routine <STRONG>wrefresh</STRONG> copies  the  named
-       window to the physical terminal screen, taking into account what is al-
-       ready there to do optimizations.  The <STRONG>refresh</STRONG> routine is the same,  us-
-       ing <STRONG>stdscr</STRONG> as the default window.  Unless <STRONG>leaveok</STRONG> has been enabled, the
-       physical cursor of the terminal is left at the location of  the  cursor
-       for that window.
+       window  to  the  <EM>physical</EM>  <EM>screen</EM>,  taking into account what is already
+       there to do optimizations.  The <STRONG>refresh</STRONG> routine is the same, using <STRONG>std-</STRONG>
+       <STRONG>scr</STRONG> as the default window.  Unless <STRONG>leaveok</STRONG> has been enabled, the physi-
+       cal cursor of the terminal is left at the location of  the  cursor  for
+       that window.
 
 
 </PRE><H3><a name="h3-wnoutrefresh_doupdate">wnoutrefresh/doupdate</a></H3><PRE>
        The <STRONG>wnoutrefresh</STRONG> and <STRONG>doupdate</STRONG> routines allow multiple updates with more
        efficiency than <STRONG>wrefresh</STRONG> alone.  In addition to all the  window  struc-
        tures,  <STRONG>curses</STRONG>  keeps  two  data  structures  representing the terminal
-       screen: a physical screen, describing what is actually on  the  screen,
-       and  a  virtual screen, describing what the programmer wants to have on
-       the screen.
+       screen:
 
-       The routine <STRONG>wrefresh</STRONG> works by first calling <STRONG>wnoutrefresh</STRONG>, which  copies
-       the  named  window  to  the  virtual screen, and then calling <STRONG>doupdate</STRONG>,
-       which compares the virtual screen to the physical screen and  does  the
-       actual  update.   If the programmer wishes to output several windows at
-       once, a series of calls to <STRONG>wrefresh</STRONG> results  in  alternating  calls  to
-       <STRONG>wnoutrefresh</STRONG>  and  <STRONG>doupdate</STRONG>,  causing  several  bursts of output to the
-       screen.  By first calling <STRONG>wnoutrefresh</STRONG> for each window, it is then pos-
-       sible  to  call  <STRONG>doupdate</STRONG>  once, resulting in only one burst of output,
-       with fewer total characters transmitted and less CPU time used.  If the
-       <EM>win</EM>  argument  to <STRONG>wrefresh</STRONG> is the global variable <STRONG>curscr</STRONG>, the screen is
-       immediately cleared and repainted from scratch.
+       <STRONG>o</STRONG>   a <EM>physical</EM> <EM>screen</EM>, describing what is actually on the screen, and
+
+       <STRONG>o</STRONG>   a <EM>virtual</EM> <EM>screen</EM>, describing what the programmer wants to  have  on
+           the screen.
+
+       The routine <STRONG>wrefresh</STRONG> works by
+
+       <STRONG>o</STRONG>   first  calling  <STRONG>wnoutrefresh</STRONG>,  which copies the named window to the
+           <EM>virtual</EM> <EM>screen</EM>, and
+
+       <STRONG>o</STRONG>   then calling <STRONG>doupdate</STRONG>, which compares the  <EM>virtual</EM>  <EM>screen</EM>  to  the
+           <EM>physical</EM> <EM>screen</EM> and does the actual update.
+
+       If the programmer wishes to output several windows at once, a series of
+       calls to <STRONG>wrefresh</STRONG> results in  alternating  calls  to  <STRONG>wnoutrefresh</STRONG>  and
+       <STRONG>doupdate</STRONG>,  causing  several  bursts  of output to the screen.  By first
+       calling <STRONG>wnoutrefresh</STRONG> for each window, it is then possible to call <STRONG>doup-</STRONG>
+       <STRONG>date</STRONG>  once,  resulting  in  only  one burst of output, with fewer total
+       characters transmitted and less CPU time used.
+
+       If the <EM>win</EM> argument to <STRONG>wrefresh</STRONG> is the <EM>physical</EM> <EM>screen</EM> (i.e., the glob-
+       al  variable  <STRONG>curscr</STRONG>),  the screen is immediately cleared and repainted
+       from scratch.
 
        The phrase "copies the named window to the virtual screen" above is am-
        biguous.   What actually happens is that all <EM>touched</EM> (changed) lines in

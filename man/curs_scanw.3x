@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.23 2018/04/07 20:56:03 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.24 2018/07/28 21:14:06 tom Exp $
 .TH curs_scanw 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -56,9 +56,11 @@
 \fBint vwscanw(WINDOW *win, const char *fmt, va_list varglist);\fR
 .SH DESCRIPTION
 The \fBscanw\fR, \fBwscanw\fR and \fBmvscanw\fR routines are analogous to
-\fBscanf\fR [see \fBscanf\fR(3)].  The effect of these routines is as though
+\fBscanf\fR [see \fBscanf\fR(3)].
+The effect of these routines is as though
 \fBwgetstr\fR were called on the window, and the resulting line used as input
-for \fBsscanf\fR(3).  Fields which do not map to a variable in the \fIfmt\fR
+for \fBsscanf\fR(3).
+Fields which do not map to a variable in the \fIfmt\fR
 field are lost.
 .PP
 The \fBvwscanw\fR and \fBvw_scanw\fR routines are analogous to \fBvscanf\fR(3).

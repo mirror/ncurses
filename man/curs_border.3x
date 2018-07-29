@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2007,2010 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2010,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border.3x,v 1.22 2010/12/04 18:36:44 tom Exp $
+.\" $Id: curs_border.3x,v 1.23 2018/07/28 21:34:06 tom Exp $
 .TH curs_border 3X ""
 .na
 .hy 0
@@ -121,16 +121,21 @@ for the following call: \fBwborder(\fR\fIwin\fR\fB,\fR \fIverch\fR\fB,\fR
 \fIverch\fR\fB,\fR \fIhorch\fR\fB,\fR \fIhorch\fR\fB, 0, 0, 0, 0)\fR.
 .PP
 The \fBhline\fR and \fBwhline\fR functions draw a horizontal (left to right)
-line using \fIch\fR starting at the current cursor position in the window.  The
-current cursor position is not changed.  The line is at most \fIn\fR characters
+line using \fIch\fR starting at the current cursor position in the window.
+The
+current cursor position is not changed.
+The line is at most \fIn\fR characters
 long, or as many as fit into the window.
 .PP
 The \fBvline\fR and \fBwvline\fR functions draw a vertical (top to bottom) line
-using \fIch\fR starting at the current cursor position in the window.  The
-current cursor position is not changed.  The line is at most \fIn\fR characters
+using \fIch\fR starting at the current cursor position in the window.
+The
+current cursor position is not changed.
+The line is at most \fIn\fR characters
 long, or as many as fit into the window.
 .SH RETURN VALUE
-All routines return the integer \fBOK\fR.  The SVr4.0 manual says "or a
+All routines return the integer \fBOK\fR.
+The SVr4.0 manual says "or a
 non-negative integer if \fBimmedok\fR is set", but this appears to be an error.
 .PP
 X/Open does not define any error conditions.

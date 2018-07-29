@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.24 2017/11/25 20:31:13 tom Exp $
+.\" $Id: panel.3x,v 1.26 2018/07/28 22:56:56 tom Exp $
 .TH panel 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -71,14 +71,17 @@ panel \- panel stack extension for curses
 .br
 .SH DESCRIPTION
 Panels are \fBcurses\fR(3X) windows with the added feature of
-depth.  Panel functions allow the use of stacked windows and ensure
+depth.
+Panel functions allow the use of stacked windows and ensure
 the proper portions of each window and the curses \fBstdscr\fR window are
 hidden or displayed when panels are added, moved, modified or removed.
-The set of currently visible panels is the stack of panels.  The
+The set of currently visible panels is the stack of panels.
+The
 \fBstdscr\fR window is beneath all panels, and is not considered part
 of the stack.
 .P
-A window is associated with every panel. The panel routines enable
+A window is associated with every panel.
+The panel routines enable
 you to create, move, hide, and show panels, as well as position a
 panel at any desired location in the stack.
 .P
@@ -93,14 +96,14 @@ to  be  displayed above any other panel) and returns a
 pointer to the new panel.
 .TP
 .B update_panels
-refreshes the virtual screen to reflect the relations between the
+refreshes the \fIvirtual screen\fP to reflect the relations between the
 panels in the stack, but does not call \fBdoupdate\fP to refresh the
-physical screen.
+\fIphysical screen\fP.
 Use this function and not \fBwrefresh\fP or \fBwnoutrefresh\fP.
 .B update_panels
 may be called more than once before a call to
 \fBdoupdate\fP, but \fBdoupdate\fP is the function responsible for updating
-the physical screen.
+the \fIphysical screen\fP.
 .TP
 .B del_panel(pan)
 removes the given panel from the  stack and deallocates the
@@ -108,7 +111,8 @@ removes the given panel from the  stack and deallocates the
 .TP
 .B hide_panel(pan)
 removes the given panel from the panel stack and thus hides it from
-view. The \fBPANEL\fR structure is not lost, merely removed from the stack.
+view.
+The \fBPANEL\fR structure is not lost, merely removed from the stack.
 .TP
 .B panel_hidden(pan)
 returns \fBTRUE\fP if the panel is in the panel stack,
@@ -117,10 +121,12 @@ If the panel is a null pointer, return \fBERR\fP.
 .TP
 .B show_panel(pan)
 makes a hidden panel visible by placing it on top of the panels in the
-panel stack. See COMPATIBILITY below.
+panel stack.
+See COMPATIBILITY below.
 .TP
 .B top_panel(pan)
-puts the given visible panel on top of all panels in the stack.  See
+puts the given visible panel on top of all panels in the stack.
+See
 COMPATIBILITY below.
 .TP
 .B bottom_panel(pan)
@@ -128,8 +134,10 @@ puts panel at the bottom of all panels.
 .TP
 .B move_panel(pan,starty,startx)
 moves the given panel window so that its upper-left corner is at
-\fBstarty\fR, \fBstartx\fR.  It does not change the position of the
-panel in the stack.  Be sure to use this function, not \fBmvwin\fR,
+\fBstarty\fR, \fBstartx\fR.
+It does not change the position of the
+panel in the stack.
+Be sure to use this function, not \fBmvwin\fR,
 to move a panel window.
 .TP
 .B replace_panel(pan,window)
@@ -139,11 +147,13 @@ you can call \fBreplace_panel\fR on the output of \fBwresize\fR(3X)).
 It does not change the position of the panel in the stack.
 .TP
 .B panel_above(pan)
-returns a pointer to the panel above pan.  If the panel argument is
+returns a pointer to the panel above pan.
+If the panel argument is
 \fB(PANEL *)0\fR, it returns a pointer to the bottom panel in the stack.
 .TP
 .B panel_below(pan)
-returns a pointer to the panel just below pan.  If the panel argument
+returns a pointer to the panel just below pan.
+If the panel argument
 is \fB(PANEL *)0\fR, it returns a pointer to the top panel in the stack.
 .TP
 .B set_panel_userptr(pan,ptr)
@@ -156,21 +166,25 @@ returns the user pointer for a given panel.
 returns a pointer to the window of the given panel.
 .SH DIAGNOSTICS
 Each routine that returns a pointer returns \fBNULL\fR if an error
-occurs. Each routine that returns an int value returns \fBOK\fR if it
+occurs.
+Each routine that returns an int value returns \fBOK\fR if it
 executes successfully and \fBERR\fR if not.
 .SH COMPATIBILITY
 Reasonable care has been taken to  ensure  compatibility
 with  the  native  panel facility introduced in System V (inspection of
 the SVr4 manual pages suggests the programming interface is unchanged).
-The \fBPANEL\fR data structures are merely  similar. The  programmer
+The \fBPANEL\fR data structures are merely  similar.
+The  programmer
 is cautioned not to directly use \fBPANEL\fR fields.
 .P
 The functions \fBshow_panel\fR and \fBtop_panel\fR are identical
 in this implementation, and work equally well with displayed or hidden
-panels.  In the native System V implementation, \fBshow_panel\fR is
+panels.
+In the native System V implementation, \fBshow_panel\fR is
 intended for making a hidden panel visible (at the top of the stack)
 and \fBtop_panel\fR is intended for making an already-visible panel
-move to the top of the stack. You are cautioned to use the correct
+move to the top of the stack.
+You are cautioned to use the correct
 function to ensure compatibility with native panel libraries.
 .SH NOTE
 In your library list, libpanel.a should be before libncurses.a; that is,
@@ -201,4 +215,5 @@ version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SH AUTHOR
 Originally written by Warren Tucker <wht@n4hgf.mt-park.ga.us>,
 primarily to assist in porting u386mon to systems without a native
-panels library.  Repackaged for ncurses by Zeyd ben-Halim.
+panels library.
+Repackaged for ncurses by Zeyd ben-Halim.

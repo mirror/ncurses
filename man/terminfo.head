@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.34 2018/05/19 20:57:27 tom Exp $
+.\" $Id: terminfo.head,v 1.35 2018/07/28 22:29:09 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -49,7 +49,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .SH NAME
 terminfo \- terminal capability data base

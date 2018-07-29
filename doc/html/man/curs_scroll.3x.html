@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2006,2010 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2010,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scroll.3x,v 1.15 2010/12/04 18:40:45 tom Exp @
+  * @Id: curs_scroll.3x,v 1.16 2018/07/28 22:59:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,8 +60,8 @@
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  <STRONG>scroll</STRONG> routine scrolls the window up one line.  This involves mov-
        ing the lines in the window data structure.  As an optimization, if the
-       scrolling  region  of  the  window  is  the entire screen, the physical
-       screen may be scrolled at the same time.
+       scrolling  region  of  the  window  is  the entire screen, the <EM>physical</EM>
+       <EM>screen</EM> may be scrolled at the same time.
 
        For positive <EM>n</EM>, the <STRONG>scrl</STRONG> and <STRONG>wscrl</STRONG> routines  scroll  the  window  up  <EM>n</EM>
        lines  (line  <EM>i</EM>+<EM>n</EM> becomes <EM>i</EM>); otherwise scroll the window down <EM>n</EM> lines.

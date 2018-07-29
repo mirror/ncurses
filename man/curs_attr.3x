@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.62 2017/12/16 20:16:07 tom Exp $
+.\" $Id: curs_attr.3x,v 1.64 2018/07/28 22:15:59 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -44,7 +44,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .de bP
 .ie n  .IP \(bu 4
@@ -197,7 +198,7 @@ it is the same size as \fBchtype\fP (used by \fBaddch\fP(3X)).
 It holds the common video attributes (such as bold, reverse),
 as well as a few bits for color.
 Those bits correspond to the \fBA_COLOR\fP symbol.
-The \fBCOLOR_PAIR\fP macro provides a value which can be OR'd into 
+The \fBCOLOR_PAIR\fP macro provides a value which can be OR'd into
 the attribute parameter.
 For example,
 as long as that value fits into the \fBA_COLOR\fP mask,
@@ -210,7 +211,8 @@ attr_set(A_BOLD, \fIpair\fP, NULL);
 However, if the value does not fit, then the \fBCOLOR_PAIR\fP macro
 uses only the bits that fit.
 For example, because in ncurses \fBA_COLOR\fP has eight (8) bits,
-then \fBCOLOR_PAIR(259)\fP is 4 (259\-255).
+then \fBCOLOR_PAIR(\fP\fI259\fP\fB)\fP is 4
+(i.e., 259 is 4 more than the limit 255).
 .PP
 The \fBPAIR_NUMBER\fP macro extracts a pair number from an \fBint\fP
 (or \fBchtype\fP).
@@ -327,7 +329,8 @@ Color pair values can only be OR'd with attributes if the pair
 number is less than 256.
 The alternate functions such as \fBcolor_set\fP can pass a color pair
 value directly.
-However, ncurses ABI 4 and 5 simply OR this value within the alternate functions.
+However, ncurses ABI 4 and 5 simply OR this value
+within the alternate functions.
 You must use ncurses ABI 6 to support more than 256 color pairs.
 .\" ---------------------------------------------------------------------------
 .SH HISTORY
@@ -397,7 +400,7 @@ l l l l l l .
 1992	HPUX 9	32	no	8	SVr2 curses
 1992	AIX 3.2	32	no	23	SVr2 curses
 1994	OSF/1 r3	32	no	23	SVr2 curses
-1995	HP-UX 10.00	32	6	16	SVr3 \*(``curses_colr\*('' 
+1995	HP-UX 10.00	32	6	16	SVr3 \*(``curses_colr\*(''
 1995	HP-UX 10.00	32	6	8	SVr4, X/Open curses
 1995	Solaris 5.4	32/64	7	16	X/Open curses
 1996	AIX 4.2	32	7	16	X/Open curses
@@ -433,12 +436,13 @@ The initial release of Solaris was in 1992.
 The \fIxpg4\fP (X/Open) curses was developed by MKS from 1990 to 1995.
 Sun's copyright began in 1996.
 .bP
-Sun updated the X/Open curses interface after 64-bit support was introduced in 1997,
+Sun updated the X/Open curses interface
+after 64-bit support was introduced in 1997,
 but did not modify the SVr4 curses interface.
 .PP
 Regarding U/Win,
 .bP
-Development of the curses library began in 1991, stopped in 2000. 
+Development of the curses library began in 1991, stopped in 2000.
 .bP
 Color support was added in 1998.
 .bP
@@ -447,7 +451,8 @@ The library uses only \fBchtype\fP (no \fBcchar_t\fP).
 .PP
 Once X/Open curses was adopted in the mid-1990s, the constraint of
 a 32-bit interface with many colors and wide-characters for \fBchtype\fP
-became a moot point.  The \fBcchar_t\fP structure (whose size and
+became a moot point.
+The \fBcchar_t\fP structure (whose size and
 members are not specified in X/Open Curses) could be extended as needed.
 .PP
 Other interfaces are rarely used now:

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2011,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1997,1999,2000,2005
 .\"
-.\" $Id: default_colors.3x,v 1.25 2016/10/15 17:16:48 tom Exp $
+.\" $Id: default_colors.3x,v 1.27 2018/07/28 22:08:59 tom Exp $
 .TH default_colors 3X ""
 .SH NAME
 \fBuse_default_colors\fR,
@@ -60,8 +60,10 @@ visual effects.
 .PP
 The first function, \fBuse_default_colors\fP
 tells the curses library to assign terminal default
-foreground/background colors to color number \-1. So init_pair(x,COLOR_RED,\-1)
-will initialize pair x as red on default background and init_pair(x,\-1,COLOR_BLUE) will
+foreground/background colors to color number \-1.
+So init_pair(x,COLOR_RED,\-1)
+will initialize pair x as red on default background
+and init_pair(x,\-1,COLOR_BLUE) will
 initialize pair x as default foreground on blue.
 .PP
 The other, \fBassume_default_colors\fP
@@ -93,7 +95,8 @@ or
 ncurses will paint a white foreground (text) with black background
 for color pair 0.
 .SH RETURN VALUE
-These functions return the integer \fBERR\fP upon failure and \fBOK\fP on success.
+These functions return the integer \fBERR\fP upon failure
+and \fBOK\fP on success.
 They will fail if either the terminal does not support
 the \fBorig_pair\fP or \fBorig_colors\fP capability.
 If the \fBinitialize_pair\fP capability is not found, this causes an
@@ -104,7 +107,8 @@ negative arguments to specify default foreground or background colors.
 .PP
 The \fBuse_default_colors\fP function was added to support \fIded\fP.
 This is a full-screen application which uses curses to manage only part
-of the screen.  The bottom portion of the screen, which is of adjustable
+of the screen.
+The bottom portion of the screen, which is of adjustable
 size, is left uncolored to display the results from shell commands.
 The top portion of the screen colors filenames using a scheme like the
 "color ls" programs.
@@ -122,8 +126,10 @@ a different problem: support for applications which would use
 environment variables and other configuration to bypass curses'
 notion of the terminal's default colors, setting specific values.
 .SH PORTABILITY
-These routines are specific to ncurses.  They were not supported on
-Version 7, BSD or System V implementations.  It is recommended that
+These routines are specific to ncurses.
+They were not supported on
+Version 7, BSD or System V implementations.
+It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
 \fBcurs_color\fR(3X),

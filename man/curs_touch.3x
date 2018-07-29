@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_touch.3x,v 1.20 2017/11/25 16:19:42 tom Exp $
+.\" $Id: curs_touch.3x,v 1.21 2018/07/28 21:34:56 tom Exp $
 .TH curs_touch 3X ""
 .na
 .hy 0
@@ -57,10 +57,12 @@
 .SH DESCRIPTION
 The \fBtouchwin\fR and \fBtouchline\fR routines throw away all
 optimization information about which parts of the window have been
-touched, by pretending that the entire window has been drawn on.  This
+touched, by pretending that the entire window has been drawn on.
+This
 is sometimes necessary when using overlapping windows, since a change
 to one window affects the other window, but the records of which lines
-have been changed in the other window do not reflect the change.  The
+have been changed in the other window do not reflect the change.
+The
 routine \fBtouchline\fR only pretends that \fIcount\fR lines have been
 changed, beginning with line \fIstart\fR.
 .PP

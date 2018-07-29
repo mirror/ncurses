@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey
 .\"
-.\" $Id: new_pair.3x,v 1.11 2018/04/01 00:01:17 tom Exp $
+.\" $Id: new_pair.3x,v 1.13 2018/07/28 22:19:56 tom Exp $
 .TH new_pair 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -49,7 +49,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .SH NAME
 \fBalloc_pair\fP,
@@ -91,7 +92,8 @@ as the limit on color pairs:
 \fBCOLORS\fP\fI * \fP\fBCOLORS\fP
 .NE
 .bP
-Terminals which support \fIdefault colors\fP distinct from \*(``ANSI colors\*('' 
+Terminals which support \fIdefault colors\fP distinct
+from \*(``ANSI colors\*('' 
 add to the possible combinations, producing this total:
 .NS
 \fI( \fP\fBCOLORS\fP\fI + 1 ) * ( \fP\fBCOLORS\fP\fI + 1 )\fP
@@ -114,9 +116,11 @@ The \fBalloc_pair\fP function accepts parameters for
 foreground and background color, and
 checks if that color combination is already associated with a color pair.
 .bP
-If the combination already exists, \fBalloc_pair\fP returns the existing pair.
+If the combination already exists,
+\fBalloc_pair\fP returns the existing pair.
 .bP
-If the combination does not exist, \fBalloc_pair\fP allocates a new color pair and returns that.
+If the combination does not exist,
+\fBalloc_pair\fP allocates a new color pair and returns that.
 .bP
 If the table fills up, \fBalloc_pair\fP discards the least-recently
 allocated entry using \fBfree_pair\fP and allocates a new color pair.
@@ -140,7 +144,8 @@ i.e., like color pair 0.
 The \fBalloc_pair\fP function returns a color pair number in the range
 1 through \fBCOLOR_PAIRS\fP\-1, unless it encounters an error updating
 its fast index to the color pair values, preventing it from allocating
-a color pair.  In that case, it returns \-1.
+a color pair.
+In that case, it returns \-1.
 .PP
 The \fBfind_pair\fP function returns a color pair number if the
 given color combination has been associated with a color pair,
@@ -149,8 +154,10 @@ or \-1 if not.
 Likewise, \fBfree_pair\fP returns \fBOK\fP unless it encounters an
 error updating the fast index or if no such color pair is in use.
 .SH PORTABILITY
-These routines are specific to ncurses.  They were not supported on
-Version 7, BSD or System V implementations.  It is recommended that
+These routines are specific to ncurses.
+They were not supported on
+Version 7, BSD or System V implementations.
+It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
 \fBcurs_color\fR(3X).

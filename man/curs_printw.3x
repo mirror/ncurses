@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.22 2018/04/07 20:18:55 tom Exp $
+.\" $Id: curs_printw.3x,v 1.23 2018/07/28 21:14:06 tom Exp $
 .TH curs_printw 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -60,7 +60,8 @@
 \fBint vwprintw(WINDOW *win, const char *fmt, va_list varglist);\fR
 .SH DESCRIPTION
 The \fBprintw\fR, \fBwprintw\fR, \fBmvprintw\fR and \fBmvwprintw\fR
-routines are analogous to \fBprintf\fR [see \fBprintf\fR(3)].  In
+routines are analogous to \fBprintf\fR [see \fBprintf\fR(3)].
+In
 effect, the string that would be output by \fBprintf\fR is output
 instead as though \fBwaddstr\fR were used on the given window.
 .PP
@@ -88,7 +89,8 @@ In this implementation, \fBvw_printw\fP and \fBvwprintw\fP are equivalent,
 to support legacy applications.
 However, the latter (\fBvwprintw\fP) is obsolete:
 .bP
-The XSI Curses standard, Issue 4 described these functions.  The function
+The XSI Curses standard, Issue 4 described these functions.
+The function
 \fBvwprintw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function
 \fBvw_printw\fR using the \fB<stdarg.h>\fR interface.
 .bP

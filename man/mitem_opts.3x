@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_opts.3x,v 1.12 2015/12/05 23:42:45 tom Exp $
+.\" $Id: mitem_opts.3x,v 1.13 2018/07/28 21:34:06 tom Exp $
 .TH mitem_opts 3X ""
 .SH NAME
 \fBset_item_opts\fP,
@@ -58,7 +58,8 @@ others alone.
 The function \fBitem_opts\fR returns the item's current option bits.
 .PP
 There is only one defined option bit mask, \fBO_SELECTABLE\fR.  When this is
-on, the item may be selected during menu processing.  This option defaults
+on, the item may be selected during menu processing.
+This option defaults
 to on.
 .SH RETURN VALUE
 Except for \fBitem_opts\fR, each routine returns one of the following:
@@ -74,8 +75,9 @@ System error occurred (see \fBerrno\fR).
 The header file \fB<menu.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V menu library.  They were not supported on
+These routines emulate the System V menu library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

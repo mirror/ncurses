@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2015 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termattrs.3x,v 1.13 2015/07/21 00:03:34 tom Exp $
+.\" $Id: curs_termattrs.3x,v 1.14 2018/07/28 21:34:06 tom Exp $
 .TH curs_termattrs 3X ""
 .SH NAME
 \fBbaudrate\fR,
@@ -67,7 +67,8 @@
 .br
 .SH DESCRIPTION
 .SS baudrate
-The \fBbaudrate\fR routine returns the output speed of the terminal.  The
+The \fBbaudrate\fR routine returns the output speed of the terminal.
+The
 number returned is in bits per second, for example \fB9600\fR, and is an
 integer.
 .SS erasechar, erasewchar
@@ -84,7 +85,8 @@ The \fBhas_ic\fR routine is true if the terminal has insert- and delete-
 character capabilities.
 .PP
 The \fBhas_il\fR routine is true if the terminal has insert- and delete-line
-capabilities, or can simulate them using scrolling regions.  This might
+capabilities, or can simulate them using scrolling regions.
+This might
 be used to determine if it would be appropriate to turn on physical
 scrolling using \fBscrollok\fR.
 .SS killchar, killwchar
@@ -98,8 +100,10 @@ the routine fails and the location referenced by \fIch\fR is not changed.
 .SS longname
 .PP
 The \fBlongname\fR routine returns a pointer to a static area
-containing a verbose description of the current terminal.  The maximum
-length of a verbose description is 128 characters.  It is defined only
+containing a verbose description of the current terminal.
+The maximum
+length of a verbose description is 128 characters.
+It is defined only
 after the call to \fBinitscr\fR or \fBnewterm\fR.  The area is
 overwritten by each call to \fBnewterm\fR and is not restored by
 \fBset_term\fR, so the value should be saved between calls to
@@ -127,7 +131,8 @@ completion.
 .SH NOTES
 Note that \fBtermattrs\fR may be a macro.
 .SH PORTABILITY
-The XSI Curses standard, Issue 4 describes these functions.  It changes the
+The XSI Curses standard, Issue 4 describes these functions.
+It changes the
 return type of \fBtermattrs\fR to the new type \fBattr_t\fR.
 Most versions of curses truncate the result returned by \fBtermname\fR to
 14 characters.

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.71 2018/05/19 21:07:17 tom Exp $
+.\" $Id: infocmp.1m,v 1.73 2018/07/28 22:08:59 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -49,7 +49,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .ds d @TERMINFO@
 .SH NAME
@@ -134,7 +135,7 @@ followed by the capability value.
 .IP
 The \fB\-u\fR option provides a related output,
 showing the first terminal description rewritten to use the second
-as a building block via the \*(``use=\*('' clause. 
+as a building block via the \*(``use=\*('' clause.
 .TP
 \fB\-n\fR
 produces a list of each capability that is in \fInone\fP of the given entries.
@@ -148,8 +149,8 @@ If no \fItermnames\fR are given,
 \fB@INFOCMP@\fR uses the environment variable \fBTERM\fR
 for each of the \fItermnames\fR.
 .SS Source Listing Options [\-I] [\-L] [\-C] [\-r]
-The \fB\-I\fR, \fB\-L\fR, and \fB\-C\fR options will produce a source listing for
-each terminal named.
+The \fB\-I\fR, \fB\-L\fR, and \fB\-C\fR options will produce
+a source listing for each terminal named.
 .
 .TS
 center tab(/) ;

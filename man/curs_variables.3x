@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2010-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2010-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_variables.3x,v 1.9 2017/11/18 23:56:00 tom Exp $
+.\" $Id: curs_variables.3x,v 1.11 2018/07/28 22:37:10 tom Exp $
 .TH curs_variables 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -100,7 +104,7 @@ This variable holds the number of milliseconds to wait after reading an
 escape character,
 to distinguish between an individual escape character entered on the
 keyboard from escape sequences sent by cursor- and function-keys
-(see curses(3X).
+(see curses(3X)).
 .SS LINES
 After initializing curses, this variable contains the height of the screen,
 i.e., the number of lines.
@@ -111,9 +115,18 @@ when converting a tab character to spaces as it adds the tab to a window
 .SS The Current Screen
 This implementation of curses uses a special window \fBcurscr\fP to
 record its updates to the terminal screen.
+.PP
+This is referred to as the \*(``physical screen\*('' in the
+\fBcurs_refresh\fR(3X) and
+\fBcurs_outopts\fR(3X) manual pages.
 .SS The New Screen
 This implementation of curses uses a special window \fBnewscr\fP to
 hold updates to the terminal screen before applying them to \fBcurscr\fP.
+.PP
+This is referred to as the \*(``virtual screen\*('' in the
+\fBcurs_kernel\fR(3X),
+\fBcurs_refresh\fR(3X) and
+\fBcurs_outopts\fR(3X) manual pages.
 .SS The Standard Screen
 Upon initializing curses,
 a default window called \fBstdscr\fP,

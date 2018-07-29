@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_format.3x,v 1.14 2016/10/15 17:02:31 tom Exp $
+.\" $Id: menu_format.3x,v 1.15 2018/07/28 21:34:06 tom Exp $
 .TH menu_format 3X ""
 .SH NAME
 \fBset_menu_format\fP,
@@ -41,12 +41,16 @@ void menu_format(const MENU *menu, int *rows, int *cols);
 .br
 .SH DESCRIPTION
 The function \fBset_menu_format\fR sets the maximum display size of the given
-menu.  If this size is too small to display all menu items, the menu will be
-made scrollable. If this size is larger than the menus subwindow and the
+menu.
+If this size is too small to display all menu items, the menu will be
+made scrollable.
+If this size is larger than the menus subwindow and the
 subwindow is too small to display all menu items, \fBpost_menu\fR will fail.
 .PP
-The default format is 16 rows, 1 column.  Calling \fBset_menu_format\fR with a
-null menu pointer will change this default.  A zero row or column argument to
+The default format is 16 rows, 1 column.
+Calling \fBset_menu_format\fR with a
+null menu pointer will change this default.
+A zero row or column argument to
 \fBset_menu_format\fR is interpreted as a request not to change the current
 value.
 .PP
@@ -75,8 +79,9 @@ No items are connected to the menu.
 The header file \fB<menu.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V menu library.  They were not supported on
+These routines emulate the System V menu library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

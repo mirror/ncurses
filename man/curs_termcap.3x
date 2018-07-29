@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.39 2018/04/07 20:51:27 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.40 2018/07/28 21:14:06 tom Exp $
 .TH curs_termcap 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -75,8 +75,10 @@
 .br
 .SH DESCRIPTION
 These routines are included as a conversion aid for programs that use
-the \fItermcap\fR library.  Their parameters are the same and the
-routines are emulated using the \fIterminfo\fR database.  Thus, they
+the \fItermcap\fR library.
+Their parameters are the same and the
+routines are emulated using the \fIterminfo\fR database.
+Thus, they
 can only be used to query the capabilities of entries for which a
 terminfo entry has been compiled.
 .SS INITIALIZATION
@@ -172,7 +174,8 @@ However, \fBtparm\fP is not a \fItermcap\fP feature,
 and portable \fItermcap\fP applications should not rely upon its availability.
 .PP
 The \fBtputs\fR routine is described on the \fBcurs_terminfo\fR(3X) manual
-page.  It can retrieve capabilities by either termcap or terminfo name.
+page.
+It can retrieve capabilities by either termcap or terminfo name.
 .SS GLOBAL VARIABLES
 .PP
 The variables
@@ -200,7 +203,8 @@ Routines that return pointers return \fBNULL\fR on error.
 .SH BUGS
 If you call \fBtgetstr\fR to fetch \fBca\fR or any other parameterized string,
 be aware that it will be returned in terminfo notation, not the older and
-not-quite-compatible termcap notation.  This will not cause problems if all
+not-quite-compatible termcap notation.
+This will not cause problems if all
 you do with it is call \fBtgoto\fR or \fBtparm\fR, which both expand
 terminfo-style strings as terminfo.
 (The \fBtgoto\fR function, if configured to support termcap, will check
@@ -210,7 +214,8 @@ appear to be terminfo).
 .PP
 Because terminfo conventions for representing padding in string capabilities
 differ from termcap's, \fBtputs("50");\fR will put out a literal "50" rather
-than busy-waiting for 50 milliseconds.  Cope with it.
+than busy-waiting for 50 milliseconds.
+Cope with it.
 .PP
 Note that termcap has nothing analogous to terminfo's \fBsgr\fR string.
 One consequence of this is that termcap applications assume \fRme\fR
@@ -221,7 +226,8 @@ termcap interface to accommodate termcap's limitation in this respect.
 These functions are provided for supporting legacy applications,
 and should not be used in new programs:
 .bP
-The XSI Curses standard, Issue 4 describes these functions.  However, they
+The XSI Curses standard, Issue 4 describes these functions.
+However, they
 are marked TO BE WITHDRAWN and may be removed in future versions.
 .bP
 X/Open Curses, Issue 5 (December 2007) marked the termcap interface

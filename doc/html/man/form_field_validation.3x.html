@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_field_validation.3x,v 1.21 2017/11/20 01:28:31 tom Exp @
+  * @Id: form_field_validation.3x,v 1.23 2018/07/28 21:18:11 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -78,63 +78,87 @@
             width.
 
        TYPE_ENUM
-            Accept  one of a specified set of strings.  Requires a third <STRONG>(char</STRONG>
-            <STRONG>**)</STRONG> argument pointing to a string list; a fourth <STRONG>int</STRONG> flag argument
-            to enable case-sensitivity; and a fifth <STRONG>int</STRONG> flag argument specify-
-            ing whether a partial match must be a unique one (if this flag  is
-            off,  a  prefix matches the first of any set of more than one list
-            elements with that prefix). Please notice that the string list  is
-            copied. So you may use a list that lives in automatic variables on
-            the stack.
+            Accept  one  of  a  specified set of strings.  Requires additional
+            parameters:
+
+            <STRONG>o</STRONG>   a third <STRONG>(char</STRONG> <STRONG>**)</STRONG> argument pointing to a string list;
+
+            <STRONG>o</STRONG>   a fourth <STRONG>int</STRONG> flag argument to enable case-sensitivity;
+
+            <STRONG>o</STRONG>   and a fifth <STRONG>int</STRONG> flag argument  specifying  whether  a  partial
+                match  must  be  a  unique one.  If this flag is off, a prefix
+                matches the first of any set of more than  one  list  elements
+                with that prefix.
+
+                The library copies the string list, so you may use a list that
+                lives in automatic variables on the stack.
 
        TYPE_INTEGER
-            Integer data, parsable to an integer by <STRONG>atoi(3)</STRONG>.  Requires a third
-            <STRONG>int</STRONG>  argument  controlling  the  precision, a fourth <STRONG>long</STRONG> argument
-            constraining minimum value, and a fifth <STRONG>long</STRONG> constraining  maximum
-            value.   If the maximum value is less than or equal to the minimum
-            value, the range is simply ignored. On return the field buffer  is
-            formatted  according  to  the  <STRONG>printf</STRONG> format specification ".*ld",
-            where the '*' is replaced by the precision argument.  For  details
-            of the precision handling see <STRONG>printf's</STRONG> man-page.
+            Integer data, parsable to an integer by <STRONG>atoi(3)</STRONG>.   Requires  addi-
+            tional parameters:
+
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
+
+            <STRONG>o</STRONG>   a fourth <STRONG>long</STRONG> argument constraining minimum value,
+
+            <STRONG>o</STRONG>   and  a  fifth <STRONG>long</STRONG> constraining maximum value.  If the maximum
+                value is less than or equal to the minimum value, the range is
+                simply  ignored.   On  return,  the  field buffer is formatted
+                according to the <STRONG>printf</STRONG> format specification ".*ld", where the
+                '*' is replaced by the precision argument.
+
+                For details of the precision handling see <STRONG>printf's</STRONG> man-page.
 
        TYPE_NUMERIC
-            Numeric data (may have a decimal-point part). Requires a third <STRONG>int</STRONG>
-            argument controlling the precision, a fourth <STRONG>double</STRONG> argument  con-
-            straining  minimum  value, and a fifth <STRONG>double</STRONG> constraining maximum
-            value. If your system supports locales, the decimal point  charac-
-            ter  to  be used must be the one specified by your locale.  If the
-            maximum value is less than or equal  to  the  minimum  value,  the
-            range  is  simply ignored. On return the field buffer is formatted
-            according to the <STRONG>printf</STRONG> format specification ".*f", where the  '*'
-            is  replaced by the precision argument.  For details of the preci-
-            sion handling see <STRONG>printf's</STRONG> man-page.
+            Numeric data (may have a decimal-point part).  This requires addi-
+            tional parameters:
+
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
+
+            <STRONG>o</STRONG>   a fourth <STRONG>double</STRONG> argument constraining minimum value,
+
+            <STRONG>o</STRONG>   and a fifth <STRONG>double</STRONG> constraining maximum value.  If your system
+                supports  locales, the decimal point character must be the one
+                specified by your locale.  If the maximum value is  less  than
+                or equal to the minimum value, the range is simply ignored.
+
+                On  return,  the  field  buffer  is formatted according to the
+                <STRONG>printf</STRONG> format specification ".*f", where the '*'  is  replaced
+                by the precision argument.
+
+                For details of the precision handling see <STRONG>printf's</STRONG> man-page.
 
        TYPE_REGEXP
-            Regular expression data.  Requires a regular expression  <STRONG>(char</STRONG>  <STRONG>*)</STRONG>
-            third  argument;  the  data  is  valid  if  the regular expression
-            matches it.  Regular expressions are in the format of <STRONG>regcomp</STRONG>  and
-            <STRONG>regexec</STRONG>.  Please notice that the regular expression must match the
-            whole field. If you have  for  example  an  eight  character  wide
-            field,  a regular expression "^[0-9]*$" always means that you have
-            to fill all eight positions with digits.  If  you  want  to  allow
-            fewer  digits,  you may use for example "^[0-9]* *$" which is good
-            for trailing spaces (up to an empty  field),  or  "^  *[0-9]*  *$"
-            which is good for leading and trailing spaces around the digits.
+            Regular  expression  data.  Requires a regular expression <STRONG>(char</STRONG> <STRONG>*)</STRONG>
+            third argument.  The data  is  valid  if  the  regular  expression
+            matches it.
+
+            Regular expressions are in the format of <STRONG>regcomp</STRONG> and <STRONG>regexec</STRONG>.
+
+            The  regular  expression  must match the whole field.  If you have
+            for example, an eight character wide field, a  regular  expression
+            "^[0-9]*$"  always means that you have to fill all eight positions
+            with digits.  If you want to allow fewer digits, you may  use  for
+            example  "^[0-9]*  *$" which is good for trailing spaces (up to an
+            empty field), or "^ *[0-9]* *$" which  is  good  for  leading  and
+            trailing spaces around the digits.
 
        TYPE_IPV4
-            An  Internet  Protocol  Version  4 address. This requires no addi-
-            tional argument. It is checked whether or not the buffer  has  the
-            form  a.b.c.d,  where  a,b,c  and d are numbers between 0 and 255.
-            Trailing blanks in the buffer are ignored. The address  itself  is
-            not validated. Please note that this is an ncurses extension. This
-            field type may not be available in other curses implementations.
+            An  Internet  Protocol  Version 4 address.  This requires no addi-
+            tional argument.  The library checks whether or not the buffer has
+            the form a.b.c.d, where a,b,c and d are numbers between 0 and 255.
+            Trailing blanks in the buffer are ignored.  The address itself  is
+            not validated.
+
+            This is an ncurses extension; this field type may not be available
+            in other curses implementations.
 
        It is possible to set up new programmer-defined field types.   See  the
        <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG> manual page.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  functions <STRONG>field_type</STRONG> and <STRONG>field_arg</STRONG> return <STRONG>NULL</STRONG> on error. The func-
+       The functions <STRONG>field_type</STRONG> and <STRONG>field_arg</STRONG> return <STRONG>NULL</STRONG> on error.  The func-
        tion <STRONG>set_field_type</STRONG> returns one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.

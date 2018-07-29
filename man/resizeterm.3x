@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.24 2017/11/18 23:47:37 tom Exp $
+.\" $Id: resizeterm.3x,v 1.25 2018/07/28 22:20:54 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -60,7 +60,8 @@ such as the \fBLINES\fP and \fBCOLS\fP variables.
 .SS resize_term
 .PP
 Most of the work is done by the inner function \fBresize_term\fR.
-The outer function \fBresizeterm\fR adds bookkeeping for the \fBSIGWINCH\fP handler.
+The outer function \fBresizeterm\fR adds bookkeeping
+for the \fBSIGWINCH\fP handler.
 When resizing the windows,
 \fBresize_term\fR blank-fills the areas that are extended.
 The calling application should fill in these areas with appropriate data.
@@ -72,7 +73,8 @@ without additional interaction with the application.
 .PP
 A support function \fBis_term_resized\fR is provided so that applications
 can check if the \fBresize_term\fR function would modify the window structures.
-It returns \fBTRUE\fP if the windows would be modified, and \fBFALSE\fP otherwise.
+It returns \fBTRUE\fP if the windows would be modified,
+and \fBFALSE\fP otherwise.
 .SH RETURN VALUE
 Except as noted, these functions return
 the integer \fBERR\fR upon failure and \fBOK\fR on success.

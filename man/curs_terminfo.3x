@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.58 2018/04/07 21:09:12 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.60 2018/07/28 22:08:59 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -115,7 +115,8 @@
 .SH DESCRIPTION
 These low-level routines must be called by programs that have to deal
 directly with the \fBterminfo\fR database to handle certain terminal
-capabilities, such as programming function keys.  For all other
+capabilities, such as programming function keys.
+For all other
 functionality, \fBcurses\fR routines are more suitable and their use is
 recommended.
 .SS Initialization
@@ -140,14 +141,18 @@ If \fBuse_env(FALSE)\fR has been called, values for
 \fBlines\fR and \fBcolumns\fR specified in \fBterminfo\fR are used.
 .bP
 Otherwise, if the environment variables \fBLINES\fR and \fBCOLUMNS\fR
-exist, their values are used.  If these environment variables do not
+exist, their values are used.
+If these environment variables do not
 exist and the program is running in a window, the current window size
-is used.  Otherwise, if the environment variables do not exist, the
+is used.
+Otherwise, if the environment variables do not exist, the
 values for \fBlines\fR and \fBcolumns\fR specified in the
 \fBterminfo\fR database are used.
 .PP
-Parameterized strings should be passed through \fBtparm\fR to instantiate them. 
-All \fBterminfo\fR strings [including the output of \fBtparm\fR] should be printed
+Parameterized strings should be passed through \fBtparm\fR to instantiate them.
+All \fBterminfo\fR strings
+(including the output of \fBtparm\fR)
+should be printed
 with \fBtputs\fR or \fBputp\fR.
 Call \fBreset_shell_mode\fR to restore the
 tty modes before exiting [see \fBcurs_kernel\fR(3X)].
@@ -214,7 +219,8 @@ means that the \fBterminfo\fR database could not be found.
 .IP
 If \fIerrret\fR is
 null, \fBsetupterm\fR prints an error message upon finding an error
-and exits.  Thus, the simplest call is:
+and exits.
+Thus, the simplest call is:
 .sp
       \fBsetupterm((char *)0, 1, (int *)0);\fR,
 .sp
@@ -250,7 +256,8 @@ string variables use the values from \fInterm\fR.
 It returns the old value of \fBcur_term\fR.
 .PP
 The \fBdel_curterm\fR routine frees the space pointed to by
-\fIoterm\fR and makes it available for further use.  If \fIoterm\fR is
+\fIoterm\fR and makes it available for further use.
+If \fIoterm\fR is
 the same as \fBcur_term\fR, references to any of the \fBterminfo\fR
 boolean, numeric, and string variables thereafter may refer to invalid
 memory locations until another \fBsetupterm\fR has been called.
@@ -291,7 +298,8 @@ variable or the return value from
 \fBtparm\fR, \fBtiparm\fP, \fBtgetstr\fR, or \fBtgoto\fR.
 .IP
 The \fBtgetstr\fP and \fBtgoto\fP functions are part of the \fItermcap\fP
-interface, which happens to share this function name with the \fIterminfo\fP interface.
+interface,
+which happens to share this function name with the \fIterminfo\fP interface.
 .bP
 \fIaffcnt\fR is the number of lines affected, or 1 if
 not applicable.
@@ -305,14 +313,15 @@ the \fIfiledes\fR specified in \fBsetupterm\fR.
 .PP
 The \fBvidputs\fR routine displays the string on the terminal in the
 video attribute mode \fIattrs\fR, which is any combination of the
-attributes listed in \fBcurses\fR(3X).  The characters are passed to
+attributes listed in \fBcurses\fR(3X).
+The characters are passed to
 the \fBputchar\fR-like routine \fIputc\fR.
 .PP
 The \fBvidattr\fR routine is like the \fBvidputs\fR routine, except
 that it outputs through \fBputchar\fR.
 .PP
-The \fBvid_attr\fR and \fBvid_puts\fR routines correspond to vidattr and vidputs,
-respectively.
+The \fBvid_attr\fR and \fBvid_puts\fR routines correspond
+to vidattr and vidputs, respectively.
 They use a set of arguments for representing the video attributes plus color,
 i.e.,
 .bP
@@ -329,7 +338,8 @@ As an extension,
 this implementation allows \fIopts\fP to be used as a pointer to \fBint\fP,
 which overrides the \fIpair\fP (\fBshort\fP) argument.
 .PP
-The \fBmvcur\fR routine provides low-level cursor motion.  It takes
+The \fBmvcur\fR routine provides low-level cursor motion.
+It takes
 effect immediately (rather than at the next refresh).
 .\" ***************************************************************************
 .SS Terminal Capability Functions
@@ -389,8 +399,9 @@ for each of the predefined \fBterminfo\fR variables:
 .RE
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fR upon failure and \fBOK\fR
-(SVr4 only specifies \*(``an integer value other than \fBERR\fR\*('') upon successful
-completion, unless otherwise noted in the preceding routine descriptions.
+(SVr4 only specifies \*(``an integer value other than \fBERR\fR\*('')
+upon successful completion,
+unless otherwise noted in the preceding routine descriptions.
 .PP
 Routines that return pointers always return \fBNULL\fR on error.
 .PP

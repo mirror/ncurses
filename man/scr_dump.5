@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: scr_dump.5,v 1.13 2018/05/19 21:10:21 tom Exp $
+.\" $Id: scr_dump.5,v 1.15 2018/07/28 21:46:15 tom Exp $
 .TH scr_dump 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,7 +43,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .de bP
 .ie n  .IP \(bu 4
@@ -385,8 +386,8 @@ The \fIxpg4\fP curses library does not know about the \fBbce\fP
 (back color erase) capability, and does not color the window background.
 .ne 10
 .PP
-On the other hand, the SVr4 curses library does know about the background
-color.  However, its screen dumps are in binary.
+On the other hand, the SVr4 curses library does know about the background color.
+However, its screen dumps are in binary.
 Here is the corresponding dump (using \*(``od -t x1\*(''):
 .NS
 0000000 1c 01 c3 d6 f3 58 05 00 0b 00 0a 00 14 00 00 00

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.47 2017/11/18 23:52:45 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.49 2018/07/28 22:19:56 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -43,7 +43,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .de bP
 .ie n  .IP \(bu 4
@@ -306,7 +307,8 @@ For instance
 the SVr4 curses library used the \fBget_mouse\fP capability to tell the
 terminal which mouse button events it should send,
 passing the mouse-button bit-mask to the terminal.
-Also, it could ask the terminal where the mouse was using the \fBreq_mouse_pos\fP capability.
+Also, it could ask the terminal
+where the mouse was using the \fBreq_mouse_pos\fP capability.
 .IP
 Those features required a terminal which had been modified to work with curses.
 They were not part of the X Consortium's xterm.

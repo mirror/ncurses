@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_post.3x,v 1.14 2017/01/07 19:25:15 tom Exp $
+.\" $Id: menu_post.3x,v 1.16 2018/07/28 22:08:59 tom Exp $
 .TH menu_post 3X ""
 .SH NAME
 \fBpost_menu\fR,
@@ -40,10 +40,13 @@ int post_menu(MENU *menu);
 int unpost_menu(MENU *menu);
 .br
 .SH DESCRIPTION
-The function \fBpost_menu\fR displays a menu to its associated subwindow.  To
-trigger physical display of the subwindow, use \fBrefresh\fR(3X) or some equivalent
+The function \fBpost_menu\fR displays a menu to its associated subwindow.
+To
+trigger physical display of the subwindow,
+use \fBrefresh\fR(3X) or some equivalent
 \fBcurses\fR routine (the implicit \fBdoupdate\fR triggered by an \fBcurses\fR
-input request will do). \fBpost_menu\fR resets the selection status of all items.
+input request will do).
+\fBpost_menu\fR resets the selection status of all items.
 .PP
 The function \fBunpost_menu\fR erases menu from its associated subwindow.
 .SH RETURN VALUE
@@ -79,8 +82,9 @@ No items are connected to the menu.
 The header file \fB<menu.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V menu library.  They were not supported on
+These routines emulate the System V menu library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

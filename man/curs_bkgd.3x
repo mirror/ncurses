@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.25 2017/11/18 23:56:00 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.26 2018/07/28 21:34:06 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -56,9 +56,11 @@ background of the named window.
 The window background is a \fBchtype\fR consisting of
 any combination of attributes (i.e., rendition) and a character.
 The attribute part of the background is combined (OR'ed) with all non-blank
-characters that are written into the window with \fBwaddch\fR.  Both
+characters that are written into the window with \fBwaddch\fR.
+Both
 the character and attribute parts of the background are combined with
-the blank characters.  The background becomes a property of the
+the blank characters.
+The background becomes a property of the
 character and moves with the character through any scrolling and
 insert/delete line/character operations.
 .PP

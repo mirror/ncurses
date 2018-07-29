@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2016 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,8 +26,16 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.17 2016/10/15 16:45:45 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.19 2018/07/28 22:59:02 tom Exp $
 .TH curs_refresh 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .na
 .hy 0
 .SH NAME
@@ -57,11 +65,11 @@
 .SH DESCRIPTION
 .SS refresh/wrefresh
 The \fBrefresh\fR and \fBwrefresh\fR routines (or \fBwnoutrefresh\fR and
-\fBdoupdate\fR) must be called to get actual output to the terminal, as other
-routines merely manipulate data structures.
+\fBdoupdate\fR) must be called to get actual output to the terminal,
+as other routines merely manipulate data structures.
 The routine \fBwrefresh\fR copies
-the named window to the physical terminal screen, taking into account what is
-already there to do optimizations.
+the named window to the \fIphysical screen\fP,
+taking into account what is already there to do optimizations.
 The \fBrefresh\fR routine is the
 same, using \fBstdscr\fR as the default window.
 Unless \fBleaveok\fR has been
@@ -73,13 +81,21 @@ The \fBwnoutrefresh\fR and \fBdoupdate\fR routines allow multiple updates with
 more efficiency than \fBwrefresh\fR alone.
 In addition to all the window
 structures, \fBcurses\fR keeps two data structures representing the terminal
-screen: a physical screen, describing what is actually on the screen, and a
-virtual screen, describing what the programmer wants to have on the screen.
+screen:
+.bP
+a \fIphysical screen\fP, describing what is actually on the screen, and
+.bP
+a \fIvirtual screen\fP, describing what the programmer wants to have on the screen.
 .PP
-The routine \fBwrefresh\fR works by first calling \fBwnoutrefresh\fR, which
-copies the named window to the virtual screen, and then calling \fBdoupdate\fR,
-which compares the virtual screen to the physical screen and does the actual
-update.
+The routine \fBwrefresh\fR works by
+.bP
+first calling \fBwnoutrefresh\fR,
+which copies the named window to the \fIvirtual screen\fP, and
+.bP
+then calling \fBdoupdate\fR, which compares
+the \fIvirtual screen\fP to the \fIphysical screen\fP
+and does the actual update.
+.PP
 If the programmer wishes to output several windows at once, a series
 of calls to \fBwrefresh\fR results in alternating calls to \fBwnoutrefresh\fR
 and \fBdoupdate\fR, causing several bursts of output to the screen.
@@ -87,11 +103,13 @@ By first
 calling \fBwnoutrefresh\fR for each window, it is then possible to call
 \fBdoupdate\fR once, resulting in only one burst of output, with fewer total
 characters transmitted and less CPU time used.
-If the \fIwin\fR argument to
-\fBwrefresh\fR is the global variable \fBcurscr\fR, the screen is immediately
-cleared and repainted from scratch.
 .PP
-The phrase "copies the named window to the virtual screen" above is ambiguous.
+If the \fIwin\fR argument to
+\fBwrefresh\fR is the \fIphysical screen\fP
+(i.e., the global variable \fBcurscr\fR),
+the screen is immediately cleared and repainted from scratch.
+.PP
+The phrase \*(``copies the named window to the virtual screen\*('' above is ambiguous.
 What actually happens is that all \fItouched\fR (changed) lines in the window
 are copied to the virtual screen.
 This affects programs that use overlapping

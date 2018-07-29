@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_kernel.3x,v 1.23 2017/11/18 23:47:37 tom Exp @
+  * @Id: curs_kernel.3x,v 1.26 2018/07/28 23:04:00 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -94,21 +94,25 @@
 
 
 </PRE><H3><a name="h3-getsyx">getsyx</a></H3><PRE>
-       The  <STRONG>getsyx</STRONG>  routine  returns  the  current  coordinates of the virtual
-       screen cursor in <EM>y</EM> and <EM>x</EM>.  If <STRONG>leaveok</STRONG> is currently <STRONG>TRUE</STRONG>, then <STRONG>-1</STRONG>,<STRONG>-1</STRONG>  is
+       The  <STRONG>getsyx</STRONG>  routine  returns  the  current  coordinates of the <EM>virtual</EM>
+       <EM>screen</EM> cursor in <EM>y</EM> and <EM>x</EM>.  If <STRONG>leaveok</STRONG> is currently <STRONG>TRUE</STRONG>, then <STRONG>-1</STRONG>,<STRONG>-1</STRONG>  is
        returned.  If lines have been removed from the top of the screen, using
        <STRONG>ripoffline</STRONG>, <EM>y</EM> and <EM>x</EM> include these lines; therefore, <EM>y</EM> and <EM>x</EM>  should  be
        used only as arguments for <STRONG>setsyx</STRONG>.
 
+       Few applications will use this feature, most use <STRONG>getyx</STRONG> instead.
+
 
 </PRE><H3><a name="h3-setsyx">setsyx</a></H3><PRE>
-       The  <STRONG>setsyx</STRONG> routine sets the virtual screen cursor to <EM>y</EM>, <EM>x</EM>.  If <EM>y</EM> and <EM>x</EM>
+       The  <STRONG>setsyx</STRONG> routine sets the <EM>virtual</EM> <EM>screen</EM> cursor to <EM>y</EM>, <EM>x</EM>.  If <EM>y</EM> and <EM>x</EM>
        are both <STRONG>-1</STRONG>, then <STRONG>leaveok</STRONG> is set.  The two routines <STRONG>getsyx</STRONG>  and  <STRONG>setsyx</STRONG>
        are  designed to be used by a library routine, which manipulates <STRONG>curses</STRONG>
        windows but does not want to change the current position  of  the  pro-
        gram's cursor.  The library routine would call <STRONG>getsyx</STRONG> at the beginning,
        do its manipulation of its own windows, do a <STRONG>wnoutrefresh</STRONG> on  its  win-
        dows, call <STRONG>setsyx</STRONG>, and then call <STRONG>doupdate</STRONG>.
+
+       Few applications will use this feature, most use <STRONG>wmove</STRONG> instead.
 
 
 </PRE><H3><a name="h3-ripoffline">ripoffline</a></H3><PRE>
@@ -180,12 +184,13 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The  functions  <STRONG>setsyx</STRONG>  and  <STRONG>getsyx</STRONG> are not described in the XSI Curses
-       standard, Issue 4.  All other functions are as described in XSI Curses.
+       The <EM>virtual</EM> <EM>screen</EM> functions <STRONG>setsyx</STRONG> and <STRONG>getsyx</STRONG> are not described in the
+       XSI Curses standard, Issue 4.  All other functions are as described  in
+       XSI Curses.
 
-       The SVr4 documentation describes <STRONG>setsyx</STRONG> and  <STRONG>getsyx</STRONG>  as  having  return
-       type int. This is misleading, as they are macros with no documented se-
-       mantics for the return value.
+       The  SVr4  documentation  describes  <STRONG>setsyx</STRONG> and <STRONG>getsyx</STRONG> as having return
+       type int.  This is misleading, as they are macros  with  no  documented
+       semantics for the return value.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

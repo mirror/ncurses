@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_validation.3x,v 1.22 2018/07/14 22:39:06 tom Exp $
+.\" $Id: form_field_validation.3x,v 1.23 2018/07/28 21:18:11 tom Exp $
 .TH form_field_validation 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -63,14 +63,16 @@ This is the type checked by validation functions.
 The predefined types are as follows:
 .TP 5
 TYPE_ALNUM
-Alphanumeric data.  Requires a third \fBint\fR argument, a minimum field width.
+Alphanumeric data.
+Requires a third \fBint\fR argument, a minimum field width.
 .TP 5
 TYPE_ALPHA
-Character data.  Requires a third \fBint\fR argument, a minimum field width.
+Character data.
+Requires a third \fBint\fR argument, a minimum field width.
 .TP 5
 TYPE_ENUM
-Accept one of a specified set of strings.  Requires additional
-parameters:
+Accept one of a specified set of strings.
+Requires additional parameters:
 .RS
 .bP
 a third \fB(char **)\fR argument pointing to a string list;
@@ -156,11 +158,11 @@ The address itself is not validated.
 This is an ncurses extension;
 this field type may not be available in other curses implementations.
 .PP
-It is possible to set up new programmer-defined field types.  See the
-\fBform_fieldtype\fR(3X) manual page.
+It is possible to set up new programmer-defined field types.
+See the \fBform_fieldtype\fR(3X) manual page.
 .SH RETURN VALUE
-The functions \fBfield_type\fR and \fBfield_arg\fR return \fBNULL\fR on
-error. The function \fBset_field_type\fR returns one of the following:
+The functions \fBfield_type\fR and \fBfield_arg\fR return \fBNULL\fR on error.
+The function \fBset_field_type\fR returns one of the following:
 .TP 5
 .B E_OK
 The routine succeeded.
@@ -175,8 +177,9 @@ System error occurred (see \fBerrno\fR).
 The header file \fB<form.h>\fR automatically includes the header file
 \fB<curses.h>\fR.
 .SH PORTABILITY
-These routines emulate the System V forms library.  They were not supported on
+These routines emulate the System V forms library.
+They were not supported on
 Version 7 or BSD versions.
 .SH AUTHORS
-Juergen Pfeifer.  Manual pages and adaptation for new curses by Eric
-S. Raymond.
+Juergen Pfeifer.
+Manual pages and adaptation for new curses by Eric S. Raymond.

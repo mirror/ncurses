@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2010-2015,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 2010-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_variables.3x,v 1.9 2017/11/18 23:56:00 tom Exp @
+  * @Id: curs_variables.3x,v 1.11 2018/07/28 22:37:10 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -101,7 +101,7 @@
        This variable holds the number of milliseconds to wait after reading an
        escape character, to distinguish between an individual escape character
        entered on the keyboard from escape sequences sent by cursor- and func-
-       tion-keys (see <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
+       tion-keys (see <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>).
 
 
 </PRE><H3><a name="h3-LINES">LINES</a></H3><PRE>
@@ -119,10 +119,16 @@
        This  implementation  of  curses uses a special window <STRONG>curscr</STRONG> to record
        its updates to the terminal screen.
 
+       This is referred to as the "physical screen"  in  the  <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
+       and <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG> manual pages.
+
 
 </PRE><H3><a name="h3-The-New-Screen">The New Screen</a></H3><PRE>
-       This implementation of curses uses a special window <STRONG>newscr</STRONG> to hold  up-
+       This  implementation of curses uses a special window <STRONG>newscr</STRONG> to hold up-
        dates to the terminal screen before applying them to <STRONG>curscr</STRONG>.
+
+       This is referred to as the "virtual  screen"  in  the  <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,
+       <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG> and <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG> manual pages.
 
 
 </PRE><H3><a name="h3-The-Standard-Screen">The Standard Screen</a></H3><PRE>

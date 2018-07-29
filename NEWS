@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3162 2018/07/21 21:42:07 tom Exp $
+-- $Id: NEWS,v 1.3165 2018/07/28 23:24:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180728
+	+ improve documentation regarding feature-test macros in curses.h
+	+ improve documentation regarding the virtual and physical screens.
+	+ formatting fixes for manpages, regenerate man-html documentation.
 
 20180721
 	+ build-fixes for gcc8.

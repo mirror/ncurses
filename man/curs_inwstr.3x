@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2002-2012,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2002-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inwstr.3x,v 1.9 2017/10/28 23:42:58 tom Exp $
+.\" $Id: curs_inwstr.3x,v 1.11 2018/07/28 22:19:56 tom Exp $
 .TH curs_inwstr 3X ""
 .SH NAME
 \fBinwstr\fR,
@@ -62,8 +62,9 @@
 These routines return a string of \fBwchar_t\fR wide characters in \fIwstr\fR,
 extracted starting at the current cursor position in the named window.
 .PP
-The four functions with \fIn\fR as the last argument return a leading substring at most
-\fIn\fR characters long (exclusive of the trailing NUL).
+The four functions with \fIn\fR as the last argument return
+a leading substring at most \fIn\fR characters long
+(exclusive of the trailing NUL).
 Transfer stops at the end of the current line, or when \fIn\fR characters have
 been stored at the location referenced by \fIwstr\fR.
 .PP
@@ -83,7 +84,8 @@ Use \fBin_wchstr\fP to return the complex characters from a window.
 .SH RETURN VALUE
 All routines return
 \fBERR\fR
-upon failure. Upon
+upon failure.
+Upon
 successful completion, the *\fBinwstr\fR
 routines return
 \fBOK\fR, and the *\fBinnwstr\fR

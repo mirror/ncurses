@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1997
 .\"
-.\" $Id: keyok.3x,v 1.12 2017/11/21 00:53:44 tom Exp $
+.\" $Id: keyok.3x,v 1.13 2018/07/28 21:34:56 tom Exp $
 .TH keyok 3X ""
 .SH NAME
 \fBkeyok\fP \- enable or disable a keycode
@@ -48,8 +48,10 @@ If the \fIenable\fP parameter is true, then the key must have been disabled,
 and vice versa.
 Otherwise, the function returns \fBOK\fP.
 .SH PORTABILITY
-These routines are specific to ncurses.  They were not supported on
-Version 7, BSD or System V implementations.  It is recommended that
+These routines are specific to ncurses.
+They were not supported on
+Version 7, BSD or System V implementations.
+It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
 \fBdefine_key\fR(3X).

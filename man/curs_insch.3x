@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2010,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insch.3x,v 1.14 2017/11/21 00:53:44 tom Exp $
+.\" $Id: curs_insch.3x,v 1.15 2018/07/28 21:34:56 tom Exp $
 .TH curs_insch 3X ""
 .SH NAME
 \fBinsch\fR,
@@ -46,7 +46,8 @@
 .br
 .SH DESCRIPTION
 These routines insert the character \fIch\fR before the character under the
-cursor.  All characters to the right of the cursor are moved one space to the
+cursor.
+All characters to the right of the cursor are moved one space to the
 right, with the possibility of the rightmost character on the line being lost.
 The insertion operation does not change the cursor position.
 .SH RETURN VALUE

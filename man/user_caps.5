@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: user_caps.5,v 1.7 2018/02/17 19:07:01 tom Exp $
+.\" $Id: user_caps.5,v 1.9 2018/07/28 22:05:23 tom Exp $
 .TH user_caps 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,7 +43,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .de bP
 .ie n  .IP \(bu 4
@@ -117,7 +118,8 @@ modifications to the toolset's predefined capability names are needed.
 .PP
 The ncurses utilities \fBtic\fP and \fBinfocmp\fP have a command-line
 option \*(``\-x\*('' to control whether the nonstandard capabilities
-are stored or retrieved.  A library function \fBuse_extended_names\fP
+are stored or retrieved.
+A library function \fBuse_extended_names\fP
 is provided for the same purpose.
 .PP
 When compiling a terminal database, if \*(``\-x\*('' is set,
@@ -161,7 +163,7 @@ ncurses makes explicit checks for these:
 .TP 3
 AX
 \fIboolean\fP, asserts that the terminal interprets SGR 39 and SGR 49
-by resetting the foreground and background color, respectively, to the default. 
+by resetting the foreground and background color, respectively, to the default.
 .IP
 This is a feature recognized by the \fBscreen\fP program as well.
 .TP 3
@@ -175,9 +177,9 @@ The command \*(``\fBtput clear\fP\*('' does the same thing.
 RGB
 \fIboolean\fP, \fInumber\fP \fBor\fP \fIstring\fP,
 to assert that the
-\fBset_a_foreground\fP and 
+\fBset_a_foreground\fP and
 \fBset_a_background\fP capabilities correspond to \fIdirect colors\fP,
-using an RGB (red/green/blue) convention. 
+using an RGB (red/green/blue) convention.
 This capability allows the \fBcolor_content\fP function to
 return appropriate values without requiring the application
 to initialize colors using \fBinit_color\fP.
@@ -254,7 +256,7 @@ kEND/special form of kend (End)
 kHOM/special form of khome (Home)
 kLFT/special form of kcub1 (cursor-left or cursor-back)
 kNXT/special form of knext (Next, or Page-Down)
-kPRV/special form of kprev (Prev, or Page-Up) 
+kPRV/special form of kprev (Prev, or Page-Up)
 kRIT/special form of kcuf1 (cursor-right, or cursor-forward)
 kUP/special form of kcuu1 (cursor-up)
 .TE

@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.52 2017/11/18 23:47:37 tom Exp @
+  * @Id: curs_util.3x,v 1.54 2018/07/28 22:08:59 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -196,7 +196,7 @@
 
        <STRONG>o</STRONG>   the data written is a copy of the <STRONG>WINDOW</STRONG> structure, and its associ-
            ated  character cells.  The format differs between the wide-charac-
-           ter (ncursesw) and non-wide (ncurses) libraries.  You can  transfer
+           ter (<STRONG>ncursesw</STRONG>) and non-wide (<STRONG>ncurses</STRONG>) libraries.  You can  transfer
            data between the two, however.
 
        <STRONG>o</STRONG>   the  retrieved  window  is always created as a top-level window (or
@@ -330,6 +330,10 @@
        not  document the treatment of codes 128 to 159.  When treating them as
        "meta" keys (or if <STRONG>keyname</STRONG> is called before initializing curses),  this
        implementation returns strings "M-^@", "M-^A", etc.
+
+       X/Open Curses documents <STRONG>unctrl</STRONG> as declared in <STRONG>&lt;unctrl.h&gt;</STRONG>, which <STRONG>ncurses</STRONG>
+       does.  However, <STRONG>ncurses</STRONG>' <STRONG>&lt;curses.h&gt;</STRONG> includes <STRONG>&lt;unctrl.h&gt;</STRONG>,  matching  the
+       behavior of SVr4 curses.  Other implementations may not do that.
 
 
 </PRE><H3><a name="h3-use_env_use_tioctl">use_env/use_tioctl</a></H3><PRE>

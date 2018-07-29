@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.136 2017/11/18 23:48:44 tom Exp $
+.\" $Id: ncurses.3x,v 1.140 2018/07/28 23:30:17 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -49,7 +49,8 @@
 .de NE
 .fi
 .ft R
-.in -4
+.ie n  .in -4
+.el    .in -2
 ..
 .ds n 5
 .ds d @TERMINFO@
@@ -1080,8 +1081,8 @@ If the \fBncurses\fR library has been configured with \fItermcap\fR
 support, \fBncurses\fR will check for a terminal's description in
 termcap form if it is not available in the terminfo database.
 .PP
-The \fBTERMCAP\fP environment variable contains either a terminal description (with
-newlines stripped out),
+The \fBTERMCAP\fP environment variable contains
+either a terminal description (with newlines stripped out),
 or a file name telling where the information denoted by
 the \fBTERM\fP environment variable exists.
 In either case, setting it directs \fBncurses\fR to ignore
@@ -1089,7 +1090,8 @@ the usual place for this information, e.g., /etc/termcap.
 .SS TERMINFO
 .PP
 \fBncurses\fP can be configured to read from multiple terminal databases.
-The \fBTERMINFO\fP variable overrides the location for the default terminal database.
+The \fBTERMINFO\fP variable overrides the location for
+the default terminal database.
 Terminal descriptions (in terminal format) are stored in terminal databases:
 .bP
 Normally these are stored in a directory tree,
@@ -1226,12 +1228,34 @@ you link with
 \fB\-lncursesw\fR
 .NE
 .IP
-You must also define \fB_XOPEN_SOURCE_EXTENDED\fP when compiling for the
-wide-character library to use the extended (wide-character) functions.
+You must also enable the wide-character features in the header file
+when compiling for the wide-character library
+to use the extended (wide-character) functions.
+The symbol which enables these features has changed since XSI Curses, Issue 4:
+.RS
+.bP
+Originally, the wide-character feature required the symbol
+\fB_XOPEN_SOURCE_EXTENDED\fP
+but that was only valid for XPG4 (1996).
+.bP
+Later, that was deemed conflicting with \fB_XOPEN_SOURCE\fP defined to 500.
+.bP
+As of mid-2018,
+none of the features in this implementation require a \fB_XOPEN_SOURCE\fP
+feature greater than 600.
+However, X/Open Curses, Issue 7 (2009) recommends defining it to 700.
+.bP
+Alternatively, you can enable the feature by defining \fBNCURSES_WIDECHAR\fP
+with the caveat that some other header file than \fBcurses.h\fP
+may require a specific value for \fB_XOPEN_SOURCE\fP
+(or a system-specific symbol).
+.RE
+.IP
 The \fBcurses.h\fP file which is installed for the wide-character
 library is designed to be compatible with the normal library's header.
 Only the size of the \fBWINDOW\fP structure differs, and very few
 applications require more than a pointer to \fBWINDOW\fPs.
+.IP
 If the headers are installed allowing overwrite,
 the wide-character library's headers should be installed last,
 to allow applications to be built using either library

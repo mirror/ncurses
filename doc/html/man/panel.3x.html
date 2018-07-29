@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: panel.3x,v 1.24 2017/11/25 20:31:13 tom Exp @
+  * @Id: panel.3x,v 1.26 2018/07/28 22:56:56 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -79,7 +79,7 @@
        currently  visible panels is the stack of panels.  The <STRONG>stdscr</STRONG> window is
        beneath all panels, and is not considered part of the stack.
 
-       A window is associated with every panel. The panel routines enable  you
+       A window is associated with every panel.  The panel routines enable you
        to  create, move, hide, and show panels, as well as position a panel at
        any desired location in the stack.
 
@@ -94,12 +94,12 @@
               above any other panel) and returns a pointer to the new panel.
 
        <STRONG>update_panels</STRONG>
-              refreshes  the  virtual  screen to reflect the relations between
+              refreshes  the  <EM>virtual</EM>  <EM>screen</EM> to reflect the relations between
               the panels in the stack, but does not call <STRONG>doupdate</STRONG>  to  refresh
-              the  physical  screen.   Use  this  function and not <STRONG>wrefresh</STRONG> or
+              the  <EM>physical</EM>  <EM>screen</EM>.   Use  this  function and not <STRONG>wrefresh</STRONG> or
               <STRONG>wnoutrefresh</STRONG>.  <STRONG>update_panels</STRONG> may be called more than once before
               a call to <STRONG>doupdate</STRONG>, but <STRONG>doupdate</STRONG> is the function responsible for
-              updating the physical screen.
+              updating the <EM>physical</EM> <EM>screen</EM>.
 
        <STRONG>del_panel(pan)</STRONG>
               removes the given panel from  the   stack  and  deallocates  the
@@ -107,7 +107,7 @@
 
        <STRONG>hide_panel(pan)</STRONG>
               removes  the  given panel from the panel stack and thus hides it
-              from view. The <STRONG>PANEL</STRONG> structure is not lost, merely removed  from
+              from view.  The <STRONG>PANEL</STRONG> structure is not lost, merely removed from
               the stack.
 
        <STRONG>panel_hidden(pan)</STRONG>
@@ -116,7 +116,7 @@
 
        <STRONG>show_panel(pan)</STRONG>
               makes a hidden panel visible by placing it on top of the  panels
-              in the panel stack. See COMPATIBILITY below.
+              in the panel stack.  See COMPATIBILITY below.
 
        <STRONG>top_panel(pan)</STRONG>
               puts  the given visible panel on top of all panels in the stack.
@@ -167,16 +167,16 @@
        Reasonable care has been taken  to   ensure   compatibility  with   the
        native   panel  facility introduced in System V (inspection of the SVr4
        manual pages suggests the programming  interface  is  unchanged).   The
-       <STRONG>PANEL</STRONG> data structures are merely  similar. The  programmer is cautioned
-       not to directly use <STRONG>PANEL</STRONG> fields.
+       <STRONG>PANEL</STRONG>  data  structures  are  merely  similar.  The  programmer is cau-
+       tioned not to directly use <STRONG>PANEL</STRONG> fields.
 
        The functions <STRONG>show_panel</STRONG> and <STRONG>top_panel</STRONG> are identical in this  implemen-
        tation,  and work equally well with displayed or hidden panels.  In the
        native System V implementation, <STRONG>show_panel</STRONG> is  intended  for  making  a
        hidden  panel  visible  (at  the  top  of  the  stack) and <STRONG>top_panel</STRONG> is
        intended for making an already-visible panel move to  the  top  of  the
-       stack. You are cautioned to use the correct function to ensure compati-
-       bility with native panel libraries.
+       stack.  You are cautioned to use the correct function to ensure compat-
+       ibility with native panel libraries.
 
 
 </PRE><H2><a name="h2-NOTE">NOTE</a></H2><PRE>
@@ -204,7 +204,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20180519).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20180728).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
