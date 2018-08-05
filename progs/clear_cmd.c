@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2016-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 #define USE_LIBTINFO
 #include <clear_cmd.h>
 
-MODULE_ID("$Id: clear_cmd.c,v 1.3 2017/10/08 00:04:26 tom Exp $")
+MODULE_ID("$Id: clear_cmd.c,v 1.4 2018/08/04 18:43:22 Nicholas.Marriott Exp $")
 
 static int
 putch(int c)
@@ -48,12 +48,12 @@ putch(int c)
 int
 clear_cmd(bool legacy)
 {
+    int retval = tputs(clear_screen, lines > 0 ? lines : 1, putch);
     if (!legacy) {
 	/* Clear the scrollback buffer if possible. */
 	char *E3 = tigetstr("E3");
 	if (E3)
 	    (void) tputs(E3, lines > 0 ? lines : 1, putch);
     }
-
-    return tputs(clear_screen, lines > 0 ? lines : 1, putch);
+    return retval;
 }
