@@ -61,6 +61,7 @@ configure = \
 		--disable-leaks \
 		--disable-macros  \
 		--disable-overwrite  \
+		--disable-relink \
 		--disable-termcap \
 		--enable-hard-tabs \
 		--enable-opaque-curses \

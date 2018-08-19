@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3167 2018/08/04 16:18:03 tom Exp $
+-- $Id: NEWS,v 1.3173 2018/08/19 00:25:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180818
+	+ build-fix for PDCurses with ncurses-examples.
+	+ improved CF_CC_ENV_FLAGS.
+	+ modify configure scripts to reduce relinking/ranlib during library
+	  install (Debian #903790):
+	  + use "install -p" when available, to avoid need for ranlib of
+	    static libraries.
+	  + modify scripts which use "--disable-relink" to add a 1-second
+	    sleep to work around tools which use whole-second timestamps, e.g.,
+	    in utime() rather than the actual file system resolution.
+	+ add "--disable-touching" option for using "install -p" option during
+	  the install, e.g., so that header-files have a predictable timestamp.
 
 20180804
 	+ improve logic for clear with E3 extension, in case the terminal

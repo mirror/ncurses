@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.167 2018/06/23 21:35:06 tom Exp $ */
+/* $Id: test.priv.h,v 1.169 2018/08/19 00:28:27 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -1009,7 +1009,7 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define USING_WINDOW2(w,func,data) use_window(w, (NCURSES_WINDOW_CB) func, data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)
 #else
-#define USING_WINDOW(w,func) func(w)
+#define USING_WINDOW(w,func) func(w, NULL)
 #define USING_WINDOW1(w,func,safe) func(w)
 #define USING_WINDOW2(w,func,data) func(w,data)
 #define WANT_USE_WINDOW() extern void _nc_want_use_window(void)

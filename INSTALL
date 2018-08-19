@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.204 2018/02/10 17:46:44 tom Exp $
+-- $Id: INSTALL,v 1.206 2018/08/18 20:41:07 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -440,10 +440,18 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --disable-relink
 	If --enable-rpath is given, the generated makefiles normally will
-	rebuild the libraries during install.  Use this option to simply
-	copy whatever the linked produced.
+	rebuild shared libraries during install.  Use this option to simply
+	copy whatever the linker produced.
 
-	This option is ignored if --enable-rpath is not given.
+	Static libraries cannot simply be copied because tools use timestamps
+	to determine if the library's symbol table is up to date.  If your
+	install program supports the "-p" (preserve timestamp) option, that
+	is used when --disable-relink is given, to avoid rebuilding the symbol
+	table.
+
+	Finally, some tools ignore the subsecond timestamps supported by some
+	filesystems.  This option adds a 1-second sleep to help those tools
+	avoid unnecessary relinking during the install process.
 
     --disable-root-environ
 	Compile with environment restriction, so certain environment variables
