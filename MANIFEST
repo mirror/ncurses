@@ -1028,6 +1028,7 @@
 ./package/ncurses.spec
 ./package/ncurses.sym
 ./package/ncursest.map
+./package/ncursest.spec
 ./package/ncursest.sym
 ./package/ncursestw.map
 ./package/ncursestw.sym

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.59 2018/07/28 21:30:27 tom Exp $
+.\" $Id: tput.1,v 1.61 2018/08/25 23:28:12 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -271,6 +271,27 @@ If \fB@TPUT@\fR is invoked by a link named \fBinit\fR, this has the
 same effect as \fB@TPUT@ init\fR.
 Again, you are less likely to use that link because another program
 named \fBinit\fP has a more well-established use.
+.SS Terminal Size
+.PP
+Besides the special commands (e.g., \fBclear\fP),
+@TPUT@ treats certain terminfo capabilities specially:
+\fBlines\fP and \fBcolumns\fP.
+@TPUT@ calls \fBsetupterm\fP(3X) to obtain the terminal size:
+.bP
+first, it gets the size from the terminal database
+(which generally is not provided for terminal emulators
+which do not have a fixed window size)
+.bP
+then it asks the operating system for the terminal's size
+(which generally works, unless connecting via a serial line which
+does not support \fINAWS\fP: negotiations about window size).
+.bP
+finally, it inspects the environment variables \fBLINES\fP and \fBCOLUMNS\fP
+which may override the terminal size.
+.PP
+If the \fB\-T\fP option is given
+@TPUT@ ignores the environment variables by calling \fBuse_tioctl(TRUE)\fP,
+relying upon the operating system (or finally, the terminal database).
 .SH EXAMPLES
 .TP 5
 \fB@TPUT@ init\fR
@@ -441,7 +462,7 @@ AT&T or BSD: Ross Ridge's \fImytinfo\fP package, published on
 \fIcomp.sources.unix\fP in December 1992.
 Ridge's program made more sophisticated use of the terminal capabilities
 than the BSD program.
-Eric Raymond used the \fBtput\fP program
+Eric Raymond used that \fBtput\fP program
 (and other parts of \fImytinfo\fP) in ncurses in June 1995.
 Using the portions dealing with terminal capabilities
 almost without change,
@@ -542,6 +563,27 @@ While it is certainly possible to write a \fBtput\fP program
 without using curses,
 none of the systems which have a curses implementation provide
 a \fBtput\fP utility which does not provide the \fIcapname\fP feature.
+.PP
+X/Open Curses Issue 7 (2009) is the first version to document utilities.
+However that part of X/Open Curses does not follow existing practice
+(i.e., Unix features documented in SVID 3):
+.bP
+It assigns exit code 4 to \*(``invalid operand\*('',
+which may be the same as \fIunknown capability\fP.
+For instance, the source code for Solaris' xcurses uses the term
+\*(``invalid\*'' in this case.
+.bP
+It assigns exit code 255 to a numeric variable that is not specified in
+the terminfo database.
+That likely is a documentation error,
+confusing the \fB\-1\fP written to the standard output for an absent
+or cancelled numeric value versus an (unsigned) exit code.
+.PP
+The various Unix systems (AIX, HPUX, Solaris) use the same exit-codes
+as ncurses.
+.PP
+NetBSD curses documents different exit codes which do not correspond
+to either ncurses or X/Open.
 .SH SEE ALSO
 \fB@CLEAR@\fR(\*n),
 \fBstty\fR(1),
