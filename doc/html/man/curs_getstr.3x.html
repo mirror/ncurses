@@ -26,7 +26,10 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.24 2018/07/28 21:34:56 tom Exp @
+  * @Id: curs_getstr.3x,v 1.26 2018/09/01 20:34:52 tom Exp @
+  * X/Open says also until EOf
+  * X/Open says then an EOS is added to the result
+  * X/Open doesn't mention n&lt;0
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -67,7 +70,7 @@
        The function <STRONG>getstr</STRONG> is equivalent to a series of calls to <STRONG>getch</STRONG>,  until
        a  newline or carriage return is received (the terminating character is
        not included in the returned string).  The resulting value is placed in
-       the area pointed to by the character pointer <EM>str</EM>.
+       the area pointed to by the character pointer <EM>str</EM>, followed by a NUL.
 
        <STRONG>wgetnstr</STRONG>  reads  at most <EM>n</EM> characters, thus preventing a possible over-
        flow of the input buffer.  Any attempt to enter more characters  (other
@@ -121,6 +124,48 @@
 
        The  functions  <STRONG>getnstr</STRONG>, <STRONG>mvgetnstr</STRONG>, and <STRONG>mvwgetnstr</STRONG> were present but not
        documented in SVr4.
+
+       X/Open Curses issue 5 (2007) stated that these functions "read at  most
+       <EM>n</EM>  bytes"  but  did not state whether the terminating NUL is counted in
+       that limit.  X/Open Curses issue 7 (2009)  changed  that  to  say  they
+       "read at most <EM>n</EM>-1 bytes" to allow for the terminating NUL.  As of 2018,
+       some implementations do, some do not count it:
+
+       <STRONG>o</STRONG>   ncurses 6.1 and PDCurses do not count the NUL in the  given  limit,
+           while
+
+       <STRONG>o</STRONG>   Solaris SVr4 and NetBSD curses count the NUL as part of the limit.
+
+       <STRONG>o</STRONG>   Solaris  xcurses  provides  both:  its wide-character <STRONG>wget_nstr</STRONG> re-
+           serves a NUL, but its <STRONG>wgetnstr</STRONG> does not count the NUL consistently.
+
+       In SVr4 curses, a negative value of <EM>n</EM> tells <STRONG>wgetnstr</STRONG> to assume that the
+       caller's  buffer  is large enough to hold the result, i.e., to act like
+       <STRONG>wgetstr</STRONG>.  X/Open Curses does not mention this (or anything  related  to
+       negative  or  zero  values  of <EM>n</EM>), however most implementations use the
+       feature, with different limits:
+
+       <STRONG>o</STRONG>   Solaris SVr4 curses and PDCurses limit the  result  to  255  bytes.
+           Other Unix systems than Solaris are likely to use the same limit.
+
+       <STRONG>o</STRONG>   Solaris xcurses limits the result to <STRONG>LINE_MAX</STRONG> bytes.
+
+       <STRONG>o</STRONG>   NetBSD  7  assumes no particular limit for the result from <STRONG>wgetstr</STRONG>.
+           However, it limits the <STRONG>wgetnstr</STRONG> parameter <EM>n</EM> to ensure  that  it  is
+           greater than zero.
+
+           A  comment in NetBSD's source code states that this is specified in
+           SUSv2.
+
+       <STRONG>o</STRONG>   ncurses (before 6.2) assumes no particular  limit  for  the  result
+           from  <STRONG>wgetstr</STRONG>,  and  treats  the  <EM>n</EM> parameter of <STRONG>wgetnstr</STRONG> like SVr4
+           curses.
+
+       <STRONG>o</STRONG>   ncurses 6.2 uses <STRONG>LINE_MAX</STRONG>, or  a  larger  (system-dependent)  value
+           which  the  <STRONG>sysconf</STRONG>  function  may provide.  If neither <STRONG>LINE_MAX</STRONG> or
+           <STRONG>sysconf</STRONG> is available, ncurses uses the POSIX value for <STRONG>LINE_MAX</STRONG>  (a
+           2048  byte limit).  In either case, it reserves a byte for the ter-
+           minating NUL.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

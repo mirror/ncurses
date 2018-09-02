@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3176 2018/08/25 23:32:32 tom Exp $
+-- $Id: NEWS,v 1.3180 2018/09/01 20:25:49 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180901
+	+ improve manual page for wgetnstr, giving background for the length
+	  parameter.
+	+ define a limit for wgetnstr, wgetn_wstr when length is negative or
+	  "too large".
+	+ update configure script to autoconf 2.52.20180819 (Debian #887390).
 
 20180825
 	+ add a section to tput manual page clarifying how it determines the

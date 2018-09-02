@@ -26,12 +26,16 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.24 2018/07/28 21:34:56 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.26 2018/09/01 20:34:52 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .na
 .hy 0
 .SH NAME
@@ -68,8 +72,12 @@
 The function \fBgetstr\fR is equivalent to a series of calls to \fBgetch\fR,
 until a newline or carriage return is received (the terminating character is
 not included in the returned string).
+.\" X/Open says also until EOf
+.\" X/Open says then an EOS is added to the result
+.\" X/Open doesn't mention n<0
 The resulting value is placed in the
-area pointed to by the character pointer \fIstr\fR.
+area pointed to by the character pointer \fIstr\fR,
+followed by a NUL.
 .PP
 \fBwgetnstr\fR reads at most \fIn\fR characters, thus preventing a possible
 overflow of the input buffer.
@@ -131,6 +139,53 @@ string by those implementations was predictable but not useful
 .PP
 The functions \fBgetnstr\fR, \fBmvgetnstr\fR, and \fBmvwgetnstr\fR were
 present but not documented in SVr4.
+.PP
+X/Open Curses issue 5 (2007) stated that these functions
+\*(``read at most \fIn\fP bytes\*(''
+but did not state whether the terminating NUL is counted in that limit.
+X/Open Curses issue 7 (2009) changed that to say they
+\*(``read at most \fIn\fP\-1 bytes\*(''
+to allow for the terminating NUL.
+As of 2018, some implementations do, some do not count it:
+.bP
+ncurses 6.1 and PDCurses do not count the NUL in the given limit, while
+.bP
+Solaris SVr4 and NetBSD curses count the NUL as part of the limit.
+.bP
+Solaris xcurses provides both:
+its wide-character \fBwget_nstr\fP reserves a NUL,
+but its \fBwgetnstr\fP does not count the NUL consistently.
+.PP
+In SVr4 curses,
+a negative value of \fIn\fP tells \fBwgetnstr\fP to assume that the
+caller's buffer is large enough to hold the result,
+i.e., to act like \fBwgetstr\fP.
+X/Open Curses does not mention this
+(or anything related to negative or zero values of \fIn\fP),
+however most implementations
+use the feature, with different limits:
+.bP
+Solaris SVr4 curses and PDCurses limit the result to 255 bytes.
+Other Unix systems than Solaris are likely to use the same limit.
+.bP
+Solaris xcurses limits the result to \fBLINE_MAX\fP bytes.
+.bP
+NetBSD 7 assumes no particular limit for the result from \fBwgetstr\fP.
+However, it limits the \fBwgetnstr\fP parameter \fIn\fP to ensure
+that it is greater than zero.
+.IP
+A comment in NetBSD's source code states that this is specified in SUSv2.
+.bP
+ncurses (before 6.2) assumes no particular limit for the result
+from \fBwgetstr\fP, and treats the \fIn\fP parameter of \fBwgetnstr\fP
+like SVr4 curses.
+.bP
+ncurses 6.2 uses \fBLINE_MAX\fP,
+or a larger (system-dependent) value
+which the \fBsysconf\fP function may provide.
+If neither \fBLINE_MAX\fP or \fBsysconf\fP is available,
+ncurses uses the POSIX value for \fBLINE_MAX\fP (a 2048 byte limit).
+In either case, it reserves a byte for the terminating NUL.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_getch\fR(3X),

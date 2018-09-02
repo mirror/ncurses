@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wstr.3x,v 1.14 2018/07/28 22:15:59 tom Exp $
+.\" $Id: curs_get_wstr.3x,v 1.16 2018/09/01 20:58:10 tom Exp $
 .TH curs_get_wstr 3X ""
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .na
 .hy 0
 .SH NAME
@@ -184,6 +188,25 @@ end-of-file character is processed.
 The latter function \fIget_wch()\fP can return a negative value,
 while \fBwchar_t\fP is a unsigned type.
 All of the vendors implement this using \fBwint_t\fR, following the standard.
+.PP
+X/Open Curses issue 7 is unclear regarding whether
+the terminating \fInull \fP\fBwchar_t\fP
+value is counted in the length parameter \fIn\fP.
+X/Open Curses issue 7 revised the corresponding description
+of \fBwgetnstr\fP to address this issue.
+The unrevised description of \fBwget_nwstr\fP can be interpreted either way.
+This implementation counts the terminator in the length.
+.PP
+X/Open Curses does not specify what happens if the length \fIn\fP is negative.
+.bP
+For analogy with \fBwgetnstr\fP,
+ncurses 6.2 uses a limit (based on \fBLINE_MAX\fP).
+.bP
+Some other implementations (such as Solaris xcurses) do the same,
+while others (PDCurses) do not allow this.
+.bP
+NetBSD 7 curses imitates ncurses 6.1 in this regard,
+treating a \fB\-1\fP as an indefinite number of characters.
 .SH SEE ALSO
 Functions:
 \fBcurses\fR(3X),

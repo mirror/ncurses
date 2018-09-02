@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.85 2018/07/14 21:20:36 tom Exp $
+# $Id: ncurses_defs,v 1.86 2018/09/01 19:16:04 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -153,6 +153,7 @@ HAVE_STRLCAT
 HAVE_STRLCPY
 HAVE_STRSTR
 HAVE_SYMLINK
+HAVE_SYSCONF
 HAVE_SYS_BSDTYPES_H
 HAVE_SYS_IOCTL_H
 HAVE_SYS_PARAM_H

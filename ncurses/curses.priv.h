@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.604 2018/06/30 21:59:10 tom Exp $
+ * $Id: curses.priv.h,v 1.606 2018/09/01 20:16:30 tom Exp $
  *
  *	curses.priv.h
  *
@@ -916,6 +916,8 @@ typedef struct {
 
 	int		slk_format;
 
+	int		getstr_limit;	/* getstr_limit based on POSIX LINE_MAX */
+
 	char		*safeprint_buf;
 	size_t		safeprint_used;
 
@@ -1002,6 +1004,15 @@ typedef struct {
 extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
 
 #define N_RIPS 5
+
+/* The limit reserves one byte for a terminating NUL */
+#define my_getstr_limit	(_nc_globals.getstr_limit - 1)
+#define _nc_getstr_limit(n) \
+	(((n) < 0) \
+	 ? my_getstr_limit \
+	 : (((n) > my_getstr_limit) \
+	    ? my_getstr_limit \
+	    : (n)))
 
 #ifdef USE_PTHREADS
 typedef struct _prescreen_list {
