@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.206 2018/08/18 20:41:07 tom Exp $
+-- $Id: INSTALL,v 1.211 2018/09/08 23:28:11 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -678,19 +678,19 @@ SUMMARY OF CONFIGURE OPTIONS:
 	vsnprintf() or vsprintf().  It is slow, however, and is used only on
 	very old systems which lack vsnprintf().
 
-    --enable-sigwinch
-	Compile support for ncurses' SIGWINCH handler.  If your application has
-	its own SIGWINCH handler, ncurses will not use its own.  The ncurses
-	handler causes wgetch() to return KEY_RESIZE when the screen-size
-	changes.  This option is the default, unless you have disabled the
-	extended functions.
-
     --enable-signed-char
 	The term.h header declares a Booleans[] array typed "char".  But it
 	stores signed values there and "char" is not necessarily signed.
 	Some packagers choose to alter the type of Booleans[] though this
 	is not strictly compatible.  This option allows one to implement this
 	alteration without patching the source code.
+
+    --enable-sigwinch
+	Compile support for ncurses' SIGWINCH handler.  If your application has
+	its own SIGWINCH handler, ncurses will not use its own.  The ncurses
+	handler causes wgetch() to return KEY_RESIZE when the screen-size
+	changes.  This option is the default, unless you have disabled the
+	extended functions.
 
     --enable-sp-funcs
 	Compile-in support for extended functions which accept a SCREEN pointer,
@@ -794,10 +794,6 @@ SUMMARY OF CONFIGURE OPTIONS:
 	correspond with that in <stdbool.h>, or defaults to platform-specific
 	sizes).
 
-    --with-build-cpp=XXX
-	This option is provided by the same macro used for $BUILD_CC, etc.,
-	but is not directly used by ncurses.
-
     --with-build-cc=XXX
 	If cross-compiling, specify a host C compiler, which is needed to
 	compile a few utilities which generate source modules for ncurses.
@@ -811,6 +807,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 
 	You can also set the environment variable $BUILD_CFLAGS rather than
 	use this option.
+
+    --with-build-cpp=XXX
+	This option is provided by the same macro used for $BUILD_CC, etc.,
+	but is not directly used by ncurses.
 
     --with-build-cppflags=XXX
 	If cross-compiling, specify the host C preprocessor-flags.  You might
@@ -995,9 +995,6 @@ SUMMARY OF CONFIGURE OPTIONS:
 		https://invisible-island.net/autoconf/
 
     --with-libtool-opts=XXX
-	Specify additional libtool options.
-
-    --with-libtool-opts
 	Allow user to pass additional libtool options into the library creation
 	and link steps.  The main use for this is to do something like
 		./configure --with-libtool-opts=-static
@@ -1067,6 +1064,15 @@ SUMMARY OF CONFIGURE OPTIONS:
 	If ".pc" files are installed, optionally add a suffix to the files
 	and corresponding package names to separate unusual configurations.
 	If no option value is given (or if it is "none"), no suffix is added.
+
+    --with-pcre2
+	Add PCRE2 (Perl-compatible regular expressions v2) to the build if it
+	is available and the user requests it.  Assume the application will
+	otherwise use the POSIX interface.
+
+	This is useful for MinGW builds because the usual POSIX interface is
+	not supplied by the development environment, while ncurses' form
+	library uses a regular expression feature for one of the field types.
 
     --with-pkg-config=[DIR]
 	Check for pkg-config, optionally specifying its path.
@@ -1195,6 +1201,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Configure the trace() function as part of the all models of the ncurses
 	library.  Normally it is part of the debug (libncurses_g) library only.
 
+    --with-valgrind
+	For testing, compile with debug option.
+	This also sets the --disable-leaks option.
+
     --with-versioned-syms[=XXX]
 	The Solaris, GNU and reportedly some other linkers (ld) accept a
 	"--version-script" option which tells the linker to annotate the
@@ -1226,18 +1236,6 @@ SUMMARY OF CONFIGURE OPTIONS:
 	may prefer to use a different ".map" file by setting this option's
 	value.
 
-    --with-xterm-kbs=XXX
-	Configure xterm's terminfo entries to use either BS (^H, i.e., ASCII
-	backspace) or DEL (^?, or 127).  XXX can be BS (or bs, 8) or DEL
-	(or del, 127).
-
-	During installation, the makefile and scripts modifies the "xterm+kbs"
-	terminfo entry to use this setting.
-
-    --with-valgrind
-	For testing, compile with debug option.
-	This also sets the --disable-leaks option.
-
     --with-wrap-prefix=XXX
 	When using the --enable-reentrant option, ncurses redefines variables
 	that would be global in curses, e.g., LINES, as a macro that calls a
@@ -1253,6 +1251,14 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Provide a pathname for the X11 rgb file, used by the picsmap program.
 	This overrides a configure check which usually works, but is needed
 	due to the lack of standardization for X11's files.
+
+    --with-xterm-kbs=XXX
+	Configure xterm's terminfo entries to use either BS (^H, i.e., ASCII
+	backspace) or DEL (^?, or 127).  XXX can be BS (or bs, 8) or DEL
+	(or del, 127).
+
+	During installation, the makefile and scripts modifies the "xterm+kbs"
+	terminfo entry to use this setting.
 
     --without-ada
 	Suppress the configure script's check for Ada95, do not build the

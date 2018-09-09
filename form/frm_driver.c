@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.126 2018/04/28 19:03:36 Leon.Winter Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.127 2018/09/08 19:03:39 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -830,7 +830,6 @@ _nc_Position_Form_Cursor(FORM *form)
 {
   FIELD *field;
   WINDOW *formwin;
-  int row, col;
 
   if (!form)
     return (E_BAD_ARGUMENT);
@@ -841,17 +840,14 @@ _nc_Position_Form_Cursor(FORM *form)
   field = form->current;
   formwin = Get_Form_Window(form);
 
-  col = Field_Has_Option(field, O_PUBLIC) ? form->curcol : form->begincol;
-  row = Field_Has_Option(field, O_PUBLIC) ? form->currow : form->toprow;
-
-  wmove(form->w, row, col);
+  wmove(form->w, form->currow, form->curcol);
   if (Has_Invisible_Parts(field))
     {
       /* in this case fieldwin isn't derived from formwin, so we have
          to move the cursor in formwin by hand... */
       wmove(formwin,
-	    field->frow + row - form->toprow,
-	    field->fcol + col - form->begincol);
+	    field->frow + form->currow - form->toprow,
+	    field->fcol + form->curcol - form->begincol);
       wcursyncup(formwin);
     }
   else
@@ -876,6 +872,7 @@ _nc_Refresh_Current_Field(FORM *form)
 {
   WINDOW *formwin;
   FIELD *field;
+  bool is_public;
 
   T((T_CALLED("_nc_Refresh_Current_Field(%p)"), (void *)form));
 
@@ -888,103 +885,105 @@ _nc_Refresh_Current_Field(FORM *form)
   field = form->current;
   formwin = Get_Form_Window(form);
 
-  if (Field_Has_Option(field, O_PUBLIC))
+  is_public = Field_Has_Option(field, O_PUBLIC);
+
+  if (Is_Scroll_Field(field))
     {
-      if (Is_Scroll_Field(field))
+      /* Again, in this case the fieldwin isn't derived from formwin,
+         so we have to perform a copy operation. */
+      if (Single_Line_Field(field))
 	{
-	  /* Again, in this case the fieldwin isn't derived from formwin,
-	     so we have to perform a copy operation. */
-	  if (Single_Line_Field(field))
-	    {
-	      /* horizontal scrolling */
-	      if (form->curcol < form->begincol)
-		form->begincol = form->curcol;
-	      else
-		{
-		  if (form->curcol >= (form->begincol + field->cols))
-		    form->begincol = form->curcol - field->cols
-		      + (move_after_insert ? 1 : 0);
-		}
-	      copywin(form->w,
-		      formwin,
-		      0,
-		      form->begincol,
-		      field->frow,
-		      field->fcol,
-		      field->frow,
-		      field->cols + field->fcol - 1,
-		      0);
-	    }
+	  /* horizontal scrolling */
+	  if (form->curcol < form->begincol)
+	    form->begincol = form->curcol;
 	  else
 	    {
-	      /* A multi-line, i.e. vertical scrolling field */
-	      int row_after_bottom, first_modified_row, first_unmodified_row;
-
-	      if (field->drows > field->rows)
-		{
-		  row_after_bottom = form->toprow + field->rows;
-		  if (form->currow < form->toprow)
-		    {
-		      form->toprow = form->currow;
-		      SetStatus(field, _NEWTOP);
-		    }
-		  if (form->currow >= row_after_bottom)
-		    {
-		      form->toprow = form->currow - field->rows + 1;
-		      SetStatus(field, _NEWTOP);
-		    }
-		  if (field->status & _NEWTOP)
-		    {
-		      /* means we have to copy whole range */
-		      first_modified_row = form->toprow;
-		      first_unmodified_row = first_modified_row + field->rows;
-		      ClrStatus(field, _NEWTOP);
-		    }
-		  else
-		    {
-		      /* we try to optimize : finding the range of touched
-		         lines */
-		      first_modified_row = form->toprow;
-		      while (first_modified_row < row_after_bottom)
-			{
-			  if (is_linetouched(form->w, first_modified_row))
-			    break;
-			  first_modified_row++;
-			}
-		      first_unmodified_row = first_modified_row;
-		      while (first_unmodified_row < row_after_bottom)
-			{
-			  if (!is_linetouched(form->w, first_unmodified_row))
-			    break;
-			  first_unmodified_row++;
-			}
-		    }
-		}
-	      else
-		{
-		  first_modified_row = form->toprow;
-		  first_unmodified_row = first_modified_row + field->rows;
-		}
-	      if (first_unmodified_row != first_modified_row)
-		copywin(form->w,
-			formwin,
-			first_modified_row,
-			0,
-			field->frow + first_modified_row - form->toprow,
-			field->fcol,
-			field->frow + first_unmodified_row - form->toprow - 1,
-			field->cols + field->fcol - 1,
-			0);
+	      if (form->curcol >= (form->begincol + field->cols))
+		form->begincol = form->curcol - field->cols
+		  + (move_after_insert ? 1 : 0);
 	    }
-	  wsyncup(formwin);
+	  if (is_public)
+	    copywin(form->w,
+		    formwin,
+		    0,
+		    form->begincol,
+		    field->frow,
+		    field->fcol,
+		    field->frow,
+		    field->cols + field->fcol - 1,
+		    0);
 	}
       else
 	{
-	  /* if the field-window is simply a derived window, i.e. contains no
-	   * invisible parts, the whole thing is trivial
-	   */
-	  wsyncup(form->w);
+	  /* A multi-line, i.e. vertical scrolling field */
+	  int row_after_bottom, first_modified_row, first_unmodified_row;
+
+	  if (field->drows > field->rows)
+	    {
+	      row_after_bottom = form->toprow + field->rows;
+	      if (form->currow < form->toprow)
+		{
+		  form->toprow = form->currow;
+		  SetStatus(field, _NEWTOP);
+		}
+	      if (form->currow >= row_after_bottom)
+		{
+		  form->toprow = form->currow - field->rows + 1;
+		  SetStatus(field, _NEWTOP);
+		}
+	      if (field->status & _NEWTOP)
+		{
+		  /* means we have to copy whole range */
+		  first_modified_row = form->toprow;
+		  first_unmodified_row = first_modified_row + field->rows;
+		  ClrStatus(field, _NEWTOP);
+		}
+	      else
+		{
+		  /* we try to optimize : finding the range of touched
+		     lines */
+		  first_modified_row = form->toprow;
+		  while (first_modified_row < row_after_bottom)
+		    {
+		      if (is_linetouched(form->w, first_modified_row))
+			break;
+		      first_modified_row++;
+		    }
+		  first_unmodified_row = first_modified_row;
+		  while (first_unmodified_row < row_after_bottom)
+		    {
+		      if (!is_linetouched(form->w, first_unmodified_row))
+			break;
+		      first_unmodified_row++;
+		    }
+		}
+	    }
+	  else
+	    {
+	      first_modified_row = form->toprow;
+	      first_unmodified_row = first_modified_row + field->rows;
+	    }
+	  if (first_unmodified_row != first_modified_row && is_public)
+	    copywin(form->w,
+		    formwin,
+		    first_modified_row,
+		    0,
+		    field->frow + first_modified_row - form->toprow,
+		    field->fcol,
+		    field->frow + first_unmodified_row - form->toprow - 1,
+		    field->cols + field->fcol - 1,
+		    0);
 	}
+      if (is_public)
+	wsyncup(formwin);
+    }
+  else
+    {
+      /* if the field-window is simply a derived window, i.e. contains no
+       * invisible parts, the whole thing is trivial
+       */
+      if (is_public)
+	wsyncup(form->w);
     }
   untouchwin(form->w);
   returnCode(_nc_Position_Form_Cursor(form));

@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.298 2018/05/05 19:11:55 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.299 2018/09/08 21:33:59 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -373,9 +373,18 @@ PutAttrChar(NCURSES_SP_DCLx CARG_CH_T ch)
 	} else
 #endif
 	if (!SP_PARM->_screen_acs_map[c8]) {
+	    /*
+	     * If we found no mapping for a given alternate-character set item
+	     * in the terminal description, attempt to use the ASCII fallback
+	     * code which is populated in the _acs_map[] array.  If that did
+	     * not correspond to a line-drawing, etc., graphics character, the
+	     * array entry would be empty.
+	     */
 	    chtype temp = UChar(SP_PARM->_acs_map[c8]);
-	    RemAttr(attr, A_ALTCHARSET);
-	    SetChar(my_ch, temp, AttrOf(attr));
+	    if (temp) {
+		RemAttr(attr, A_ALTCHARSET);
+		SetChar(my_ch, temp, AttrOf(attr));
+	    }
 	}
 
 	/*

@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.195 2018/09/01 21:16:23 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.196 2018/09/08 20:14:26 tom Exp $")
 
 /****************************************************************************
  *
@@ -715,12 +715,20 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 		       "Not enough memory to create terminal structure.\n");
 	}
 #if HAVE_SYSCONF
+	{
+	    long limit;
 #ifdef LINE_MAX
-	_nc_globals.getstr_limit = LINE_MAX;
+	    limit = LINE_MAX;
+#else
+	    limit = _nc_globals.getstr_limit;
 #endif
 #ifdef _SC_LINE_MAX
-	_nc_globals.getstr_limit = sysconf(_SC_LINE_MAX);
+	    if (limit < sysconf(_SC_LINE_MAX))
+		limit = sysconf(_SC_LINE_MAX);
 #endif
+	    if (_nc_globals.getstr_limit < (int) limit)
+		_nc_globals.getstr_limit = (int) limit;
+	}
 #endif /* HAVE_SYSCONF */
 	T(("using %d for getstr limit", _nc_globals.getstr_limit));
 

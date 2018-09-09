@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.59 2017/09/10 21:08:46 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.60 2018/09/08 21:11:49 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1082,8 +1082,13 @@ drv_initacs(TERMINAL_CONTROL_BLOCK * TCB, chtype *real_map, chtype *fake_map)
 	while (i + 1 < length) {
 	    if (acs_chars[i] != 0 && UChar(acs_chars[i]) < ACS_LEN) {
 		real_map[UChar(acs_chars[i])] = UChar(acs_chars[i + 1]) | A_ALTCHARSET;
-		if (sp != 0)
+		T(("#%d real_map[%s] = %s",
+		   (int) i,
+		   _tracechar(UChar(acs_chars[i])),
+		   _tracechtype(real_map[UChar(acs_chars[i])])));
+		if (sp != 0) {
 		    sp->_screen_acs_map[UChar(acs_chars[i])] = TRUE;
+		}
 	    }
 	    i += 2;
 	}
@@ -1113,7 +1118,6 @@ drv_initacs(TERMINAL_CONTROL_BLOCK * TCB, chtype *real_map, chtype *fake_map)
 		   ? "DIFF"
 		   : "SAME"),
 		_nc_visbuf(show));
-
 	_nc_unlock_global(tracef);
     }
 #endif /* TRACE */
