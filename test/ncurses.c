@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.507 2018/06/23 21:35:06 tom Exp $
+$Id: ncurses.c,v 1.508 2018/09/22 21:21:43 tom Exp $
 
 ***************************************************************************/
 
@@ -7775,6 +7775,10 @@ main_menu(bool top)
 	    if (read(fileno(stdin), &ch, (size_t) 1) <= 0) {
 		if (command == 0)
 		    command = 'q';
+		if (errno == EINTR) {
+		    clearerr(stdin);
+		    continue;
+		}
 		break;
 	    } else if (command == 0 && !isspace(UChar(ch))) {
 		command = ch;

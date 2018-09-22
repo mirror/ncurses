@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.1
-Release: 20180908
+Release: 20180922
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -44,10 +44,16 @@ This package is used for testing ABI %{MY_ABI}.
 %define _disable_ld_build_id 1
 %endif
 
+%if %{is_redhat}
+# workaround for toolset breakage in Fedora 28
+%define _test_relink --enable-relink
+%else
+%define _test_relink --disable-relink
+%endif
+
 %setup -q -n ncurses-%{version}-%{release}
 
 %build
-%define my_srcdir ..
 %define CFG_OPTS \\\
 	--target %{_target_platform} \\\
 	--prefix=%{_prefix} \\\
@@ -60,7 +66,7 @@ This package is used for testing ABI %{MY_ABI}.
 	--disable-leaks \\\
 	--disable-macros  \\\
 	--disable-overwrite  \\\
-	--disable-relink  \\\
+	%{_test_relink}  \\\
 	--disable-termcap \\\
 	--enable-hard-tabs \\\
 	--enable-opaque-curses \\\
@@ -97,6 +103,7 @@ This package is used for testing ABI %{MY_ABI}.
 CFLAGS="%{CC_NORMAL}" \
 RPATH_LIST=../lib:%{_libdir} \
 %configure %{CFG_OPTS}
+
 make
 
 %install

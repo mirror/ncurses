@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3185 2018/09/08 23:29:00 tom Exp $
+-- $Id: NEWS,v 1.3190 2018/09/22 21:23:32 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180922
+	+ ignore interrupted system-call in test/ncurses's command-line, e.g.,
+	  if the terminal were resized.
+	+ add shift/control/alt logic for decoding xterm's 1006 mode (Redhat
+	  #1610681, cf: 20141011).
+	+ modify rpm test-packages to not use --disable-relink with Redhat,
+	  since Fedora 28's tools do not work with that feature.
 
 20180908
 	+ document --with-pcre2 configure option in INSTALL.

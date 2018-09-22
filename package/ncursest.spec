@@ -1,7 +1,7 @@
 Summary: Curses library with POSIX thread support.
 Name: ncursest6
 Version: 6.1
-Release: 20180908
+Release: 20180922
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -44,6 +44,13 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 %define _disable_ld_build_id 1
 %endif
 
+%if %{is_redhat}
+# workaround for toolset breakage in Fedora 28
+%define _test_relink --enable-relink
+%else
+%define _test_relink --disable-relink
+%endif
+
 %setup -q -n ncurses-%{version}-%{release}
 
 %build
@@ -60,7 +67,7 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 	--disable-leaks \\\
 	--disable-macros  \\\
 	--disable-overwrite  \\\
-	--disable-relink  \\\
+	%{_test_relink}  \\\
 	--disable-termcap \\\
 	--enable-hard-tabs \\\
 	--enable-opaque-curses \\\
