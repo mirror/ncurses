@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.177 2018/09/22 19:54:21 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.178 2018/09/23 08:40:23 tom Exp $")
 
 #include <tic.h>
 
@@ -956,7 +956,6 @@ decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 {
     bool result;
 
-    _tracef("decode_X10_bstate %#x", intro);
     eventp->bstate = 0;
 
     if (!handle_wheel(sp, eventp, (int) intro, (intro & 96) == 96)) {
