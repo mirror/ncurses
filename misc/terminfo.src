@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.705 $
-#	$Date: 2018/07/21 19:02:07 $
+#	$Revision: 1.712 $
+#	$Date: 2018/09/30 00:24:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -10308,10 +10308,12 @@ tvi925-hi|TeleVideo Model 925 with half intensity standout mode,
 # I also inserted <ich1> and <kich1>; the :ko: string indicated that <ich>
 # should be present and all tvi native modes use the same string for this.
 # Finally, note that BSD has cud1=^V. -- esr)
+#
+# TVI 950 has 11 function-keys -TD
 tvi950|televideo 950,
 	OTbs, am, hs, mir, msgr, xenl, xon,
 	cols#80, it#8, lines#24, xmc#1,
-	acsc=b\011c\014d\re\ni\013, bel=^G, cbt=\EI, clear=\E*,
+	acsc=jHkGlFmEnIqKtMuLvOwNxJ, bel=^G, cbt=\EI, clear=\E*,
 	cr=\r, cub1=^H, cud1=\n, cuf1=^L,
 	cup=\E=%p1%{32}%+%c%p2%{32}%+%c, cuu1=^K, dch1=\EW,
 	dl1=\ER, dsl=\Eg\Ef\r, ed=\Ey, el=\Et, flash=\Eb$<200/>\Ed,
@@ -10321,12 +10323,14 @@ tvi950|televideo 950,
 	    \E016\E004\Ex0\0\0\Ex1\0\0\Ex2\0\0\011\Ex3\0\0\Ex4\r\0
 	    \Ef\r,
 	kbs=^H, kcbt=\EI, kclr=\E*, kcub1=^H, kcud1=^V, kcuf1=^L,
-	kcuu1=^K, kdch1=\EW, kdl1=\ER, ked=\Ey, kel=\Et, kf0=^A0\r,
-	kf1=^A@\r, kf2=^AA\r, kf3=^AB\r, kf4=^AC\r, kf5=^AD\r,
-	kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r, khome=^^,
-	kich1=\EQ, kil1=\EE, mc4=\Ea, mc5=\E`, ri=\Ej, rmacs=^X,
-	rmir=\Er, smacs=^U, smir=\Eq, tbc=\E3, tsl=\Eg\Ef,
-	use=adm+sgr,
+	kcuu1=^K, kdch1=\EW, kdl1=\ER, ked=\Ey, kel=\Et, kf1=^A@\r,
+	kf10=^AI\r, kf11=^AJ\r, kf2=^AA\r, kf3=^AB\r, kf4=^AC\r,
+	kf5=^AD\r, kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r,
+	khome=^^, kich1=\EQ, kil1=\EE, mc4=\Ea, mc5=\E`, ri=\Ej,
+	rmacs=\E%%, rmir=\Er, smacs=\E$, smir=\Eq, tbc=\E3,
+	tsl=\Eg\Ef, kF1=^A`\r, kF10=^Ai\r, kF11=^Aj\r, kF2=^Aa\r,
+	kF3=^Ab\r, kF4=^Ac\r, kF5=^Ad\r, kF6=^Ae\r, kF7=^Af\r,
+	kF8=^Ag\r, kF9=^Ah\r, use=adm+sgr,
 #
 # is for 950 with two pages adds the following:
 #	set 48 line page (\E\\2)
@@ -10409,7 +10413,7 @@ tvi955|televideo 955,
 	civis=\E.0, cnorm=\E.2, cud1=^V, cup=\E[%i%p1%d;%p2%dH,
 	cvvis=\E.1, dim=\E[=5h, ind@, invis=\EG1,
 	is2=\E[=3l\EF1\Ed\EG0\E[=5l\E%\El, kctab=\E2, khts=\E1,
-	knp=\EK, kpp=\EJ, krmir=\EQ, ktbc=\E3, mc0=\EP, rmacs=\E%%,
+	knp=\EK, kpp=\EJ, krmir=\EQ, ktbc=\E3, mc0=\EP, rmacs=\E%,
 	rmam=\E[=7l, rmxon=^N,
 	rs1=\EDF\EC\Eg\Er\EO\E'\E(\Ew\EX\Ee\s\017\E0P\E6\0\E0p\E4\0
 	    \Ef\r,
@@ -14049,16 +14053,20 @@ regent25|Adds Regent 25,
 	use=regent20,
 regent40|Adds Regent 40,
 	xmc#1,
-	bel=^G, dl1=\El$<2*>, il1=\EM$<2*>, kf0=^B1\r, kf1=^B2\r,
-	kf2=^B3\r, kf3=^B4\r, kf4=^B5\r, kf5=^B6\r, kf6=^B7\r,
-	kf7=^B8\r, lf0=F1, lf1=F2, lf2=F3, lf3=F4, lf4=F5, lf5=F6,
+	bel=^G, dl1=\El$<2*>, il1=\EM$<2*>, kf1=^B1\r, kf2=^B2\r,
+	kf3=^B3\r, kf4=^B4\r, kf5=^B5\r, kf6=^B6\r, kf7=^B7\r,
+	kf8=^B8\r, lf0=F1, lf1=F2, lf2=F3, lf3=F4, lf4=F5, lf5=F6,
 	lf6=F7, lf7=F8, rmso=\E0@, rmul=\E0@, sgr0=\E0@, smso=\E0P,
 	smul=\E0`, use=regent25,
 regent40+|Adds Regent 40+,
 	is2=\EB, use=regent40,
-regent60|regent200|Adds Regent 60,
-	dch1=\EE, is2=\EV\EB, kdch1=\EE, kich1=\EF, krmir=\EF,
-	rmir=\EF, rmso=\ER\E0@\EV, smir=\EF, smso=\ER\E0P\EV,
+# It uses a different code for mapping acs vs dim/blink.
+regent60|regent200|adds200|Adds Regent 60,
+	acsc=jLkDl@mHnhq`tXuTv\\wPxd, dch1=\EE, is2=\EV\EB,
+	kbs=^H, kcbt=\EO, kdch1=\EE, kich1=\EF, krmir=\EF, rmacs=\E2,
+	rmir=\EF, rmso=\ER\E0@\EV, smacs=\E1, smir=\EF,
+	smso=\ER\E0P\EV, cd=\Ek, kF1=^B!\r, kF2=^B"\r, kF3=^B#\r,
+	kF4=^B$\r, kF5=^B%\r, kF6=^B&\r, kF7=^B'\r, kF8=^B(\r,
 	use=regent40+,
 # From: <edward@onyx.berkeley.edu> Thu Jul  9 09:27:33 1981
 # (viewpoint: added <kcuf1>, function key, and <dl1> capabilities -- esr)
@@ -18340,7 +18348,7 @@ ncrvt100wan|NCRVT100WPP|ncrvt100wpp|NCR VT100 emulation of the 2900 terminal,
 #		P4 <==> Blink attribute parameter
 #		P5 <==> Dim attribute parameter
 # From <root@goliath.un.atlantaga.NCR.COM>, init string hacked by SCO.
-ncr7900i|ncr7900|ncr 7900 model 1,
+ncr7900i|ncr7900|n7900|ncr 7900 model 1,
 	am, bw, ul,
 	cols#80, lines#24, xmc#1,
 	bel=^G, blink=\E0B, clear=^L, cr=\r, cub1=^H, cud1=\n, cuf1=^F,
@@ -25758,5 +25766,19 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ corrected acsc for wy50 -TD
 #	+ add wy50 and wy60 shifted function-keys as kF1 to kF16 -TD
 #	+ remove ansi+rep mis-added to interix in 2018-02-23 -TD
+#
+# 2018-07-28
+#	+ fix typo in tvi955 -TD
+#	+ corrected acsc for regent60 -TD
+#	+ add alias n7900 -TD
+#
+# 2018-09-29
+#	+ corrected acsc for tvi950 -TD
+#	+ remove bogus kf0 from tvi950 -TD
+#	+ added function-key definitions to agree with Televideo 950 manual -TD
+#	+ add bel to tvi950 -TD
+#	+ add shifted function-keys to regent60 -TD
+#	+ renumber regent40 function-keys to match manual -TD
+#	+ add cd (clr_eos) to adds200 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

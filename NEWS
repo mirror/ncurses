@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3192 2018/09/23 08:41:44 tom Exp $
+-- $Id: NEWS,v 1.3194 2018/09/30 00:33:46 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20180929
+	+ fix typo in tvi955 -TD
+	+ corrected acsc for regent60 -TD
+	+ add alias n7900 -TD
+	+ corrected acsc for tvi950 -TD
+	+ remove bogus kf0 from tvi950 -TD
+	+ added function-key definitions to agree with Televideo 950 manual -TD
+	+ add bel to tvi950 -TD
+	+ add shifted function-keys to regent60 -TD
+	+ renumber regent40 function-keys to match manual -TD
+	+ add cd (clr_eos) to adds200 -TD
 
 20180923
 	+ build-fix: remove a _tracef call which was used for debugging (report
