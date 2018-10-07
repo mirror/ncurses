@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3194 2018/09/30 00:33:46 tom Exp $
+-- $Id: NEWS,v 1.3197 2018/10/06 22:52:14 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181006
+	+ improve a configure check to work with newer optimizers (report by
+	  Denis Pronin, Gentoo #606142).
+	+ fix typo in tput.c (Sven Joachim, cf: 20180825).
 
 20180929
 	+ fix typo in tvi955 -TD

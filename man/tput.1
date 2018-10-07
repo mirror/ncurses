@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.61 2018/08/25 23:28:12 tom Exp $
+.\" $Id: tput.1,v 1.62 2018/09/30 20:31:59 Sven.Joachim Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -571,7 +571,7 @@ However that part of X/Open Curses does not follow existing practice
 It assigns exit code 4 to \*(``invalid operand\*('',
 which may be the same as \fIunknown capability\fP.
 For instance, the source code for Solaris' xcurses uses the term
-\*(``invalid\*'' in this case.
+\*(``invalid\*('' in this case.
 .bP
 It assigns exit code 255 to a numeric variable that is not specified in
 the terminfo database.
