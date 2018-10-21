@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.666 2018/10/13 19:32:11 tom Exp $
+dnl $Id: configure.in,v 1.667 2018/10/20 23:56:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.666 $)
+AC_REVISION($Revision: 1.667 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -661,6 +661,13 @@ CF_WITH_PATHLIST(terminfo-dirs,
 	${datadir}/terminfo)
 AC_MSG_RESULT($TERMINFO_DIRS)
 test -n "$TERMINFO_DIRS" && AC_DEFINE_UNQUOTED(TERMINFO_DIRS,"$TERMINFO_DIRS",[Define as needed to predefine the TERMINFO_DIR searchlist])
+
+case "x$TERMINFO" in
+x???:*)
+	AC_MSG_WARN(ignoring non-directory/file TERMINFO value)
+	unset TERMINFO
+	;;
+esac
 
 AC_MSG_CHECKING(for default terminfo directory)
 CF_WITH_PATH(default-terminfo-dir,

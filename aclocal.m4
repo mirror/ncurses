@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.850 2018/10/13 19:43:04 tom Exp $
+dnl $Id: aclocal.m4,v 1.853 2018/10/21 00:25:40 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -8090,7 +8090,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_VERSIONED_SYMS version: 7 updated: 2015/10/24 20:50:26
+dnl CF_WITH_VERSIONED_SYMS version: 8 updated: 2018/10/20 20:24:34
 dnl ----------------------
 dnl Use this when building shared library with ELF, to markup symbols with the
 dnl version identifier from the given input file.  Generally that identifier is
@@ -8104,11 +8104,21 @@ AC_ARG_WITH(versioned-syms,
 	[  --with-versioned-syms=X markup versioned symbols using ld],
 	[with_versioned_syms=$withval],
 	[with_versioned_syms=no])
-if test "x$with_versioned_syms" = xyes
-then
+case "x$with_versioned_syms" in
+(xyes)
 	with_versioned_syms='${top_srcdir}/package/ifelse($1,,${PACKAGE},[$1]).map'
 	AC_SUBST(PACKAGE)
-fi
+	;;
+(xno)
+	;;
+(x/*)
+	test -f "$with_versioned_syms" || AC_MSG_ERROR(expected a filename: $with_versioned_syms)
+	;;
+(*)
+	test -f "$with_versioned_syms" || AC_MSG_ERROR(expected a filename: $with_versioned_syms)
+	with_versioned_syms=`pwd`/"$with_versioned_syms"
+	;;
+esac
 AC_MSG_RESULT($with_versioned_syms)
 
 RESULTING_SYMS=

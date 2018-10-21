@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.178 2018/09/23 08:40:23 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.179 2018/10/20 18:33:23 tom Exp $")
 
 #include <tic.h>
 
@@ -1276,15 +1276,15 @@ decode_xterm_SGR1006(SCREEN *sp, MEVENT * eventp)
 	    } else {
 		eventp->bstate = REPORT_MOUSE_POSITION;
 	    }
-	    if (b & 4) {
-		eventp->bstate |= BUTTON_SHIFT;
-	    }
-	    if (b & 8) {
-		eventp->bstate |= BUTTON_ALT;
-	    }
-	    if (b & 16) {
-		eventp->bstate |= BUTTON_CTRL;
-	    }
+	}
+	if (b & 4) {
+	    eventp->bstate |= BUTTON_SHIFT;
+	}
+	if (b & 8) {
+	    eventp->bstate |= BUTTON_ALT;
+	}
+	if (b & 16) {
+	    eventp->bstate |= BUTTON_CTRL;
 	}
 	result = (eventp->bstate & REPORT_MOUSE_POSITION) ? TRUE : FALSE;
 	eventp->x = (data.params[1] ? (data.params[1] - 1) : 0);
