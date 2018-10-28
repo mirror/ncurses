@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3204 2018/10/21 00:24:16 tom Exp $
+-- $Id: NEWS,v 1.3206 2018/10/27 23:17:17 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181027
+	+ add OpenGL clients alacritty and kitty -TD
+	+ add Smulx for tmux, vte-2018 -Nicholas Marriott
 
 20181020
 	+ ignore $TERMINFO as a default value in configure script if it came
