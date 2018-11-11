@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.667 2018/10/20 23:56:05 tom Exp $
+dnl $Id: configure.in,v 1.671 2018/11/11 01:12:44 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.667 $)
+AC_REVISION($Revision: 1.671 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -61,14 +61,14 @@ AC_ARG_WITH(ada,
 	[  --without-ada           suppress check for Ada95, don't build demo],
 	[cf_with_ada=$withval],
 	[cf_with_ada=yes])
+
 if test "x$cf_with_ada" = xyes
 then
-	cf_PROG_CC="gnatgcc gcc cc"
+	cf_prog_cc="gnatgcc gcc cc"
 else
-	cf_PROG_CC="gcc cc"
+	cf_prog_cc="gcc cc"
 fi
-
-CF_PROG_CC($cf_PROG_CC)
+CF_PROG_CC($cf_prog_cc)
 
 AC_PROG_CPP
 AC_PROG_GCC_TRADITIONAL

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.853 2018/10/21 00:25:40 tom Exp $
+dnl $Id: aclocal.m4,v 1.857 2018/11/11 00:47:04 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1427,6 +1427,11 @@ fi
 AC_SUBST($1)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_DIRNAME version: 4 updated: 2002/12/21 19:25:52
+dnl ----------
+dnl "dirname" is not portable, so we fake it with a shell script.
+AC_DEFUN([CF_DIRNAME],[$1=`echo $2 | sed -e 's%/[[^/]]*$%%'`])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_DIRS_TO_MAKE version: 3 updated: 2002/02/23 20:38:31
 dnl ---------------
 AC_DEFUN([CF_DIRS_TO_MAKE],
@@ -1447,11 +1452,6 @@ do
 done
 AC_SUBST(DIRS_TO_MAKE)
 ])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_DIRNAME version: 4 updated: 2002/12/21 19:25:52
-dnl ----------
-dnl "dirname" is not portable, so we fake it with a shell script.
-AC_DEFUN([CF_DIRNAME],[$1=`echo $2 | sed -e 's%/[[^/]]*$%%'`])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_DISABLE_ECHO version: 13 updated: 2015/04/18 08:56:57
 dnl ---------------
@@ -5643,7 +5643,7 @@ AC_DEFUN([CF_PROG_EGREP],
 	test -z "$EGREP" && AC_MSG_ERROR(No egrep program found)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 6 updated: 2018/01/16 16:45:49
+dnl CF_PROG_GNAT version: 7 updated: 2018/11/10 18:37:39
 dnl ------------
 dnl Check for gnatmake, ensure that it is complete.
 AC_DEFUN([CF_PROG_GNAT],[
@@ -5665,7 +5665,20 @@ else
 			for cf_gprconfig in Ada C
 			do
 				AC_MSG_CHECKING(for gprconfig name for $cf_gprconfig)
-				cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+				if test $cf_gprconfig = C
+				then
+					for cf_gprconfig_param in \
+						$cf_gprconfig,,,,GNATGCC \
+						$cf_gprconfig,,,,GCC \
+						$cf_gprconfig
+					do
+						cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig_param 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+						test -n "$cf_gprconfig_value" && break
+					done
+				else
+					cf_gprconfig_param=$cf_gprconfig
+					cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig_param 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+				fi
 				if test -n "$cf_gprconfig_value"
 				then
 					eval cf_ada_config_[$]cf_gprconfig=[$]cf_gprconfig_value

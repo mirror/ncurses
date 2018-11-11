@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.50 2018/01/15 22:12:59 tom Exp $
+#  $Id: Makefile.in,v 1.53 2018/11/10 21:53:44 tom Exp $
 #
 .SUFFIXES:
 
@@ -92,7 +92,10 @@ ADA          = @cf_ada_compiler@
 ADAFLAGS     = @ADAFLAGS@ -I$(srcdir)
 
 ADAMAKE      = @cf_ada_make@
-ADAMAKEFLAGS = -a -A$(srcdir) -A$(ada_srcdir) -A$(srcdir)/$(ada_srcdir)
+ADAMAKEFLAGS = -a \
+	-A$(srcdir) \
+	-A$(ada_srcdir) \
+	-A$(srcdir)/$(ada_srcdir)
 
 ALIB         = @cf_ada_package@
 ABASE        = $(ALIB)-curses

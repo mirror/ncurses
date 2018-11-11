@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.136 2018/08/18 20:38:26 tom Exp $
+dnl $Id: aclocal.m4,v 1.139 2018/11/11 00:48:11 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3051,25 +3051,7 @@ AC_SUBST(PROG_EXT)
 test -n "$PROG_EXT" && AC_DEFINE_UNQUOTED(PROG_EXT,"$PROG_EXT",[Define to the program extension (normally blank)])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_INSTALL version: 7 updated: 2015/04/18 08:56:57
-dnl ---------------
-dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
-dnl misc/tabset install won't work properly.  Usually this happens only when
-dnl using the fallback mkinstalldirs script
-AC_DEFUN([CF_PROG_INSTALL],
-[AC_PROG_INSTALL
-case $INSTALL in
-(/*)
-	;;
-(*)
-	CF_DIRNAME(cf_dir,$INSTALL)
-	test -z "$cf_dir" && cf_dir=.
-	INSTALL=`cd $cf_dir && pwd`/`echo $INSTALL | sed -e 's%^.*/%%'`
-	;;
-esac
-])dnl
-dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 6 updated: 2018/01/16 16:45:49
+dnl CF_PROG_GNAT version: 7 updated: 2018/11/10 18:37:39
 dnl ------------
 dnl Check for gnatmake, ensure that it is complete.
 AC_DEFUN([CF_PROG_GNAT],[
@@ -3091,7 +3073,20 @@ else
 			for cf_gprconfig in Ada C
 			do
 				AC_MSG_CHECKING(for gprconfig name for $cf_gprconfig)
-				cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+				if test $cf_gprconfig = C
+				then
+					for cf_gprconfig_param in \
+						$cf_gprconfig,,,,GNATGCC \
+						$cf_gprconfig,,,,GCC \
+						$cf_gprconfig
+					do
+						cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig_param 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+						test -n "$cf_gprconfig_value" && break
+					done
+				else
+					cf_gprconfig_param=$cf_gprconfig
+					cf_gprconfig_value=`echo s| gprconfig --config=$cf_gprconfig_param 2>&AC_FD_CC | ${AWK:-awk} '/^\*/{print [$]3;}' | head -n 1`
+				fi
 				if test -n "$cf_gprconfig_value"
 				then
 					eval cf_ada_config_[$]cf_gprconfig=[$]cf_gprconfig_value
@@ -3139,6 +3134,24 @@ AC_SUBST(cf_ada_make)
 AC_SUBST(cf_ada_config)
 AC_SUBST(cf_ada_config_Ada)
 AC_SUBST(cf_ada_config_C)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_PROG_INSTALL version: 7 updated: 2015/04/18 08:56:57
+dnl ---------------
+dnl Force $INSTALL to be an absolute-path.  Otherwise, edit_man.sh and the
+dnl misc/tabset install won't work properly.  Usually this happens only when
+dnl using the fallback mkinstalldirs script
+AC_DEFUN([CF_PROG_INSTALL],
+[AC_PROG_INSTALL
+case $INSTALL in
+(/*)
+	;;
+(*)
+	CF_DIRNAME(cf_dir,$INSTALL)
+	test -z "$cf_dir" && cf_dir=.
+	INSTALL=`cd $cf_dir && pwd`/`echo $INSTALL | sed -e 's%^.*/%%'`
+	;;
+esac
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PROG_LN_S version: 2 updated: 2010/08/14 18:25:37

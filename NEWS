@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3206 2018/10/27 23:17:17 tom Exp $
+-- $Id: NEWS,v 1.3211 2018/11/11 01:36:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181110
+	+ several workarounds to ensure proper C compiler used in parts of
+	  Ada95 tree.
+	+ update config.guess, config.sub from
+		http://git.savannah.gnu.org/cgit/config.git
 
 20181027
 	+ add OpenGL clients alacritty and kitty -TD

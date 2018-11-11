@@ -27,7 +27,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# $Id: library-cfg.sh,v 1.3 2018/01/15 14:32:47 tom Exp $
+# $Id: library-cfg.sh,v 1.4 2018/11/10 22:58:52 tom Exp $
 #
 # Work around incompatible behavior introduced with gnat6, which causes
 # gnatmake to attempt to compile all of the C objects which might be part of
@@ -40,8 +40,15 @@ shift 1
 param=
 while test $# != 0
 do
-	test -n "$param" && param="$param,"
-	param="$param\"$1\""
+	case "x$1" in
+	*-[OgDIWf]*)
+		test -n "$param" && param="$param,"
+		param="$param\"$1\""
+		;;
+	*)
+		echo "${0##*/}: ignored option $1" >&2
+		;;
+	esac
 	shift 1
 done
 
