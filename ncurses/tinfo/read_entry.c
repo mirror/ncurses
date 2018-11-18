@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.148 2018/04/14 17:43:37 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.150 2018/11/17 21:40:10 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -749,10 +749,13 @@ _nc_read_tic_entry(char *filename,
        (T_CALLED("_nc_read_tic_entry(file=%p, path=%s, name=%s)"),
 	filename, path, name));
 
+    assert(TGETENT_YES == TRUE);	/* simplify call for _nc_name_match */
+
     if ((used = decode_quickdump(buffer, path)) != 0
 	&& (code = _nc_read_termtype(tp, buffer, used)) == TGETENT_YES
-	&& _nc_name_match(tp->term_names, name, "|")) {
+	&& (code = _nc_name_match(tp->term_names, name, "|")) == TGETENT_YES) {
 	TR(TRACE_DATABASE, ("loaded quick-dump for %s", name));
+	strcpy(filename, "$TERMINFO");	/* shorten name shown by infocmp */
     } else
 #if USE_HASHED_DB
 	if (make_db_filename(filename, limit, path)

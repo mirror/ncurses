@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3211 2018/11/11 01:36:45 tom Exp $
+-- $Id: NEWS,v 1.3214 2018/11/17 22:45:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181117
+	+ ignore the hex/b64 $TERMINFO in toe's listing.
+	+ correct a status-check in _nc_read_tic_entry() so that if reading
+	  a hex/b64 $TERMINFO, and the $TERM does not match, fall-through to
+	  the compiled-in search list.
 
 20181110
 	+ several workarounds to ensure proper C compiler used in parts of
