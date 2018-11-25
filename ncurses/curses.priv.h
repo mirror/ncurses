@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.607 2018/11/24 17:27:36 tom Exp $
+ * $Id: curses.priv.h,v 1.608 2018/11/25 11:26:03 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1724,6 +1724,9 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define T_CREATE(fmt) "create :" fmt
 #define T_RETURN(fmt) "return }" fmt
 
+#define NonNull(s)              ((s) != 0 ? s : "<null>")
+#define NonEmpty(s)             ((s) != 0 && *(s) != '\0')
+
 #ifdef TRACE
 
 #if USE_REENTRANT
@@ -1762,8 +1765,6 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 typedef void VoidFunc(void);
 
 #define TR_FUNC(value)          ((const char*) (value))
-#define NonNull(s)              ((s) != 0 ? s : "<null>")
-#define NonEmpty(s)             ((s) != 0 && *(s) != '\0')
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)
