@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.47 2018/06/09 17:35:50 tom Exp $
+ * $Id: movewindow.c,v 1.48 2018/11/24 21:29:46 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -105,8 +105,10 @@ message(int lineno, CONST_FMT char *fmt, va_list argp)
 	vsprintf(buffer, fmt, argp);
 	addstr(buffer);
     }
-#else
+#elif defined(HAVE_VW_PRINTW)
     vw_printw(stdscr, fmt, argp);
+#else
+    vwprintw(stdscr, fmt, argp);
 #endif
 
     move(y, x);

@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.196 2018/09/08 20:14:26 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.197 2018/11/24 22:13:16 tom Exp $")
 
 /****************************************************************************
  *
@@ -746,7 +746,9 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 #else
 #if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
 	status = _nc_setup_tinfo(tname, &TerminalType(termp));
+	T(("_nc_setup_tinfo returns %d", status));
 #else
+	T(("no database available"));
 	status = TGETENT_NO;
 #endif
 
@@ -755,6 +757,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	    const TERMTYPE2 *fallback = _nc_fallback2(tname);
 
 	    if (fallback) {
+		T(("found fallback entry"));
 		TerminalType(termp) = *fallback;
 		status = TGETENT_YES;
 	    }

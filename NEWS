@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3214 2018/11/17 22:45:23 tom Exp $
+-- $Id: NEWS,v 1.3219 2018/11/24 22:39:15 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181124
+	+ check --with-fallbacks option to ensure there is a value, and add
+	  the fallback information to top-level Makefile summary.
+	+ add some traces in initialization to show whether a fallback entry is
+	  used.
+	+ build-fix for test/movewindow with ncurses-examples on Solaris.
+	+ add "-l" option to test/background, to dump screen contents in a form
+	  that lets different curses implementations be compared.
+	+ modify the initialization checks for mouse so that the xterm+sm+1006
+	  block will work with terminal descriptions not mentioning xterm
+	  (report by Tomas Janousek).
 
 20181117
 	+ ignore the hex/b64 $TERMINFO in toe's listing.

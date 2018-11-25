@@ -1115,6 +1115,8 @@
 ./test/dots_mvcur.c
 ./test/dots_termcap.c
 ./test/dots_xcurses.c
+./test/dump_window.c
+./test/dump_window.h
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h

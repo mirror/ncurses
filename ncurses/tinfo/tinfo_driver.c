@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.60 2018/09/08 21:11:49 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.63 2018/11/24 22:17:03 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -162,7 +162,9 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 
 #if (NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP)
     status = _nc_setup_tinfo(tname, &TerminalType(termp));
+    T(("_nc_setup_tinfo returns %d", status));
 #else
+    T(("no database available"));
     status = TGETENT_NO;
 #endif
 
@@ -171,6 +173,7 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	const TERMTYPE2 *fallback = _nc_fallback2(tname);
 
 	if (fallback) {
+	    T(("found fallback entry"));
 	    TerminalType(termp) = *fallback;
 	    status = TGETENT_YES;
 	}
@@ -894,11 +897,8 @@ drv_initmouse(TERMINAL_CONTROL_BLOCK * TCB)
 
     /* we know how to recognize mouse events under "xterm" */
     if (sp != 0) {
-	if (key_mouse != 0) {
-	    if (!strcmp(key_mouse, xterm_kmous)
-		|| strstr(SP_TERMTYPE term_names, "xterm") != 0) {
-		init_xterm_mouse(sp);
-	    }
+	if (NonEmpty(key_mouse)) {
+	    init_xterm_mouse(sp);
 	} else if (strstr(SP_TERMTYPE term_names, "xterm") != 0) {
 	    if (_nc_add_to_try(&(sp->_keytry), xterm_kmous, KEY_MOUSE) == OK)
 		init_xterm_mouse(sp);

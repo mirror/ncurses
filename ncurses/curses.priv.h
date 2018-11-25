@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.606 2018/09/01 20:16:30 tom Exp $
+ * $Id: curses.priv.h,v 1.607 2018/11/24 17:27:36 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1763,6 +1763,7 @@ typedef void VoidFunc(void);
 
 #define TR_FUNC(value)          ((const char*) (value))
 #define NonNull(s)              ((s) != 0 ? s : "<null>")
+#define NonEmpty(s)             ((s) != 0 && *(s) != '\0')
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)

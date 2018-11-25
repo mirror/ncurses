@@ -1,4 +1,4 @@
-# $Id: programs,v 1.41 2017/10/22 16:06:57 tom Exp $
+# $Id: programs,v 1.42 2018/11/24 17:56:32 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -30,7 +30,7 @@
 # Author: Thomas E. Dickey
 #
 # programs used for ncurses tests
-background	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	background
+background	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	background dump_window
 blue		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	blue
 bs		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	bs
 cardfile	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	cardfile

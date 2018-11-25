@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.671 2018/11/11 01:12:44 tom Exp $
+dnl $Id: configure.in,v 1.672 2018/11/24 22:37:01 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.671 $)
+AC_REVISION($Revision: 1.672 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -611,8 +611,23 @@ AC_ARG_WITH(fallbacks,
 	[with_fallback=$withval],
 	[with_fallback=])
 AC_MSG_RESULT($with_fallback)
-FALLBACK_LIST=`test "$with_fallback" != no && echo "$with_fallback" | sed -e 's/,/ /g'`
+
+case ".$with_fallback" in
+(.|.no)
+	FALLBACK_LIST=
+	;;
+(.yes)
+	AC_MSG_WARN(expected a list of terminal descriptions)
+	;;
+(*)
+	FALLBACK_LIST=`echo "$with_fallback" | sed -e 's/,/ /g'`
+	;;
+esac
+
+USE_FALLBACKS=
+test -z "$FALLBACK_LIST" && USE_FALLBACKS="#"
 AC_SUBST(FALLBACK_LIST)
+AC_SUBST(USE_FALLBACKS)
 
 AC_MSG_CHECKING(if you want modern xterm or antique)
 AC_ARG_WITH(xterm-new,

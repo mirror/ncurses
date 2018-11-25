@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.46 2017/07/01 22:54:42 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.47 2018/11/24 22:42:01 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -148,6 +148,7 @@ update_getenv(const char *name, DBDIRS which)
     return result;
 }
 
+#if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
 static char *
 cache_getenv(const char *name, DBDIRS which)
 {
@@ -159,6 +160,7 @@ cache_getenv(const char *name, DBDIRS which)
     }
     return result;
 }
+#endif
 
 /*
  * The cache expires if at least a second has passed since the initial lookup,
