@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.160 2018/08/18 20:39:24 tom Exp $
+dnl $Id: aclocal.m4,v 1.161 2018/12/01 21:05:05 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -3831,7 +3831,7 @@ esac
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 53 updated: 2018/06/16 18:58:58
+dnl CF_XOPEN_SOURCE version: 54 updated: 2018/11/07 07:43:44
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -3861,7 +3861,7 @@ case $host_os in
 	cf_xopen_source="-D_DARWIN_C_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(freebsd*|dragonfly*)
+(freebsd*|dragonfly*|midnightbsd*)
 	# 5.x headers associate
 	#	_XOPEN_SOURCE=600 with _POSIX_C_SOURCE=200112L
 	#	_XOPEN_SOURCE=500 with _POSIX_C_SOURCE=199506L

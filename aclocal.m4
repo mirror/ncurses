@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.857 2018/11/11 00:47:04 tom Exp $
+dnl $Id: aclocal.m4,v 1.858 2018/12/01 21:00:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5643,7 +5643,7 @@ AC_DEFUN([CF_PROG_EGREP],
 	test -z "$EGREP" && AC_MSG_ERROR(No egrep program found)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 7 updated: 2018/11/10 18:37:39
+dnl CF_PROG_GNAT version: 8 updated: 2018/11/10 19:47:04
 dnl ------------
 dnl Check for gnatmake, ensure that it is complete.
 AC_DEFUN([CF_PROG_GNAT],[
@@ -8326,7 +8326,7 @@ fi
 AC_SUBST(no_x11_rgb)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 53 updated: 2018/06/16 18:58:58
+dnl CF_XOPEN_SOURCE version: 54 updated: 2018/11/07 07:43:44
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -8356,7 +8356,7 @@ case $host_os in
 	cf_xopen_source="-D_DARWIN_C_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(freebsd*|dragonfly*)
+(freebsd*|dragonfly*|midnightbsd*)
 	# 5.x headers associate
 	#	_XOPEN_SOURCE=600 with _POSIX_C_SOURCE=200112L
 	#	_XOPEN_SOURCE=500 with _POSIX_C_SOURCE=199506L

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.508 2018/09/22 21:21:43 tom Exp $
+$Id: ncurses.c,v 1.510 2018/12/02 01:11:05 tom Exp $
 
 ***************************************************************************/
 
@@ -4367,7 +4367,10 @@ x_acs_test(bool recur GCC_UNUSED)
     void (*last_show_wacs) (int, attr_t, NCURSES_PAIRS_T) = 0;
     W_ATTR_TBL my_list[SIZEOF(w_attrs_to_test)];
     unsigned my_size = init_w_attr_list(my_list, term_attrs());
+    char at_page[5];
+    bool pending_code = FALSE;
 
+    at_page[0] = '\0';
     do {
 	switch (c) {
 	case CTRL('L'):
@@ -4399,15 +4402,39 @@ x_acs_test(bool recur GCC_UNUSED)
 	case 'u':
 	    ToggleAcs(last_show_wacs, show_utf8_chars);
 	    break;
+	case '@':
+	    pending_code = !pending_code;
+	    if (pending_code) {
+		sprintf(at_page, "%02x", digit);
+	    } else if (at_page[0] != '\0') {
+		sscanf(at_page, "%x", &digit);
+	    }
+	    break;
 	default:
-	    if (c < 256 && isdigit(c)) {
+	    if (pending_code && isxdigit(c)) {
+		size_t len = strlen(at_page);
+		if (len && at_page[0] == '0') {
+		    memmove(at_page, at_page + 1, len--);
+		}
+		if (len < sizeof(at_page) - 1) {
+		    at_page[len++] = (char) c;
+		    at_page[len] = '\0';
+		}
+	    } else if (pending_code
+		       && (c == '\b' || c == KEY_BACKSPACE || c == KEY_DC)) {
+		size_t len = strlen(at_page);
+		if (len)
+		    at_page[--len] = '\0';
+	    } else if (c < 256 && isdigit(c)) {
 		digit = (c - '0');
 		last_show_wacs = 0;
 	    } else if (c == '+') {
 		++digit;
+		sprintf(at_page, "%02x", digit);
 		last_show_wacs = 0;
 	    } else if (c == '-' && digit > 0) {
 		--digit;
+		sprintf(at_page, "%02x", digit);
 		last_show_wacs = 0;
 	    } else if (c == '>' && repeat < (COLS / 4)) {
 		++repeat;
@@ -4435,7 +4462,11 @@ x_acs_test(bool recur GCC_UNUSED)
 	}
 
 	MvPrintw(LINES - 4, 0,
-		 "Select: a/d/t WACS, w=all x=box, u UTF-8, ^L repaint");
+		 "Select: a/d/t WACS, w=%d/page, @",
+		 pagesize);
+	printw("%s",
+	       pending_code ? at_page : "page");
+	addstr(", x=box, u UTF-8, ^L repaint");
 	MvPrintw(LINES - 3, 2,
 		 "0-9,+/- non-ASCII, </> repeat, _ space, ESC=quit");
 	if (UseColors) {

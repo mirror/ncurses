@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.608 2018/11/25 11:26:03 tom Exp $
+ * $Id: curses.priv.h,v 1.609 2018/12/01 22:04:24 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1623,6 +1623,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define isWidecExt(ch)	(0)
 #define if_WIDEC(code) /* nothing */
 
+#define Charable(ch)	((ch) >= ' ' && (ch) <= '~')
 #define L(ch)		ch
 #endif /* } */
 
