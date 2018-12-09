@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_bkgd.3x,v 1.26 2018/07/28 21:34:06 tom Exp @
+  * @Id: curs_bkgd.3x,v 1.28 2018/12/09 00:45:05 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -81,13 +81,45 @@
 </PRE><H3><a name="h3-bkgd">bkgd</a></H3><PRE>
        The <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> functions set the background property of the current
        or  specified  window  and  then  apply this setting to every character
-       position in that window:
+       position in that window.  According to  X/Open  Curses,  it  should  do
+       this:
 
-       <STRONG>o</STRONG>   The rendition of every character on the screen is  changed  to  the
+       <STRONG>o</STRONG>   The  rendition  of  every character on the screen is changed to the
            new background rendition.
 
-       <STRONG>o</STRONG>   Wherever  the former background character appears, it is changed to
+       <STRONG>o</STRONG>   Wherever the former background character appears, it is changed  to
            the new background character.
+
+       Neither  X/Open Curses nor the SVr4 manual pages give details about the
+       way the rendition of characters on the screen is updated when  <STRONG>bkgd</STRONG>  or
+       <STRONG>wbkgd</STRONG> is used to change the background character.
+
+       This  implementation,  like  SVr4 curses, does not store the background
+       and window attribute contributions to each cell separately.  It updates
+       the rendition by comparing the character, non-color attributes and col-
+       ors contained in the background.  For each cell in the window,  whether
+       or not it is blank:
+
+       <STRONG>o</STRONG>   The  library  first  compares  the <EM>character</EM>, and if it matches the
+           current character part of the background, it replaces that with the
+           new background character.
+
+       <STRONG>o</STRONG>   The  library  then  checks  if the cell uses color, i.e., its color
+           pair value is nonzero.  If not, it simply replaces  the  attributes
+           and color pair in the cell with those from the new background char-
+           acter.
+
+       <STRONG>o</STRONG>   If the cell uses color, and that matches the color in  the  current
+           background, the library removes attributes which may have come from
+           the current background and adds attributes from the new background.
+           It finishes by setting the cell to use the color from the new back-
+           ground.
+
+       <STRONG>o</STRONG>   If the cell uses color, and that does not match the  color  in  the
+           current   background,   the  library  updates  only  the  non-color
+           attributes, first removing those which may have come from the  cur-
+           rent  background,  and  then  adding  attributes from the new back-
+           ground.
 
 
 </PRE><H3><a name="h3-getbkgd">getbkgd</a></H3><PRE>
@@ -96,19 +128,32 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  routines  <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return the integer <STRONG>OK</STRONG>.  The SVr4.0 manual
-       says "or a non-negative integer if <STRONG>immedok</STRONG> is set", but this appears to
-       be an error.
+       These  functions are described in the XSI Curses standard, Issue 4.  It
+       specifies that <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return <STRONG>ERR</STRONG> on failure, but gives no fail-
+       ure conditions.
+
+       The  routines  <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return the integer <STRONG>OK</STRONG>, unless the library
+       has not been initialized.
+
+       In contrast, the SVr4.0 manual says <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> may return <STRONG>OK</STRONG> "or  a
+       non-negative  integer  if  <STRONG>immedok</STRONG>  is set", which refers to the return
+       value from <STRONG>wrefresh</STRONG> (used to implement the immediate repainting).   The
+       SVr4  curses  <STRONG>wrefresh</STRONG>  returns the number of characters written to the
+       screen during the refresh.  This implementation does not do that.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>bkgdset</STRONG> and <STRONG>bkgd</STRONG> may be macros.
 
+       X/Open Curses mentions that the character part of the  background  must
+       be  a  single-byte  value.   This  implementation, like SVr4, checks to
+       ensure that, and will reuse the old background character if  the  check
+       fails.
+
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  functions are described in the XSI Curses standard, Issue 4.  It
-       specifies that <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return <STRONG>ERR</STRONG> on failure, but gives no fail-
-       ure conditions.
+       These  functions  are  described  in  the  XSI Curses standard, Issue 4
+       (X/Open Curses).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

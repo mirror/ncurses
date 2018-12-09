@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgrnd.3x,v 1.9 2018/07/28 21:34:06 tom Exp $
+.\" $Id: curs_bkgrnd.3x,v 1.10 2018/12/09 00:50:50 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -97,6 +97,10 @@ Note that
 \fBbkgrndset\fR, and
 \fBgetbkgrnd\fR
 may be macros.
+.PP
+X/Open Curses does not provide details on how the rendition is changed.
+This implementation follows the approach used in SVr4 curses,
+which is explained in the manual page for \fBwbkgd\fP.
 .SH RETURN VALUE
 .PP
 The \fBbkgrndset\fR and \fBwbkgrndset\fR routines do not return a value.
@@ -107,6 +111,10 @@ Otherwise, they return \fBERR\fR:
 A null window pointer is treated as an error.
 .bP
 A null character pointer is treated as an error.
+.SH PORTABILITY
+.PP
+These functions are described in the XSI Curses standard, Issue 4
+(X/Open Curses).
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_bkgd\fR(3X)

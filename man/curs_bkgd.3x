@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.26 2018/07/28 21:34:06 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.28 2018/12/09 00:45:05 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -57,8 +57,7 @@ The window background is a \fBchtype\fR consisting of
 any combination of attributes (i.e., rendition) and a character.
 The attribute part of the background is combined (OR'ed) with all non-blank
 characters that are written into the window with \fBwaddch\fR.
-Both
-the character and attribute parts of the background are combined with
+Both the character and attribute parts of the background are combined with
 the blank characters.
 The background becomes a property of the
 character and moves with the character through any scrolling and
@@ -71,7 +70,8 @@ as the graphic rendition of the character put on the screen.
 .PP
 The \fBbkgd\fR and \fBwbkgd\fR functions
 set the background property of the current or specified window
-and then apply this setting to every character position in that window:
+and then apply this setting to every character position in that window.
+According to X/Open Curses, it should do this:
 .PP
 .bP
 The rendition of every character on the screen is changed to
@@ -79,23 +79,72 @@ the new background rendition.
 .bP
 Wherever the former background character
 appears, it is changed to the new background character.
+.PP
+Neither X/Open Curses nor the SVr4 manual pages give details about
+the way the rendition of characters on the screen is updated when
+\fBbkgd\fP or \fBwbkgd\fP is used to change the background character.
+.PP
+This implementation, like SVr4 curses, does not store the background
+and window attribute contributions to each cell separately.
+It updates the rendition by comparing the character, non-color attributes and
+colors contained in the background.
+For each cell in the window, whether or not it is blank:
+.bP
+The library first compares the \fIcharacter\fP,
+and if it matches the current character part of the background,
+it replaces that with the new background character.
+.bP
+The library then checks if the cell uses color,
+i.e., its color pair value is nonzero.
+If not, it simply replaces the attributes and color pair in the
+cell with those from the new background character.
+.bP
+If the cell uses color,
+and that matches the color in the current background,
+the library removes attributes
+which may have come from the current background 
+and adds attributes from the new background.
+It finishes by setting the cell
+to use the color from the new background.
+.bP
+If the cell uses color,
+and that does not match the color in the current background,
+the library updates only the non-color attributes,
+first removing those which may have come from the current background,
+and then adding attributes from the new background.
 .SS getbkgd
 .PP
 The \fBgetbkgd\fR function returns the given window's current background
 character/attribute pair.
 .SH RETURN VALUE
 .PP
-The routines \fBbkgd\fR and \fBwbkgd\fR return the integer \fBOK\fR.
-The SVr4.0 manual says "or a non-negative integer if \fBimmedok\fR is set",
-but this appears to be an error.
-.SH NOTES
-.PP
-Note that \fBbkgdset\fR and \fBbkgd\fR may be macros.
-.SH PORTABILITY
-.PP
 These functions are described in the XSI Curses standard, Issue 4.
 It specifies that \fBbkgd\fR and \fBwbkgd\fR return \fBERR\fR on failure,
 but gives no failure conditions.
+.PP
+The routines \fBbkgd\fR and \fBwbkgd\fR return the integer \fBOK\fR,
+unless the library has not been initialized.
+.PP
+In contrast,
+the SVr4.0 manual says \fBbkgd\fR and \fBwbkgd\fR may return \fBOK\fP
+"or a non-negative integer if \fBimmedok\fR is set",
+which refers to the return value from \fBwrefresh\fP
+(used to implement the immediate repainting).
+The SVr4 curses \fBwrefresh\fP returns the number of characters
+written to the screen during the refresh.
+This implementation does not do that.
+.SH NOTES
+.PP
+Note that \fBbkgdset\fR and \fBbkgd\fR may be macros.
+.PP
+X/Open Curses mentions that the character part of the background must
+be a single-byte value.
+This implementation, like SVr4, checks to ensure that,
+and will reuse the old background character if the check fails.
+.SH PORTABILITY
+.PP
+These functions are described in the XSI Curses standard, Issue 4
+(X/Open Curses).
 .SH SEE ALSO
 .na
 .PP

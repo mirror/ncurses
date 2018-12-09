@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3225 2018/12/01 20:59:08 tom Exp $
+-- $Id: NEWS,v 1.3227 2018/12/08 23:02:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181208
+	+ modify wbkgd() and wbkgrnd() to improve compatibility with SVr4
+	  curses, changing the way the window rendition is updated when the
+	  background character is modified (report by Valery Ushakov).
 
 20181201
 	+ add midnightbsd to CF_XOPEN_SOURCE macro (patch by Urs Jansen).
