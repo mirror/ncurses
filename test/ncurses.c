@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.510 2018/12/02 01:11:05 tom Exp $
+$Id: ncurses.c,v 1.511 2018/12/15 20:34:01 tom Exp $
 
 ***************************************************************************/
 
@@ -3945,15 +3945,15 @@ merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, NCURSES_PAIRS_T p
  * into account, use 256 characters for the page.
  */
 static void
-show_paged_widechars(int base,
-		     int pagesize,
+show_paged_widechars(unsigned base,
+		     unsigned pagesize,
 		     int repeat,
 		     int space,
 		     attr_t attr,
 		     NCURSES_PAIRS_T pair)
 {
-    int first = base * pagesize;
-    int last = first + pagesize - 1;
+    unsigned first = base * pagesize;
+    unsigned last = first + pagesize - 1;
     int per_line = 16;
     cchar_t temp;
     wchar_t code;
@@ -3964,8 +3964,8 @@ show_paged_widechars(int base,
     MvPrintw(0, 20, "Display of Character Codes %#x to %#x", first, last);
     attroff(A_BOLD);
 
-    for (code = (wchar_t) first; (int) code <= last; code++) {
-	int row = (2 + ((int) code - first) / per_line);
+    for (code = (wchar_t) first; code <= (wchar_t) last; code++) {
+	int row = (2 + (int) (code - (wchar_t) first) / per_line);
 	int col = 5 * ((int) code % per_line);
 	int count;
 
@@ -3986,20 +3986,20 @@ show_paged_widechars(int base,
 }
 
 static void
-show_upper_widechars(int first, int repeat, int space, attr_t attr, NCURSES_PAIRS_T pair)
+show_upper_widechars(unsigned first, int repeat, int space, attr_t attr, NCURSES_PAIRS_T pair)
 {
     cchar_t temp;
     wchar_t code;
-    int last = first + 31;
+    unsigned last = first + 31;
 
     erase();
     attron(A_BOLD);
     MvPrintw(0, 20, "Display of Character Codes %d to %d", first, last);
     attroff(A_BOLD);
 
-    for (code = (wchar_t) first; (int) code <= last; code++) {
-	int row = 2 + ((code - first) % 16);
-	int col = ((code - first) / 16) * COLS / 2;
+    for (code = (wchar_t) first; code <= (wchar_t) last; code++) {
+	int row = 2 + ((int) (code - (wchar_t) first) % 16);
+	int col = ((int) (code - (wchar_t) first) / 16) * COLS / 2;
 	wchar_t codes[10];
 	char tmp[80];
 	int count = repeat;
@@ -4355,10 +4355,10 @@ static int
 x_acs_test(bool recur GCC_UNUSED)
 {
     int c = 'a';
-    int digit = 0;
+    unsigned digit = 0;
     int repeat = 1;
     int space = ' ';
-    int pagesize = 32;
+    unsigned pagesize = 32;
     attr_t attr = WA_NORMAL;
     int fg = COLOR_BLACK;
     int bg = COLOR_BLACK;
@@ -4426,7 +4426,7 @@ x_acs_test(bool recur GCC_UNUSED)
 		if (len)
 		    at_page[--len] = '\0';
 	    } else if (c < 256 && isdigit(c)) {
-		digit = (c - '0');
+		digit = (unsigned) (c - '0');
 		last_show_wacs = 0;
 	    } else if (c == '+') {
 		++digit;
@@ -4434,7 +4434,7 @@ x_acs_test(bool recur GCC_UNUSED)
 		last_show_wacs = 0;
 	    } else if (c == '-' && digit > 0) {
 		--digit;
-		sprintf(at_page, "%02x", digit);
+		sprintf(at_page, "%02x", UChar(digit));
 		last_show_wacs = 0;
 	    } else if (c == '>' && repeat < (COLS / 4)) {
 		++repeat;

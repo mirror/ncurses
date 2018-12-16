@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.100 2017/06/24 15:15:55 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.101 2018/12/15 23:54:24 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -274,11 +274,14 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 #ifdef TRACE
     if (USE_TRACEF(TRACE_TPUTS)) {
 	char addrbuf[32];
+	TR_FUNC_BFR(1);
 
-	if (outc == NCURSES_SP_NAME(_nc_outch))
+	if (outc == NCURSES_SP_NAME(_nc_outch)) {
 	    _nc_STRCPY(addrbuf, "_nc_outch", sizeof(addrbuf));
-	else
-	    _nc_SPRINTF(addrbuf, _nc_SLIMIT(sizeof(addrbuf)) "%p", TR_FUNC(outc));
+	} else {
+	    _nc_SPRINTF(addrbuf, _nc_SLIMIT(sizeof(addrbuf)) "%s",
+			TR_FUNC_ARG(0, outc));
+	}
 	if (_nc_tputs_trace) {
 	    _tracef("tputs(%s = %s, %d, %s) called", _nc_tputs_trace,
 		    _nc_visbuf(string), affcnt, addrbuf);

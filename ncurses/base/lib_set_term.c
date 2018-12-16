@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -46,7 +46,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.167 2017/09/10 21:09:16 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.168 2018/12/15 23:49:43 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -750,9 +750,12 @@ NCURSES_SP_NAME(_nc_ripoffline) (NCURSES_SP_DCLx
 				 int (*init) (WINDOW *, int))
 {
     int code = ERR;
+    TR_FUNC_BFR(1);
 
     START_TRACE();
-    T((T_CALLED("ripoffline(%p,%d,%p)"), (void *) SP_PARM, line, TR_FUNC(init)));
+    T((T_CALLED("ripoffline(%p,%d,%s)"),
+       (void *) SP_PARM, line,
+       TR_FUNC_ARG(0, init)));
 
 #if NCURSES_SP_FUNCS
     if (SP_PARM != 0 && SP_PARM->_prescreen)

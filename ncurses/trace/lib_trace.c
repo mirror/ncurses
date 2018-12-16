@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.87 2018/06/24 00:06:37 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.89 2018/12/16 01:05:30 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -306,6 +306,38 @@ _nc_retrace_win(WINDOW *code)
 {
     T((T_RETURN("%p"), (void *) code));
     return code;
+}
+
+NCURSES_EXPORT(char *)
+_nc_fmt_funcptr(char *target, const char *source, size_t size)
+{
+    size_t n;
+    char *dst = target;
+    bool leading = TRUE;
+
+    union {
+	int value;
+	char bytes[sizeof(int)];
+    } byteorder;
+
+    byteorder.value = 0x1234;
+
+    *dst++ = '0';
+    *dst++ = 'x';
+
+    for (n = 0; n < size; ++n) {
+	unsigned ch = ((byteorder.bytes[0] == 0x34)
+		       ? UChar(source[size - n - 1])
+		       : UChar(source[n]));
+	if (ch != 0 || (n + 1) >= size)
+	    leading = FALSE;
+	if (!leading) {
+	    sprintf(dst, "%02x", ch & 0xff);
+	    dst += 2;
+	}
+    }
+    *dst = '\0';
+    return target;
 }
 
 #if USE_REENTRANT

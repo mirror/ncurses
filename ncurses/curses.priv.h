@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.609 2018/12/01 22:04:24 tom Exp $
+ * $Id: curses.priv.h,v 1.612 2018/12/16 01:16:58 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1765,7 +1765,8 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 
 typedef void VoidFunc(void);
 
-#define TR_FUNC(value)          ((const char*) (value))
+#define TR_FUNC_BFR(max)	char tr_func_data[max][(sizeof(void *) + sizeof(void (*)(void))) * 2 + 4]
+#define TR_FUNC_ARG(num,func)	_nc_fmt_funcptr(&tr_func_data[num][0], (const char *)&(func), sizeof((func)))
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)
 #define returnBits(code)	TRACE_RETURN(code,unsigned)
@@ -1804,6 +1805,8 @@ extern NCURSES_EXPORT(unsigned)         _nc_retrace_unsigned (unsigned);
 extern NCURSES_EXPORT(void *)           _nc_retrace_void_ptr (void *);
 extern NCURSES_EXPORT(void)             _nc_fifo_dump (SCREEN *);
 
+extern NCURSES_EXPORT(char *)           _nc_fmt_funcptr(char *, const char *, size_t);
+
 #if USE_REENTRANT
 NCURSES_WRAPPED_VAR(long, _nc_outchars);
 NCURSES_WRAPPED_VAR(const char *, _nc_tputs_trace);
@@ -1837,6 +1840,7 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define T(a)
 #define TR(n, a)
 #define TPUTS_TRACE(s)
+#define TR_FUNC_BFR(max)
 
 #define returnAttr(code)	return code
 #define returnBits(code)	return code

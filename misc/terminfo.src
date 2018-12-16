@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.718 $
-#	$Date: 2018/10/27 23:10:56 $
+#	$Revision: 1.721 $
+#	$Date: 2018/12/15 21:41:48 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3350,16 +3350,16 @@ nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (b
 
 # This is tested with OS X 10.8 (Mountain Lion), 2012/08/11
 #	TERM_PROGRAM_VERSION=309
-# Earlier reports state that these differences also apply to OS X 10.7 (Lion),
+# Earlier reports state that these differences also apply to OS X 10.7 (Leopard),
 #	TERM_PROGRAM_VERSION=303
-nsterm-256color|Terminal.app in OS X 10.8,
+nsterm-build309|Terminal.app in OS X 10.8,
 	use=xterm+256setaf, use=nsterm-bce,
 
 # removed bogus kDC7 -TD
 nsterm-build326|Terminal.app in OS X 10.9,
 	kDC=\E[3;2~, kLFT=\E[1;2D, kRIT=\E[1;2C, kcbt=\E[Z,
 	kf18=\E[32~, kDC5=\E[3;5~, kLFT3=\Eb, kLFT5=\E[1;5D,
-	kRIT3=\Ef, kRIT5=\E[1;5C, use=nsterm-256color,
+	kRIT3=\Ef, kRIT5=\E[1;5C, use=nsterm-build309,
 
 # actually "343.7"
 nsterm-build343|Terminal.app in OS X 10.10,
@@ -3417,7 +3417,7 @@ nsterm-build400|Terminal.app in OS X 10.13,
 	use=ecma+italics, use=nsterm-build361,
 
 # This is an alias which should always point to the "current" version
-nsterm|Apple_Terminal|AppKit Terminal.app,
+nsterm|nsterm-256color|Apple_Terminal|AppKit Terminal.app,
 	use=nsterm-build400,
 
 #### iTerm, iTerm2
@@ -5326,6 +5326,8 @@ gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
 # deprecated - use "vte" for newer versions
 gnome|GNOME Terminal,
 	use=vte-2012,
+gnome-256color|GNOME Terminal with xterm 256-colors,
+	use=xterm+256color, use=gnome,
 
 # relevant changes were made in January 2014, and later.
 #
@@ -5367,8 +5369,6 @@ vte|VTE aka GNOME Terminal,
 
 vte-256color|VTE with xterm 256-colors,
 	use=xterm+256color, use=vte,
-gnome-256color|GNOME Terminal with xterm 256-colors,
-	use=vte-256color,
 
 # XFCE Terminal 0.2.5.4beta2
 #
@@ -25968,5 +25968,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2018-10-27
 #	+ add OpenGL clients alacritty and kitty -TD
 #	+ add Smulx for tmux, vte-2018 -Nicholas Marriott
+#
+# 2018-12-15
+#	+ fix a typo in comments (Aaron Gyes).
+#	+ add nsterm-build309 to replace nsterm-256color, assigning the latter
+#	  as an alias of nsterm, to make mouse work with nsterm-256color -TD
+#	+ base gnome-256color entry on "gnome", not "vte", for consistency -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

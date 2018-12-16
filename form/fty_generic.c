@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2016,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_generic.c,v 1.7 2016/01/23 21:32:00 tom Exp $")
+MODULE_ID("$Id: fty_generic.c,v 1.8 2018/12/16 00:14:02 tom Exp $")
 
 /*
  * This is not a full implementation of a field type, but adds some
@@ -109,12 +109,14 @@ _nc_generic_fieldtype(bool (*const field_check) (FORM *, FIELD *, const void *),
   int code = E_SYSTEM_ERROR;
   FIELDTYPE *res = (FIELDTYPE *)0;
 
-  T((T_CALLED("_nc_generic_fieldtype(%p,%p,%p,%p,%p)"),
-     TR_FUNC(field_check),
-     TR_FUNC(char_check),
-     TR_FUNC(next),
-     TR_FUNC(prev),
-     TR_FUNC(freecallback)));
+  TR_FUNC_BFR(5);
+
+  T((T_CALLED("_nc_generic_fieldtype(%s,%s,%s,%s,%s)"),
+     TR_FUNC_ARG(0, field_check),
+     TR_FUNC_ARG(1, char_check),
+     TR_FUNC_ARG(2, next),
+     TR_FUNC_ARG(3, prev),
+     TR_FUNC_ARG(4, freecallback)));
 
   if (field_check || char_check)
     {
