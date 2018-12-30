@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.20 2018/05/02 00:14:29 tom Exp $
+# $Id: tracemunch,v 1.24 2018/12/29 22:20:06 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -90,129 +90,149 @@ sub transaddr {
     return $arg;
 }
 
-while (<STDIN>) {
-    my $addr;
-    my $n;
-    my $awaiting = "";
+sub muncher($) {
+    my $STDIN = shift;
 
-  CLASSIFY: {
+    while (<$STDIN>) {
+        my $addr;
+        my $n;
+        my $awaiting = "";
 
-        my $thread = "";
-        if ( $_ =~ /^(0x[[:xdigit:]]+):/ ) {
-            $thr_addr{$1} = ++$thr_nums unless defined $thr_addr{$1};
-            $thread = "thread" . $thr_addr{$1} . ":";
-            $_ =~ s/^[^:]*://;
-        }
+      CLASSIFY: {
 
-        # Transform window pointer addresses so it's easier to compare logs
-        $awaiting = "curscr" if ( $_ =~ /creating curscr/ );
-        $awaiting = "newscr" if ( $_ =~ /creating newscr/ );
-        $awaiting = "stdscr" if ( $_ =~ /creating stdscr/ );
-        $awaiting = "screen" if ( $_ =~ /^(\+ )*called \{new_prescr\(\)/ );
-        if ( $_ =~ /^create :window 0x([[:xdigit:]]+)/ ) {
-            $addr = "0x$1";
-            if ( $awaiting eq "curscr" ) {
-                $curscr = $addr;
+            # just in case someone tries a file with cr/lf line-endings:
+            $_ =~ s/\r\n/\n/g;
+            $_ =~ s/\r/\n/g;
+
+            my $thread = "";
+            if ( $_ =~ /^(0x[[:xdigit:]]+):/ ) {
+                $thr_addr{$1} = ++$thr_nums unless defined $thr_addr{$1};
+                $thread = "thread" . $thr_addr{$1} . ":";
+                $_ =~ s/^[^:]*://;
             }
-            elsif ( $awaiting eq "newscr" ) {
-                $newscr = $addr;
+
+            # Transform window pointer addresses so it's easier to compare logs
+            $awaiting = "curscr" if ( $_ =~ /creating curscr/ );
+            $awaiting = "newscr" if ( $_ =~ /creating newscr/ );
+            $awaiting = "stdscr" if ( $_ =~ /creating stdscr/ );
+            $awaiting = "screen" if ( $_ =~ /^(\+ )*called \{new_prescr\(\)/ );
+            if ( $_ =~ /^create :window 0x([[:xdigit:]]+)/ ) {
+                $addr = "0x$1";
+                if ( $awaiting eq "curscr" ) {
+                    $curscr = $addr;
+                }
+                elsif ( $awaiting eq "newscr" ) {
+                    $newscr = $addr;
+                }
+                elsif ( $awaiting eq "stdscr" ) {
+                    $stdscr = $addr;
+                }
+                else {
+                    $win_addr{$addr} = $win_nums++;
+                }
+                $awaiting = "";
             }
-            elsif ( $awaiting eq "stdscr" ) {
-                $stdscr = $addr;
+            elsif ( $_ =~ /^(\+ )*called \{_nc_add_to_try\((0x[[:xdigit:]]+),/ )
+            {
+                $try_addr{$2} = ++$try_nums unless defined $try_addr{$2};
             }
-            else {
-                $win_addr{$addr} = $win_nums++;
-            }
-            $awaiting = "";
-        }
-        elsif ( $_ =~ /^(\+ )*called \{_nc_add_to_try\((0x[[:xdigit:]]+),/ ) {
-            $try_addr{$2} = ++$try_nums unless defined $try_addr{$2};
-        }
-        elsif ( $_ =~ /^(\+ )*_nc_alloc_screen_sp 0x([[:xdigit:]]+)/ ) {
-            $addr = "0x$2";
-            $scr_addr{$addr} = ++$scr_nums unless ( $scr_addr{$addr} );
-            $awaiting = "";
-        }
-        elsif ( $_ =~ /^(\+ )*return }0x([[:xdigit:]]+)/ ) {
-            $addr = "0x$2";
-            if ( $awaiting eq "screen" ) {
+            elsif ( $_ =~ /^(\+ )*_nc_alloc_screen_sp 0x([[:xdigit:]]+)/ ) {
+                $addr = "0x$2";
                 $scr_addr{$addr} = ++$scr_nums unless ( $scr_addr{$addr} );
+                $awaiting = "";
             }
-        }
-        elsif ( $_ =~ /^\.\.\.deleted win=0x([[:xdigit:]]+)/ ) {
-            $addr = "0x$1";
-            $_    = &transaddr($_);
-            if ( $addr eq $curscr ) {
-                $curscr = "";
+            elsif ( $_ =~ /^(\+ )*return }0x([[:xdigit:]]+)/ ) {
+                $addr = "0x$2";
+                if ( $awaiting eq "screen" ) {
+                    $scr_addr{$addr} = ++$scr_nums unless ( $scr_addr{$addr} );
+                }
             }
-            elsif ( $addr eq $newscr ) {
-                $newscr = "";
-            }
-            elsif ( $addr eq $stdscr ) {
-                $stdscr = "";
-            }
-            else {
-                undef $win_addr{$addr};
-            }
-        }
-
-        # Compactify runs of PutAttrChar calls (TR_CHARPUT)
-        if ( $_ =~ /$putattr/ ) {
-            my $putattr_chars = $1;
-            my $starty        = $2;
-            my $startx        = $3;
-            while (<STDIN>) {
-                if ( $_ =~ /$putattr/ ) {
-                    $putattr_chars .= $1;
+            elsif ( $_ =~ /^\.\.\.deleted win=0x([[:xdigit:]]+)/ ) {
+                $addr = "0x$1";
+                $_    = &transaddr($_);
+                if ( $addr eq $curscr ) {
+                    $curscr = "";
+                }
+                elsif ( $addr eq $newscr ) {
+                    $newscr = "";
+                }
+                elsif ( $addr eq $stdscr ) {
+                    $stdscr = "";
                 }
                 else {
-                    last;
+                    undef $win_addr{$addr};
                 }
             }
-            print
+
+            # Compactify runs of PutAttrChar calls (TR_CHARPUT)
+            if ( $_ =~ /$putattr/ ) {
+                my $putattr_chars = $1;
+                my $starty        = $2;
+                my $startx        = $3;
+                while (<$STDIN>) {
+                    if ( $_ =~ /$putattr/ ) {
+                        $putattr_chars .= $1;
+                    }
+                    else {
+                        last;
+                    }
+                }
+                print
 "RUN of PutAttrChar()s: \"$putattr_chars\" from ${starty}, ${startx}\n";
-            redo CLASSIFY;
-        }
+                redo CLASSIFY;
+            }
 
-        # Compactify runs of waddnstr calls (TR_CALLS)
-        if ( $_ =~ /$waddnstr/ ) {
-            my $waddnstr_chars = $2;
-            my $winaddr        = $1;
-            while (<STDIN>) {
-                if ( $_ =~ /$waddnstr/ && $1 eq $winaddr ) {
-                    $waddnstr_chars .= $2;
+            # Compactify runs of waddnstr calls (TR_CALLS)
+            if ( $_ =~ /$waddnstr/ ) {
+                my $waddnstr_chars = $2;
+                my $winaddr        = $1;
+                while (<$STDIN>) {
+                    if ( $_ =~ /$waddnstr/ && $1 eq $winaddr ) {
+                        $waddnstr_chars .= $2;
+                    }
+                    else {
+                        last;
+                    }
+                }
+                my $winaddstr = &transaddr($winaddr);
+                print "RUN of waddnstr()s: $winaddr, \"$waddnstr_chars\"\n";
+                redo CLASSIFY;
+            }
+
+            # More transformations can go here
+
+            # Repeated runs of anything
+            my $anyline     = &transaddr($_);
+            my $repeatcount = 1;
+            while (<$STDIN>) {
+                if ( &transaddr($_) eq $anyline ) {
+                    $repeatcount++;
                 }
                 else {
                     last;
                 }
             }
-            my $winaddstr = &transaddr($winaddr);
-            print "RUN of waddnstr()s: $winaddr, \"$waddnstr_chars\"\n";
-            redo CLASSIFY;
-        }
-
-        # More transformations can go here
-
-        # Repeated runs of anything
-        my $anyline     = &transaddr($_);
-        my $repeatcount = 1;
-        while (<STDIN>) {
-            if ( &transaddr($_) eq $anyline ) {
-                $repeatcount++;
+            if ( $repeatcount > 1 ) {
+                print "${repeatcount} REPEATS OF $anyline";
             }
             else {
-                last;
+                print $thread . $anyline;
             }
-        }
-        if ( $repeatcount > 1 ) {
-            print "${repeatcount} REPEATS OF $anyline";
-        }
-        else {
-            print $thread . $anyline;
-        }
-        redo CLASSIFY if $_;
+            redo CLASSIFY if $_;
 
-    }    # :CLASSIFY
+        }    # :CLASSIFY
+    }
+}
+
+if ( $#ARGV >= 0 ) {
+    while ( $#ARGV >= 0 ) {
+        my $file = shift @ARGV;
+        open my $ifh, "<", $file or die $!;
+        &muncher($ifh);
+    }
+}
+else {
+    &muncher( \*STDIN );
 }
 
 # tracemunch ends here

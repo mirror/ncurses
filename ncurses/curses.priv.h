@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.612 2018/12/16 01:16:58 tom Exp $
+ * $Id: curses.priv.h,v 1.613 2018/12/29 20:07:04 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1544,26 +1544,27 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define PUTC_INIT	init_mb (PUT_st)
 #define PUTC(ch)	do { if(!isWidecExt(ch)) {				    \
 			if (Charable(ch)) {					    \
-			    TR_PUTC(CharOf(ch)); \
-			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
+			    TR_PUTC(CharOf(ch));				    \
+			    NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch));	    \
 			    COUNT_OUTCHARS(1);					    \
 			} else {						    \
 			    for (PUTC_i = 0; PUTC_i < CCHARW_MAX; ++PUTC_i) {	    \
 				PUTC_ch = (ch).chars[PUTC_i];			    \
 				if (PUTC_ch == L'\0')				    \
 				    break;					    \
-				PUTC_INIT;						    \
+				PUTC_INIT;					    \
 				PUTC_n = (int) wcrtomb(PUTC_buf,		    \
 						       (ch).chars[PUTC_i], &PUT_st); \
 				if (PUTC_n <= 0) {				    \
-				    if (PUTC_ch && is8bits(PUTC_ch) && PUTC_i == 0) \
-					TR_PUTC(CharOf(ch)); \
+				    if (PUTC_ch && is8bits(PUTC_ch) && PUTC_i == 0) { \
+					TR_PUTC(CharOf(ch));			    \
 					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx CharOf(ch)); \
+				    }						    \
 				    break;					    \
 				} else {					    \
 				    int PUTC_j;					    \
 				    for (PUTC_j = 0; PUTC_j < PUTC_n; ++PUTC_j) {   \
-					TR_PUTC(PUTC_buf[PUTC_j]); \
+					TR_PUTC(PUTC_buf[PUTC_j]);		    \
 					NCURSES_OUTC_FUNC (NCURSES_SP_ARGx PUTC_buf[PUTC_j]); \
 				    }						    \
 				}						    \
@@ -2065,8 +2066,12 @@ extern NCURSES_EXPORT(int) _nc_init_color(SCREEN *, int, int, int, int);
 extern NCURSES_EXPORT(int) _nc_init_pair(SCREEN *, int, int, int);
 extern NCURSES_EXPORT(int) _nc_pair_content(SCREEN *, int, int *, int *);
 extern NCURSES_EXPORT(bool) _nc_reset_colors(void);
-extern NCURSES_EXPORT(colorpair_t *) _nc_reserve_pairs(SCREEN *, int);
+extern NCURSES_EXPORT(void) _nc_reserve_pairs(SCREEN *, int);
 extern NCURSES_EXPORT(void) _nc_change_pair(SCREEN *, int);
+
+#define ReservePairs(sp,want) \
+	    if ((sp->_color_pairs == 0) || (want >= sp->_pair_alloc)) \
+		_nc_reserve_pairs(sp, want)
 
 /* lib_getch.c */
 extern NCURSES_EXPORT(int) _nc_wgetch(WINDOW *, int *, int EVENTLIST_2nd(_nc_eventlist *));

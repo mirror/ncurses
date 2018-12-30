@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.168 2017/09/02 21:01:54 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.169 2018/12/23 00:37:35 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -94,7 +94,7 @@ static int indent = 8;
 #define OBSOLETE(n) (n[0] == 'O' && n[1] == 'T')
 #endif
 
-#define isObsolete(f,n) ((f == F_TERMINFO || f == F_VARIABLE) && OBSOLETE(n))
+#define isObsolete(f,n) ((f == F_TERMINFO || f == F_VARIABLE) && (sortmode != S_VARIABLE) && OBSOLETE(n))
 
 #if NCURSES_XNAMES
 #define BoolIndirect(j) ((j >= BOOLCOUNT) ? (j) : ((sortmode == S_NOSORT) ? j : bool_indirect[j]))

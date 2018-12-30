@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.49 2018/07/28 22:19:56 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.50 2018/12/29 23:40:47 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -370,6 +370,12 @@ corresponds to private mode 1000 of xterm:
 \\E[?1000%?%p1%{1}%=%th%el%;
 .RE
 .PP
+The mouse driver also recognizes a newer xterm private mode 1006, e.g.,
+.PP
+.RS 3
+\\E[?1006;1000%?%p1%{1}%=%th%el%;
+.RE
+.PP
 The \fIz\fP member in the event structure is not presently used.
 It is intended
 for use with touch screens (which may be pressure-sensitive) or with
@@ -396,9 +402,11 @@ i.e., it is the beginning of the response.
 .PP
 Because there are no standard terminal responses that would serve to identify
 terminals which support the xterm mouse protocol, \fBncurses\fR assumes that
-if your $TERM environment variable contains "xterm",
+if your $TERM environment variable contains \*(``xterm\*('',
 or \fBkmous\fR is defined in
 the terminal description, then the terminal may send mouse events.
+The \fBkmous\fP capability is checked first, allowing the
+use of newer xterm mouse protocols.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_kernel\fR(3X),

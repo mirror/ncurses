@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3231 2018/12/16 00:18:46 tom Exp $
+-- $Id: NEWS,v 1.3236 2018/12/29 23:45:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20181229
+	+ improve man/curs_mouse.3x with regard to xterm
+	+ modify tracemunch to accept filename parameters in addition to use
+	  as a pipe/filter.
+	+ minor optimization to reduce calls to _nc_reserve_pairs (prompted by
+	  discussion with Bryan Christ).
+	+ add test/pair_content.c and test/color_content.c
+	+ modify infocmp to omit filtering of "OTxx" names which are used for
+	  obsolete capabilities, when the output is sorted by long-names.
+	  Doing this helps when making a table of the short/long capability
+	  names.
 
 20181215
 	+ several fixes for gcc8 strict compiler warnings.

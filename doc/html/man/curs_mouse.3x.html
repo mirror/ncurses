@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.49 2018/07/28 22:19:56 tom Exp @
+  * @Id: curs_mouse.3x,v 1.50 2018/12/29 23:40:47 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -319,6 +319,10 @@
 
           \E[?1000%?%p1%{1}%=%th%el%;
 
+       The mouse driver also recognizes a newer xterm private mode 1006, e.g.,
+
+          \E[?1006;1000%?%p1%{1}%=%th%el%;
+
        The  <EM>z</EM>  member in the event structure is not presently used.  It is in-
        tended for use with touch screens (which may be pressure-sensitive)  or
        with 3D-mice/trackballs/power gloves.
@@ -345,7 +349,8 @@
        identify terminals which support the xterm mouse protocol, <STRONG>ncurses</STRONG>  as-
        sumes  that  if  your  $TERM  environment variable contains "xterm", or
        <STRONG>kmous</STRONG> is defined in the terminal description,  then  the  terminal  may
-       send mouse events.
+       send mouse events.  The <STRONG>kmous</STRONG> capability is checked first, allowing the
+       use of newer xterm mouse protocols.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

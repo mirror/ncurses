@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.169 2018/08/19 00:28:27 tom Exp $ */
+/* $Id: test.priv.h,v 1.171 2018/12/29 21:44:07 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -467,6 +467,12 @@ extern int optind;
 #define slk_clear()		/* nothing */
 #endif
 
+#if HAVE_TPUTS_SP
+#define USE_SP_FUNCS 1
+#else
+#define USE_SP_FUNCS 0
+#endif
+
 #ifndef HAVE_WSYNCDOWN
 #define wsyncdown(win)		/* nothing */
 #endif
@@ -895,6 +901,19 @@ extern char *strnames[], *strcodes[], *strfnames[];
 #undef large
 #undef small
 
+#endif
+
+#ifdef NEED_TIME_H
+#if TIME_WITH_SYS_TIME
+# include <sys/time.h>
+# include <time.h>
+#else
+# if HAVE_SYS_TIME_H
+#  include <sys/time.h>
+# else
+#  include <time.h>
+# endif
+#endif
 #endif
 
 /* Use this to quiet gcc's -Wwrite-strings warnings, but accommodate SVr4

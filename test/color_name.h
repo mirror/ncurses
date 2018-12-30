@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2011-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2011-2016,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_name.h,v 1.5 2016/09/04 20:11:36 tom Exp $
+ * $Id: color_name.h,v 1.6 2018/12/29 15:19:30 tom Exp $
  */
 
 #ifndef __COLORNAME_H
@@ -79,7 +79,7 @@ color_code(const char *color)
     }
     return result;
 }
-#endif /* NEED_COLOR_NAME */
+#endif /* NEED_COLOR_CODE */
 
 #ifdef NEED_COLOR_NAME
 static const char *

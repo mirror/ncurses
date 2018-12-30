@@ -1,21 +1,11 @@
-/* $Id: tclock.c,v 1.38 2017/09/09 00:37:06 tom Exp $ */
+/* $Id: tclock.c,v 1.39 2018/12/29 17:23:42 tom Exp $ */
 
+#define NEED_TIME_H
 #include <test.priv.h>
 
 #if HAVE_MATH_H
 
 #include <math.h>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
 
 /*
   tclock - analog/digital clock for curses.

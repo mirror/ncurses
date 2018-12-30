@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.10 2017/04/15 21:40:50 tom Exp $
+ * $Id: extended_color.c,v 1.11 2018/12/29 21:50:33 tom Exp $
  */
 
 #include <test.priv.h>
@@ -35,7 +35,12 @@
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 
+#if USE_SP_FUNCS
 static bool opt_s = FALSE;
+#define if_opt_s(a,b) (opt_s ? (a) : (b))
+#else
+#define if_opt_s(a,b) (b)
+#endif
 
 static void
 failed(const char *name)
@@ -51,11 +56,9 @@ do_pair_content(SCREEN *sp, int pair)
 {
     int i, f, b;
 
-    if (opt_s) {
-	i = extended_pair_content_sp(sp, pair, &f, &b);
-    } else {
-	i = extended_pair_content(0, &f, &b);
-    }
+    (void) sp;
+    i = if_opt_s(extended_pair_content_sp(sp, pair, &f, &b),
+		 extended_pair_content(0, &f, &b));
     if (i != OK)
 	failed("pair_content");
     printw("pair %d contains (%d,%d)\n", pair, f, b);
@@ -66,11 +69,10 @@ static void
 do_init_pair(SCREEN *sp, int pair, int fg, int bg)
 {
     int i;
-    if (opt_s) {
-	i = init_extended_pair_sp(sp, pair, fg, bg);
-    } else {
-	i = init_extended_pair(pair, fg, bg);
-    }
+
+    (void) sp;
+    i = if_opt_s(init_extended_pair_sp(sp, pair, fg, bg),
+		 init_extended_pair(pair, fg, bg));
     if (i != OK)
 	failed("init_pair");
 }
@@ -80,11 +82,10 @@ do_init_color(SCREEN *sp, int color, int adjust)
 {
     int r, g, b;
     int i;
-    if (opt_s) {
-	i = extended_color_content_sp(sp, color, &r, &g, &b);
-    } else {
-	i = extended_color_content(color, &r, &g, &b);
-    }
+
+    (void) sp;
+    i = if_opt_s(extended_color_content_sp(sp, color, &r, &g, &b),
+		 extended_color_content(color, &r, &g, &b));
     if (i != OK)
 	failed("color_content");
 
@@ -92,11 +93,8 @@ do_init_color(SCREEN *sp, int color, int adjust)
     g = (adjust + 1000 + g) % 1000;
     b = (adjust + 1000 + b) % 1000;
 
-    if (opt_s) {
-	i = init_extended_color_sp(sp, color, r, g, b);
-    } else {
-	i = init_extended_color(color, r, g, b);
-    }
+    i = if_opt_s(init_extended_color_sp(sp, color, r, g, b),
+		 init_extended_color(color, r, g, b));
     if (i != OK)
 	failed("init_color");
 }
@@ -116,11 +114,10 @@ show_1_rgb(SCREEN *sp, const char *name, int color, int y, int x)
 {
     int r, g, b;
     int i;
-    if (opt_s) {
-	i = extended_color_content_sp(sp, color, &r, &g, &b);
-    } else {
-	i = extended_color_content(color, &r, &g, &b);
-    }
+
+    (void) sp;
+    i = if_opt_s(extended_color_content_sp(sp, color, &r, &g, &b),
+		 extended_color_content(color, &r, &g, &b));
     wmove(stdscr, y, x);
     if (i == OK) {
 	printw("%-8s %3d/%3d/%3d", name, r, g, b);
@@ -166,9 +163,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     while ((i = getopt(argc, argv, "s")) != -1) {
 	switch (i) {
+#if USE_SP_FUNCS
 	case 's':
 	    opt_s = TRUE;
 	    break;
+#endif
 	default:
 	    usage();
 	    /* NOTREACHED */
@@ -210,11 +209,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     printw("Drawing soft-key tabs with pair 2\n");
     slk_attrset(A_BOLD);	/* reverse-video is hard to see */
-    if (opt_s) {
-	extended_slk_color_sp(sp, 2);
-    } else {
-	extended_slk_color(2);
-    }
+    i = if_opt_s(extended_slk_color_sp(sp, 2),
+		 extended_slk_color(2));
     for (i = 1; i <= 8; ++i) {
 	char temp[80];
 	sprintf(temp, "(SLK-%d)", i);
@@ -223,7 +219,9 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     slk_touch();
     slk_noutrefresh();
 
-    if (opt_s ? can_change_color_sp(sp) : can_change_color()) {
+    i = if_opt_s(can_change_color_sp(sp),
+		 can_change_color());
+    if (i) {
 	do_color_set("Default Colors", 0);
 	printw("Press any key to stop...\n");
 	nodelay(stdscr, TRUE);

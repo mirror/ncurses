@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.6 2017/06/17 19:36:33 tom Exp $
+ * $Id: foldkeys.c,v 1.7 2018/12/29 17:53:03 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -38,20 +38,10 @@
  * merging only for the keys which are defined in the terminal description.
  */
 
+#define NEED_TIME_H
 #include <test.priv.h>
 
 #if defined(NCURSES_VERSION) && NCURSES_EXT_FUNCS
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
 
 #define MY_LOGFILE "demo_foldkeys.log"
 #define MY_KEYS (KEY_MAX + 1)

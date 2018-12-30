@@ -26,12 +26,13 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.53 2018/05/12 15:11:16 tom Exp $
+ * $Id: savescreen.c,v 1.54 2018/12/29 17:25:56 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
  */
 
+#define NEED_TIME_H
 #include <test.priv.h>
 #include <popup_msg.h>
 #include <parse_rgb.h>
@@ -40,17 +41,6 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
-
-#if TIME_WITH_SYS_TIME
-# include <sys/time.h>
-# include <time.h>
-#else
-# if HAVE_SYS_TIME_H
-#  include <sys/time.h>
-# else
-#  include <time.h>
-# endif
-#endif
 
 #if defined(__hpux)
 #define MyMarker 'X'

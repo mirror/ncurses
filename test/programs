@@ -1,6 +1,6 @@
-# $Id: programs,v 1.42 2018/11/24 17:56:32 tom Exp $
+# $Id: programs,v 1.43 2018/12/29 15:32:00 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2016,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -36,6 +36,7 @@ bs		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	bs
 cardfile	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	cardfile
 chgat		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	chgat popup_msg
 clip_printw	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	clip_printw popup_msg
+color_content	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	color_content
 color_set	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	color_set
 demo_altkeys	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_altkeys
 demo_defkey	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_defkey
@@ -74,9 +75,10 @@ list_keys	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	list_keys
 lrtest		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	lrtest
 movewindow	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	movewindow popup_msg
 ncurses		$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	ncurses
-padview		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	padview popup_msg
-picsmap		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	picsmap
 newdemo		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	newdemo
+padview		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	padview popup_msg
+pair_content	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	pair_content
+picsmap		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	picsmap
 railroad	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	railroad
 rain		$(LDFLAGS_THREADS)	$(LOCAL_LIBS)	rain popup_msg
 redraw		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	redraw popup_msg
