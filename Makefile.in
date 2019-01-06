@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.41 2018/11/24 22:38:10 tom Exp $
+# $Id: Makefile.in,v 1.42 2019/01/06 00:35:11 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -97,6 +97,9 @@ preinstall :
 
 distclean \
 realclean ::
+
+check:
+	@ echo The test-programs are interactive
 
 
 # Put the common rules here so that we can easily construct the list of

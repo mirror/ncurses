@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.859 2018/12/15 19:52:08 tom Exp $
+dnl $Id: aclocal.m4,v 1.861 2019/01/01 01:49:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5432,7 +5432,7 @@ fi
 AC_SUBST(PKG_CONFIG)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_POSIX_C_SOURCE version: 10 updated: 2018/06/20 20:23:13
+dnl CF_POSIX_C_SOURCE version: 11 updated: 2018/12/31 20:46:17
 dnl -----------------
 dnl Define _POSIX_C_SOURCE to the given level, and _POSIX_SOURCE if needed.
 dnl
@@ -5447,7 +5447,10 @@ dnl
 dnl Parameters:
 dnl	$1 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_POSIX_C_SOURCE],
-[
+[AC_REQUIRE([CF_POSIX_VISIBLE])dnl
+
+if test "$cf_cv_posix_visible" = no; then
+
 cf_POSIX_C_SOURCE=ifelse([$1],,199506L,[$1])
 
 cf_save_CFLAGS="$CFLAGS"
@@ -5504,6 +5507,35 @@ if test "$cf_cv_posix_c_source" != no ; then
 	CF_ADD_CFLAGS($cf_cv_posix_c_source)
 fi
 
+fi # cf_cv_posix_visible
+
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_POSIX_VISIBLE version: 1 updated: 2018/12/31 20:46:17
+dnl ----------------
+dnl POSIX documents test-macros which an application may set before any system
+dnl headers are included to make features available.
+dnl
+dnl Some BSD platforms (originally FreeBSD, but copied by a few others)
+dnl diverged from POSIX in 2002 by setting symbols which make all of the most
+dnl recent features visible in the system header files unless the application
+dnl overrides the corresponding test-macros.  Doing that introduces portability
+dnl problems.
+dnl
+dnl This macro makes a special check for the symbols used for this, to avoid a
+dnl conflicting definition.
+AC_DEFUN([CF_POSIX_VISIBLE],
+[
+AC_CACHE_CHECK(if the POSIX test-macros are already defined,cf_cv_posix_visible,[
+AC_TRY_COMPILE([#include <stdio.h>],[
+#if defined(__POSIX_VISIBLE) && ((__POSIX_VISIBLE - 0L) > 0) \
+	&& defined(__XSI_VISIBLE) && ((__XSI_VISIBLE - 0L) > 0) \
+	&& defined(__BSD_VISIBLE) && ((__BSD_VISIBLE - 0L) > 0) \
+	&& defined(__ISO_C_VISIBLE) && ((__ISO_C_VISIBLE - 0L) > 0)
+#error conflicting symbols found
+#endif
+],[cf_cv_posix_visible=no],[cf_cv_posix_visible=yes])
+])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PREDEFINE version: 2 updated: 2010/05/26 16:44:57
@@ -8386,7 +8418,7 @@ fi
 AC_SUBST(no_x11_rgb)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 54 updated: 2018/11/07 07:43:44
+dnl CF_XOPEN_SOURCE version: 55 updated: 2018/12/31 20:46:17
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -8397,6 +8429,9 @@ dnl	$1 is the nominal value for _XOPEN_SOURCE
 dnl	$2 is the nominal value for _POSIX_C_SOURCE
 AC_DEFUN([CF_XOPEN_SOURCE],[
 AC_REQUIRE([AC_CANONICAL_HOST])
+AC_REQUIRE([CF_POSIX_VISIBLE])
+
+if test "$cf_cv_posix_visible" = no; then
 
 cf_XOPEN_SOURCE=ifelse([$1],,500,[$1])
 cf_POSIX_C_SOURCE=ifelse([$2],,199506L,[$2])
@@ -8511,4 +8546,5 @@ make an error
 		CF_TRY_XOPEN_SOURCE
 	fi
 fi
+fi # cf_cv_posix_visible
 ])

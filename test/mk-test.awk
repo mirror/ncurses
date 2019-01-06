@@ -1,6 +1,6 @@
-# $Id: mk-test.awk,v 1.21 2018/01/15 15:59:25 tom Exp $
+# $Id: mk-test.awk,v 1.22 2019/01/06 00:35:28 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -80,6 +80,8 @@ END	{
 	print	""
 	print	"sources:"
 	print	""
+	print	"check:"
+	print	"	@ echo The test-programs are interactive"
 	print	"tags:"
 	print	"	$(CTAGS) *.[ch]"
 	print	""

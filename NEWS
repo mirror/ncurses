@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3236 2018/12/29 23:45:51 tom Exp $
+-- $Id: NEWS,v 1.3242 2019/01/06 00:34:40 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190105
+	+ add dummy "check" rule in top-level and test-Makefile to simply
+	  building test-packages for Arch.
+	+ modify configure script to avoid conflict with a non-POSIX feature 
+	  that enables all parts of the system headers by default.  Some
+	  packagers have come to rely upon this behavior (FreeBSD #234049).
+	+ update config.guess, config.sub
 
 20181229
 	+ improve man/curs_mouse.3x with regard to xterm
