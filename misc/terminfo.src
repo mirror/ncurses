@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.721 $
-#	$Date: 2018/12/15 21:41:48 $
+#	$Revision: 1.726 $
+#	$Date: 2019/01/12 22:33:55 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3845,6 +3845,8 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 # PuTTY recognizes xterm's 1049 mode for switching to/from alternate screen,
 # but implements it incorrectly as mentioned here:
 #	http://stackoverflow.com/questions/24613237/terminal-retains-bg-color-after-closing-vim-using-color-scheme-and-putty-256co/37869114#37869114
+# PuTTY recognized xterm's 1006 mode since late 2015; subsequent release was
+# in 2017 (0.70) -TD
 putty|PuTTY terminal emulator,
 	am, bce, bw, ccc, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64, U8#1,
@@ -3871,11 +3873,11 @@ putty|PuTTY terminal emulator,
 	kLFT=\E[D, kRIT=\E[C, kb2=\E[G, kbs=^?, kcbt=\E[Z,
 	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
 	kdch1=\E[3~, kend=\E[4~, khome=\E[1~, kich1=\E[2~,
-	kind=\E[B, kmous=\E[M, knp=\E[6~, kpp=\E[5~, kri=\E[A,
-	kspd=^Z, nel=\r\n, oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m,
-	ri=\EM, rin=\E[%p1%dT, rmacs=^O, rmam=\E[?7l,
-	rmcup=\E[2J\E[?47l, rmir=\E[4l, rmkx=\E[?1l\E>,
-	rmpch=\E[10m, rmso=\E[27m, rmul=\E[24m,
+	kind=\E[B, knp=\E[6~, kpp=\E[5~, kri=\E[A, kspd=^Z, nel=\r\n,
+	oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
+	rin=\E[%p1%dT, rmacs=^O, rmam=\E[?7l, rmcup=\E[2J\E[?47l,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmpch=\E[10m, rmso=\E[27m,
+	rmul=\E[24m,
 	rs2=\E<\E["p\E[50;6"p\Ec\E[?3l\E]R\E[?1000l,
 	s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m, sc=\E7,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
@@ -3884,7 +3886,8 @@ putty|PuTTY terminal emulator,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
 	smir=\E[4h, smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J,
-	use=putty+fnkeys, use=vt102+enq, use=xterm+sl,
+	use=xterm+sm+1006, use=putty+fnkeys, use=vt102+enq,
+	use=xterm+sl,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
@@ -4396,7 +4399,7 @@ xterm+app|fragment with cursor keys in application mode,
 # not part of the original plan.  The changes for xterm patch #206 (2005/11/3)
 # show that kri/kind were seen much later as part of a set including kLFT/kRIT:
 #
-#   * modify  xterm-new  terminfo  entry to use capabilities for shifted       
+#   * modify  xterm-new  terminfo  entry to use capabilities for shifted
 #     scroll forward/reverse as shifted cursor up/down.
 #
 # In the 1980s when terminfo was defined, the developers made more of
@@ -4694,6 +4697,9 @@ st-direct|st with direct-color indexing,
 	use=xterm+indirect, use=st,
 vte-direct|vte with direct-color indexing,
 	use=xterm+indirect, use=vte,
+# reportedly in Apple's Mohave (fall 2018), but untested -TD
+nsterm-direct|nsterm with direct-color indexing,
+	use=xterm+indirect, use=nsterm,
 
 # As for others:
 # + Apple's Terminal.app does not recognize either form of the direct-color
@@ -5479,6 +5485,9 @@ kvt|KDE terminal,
 #    different from xterm (and vt100's).  They have the same behavior in
 #    this detail, but it is unclear which copies the other.
 #
+# Deferred update for konsole 2.10 (late 2012):
+#    add SGR 1006 mouse
+#
 # Updated for konsole 2.12.4 (late 2013):
 #    add sitm/ritm
 #
@@ -5501,8 +5510,8 @@ konsole-base|KDE console window,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
 	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[0m\017, smam=\E[?7h, vpa=\E[%i%p1%dd,
-	use=ecma+strikeout, use=ecma+italics, use=ecma+color,
-	use=xterm-r6,
+	use=xterm+sm+1006, use=ecma+strikeout,
+	use=ecma+italics, use=ecma+color, use=xterm-r6,
 
 # The keytab feature was introduced in 0.9.12 (February 2000) with "linux" and
 # "vt100" key-table files along with a compiled-in default key-table.
@@ -5859,19 +5868,19 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 # NNTP-Posting-Host: theory.tc.cornell.edu
 # Keywords: xvt, xterm, Xwindows
 # Originator: mdw@theory.TC.Cornell.EDU
-# 
+#
 # Rxvt has been uploaded to /pub/Linux/Incoming/rxvt.tar.z and
 # rxvt.README on sunsite.unc.edu.
-# 
-# Xvt is an xterm replacement which uses a little less memory, and is 
+#
+# Xvt is an xterm replacement which uses a little less memory, and is
 # suitable for use on machines with small memories. Tek4010 support
 # is removed.
-# 
-# Modifications were made by Rob Nation (nation@rocket.sanders.lockheed.com) 
+#
+# Modifications were made by Rob Nation (nation@rocket.sanders.lockheed.com)
 # to make it a little more compact, and to add and remove certain features.
-# 
-# 
-# -- 
+#
+#
+# --
 # Send submissions for comp.os.linux.announce to: linux-announce@tc.cornell.edu
 #------------------------------------------------------------------------------
 #
@@ -22290,6 +22299,26 @@ ti700|ti733|ti735|ti745|ti800|ti silent 700/733/735/745 or omni 800,
 	cols#80,
 	bel=^G, cr=\r$<162>, cub1=^H, cud1=\n, ind=\n,
 
+# Terminal entries for the Texas Instruments 703/707
+# hardcopy terminals.
+#
+# http://www.bitsavers.org/pdf/ti/terminal/silent_700/
+# Refer to:
+#	Model 707 Data Terminal User's Manual
+#
+# pages 2-7 and 2-8 say that the model 707 prints 10.2 characters per inch
+# (cpi) (80 characters per line) by default, and can be switched to/from 17.0
+# cpi using an escape sequence.  There is no 80/132-column capability in
+# terminfo (only the more general cpi which allows any value).
+ti703|ti707|Texas Instruments Silent 703/707,
+	am, hc, os, xenl,
+	cols#80, it#8,
+	bel=^G, cr=\r$<162>, cub1=^H, cud1=\n, cuf1=\s, ht=^I, ind=\n,
+	is2=\EPC\\, nel=\r\n,
+ti703-w|ti707-w|Texas Instruments Silent 703/707,
+	cols#132,
+	is2=\EPD\\, use=ti703,
+
 #
 # Texas Instruments 916 VDT 7 bit control mode
 #
@@ -25974,5 +26003,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add nsterm-build309 to replace nsterm-256color, assigning the latter
 #	  as an alias of nsterm, to make mouse work with nsterm-256color -TD
 #	+ base gnome-256color entry on "gnome", not "vte", for consistency -TD
+#
+# 2019-01-12
+#	+ add nsterm-direct -TD
+#	+ use SGR 1006 mouse for konsole-base -TD
+#	+ use SGR 1006 mouse for putty -TD
+#	+ add ti703/ti707, ti703-w/ti707-w (Robert Clausecker)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

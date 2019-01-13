@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.30 2018/07/28 21:46:48 tom Exp $
+.\" $Id: term.5,v 1.32 2019/01/12 23:11:08 tom Exp $
 .TH term 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -233,7 +233,7 @@ On occasion, 16-bit signed integers are not large enough.
 With \fBncurses\fP 6.1, a new format was introduced by making a few changes
 to the legacy format:
 .bP
-a different magic number (0542)
+a different magic number (octal 01036)
 .bP
 changing the type for the \fInumber\fP array from signed 16-bit integers
 to signed 32-bit integers.
@@ -244,6 +244,8 @@ However, that cannot provide callers with the extended numbers.
 The library uses a similar but hidden data structure \fBTERMTYPE2\fP
 to provide data for the terminfo functions.
 .SH PORTABILITY
+.SS setupterm
+.PP
 Note that it is possible for
 .B setupterm
 to expect a different set of capabilities
@@ -261,6 +263,11 @@ must be prepared for both possibilities \-
 this is why the numbers and sizes are included.
 Also, new capabilities must always be added at the end of the lists
 of boolean, number, and string capabilities.
+.SS Binary format
+.PP
+X/Open Curses does not specify a format for the terminfo database.
+UNIX System V curses used a directory-tree of binary files,
+one per terminal description.
 .PP
 Despite the consistent use of little-endian for numbers and the otherwise
 self-describing format, it is not wise to count on portability of binary
@@ -273,10 +280,30 @@ System V and XSI Curses extensions.
 See \fBterminfo\fR(\*n) for detailed
 discussion of terminfo source compatibility issues.
 .PP
+This implementation is by default compatible with the binary
+terminfo format used by Solaris curses,
+except in a few less-used details
+where it was found that the latter did not match X/Open Curses.
+The format used by the other Unix versions
+can be matched by building ncurses
+with different configuration options.
+.SS Magic codes
+.PP
+The magic number in a binary terminfo file is the first 16-bits (two bytes).
+Besides making it more reliable for the library to check that a file
+is terminfo,
+utilities such as \fBfile\fP also use that to tell what the file-format is.
+System V defined more than one magic number,
+with 0433, 0435 as screen-dumps (see \fBscr_dump\fP(5)).
+This implementation uses 01036 as a continuation of that sequence,
+but with a different high-order byte to avoid confusion.
+.SS The TERMTYPE structure
+.PP
 Direct access to the \fBTERMTYPE\fP structure is provided for legacy
 applications.
 Portable applications should use the \fBtigetflag\fP and related functions
 described in \fBcurs_terminfo\fP(3X) for reading terminal capabilities.
+.SS Mixed-case terminal names
 .PP
 A small number of terminal descriptions use uppercase characters in
 their names.
