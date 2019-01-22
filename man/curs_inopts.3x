@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.27 2018/07/28 22:20:54 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.28 2019/01/20 20:39:35 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -178,7 +178,7 @@ The default value for keypad is \fBFALSE\fP.
 .SS meta
 .PP
 Initially, whether the terminal returns 7 or 8 significant bits on
-input depends on the control mode of the tty driver [see termio(7)].
+input depends on the control mode of the tty driver [see \fBtermios\fP(3)].
 To force 8 bits to be returned, invoke \fBmeta\fR(\fIwin\fR,
 \fBTRUE\fR); this is equivalent, under POSIX, to setting the CS8 flag
 on the terminal.
@@ -225,7 +225,7 @@ the BREAK key depends on other bits in the tty driver that are not set by
 .PP
 When the \fBnoqiflush\fR routine is used, normal flush of input and
 output queues associated with the \fBINTR\fR, \fBQUIT\fR and
-\fBSUSP\fR characters will not be done [see termio(7)].
+\fBSUSP\fR characters will not be done [see \fBtermios\fP(3)].
 When
 \fBqiflush\fR is called, the queues will be flushed when these control
 characters are read.
@@ -345,4 +345,4 @@ control states that are hard to predict or understand; it is not recommended.
 \fBcurs_initscr\fR(3X),
 \fBcurs_util\fR(3X),
 \fBdefine_key\fR(3X),
-\fBtermio\fR(7)
+\fBtermios\fR(3)

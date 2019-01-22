@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2013,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.33 2017/11/24 19:26:31 tom Exp $
+ * $Id: dots.c,v 1.34 2019/01/21 14:20:18 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -143,11 +143,16 @@ main(int argc,
     int f_option = 0;
     int m_option = 2;
     int s_option = 1;
+    size_t need;
+    char *my_env;
 
     while ((x = getopt(argc, argv, "T:efm:s:")) != -1) {
 	switch (x) {
 	case 'T':
-	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    need = 6 + strlen(optarg);
+	    my_env = malloc(need);
+	    _nc_SPRINTF(my_env, _nc_SLIMIT(need) "TERM=%s", optarg);
+	    putenv(my_env);
 	    break;
 #if HAVE_USE_ENV
 	case 'e':

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.613 2018/12/29 20:07:04 tom Exp $
+ * $Id: curses.priv.h,v 1.615 2019/01/21 14:50:27 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1710,6 +1710,14 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 # endif
 #endif
 
+#ifdef __TANDEM
+#define ROOT_UID 65535
+#endif
+
+#ifndef ROOT_UID
+#define ROOT_UID 0
+#endif
+
 /*
  * Standardize/simplify common loops
  */
@@ -1766,7 +1774,8 @@ extern NCURSES_EXPORT(void)	_nc_locked_tracef (const char *, ...) GCC_PRINTFLIKE
 
 typedef void VoidFunc(void);
 
-#define TR_FUNC_BFR(max)	char tr_func_data[max][(sizeof(void *) + sizeof(void (*)(void))) * 2 + 4]
+#define TR_FUNC_LEN		((sizeof(void *) + sizeof(void (*)(void))) * 2 + 4)
+#define TR_FUNC_BFR(max)	char tr_func_data[max][TR_FUNC_LEN]
 #define TR_FUNC_ARG(num,func)	_nc_fmt_funcptr(&tr_func_data[num][0], (const char *)&(func), sizeof((func)))
 
 #define returnAttr(code)	TRACE_RETURN(code,attr_t)

@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.55 2018/07/28 22:15:59 tom Exp @
+  * @Id: curs_color.3x,v 1.61 2019/01/20 17:04:08 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -47,8 +47,9 @@
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
        <STRONG>start_color</STRONG>, <STRONG>has_colors</STRONG>, <STRONG>can_change_color</STRONG>, <STRONG>init_pair</STRONG>, <STRONG>init_color</STRONG>,
-       <STRONG>color_content</STRONG>, <STRONG>pair_content</STRONG>, <STRONG>reset_color_pairs</STRONG>, <STRONG>COLOR_PAIR</STRONG>, <STRONG>PAIR_NUMBER</STRONG>
-       - <STRONG>curses</STRONG> color manipulation routines
+       <STRONG>init_extended_pair</STRONG>, <STRONG>init_extended_color</STRONG>, <STRONG>color_content</STRONG>, <STRONG>pair_content</STRONG>,
+       <STRONG>extended_color_content</STRONG>, <STRONG>extended_pair_content</STRONG>, <STRONG>reset_color_pairs</STRONG>,
+       <STRONG>COLOR_PAIR</STRONG>, <STRONG>PAIR_NUMBER</STRONG> - <STRONG>curses</STRONG> color manipulation routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -82,26 +83,26 @@
 
 </PRE><H3><a name="h3-Overview">Overview</a></H3><PRE>
        <STRONG>curses</STRONG> supports color attributes on terminals with that capability.  To
-       use these routines <STRONG>start_color</STRONG> must  be  called,  usually  right  after
+       use  these  routines  <STRONG>start_color</STRONG>  must  be called, usually right after
        <STRONG>initscr</STRONG>.  Colors are always used in pairs (referred to as color-pairs).
-       A color-pair consists of a foreground  color  (for  characters)  and  a
-       background  color (for the blank field on which the characters are dis-
-       played).  A  programmer  initializes  a  color-pair  with  the  routine
+       A  color-pair  consists  of  a  foreground color (for characters) and a
+       background color (for the blank field on which the characters are  dis-
+       played).   A  programmer  initializes  a  color-pair  with  the routine
        <STRONG>init_pair</STRONG>.  After it has been initialized, <STRONG>COLOR_PAIR</STRONG>(<EM>n</EM>) can be used to
        convert the pair to a video attribute.
 
-       If a terminal is capable of redefining colors, the programmer  can  use
-       the  routine  <STRONG>init_color</STRONG> to change the definition of a color.  The rou-
-       tines <STRONG>has_colors</STRONG> and <STRONG>can_change_color</STRONG> return <STRONG>TRUE</STRONG> or  <STRONG>FALSE</STRONG>,  depending
+       If  a  terminal is capable of redefining colors, the programmer can use
+       the routine <STRONG>init_color</STRONG> to change the definition of a color.   The  rou-
+       tines  <STRONG>has_colors</STRONG>  and <STRONG>can_change_color</STRONG> return <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>, depending
        on whether the terminal has color capabilities and whether the program-
        mer can change the colors.  The routine <STRONG>color_content</STRONG> allows a program-
-       mer  to  extract  the  amounts of red, green, and blue components in an
-       initialized color.  The routine <STRONG>pair_content</STRONG>  allows  a  programmer  to
+       mer to extract the amounts of red, green, and  blue  components  in  an
+       initialized  color.   The  routine  <STRONG>pair_content</STRONG> allows a programmer to
        find out how a given color-pair is currently defined.
 
 
 </PRE><H3><a name="h3-Color-Rendering">Color Rendering</a></H3><PRE>
-       The  <STRONG>curses</STRONG>  library  combines these inputs to produce the actual fore-
+       The <STRONG>curses</STRONG> library combines these inputs to produce  the  actual  fore-
        ground and background colors shown on the screen:
 
        <STRONG>o</STRONG>   per-character video attributes (e.g., via <STRONG>waddch</STRONG>),
@@ -111,14 +112,14 @@
        <STRONG>o</STRONG>   the background character (e.g., <STRONG>wbkgdset</STRONG>).
 
        Per-character and window attributes are usually set by a parameter con-
-       taining  video attributes including a color pair value.  Some functions
+       taining video attributes including a color pair value.  Some  functions
        such as <STRONG>wattr_set</STRONG> use a separate parameter which is the color pair num-
        ber.
 
-       The  background  character  is  a special case: it includes a character
+       The background character is a special case:  it  includes  a  character
        value, just as if it were passed to <STRONG>waddch</STRONG>.
 
-       The <STRONG>curses</STRONG> library does the actual work of combining these color  pairs
+       The  <STRONG>curses</STRONG> library does the actual work of combining these color pairs
        in an internal function called from <STRONG>waddch</STRONG>:
 
        <STRONG>o</STRONG>   If the parameter passed to <STRONG>waddch</STRONG> is <EM>blank</EM>, and it uses the special
@@ -126,17 +127,17 @@
 
            <STRONG>o</STRONG>   <STRONG>curses</STRONG> next checks the window attribute.
 
-           <STRONG>o</STRONG>   If the window attribute does not use color pair 0, <STRONG>curses</STRONG>  uses
+           <STRONG>o</STRONG>   If  the window attribute does not use color pair 0, <STRONG>curses</STRONG> uses
                the color pair from the window attribute.
 
            <STRONG>o</STRONG>   Otherwise, <STRONG>curses</STRONG> uses the background character.
 
-       <STRONG>o</STRONG>   If  the parameter passed to <STRONG>waddch</STRONG> is <EM>not</EM> <EM>blank</EM>, or it does not use
-           the special color pair 0, <STRONG>curses</STRONG> prefers the color  pair  from  the
-           parameter,  if  it  is nonzero.  Otherwise, it tries the window at-
+       <STRONG>o</STRONG>   If the parameter passed to <STRONG>waddch</STRONG> is <EM>not</EM> <EM>blank</EM>, or it does not  use
+           the  special  color  pair 0, <STRONG>curses</STRONG> prefers the color pair from the
+           parameter, if it is nonzero.  Otherwise, it tries  the  window  at-
            tribute next, and finally the background character.
 
-       Some <STRONG>curses</STRONG> functions such as <STRONG>wprintw</STRONG> call <STRONG>waddch</STRONG>.  Those do  not  com-
+       Some  <STRONG>curses</STRONG>  functions such as <STRONG>wprintw</STRONG> call <STRONG>waddch</STRONG>.  Those do not com-
        bine its parameter with a color pair.  Consequently those calls use on-
        ly the window attribute or the background character.
 
@@ -155,68 +156,74 @@
              <STRONG>COLOR_CYAN</STRONG>
              <STRONG>COLOR_WHITE</STRONG>
 
-       Some terminals support more than the eight (8)  "ANSI"  colors.   There
+       Some  terminals  support  more than the eight (8) "ANSI" colors.  There
        are no standard names for those additional colors.
 
 
 </PRE><H2><a name="h2-VARIABLES">VARIABLES</a></H2><PRE>
 
 </PRE><H3><a name="h3-COLORS">COLORS</a></H3><PRE>
-       is  initialized by <STRONG>start_color</STRONG> to the maximum number of colors the ter-
+       is initialized by <STRONG>start_color</STRONG> to the maximum number of colors the  ter-
        minal can support.
 
 
 </PRE><H3><a name="h3-COLOR_PAIRS">COLOR_PAIRS</a></H3><PRE>
-       is initialized by <STRONG>start_color</STRONG> to the maximum number of color pairs  the
+       is  initialized by <STRONG>start_color</STRONG> to the maximum number of color pairs the
        terminal can support.
 
 
 </PRE><H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
 
 </PRE><H3><a name="h3-start_color">start_color</a></H3><PRE>
-       The  <STRONG>start_color</STRONG>  routine  requires no arguments.  It must be called if
-       the programmer wants to use colors, and before any other color  manipu-
-       lation  routine  is  called.   It is good practice to call this routine
+       The <STRONG>start_color</STRONG> routine requires no arguments.  It must  be  called  if
+       the  programmer wants to use colors, and before any other color manipu-
+       lation routine is called.  It is good practice  to  call  this  routine
        right after <STRONG>initscr</STRONG>.  <STRONG>start_color</STRONG> does this:
 
-       <STRONG>o</STRONG>   It initializes two global variables, <STRONG>COLORS</STRONG>  and  <STRONG>COLOR_PAIRS</STRONG>  (re-
-           spectively  defining  the  maximum number of colors and color-pairs
+       <STRONG>o</STRONG>   It  initializes  two  global variables, <STRONG>COLORS</STRONG> and <STRONG>COLOR_PAIRS</STRONG> (re-
+           spectively defining the maximum number of  colors  and  color-pairs
            the terminal can support).
 
-       <STRONG>o</STRONG>   It initializes the special color pair <STRONG>0</STRONG> to the  default  foreground
+       <STRONG>o</STRONG>   It  initializes  the special color pair <STRONG>0</STRONG> to the default foreground
            and background colors.  No other color pairs are initialized.
 
-       <STRONG>o</STRONG>   It  restores the colors on the terminal to the values they had when
+       <STRONG>o</STRONG>   It restores the colors on the terminal to the values they had  when
            the terminal was just turned on.
 
-       <STRONG>o</STRONG>   If the terminal supports the <STRONG>initc</STRONG>  (<STRONG>initialize_color</STRONG>)  capability,
-           <STRONG>start_color</STRONG>  initializes  its  internal table representing the red,
-           green and blue components of the color palette.
+       <STRONG>o</STRONG>   If  the  terminal supports the <STRONG>initc</STRONG> (<STRONG>initialize_color</STRONG>) capability,
+           <STRONG>start_color</STRONG> initializes its internal table  representing  the  red,
+           green, and blue components of the color palette.
 
            The components depend on whether the terminal uses CGA (aka "ANSI")
-           or  HLS  (i.e.,  the  <STRONG>hls</STRONG>  (<STRONG>hue_lightness_saturation</STRONG>) capability is
-           set).  The table  is  initialized  first  for  eight  basic  colors
-           (black,  red,  green,  yellow, blue, magenta, cyan, and white), and
-           after that (if the terminal supports more than  eight  colors)  the
-           components are initialized to <STRONG>1000</STRONG>.
+           or HLS (i.e.,  the  <STRONG>hls</STRONG>  (<STRONG>hue_lightness_saturation</STRONG>)  capability  is
+           set).   The  table  is  initialized  first  for  eight basic colors
+           (black, red, green, yellow, blue, magenta, cyan, and white),  using
+           weights that depend upon the CGA/HLS choice.  For "ANSI" colors the
+           weights are <STRONG>680</STRONG> or <STRONG>0</STRONG> depending on whether  the  corresponding  red,
+           green,  or  blue component is used or not.  That permits using <STRONG>1000</STRONG>
+           to represent bold/bright colors.  After the  initial  eight  colors
+           (if  the  terminal  supports more than eight colors) the components
+           are initialized using the same pattern, but with weights  of  <STRONG>1000</STRONG>.
+           SVr4 uses a similar scheme, but uses <STRONG>1000</STRONG> for the components of the
+           initial eight colors.
 
            <STRONG>start_color</STRONG> does not attempt to set the terminal's color palette to
            match its built-in table.  An application may use <STRONG>init_color</STRONG> to al-
            ter the internal table along with the terminal's color.
 
-       These  limits  apply  to  color values and color pairs.  Values outside
+       These limits apply to color values and  color  pairs.   Values  outside
        these limits are not legal, and may result in a runtime error:
 
-       <STRONG>o</STRONG>   <STRONG>COLORS</STRONG> corresponds to the terminal database's <STRONG>max_colors</STRONG>  capabili-
+       <STRONG>o</STRONG>   <STRONG>COLORS</STRONG>  corresponds to the terminal database's <STRONG>max_colors</STRONG> capabili-
            ty, (see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>).
 
-       <STRONG>o</STRONG>   color  values are expected to be in the range <STRONG>0</STRONG> to <STRONG>COLORS-1</STRONG>, inclu-
+       <STRONG>o</STRONG>   color values are expected to be in the range <STRONG>0</STRONG> to <STRONG>COLORS-1</STRONG>,  inclu-
            sive (including <STRONG>0</STRONG> and <STRONG>COLORS-1</STRONG>).
 
-       <STRONG>o</STRONG>   a special color value <STRONG>-1</STRONG> is used in certain extended  functions  to
-           denote the <EM>default</EM> <EM>color</EM> (see <STRONG>use_default_colors</STRONG>).
+       <STRONG>o</STRONG>   a  special  color value <STRONG>-1</STRONG> is used in certain extended functions to
+           denote the <EM>default</EM> <EM>color</EM> (see <STRONG><A HREF="default_colors.3x.html">use_default_colors(3x)</A></STRONG>).
 
-       <STRONG>o</STRONG>   <STRONG>COLOR_PAIRS</STRONG>  corresponds to the terminal database's <STRONG>max_pairs</STRONG> capa-
+       <STRONG>o</STRONG>   <STRONG>COLOR_PAIRS</STRONG> corresponds to the terminal database's <STRONG>max_pairs</STRONG>  capa-
            bility, (see <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>).
 
        <STRONG>o</STRONG>   legal color pair values are in the range <STRONG>1</STRONG> to <STRONG>COLOR_PAIRS-1</STRONG>, inclu-
@@ -225,96 +232,129 @@
        <STRONG>o</STRONG>   color pair <STRONG>0</STRONG> is special; it denotes "no color".
 
            Color pair <STRONG>0</STRONG> is assumed to be white on black, but is actually what-
-           ever the terminal implements before color is initialized.  It  can-
+           ever  the terminal implements before color is initialized.  It can-
            not be modified by the application.
 
 
 </PRE><H3><a name="h3-has_colors">has_colors</a></H3><PRE>
-       The  <STRONG>has_colors</STRONG>  routine requires no arguments.  It returns <STRONG>TRUE</STRONG> if the
+       The <STRONG>has_colors</STRONG> routine requires no arguments.  It returns <STRONG>TRUE</STRONG>  if  the
        terminal can manipulate colors; otherwise, it returns <STRONG>FALSE</STRONG>.  This rou-
        tine facilitates writing terminal-independent programs.  For example, a
-       programmer can use it to decide whether to  use  color  or  some  other
+       programmer  can  use  it  to  decide whether to use color or some other
        video attribute.
 
 
 </PRE><H3><a name="h3-can_change_color">can_change_color</a></H3><PRE>
        The <STRONG>can_change_color</STRONG> routine requires no arguments.  It returns <STRONG>TRUE</STRONG> if
-       the terminal supports colors and can change their  definitions;  other,
-       it  returns  <STRONG>FALSE</STRONG>.  This routine facilitates writing terminal-indepen-
+       the  terminal  supports colors and can change their definitions; other,
+       it returns <STRONG>FALSE</STRONG>.  This routine facilitates  writing  terminal-indepen-
        dent programs.
 
 
 </PRE><H3><a name="h3-init_pair">init_pair</a></H3><PRE>
        The <STRONG>init_pair</STRONG> routine changes the definition of a color-pair.  It takes
-       three  arguments: the number of the color-pair to be changed, the fore-
+       three arguments: the number of the color-pair to be changed, the  fore-
        ground color number, and the background color number.  For portable ap-
        plications:
 
-       <STRONG>o</STRONG>   The  first  argument  must be a legal color pair value.  If default
-           colors are used (see <STRONG>use_default_colors</STRONG>) the upper limit is adjust-
-           ed to allow for extra pairs which use a default color in foreground
-           and/or background.
+       <STRONG>o</STRONG>   The first argument must be a legal color pair  value.   If  default
+           colors are used (see <STRONG><A HREF="default_colors.3x.html">use_default_colors(3x)</A></STRONG>) the upper limit is ad-
+           justed to allow for extra pairs which use a default color in  fore-
+           ground and/or background.
 
        <STRONG>o</STRONG>   The second and third arguments must be legal color values.
 
-       If the color-pair was previously initialized, the screen  is  refreshed
-       and  all  occurrences of that color-pair are changed to the new defini-
+       If  the  color-pair was previously initialized, the screen is refreshed
+       and all occurrences of that color-pair are changed to the  new  defini-
        tion.
 
-       As an extension, ncurses allows you to set color pair  <STRONG>0</STRONG>  via  the  <STRONG>as-</STRONG>
-       <STRONG><A HREF="assume_default_colors.3x.html">sume_default_colors(3x)</A></STRONG>  routine, or to specify the use of default col-
-       ors (color number <STRONG>-1</STRONG>) if you first  invoke  the  <STRONG><A HREF="default_colors.3x.html">use_default_colors(3x)</A></STRONG>
+       As  an  extension,  ncurses  allows you to set color pair <STRONG>0</STRONG> via the <STRONG>as-</STRONG>
+       <STRONG><A HREF="assume_default_colors.3x.html">sume_default_colors(3x)</A></STRONG> routine, or to specify the use of default  col-
+       ors  (color  number  <STRONG>-1</STRONG>) if you first invoke the <STRONG><A HREF="default_colors.3x.html">use_default_colors(3x)</A></STRONG>
        routine.
 
-       The  extension  <STRONG>reset_color_pairs</STRONG>  tells  ncurses to discard all of the
-       color-pair information which was set with <STRONG>init_pair</STRONG>.  It  also  touches
-       the  current-  and  standard-screens, allowing an application to switch
-       color palettes rapidly.
+
+</PRE><H3><a name="h3-init_extended_pair">init_extended_pair</a></H3><PRE>
+       Because <STRONG>init_pair</STRONG> uses signed <STRONG>short</STRONG>s for its  parameters,  that  limits
+       color-pairs  and  color-values to 32767 on modern hardware.  The exten-
+       sion <STRONG>init_extended_pair</STRONG> uses <STRONG>int</STRONG>s for the color-pair  and  color-value,
+       allowing a larger number of colors to be supported.
 
 
 </PRE><H3><a name="h3-init_color">init_color</a></H3><PRE>
-       The <STRONG>init_color</STRONG> routine changes the definition of  a  color.   It  takes
+       The  <STRONG>init_color</STRONG>  routine  changes  the definition of a color.  It takes
        four arguments: the number of the color to be changed followed by three
        RGB values (for the amounts of red, green, and blue components).
 
-       <STRONG>o</STRONG>   The first argument must be a legal color value; default colors  are
-           not  allowed  here.   (See the section <STRONG>Colors</STRONG> for the default color
+       <STRONG>o</STRONG>   The  first argument must be a legal color value; default colors are
+           not allowed here.  (See the section <STRONG>Colors</STRONG> for  the  default  color
            index.)
 
-       <STRONG>o</STRONG>   Each of the last three arguments must be a value  in  the  range  <STRONG>0</STRONG>
+       <STRONG>o</STRONG>   Each  of  the  last  three arguments must be a value in the range <STRONG>0</STRONG>
            through <STRONG>1000</STRONG>.
 
-       When  <STRONG>init_color</STRONG>  is  used, all occurrences of that color on the screen
+       When <STRONG>init_color</STRONG> is used, all occurrences of that color  on  the  screen
        immediately change to the new definition.
+
+
+</PRE><H3><a name="h3-init_extended_color">init_extended_color</a></H3><PRE>
+       Because  <STRONG>init_color</STRONG>  uses signed <STRONG>short</STRONG>s for its parameters, that limits
+       color-values and their red, green, and blue components to 32767 on mod-
+       ern hardware.  The extension <STRONG>init_extended_color</STRONG> uses <STRONG>int</STRONG>s for the col-
+       or value and for setting the red, green, and blue components,  allowing
+       a larger number of colors to be supported.
 
 
 </PRE><H3><a name="h3-color_content">color_content</a></H3><PRE>
        The <STRONG>color_content</STRONG> routine gives programmers a way to find the intensity
-       of  the  red, green, and blue (RGB) components in a color.  It requires
-       four arguments: the color number, and three  addresses  of  <STRONG>short</STRONG>s  for
-       storing  the information about the amounts of red, green, and blue com-
+       of the red, green, and blue (RGB) components in a color.   It  requires
+       four  arguments:  the  color  number, and three addresses of <STRONG>short</STRONG>s for
+       storing the information about the amounts of red, green, and blue  com-
        ponents in the given color.
 
-       <STRONG>o</STRONG>   The first argument must be a legal color  value,  i.e.,  <STRONG>0</STRONG>  through
+       <STRONG>o</STRONG>   The  first  argument  must  be a legal color value, i.e., <STRONG>0</STRONG> through
            <STRONG>COLORS-1</STRONG>, inclusive.
 
-       <STRONG>o</STRONG>   The  values that are stored at the addresses pointed to by the last
-           three arguments are in the range  <STRONG>0</STRONG>  (no  component)  through  <STRONG>1000</STRONG>
+       <STRONG>o</STRONG>   The values that are stored at the addresses pointed to by the  last
+           three  arguments  are  in  the  range <STRONG>0</STRONG> (no component) through <STRONG>1000</STRONG>
            (maximum amount of component), inclusive.
 
 
+</PRE><H3><a name="h3-extended_color_content">extended_color_content</a></H3><PRE>
+       Because <STRONG>color_content</STRONG> uses signed <STRONG>short</STRONG>s for its parameters, that  lim-
+       its  color-values and their red, green, and blue components to 32767 on
+       modern hardware.  The extension <STRONG>extended_color_content</STRONG>  uses  <STRONG>int</STRONG>s  for
+       the  color value and for returning the red, green, and blue components,
+       allowing a larger number of colors to be supported.
+
+
 </PRE><H3><a name="h3-pair_content">pair_content</a></H3><PRE>
-       The  <STRONG>pair_content</STRONG>  routine allows programmers to find out what colors a
-       given color-pair consists of.  It requires three arguments: the  color-
+       The <STRONG>pair_content</STRONG> routine allows programmers to find out what  colors  a
+       given  color-pair consists of.  It requires three arguments: the color-
        pair number, and two addresses of <STRONG>short</STRONG>s for storing the foreground and
        the background color numbers.
 
-       <STRONG>o</STRONG>   The first argument must be a legal color value, i.e., in the  range
+       <STRONG>o</STRONG>   The  first argument must be a legal color value, i.e., in the range
            <STRONG>1</STRONG> through <STRONG>COLOR_PAIRS-1</STRONG>, inclusive.
 
-       <STRONG>o</STRONG>   The  values that are stored at the addresses pointed to by the sec-
-           ond and third arguments are in the range <STRONG>0</STRONG> through  <STRONG>COLORS</STRONG>,  inclu-
+       <STRONG>o</STRONG>   The values that are stored at the addresses pointed to by the  sec-
+           ond  and  third arguments are in the range <STRONG>0</STRONG> through <STRONG>COLORS</STRONG>, inclu-
            sive.
+
+
+</PRE><H3><a name="h3-extended_pair_content">extended_pair_content</a></H3><PRE>
+       Because <STRONG>pair_content</STRONG> uses signed <STRONG>short</STRONG>s for its parameters, that limits
+       color-pair and color-values to 32767 on modern hardware.  The extension
+       <STRONG>extended_pair_content</STRONG> uses <STRONG>int</STRONG>s for the color pair  and  for  returning
+       the  foreground and background colors, allowing a larger number of col-
+       ors to be supported.
+
+
+</PRE><H3><a name="h3-reset_color_pairs">reset_color_pairs</a></H3><PRE>
+       The extension <STRONG>reset_color_pairs</STRONG> tells ncurses to  discard  all  of  the
+       color-pair  information  which was set with <STRONG>init_pair</STRONG>.  It also touches
+       the current- and standard-screens, allowing an  application  to  switch
+       color palettes rapidly.
 
 
 </PRE><H3><a name="h3-PAIR_NUMBER">PAIR_NUMBER</a></H3><PRE>
@@ -337,13 +377,29 @@
        specifies  only "an integer value other than <STRONG>ERR</STRONG>") upon successful com-
        pletion.
 
-       X/Open defines no error conditions.  This  implementation  will  return
-       <STRONG>ERR</STRONG>  on  attempts  to  use color values outside the range <STRONG>0</STRONG> to <STRONG>COLORS</STRONG>-1
-       (except for the default colors extension), or use color  pairs  outside
-       the  range <STRONG>0</STRONG> to <STRONG>COLOR_PAIRS-1</STRONG>.  Color values used in <STRONG>init_color</STRONG> must be
-       in the range <STRONG>0</STRONG> to <STRONG>1000</STRONG>.  An error is returned from all functions if the
-       terminal has not been initialized.  An error is returned from secondary
-       functions such as <STRONG>init_pair</STRONG> if <STRONG>start_color</STRONG> was not called.
+       X/Open defines no error conditions.  SVr4 does document some error con-
+       ditions which apply in general:
+
+       <STRONG>o</STRONG>   This implementation will return <STRONG>ERR</STRONG> on attempts to use color values
+           outside the range <STRONG>0</STRONG> to <STRONG>COLORS</STRONG>-1 (except for the default colors  ex-
+           tension), or use color pairs outside the range <STRONG>0</STRONG> to <STRONG>COLOR_PAIRS-1</STRONG>.
+
+           Color values used in <STRONG>init_color</STRONG> must be in the range <STRONG>0</STRONG> to <STRONG>1000</STRONG>.
+
+           An  error  is  returned  from all functions if the terminal has not
+           been initialized.
+
+           An error is returned from secondary functions such as <STRONG>init_pair</STRONG>  if
+           <STRONG>start_color</STRONG> was not called.
+
+       <STRONG>o</STRONG>   SVr4  does much the same, except that it returns <STRONG>ERR</STRONG> from <STRONG>pair_con-</STRONG>
+           <STRONG>tent</STRONG> if the pair was not initialized using <STRONG>init_pairs</STRONG>  and  it  re-
+           turns  <STRONG>ERR</STRONG>  from  <STRONG>color_content</STRONG>  if  the  terminal does not support
+           changing colors.
+
+           This implementation does not return <STRONG>ERR</STRONG> for either case.
+
+       Specific functions make additional checks:
 
           <STRONG>init_color</STRONG>
                returns an error if the terminal does not support this feature,
@@ -440,9 +496,14 @@
 <li><a href="#h3-has_colors">has_colors</a></li>
 <li><a href="#h3-can_change_color">can_change_color</a></li>
 <li><a href="#h3-init_pair">init_pair</a></li>
+<li><a href="#h3-init_extended_pair">init_extended_pair</a></li>
 <li><a href="#h3-init_color">init_color</a></li>
+<li><a href="#h3-init_extended_color">init_extended_color</a></li>
 <li><a href="#h3-color_content">color_content</a></li>
+<li><a href="#h3-extended_color_content">extended_color_content</a></li>
 <li><a href="#h3-pair_content">pair_content</a></li>
+<li><a href="#h3-extended_pair_content">extended_pair_content</a></li>
+<li><a href="#h3-reset_color_pairs">reset_color_pairs</a></li>
 <li><a href="#h3-PAIR_NUMBER">PAIR_NUMBER</a></li>
 <li><a href="#h3-COLOR_PAIR">COLOR_PAIR</a></li>
 </ul>

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_error.c,v 1.37 2016/09/10 20:26:29 tom Exp $")
+MODULE_ID("$Id: comp_error.c,v 1.39 2019/01/20 02:31:22 tom Exp $")
 
 NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings = FALSE;
 NCURSES_EXPORT_VAR(int) _nc_curr_line = 0; /* current line # in input */
@@ -105,7 +105,7 @@ where_is_problem(void)
 }
 
 NCURSES_EXPORT(void)
-_nc_warning(const char *const fmt,...)
+_nc_warning(const char *const fmt, ...)
 {
     va_list argp;
 
@@ -120,7 +120,7 @@ _nc_warning(const char *const fmt,...)
 }
 
 NCURSES_EXPORT(void)
-_nc_err_abort(const char *const fmt,...)
+_nc_err_abort(const char *const fmt, ...)
 {
     va_list argp;
 
@@ -133,7 +133,7 @@ _nc_err_abort(const char *const fmt,...)
 }
 
 NCURSES_EXPORT(void)
-_nc_syserr_abort(const char *const fmt,...)
+_nc_syserr_abort(const char *const fmt, ...)
 {
     va_list argp;
 
@@ -143,16 +143,18 @@ _nc_syserr_abort(const char *const fmt,...)
     fprintf(stderr, "\n");
     va_end(argp);
 
+#if defined(TRACE) || !defined(NDEBUG)
     /* If we're debugging, try to show where the problem occurred - this
      * will dump core.
      */
-#if defined(TRACE) || !defined(NDEBUG)
-    abort();
-#else
+#ifndef USE_ROOT_ENVIRON
+    if (getuid() != ROOT_UID)
+#endif
+	abort();
+#endif
     /* Dumping core in production code is not a good idea.
      */
     exit(EXIT_FAILURE);
-#endif
 }
 
 #if NO_LEAKS

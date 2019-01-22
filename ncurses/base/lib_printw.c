@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,10 +39,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_printw.c,v 1.26 2018/06/09 20:18:24 tom Exp $")
+MODULE_ID("$Id: lib_printw.c,v 1.27 2019/01/19 15:46:25 tom Exp $")
 
 NCURSES_EXPORT(int)
-printw(const char *fmt,...)
+printw(const char *fmt, ...)
 {
     va_list argp;
     int code;
@@ -63,7 +63,7 @@ printw(const char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-wprintw(WINDOW *win, const char *fmt,...)
+wprintw(WINDOW *win, const char *fmt, ...)
 {
     va_list argp;
     int code;
@@ -84,7 +84,7 @@ wprintw(WINDOW *win, const char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvprintw(int y, int x, const char *fmt,...)
+mvprintw(int y, int x, const char *fmt, ...)
 {
     int code;
 
@@ -107,7 +107,7 @@ mvprintw(int y, int x, const char *fmt,...)
 }
 
 NCURSES_EXPORT(int)
-mvwprintw(WINDOW *win, int y, int x, const char *fmt,...)
+mvwprintw(WINDOW *win, int y, int x, const char *fmt, ...)
 {
     int code;
 

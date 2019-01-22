@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.17 2018/06/24 00:06:37 tom Exp $
+ * $Id: dots_termcap.c,v 1.18 2019/01/21 14:20:18 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -213,11 +213,16 @@ main(int argc, char *argv[])
     char buffer[1024];
     char area[1024];
     char *name;
+    size_t need;
+    char *my_env;
 
     while ((x = getopt(argc, argv, "T:em:s:")) != -1) {
 	switch (x) {
 	case 'T':
-	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    need = 6 + strlen(optarg);
+	    my_env = malloc(need);
+	    _nc_SPRINTF(my_env, _nc_SLIMIT(need) "TERM=%s", optarg);
+	    putenv(my_env);
 	    break;
 	case 'e':
 	    e_option = 1;

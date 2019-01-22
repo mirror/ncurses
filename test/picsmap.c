@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2017-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.123 2018/06/16 22:55:45 tom Exp $
+ * $Id: picsmap.c,v 1.127 2019/01/21 19:45:57 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -113,10 +113,10 @@ typedef struct {
 #define debugmsg2 if (debugging) logmsg2
 
 static void cleanup(int) GCC_NORETURN;
-static void giveup(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
-static void logmsg(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
-static void logmsg2(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
-static void warning(const char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static void giveup(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
+static void logmsg(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
+static void logmsg2(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
+static void warning(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
 static int gather_c_values(int);
 
 static FILE *logfp = 0;
@@ -137,7 +137,7 @@ static FG_NODE *reading_ncols;
 static void *reading_ntree;
 #endif
 
-#if HAVE_ALLOC_PAIR && HAVE_INIT_EXTENDED_COLOR
+#if HAVE_ALLOC_PAIR && USE_EXTENDED_COLOR
 #define USE_EXTENDED_COLORS 1
 static bool use_extended_pairs = FALSE;
 static bool use_extended_colors = FALSE;
@@ -146,7 +146,7 @@ static bool use_extended_colors = FALSE;
 #endif
 
 static void
-logmsg(const char *fmt,...)
+logmsg(const char *fmt, ...)
 {
     if (logfp != 0) {
 	va_list ap;
@@ -159,7 +159,7 @@ logmsg(const char *fmt,...)
 }
 
 static void
-logmsg2(const char *fmt,...)
+logmsg2(const char *fmt, ...)
 {
     if (logfp != 0) {
 	va_list ap;
@@ -207,7 +207,7 @@ failed(const char *msg)
 }
 
 static void
-warning(const char *fmt,...)
+warning(const char *fmt, ...)
 {
     if (logfp != 0) {
 	va_list ap;
@@ -533,7 +533,7 @@ usage(void)
 }
 
 static void
-giveup(const char *fmt,...)
+giveup(const char *fmt, ...)
 {
     va_list ap;
 
@@ -567,7 +567,9 @@ read_palette(const char *filename)
 {
     static const char *data_dir = DATA_DIR;
     char **result = 0;
-    char *full_name = malloc(strlen(data_dir) + 20 + strlen(filename));
+    size_t last = strlen(filename);
+    size_t need = (strlen(data_dir) + 20 + last);
+    char *full_name = malloc(need);
     char *s;
     struct stat sb;
 
@@ -578,14 +580,16 @@ read_palette(const char *filename)
 	    *(s = full_name) = '\0';
 	    if (tries & 1) {
 		if (strchr(filename, '/') == 0) {
-		    sprintf(full_name, "%s/", data_dir);
+		    _nc_SPRINTF(full_name, _nc_SLIMIT(need) "%s/", data_dir);
 		} else {
 		    continue;
 		}
 	    }
 	    s += strlen(s);
+	    if (((size_t) (s - full_name) + last + 1) >= need)
+		continue;
 
-	    strcpy(s, filename);
+	    _nc_STRCAT(full_name, filename, need);
 	    if (tries & 4) {
 		char *t = s;
 		char *tc;
@@ -606,7 +610,8 @@ read_palette(const char *filename)
 		}
 		if (found && (t != s)
 		    && (strncmp) (s, "xterm", (size_t) (t - s))) {
-		    sprintf(s, "xterm%s", filename + (t - s));
+		    _nc_SPRINTF(s, _nc_SLIMIT(need - (size_t) (s - full_name))
+				"xterm%s", filename + (t - s));
 		} else {
 		    continue;
 		}
@@ -616,7 +621,7 @@ read_palette(const char *filename)
 	    if (tries & 2) {
 		int len = (int) strlen(filename);
 		if (len <= 4 || strcmp(filename + len - 4, ".dat")) {
-		    strcpy(s, ".dat");
+		    _nc_STRCAT(full_name, ".dat", need);
 		} else {
 		    continue;
 		}
@@ -769,7 +774,7 @@ bytes_of(int value)
     return value;
 }
 
-static int match_c(const char *, const char *,...) GCC_SCANFLIKE(2,3);
+static int match_c(const char *, const char *, ...) GCC_SCANFLIKE(2,3);
 
 static char *
 skip_s(char *s)
@@ -797,7 +802,7 @@ skip_word(char *s)
 }
 
 static int
-match_c(const char *source, const char *pattern,...)
+match_c(const char *source, const char *pattern, ...)
 {
     int limit = (int) strlen(source);
     const char *last_s = source + limit;
@@ -1265,7 +1270,8 @@ parse_xpm(char **data)
 static PICS_HEAD *
 parse_img(const char *filename)
 {
-    char *cmd = malloc(strlen(filename) + 256);
+    size_t need = strlen(filename) + 256;
+    char *cmd = malloc(need);
     FILE *pp;
     char buffer[BUFSIZ];
     char dummy[BUFSIZ];
@@ -1275,9 +1281,9 @@ parse_img(const char *filename)
     int pic_y = 0;
     int width = in_curses ? COLS : 80;
 
-    sprintf(cmd, "identify \"%s\"", filename);
+    _nc_SPRINTF(cmd, _nc_SLIMIT(need) "identify \"%s\"", filename);
     if (quiet)
-	strcat(cmd, " 2>/dev/null");
+	_nc_STRCAT(cmd, " 2>/dev/null", need);
 
     logmsg("...opening pipe to %s", cmd);
 
@@ -1303,11 +1309,12 @@ parse_img(const char *filename)
     if (pic_x <= 0 || pic_y <= 0)
 	goto finish;
 
-    sprintf(cmd, "convert " "-resize %dx%d\\! " "-thumbnail %dx \"%s\" "
-	    "-define txt:compliance=SVG txt:-",
-	    pic_x, pic_y, width, filename);
+    _nc_SPRINTF(cmd, _nc_SLIMIT(need)
+		"convert " "-resize %dx%d\\! " "-thumbnail %dx \"%s\" "
+		"-define txt:compliance=SVG txt:-",
+		pic_x, pic_y, width, filename);
     if (quiet)
-	strcat(cmd, " 2>/dev/null");
+	_nc_STRCAT(cmd, " 2>/dev/null", need);
 
     logmsg("...opening pipe to %s", cmd);
     if ((pp = popen(cmd, "r")) != 0) {
@@ -1596,22 +1603,26 @@ report_colors(PICS_HEAD * pics)
 	    *s = '\0';
 	    for (k = 0; k < wide; ++k) {
 		int n = j + (k * high);
+		size_t want = (sizeof(buffer) - (size_t) (s - buffer));
+		if (want < 100)
+		    break;
 		if (n >= pics->colors)
 		    break;
 		if (k) {
 		    *s++ = ' ';
 		    if (digits < 8) {
-			sprintf(s, "%*s", 8 - digits, " ");
+			_nc_SPRINTF(s, _nc_SLIMIT(want) "%*s", 8 - digits,
+				    " ");
 			s += strlen(s);
 		    }
 		}
 		if (pics->fgcol[n].fgcol >= 0) {
-		    sprintf(s, "%3d #%06X %*d", n,
-			    pics->fgcol[n].fgcol,
-			    digits, pics->fgcol[n].count);
+		    _nc_SPRINTF(s, _nc_SLIMIT(want) "%3d #%06X %*d", n,
+				pics->fgcol[n].fgcol,
+				digits, pics->fgcol[n].count);
 		} else {
-		    sprintf(s, "%3d (empty) %*d", n,
-			    digits, pics->fgcol[n].count);
+		    _nc_SPRINTF(s, _nc_SLIMIT(want) "%3d (empty) %*d", n,
+				digits, pics->fgcol[n].count);
 		}
 		s += strlen(s);
 		if ((s - buffer) > 100)

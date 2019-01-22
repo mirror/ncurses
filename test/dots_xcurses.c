@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2017-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.16 2018/06/23 21:35:06 tom Exp $
+ * $Id: dots_xcurses.c,v 1.17 2019/01/21 14:20:18 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -150,11 +150,16 @@ main(int argc, char *argv[])
 #endif
     int m_option = 2;
     int s_option = 1;
+    size_t need;
+    char *my_env;
 
     while ((ch = getopt(argc, argv, "T:dem:s:x")) != -1) {
 	switch (ch) {
 	case 'T':
-	    putenv(strcat(strcpy(malloc(6 + strlen(optarg)), "TERM="), optarg));
+	    need = 6 + strlen(optarg);
+	    my_env = malloc(need);
+	    _nc_SPRINTF(my_env, _nc_SLIMIT(need) "TERM=%s", optarg);
+	    putenv(my_env);
 	    break;
 #if HAVE_USE_DEFAULT_COLORS
 	case 'd':

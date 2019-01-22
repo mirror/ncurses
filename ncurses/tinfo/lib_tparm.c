@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.106 2018/07/01 15:23:27 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.107 2019/01/19 15:46:25 tom Exp $")
 
 /*
  *	char *
@@ -840,7 +840,7 @@ tparam_internal(int use_TPARM_ARG, const char *string, va_list ap)
 #endif
 
 NCURSES_EXPORT(char *)
-tparm_varargs(const char *string,...)
+tparm_varargs(const char *string, ...)
 {
     va_list ap;
     char *result;
@@ -873,7 +873,7 @@ tparm_proto(const char *string,
 #endif /* NCURSES_TPARM_VARARGS */
 
 NCURSES_EXPORT(char *)
-tiparm(const char *string,...)
+tiparm(const char *string, ...)
 {
     va_list ap;
     char *result;

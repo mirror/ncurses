@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.127 2018/09/08 19:03:39 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.128 2019/01/20 01:25:02 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -866,7 +866,7 @@ _nc_Position_Form_Cursor(FORM *form)
 |                    E_BAD_ARGUMENT    - invalid form pointer
 |                    E_SYSTEM_ERROR    - general error
 +--------------------------------------------------------------------------*/
-static bool move_after_insert = true;
+static bool move_after_insert = TRUE;
 NCURSES_EXPORT(int)
 _nc_Refresh_Current_Field(FORM *form)
 {
@@ -4359,7 +4359,7 @@ form_driver(FORM *form, int c)
   const Binding_Info *BI = (Binding_Info *) 0;
   int res = E_UNKNOWN_COMMAND;
 
-  move_after_insert = true;
+  move_after_insert = TRUE;
 
   T((T_CALLED("form_driver(%p,%d)"), (void *)form, c));
 

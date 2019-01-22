@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.48 2018/11/24 21:29:46 tom Exp $
+ * $Id: movewindow.c,v 1.50 2019/01/21 20:11:22 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -54,7 +54,9 @@ TODO:
 #undef derwin
 #endif
 
-#if defined(NCURSES_VERSION) || defined(PDCURSES)
+#if defined(NCURSES_CONST)
+#define CONST_FMT NCURSES_CONST
+#elif defined(PDCURSES)
 #define CONST_FMT const
 #else
 #define CONST_FMT		/* nothing */
@@ -76,8 +78,8 @@ typedef struct {
     WINDOW *child;		/* the actual value */
 } FRAME;
 
-static void head_line(CONST_FMT char *fmt,...) GCC_PRINTFLIKE(1, 2);
-static void tail_line(CONST_FMT char *fmt,...) GCC_PRINTFLIKE(1, 2);
+static void head_line(CONST_FMT char *fmt, ...) GCC_PRINTFLIKE(1, 2);
+static void tail_line(CONST_FMT char *fmt, ...) GCC_PRINTFLIKE(1, 2);
 
 static unsigned num_windows;
 static FRAME *all_windows;
@@ -116,7 +118,7 @@ message(int lineno, CONST_FMT char *fmt, va_list argp)
 }
 
 static void
-head_line(CONST_FMT char *fmt,...)
+head_line(CONST_FMT char *fmt, ...)
 {
     va_list argp;
 
@@ -126,7 +128,7 @@ head_line(CONST_FMT char *fmt,...)
 }
 
 static void
-tail_line(CONST_FMT char *fmt,...)
+tail_line(CONST_FMT char *fmt, ...)
 {
     va_list argp;
 
@@ -664,8 +666,10 @@ show_help(WINDOW *current)
     size_t n;
 
     for (n = 0; n < SIZEOF(help); ++n) {
-	msgs[n] = typeMalloc(char, 21 + strlen(help[n].msg));
-	sprintf(msgs[n], "%-20s%s", keyname(help[n].key), help[n].msg);
+	size_t need = (21 + strlen(help[n].msg));
+	msgs[n] = typeMalloc(char, need);
+	_nc_SPRINTF(msgs[n], _nc_SLIMIT(need)
+		    "%-20s%s", keyname(help[n].key), help[n].msg);
     }
     popup_msg2(current, msgs);
     for (n = 0; n < SIZEOF(help); ++n) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.511 2018/12/15 20:34:01 tom Exp $
+$Id: ncurses.c,v 1.514 2019/01/21 20:15:28 tom Exp $
 
 ***************************************************************************/
 
@@ -2497,12 +2497,12 @@ color_test(bool recur GCC_UNUSED)
 
 #if USE_WIDEC_SUPPORT
 
-#if HAVE_INIT_EXTENDED_COLOR
+#if USE_EXTENDED_COLOR
 #define InitExtendedPair(p,f,g) init_extended_pair((p),(f),(g))
 #define ExtendedColorSet(p)     color_set((NCURSES_PAIRS_T) (p), &(p))
 #define EXTENDED_PAIRS_T int
 #else
-#define InitExtendedPair(p,f,g) init_pair((NCURSES_PAIRS_T) (p),(f),(g))
+#define InitExtendedPair(p,f,g) init_pair((NCURSES_PAIRS_T) (p),(NCURSES_COLOR_T)(f),(NCURSES_COLOR_T)(g))
 #define ExtendedColorSet(p)     color_set((NCURSES_PAIRS_T) (p), NULL)
 #define EXTENDED_PAIRS_T NCURSES_PAIRS_T
 #endif
@@ -4367,7 +4367,7 @@ x_acs_test(bool recur GCC_UNUSED)
     void (*last_show_wacs) (int, attr_t, NCURSES_PAIRS_T) = 0;
     W_ATTR_TBL my_list[SIZEOF(w_attrs_to_test)];
     unsigned my_size = init_w_attr_list(my_list, term_attrs());
-    char at_page[5];
+    char at_page[20];
     bool pending_code = FALSE;
 
     at_page[0] = '\0';
@@ -4405,9 +4405,9 @@ x_acs_test(bool recur GCC_UNUSED)
 	case '@':
 	    pending_code = !pending_code;
 	    if (pending_code) {
-		sprintf(at_page, "%02x", digit);
+		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%02x", digit);
 	    } else if (at_page[0] != '\0') {
-		sscanf(at_page, "%x", &digit);
+		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%x", digit);
 	    }
 	    break;
 	default:
@@ -4430,11 +4430,12 @@ x_acs_test(bool recur GCC_UNUSED)
 		last_show_wacs = 0;
 	    } else if (c == '+') {
 		++digit;
-		sprintf(at_page, "%02x", digit);
+		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%02x", digit);
 		last_show_wacs = 0;
 	    } else if (c == '-' && digit > 0) {
 		--digit;
-		sprintf(at_page, "%02x", UChar(digit));
+		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%02x",
+			    UChar(digit));
 		last_show_wacs = 0;
 	    } else if (c == '>' && repeat < (COLS / 4)) {
 		++repeat;

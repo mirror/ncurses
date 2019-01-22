@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.150 2018/11/17 21:40:10 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.152 2019/01/21 14:56:40 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -57,9 +57,9 @@ convert_16bits(char *buf, NCURSES_INT2 *Numbers, int count)
     int i;
     size_t j;
     size_t size = SIZEOF_SHORT;
-    unsigned char ch;
     for (i = 0; i < count; i++) {
 	unsigned mask = 0xff;
+	unsigned char ch = 0;
 	Numbers[i] = 0;
 	for (j = 0; j < size; ++j) {
 	    ch = UChar(*buf++);
@@ -755,7 +755,8 @@ _nc_read_tic_entry(char *filename,
 	&& (code = _nc_read_termtype(tp, buffer, used)) == TGETENT_YES
 	&& (code = _nc_name_match(tp->term_names, name, "|")) == TGETENT_YES) {
 	TR(TRACE_DATABASE, ("loaded quick-dump for %s", name));
-	strcpy(filename, "$TERMINFO");	/* shorten name shown by infocmp */
+	/* shorten name shown by infocmp */
+	_nc_STRCPY(filename, "$TERMINFO", limit);
     } else
 #if USE_HASHED_DB
 	if (make_db_filename(filename, limit, path)

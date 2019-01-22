@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.672 2018/11/24 22:37:01 tom Exp $
+dnl $Id: configure.in,v 1.674 2019/01/20 12:05:04 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.672 $)
+AC_REVISION($Revision: 1.674 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2313,13 +2313,16 @@ esac
 # substitute into misc/Makefile to suppress
 # (un)install.data from the
 # (un)install rules.
-if test "x$cf_with_db_install" = "xno"; then
+if test "x$cf_with_db_install" = "xno" || test "x$TERMINFO_SRC" = "xno"; then
+	MAKE_DATABASE="#"
 	MISC_INSTALL_DATA=
 	MISC_UNINSTALL_DATA=
 else
+	MAKE_DATABASE=""
 	MISC_INSTALL_DATA=install.data
 	MISC_UNINSTALL_DATA=uninstall.data
 fi
+AC_SUBST(MAKE_DATABASE)
 AC_SUBST(MISC_INSTALL_DATA)
 AC_SUBST(MISC_UNINSTALL_DATA)
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.54 2018/12/29 17:25:56 tom Exp $
+ * $Id: savescreen.c,v 1.55 2019/01/20 15:59:28 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -387,7 +387,7 @@ main(int argc, char *argv[])
 			while (col++ < cols) {
 			    int color = (((r * (g_max + 1)) + g) * (b_max + 1)
 					 + b + MAX_ANSI);
-#if HAVE_INIT_EXTENDED_COLOR
+#if USE_EXTENDED_COLOR
 			    init_extended_pair(pair, color, color);
 #else
 			    init_pair(pair, color, color);

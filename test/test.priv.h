@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.171 2018/12/29 21:44:07 tom Exp $ */
+/* $Id: test.priv.h,v 1.176 2019/01/21 22:42:35 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -453,6 +453,12 @@ extern int optind;
 #define getnstr(s,n) getstr(s)
 #endif
 
+#if HAVE_INIT_EXTENDED_COLOR
+#define USE_EXTENDED_COLOR 1
+#else
+#define USE_EXTENDED_COLOR 0
+#endif
+
 #ifndef USE_SOFTKEYS
 #if HAVE_SLK_INIT
 #define USE_SOFTKEYS 1
@@ -508,9 +514,9 @@ extern int optind;
 
 /* workaround, to build against NetBSD's variant of the form library */
 #ifdef HAVE_NETBSD_FORM_H
-#define form_getyx(form, y, x) y = current_field(form)->cursor_ypos, x = current_field(form)->cursor_xpos
+#define form_getyx(form, y, x) y = (int)current_field(form)->cursor_ypos, x = (int)current_field(form)->cursor_xpos
 #else
-#define form_getyx(form, y, x) y = (form)->currow, x = (form)->curcol
+#define form_getyx(form, y, x) y = (int)(form)->currow, x = (int)(form)->curcol
 #endif
 
 /* workaround, to build against NetBSD's variant of the form library */
@@ -680,6 +686,15 @@ extern int optind;
 
 #ifndef USE_STRING_HACKS
 #define USE_STRING_HACKS 0
+#endif
+
+#ifndef NCURSES_CAST
+#ifdef __cplusplus
+extern "C" {
+#define NCURSES_CAST(type,value) static_cast<type>(value)
+#else
+#define NCURSES_CAST(type,value) (type)(value)
+#endif
 #endif
 
 #if USE_STRING_HACKS && HAVE_STRLCAT
@@ -1010,9 +1025,25 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #endif
 
 /*
+ * ncurses provides a termcap interface; a few packagers replace or displace
+ * its header file with an incompatible one.  The demo_termcap program uses
+ * the ncurses file, if available.
+ */
+#ifdef NCURSES_VERSION
+#ifndef HAVE_NCURSES_TERMCAP_H
+#define HAVE_NCURSES_TERMCAP_H 0
+#endif
+#ifndef HAVE_TERMCAP_H
+#define HAVE_TERMCAP_H 0
+#endif
+#endif
+
+/*
  * ncurses uses const in some places where X/Open does (or did) not allow.
  */
-#if defined(NCURSES_VERSION) || defined(PDCURSES)
+#if defined(NCURSES_CONST)
+#define CONST_MENUS NCURSES_CONST
+#elif defined(PDCURSES)
 #define CONST_MENUS const
 #else
 #define CONST_MENUS		/* nothing */

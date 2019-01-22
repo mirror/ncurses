@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.170 2018/12/23 00:37:35 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.171 2019/01/21 15:11:51 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -530,7 +530,7 @@ fill_spaces(const char *src)
 	for (s = d = 0; src[s] != '\0'; ++s) {
 	    if (src[s] == ' ') {
 		if (pass) {
-		    strcpy(&result[d], fill);
+		    _nc_STRCPY(&result[d], fill, need + 1 - d);
 		    d += (int) size;
 		} else {
 		    need += size;

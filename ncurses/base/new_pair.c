@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2017-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -60,7 +60,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.17 2018/12/29 21:27:21 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.18 2019/01/21 14:54:47 tom Exp $")
 
 #if NCURSES_EXT_COLORS
 
@@ -102,13 +102,17 @@ dumpit(SCREEN *sp, int pair, const char *tag)
     char bigbuf[256 * 20];
     char *p = bigbuf;
     int n;
-    sprintf(p, "%s", tag);
-    p += strlen(p);
+    size_t have = sizeof(bigbuf);
+
+    _nc_STRCPY(p, tag, have);
     for (n = 0; n < sp->_pair_limit; ++n) {
 	if (list[n].mode != cpFREE) {
-	    sprintf(p, " %d%c(%d,%d)",
-		    n, n == pair ? '@' : ':', list[n].next, list[n].prev);
 	    p += strlen(p);
+	    if ((size_t) (p - bigbuf) + 50 > have)
+		break;
+	    _nc_SPRINTF(p, _nc_SLIMIT(have - (p - bigbuf))
+			" %d%c(%d,%d)",
+			n, n == pair ? '@' : ':', list[n].next, list[n].prev);
 	}
     }
     T(("(%d/%d) %ld - %s",

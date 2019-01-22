@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.150 2018/06/17 01:22:00 tom Exp $
+dnl $Id: configure.in,v 1.151 2019/01/21 22:50:54 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -258,12 +258,37 @@ tsearch \
 AC_CACHE_CHECK(if we can use termcap.h,cf_cv_have_termcap_h,[
 	AC_TRY_COMPILE([
 #include <curses.h>
+#ifdef NCURSES_VERSION
+#undef NCURSES_VERSION
+#endif
 #include <termcap.h>
+#ifndef NCURSES_VERSION
+#error wrong header
+#endif
 ],
 	[return 0;],
 	[cf_cv_have_termcap_h=yes],
 	[cf_cv_have_termcap_h=no])])
-test "x$cf_cv_have_termcap_h" = xyes && AC_DEFINE(HAVE_TERMCAP_H)
+if test "x$cf_cv_have_termcap_h" = xyes
+then
+	AC_DEFINE(HAVE_TERMCAP_H)
+else
+AC_CACHE_CHECK(if we can use ncurses/termcap.h,cf_cv_have_ncurses_termcap_h,[
+	AC_TRY_COMPILE([
+#include <ncurses/curses.h>
+#ifdef NCURSES_VERSION
+#undef NCURSES_VERSION
+#endif
+#include <ncurses/termcap.h>
+#ifndef NCURSES_VERSION
+#error wrong header
+#endif
+],
+	[return 0;],
+	[cf_cv_have_ncurses_termcap_h=yes],
+	[cf_cv_have_ncurses_termcap_h=no])])
+test "x$cf_cv_have_ncurses_termcap_h" = xyes && AC_DEFINE(HAVE_NCURSES_TERMCAP_H)
+fi
 
 if test "x$ac_cv_func_getopt" = xno; then
 	AC_MSG_ERROR(getopt is required for building programs)

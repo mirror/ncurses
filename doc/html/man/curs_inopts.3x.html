@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.27 2018/07/28 22:20:54 tom Exp @
+  * @Id: curs_inopts.3x,v 1.28 2019/01/20 20:39:35 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -141,7 +141,7 @@
 
 </PRE><H3><a name="h3-meta">meta</a></H3><PRE>
        Initially,  whether the terminal returns 7 or 8 significant bits on in-
-       put depends on the control mode of the tty driver [see <STRONG>termio(7)</STRONG>].   To
+       put depends on the control mode of the tty driver [see <STRONG>termios(3)</STRONG>].  To
        force  8  bits  to be returned, invoke <STRONG>meta</STRONG>(<EM>win</EM>, <STRONG>TRUE</STRONG>); this is equiva-
        lent, under POSIX, to setting the CS8 flag on the terminal.  To force 7
        bits to be returned, invoke <STRONG>meta</STRONG>(<EM>win</EM>, <STRONG>FALSE</STRONG>); this is equivalent, under
@@ -177,7 +177,7 @@
 </PRE><H3><a name="h3-noqiflush">noqiflush</a></H3><PRE>
        When the <STRONG>noqiflush</STRONG> routine is used, normal flush of  input  and  output
        queues  associated  with the <STRONG>INTR</STRONG>, <STRONG>QUIT</STRONG> and <STRONG>SUSP</STRONG> characters will not be
-       done [see <STRONG>termio(7)</STRONG>].  When <STRONG>qiflush</STRONG>  is  called,  the  queues  will  be
+       done [see <STRONG>termios(3)</STRONG>].  When <STRONG>qiflush</STRONG> is  called,  the  queues  will  be
        flushed  when  these control characters are read.  You may want to call
        <STRONG>noqiflush</STRONG> in a signal handler if you want output to continue as  though
        the interrupt had not occurred, after the handler exits.
@@ -274,7 +274,7 @@
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,   <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>,  <STRONG>de-</STRONG>
-       <STRONG><A HREF="define_key.3x.html">fine_key(3x)</A></STRONG>, <STRONG>termio(7)</STRONG>
+       <STRONG><A HREF="define_key.3x.html">fine_key(3x)</A></STRONG>, <STRONG>termios(3)</STRONG>
 
 
 

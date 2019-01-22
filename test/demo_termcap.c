@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.56 2017/12/26 22:41:47 tom Exp $
+ * $Id: demo_termcap.c,v 1.57 2019/01/21 22:50:46 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -46,8 +46,12 @@
 #endif
 #endif
 
-#if defined(NCURSES_VERSION) && HAVE_TERMCAP_H
+#if defined(NCURSES_VERSION)
+#if HAVE_NCURSES_TERMCAP_H
+#include <ncurses/termcap.h>
+#elif HAVE_TERMCAP_H
 #include <termcap.h>
+#endif
 #endif
 
 static void failed(const char *) GCC_NORETURN;

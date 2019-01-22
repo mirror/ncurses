@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.211 2018/09/08 23:28:11 tom Exp $
+-- $Id: INSTALL,v 1.212 2019/01/19 17:42:30 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -310,7 +310,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 	and termcap data from disk.  You can configure ncurses to have a
 	built-in database, aka "fallback" entries.  Embedded applications may
 	have no need for an external database.  Some, but not all of the
-	programs are useful in this configuration, e.g., reset and tput versus
+	programs are useful in this configuration, e.g., tset and tput versus
 	infocmp and tic.
 
     --disable-db-install

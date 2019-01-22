@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.139 2018/12/29 20:10:07 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.140 2019/01/21 01:55:18 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -396,8 +396,10 @@ NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
 	     * allow for default-color as a component of a color-pair.
 	     */
 	    SP_PARM->_pair_limit += (1 + (2 * maxcolors));
+#if !NCURSES_EXT_COLORS
 	    SP_PARM->_pair_limit = limit_PAIRS(SP_PARM->_pair_limit);
 #endif
+#endif /* NCURSES_EXT_FUNCS */
 	    SP_PARM->_pair_count = maxpairs;
 	    SP_PARM->_color_count = maxcolors;
 #if !USE_REENTRANT

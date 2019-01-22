@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017,2018 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2017-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,12 +26,12 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.11 2018/12/29 21:50:33 tom Exp $
+ * $Id: extended_color.c,v 1.13 2019/01/21 14:59:34 tom Exp $
  */
 
 #include <test.priv.h>
 
-#if HAVE_INIT_EXTENDED_COLOR
+#if USE_EXTENDED_COLOR
 
 #define SHOW(n) ((n) == ERR ? "ERR" : "OK")
 
@@ -213,7 +213,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 		 extended_slk_color(2));
     for (i = 1; i <= 8; ++i) {
 	char temp[80];
-	sprintf(temp, "(SLK-%d)", i);
+	_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "(SLK-%d)", i);
 	slk_set(i, temp, 0);
     }
     slk_touch();

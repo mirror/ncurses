@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2019 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 /*
  * clone of view.c, using pads
  *
- * $Id: padview.c,v 1.12 2017/10/23 00:37:21 tom Exp $
+ * $Id: padview.c,v 1.13 2019/01/21 19:47:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -89,7 +89,7 @@ show_all(const char *tag, WINDOW *my_pad, int my_row)
     _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 		"view %.*s", (int) strlen(tag), tag);
     i = (int) strlen(temp);
-    _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - i)
+    _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
 		" %.*s", (int) sizeof(temp) - i - 2, fname);
     mvprintw(0, 0, "%.*s", COLS, temp);
     this_time = time((time_t *) 0);

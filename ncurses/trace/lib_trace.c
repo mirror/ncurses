@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.89 2018/12/16 01:05:30 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.91 2019/01/21 14:51:38 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -219,7 +219,7 @@ _nc_va_tracef(const char *fmt, va_list ap)
 }
 
 NCURSES_EXPORT(void)
-_tracef(const char *fmt,...)
+_tracef(const char *fmt, ...)
 {
     va_list ap;
 
@@ -332,7 +332,8 @@ _nc_fmt_funcptr(char *target, const char *source, size_t size)
 	if (ch != 0 || (n + 1) >= size)
 	    leading = FALSE;
 	if (!leading) {
-	    sprintf(dst, "%02x", ch & 0xff);
+	    _nc_SPRINTF(dst, _nc_SLIMIT(TR_FUNC_LEN - (dst - target))
+			"%02x", ch & 0xff);
 	    dst += 2;
 	}
     }
@@ -375,7 +376,7 @@ _nc_use_tracef(unsigned mask)
  * the tracef mutex.
  */
 NCURSES_EXPORT(void)
-_nc_locked_tracef(const char *fmt,...)
+_nc_locked_tracef(const char *fmt, ...)
 {
     va_list ap;
 
