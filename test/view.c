@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.135 2017/10/23 09:18:01 tom Exp $
+ * $Id: view.c,v 1.136 2019/01/27 00:52:06 tom Exp $
  */
 
 #include <test.priv.h>
@@ -145,7 +145,7 @@ show_all(const char *tag)
     _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 		"view %.*s", (int) strlen(tag), tag);
     i = (int) strlen(temp);
-    _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - i)
+    _nc_SPRINTF(temp + i, _nc_SLIMIT(sizeof(temp) - (size_t) i)
 		" %.*s", (int) sizeof(temp) - i - 2, fname);
     move(0, 0);
     printw("%.*s", COLS, temp);

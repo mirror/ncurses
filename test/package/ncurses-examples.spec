@@ -1,9 +1,9 @@
 Summary: example/test programs from ncurses
-%define AppProgram ncurses-examples
-%define AltProgram ncursest-examples
-%define AppVersion MAJOR.MINOR
-%define AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.12 2018/06/02 22:46:44 tom Exp $
+%global AppProgram ncurses-examples
+%global AltProgram ncursest-examples
+%global AppVersion MAJOR.MINOR
+%global AppRelease YYYYMMDD
+# $Id: ncurses-examples.spec,v 1.13 2019/01/27 00:22:06 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}

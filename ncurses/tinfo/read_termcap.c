@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -56,7 +56,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.96 2018/05/12 18:52:02 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.97 2019/01/26 20:07:30 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -965,6 +965,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 #endif
 #if USE_GETCAP
     char *p, tc[TBUFSIZ];
+    char *tc_buf = 0;
 #define MY_SIZE sizeof(tc) - 1
     int status;
     static char *source;
@@ -983,8 +984,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
     if (use_terminfo_vars() && (p = getenv("TERMCAP")) != 0
 	&& !_nc_is_abs_path(p) && _nc_name_match(p, tn, "|:")) {
 	/* TERMCAP holds a termcap entry */
-	_nc_STRNCPY(tc, p, MY_SIZE);
-	tc[MY_SIZE] = '\0';
+	tc_buf = strdup(p);
 	_nc_set_source("TERMCAP");
     } else {
 	/* we're using getcap(3) */
@@ -993,8 +993,13 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 
 	_nc_curr_line = lineno;
 	_nc_set_source(source);
+	tc_buf = tc;
     }
-    _nc_read_entry_source((FILE *) 0, tc, FALSE, TRUE, NULLHOOK);
+    if (tc_buf == 0)
+	return (TGETENT_ERR);
+    _nc_read_entry_source((FILE *) 0, tc_buf, FALSE, TRUE, NULLHOOK);
+    if (tc_buf != tc)
+	free(tc_buf);
 #else
     /*
      * Here is what the 4.4BSD termcap(3) page prescribes:
@@ -1028,7 +1033,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
     int j, k;
     bool use_buffer = FALSE;
     bool normal = TRUE;
-    char tc_buf[1024];
+    char *tc_buf = 0;
     char pathbuf[PATH_MAX];
     char *copied = 0;
     char *cp;
@@ -1040,10 +1045,8 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 	    ADD_TC(tc, 0);
 	    normal = FALSE;
 	} else if (_nc_name_match(tc, tn, "|:")) {	/* treat as a capability file */
-	    use_buffer = TRUE;
-	    _nc_SPRINTF(tc_buf,
-			_nc_SLIMIT(sizeof(tc_buf))
-			"%.*s\n", (int) sizeof(tc_buf) - 2, tc);
+	    tc_buf = strdup(tc);
+	    use_buffer = (tc_buf != 0);
 	    normal = FALSE;
 	}
     }
@@ -1112,6 +1115,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 	 * that since it's just a single entry, they won't be a pain.
 	 */
 	_nc_read_entry_source((FILE *) 0, tc_buf, FALSE, FALSE, NULLHOOK);
+	free(tc_buf);
     } else {
 	int i;
 

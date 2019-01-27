@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.43 2018/04/14 21:06:14 Leon.Winter Exp $ */
+/* $Id: form.priv.h,v 0.44 2019/01/26 22:17:48 Leon.Winter Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -167,7 +167,8 @@ TypeArgument;
 			STD_FIELD_OPTS |\
 			O_DYNAMIC_JUSTIFY |\
 			O_NO_LEFT_STRIP |\
-			O_EDGE_INSERT_STAY)
+			O_EDGE_INSERT_STAY |\
+			O_INPUT_LIMIT)
 
 #define C_BLANK ' '
 #define is_blank(c) ((c)==C_BLANK)

@@ -32,7 +32,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_max.c,v 1.14 2019/01/19 21:26:06 Leon.Winter Exp $")
+MODULE_ID("$Id: fld_max.c,v 1.15 2019/01/26 22:18:08 Leon.Winter Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -63,7 +63,9 @@ set_max_field(FIELD *field, int maxgrow)
 	    RETURN(E_BAD_ARGUMENT);
 	}
       field->maxgrow = maxgrow;
-      if (Field_Has_Option(field, O_INPUT_LIMIT) && field->dcols > maxgrow)
+      /* shrink */
+      if (maxgrow > 0 && Field_Has_Option(field, O_INPUT_LIMIT) &&
+	  field->dcols > maxgrow)
 	field->dcols = maxgrow;
       ClrStatus(field, _MAY_GROW);
       if (!((unsigned)field->opts & O_STATIC))

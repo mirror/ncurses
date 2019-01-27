@@ -1,10 +1,10 @@
 Summary: ncurses-examples - example/test programs from ncurses
 %?mingw_package_header
 
-%define AppProgram ncurses-examples
-%define AppVersion MAJOR.MINOR
-%define AppRelease YYYYMMDD
-# $Id: mingw-ncurses-examples.spec,v 1.7 2018/01/04 02:31:57 tom Exp $
+%global AppProgram ncurses-examples
+%global AppVersion MAJOR.MINOR
+%global AppRelease YYYYMMDD
+# $Id: mingw-ncurses-examples.spec,v 1.8 2019/01/27 00:22:16 tom Exp $
 Name: mingw32-ncurses6-examples
 Version: %{AppVersion}
 Release: %{AppRelease}
