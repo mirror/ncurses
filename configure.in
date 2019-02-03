@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.674 2019/01/20 12:05:04 tom Exp $
+dnl $Id: configure.in,v 1.677 2019/02/02 19:57:53 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.674 $)
+AC_REVISION($Revision: 1.677 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1706,7 +1706,6 @@ strdup \
 strstr \
 sysconf \
 tcgetpgrp \
-tdestroy \
 times \
 tsearch \
 vsnprintf \
@@ -2313,18 +2312,22 @@ esac
 # substitute into misc/Makefile to suppress
 # (un)install.data from the
 # (un)install rules.
-if test "x$cf_with_db_install" = "xno" || test "x$TERMINFO_SRC" = "xno"; then
-	MAKE_DATABASE="#"
+if test "x$cf_with_db_install" = "xno"; then
 	MISC_INSTALL_DATA=
 	MISC_UNINSTALL_DATA=
 else
-	MAKE_DATABASE=""
 	MISC_INSTALL_DATA=install.data
 	MISC_UNINSTALL_DATA=uninstall.data
 fi
-AC_SUBST(MAKE_DATABASE)
 AC_SUBST(MISC_INSTALL_DATA)
 AC_SUBST(MISC_UNINSTALL_DATA)
+
+if test "x$cf_with_db_install" = "xno" || test "x$TERMINFO_SRC" = "xno"; then
+	MAKE_DATABASE="#"
+else
+	MAKE_DATABASE="$MAKE_TERMINFO"
+fi
+AC_SUBST(MAKE_DATABASE)
 
 SUB_SCRIPTS=
 

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.127 2019/01/21 19:45:57 tom Exp $
+ * $Id: picsmap.c,v 1.128 2019/02/02 20:03:13 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -61,10 +61,6 @@
 
 #if HAVE_TSEARCH
 #include <search.h>
-#if HAVE_TDESTROY && !defined(_GNU_SOURCE)
-#undef HAVE_TDESTROY
-#define HAVE_TDESTROY 0
-#endif
 #endif
 
 #undef CUR			/* use only the curses interface */
@@ -383,26 +379,15 @@ finish_c_values(PICS_HEAD * head)
     reading_ncols = 0;
 }
 
-#if HAVE_TSEARCH && HAVE_TDESTROY
-static void
-never_free(void *node GCC_UNUSED)
-{
-}
-#endif
-
 static void
 dispose_c_values(void)
 {
 #if HAVE_TSEARCH
     if (reading_ntree != 0) {
-#if HAVE_TDESTROY
-	tdestroy(reading_ntree, never_free);
-#else
 	int n;
 	for (n = 0; n < reading_last; ++n) {
 	    tdelete(I2P(n), &reading_ntree, compare_c_values);
 	}
-#endif
 	reading_ntree = 0;
     }
 #endif

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3266 2019/01/27 00:23:49 tom Exp $
+-- $Id: NEWS,v 1.3270 2019/02/03 01:19:58 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190202
+	+ modify rpm test-package ".spec" file to work around naming conflict
+	  with Redhat's package for ncurses6.
+	+ modify no-leaks code in test/picsmap to avoid non-standard tdestroy.
+	+ amend change to configure script which altered the top-level makefile
+	  to avoid attempting to install the terminfo database when it was not
+	  configured, to allow for installing the ".pc" files which are also
+	  in the misc directory (report by Steve Wills).
 
 20190126
 	+ change some "%define" statements in test-packages for RPMs to

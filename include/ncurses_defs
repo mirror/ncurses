@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.86 2018/09/01 19:16:04 tom Exp $
+# $Id: ncurses_defs,v 1.87 2019/02/02 20:04:14 tom Exp $
 ##############################################################################
-# Copyright (c) 2000-2017,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 2000-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -165,7 +165,6 @@ HAVE_SYS_TIME_H
 HAVE_SYS_TIME_SELECT
 HAVE_TCGETATTR
 HAVE_TCGETPGRP
-HAVE_TDESTROY
 HAVE_TELL
 HAVE_TERMATTRS	1
 HAVE_TERMCAP_H	1

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.176 2019/01/21 22:42:35 tom Exp $ */
+/* $Id: test.priv.h,v 1.177 2019/02/02 19:57:53 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -248,10 +248,6 @@
 
 #ifndef HAVE_SYS_SELECT_H
 #define HAVE_SYS_SELECT_H 0
-#endif
-
-#ifndef HAVE_TDESTROY
-#define HAVE_TDESTROY 0
 #endif
 
 #ifndef HAVE_TERMATTRS

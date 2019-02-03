@@ -3,7 +3,7 @@ Summary: example/test programs from ncurses
 %global AltProgram ncursest-examples
 %global AppVersion MAJOR.MINOR
 %global AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.13 2019/01/27 00:22:06 tom Exp $
+# $Id: ncurses-examples.spec,v 1.14 2019/02/03 01:17:27 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -52,7 +52,7 @@ CONFIGURE_TOP=%{my_srcdir} \
 	--prefix=%{_prefix} \
 	--bindir=%{_bindir}/%{AppProgram} \
 	--datadir=%{_datadir}/%{AppProgram} \
-	--with-screen=ncursesw6 \
+	--with-screen=ncursesw6dev \
 	--disable-rpath-hack
 
 make
@@ -68,7 +68,7 @@ CONFIGURE_TOP=%{my_srcdir} \
 	--prefix=%{_prefix} \
 	--bindir=%{_bindir}/%{AltProgram} \
 	--datadir=%{_datadir}/%{AltProgram} \
-	--with-screen=ncursestw6 \
+	--with-screen=ncursestw6dev \
 	--disable-rpath-hack
 
 make
