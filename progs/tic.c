@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.256 2018/03/18 00:05:10 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.266 2019/02/10 02:25:46 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -59,6 +59,7 @@ static FILE *tmp_fp;
 static bool capdump = FALSE;	/* running as infotocap? */
 static bool infodump = FALSE;	/* running as captoinfo? */
 static bool showsummary = FALSE;
+static unsigned debug_level;
 static char **namelst = 0;
 static const char *to_remove;
 
@@ -680,7 +681,6 @@ main(int argc, char *argv[])
     char my_tmpname[PATH_MAX];
     char my_altfile[PATH_MAX];
     int v_opt = -1;
-    unsigned debug_level;
     int smart_defaults = TRUE;
     char *termcap;
     ENTRY *qp;
@@ -1666,28 +1666,28 @@ check_screen(TERMTYPE2 *tp)
 	}
 
 	if (have_XM && have_XT) {
-	    _nc_warning("Screen's XT capability conflicts with XM");
+	    _nc_warning("screen's XT capability conflicts with XM");
 	} else if (have_XT && screen_base) {
-	    _nc_warning("Screen's \"screen\" entries should not have XT set");
+	    _nc_warning("screen's \"screen\" entries should not have XT set");
 	} else if (have_XT) {
 	    if (!have_kmouse && is_screen) {
 		if (VALID_STRING(key_mouse)) {
-		    _nc_warning("Value of kmous inconsistent with screen's usage");
+		    _nc_warning("value of kmous inconsistent with screen's usage");
 		} else {
-		    _nc_warning("Expected kmous capability with XT");
+		    _nc_warning("expected kmous capability with XT");
 		}
 	    }
 	    if (!have_bce && max_colors > 0)
-		_nc_warning("Expected bce capability with XT");
+		_nc_warning("expected bce capability with XT");
 	    if (!use_sgr_39_49 && have_bce && max_colors > 0)
-		_nc_warning("Expected orig_colors capability with XT to have 39/49 parameters");
+		_nc_warning("expected orig_colors capability with XT to have 39/49 parameters");
 	    if (VALID_STRING(to_status_line))
 		_nc_warning("\"tsl\" capability is redundant, given XT");
 	} else {
 	    if (have_kmouse
 		&& !have_XM
 		&& !screen_base && strchr(name, '+') == 0) {
-		_nc_warning("Expected XT to be set, given kmous");
+		_nc_warning("expected XT to be set, given kmous");
 	    }
 	}
     }
@@ -1788,13 +1788,71 @@ expected_params(const char *name)
     return result;
 }
 
+typedef struct {
+    const char *name;
+    int n_type;
+    int n_parms;
+} USERCAPS;
+
 /*
+ * These are user-capabilities that happen to be used in ncurses' terminal
+ * database.
+ */
+static USERCAPS *
+lookup_user_capability(const char *name)
+{
+    /* *INDENT-OFF* */
+#define DATA(name,type,parms) { name, type, parms }
+    static USERCAPS table[] = {
+	DATA( "AX",    BOOLEAN, 0 ),
+	DATA( "Cr",    STRING,  0 ),
+	DATA( "Cs",    STRING,  1 ),
+	DATA( "E0",    STRING,  0 ),
+	DATA( "E3",    STRING,  0 ),
+	DATA( "G0",    BOOLEAN, 0 ),
+	DATA( "Ms",    STRING,  2 ),
+	DATA( "RGB",   BOOLEAN, 0 ),	/* FIXME can be number or string */
+	DATA( "S0",    STRING,  1 ),
+	DATA( "Se",    STRING,  0 ),
+	DATA( "Smulx", STRING,  1 ),
+	DATA( "Ss",    STRING,  1 ),
+	DATA( "TS",    STRING,  0 ),
+	DATA( "U8",    NUMBER,  0 ),
+	DATA( "XM",    STRING,  1 ),
+	DATA( "XT",    BOOLEAN, 0 ),
+	DATA( "grbom", STRING,  0 ),
+	DATA( "gsbom", STRING,  0 ),
+	DATA( "rmxx",  STRING,  0 ),
+	DATA( "smxx",  STRING,  0 ),
+	DATA( "xm",    STRING,  9 ),
+    };
+#undef DATA
+    /* *INDENT-ON* */
+
+    size_t n;
+    USERCAPS *result = 0;
+    if (*name != 'k') {
+	for (n = 0; n < SIZEOF(table); ++n) {
+	    if (!strcmp(name, table[n].name)) {
+		result = &table[n];
+		break;
+	    }
+	}
+    }
+    return result;
+}
+
+/*
+ * If a given name is likely to be a user-capability, return the number of
+ * parameters it would be used with.  If not, return -1.
+ *
  * ncurses assumes that u6 could be used for getting the cursor-position, but
  * that is not implemented.  Make a special case for that, to quiet needless
  * warnings.
  *
- * There are other string-capability extensions (see terminfo.src) which could
- * have parameters such as "Ss", "%u", but are not used by ncurses.
+ * The other string-capability extensions (see terminfo.src) which could have
+ * parameters such as "Ss", "%u", are not used by ncurses.  But we check those
+ * anyway, to validate the terminfo database.
  */
 static int
 is_user_capability(const char *name)
@@ -1802,8 +1860,14 @@ is_user_capability(const char *name)
     int result = -1;
     if (name[0] == 'u' &&
 	(name[1] >= '0' && name[1] <= '9') &&
-	name[2] == '\0')
+	name[2] == '\0') {
 	result = (name[1] == '6') ? 2 : 0;
+    } else if (using_extensions) {
+	USERCAPS *p = lookup_user_capability(name);
+	if (p != 0) {
+	    result = p->n_parms;
+	}
+    }
     return result;
 }
 
@@ -1851,11 +1915,15 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
     }
 
     if (extended) {
-	if (actual > 0) {
-	    _nc_warning("extended %s capability has %d parameters",
+	int check = is_user_capability(name);
+	if (check != actual) {
+	    _nc_warning("extended %s capability has %d parameters, expected %d",
+			name, actual, check);
+	} else if (debug_level > 1) {
+	    _nc_warning("extended %s capability has %d parameters, as expected",
 			name, actual);
-	    expected = actual;
 	}
+	expected = actual;
     }
 
     if (params[0]) {
@@ -1889,8 +1957,8 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	    if ((user_cap == analyzed) && using_extensions) {
 		;		/* ignore */
 	    } else if (user_cap >= 0) {
-		_nc_warning("tparm will use %d parameters for %s",
-			    analyzed, name);
+		_nc_warning("tparm will use %d parameters for %s, expected %d",
+			    analyzed, name, user_cap);
 	    } else {
 		_nc_warning("tparm analyzed %d parameters for %s, expected %d",
 			    analyzed, name, actual);
@@ -2368,7 +2436,7 @@ similar_sgr(int num, char *a, char *b)
 		    ;
 		} else if (b[0] == '$'
 			   && b[1] == '<') {
-		    _nc_warning("Did not find delay %s", _nc_visbuf(b));
+		    _nc_warning("did not find delay %s", _nc_visbuf(b));
 		} else {
 		    _nc_warning("checking sgr(%s) %s\n\tcompare to %s\n\tunmatched %s",
 				sgr_names[num], _nc_visbuf2(1, base_a),
@@ -2556,7 +2624,7 @@ check_conflict(TERMTYPE2 *tp)
 		    check[k] = 1;
 		    if (first) {
 			if (!conflict) {
-			    _nc_warning("Conflicting key definitions (using the last)");
+			    _nc_warning("conflicting key definitions (using the last)");
 			    conflict = TRUE;
 			}
 			fprintf(stderr, "...");
@@ -2733,6 +2801,63 @@ check_sgr_param(TERMTYPE2 *tp, int code, const char *name, char *value)
     }
 }
 
+static int
+standard_type(const char *name)
+{
+    int result = -1;
+    const struct name_table_entry *np;
+
+    if ((np = _nc_find_entry(name, _nc_get_hash_table(0))) != 0) {
+	result = np->nte_type;
+    }
+    return result;
+}
+
+static const char *
+name_of_type(int type)
+{
+    const char *result = "unknown";
+    switch (type) {
+    case BOOLEAN:
+	result = "boolean";
+	break;
+    case NUMBER:
+	result = "number";
+	break;
+    case STRING:
+	result = "string";
+	break;
+    }
+    return result;
+}
+
+static void
+check_user_capability_type(const char *name, int actual)
+{
+    USERCAPS *p = lookup_user_capability(name);
+    if (p != 0) {
+	if (p->n_type != actual)
+	    _nc_warning("expected %s to be %s, but actually %s",
+			name,
+			name_of_type(p->n_type),
+			name_of_type(actual)
+		);
+    } else {
+	int expected = standard_type(name);
+	if (expected >= 0) {
+	    _nc_warning("expected %s to be %s, but actually %s",
+			name,
+			name_of_type(p->n_type),
+			name_of_type(expected)
+		);
+	} else if (*name != 'k') {
+	    _nc_warning("undocumented %s capability %s",
+			name_of_type(actual),
+			name);
+	}
+    }
+}
+
 /* other sanity-checks (things that we don't want in the normal
  * logic that reads a terminfo entry)
  */
@@ -2752,7 +2877,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	     * check for consistent number of parameters.
 	     */
 	    if (j >= SIZEOF(parametrized) ||
-		is_user_capability(name) > 0 ||
+		is_user_capability(name) >= 0 ||
 		parametrized[j] > 0) {
 		check_params(tp, name, a, (j >= STRCOUNT));
 	    }
@@ -2762,6 +2887,18 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	    }
 	}
     }
+#if NCURSES_XNAMES
+    /* in extended mode, verify that each extension is expected type */
+    for_each_ext_boolean(j, tp) {
+	check_user_capability_type(ExtBoolname(tp, (int) j, strnames), BOOLEAN);
+    }
+    for_each_ext_number(j, tp) {
+	check_user_capability_type(ExtNumname(tp, (int) j, strnames), NUMBER);
+    }
+    for_each_ext_string(j, tp) {
+	check_user_capability_type(ExtStrname(tp, (int) j, strnames), STRING);
+    }
+#endif /* NCURSES_XNAMES */
 
     check_acs(tp);
     check_colors(tp);
