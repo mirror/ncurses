@@ -1,6 +1,6 @@
-# $Id: programs,v 1.43 2018/12/29 15:32:00 tom Exp $
+# $Id: programs,v 1.44 2019/02/16 21:38:16 tom Exp $
 ##############################################################################
-# Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -45,6 +45,7 @@ demo_keyok	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_keyok
 demo_menus	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_menus
 demo_new_pair	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_new_pair popup_msg
 demo_panels	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_panels
+demo_tabs	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_tabs
 demo_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_termcap
 demo_terminfo	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	demo_terminfo
 ditto		$(LDFLAGS_THREADS)	$(LOCAL_LIBS)	ditto

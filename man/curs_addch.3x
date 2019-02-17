@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.46 2018/07/28 21:02:35 tom Exp $
+.\" $Id: curs_addch.3x,v 1.47 2019/02/16 23:50:17 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -252,8 +252,9 @@ before attempting call \fBwaddch\fP, and
 call \fBwadd_wch\fP for characters which cannot be handled by \fBwaddch\fP.
 .SS TABSIZE
 .LP
-The \fBTABSIZE\fR variable is implemented in some versions of curses,
-but is not part of X/Open curses.
+The \fBTABSIZE\fR variable is implemented in SVr4 and other versions of curses,
+but is not part of X/Open curses
+(see \fBcurs_variables\fR(3X) for more details).
 .LP
 If \fIch\fR is a carriage return,
 the cursor is moved to the beginning of the current row of the window.

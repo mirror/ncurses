@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3272 2019/02/10 00:56:56 tom Exp $
+-- $Id: NEWS,v 1.3275 2019/02/16 23:45:57 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190216
+	+ improve manual page description of TABSIZE.
+	+ add test/demo_tabs program.
 
 20190209
 	+ add check in tic to provide warnings for mismatched number of
@@ -9374,7 +9378,7 @@ it is not possible to add this information.
 20000701 pre-release
 	+ change minor version to 1, i.e., ncurses 5.1
 	+ add experimental configure option --enable-colorfgbg to check for
-	  $COLORTERM variable as set by rxvt/aterm/Eterm.
+	  $COLORFGBG variable as set by rxvt/aterm/Eterm.
 	+ add Eterm terminfo entry (Michael Jennings <mej@valinux.com>).
 	+ modify manlinks.sed to pick aliases from the SYNOPSIS section, and
 	  several manpages so manlinks.sed can find aliases for creating

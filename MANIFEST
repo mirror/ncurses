@@ -1108,6 +1108,7 @@
 ./test/demo_menus.c
 ./test/demo_new_pair.c
 ./test/demo_panels.c
+./test/demo_tabs.c
 ./test/demo_termcap.c
 ./test/demo_terminfo.c
 ./test/ditto.c

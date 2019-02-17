@@ -1,6 +1,6 @@
-# $Id: manhtml.aliases,v 1.12 2017/04/22 14:07:02 tom Exp $
+# $Id: manhtml.aliases,v 1.13 2019/02/16 23:44:49 tom Exp $
 #***************************************************************************
-# Copyright (c) 2013-2016,2017 Free Software Foundation, Inc.              *
+# Copyright (c) 2013-2017,2019 Free Software Foundation, Inc.              *
 #                                                                          *
 # Permission is hereby granted, free of charge, to any person obtaining a  *
 # copy of this software and associated documentation files (the            *
@@ -43,6 +43,7 @@ is_scrollok(3X)		curs_opaque(3X)
 keypad(3X)		curs_inopts(3X)
 longname(3X)		curs_termattrs(3X)
 meta(3X)		curs_inopts(3X)
+mvcur(3X)		curs_terminfo(3X)
 newterm(3X)		curs_initscr(3X)
 refresh(3X)		curs_refresh(3X)
 reset_shell_mode(3X)	curs_kernel(3X)

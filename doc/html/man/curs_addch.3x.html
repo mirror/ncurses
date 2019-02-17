@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.46 2018/07/28 21:02:35 tom Exp @
+  * @Id: curs_addch.3x,v 1.47 2019/02/16 23:50:17 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -242,11 +242,12 @@
 
 
 </PRE><H3><a name="h3-TABSIZE">TABSIZE</a></H3><PRE>
-       The  <STRONG>TABSIZE</STRONG> variable is implemented in some versions of curses, but is
-       not part of X/Open curses.
+       The  <STRONG>TABSIZE</STRONG>  variable  is  implemented  in  SVr4 and other versions of
+       curses, but is not part of X/Open curses  (see  <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>  for
+       more details).
 
        If <EM>ch</EM> is a carriage return, the cursor is moved to the beginning of the
-       current  row of the window.  This is true of other implementations, but
+       current row of the window.  This is true of other implementations,  but
        is not documented.
 
 
@@ -254,7 +255,7 @@
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,  <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>,  <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>,  <STRONG>curs_out-</STRONG>
        <STRONG><A HREF="curs_outopts.3x.html">opts(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>.
 
-       Comparable  functions  in  the  wide-character  (ncursesw)  library are
+       Comparable functions  in  the  wide-character  (ncursesw)  library  are
        described in <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>.
 
 

@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.177 2019/02/02 19:57:53 tom Exp $ */
+/* $Id: test.priv.h,v 1.178 2019/02/17 01:03:18 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -467,6 +467,10 @@ extern int optind;
 #define slk_init()		/* nothing */
 #define slk_restore()		/* nothing */
 #define slk_clear()		/* nothing */
+#endif
+
+#if !NCURSES_EXT_FUNCS
+#define set_tabsize(n)	TABSIZE = (n)
 #endif
 
 #if HAVE_TPUTS_SP

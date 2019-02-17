@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 2008-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.19 2018/07/28 21:46:31 tom Exp @
+  * @Id: tabs.1,v 1.20 2019/02/16 23:56:38 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -65,6 +65,12 @@
        the standard output to a file (which prevents <STRONG>tabs</STRONG> from actually chang-
        ing the tabstops), and later <STRONG>cat</STRONG> the file to the screen,  setting  tab-
        stops at that point.
+
+       These  are  hardware  tabs, which cannot be queried rapidly by applica-
+       tions running in the terminal, if at all.  Curses and other full-screen
+       applications  may  use  hardware tabs in optimizing their output to the
+       terminal.  If the hardware tabstops differ from the information in  the
+       terminal database, the result is unpredictable.
 
 
 </PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
@@ -164,7 +170,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190121).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190216).
 
 
 

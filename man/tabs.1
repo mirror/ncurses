@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2008-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.19 2018/07/28 21:46:31 tom Exp $
+.\" $Id: tabs.1,v 1.20 2019/02/16 23:56:38 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -69,6 +69,13 @@ Like \fB@CLEAR@\fR(1), \fB@TABS@\fR writes to the standard output.
 You can redirect the standard output to a file (which prevents
 \fB@TABS@\fR from actually changing the tabstops),
 and later \fBcat\fP the file to the screen, setting tabstops at that point.
+.PP
+These are hardware tabs, which cannot be queried rapidly by applications
+running in the terminal, if at all.
+Curses and other full-screen applications may use hardware tabs
+in optimizing their output to the terminal.
+If the hardware tabstops differ from the information in the terminal
+database, the result is unpredictable.
 .SH OPTIONS
 .SS General Options
 .TP 5
