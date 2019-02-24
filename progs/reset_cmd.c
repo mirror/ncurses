@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016,2017 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2016-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -52,7 +52,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.13 2017/10/07 20:56:03 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.14 2019/02/23 18:33:19 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -341,7 +341,7 @@ default_erase(void)
     int result;
 
     if (over_strike
-	&& key_backspace != 0
+	&& VALID_STRING(key_backspace)
 	&& strlen(key_backspace) == 1) {
 	result = key_backspace[0];
     } else {
@@ -398,7 +398,7 @@ set_conversions(TTY * tty_settings)
 #endif /* OXTABS */
 
     /* test used to be tgetflag("NL") */
-    if (newline != (char *) 0 && newline[0] == '\n' && !newline[1]) {
+    if (VALID_STRING(newline) && newline[0] == '\n' && !newline[1]) {
 	/* Newline, not linefeed. */
 #ifdef ONLCR
 	tty_settings->c_oflag &= ~((unsigned) ONLCR);
@@ -407,7 +407,7 @@ set_conversions(TTY * tty_settings)
     }
 #ifdef OXTABS
     /* test used to be tgetflag("pt") */
-    if (has_hardware_tabs)	/* Print tabs. */
+    if (VALID_STRING(set_tab) && VALID_STRING(clear_all_tabs))
 	tty_settings->c_oflag &= ~OXTABS;
 #endif /* OXTABS */
     tty_settings->c_lflag |= (ECHOE | ECHOK);
@@ -423,7 +423,7 @@ set_conversions(TTY * tty_settings)
 static bool
 reset_tabstops(int wide)
 {
-    if ((init_tabs != 8) && (set_tab && clear_all_tabs)) {
+    if ((init_tabs != 8) && (VALID_STRING(set_tab) && VALID_STRING(clear_all_tabs))) {
 	int c;
 
 	(void) putc('\r', my_file);	/* Force to left margin. */
@@ -449,7 +449,7 @@ static bool
 sent_string(const char *s)
 {
     bool sent = FALSE;
-    if (s != 0) {
+    if (VALID_STRING(s)) {
 	tputs(s, 0, out_char);
 	sent = TRUE;
     }
@@ -474,7 +474,7 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
     }
 #endif
     if (use_reset || use_init) {
-	if (init_prog != 0) {
+	if (VALID_STRING(init_prog)) {
 	    IGNORE_RC(system(init_prog));
 	}
 
@@ -487,22 +487,22 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 				  : init_2string);
 
 #if defined(set_lr_margin)
-	if (set_lr_margin != 0) {
+	if (VALID_STRING(set_lr_margin)) {
 	    need_flush |= sent_string(TPARM_2(set_lr_margin, 0,
 					      columns - 1));
 	} else
 #endif
 #if defined(set_left_margin_parm) && defined(set_right_margin_parm)
-	    if (set_left_margin_parm != 0
-		&& set_right_margin_parm != 0) {
+	    if (VALID_STRING(set_left_margin_parm)
+		&& VALID_STRING(set_right_margin_parm)) {
 	    need_flush |= sent_string(TPARM_1(set_left_margin_parm, 0));
 	    need_flush |= sent_string(TPARM_1(set_right_margin_parm,
 					      columns - 1));
 	} else
 #endif
-	    if (clear_margins != 0
-		&& set_left_margin != 0
-		&& set_right_margin != 0) {
+	    if (VALID_STRING(clear_margins)
+		&& VALID_STRING(set_left_margin)
+		&& VALID_STRING(set_right_margin)) {
 	    need_flush |= sent_string(clear_margins);
 	    if (carriage_return != 0) {
 		need_flush |= sent_string(carriage_return);
@@ -510,7 +510,7 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 		PUTCHAR('\r');
 	    }
 	    need_flush |= sent_string(set_left_margin);
-	    if (parm_right_cursor) {
+	    if (VALID_STRING(parm_right_cursor)) {
 		need_flush |= sent_string(TPARM_1(parm_right_cursor,
 						  columns - 1));
 	    } else {
@@ -519,7 +519,7 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 		}
 	    }
 	    need_flush |= sent_string(set_right_margin);
-	    if (carriage_return != 0) {
+	    if (VALID_STRING(carriage_return)) {
 		need_flush |= sent_string(carriage_return);
 	    } else {
 		PUTCHAR('\r');

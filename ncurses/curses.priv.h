@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.615 2019/01/21 14:50:27 tom Exp $
+ * $Id: curses.priv.h,v 1.616 2019/02/23 17:54:39 tom Exp $
  *
  *	curses.priv.h
  *
@@ -538,6 +538,8 @@ NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
 #define SET_ESCDELAY(value)  ESCDELAY = value
 
 #endif
+
+#define HasHardTabs()	(NonEmpty(clear_all_tabs) && NonEmpty(set_tab))
 
 #define TR_MUTEX(data) _tracef("%s@%d: me:%08lX COUNT:%2u/%2d/%6d/%2d/%s%9u: " #data, \
 	    __FILE__, __LINE__, \

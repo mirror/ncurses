@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.726 $
-#	$Date: 2019/01/12 22:33:55 $
+#	$Revision: 1.727 $
+#	$Date: 2019/02/23 22:45:23 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -14257,7 +14257,7 @@ regent60|regent200|adds200|Adds Regent 60,
 	acsc=jLkDl@mHnhq`tXuTv\\wPxd, dch1=\EE, is2=\EV\EB,
 	kbs=^H, kcbt=\EO, kdch1=\EE, kich1=\EF, krmir=\EF, rmacs=\E2,
 	rmir=\EF, rmso=\ER\E0@\EV, smacs=\E1, smir=\EF,
-	smso=\ER\E0P\EV, cd=\Ek, kF1=^B!\r, kF2=^B"\r, kF3=^B#\r,
+	smso=\ER\E0P\EV, ed=\Ek, kF1=^B!\r, kF2=^B"\r, kF3=^B#\r,
 	kF4=^B$\r, kF5=^B%\r, kF6=^B&\r, kF7=^B'\r, kF8=^B(\r,
 	use=regent40+,
 # From: <edward@onyx.berkeley.edu> Thu Jul  9 09:27:33 1981
@@ -26009,5 +26009,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ use SGR 1006 mouse for konsole-base -TD
 #	+ use SGR 1006 mouse for putty -TD
 #	+ add ti703/ti707, ti703-w/ti707-w (Robert Clausecker)
+#
+# 2019-02-23
+#	+ fix typo in adds200 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.266 2019/02/10 02:25:46 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.268 2019/02/23 21:49:28 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1095,6 +1095,50 @@ main(int argc, char *argv[])
 static void
 check_acs(TERMTYPE2 *tp)
 {
+    int vt100_smacs = 0;
+    int vt100_rmacs = 0;
+    int vt100_enacs = 0;
+
+    /*
+     * ena_acs is not always necessary, but if it is present, the enter/exit
+     * capabilities should be.
+     */
+    ANDMISSING(ena_acs, enter_alt_charset_mode);
+    ANDMISSING(ena_acs, exit_alt_charset_mode);
+    PAIRED(exit_alt_charset_mode, exit_alt_charset_mode);
+
+    /*
+     * vt100-like is frequently used, but perhaps ena_acs is missing, etc.
+     */
+    if (VALID_STRING(enter_alt_charset_mode)) {
+	vt100_smacs = (!strcmp("\033(0", enter_alt_charset_mode)
+		       ? 2
+		       : (!strcmp("\016", enter_alt_charset_mode)
+			  ? 1
+			  : 0));
+    }
+    if (VALID_STRING(exit_alt_charset_mode)) {
+	vt100_rmacs = (!strcmp("\033(B", exit_alt_charset_mode)
+		       ? 2
+		       : (!strcmp("\017", exit_alt_charset_mode)
+			  ? 1
+			  : 0));
+    }
+    if (VALID_STRING(ena_acs)) {
+	vt100_enacs = (!strcmp("\033(B\033)0", ena_acs)
+		       ? 2
+		       : 0);
+    }
+    if (vt100_rmacs && vt100_smacs && (vt100_rmacs != vt100_smacs)) {
+	_nc_warning("rmacs/smacs are inconsistent");
+    }
+    if ((vt100_rmacs == 2) && (vt100_smacs == 2) && vt100_enacs) {
+	_nc_warning("rmacs/smacs make enacs redundant");
+    }
+    if ((vt100_rmacs == 1) && (vt100_smacs == 1) && !vt100_enacs) {
+	_nc_warning("VT100-style rmacs/smacs require enacs");
+    }
+
     if (VALID_STRING(acs_chars)) {
 	const char *boxes = "lmkjtuvwqxn";
 	char mapped[256];

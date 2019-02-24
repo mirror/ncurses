@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.146 2018/03/03 22:40:47 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.148 2019/02/24 00:31:57 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -344,7 +344,9 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
     SP_PARM->_home_cost = CostOf(cursor_home, 0);
     SP_PARM->_ll_cost = CostOf(cursor_to_ll, 0);
 #if USE_HARD_TABS
-    if (getenv("NCURSES_NO_HARD_TABS") == 0) {
+    if (getenv("NCURSES_NO_HARD_TABS") == 0
+	&& dest_tabs_magic_smso == 0
+	&& HasHardTabs()) {
 	SP_PARM->_ht_cost = CostOf(tab, 0);
 	SP_PARM->_cbt_cost = CostOf(back_tab, 0);
     } else {
@@ -1217,24 +1219,21 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	if (fgets(buf, sizeof(buf), stdin) == 0)
 	    break;
 
+#define PUTS(s)   (void) puts(s)
+#define PUTF(s,t) (void) printf(s,t)
 	if (buf[0] == '?') {
-	    (void) puts("?                -- display this help message");
-	    (void)
-		puts("fy fx ty tx      -- (4 numbers) display (fy,fx)->(ty,tx) move");
-	    (void) puts("s[croll] n t b m -- display scrolling sequence");
-	    (void)
-		printf("r[eload]         -- reload terminal info for %s\n",
-		       termname());
-	    (void)
-		puts("l[oad] <term>    -- load terminal info for type <term>");
-	    (void) puts("d[elete] <cap>   -- delete named capability");
-	    (void) puts("i[nspect]        -- display terminal capabilities");
-	    (void)
-		puts("c[ost]           -- dump cursor-optimization cost table");
-	    (void) puts("o[optimize]      -- toggle movement optimization");
-	    (void)
-		puts("t[orture] <num>  -- torture-test with <num> random moves");
-	    (void) puts("q[uit]           -- quit the program");
+	    PUTS("?                -- display this help message");
+	    PUTS("fy fx ty tx      -- (4 numbers) display (fy,fx)->(ty,tx) move");
+	    PUTS("s[croll] n t b m -- display scrolling sequence");
+	    PUTF("r[eload]         -- reload terminal info for %s\n",
+		 termname());
+	    PUTS("l[oad] <term>    -- load terminal info for type <term>");
+	    PUTS("d[elete] <cap>   -- delete named capability");
+	    PUTS("i[nspect]        -- display terminal capabilities");
+	    PUTS("c[ost]           -- dump cursor-optimization cost table");
+	    PUTS("o[optimize]      -- toggle movement optimization");
+	    PUTS("t[orture] <num>  -- torture-test with <num> random moves");
+	    PUTS("q[uit]           -- quit the program");
 	} else if (sscanf(buf, "%d %d %d %d", &fy, &fx, &ty, &tx) == 4) {
 	    struct timeval before, after;
 

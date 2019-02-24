@@ -29,10 +29,11 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_tabs.c,v 1.2 2019/02/17 01:01:11 tom Exp $
+ * $Id: demo_tabs.c,v 1.4 2019/02/24 00:38:13 tom Exp $
  *
  * A simple demo of tabs in curses.
  */
+#define USE_TINFO
 #include "test.priv.h"
 
 static void
@@ -82,8 +83,10 @@ main(int argc, char *argv[])
     cbreak();
     if (curses_stops > 0)
 	set_tabsize(curses_stops);
+#if HAVE_TIGETNUM
     tabstop = tigetnum("it");
     if (tabstop <= 0)
+#endif
 	tabstop = 8;
     for (row = 0; row < LINES; ++row) {
 	move(row, 0);
