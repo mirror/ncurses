@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.299 2018/09/08 21:33:59 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.300 2019/02/25 21:42:01 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -686,8 +686,9 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 	    } else if (repeat_char != 0 &&
 #if USE_WIDEC_SUPPORT
 		       (!SP_PARM->_screen_unicode &&
-			((AttrOf(ntext0) & A_ALTCHARSET) == 0 ||
-			 (CharOf(ntext0) < ACS_LEN))) &&
+			(CharOf(ntext0) < ((AttrOf(ntext0) & A_ALTCHARSET)
+					   ? ACS_LEN
+					   : 256))) &&
 #endif
 		       runcount > SP_PARM->_rep_cost) {
 		NCURSES_CH_T temp;

@@ -1,0 +1,145 @@
+##############################################################################
+# Copyright (c) 2019 Free Software Foundation, Inc.                          #
+#                                                                            #
+# Permission is hereby granted, free of charge, to any person obtaining a    #
+# copy of this software and associated documentation files (the "Software"), #
+# to deal in the Software without restriction, including without limitation  #
+# the rights to use, copy, modify, merge, publish, distribute, distribute    #
+# with modifications, sublicense, and/or sell copies of the Software, and to #
+# permit persons to whom the Software is furnished to do so, subject to the  #
+# following conditions:                                                      #
+#                                                                            #
+# The above copyright notice and this permission notice shall be included in #
+# all copies or substantial portions of the Software.                        #
+#                                                                            #
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR #
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,   #
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL    #
+# THE ABOVE COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER      #
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING    #
+# FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER        #
+# DEALINGS IN THE SOFTWARE.                                                  #
+#                                                                            #
+# Except as contained in this notice, the name(s) of the above copyright     #
+# holders shall not be used in advertising or otherwise to promote the sale, #
+# use or other dealings in this Software without prior written               #
+# authorization.                                                             #
+##############################################################################
+#
+# Author: Thomas E. Dickey
+#
+# $Id: Caps-ncurses,v 1.2 2019/03/02 22:46:09 tom Exp $
+#
+# This is a table of ncurses user-definable capabilities which applications
+# developers may have used.  ncurses may use the table to check consistency of
+# types/parameters.  Applications may have defined others (such as screen's
+# LP and NF), but where a standard capability is available, those alternatives
+# are not listed here.
+#
+used_by ncurses
+userdef	E3	str	-	clears the terminal's scrollback buffer.
+userdef	RGB	bool	-	use direct colors with 1/3 of color-pair bits per color.
+userdef	RGB	num	n	use direct colors with given number of bits per color.
+userdef	RGB	str	nnn	use direct colors with given bit-layout.
+userdef	TS	str	-	like "tsl", but uses no parameter.
+userdef	U8	num	n	terminal does/does not support VT100 SI/SO when processing UTF-8 encoding.
+userdef	XM	str	-	initialize alternate xterm mouse mode
+userdef	grbom	str	-	disable real bold (not intensity bright) mode.
+userdef	gsbom	str	-	enable real bold (not intensity bright) mode.
+userdef	xm	str	-	mouse response, no parameters
+userdef	xm	str	n	mouse response, p1 = y-ordinate
+userdef	xm	str	nn	mouse response, p2 = x-ordinate
+userdef	xm	str	nnn	mouse response, p3 = button
+userdef	xm	str	nnns	mouse response, p4 = state, e.g., pressed or released
+userdef	xm	str	nnnsn	mouse response, p6 = y-ordinate starting region
+userdef	xm	str	nnnsnn	mouse response, p7 = x-ordinate starting region
+userdef	xm	str	nnnsnnn	mouse response, p8 = y-ordinate ending region
+userdef	xm	str	nnnsnnnn	mouse response, p9 = x-ordinate ending region
+#
+used_by screen
+userdef	AN	bool	-	turn on autonuke.
+userdef	AX	bool	-	understands ANSI set default fg/bg color (\E[39m / \E[49m).
+userdef	C0	str	-	use the string as a conversion table for font '0', like acsc.
+userdef	C8	bool	-	terminal shows bold as high-intensity colors.
+userdef	CE	str	-	switch cursor-keys back to normal mode.
+userdef	CS	str	-	switch cursor-keys to application mode.
+userdef	E0	str	-	switch charset 'G0' back to standard charset. Default is '\E(B'.
+userdef	G0	bool	-	terminal can deal with ISO 2022 font selection sequences.
+userdef	KJ	str	s	set the encoding of the terminal.
+userdef	OL	num	n	set the screen program's output buffer limit.
+userdef	S0	str	s	switch charset 'G0' to the specified charset. Default is '\E(%.'.
+userdef	TF	bool	-	add missing capabilities to screen's termcap/info entry. (Set by default).
+userdef	WS	str	nn	resize display. This capability has the desired width and height as arguments. SunView(tm) example: '\E[8;%d;%dt'.
+userdef	XC	str	s	describe a translation of characters to strings depending on the current font.
+userdef	XT	bool	-	terminal understands special xterm sequences (OSC, mouse tracking).
+userdef	Z0	str	-	change width to 132 columns.
+userdef	Z1	str	-	change width to 80 columns.
+#
+used_by tmux
+userdef	Cr	str	-	restore the default cursor color.
+userdef	Cs	str	s	set the cursor color.
+userdef	Csr	str	n	change the cursor style, overriding Ss.
+userdef	Ms	str	ss	store the current buffer in the host terminal's selection (clipboard).
+userdef	Se	str	-	reset the cursor style to the terminal initial state.
+userdef	Smulx	str	n	modify the appearance of underlines in VTE.
+userdef	Ss	str	n	change the cursor style.
+userdef	rmxx	str	-	reset ECMA-48 strikeout/crossed-out attributes.
+userdef	smxx	str	-	set ECMA-48 strikeout/crossed-out attributes.
+#
+used_by xterm
+userdef	kDC3	str	-	alt delete-character
+userdef	kDC4	str	-	shift+alt delete-character
+userdef	kDC5	str	-	control delete-character
+userdef	kDC6	str	-	shift+control delete-character
+userdef	kDC7	str	-	alt+control delete-character
+userdef	kDN	str	-	shift down-cursor
+userdef	kDN3	str	-	alt down-cursor
+userdef	kDN4	str	-	shift+alt down-cursor
+userdef	kDN5	str	-	control down-cursor
+userdef	kDN6	str	-	shift+control down-cursor
+userdef	kDN7	str	-	alt+control down-cursor
+userdef	kEND3	str	-	alt end
+userdef	kEND4	str	-	shift+alt end
+userdef	kEND5	str	-	control end
+userdef	kEND6	str	-	shift+control end
+userdef	kEND7	str	-	alt+control end
+userdef	kHOM3	str	-	alt home
+userdef	kHOM4	str	-	shift+alt home
+userdef	kHOM5	str	-	control home
+userdef	kHOM6	str	-	shift+control home
+userdef	kHOM7	str	-	alt+control home
+userdef	kIC3	str	-	alt insert-character
+userdef	kIC4	str	-	shift+alt insert-character
+userdef	kIC5	str	-	control insert-character
+userdef	kIC6	str	-	shift+control insert-character
+userdef	kIC7	str	-	alt+control insert-character
+userdef	kLFT3	str	-	alt left-cursor
+userdef	kLFT4	str	-	shift+alt left-cursor
+userdef	kLFT5	str	-	control left-cursor
+userdef	kLFT6	str	-	shift+control left-cursor
+userdef	kLFT7	str	-	alt+control left-cursor
+userdef	kNXT3	str	-	alt next
+userdef	kNXT4	str	-	shift+alt next
+userdef	kNXT5	str	-	control next
+userdef	kNXT6	str	-	shift+control next
+userdef	kNXT7	str	-	alt+control next
+userdef	kPRV3	str	-	alt previous
+userdef	kPRV4	str	-	shift+alt previous
+userdef	kPRV5	str	-	control previous
+userdef	kPRV6	str	-	shift+control previous
+userdef	kPRV7	str	-	alt+control previous
+userdef	kRIT3	str	-	alt right-cursor
+userdef	kRIT4	str	-	shift+alt right-cursor
+userdef	kRIT5	str	-	control right-cursor
+userdef	kRIT6	str	-	shift+control right-cursor
+userdef	kRIT7	str	-	alt+control right-cursor
+userdef	kUP	str	-	shift up-cursor
+userdef	kUP3	str	-	alt up-cursor
+userdef	kUP4	str	-	shift+alt up-cursor
+userdef	kUP5	str	-	control up-cursor
+userdef	kUP6	str	-	shift+control up-cursor
+userdef	kUP7	str	-	alt+control up-cursor
+userdef	ka2	str	-	vt220-keypad extensions
+userdef	kb1	str	-	vt220-keypad extensions
+userdef	kb3	str	-	vt220-keypad extensions
+userdef	kc2	str	-	vt220-keypad extensions

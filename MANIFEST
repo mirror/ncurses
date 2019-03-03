@@ -533,6 +533,7 @@
 ./form/llib-lformw
 ./form/modules
 ./include/Caps
+./include/Caps-ncurses
 ./include/Caps.aix4
 ./include/Caps.hpux11
 ./include/Caps.keys

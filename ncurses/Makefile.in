@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.156 2018/03/01 17:37:19 tom Exp $
+# $Id: Makefile.in,v 1.157 2019/03/02 22:18:27 tom Exp $
 ##############################################################################
-# Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -155,6 +155,7 @@ FALLBACK_LIST	= @FALLBACK_LIST@
 
 USE_BIG_STRINGS	= @USE_BIG_STRINGS@
 TERMINFO_CAPS	= $(top_srcdir)/include/@TERMINFO_CAPS@
+CAPLIST		= $(TERMINFO_CAPS) $(top_srcdir)/include/Caps-ncurses
 
 TERMINFO	= @TERMINFO@
 TERMINFO_SRC	= @TERMINFO_SRC@
@@ -228,7 +229,7 @@ init_keytry.h: make_keys$(BUILD_EXEEXT) keys.list
 	./make_keys$(BUILD_EXEEXT) keys.list > $@
 
 keys.list :	$(tinfo)/MKkeys_list.sh
-	AWK=$(AWK) $(SHELL) $(tinfo)/MKkeys_list.sh $(TERMINFO_CAPS) | LC_ALL=C sort >$@
+	AWK=$(AWK) $(SHELL) $(tinfo)/MKkeys_list.sh $(CAPLIST) | LC_ALL=C sort >$@
 
 make_keys$(BUILD_EXEEXT) : \
 		$(tinfo)/make_keys.c \
@@ -254,16 +255,16 @@ report_offsets$(BUILD_EXEEXT) : \
 		../include/hashsize.h \
 		$(tinfo)/MKcaptab.sh \
 		$(tinfo)/MKcaptab.awk
-	$(SHELL) -e $(tinfo)/MKcaptab.sh $(AWK) $(USE_BIG_STRINGS) $(tinfo)/MKcaptab.awk $(srcdir)/../include/@TERMINFO_CAPS@ > $@
+	$(SHELL) -e $(tinfo)/MKcaptab.sh $(AWK) $(USE_BIG_STRINGS) $(tinfo)/MKcaptab.awk $(CAPLIST) > $@
 
 ./lib_keyname.c: keys.list $(base)/MKkeyname.awk
 	$(AWK) -f $(base)/MKkeyname.awk bigstrings=$(USE_BIG_STRINGS) keys.list > $@
 
 ./codes.c: $(tinfo)/MKcodes.awk
-	$(AWK) -f $(tinfo)/MKcodes.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
+	$(AWK) -f $(tinfo)/MKcodes.awk bigstrings=$(USE_BIG_STRINGS) $(CAPLIST) >$@
 
 ./names.c: $(tinfo)/MKnames.awk
-	$(AWK) -f $(tinfo)/MKnames.awk bigstrings=$(USE_BIG_STRINGS) $(srcdir)/../include/@TERMINFO_CAPS@ >$@
+	$(AWK) -f $(tinfo)/MKnames.awk bigstrings=$(USE_BIG_STRINGS) $(CAPLIST) >$@
 
 ./unctrl.c: $(base)/MKunctrl.awk
 	echo | $(AWK) -f $(base)/MKunctrl.awk bigstrings=$(USE_BIG_STRINGS) >$@
