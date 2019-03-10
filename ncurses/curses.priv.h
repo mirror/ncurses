@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.616 2019/02/23 17:54:39 tom Exp $
+ * $Id: curses.priv.h,v 1.618 2019/03/09 23:43:24 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2048,6 +2048,16 @@ typedef struct
 	short	source;
 } alias_table_data;
 
+/* comp_userdefs.c */
+typedef struct {
+	short	ute_name;	/* offset of name to hash on */
+	unsigned ute_type;	/* mask (BOOLEAN, NUMBER, STRING) */
+	unsigned ute_argc;	/* number of parameters */
+	unsigned ute_args;	/* bit-mask for string parameters */
+	short	ute_index;	/* index of associated variable in its array */
+	short	ute_link;	/* index in table of next hash, or -1 */
+} user_table_data;
+
 /* doupdate.c */
 #if USE_XMC_SUPPORT
 extern NCURSES_EXPORT(void) _nc_do_xmc_glitch (attr_t);
@@ -2262,6 +2272,7 @@ extern NCURSES_EXPORT(void) _nc_codes_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_captab_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_error_leaks(void);
 extern NCURSES_EXPORT(void) _nc_comp_scan_leaks(void);
+extern NCURSES_EXPORT(void) _nc_comp_userdefs_leaks(void);
 extern NCURSES_EXPORT(void) _nc_db_iterator_leaks(void);
 extern NCURSES_EXPORT(void) _nc_keyname_leaks(void);
 extern NCURSES_EXPORT(void) _nc_names_leaks(void);

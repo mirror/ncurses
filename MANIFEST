@@ -901,6 +901,7 @@
 ./ncurses/tinfo/MKfallback.sh
 ./ncurses/tinfo/MKkeys_list.sh
 ./ncurses/tinfo/MKnames.awk
+./ncurses/tinfo/MKuserdefs.sh
 ./ncurses/tinfo/README
 ./ncurses/tinfo/access.c
 ./ncurses/tinfo/add_tries.c

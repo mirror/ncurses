@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.76 2018/05/06 00:19:34 tom Exp $
+ * $Id: tic.h,v 1.78 2019/03/10 00:06:02 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -215,6 +215,21 @@ struct alias
 #define NOTFOUND	((struct name_table_entry *) 0)
 
 /*
+ * The file comp_userdefs.c contains an array of these structures, one per
+ * possible capability.  These are indexed by a hash table array of pointers to
+ * the same structures for use by the parser.
+ */
+struct user_table_entry
+{
+	const char *ute_name;	/* name to hash on */
+	int	ute_type;	/* mask (BOOLEAN, NUMBER, STRING) */
+	unsigned ute_argc;	/* number of parameters */
+	unsigned ute_args;	/* bit-mask for string parameters */
+	HashValue ute_index;	/* index of associated variable in its array */
+	HashValue ute_link;	/* index in table of next hash, or -1 */
+};
+
+/*
  * The casts are required for correct sign-propagation with systems such as
  * AIX, IRIX64, Solaris which default to unsigned characters.  The C standard
  * leaves this detail unspecified.
@@ -266,6 +281,8 @@ extern NCURSES_EXPORT(const struct alias *) _nc_get_alias_table (bool);
 /* comp_hash.c: name lookup */
 extern NCURSES_EXPORT(struct name_table_entry const *) _nc_find_type_entry
 	(const char *, int, bool);
+extern NCURSES_EXPORT(struct user_table_entry const *) _nc_find_user_entry
+	(const char *);
 
 /* comp_scan.c: lexical analysis */
 extern NCURSES_EXPORT(int)  _nc_get_token (bool);
@@ -294,6 +311,10 @@ extern NCURSES_EXPORT_VAR(bool) _nc_suppress_warnings;
 
 /* comp_scan.c */
 extern NCURSES_EXPORT_VAR(struct token)	_nc_curr_token;
+
+/* comp_userdefs.c */
+NCURSES_EXPORT(const struct user_table_entry *) _nc_get_userdefs_table (void);
+NCURSES_EXPORT(const HashData *) _nc_get_hash_user (void);
 
 /* captoinfo.c: capability conversion */
 extern NCURSES_EXPORT(char *) _nc_captoinfo (const char *, const char *, int const);

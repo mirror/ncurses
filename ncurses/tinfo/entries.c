@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2012,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.26 2017/08/04 09:01:39 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.27 2019/03/09 23:41:08 tom Exp $")
 
 /****************************************************************************
  *
@@ -130,6 +130,7 @@ _nc_leaks_tinfo(void)
     _nc_forget_prescr();
 
     _nc_comp_captab_leaks();
+    _nc_comp_userdefs_leaks();
     _nc_free_entries(_nc_head);
     _nc_get_type(0);
     _nc_first_name(0);

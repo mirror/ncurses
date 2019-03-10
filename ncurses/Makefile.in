@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.157 2019/03/02 22:18:27 tom Exp $
+# $Id: Makefile.in,v 1.160 2019/03/09 23:39:14 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -164,6 +164,7 @@ TIC_PATH	= @TIC_PATH@
 AUTO_SRC = \
 	./codes.c \
 	./comp_captab.c \
+	./comp_userdefs.c \
 	./expanded.c \
 	./fallback.c \
 	./lib_gen.c \
@@ -256,6 +257,12 @@ report_offsets$(BUILD_EXEEXT) : \
 		$(tinfo)/MKcaptab.sh \
 		$(tinfo)/MKcaptab.awk
 	$(SHELL) -e $(tinfo)/MKcaptab.sh $(AWK) $(USE_BIG_STRINGS) $(tinfo)/MKcaptab.awk $(CAPLIST) > $@
+
+./comp_userdefs.c: \
+		make_hash$(BUILD_EXEEXT) \
+		../include/hashsize.h \
+		$(tinfo)/MKuserdefs.sh
+	$(SHELL) -e $(tinfo)/MKuserdefs.sh $(AWK) $(USE_BIG_STRINGS) $(CAPLIST) > $@
 
 ./lib_keyname.c: keys.list $(base)/MKkeyname.awk
 	$(AWK) -f $(base)/MKkeyname.awk bigstrings=$(USE_BIG_STRINGS) keys.list > $@
