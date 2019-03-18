@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKuserdefs.sh,v 1.6 2019/03/10 01:08:14 tom Exp $
+# $Id: MKuserdefs.sh,v 1.8 2019/03/17 00:46:17 tom Exp $
 AWK=${1-awk}; shift 1
 OPT1=${1-0}; shift 1
 
@@ -75,6 +75,8 @@ _nc_build_names(struct user_table_entry **actual,
 	    for (n = 0; n < CAPTABSIZE; ++n) {
 		(*actual)[n].ute_name = strings + len;
 		(*actual)[n].ute_type = (int) source[n].ute_type;
+		(*actual)[n].ute_argc = source[n].ute_argc;
+		(*actual)[n].ute_args = source[n].ute_args;
 		(*actual)[n].ute_index = source[n].ute_index;
 		(*actual)[n].ute_link = source[n].ute_link;
 		next_string(strings, &len);

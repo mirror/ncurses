@@ -24,7 +24,7 @@
 <span class="comment"><EM>--                                 S P E C                                  --</EM></span>
 <span class="comment"><EM>--                                                                          --</EM></span>
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
-<span class="comment"><EM>-- Copyright (c) 1998-2003,2009 Free Software Foundation, Inc.              --</EM></span>
+<span class="comment"><EM>-- Copyright (c) 1998-2009,2018 Free Software Foundation, Inc.              --</EM></span>
 <span class="comment"><EM>--                                                                          --</EM></span>
 <span class="comment"><EM>-- Permission is hereby granted, free of charge, to any person obtaining a  --</EM></span>
 <span class="comment"><EM>-- copy of this software and associated documentation files (the            --</EM></span>
@@ -52,7 +52,7 @@
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
 <span class="comment"><EM>--  Author:  Juergen Pfeifer, 1996</EM></span>
 <span class="comment"><EM>--  Version Control:</EM></span>
-<span class="comment"><EM>--  @Revision: 1.12 @</EM></span>
+<span class="comment"><EM>--  @Revision: 1.13 @</EM></span>
 <span class="comment"><EM>--  Binding Version 01.00</EM></span>
 <span class="comment"><EM>------------------------------------------------------------------------------</EM></span>
 <b>with</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings;
@@ -71,12 +71,12 @@
 
    <b>type</b> <span class="symbol"><A NAME="ref_55_9">Enumeration_Info</A></span> (<span class="symbol"><A NAME="ref_55_27" HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_9">C</A></span> : Positive) <b>is</b>
       <b>record</b>
-         <span class="symbol"><A NAME="ref_57_10">Names</A></span>                : Enum_Array (1 .. <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_27">C</A>);
-         <span class="symbol"><A NAME="ref_58_10">Case_Sensitive</A></span>       : Boolean := False;
-         <span class="symbol"><A NAME="ref_59_10">Match_Must_Be_Unique</A></span> : Boolean := False;
+         <span class="symbol"><A NAME="ref_57_10">Case_Sensitive</A></span>       : Boolean := False;
+         <span class="symbol"><A NAME="ref_58_10">Match_Must_Be_Unique</A></span> : Boolean := False;
+         <span class="symbol"><A NAME="ref_59_10">Names</A></span>                : Enum_Array (1 .. <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_27">C</A>);
       <b>end</b> <b>record</b>;
 
-   <b>type</b> <span class="symbol"><A NAME="ref_62_9">Enumeration_Field</A></span> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_53_9">Field_Type</A> <b>with</b> <b>private</b>;
+   <b>type</b> <span class="symbol"><A NAME="ref_62_9">Enumeration_Field</A></span> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A> <b>with</b> <b>private</b>;
 
    <b>function</b> <span class="symbol"><A NAME="ref_64_13" HREF="terminal_interface-curses-forms-field_types-enumeration__adb.htm#ref_48_13">Create</A></span> (<span class="symbol"><A NAME="ref_64_21" HREF="terminal_interface-curses-forms-field_types-enumeration__adb.htm#ref_48_21">Info</A></span> : <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_55_9">Enumeration_Info</A>;
                     <span class="symbol"><A NAME="ref_65_21" HREF="terminal_interface-curses-forms-field_types-enumeration__adb.htm#ref_49_21">Auto_Release_Names</A></span> : Boolean := False)
@@ -105,7 +105,7 @@
 <b>private</b>
    <b>type</b> <span class="symbol"><A NAME="ref_89_9" HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_43_53">CPA_Access</A></span> <b>is</b> <b>access</b> <A HREF="interfac__ads.htm#ref_38_9">Interfaces</A>.C.Strings.chars_ptr_array;
 
-   <b>type</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_62_9">Enumeration_Field</A> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_53_9">Field_Type</A> <b>with</b>
+   <b>type</b> <A HREF="terminal_interface-curses-forms-field_types-enumeration__ads.htm#ref_62_9">Enumeration_Field</A> <b>is</b> <b>new</b> <A HREF="terminal_interface-curses-forms-field_types__ads.htm#ref_52_9">Field_Type</A> <b>with</b>
       <b>record</b>
          <span class="symbol"><A NAME="ref_93_10">Case_Sensitive</A></span>       : Boolean := False;
          <span class="symbol"><A NAME="ref_94_10">Match_Must_Be_Unique</A></span> : Boolean := False;

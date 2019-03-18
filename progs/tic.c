@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.268 2019/02/23 21:49:28 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.271 2019/03/17 00:46:55 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1832,56 +1832,16 @@ expected_params(const char *name)
     return result;
 }
 
-typedef struct {
-    const char *name;
-    int n_type;
-    int n_parms;
-} USERCAPS;
-
 /*
- * These are user-capabilities that happen to be used in ncurses' terminal
+ * Check for user-capabilities that happen to be used in ncurses' terminal
  * database.
  */
-static USERCAPS *
+static struct user_table_entry const *
 lookup_user_capability(const char *name)
 {
-    /* *INDENT-OFF* */
-#define DATA(name,type,parms) { name, type, parms }
-    static USERCAPS table[] = {
-	DATA( "AX",    BOOLEAN, 0 ),
-	DATA( "Cr",    STRING,  0 ),
-	DATA( "Cs",    STRING,  1 ),
-	DATA( "E0",    STRING,  0 ),
-	DATA( "E3",    STRING,  0 ),
-	DATA( "G0",    BOOLEAN, 0 ),
-	DATA( "Ms",    STRING,  2 ),
-	DATA( "RGB",   BOOLEAN, 0 ),	/* FIXME can be number or string */
-	DATA( "S0",    STRING,  1 ),
-	DATA( "Se",    STRING,  0 ),
-	DATA( "Smulx", STRING,  1 ),
-	DATA( "Ss",    STRING,  1 ),
-	DATA( "TS",    STRING,  0 ),
-	DATA( "U8",    NUMBER,  0 ),
-	DATA( "XM",    STRING,  1 ),
-	DATA( "XT",    BOOLEAN, 0 ),
-	DATA( "grbom", STRING,  0 ),
-	DATA( "gsbom", STRING,  0 ),
-	DATA( "rmxx",  STRING,  0 ),
-	DATA( "smxx",  STRING,  0 ),
-	DATA( "xm",    STRING,  9 ),
-    };
-#undef DATA
-    /* *INDENT-ON* */
-
-    size_t n;
-    USERCAPS *result = 0;
+    struct user_table_entry const *result = 0;
     if (*name != 'k') {
-	for (n = 0; n < SIZEOF(table); ++n) {
-	    if (!strcmp(name, table[n].name)) {
-		result = &table[n];
-		break;
-	    }
-	}
+	result = _nc_find_user_entry(name);
     }
     return result;
 }
@@ -1907,9 +1867,9 @@ is_user_capability(const char *name)
 	name[2] == '\0') {
 	result = (name[1] == '6') ? 2 : 0;
     } else if (using_extensions) {
-	USERCAPS *p = lookup_user_capability(name);
+	struct user_table_entry const *p = lookup_user_capability(name);
 	if (p != 0) {
-	    result = p->n_parms;
+	    result = (int) p->ute_argc;
 	}
     }
     return result;
@@ -2878,20 +2838,12 @@ name_of_type(int type)
 static void
 check_user_capability_type(const char *name, int actual)
 {
-    USERCAPS *p = lookup_user_capability(name);
-    if (p != 0) {
-	if (p->n_type != actual)
-	    _nc_warning("expected %s to be %s, but actually %s",
-			name,
-			name_of_type(p->n_type),
-			name_of_type(actual)
-		);
-    } else {
+    if (lookup_user_capability(name) == 0) {
 	int expected = standard_type(name);
 	if (expected >= 0) {
 	    _nc_warning("expected %s to be %s, but actually %s",
 			name,
-			name_of_type(p->n_type),
+			name_of_type(actual),
 			name_of_type(expected)
 		);
 	} else if (*name != 'k') {

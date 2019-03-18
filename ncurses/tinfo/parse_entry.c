@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.93 2018/04/14 17:41:12 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.96 2019/03/16 23:31:40 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -63,7 +63,7 @@ static struct name_table_entry const *lookup_fullname(const char *name);
 #if NCURSES_XNAMES
 
 static struct name_table_entry const *
-_nc_extend_names(ENTRY * entryp, char *name, int token_type)
+_nc_extend_names(ENTRY * entryp, const char *name, int token_type)
 {
     static struct name_table_entry temp;
     TERMTYPE2 *tp = &(entryp->tterm);
@@ -177,6 +177,39 @@ _nc_extend_names(ENTRY * entryp, char *name, int token_type)
     temp.nte_link = -1;
 
     return &temp;
+}
+
+static const char *
+usertype2s(int mask)
+{
+    const char *result = "unknown";
+    if (mask & (1 << BOOLEAN)) {
+	result = "boolean";
+    } else if (mask & (1 << NUMBER)) {
+	result = "number";
+    } else if (mask & (1 << STRING)) {
+	result = "string";
+    }
+    return result;
+}
+
+static bool
+expected_type(const char *name, int token_type, bool silent)
+{
+    struct user_table_entry const *entry = _nc_find_user_entry(name);
+    bool result = TRUE;
+    if ((entry != 0) && (token_type != CANCEL)) {
+	int have_type = (1 << token_type);
+	if (!(entry->ute_type & have_type)) {
+	    if (!silent)
+		_nc_warning("expected %s-type for %s, have %s",
+			    usertype2s(entry->ute_type),
+			    name,
+			    usertype2s(have_type));
+	    result = FALSE;
+	}
+    }
+    return result;
 }
 #endif /* NCURSES_XNAMES */
 
@@ -385,12 +418,20 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 	     * define a name based on its context.
 	     */
 	    if (entry_ptr == NOTFOUND
-		&& _nc_user_definable
-		&& (entry_ptr = _nc_extend_names(entryp,
-						 _nc_curr_token.tk_name,
-						 token_type)) != 0) {
-		if (_nc_tracing >= DEBUG_LEVEL(1))
-		    _nc_warning("extended capability '%s'", _nc_curr_token.tk_name);
+		&& _nc_user_definable) {
+		if (expected_type(_nc_curr_token.tk_name, token_type, silent)) {
+		    if ((entry_ptr = _nc_extend_names(entryp,
+						      _nc_curr_token.tk_name,
+						      token_type)) != 0) {
+			if (_nc_tracing >= DEBUG_LEVEL(1)) {
+			    _nc_warning("extended capability '%s'",
+					_nc_curr_token.tk_name);
+			}
+		    }
+		} else {
+		    /* ignore it: we have already printed error message */
+		    continue;
+		}
 	    }
 #endif /* NCURSES_XNAMES */
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2001-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2001-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -283,10 +283,10 @@ void	_nc_change_pair(
 		{ /* void */ }
 
 #undef _nc_reserve_pairs
-colorpair_t *_nc_reserve_pairs(
+void	_nc_reserve_pairs(
 		SCREEN	*sp, 
 		int	want)
-		{ return(*(colorpair_t **)0); }
+		{ /* void */ }
 
 #undef _nc_init_pair
 int	_nc_init_pair(
@@ -1179,20 +1179,6 @@ int	(untouchwin)(
 int	(vline)(
 		chtype	a1, 
 		int	z)
-		{ return(*(int *)0); }
-
-#undef vw_printw
-int	(vw_printw)(
-		WINDOW	*a1, 
-		const char *a2, 
-		va_list	z)
-		{ return(*(int *)0); }
-
-#undef vw_scanw
-int	(vw_scanw)(
-		WINDOW	*a1, 
-		const char *a2, 
-		va_list	z)
 		{ return(*(int *)0); }
 
 #undef waddchstr
@@ -2425,6 +2411,13 @@ int	vwprintw(
 		va_list	argp)
 		{ return(*(int *)0); }
 
+#undef vw_printw
+int	vw_printw(
+		WINDOW	*win, 
+		const char *fmt, 
+		va_list	argp)
+		{ return(*(int *)0); }
+
 /* ./base/lib_redrawln.c */
 
 #undef wredrawln
@@ -2467,6 +2460,13 @@ int	restartterm(
 
 #undef vwscanw
 int	vwscanw(
+		WINDOW	*win, 
+		const char *fmt, 
+		va_list	argp)
+		{ return(*(int *)0); }
+
+#undef vw_scanw
+int	vw_scanw(
 		WINDOW	*win, 
 		const char *fmt, 
 		va_list	argp)
@@ -3852,6 +3852,21 @@ struct name_table_entry const *_nc_find_type_entry(
 		NCURSES_BOOL termcap)
 		{ return(*(struct name_table_entry const **)0); }
 
+#undef _nc_find_user_entry
+struct user_table_entry const *_nc_find_user_entry(
+		const char *string)
+		{ return(*(struct user_table_entry const **)0); }
+
+/* ./comp_userdefs.c */
+
+#undef _nc_get_userdefs_table
+const struct user_table_entry *_nc_get_userdefs_table(void)
+		{ return(*(const struct user_table_entry **)0); }
+
+#undef _nc_get_hash_user
+const HashData *_nc_get_hash_user(void)
+		{ return(*(const HashData **)0); }
+
 /* ./tinfo/db_iterator.c */
 
 #undef _nc_tic_dir
@@ -4725,6 +4740,13 @@ SCREEN	*_nc_retrace_sp(
 WINDOW	*_nc_retrace_win(
 		WINDOW	*code)
 		{ return(*(WINDOW **)0); }
+
+#undef _nc_fmt_funcptr
+char	*_nc_fmt_funcptr(
+		char	*target, 
+		const char *source, 
+		size_t	size)
+		{ return(*(char **)0); }
 
 /* ./trace/lib_traceatr.c */
 

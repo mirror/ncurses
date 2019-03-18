@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3286 2019/03/09 21:35:49 tom Exp $
+-- $Id: NEWS,v 1.3293 2019/03/17 01:23:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190317
+	+ regenerate llib-* files.
+	+ modify tic to also use new function for user-defined capability info.
+	+ modify _nc_parse_entry() to check if a user-defined capability has
+	  an unexpected type; ignore it in that case.
+	+ fix a special case of link-anchors in generated Ada html files.
+	+ use newer rel=author tag in generated html rather than rev=made,
+	  which did not become accepted.
 
 20190309
 	+ in-progress changes to add parameter-checking for common user-defined

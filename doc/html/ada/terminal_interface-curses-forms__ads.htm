@@ -307,7 +307,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_new.3x.html">form_field_new.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_1"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_1">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_294_13" HREF="terminal_interface-curses-forms__adb.htm#ref_91_13">Create</A></span> (<span class="symbol"><A NAME="ref_294_21" HREF="terminal_interface-curses-forms__adb.htm#ref_91_21">Height</A></span>       : <A HREF="terminal_interface-curses__ads.htm#ref_61_12">Line_Count</A>;
                     <span class="symbol"><A NAME="ref_295_21" HREF="terminal_interface-curses-forms__adb.htm#ref_92_21">Width</A></span>        : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Column_Count</A>;
                     <span class="symbol"><A NAME="ref_296_21" HREF="terminal_interface-curses-forms__adb.htm#ref_93_21">Top</A></span>          : <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
@@ -318,7 +318,7 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">new_field()</A></EM></span>
    <span class="comment"><EM>--  An overloaded Create is defined later. Pragma Inline appears there.</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_2"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_2">|</A></EM></span>
    <b>function</b> New_Field (<span class="symbol"><A NAME="ref_305_24">Height</A></span>       : <A HREF="terminal_interface-curses__ads.htm#ref_61_12">Line_Count</A>;
                        <span class="symbol"><A NAME="ref_306_24">Width</A></span>        : <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Column_Count</A>;
                        <span class="symbol"><A NAME="ref_307_24">Top</A></span>          : <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
@@ -329,20 +329,20 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">new_field()</A></EM></span>
    <b>pragma</b> Inline (New_Field);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_3"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_3">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_316_14" HREF="terminal_interface-curses-forms__adb.htm#ref_114_14">Delete</A></span> (<span class="symbol"><A NAME="ref_316_22" HREF="terminal_interface-curses-forms__adb.htm#ref_114_22">Fld</A></span> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">free_field()</A></EM></span>
    <span class="comment"><EM>--  Reset Fld to Null_Field</EM></span>
    <span class="comment"><EM>--  An overloaded Delete is defined later. Pragma Inline appears there.</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_4"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_4">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_322_13" HREF="terminal_interface-curses-forms__adb.htm#ref_126_13">Duplicate</A></span> (<span class="symbol"><A NAME="ref_322_24" HREF="terminal_interface-curses-forms__adb.htm#ref_126_24">Fld</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                        <span class="symbol"><A NAME="ref_323_24" HREF="terminal_interface-curses-forms__adb.htm#ref_127_24">Top</A></span>  : <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
                        <span class="symbol"><A NAME="ref_324_24" HREF="terminal_interface-curses-forms__adb.htm#ref_128_24">Left</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_59_9">Column_Position</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_new.3x.html">dup_field()</A></EM></span>
    <b>pragma</b> Inline (Duplicate);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_5"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_5">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_329_13" HREF="terminal_interface-curses-forms__adb.htm#ref_147_13">Link</A></span> (<span class="symbol"><A NAME="ref_329_19" HREF="terminal_interface-curses-forms__adb.htm#ref_147_19">Fld</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                   <span class="symbol"><A NAME="ref_330_19" HREF="terminal_interface-curses-forms__adb.htm#ref_148_19">Top</A></span>  : <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
                   <span class="symbol"><A NAME="ref_331_19" HREF="terminal_interface-curses-forms__adb.htm#ref_149_19">Left</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_59_9">Column_Position</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
@@ -353,13 +353,13 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_just.3x.html">form_field_just.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_6"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_6">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_340_14" HREF="terminal_interface-curses-forms__adb.htm#ref_172_14">Set_Justification</A></span> (<span class="symbol"><A NAME="ref_340_33" HREF="terminal_interface-curses-forms__adb.htm#ref_172_33">Fld</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                                 <span class="symbol"><A NAME="ref_341_33" HREF="terminal_interface-curses-forms__adb.htm#ref_173_33">Just</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Field_Justification</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_33">None</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_just.3x.html">set_field_just()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_340_14">Set_Justification</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_7"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_7">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_346_13" HREF="terminal_interface-curses-forms__adb.htm#ref_186_13">Get_Justification</A></span> (<span class="symbol"><A NAME="ref_346_32" HREF="terminal_interface-curses-forms__adb.htm#ref_186_32">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_57_9">Field_Justification</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_just.3x.html">field_just()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_346_13">Get_Justification</A>);
@@ -368,7 +368,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_buffer.3x.html">form_field_buffer.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_8"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_8">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_355_14" HREF="terminal_interface-curses-forms__adb.htm#ref_200_14">Set_Buffer</A></span>
      (<span class="symbol"><A NAME="ref_356_7" HREF="terminal_interface-curses-forms__adb.htm#ref_201_7">Fld</A></span>    : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
       <span class="symbol"><A NAME="ref_357_7" HREF="terminal_interface-curses-forms__adb.htm#ref_202_7">Buffer</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_130_9">Buffer_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_130_9">Buffer_Number</A>'First;
@@ -376,7 +376,7 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_buffer()</A></EM></span>
    <span class="comment"><EM>--  Not inlined</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_9"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_9">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_363_14" HREF="terminal_interface-curses-forms__adb.htm#ref_217_14">Get_Buffer</A></span>
      (<span class="symbol"><A NAME="ref_364_7" HREF="terminal_interface-curses-forms__adb.htm#ref_218_7">Fld</A></span>    : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
       <span class="symbol"><A NAME="ref_365_7" HREF="terminal_interface-curses-forms__adb.htm#ref_219_7">Buffer</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_130_9">Buffer_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_130_9">Buffer_Number</A>'First;
@@ -390,18 +390,18 @@
    <span class="comment"><EM>--  Same but as function</EM></span>
    <b>pragma</b> Inline (Get_Buffer);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_10"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_10">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_377_14" HREF="terminal_interface-curses-forms__adb.htm#ref_242_14">Set_Status</A></span> (<span class="symbol"><A NAME="ref_377_26" HREF="terminal_interface-curses-forms__adb.htm#ref_242_26">Fld</A></span>    : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                          <span class="symbol"><A NAME="ref_378_26" HREF="terminal_interface-curses-forms__adb.htm#ref_243_26">Status</A></span> : Boolean := True);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_status()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_377_14">Set_Status</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_11"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_11">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_383_13" HREF="terminal_interface-curses-forms__adb.htm#ref_257_13">Changed</A></span> (<span class="symbol"><A NAME="ref_383_22" HREF="terminal_interface-curses-forms__adb.htm#ref_257_22">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>) <b>return</b> Boolean;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">field_status()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_383_13">Changed</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_12"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_12">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_388_14" HREF="terminal_interface-curses-forms__adb.htm#ref_273_14">Set_Maximum_Size</A></span> (<span class="symbol"><A NAME="ref_388_32" HREF="terminal_interface-curses-forms__adb.htm#ref_273_32">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                                <span class="symbol"><A NAME="ref_389_32" HREF="terminal_interface-curses-forms__adb.htm#ref_274_32">Max</A></span> : Natural := 0);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_buffer.3x.html">set_field_max()</A></EM></span>
@@ -411,13 +411,13 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_opts.3x.html">form_field_opts.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_13"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_13">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_398_14" HREF="terminal_interface-curses-forms__adb.htm#ref_290_14">Set_Options</A></span> (<span class="symbol"><A NAME="ref_398_27" HREF="terminal_interface-curses-forms__adb.htm#ref_290_27">Fld</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                           <span class="symbol"><A NAME="ref_399_27" HREF="terminal_interface-curses-forms__adb.htm#ref_291_27">Options</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_62_9">Field_Option_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">set_field_opts()</A></EM></span>
    <span class="comment"><EM>--  An overloaded version is defined later. Pragma Inline appears there</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_14"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_14">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_404_14" HREF="terminal_interface-curses-forms__adb.htm#ref_303_14">Switch_Options</A></span> (<span class="symbol"><A NAME="ref_404_30" HREF="terminal_interface-curses-forms__adb.htm#ref_303_30">Fld</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                              <span class="symbol"><A NAME="ref_405_30" HREF="terminal_interface-curses-forms__adb.htm#ref_304_30">Options</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_62_9">Field_Option_Set</A>;
                              <span class="symbol"><A NAME="ref_406_30" HREF="terminal_interface-curses-forms__adb.htm#ref_305_30">On</A></span>      : Boolean := True);
@@ -425,12 +425,12 @@
    <span class="comment"><EM>--  AKA: field_opts_off()</EM></span>
    <span class="comment"><EM>--  An overloaded version is defined later. Pragma Inline appears there</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_15"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_15">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_412_14" HREF="terminal_interface-curses-forms__adb.htm#ref_324_14">Get_Options</A></span> (<span class="symbol"><A NAME="ref_412_27" HREF="terminal_interface-curses-forms__adb.htm#ref_324_27">Fld</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                           <span class="symbol"><A NAME="ref_413_27" HREF="terminal_interface-curses-forms__adb.htm#ref_325_27">Options</A></span> : <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_62_9">Field_Option_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">field_opts()</A></EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_16"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_16">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_417_13" HREF="terminal_interface-curses-forms__adb.htm#ref_336_13">Get_Options</A></span> (<span class="symbol"><A NAME="ref_417_26" HREF="terminal_interface-curses-forms__adb.htm#ref_336_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_54_4">Null_Field</A>)
                          <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_62_9">Field_Option_Set</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_opts.3x.html">field_opts()</A></EM></span>
@@ -440,7 +440,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_attributes.3x.html">form_field_attributes.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_17"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_17">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_427_14" HREF="terminal_interface-curses-forms__adb.htm#ref_351_14">Set_Foreground</A></span>
      (<span class="symbol"><A NAME="ref_428_7" HREF="terminal_interface-curses-forms__adb.htm#ref_352_7">Fld</A></span>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
       <span class="symbol"><A NAME="ref_429_7" HREF="terminal_interface-curses-forms__adb.htm#ref_353_7">Fore</A></span>  : <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A> := <A HREF="terminal_interface-curses__ads.htm#ref_485_4">Normal_Video</A>;
@@ -448,19 +448,19 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_fore()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_427_14">Set_Foreground</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_18"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_18">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_435_14" HREF="terminal_interface-curses-forms__adb.htm#ref_368_14">Foreground</A></span> (<span class="symbol"><A NAME="ref_435_26" HREF="terminal_interface-curses-forms__adb.htm#ref_368_26">Fld</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                          <span class="symbol"><A NAME="ref_436_26" HREF="terminal_interface-curses-forms__adb.htm#ref_369_26">Fore</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_fore()</A></EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_19"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_19">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_440_14" HREF="terminal_interface-curses-forms__adb.htm#ref_377_14">Foreground</A></span> (<span class="symbol"><A NAME="ref_440_26" HREF="terminal_interface-curses-forms__adb.htm#ref_377_26">Fld</A></span>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                          <span class="symbol"><A NAME="ref_441_26" HREF="terminal_interface-curses-forms__adb.htm#ref_378_26">Fore</A></span>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A>;
                          <span class="symbol"><A NAME="ref_442_26" HREF="terminal_interface-curses-forms__adb.htm#ref_379_26">Color</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_409_9">Color_Pair</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_fore()</A></EM></span>
    <b>pragma</b> Inline (Foreground);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_20"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_20">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_447_14" HREF="terminal_interface-curses-forms__adb.htm#ref_390_14">Set_Background</A></span>
      (<span class="symbol"><A NAME="ref_448_7" HREF="terminal_interface-curses-forms__adb.htm#ref_391_7">Fld</A></span>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
       <span class="symbol"><A NAME="ref_449_7" HREF="terminal_interface-curses-forms__adb.htm#ref_392_7">Back</A></span>  : <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A> := <A HREF="terminal_interface-curses__ads.htm#ref_485_4">Normal_Video</A>;
@@ -468,25 +468,25 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_back()</A></EM></span>
    <b>pragma</b> Inline (Set_Background);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_21"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_21">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_455_14" HREF="terminal_interface-curses-forms__adb.htm#ref_407_14">Background</A></span> (<span class="symbol"><A NAME="ref_455_26" HREF="terminal_interface-curses-forms__adb.htm#ref_407_26">Fld</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                          <span class="symbol"><A NAME="ref_456_26" HREF="terminal_interface-curses-forms__adb.htm#ref_408_26">Back</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_back()</A></EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_22"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_22">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_460_14" HREF="terminal_interface-curses-forms__adb.htm#ref_416_14">Background</A></span> (<span class="symbol"><A NAME="ref_460_26" HREF="terminal_interface-curses-forms__adb.htm#ref_416_26">Fld</A></span>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                          <span class="symbol"><A NAME="ref_461_26" HREF="terminal_interface-curses-forms__adb.htm#ref_417_26">Back</A></span>  : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_417_9">Character_Attribute_Set</A>;
                          <span class="symbol"><A NAME="ref_462_26" HREF="terminal_interface-curses-forms__adb.htm#ref_418_26">Color</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_409_9">Color_Pair</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_back()</A></EM></span>
    <b>pragma</b> Inline (Background);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_23"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_23">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_467_14" HREF="terminal_interface-curses-forms__adb.htm#ref_429_14">Set_Pad_Character</A></span> (<span class="symbol"><A NAME="ref_467_33" HREF="terminal_interface-curses-forms__adb.htm#ref_429_33">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                                 <span class="symbol"><A NAME="ref_468_33" HREF="terminal_interface-curses-forms__adb.htm#ref_430_33">Pad</A></span> : Character := Space);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">set_field_pad()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_467_14">Set_Pad_Character</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_24"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_24">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_473_14" HREF="terminal_interface-curses-forms__adb.htm#ref_443_14">Pad_Character</A></span> (<span class="symbol"><A NAME="ref_473_29" HREF="terminal_interface-curses-forms__adb.htm#ref_443_29">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                             <span class="symbol"><A NAME="ref_474_29" HREF="terminal_interface-curses-forms__adb.htm#ref_444_29">Pad</A></span> : <b>out</b> Character);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_attributes.3x.html">field_pad()</A></EM></span>
@@ -496,7 +496,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field_info.3x.html">form_field_info.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_25"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_25">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_483_14" HREF="terminal_interface-curses-forms__adb.htm#ref_458_14">Info</A></span> (<span class="symbol"><A NAME="ref_483_20" HREF="terminal_interface-curses-forms__adb.htm#ref_458_20">Fld</A></span>                : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                    <span class="symbol"><A NAME="ref_484_20" HREF="terminal_interface-curses-forms__adb.htm#ref_459_20">Lines</A></span>              : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_12">Line_Count</A>;
                    <span class="symbol"><A NAME="ref_485_20" HREF="terminal_interface-curses-forms__adb.htm#ref_460_20">Columns</A></span>            : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Column_Count</A>;
@@ -507,7 +507,7 @@
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field_info.3x.html">field_info()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_483_14">Info</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_26"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_26">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_494_14" HREF="terminal_interface-curses-forms__adb.htm#ref_488_14">Dynamic_Info</A></span> (<span class="symbol"><A NAME="ref_494_28" HREF="terminal_interface-curses-forms__adb.htm#ref_488_28">Fld</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                            <span class="symbol"><A NAME="ref_495_28" HREF="terminal_interface-curses-forms__adb.htm#ref_489_28">Lines</A></span>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_12">Line_Count</A>;
                            <span class="symbol"><A NAME="ref_496_28" HREF="terminal_interface-curses-forms__adb.htm#ref_490_28">Columns</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Column_Count</A>;
@@ -519,29 +519,29 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_win.3x.html">form_win.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_27"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_27">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_506_14" HREF="terminal_interface-curses-forms__adb.htm#ref_513_14">Set_Window</A></span> (<span class="symbol"><A NAME="ref_506_26" HREF="terminal_interface-curses-forms__adb.htm#ref_513_26">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                          <span class="symbol"><A NAME="ref_507_26" HREF="terminal_interface-curses-forms__adb.htm#ref_514_26">Win</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_win.3x.html">set_form_win()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_506_14">Set_Window</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_28"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_28">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_512_13" HREF="terminal_interface-curses-forms__adb.htm#ref_526_13">Get_Window</A></span> (<span class="symbol"><A NAME="ref_512_25" HREF="terminal_interface-curses-forms__adb.htm#ref_526_25">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_win.3x.html">form_win()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_512_13">Get_Window</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_29"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_29">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_517_14" HREF="terminal_interface-curses-forms__adb.htm#ref_538_14">Set_Sub_Window</A></span> (<span class="symbol"><A NAME="ref_517_30" HREF="terminal_interface-curses-forms__adb.htm#ref_538_30">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                              <span class="symbol"><A NAME="ref_518_30" HREF="terminal_interface-curses-forms__adb.htm#ref_539_30">Win</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_win.3x.html">set_form_sub()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_517_14">Set_Sub_Window</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_30"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_30">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_523_13" HREF="terminal_interface-curses-forms__adb.htm#ref_551_13">Get_Sub_Window</A></span> (<span class="symbol"><A NAME="ref_523_29" HREF="terminal_interface-curses-forms__adb.htm#ref_551_29">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_win.3x.html">form_sub()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_523_13">Get_Sub_Window</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_31"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_31">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_528_14" HREF="terminal_interface-curses-forms__adb.htm#ref_563_14">Scale</A></span> (<span class="symbol"><A NAME="ref_528_21" HREF="terminal_interface-curses-forms__adb.htm#ref_563_21">Frm</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                     <span class="symbol"><A NAME="ref_529_21" HREF="terminal_interface-curses-forms__adb.htm#ref_564_21">Lines</A></span>   : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_61_12">Line_Count</A>;
                     <span class="symbol"><A NAME="ref_530_21" HREF="terminal_interface-curses-forms__adb.htm#ref_565_21">Columns</A></span> : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_63_12">Column_Count</A>);
@@ -555,46 +555,46 @@
    <b>type</b> <span class="symbol"><A NAME="ref_538_9">Form_Hook_Function</A></span> <b>is</b> <b>access</b> <b>procedure</b> (<span class="symbol"><A NAME="ref_538_49" HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>);
    <b>pragma</b> Convention (C, <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_32"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_32">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_542_14" HREF="terminal_interface-curses-forms__adb.htm#ref_584_14">Set_Field_Init_Hook</A></span> (<span class="symbol"><A NAME="ref_542_35" HREF="terminal_interface-curses-forms__adb.htm#ref_584_35">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                                   <span class="symbol"><A NAME="ref_543_35" HREF="terminal_interface-curses-forms__adb.htm#ref_585_35">Proc</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_field_init()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_542_14">Set_Field_Init_Hook</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_33"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_33">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_548_14" HREF="terminal_interface-curses-forms__adb.htm#ref_597_14">Set_Field_Term_Hook</A></span> (<span class="symbol"><A NAME="ref_548_35" HREF="terminal_interface-curses-forms__adb.htm#ref_597_35">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                                   <span class="symbol"><A NAME="ref_549_35" HREF="terminal_interface-curses-forms__adb.htm#ref_598_35">Proc</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_field_term()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_548_14">Set_Field_Term_Hook</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_34"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_34">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_554_14" HREF="terminal_interface-curses-forms__adb.htm#ref_610_14">Set_Form_Init_Hook</A></span> (<span class="symbol"><A NAME="ref_554_34" HREF="terminal_interface-curses-forms__adb.htm#ref_610_34">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                                  <span class="symbol"><A NAME="ref_555_34" HREF="terminal_interface-curses-forms__adb.htm#ref_611_34">Proc</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_form_init()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_554_14">Set_Form_Init_Hook</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_35"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_35">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_560_14" HREF="terminal_interface-curses-forms__adb.htm#ref_623_14">Set_Form_Term_Hook</A></span> (<span class="symbol"><A NAME="ref_560_34" HREF="terminal_interface-curses-forms__adb.htm#ref_623_34">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                                  <span class="symbol"><A NAME="ref_561_34" HREF="terminal_interface-curses-forms__adb.htm#ref_624_34">Proc</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">set_form_term()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_560_14">Set_Form_Term_Hook</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_36"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_36">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_566_13">Get_Field_Init_Hook</A></span> (<span class="symbol"><A NAME="ref_566_34" HREF="terminal_interface-curses-forms__ads.htm#ref_566_13">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">field_init()</A></EM></span>
    <b>pragma</b> Import (C, Get_Field_Init_Hook, "field_init");
 
-   <span class="comment"><EM>--  #1A NAME="AFU_37"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_37">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_571_13">Get_Field_Term_Hook</A></span> (<span class="symbol"><A NAME="ref_571_34" HREF="terminal_interface-curses-forms__ads.htm#ref_571_13">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">field_term()</A></EM></span>
    <b>pragma</b> Import (C, Get_Field_Term_Hook, "field_term");
 
-   <span class="comment"><EM>--  #1A NAME="AFU_38"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_38">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_576_13">Get_Form_Init_Hook</A></span> (<span class="symbol"><A NAME="ref_576_33" HREF="terminal_interface-curses-forms__ads.htm#ref_576_13">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">form_init()</A></EM></span>
    <b>pragma</b> Import (C, Get_Form_Init_Hook, "form_init");
 
-   <span class="comment"><EM>--  #1A NAME="AFU_39"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_39">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_581_13">Get_Form_Term_Hook</A></span> (<span class="symbol"><A NAME="ref_581_33" HREF="terminal_interface-curses-forms__ads.htm#ref_581_13">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_538_9">Form_Hook_Function</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_hook.3x.html">form_term()</A></EM></span>
    <b>pragma</b> Import (C, Get_Form_Term_Hook, "form_term");
@@ -603,30 +603,30 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_field.3x.html">form_field.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_40"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_40">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_590_14" HREF="terminal_interface-curses-forms__adb.htm#ref_640_14">Redefine</A></span> (<span class="symbol"><A NAME="ref_590_24" HREF="terminal_interface-curses-forms__adb.htm#ref_640_24">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                        <span class="symbol"><A NAME="ref_591_24" HREF="terminal_interface-curses-forms__adb.htm#ref_641_24">Flds</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_135_9">Field_Array_Access</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field.3x.html">set_form_fields()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_590_14">Redefine</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_41"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_41">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_596_14">Set_Fields</A></span> (<span class="symbol"><A NAME="ref_596_26">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                          <span class="symbol"><A NAME="ref_597_26">Flds</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_135_9">Field_Array_Access</A>) <b>renames</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_590_14">Redefine</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field.3x.html">set_form_fields()</A></EM></span>
    <span class="comment"><EM>--  pragma Inline (Set_Fields);</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_42"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_42">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_602_13" HREF="terminal_interface-curses-forms__adb.htm#ref_658_13">Fields</A></span> (<span class="symbol"><A NAME="ref_602_21" HREF="terminal_interface-curses-forms__adb.htm#ref_658_21">Frm</A></span>   : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                     <span class="symbol"><A NAME="ref_603_21" HREF="terminal_interface-curses-forms__adb.htm#ref_659_21">Index</A></span> : Positive) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field.3x.html">form_fields()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_602_13">Fields</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_43"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_43">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_608_13" HREF="terminal_interface-curses-forms__adb.htm#ref_678_13">Field_Count</A></span> (<span class="symbol"><A NAME="ref_608_26" HREF="terminal_interface-curses-forms__adb.htm#ref_678_26">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> Natural;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_field.3x.html">field_count()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_608_13">Field_Count</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_44"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_44">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_613_14" HREF="terminal_interface-curses-forms__adb.htm#ref_688_14">Move</A></span> (<span class="symbol"><A NAME="ref_613_20" HREF="terminal_interface-curses-forms__adb.htm#ref_688_20">Fld</A></span>    : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                    <span class="symbol"><A NAME="ref_614_20" HREF="terminal_interface-curses-forms__adb.htm#ref_689_20">Line</A></span>   : <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
                    <span class="symbol"><A NAME="ref_615_20" HREF="terminal_interface-curses-forms__adb.htm#ref_690_20">Column</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_59_9">Column_Position</A>);
@@ -637,18 +637,18 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_new.3x.html">form_new.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_45"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_45">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_624_13" HREF="terminal_interface-curses-forms__adb.htm#ref_705_13">Create</A></span> (<span class="symbol"><A NAME="ref_624_21" HREF="terminal_interface-curses-forms__adb.htm#ref_705_21">Fields</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_135_9">Field_Array_Access</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_new.3x.html">new_form()</A></EM></span>
    <b>pragma</b> Inline (Create);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_46"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_46">|</A></EM></span>
    <b>function</b> New_Form (<span class="symbol"><A NAME="ref_629_23">Fields</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_135_9">Field_Array_Access</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>
      <b>renames</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_624_13">Create</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_new.3x.html">new_form()</A></EM></span>
    <span class="comment"><EM>--  pragma Inline (New_Form);</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_47"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_47">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_635_14" HREF="terminal_interface-curses-forms__adb.htm#ref_726_14">Delete</A></span> (<span class="symbol"><A NAME="ref_635_22" HREF="terminal_interface-curses-forms__adb.htm#ref_726_22">Frm</A></span> : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_new.3x.html">free_form()</A></EM></span>
    <span class="comment"><EM>--  Reset Frm to Null_Form</EM></span>
@@ -658,13 +658,13 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_opts.3x.html">form_opts.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_48"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_48">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_645_14" HREF="terminal_interface-curses-forms__adb.htm#ref_742_14">Set_Options</A></span> (<span class="symbol"><A NAME="ref_645_27" HREF="terminal_interface-curses-forms__adb.htm#ref_742_27">Frm</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                           <span class="symbol"><A NAME="ref_646_27" HREF="terminal_interface-curses-forms__adb.htm#ref_743_27">Options</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_108_9">Form_Option_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_opts.3x.html">set_form_opts()</A></EM></span>
    <b>pragma</b> Inline (Set_Options);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_49"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_49">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_651_14" HREF="terminal_interface-curses-forms__adb.htm#ref_755_14">Switch_Options</A></span> (<span class="symbol"><A NAME="ref_651_30" HREF="terminal_interface-curses-forms__adb.htm#ref_755_30">Frm</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                              <span class="symbol"><A NAME="ref_652_30" HREF="terminal_interface-curses-forms__adb.htm#ref_756_30">Options</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_108_9">Form_Option_Set</A>;
                              <span class="symbol"><A NAME="ref_653_30" HREF="terminal_interface-curses-forms__adb.htm#ref_757_30">On</A></span>      : Boolean := True);
@@ -672,12 +672,12 @@
    <span class="comment"><EM>--  AKA: form_opts_off()</EM></span>
    <b>pragma</b> Inline (Switch_Options);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_50"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_50">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_659_14" HREF="terminal_interface-curses-forms__adb.htm#ref_776_14">Get_Options</A></span> (<span class="symbol"><A NAME="ref_659_27" HREF="terminal_interface-curses-forms__adb.htm#ref_776_27">Frm</A></span>     : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                           <span class="symbol"><A NAME="ref_660_27" HREF="terminal_interface-curses-forms__adb.htm#ref_777_27">Options</A></span> : <b>out</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_108_9">Form_Option_Set</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_opts.3x.html">form_opts()</A></EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_51"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_51">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_664_13" HREF="terminal_interface-curses-forms__adb.htm#ref_788_13">Get_Options</A></span> (<span class="symbol"><A NAME="ref_664_26" HREF="terminal_interface-curses-forms__adb.htm#ref_788_26">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_55_4">Null_Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_108_9">Form_Option_Set</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_opts.3x.html">form_opts()</A></EM></span>
    <b>pragma</b> Inline (Get_Options);
@@ -686,7 +686,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_post.3x.html">form_post.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_52"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_52">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_673_14" HREF="terminal_interface-curses-forms__adb.htm#ref_802_14">Post</A></span> (<span class="symbol"><A NAME="ref_673_20" HREF="terminal_interface-curses-forms__adb.htm#ref_802_20">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                    <span class="symbol"><A NAME="ref_674_20" HREF="terminal_interface-curses-forms__adb.htm#ref_803_20">Post</A></span> : Boolean := True);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_post.3x.html">post_form()</A></EM></span>
@@ -697,7 +697,7 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_cursor.3x.html">form_cursor.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_53"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_53">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_684_14" HREF="terminal_interface-curses-forms__adb.htm#ref_824_14">Position_Cursor</A></span> (<span class="symbol"><A NAME="ref_684_31" HREF="terminal_interface-curses-forms__adb.htm#ref_824_31">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_cursor.3x.html">pos_form_cursor()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_684_14">Position_Cursor</A>);
@@ -706,12 +706,12 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_data.3x.html">form_data.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_54"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_54">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_693_13" HREF="terminal_interface-curses-forms__adb.htm#ref_839_13">Data_Ahead</A></span> (<span class="symbol"><A NAME="ref_693_25" HREF="terminal_interface-curses-forms__adb.htm#ref_839_25">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> Boolean;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_data.3x.html">data_ahead()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_693_13">Data_Ahead</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_55"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_55">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_698_13" HREF="terminal_interface-curses-forms__adb.htm#ref_855_13">Data_Behind</A></span> (<span class="symbol"><A NAME="ref_698_26" HREF="terminal_interface-curses-forms__adb.htm#ref_855_26">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> Boolean;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_data.3x.html">data_behind()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_698_13">Data_Behind</A>);
@@ -725,7 +725,7 @@
                           <span class="symbol"><A NAME="ref_708_27">Unknown_Request</A></span>,
                           <span class="symbol"><A NAME="ref_709_27">Invalid_Field</A></span>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_56"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_56">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_712_13" HREF="terminal_interface-curses-forms__adb.htm#ref_875_13">Driver</A></span> (<span class="symbol"><A NAME="ref_712_21" HREF="terminal_interface-curses-forms__adb.htm#ref_875_21">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                     <span class="symbol"><A NAME="ref_713_21" HREF="terminal_interface-curses-forms__adb.htm#ref_876_21">Key</A></span> : <A HREF="terminal_interface-curses__ads.htm#ref_66_9">Key_Code</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_706_9">Driver_Result</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_driver.3x.html">form_driver()</A></EM></span>
@@ -737,29 +737,29 @@
 
    <b>type</b> <span class="symbol"><A NAME="ref_721_9">Page_Number</A></span> <b>is</b> <b>new</b> Natural;
 
-   <span class="comment"><EM>--  #1A NAME="AFU_57"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_57">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_724_14" HREF="terminal_interface-curses-forms__adb.htm#ref_902_14">Set_Current</A></span> (<span class="symbol"><A NAME="ref_724_27" HREF="terminal_interface-curses-forms__adb.htm#ref_902_27">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                           <span class="symbol"><A NAME="ref_725_27" HREF="terminal_interface-curses-forms__adb.htm#ref_903_27">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_page.3x.html">set_current_field()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_724_14">Set_Current</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_58"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_58">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_730_13" HREF="terminal_interface-curses-forms__adb.htm#ref_914_13">Current</A></span> (<span class="symbol"><A NAME="ref_730_22" HREF="terminal_interface-curses-forms__adb.htm#ref_914_22">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_page.3x.html">current_field()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_730_13">Current</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_59"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_59">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_735_14" HREF="terminal_interface-curses-forms__adb.htm#ref_929_14">Set_Page</A></span> (<span class="symbol"><A NAME="ref_735_24" HREF="terminal_interface-curses-forms__adb.htm#ref_929_24">Frm</A></span>  : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>;
                        <span class="symbol"><A NAME="ref_736_24" HREF="terminal_interface-curses-forms__adb.htm#ref_930_24">Page</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_721_9">Page_Number</A> := <A HREF="terminal_interface-curses-forms__ads.htm#ref_721_9">Page_Number</A>'First);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_page.3x.html">set_form_page()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_735_14">Set_Page</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_60"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_60">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_741_13" HREF="terminal_interface-curses-forms__adb.htm#ref_941_13">Page</A></span> (<span class="symbol"><A NAME="ref_741_19" HREF="terminal_interface-curses-forms__adb.htm#ref_941_19">Frm</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_52_9">Form</A>) <b>return</b> <A HREF="terminal_interface-curses-forms__ads.htm#ref_721_9">Page_Number</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_page.3x.html">form_page()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_741_13">Page</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_61"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_61">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_746_13" HREF="terminal_interface-curses-forms__adb.htm#ref_955_13">Get_Index</A></span> (<span class="symbol"><A NAME="ref_746_24" HREF="terminal_interface-curses-forms__adb.htm#ref_955_24">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>) <b>return</b> Positive;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_page.3x.html">field_index()</A></EM></span>
    <span class="comment"><EM>--  Please note that in this binding we start the numbering of fields</EM></span>
@@ -771,13 +771,13 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/form_new_page.3x.html">form_new_page.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_62"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_62">|</A></EM></span>
    <b>procedure</b> <span class="symbol"><A NAME="ref_758_14" HREF="terminal_interface-curses-forms__adb.htm#ref_975_14">Set_New_Page</A></span> (<span class="symbol"><A NAME="ref_758_28" HREF="terminal_interface-curses-forms__adb.htm#ref_975_28">Fld</A></span>      : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>;
                            <span class="symbol"><A NAME="ref_759_28" HREF="terminal_interface-curses-forms__adb.htm#ref_976_28">New_Page</A></span> : Boolean := True);
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_new_page.3x.html">set_new_page()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_758_14">Set_New_Page</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_63"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_63">|</A></EM></span>
    <b>function</b> <span class="symbol"><A NAME="ref_764_13" HREF="terminal_interface-curses-forms__adb.htm#ref_987_13">Is_New_Page</A></span> (<span class="symbol"><A NAME="ref_764_26" HREF="terminal_interface-curses-forms__adb.htm#ref_987_26">Fld</A></span> : <A HREF="terminal_interface-curses-forms__ads.htm#ref_51_9">Field</A>) <b>return</b> Boolean;
    <span class="comment"><EM>--  AKA: <A HREF="../man/form_new_page.3x.html">new_page()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-forms__ads.htm#ref_764_13">Is_New_Page</A>);

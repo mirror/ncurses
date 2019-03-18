@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.101 2018/12/15 23:54:24 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.102 2019/03/17 21:57:04 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -125,6 +125,7 @@ NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 	    size_t amount = SP->out_inuse;
 
 	    SP->out_inuse = 0;
+	    TR(TRACE_CHARPUT, ("flushing %ld bytes", (unsigned long) amount));
 	    while (amount) {
 		ssize_t res = write(SP_PARM->_ofd, buf, amount);
 

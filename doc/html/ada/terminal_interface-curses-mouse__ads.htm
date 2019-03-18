@@ -104,70 +104,70 @@
    <span class="comment"><EM>--  | Man page <A HREF="../man/curs_mouse.3x.html">curs_mouse.3x</A></EM></span>
    <span class="comment"><EM>--  |=====================================================================</EM></span>
 
-   <b>function</b> <span class="symbol"><A NAME="ref_90_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_50_13">Has_Mouse</A></span> <b>return</b> Boolean;
+   <b>function</b> <span class="symbol"><A NAME="ref_90_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_48_13">Has_Mouse</A></span> <b>return</b> Boolean;
    <span class="comment"><EM>--  Return true if a mouse device is supported, false otherwise.</EM></span>
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_93_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_77_14">Register_Reportable_Event</A></span>
-     (<span class="symbol"><A NAME="ref_94_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_77_41">Button</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
-      <span class="symbol"><A NAME="ref_95_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_78_41">State</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_71_9">Button_State</A>;
-      <span class="symbol"><A NAME="ref_96_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_79_41">Mask</A></span>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_93_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_75_14">Register_Reportable_Event</A></span>
+     (<span class="symbol"><A NAME="ref_94_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_75_41">Button</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
+      <span class="symbol"><A NAME="ref_95_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_76_41">State</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_71_9">Button_State</A>;
+      <span class="symbol"><A NAME="ref_96_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_77_41">Mask</A></span>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>);
    <span class="comment"><EM>--  Stores the event described by the button and the state in the mask.</EM></span>
    <span class="comment"><EM>--  Before you call this the first time, you should initialize the mask</EM></span>
    <span class="comment"><EM>--  with the Empty_Mask constant</EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_93_14">Register_Reportable_Event</A>);
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_102_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_95_14">Register_Reportable_Events</A></span>
-     (<span class="symbol"><A NAME="ref_103_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_95_42">Button</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
-      <span class="symbol"><A NAME="ref_104_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_96_42">State</A></span>  : Button_States;
-      <span class="symbol"><A NAME="ref_105_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_97_42">Mask</A></span>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_102_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_93_14">Register_Reportable_Events</A></span>
+     (<span class="symbol"><A NAME="ref_103_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_93_42">Button</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
+      <span class="symbol"><A NAME="ref_104_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_94_42">State</A></span>  : Button_States;
+      <span class="symbol"><A NAME="ref_105_7" HREF="terminal_interface-curses-mouse__adb.htm#ref_95_42">Mask</A></span>   : <b>in</b> <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>);
    <span class="comment"><EM>--  Register all events described by the Button and the State bitmap.</EM></span>
    <span class="comment"><EM>--  Before you call this the first time, you should initialize the mask</EM></span>
    <span class="comment"><EM>--  with the Empty_Mask constant</EM></span>
 
-   <span class="comment"><EM>--  #1A NAME="AFU_1"#2|</EM></span>
+   <span class="comment"><EM>--  <A NAME="AFU_1">|</A></EM></span>
    <span class="comment"><EM>--  There is one difference to mousmask(): we return the value of the</EM></span>
    <span class="comment"><EM>--  old mask, that means the event mask value before this call.</EM></span>
    <span class="comment"><EM>--  Not Implemented: The library version</EM></span>
    <span class="comment"><EM>--  returns a Mouse_Mask that tells which events are reported.</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_115_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_107_13">Start_Mouse</A></span> (<span class="symbol"><A NAME="ref_115_26" HREF="terminal_interface-curses-mouse__adb.htm#ref_107_26">Mask</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_58_4">All_Events</A>)
+   <b>function</b> <span class="symbol"><A NAME="ref_115_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_105_13">Start_Mouse</A></span> (<span class="symbol"><A NAME="ref_115_26" HREF="terminal_interface-curses-mouse__adb.htm#ref_105_26">Mask</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_58_4">All_Events</A>)
                          <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">mousemask()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_115_13">Start_Mouse</A>);
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_120_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_123_14">End_Mouse</A></span> (<span class="symbol"><A NAME="ref_120_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_123_25">Mask</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_57_4">No_Events</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_120_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_121_14">End_Mouse</A></span> (<span class="symbol"><A NAME="ref_120_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_121_25">Mask</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_56_9">Event_Mask</A> := <A HREF="terminal_interface-curses-mouse__ads.htm#ref_57_4">No_Events</A>);
    <span class="comment"><EM>--  Terminates the mouse, restores the specified event mask</EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_120_14">End_Mouse</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_2"#2|</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_125_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_62_13">Get_Mouse</A></span> <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>;
+   <span class="comment"><EM>--  <A NAME="AFU_2">|</A></EM></span>
+   <b>function</b> <span class="symbol"><A NAME="ref_125_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_60_13">Get_Mouse</A></span> <b>return</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>;
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">getmouse()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_125_13">Get_Mouse</A>);
 
-   <b>procedure</b> <span class="symbol"><A NAME="ref_129_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_171_14">Get_Event</A></span> (<span class="symbol"><A NAME="ref_129_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_171_25">Event</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>;
-                        <span class="symbol"><A NAME="ref_130_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_172_25">Y</A></span>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
-                        <span class="symbol"><A NAME="ref_131_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_173_25">X</A></span>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_59_9">Column_Position</A>;
-                        <span class="symbol"><A NAME="ref_132_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_174_25">Button</A></span> : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
-                        <span class="symbol"><A NAME="ref_133_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_175_25">State</A></span>  : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_71_9">Button_State</A>);
+   <b>procedure</b> <span class="symbol"><A NAME="ref_129_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_169_14">Get_Event</A></span> (<span class="symbol"><A NAME="ref_129_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_169_25">Event</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>;
+                        <span class="symbol"><A NAME="ref_130_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_170_25">Y</A></span>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_58_9">Line_Position</A>;
+                        <span class="symbol"><A NAME="ref_131_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_171_25">X</A></span>      : <b>out</b> <A HREF="terminal_interface-curses__ads.htm#ref_59_9">Column_Position</A>;
+                        <span class="symbol"><A NAME="ref_132_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_172_25">Button</A></span> : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_60_9">Mouse_Button</A>;
+                        <span class="symbol"><A NAME="ref_133_25" HREF="terminal_interface-curses-mouse__adb.htm#ref_173_25">State</A></span>  : <b>out</b> <A HREF="terminal_interface-curses-mouse__ads.htm#ref_71_9">Button_State</A>);
    <span class="comment"><EM>--  !!! Warning: X and Y are screen coordinates. Due to ripped of lines they</EM></span>
    <span class="comment"><EM>--  may not be identical to window coordinates.</EM></span>
    <span class="comment"><EM>--  Not Implemented: Get_Event only reports one event, the C library</EM></span>
    <span class="comment"><EM>--  version supports multiple events, e.g. {click-1, click-3}</EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_129_14">Get_Event</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_3"#2|</EM></span>
-   <b>procedure</b> <span class="symbol"><A NAME="ref_141_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_184_14">Unget_Mouse</A></span> (<span class="symbol"><A NAME="ref_141_27" HREF="terminal_interface-curses-mouse__adb.htm#ref_184_27">Event</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>);
+   <span class="comment"><EM>--  <A NAME="AFU_3">|</A></EM></span>
+   <b>procedure</b> <span class="symbol"><A NAME="ref_141_14" HREF="terminal_interface-curses-mouse__adb.htm#ref_182_14">Unget_Mouse</A></span> (<span class="symbol"><A NAME="ref_141_27" HREF="terminal_interface-curses-mouse__adb.htm#ref_182_27">Event</A></span> : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>);
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">ungetmouse()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_141_14">Unget_Mouse</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_4"#2|</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_146_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_194_13">Enclosed_In_Window</A></span> (<span class="symbol"><A NAME="ref_146_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_194_33">Win</A></span>    : <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_644_13">Standard_Window</A>;
-                                <span class="symbol"><A NAME="ref_147_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_195_33">Event</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>) <b>return</b> Boolean;
+   <span class="comment"><EM>--  <A NAME="AFU_4">|</A></EM></span>
+   <b>function</b> <span class="symbol"><A NAME="ref_146_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_192_13">Enclosed_In_Window</A></span> (<span class="symbol"><A NAME="ref_146_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_192_33">Win</A></span>    : <A HREF="terminal_interface-curses__ads.htm#ref_55_9">Window</A> := <A HREF="terminal_interface-curses__ads.htm#ref_644_13">Standard_Window</A>;
+                                <span class="symbol"><A NAME="ref_147_33" HREF="terminal_interface-curses-mouse__adb.htm#ref_193_33">Event</A></span>  : <A HREF="terminal_interface-curses-mouse__ads.htm#ref_84_9">Mouse_Event</A>) <b>return</b> Boolean;
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">wenclose()</A></EM></span>
    <span class="comment"><EM>--  But : use event instead of screen coordinates.</EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_146_13">Enclosed_In_Window</A>);
 
-   <span class="comment"><EM>--  #1A NAME="AFU_5"#2|</EM></span>
-   <b>function</b> <span class="symbol"><A NAME="ref_153_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_210_13">Mouse_Interval</A></span> (<span class="symbol"><A NAME="ref_153_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_210_29">Msec</A></span> : Natural := 200) <b>return</b> Natural;
+   <span class="comment"><EM>--  <A NAME="AFU_5">|</A></EM></span>
+   <b>function</b> <span class="symbol"><A NAME="ref_153_13" HREF="terminal_interface-curses-mouse__adb.htm#ref_208_13">Mouse_Interval</A></span> (<span class="symbol"><A NAME="ref_153_29" HREF="terminal_interface-curses-mouse__adb.htm#ref_208_29">Msec</A></span> : Natural := 200) <b>return</b> Natural;
    <span class="comment"><EM>--  AKA: <A HREF="../man/curs_mouse.3x.html">mouseinterval()</A></EM></span>
    <b>pragma</b> Inline (<A HREF="terminal_interface-curses-mouse__ads.htm#ref_153_13">Mouse_Interval</A>);
 
