@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.91 2019/01/21 14:51:38 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.92 2019/03/23 23:47:16 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -98,7 +98,7 @@ trace(const unsigned int tracelevel)
     if ((MyFP == 0) && tracelevel) {
 	MyInit = TRUE;
 	if (MyFD >= 0) {
-	    MyFP = fdopen(MyFD, "wb");
+	    MyFP = fdopen(MyFD, BIN_W);
 	} else {
 	    if (MyPath[0] == '\0') {
 		size_t size = sizeof(MyPath) - 12;
@@ -115,7 +115,7 @@ trace(const unsigned int tracelevel)
 	    }
 	    if (_nc_access(MyPath, W_OK) < 0
 		|| (MyFD = open(MyPath, O_CREAT | O_EXCL | O_RDWR, 0600)) < 0
-		|| (MyFP = fdopen(MyFD, "wb")) == 0) {
+		|| (MyFP = fdopen(MyFD, BIN_W)) == 0) {
 		;		/* EMPTY */
 	    }
 	}

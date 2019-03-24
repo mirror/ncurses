@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2010-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2010-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.10 2018/04/07 20:58:41 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.15 2019/03/24 01:45:40 tom Exp $
 .TH curs_sp_funcs 3X ""
 .na
 .hy 0
@@ -68,7 +68,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint endwin_sp(SCREEN*);\fR
 .br
-\fBint erasechar_sp(SCREEN*);\fR
+\fBchar erasechar_sp(SCREEN*);\fR
 .br
 \fBint extended_color_content_sp(SCREEN *, int, int *, int *, int *);\fR
 .br
@@ -76,7 +76,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint extended_slk_color_sp(SCREEN*, int);\fR
 .br
-\fBint filter_sp(SCREEN*);\fR
+\fBvoid filter_sp(SCREEN*);\fR
 .br
 \fBint find_pair_sp(SCREEN*, int, int);\fR
 .br
@@ -92,7 +92,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBWINDOW* getwin_sp(SCREEN*, FILE*);\fR
 .br
-\fBint halfdelay_sp(SCREEN*);\fR
+\fBint halfdelay_sp(SCREEN*, int);\fR
 .br
 \fBbool has_colors_sp(SCREEN*);\fR
 .br
@@ -154,7 +154,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint noecho_sp(SCREEN*);\fR
 .br
-\fBint nofilter_sp(SCREEN*);\fR
+\fBvoid nofilter_sp(SCREEN*);\fR
 .br
 \fBint nonl_sp(SCREEN*);\fR
 .br
@@ -204,7 +204,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint slk_attrset_sp(SCREEN*, const chtype);\fR
 .br
-\fBint slk_attr_sp(SCREEN*);\fR
+\fBattr_t slk_attr_sp(SCREEN*);\fR
 .br
 \fBint slk_clear_sp(SCREEN*);\fR
 .br
@@ -212,7 +212,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint slk_init_sp(SCREEN*, int);\fR
 .br
-\fBint slk_label_sp(SCREEN*, int);\fR
+\fBchar* slk_label_sp(SCREEN*, int);\fR
 .br
 \fBint slk_noutrefresh_sp(SCREEN*);\fR
 .br
@@ -246,7 +246,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBvoid use_env_sp(SCREEN*, bool);\fR
 .br
-\fBvoid use_tioctl_sp (SCREEN *, bool)\fR
+\fBvoid use_tioctl_sp(SCREEN *, bool);\fR
 .br
 \fBint use_legacy_coding_sp(SCREEN*, int);\fR
 .br
@@ -262,19 +262,19 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .sp
 \fB#include <form.h>\fR
 .sp
-\fBint new_form_sp(SCREEN*, FIELD **);\fR
+\fBFORM* new_form_sp(SCREEN*, FIELD **);\fR
 .sp
 \fB#include <menu.h>\fR
 .sp
-\fBint new_menu_sp(SCREEN*, ITEM **);\fR
+\fBMENU* new_menu_sp(SCREEN*, ITEM **);\fR
 .sp
 \fB#include <panel.h>\fR
 .sp
-\fBint ceiling_panel(SCREEN*);\fR
+\fBPANEL* ceiling_panel(SCREEN*);\fR
 .br
 \fBPANEL* ground_panel(SCREEN*);\fR
 .br
-\fBint update_panels_sp(SCREEN*);\fR
+\fBvoid update_panels_sp(SCREEN*);\fR
 .sp
 \fB#include <term.h>\fR
 .sp
@@ -282,7 +282,7 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint putp_sp(SCREEN*, const char *);\fR
 .br
-\fBint tgetflag_sp(SCREEN*, char *, const char *);\fR
+\fBint tgetflag_sp(SCREEN*, const char *);\fR
 .br
 \fBint tgetent_sp(SCREEN*, char *, const char *);\fR
 .br

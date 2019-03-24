@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.93 2018/01/14 17:39:47 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.94 2019/03/23 23:47:16 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -948,7 +948,7 @@ NCURSES_SP_NAME(scr_restore) (NCURSES_SP_DCLx const char *file)
     T((T_CALLED("scr_restore(%p,%s)"), (void *) SP_PARM, _nc_visbuf(file)));
 
     if (_nc_access(file, R_OK) >= 0
-	&& (fp = fopen(file, "rb")) != 0) {
+	&& (fp = fopen(file, BIN_R)) != 0) {
 	delwin(NewScreen(SP_PARM));
 	NewScreen(SP_PARM) = getwin(fp);
 #if !USE_REENTRANT
@@ -979,7 +979,7 @@ scr_dump(const char *file)
     T((T_CALLED("scr_dump(%s)"), _nc_visbuf(file)));
 
     if (_nc_access(file, W_OK) < 0
-	|| (fp = fopen(file, "wb")) == 0) {
+	|| (fp = fopen(file, BIN_W)) == 0) {
 	result = ERR;
     } else {
 	(void) putwin(newscr, fp);
@@ -1006,7 +1006,7 @@ NCURSES_SP_NAME(scr_init) (NCURSES_SP_DCLx const char *file)
 	FILE *fp = 0;
 
 	if (_nc_access(file, R_OK) >= 0
-	    && (fp = fopen(file, "rb")) != 0) {
+	    && (fp = fopen(file, BIN_R)) != 0) {
 	    delwin(CurScreen(SP_PARM));
 	    CurScreen(SP_PARM) = getwin(fp);
 #if !USE_REENTRANT

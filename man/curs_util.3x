@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.54 2018/07/28 22:08:59 tom Exp $
+.\" $Id: curs_util.3x,v 1.55 2019/03/23 21:51:12 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -57,13 +57,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBchar *unctrl(chtype c);\fR
+\fBconst char *unctrl(chtype c);\fR
 .br
 \fBwchar_t *wunctrl(cchar_t *c);\fR
 .br
-\fBchar *keyname(int c);\fR
+\fBconst char *keyname(int c);\fR
 .br
-\fBchar *key_name(wchar_t w);\fR
+\fBconst char *key_name(wchar_t w);\fR
 .br
 \fBvoid filter(void);\fR
 .br

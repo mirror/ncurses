@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.197 2018/11/24 22:13:16 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.199 2019/03/23 23:42:20 tom Exp $")
 
 /****************************************************************************
  *
@@ -758,7 +758,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 
 	    if (fallback) {
 		T(("found fallback entry"));
-		TerminalType(termp) = *fallback;
+		_nc_copy_termtype2(&(TerminalType(termp)), fallback);
 		status = TGETENT_YES;
 	    }
 	}

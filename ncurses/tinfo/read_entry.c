@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.153 2019/01/23 00:02:04 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.154 2019/03/23 23:47:16 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -552,7 +552,7 @@ _nc_read_file_entry(const char *const filename, TERMTYPE2 *ptr)
     int code;
 
     if (_nc_access(filename, R_OK) < 0
-	|| (fp = fopen(filename, "rb")) == 0) {
+	|| (fp = fopen(filename, BIN_R)) == 0) {
 	TR(TRACE_DATABASE, ("cannot open terminfo %s (errno=%d)", filename, errno));
 	code = TGETENT_NO;
     } else {

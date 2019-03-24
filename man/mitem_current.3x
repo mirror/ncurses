@@ -27,14 +27,14 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_current.3x,v 1.15 2019/01/20 20:32:23 tom Exp $
+.\" $Id: mitem_current.3x,v 1.16 2019/03/23 21:47:36 tom Exp $
 .TH mitem_current 3X ""
 .SH NAME
 \fBmitem_current\fR \- set and get current_menu_item
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .br
-int set_current_item(MENU *menu, const ITEM *item);
+int set_current_item(MENU *menu, ITEM *item);
 .br
 ITEM *current_item(const MENU *menu);
 .br

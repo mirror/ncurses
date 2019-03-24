@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2007-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2007-2017,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_legacy.3x,v 1.8 2017/11/21 00:45:48 tom Exp $
+.\" $Id: curs_legacy.3x,v 1.9 2019/03/23 21:51:12 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -37,23 +37,23 @@ curs_legacy \- get \fBcurses\fP cursor and window coordinates, attributes
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint getattrs(WINDOW *win);\fP
+\fBint getattrs(const WINDOW *win);\fP
 .br
-\fBint getbegx(WINDOW *win);\fP
+\fBint getbegx(const WINDOW *win);\fP
 .br
-\fBint getbegy(WINDOW *win);\fP
+\fBint getbegy(const WINDOW *win);\fP
 .br
-\fBint getcurx(WINDOW *win);\fP
+\fBint getcurx(const WINDOW *win);\fP
 .br
-\fBint getcury(WINDOW *win);\fP
+\fBint getcury(const WINDOW *win);\fP
 .br
-\fBint getmaxx(WINDOW *win);\fP
+\fBint getmaxx(const WINDOW *win);\fP
 .br
-\fBint getmaxy(WINDOW *win);\fP
+\fBint getmaxy(const WINDOW *win);\fP
 .br
-\fBint getparx(WINDOW *win);\fP
+\fBint getparx(const WINDOW *win);\fP
 .br
-\fBint getpary(WINDOW *win);\fP
+\fBint getpary(const WINDOW *win);\fP
 .br
 .SH DESCRIPTION
 These legacy functions are simpler to use than the X/Open Curses functions:

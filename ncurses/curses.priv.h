@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.618 2019/03/09 23:43:24 tom Exp $
+ * $Id: curses.priv.h,v 1.619 2019/03/23 23:45:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -238,6 +238,13 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #ifndef S_ISREG
 #define S_ISREG(mode) ((mode & S_IFMT) == S_IFREG)
 #endif
+
+/*
+ * POSIX ignores the "b", which c89 specified.  Some very old systems do not
+ * accept it.
+ */
+#define BIN_R	"rb"
+#define BIN_W	"wb"
 
 /*
  * Scroll hints are useless when hashmap is used

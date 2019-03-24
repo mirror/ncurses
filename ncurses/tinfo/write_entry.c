@@ -50,7 +50,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.111 2019/01/20 02:54:14 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.113 2019/03/23 23:47:16 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -70,7 +70,7 @@ write_file(char *filename, TERMTYPE2 *tp)
 	_nc_warning("entry is larger than %u bytes", limit);
     } else {
 	FILE *fp = ((_nc_access(filename, W_OK) == 0)
-		    ? fopen(filename, "wb")
+		    ? fopen(filename, BIN_W)
 		    : 0);
 	size_t actual;
 
@@ -466,7 +466,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
 
 	check_writeable(ptr[0]);
 	_nc_SPRINTF(linkname, _nc_SLIMIT(sizeof(linkname))
-		    LEAF_FMT "/%s", ptr[0], ptr);
+		    LEAF_FMT "/%.*s", ptr[0], (int) sizeof(linkname) - 3, ptr);
 
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");

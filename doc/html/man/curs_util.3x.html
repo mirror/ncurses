@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_util.3x,v 1.54 2018/07/28 22:08:59 tom Exp @
+  * @Id: curs_util.3x,v 1.55 2019/03/23 21:51:12 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,10 +55,10 @@
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>char</STRONG> <STRONG>*unctrl(chtype</STRONG> <STRONG>c);</STRONG>
+       <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*unctrl(chtype</STRONG> <STRONG>c);</STRONG>
        <STRONG>wchar_t</STRONG> <STRONG>*wunctrl(cchar_t</STRONG> <STRONG>*c);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*keyname(int</STRONG> <STRONG>c);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*key_name(wchar_t</STRONG> <STRONG>w);</STRONG>
+       <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*keyname(int</STRONG> <STRONG>c);</STRONG>
+       <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*key_name(wchar_t</STRONG> <STRONG>w);</STRONG>
        <STRONG>void</STRONG> <STRONG>filter(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>nofilter(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>use_env(bool</STRONG> <STRONG>f);</STRONG>

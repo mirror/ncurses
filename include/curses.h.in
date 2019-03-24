@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.263 2018/06/09 20:16:32 tom Exp $ */
+/* $Id: curses.h.in,v 1.264 2019/03/23 23:06:46 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -892,12 +892,6 @@ extern NCURSES_EXPORT(char *) tparm_varargs (const char *, ...);	/* special */
 extern NCURSES_EXPORT(char *) tiparm (const char *, ...);		/* special */
 
 /*
- * X/Open says this returns a bool; SVr4 also checked for out-of-range line.
- * The macro provides compatibility:
- */
-#define is_linetouched(w,l) ((!(w) || ((l) > getmaxy(w)) || ((l) < 0)) ? ERR : (is_linetouched)((w),(l)))
-
-/*
  * These functions are not in X/Open, but we use them in macro definitions:
  */
 extern NCURSES_EXPORT(int) getattrs (const WINDOW *);			/* generated */
@@ -1431,6 +1425,12 @@ NCURSES_EXPORT(int) vsscanf(const char *, const char *, va_list);
 #define wgetscrreg(win,t,b)	(NCURSES_OK_ADDR(win) ? (*(t) = (win)->_regtop, *(b) = (win)->_regbottom, OK) : ERR)
 #endif
 #endif
+
+/*
+ * X/Open says this returns a bool; SVr4 also checked for out-of-range line.
+ * The macro provides compatibility:
+ */
+#define is_linetouched(w,l) ((!(w) || ((l) > getmaxy(w)) || ((l) < 0)) ? ERR : (is_linetouched)((w),(l)))
 
 #endif /* NCURSES_NOMACROS */
 
