@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.619 2019/03/23 23:45:56 tom Exp $
+ * $Id: curses.priv.h,v 1.620 2019/03/30 21:31:37 tom Exp $
  *
  *	curses.priv.h
  *
@@ -243,8 +243,13 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
  * POSIX ignores the "b", which c89 specified.  Some very old systems do not
  * accept it.
  */
+#if USE_FOPEN_BIN_R
 #define BIN_R	"rb"
 #define BIN_W	"wb"
+#else
+#define BIN_R	"r"
+#define BIN_W	"w"
+#endif
 
 /*
  * Scroll hints are useless when hashmap is used

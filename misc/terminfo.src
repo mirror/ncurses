@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.727 $
-#	$Date: 2019/02/23 22:45:23 $
+#	$Revision: 1.729 $
+#	$Date: 2019/03/30 22:59:53 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4988,7 +4988,7 @@ xterm-x11mouse|X11 mouse,
 # response.
 xterm+x11hilite|X11 xterm mouse protocol with highlight,
 	kmous=\E[M, XM=\E[?1001%?%p1%{1}%=%th%el%;,
-	xm=\E[%p7%'!'%+%p6%'!'%+%c%p9%'!'%+%c%p8%'!'%+%c%p2%'!'%+%c
+	xm=\E[%p6%'!'%+%p5%'!'%+%c%p8%'!'%+%c%p7%'!'%+%c%p2%'!'%+%c
 	   %p1%'!'%+%cT,
 xterm-x11hilite|X11 mouse with highlight,
 	use=xterm+x11mouse, use=xterm,
@@ -7184,6 +7184,30 @@ screen3|older VT 100/ANSI X3.64 virtual terminal,
 	rmir=\E[4l, rmkx=\E>, rmso=\E[23m, rmul=\E[24m, rs1=\Ec,
 	sc=\E7, sgr0=\E[m, smir=\E[4h, smkx=\E=, smso=\E[3m,
 	smul=\E[4m, tbc=\E[3g,
+
+# screen 4.0 was released 2003-07-21, and as of March 2019, its terminfo file
+# was last updated in 2009 to include 256-color support.  The most recent
+# release is 4.6.2 (October 2017).
+screen4|VT 100/ANSI X3.64 virtual terminal,
+	use=screen,
+
+# As of March 2019, screen 5.0 has not been released.
+#
+# However,
+#
+#	https://savannah.gnu.org/bugs/?36676
+#
+# mentions a change to implement italics which should be in a version 5,
+# (implemented 2016-11-05, but merged 2017-07-09).  That does away with the
+# longstanding use of SGR 3 for standout, and interprets it as italics.
+#
+# The same development branch has some support for direct-colors, but none
+# of this has been documented.
+screen5|VT 100/ANSI X3.64 virtual terminal (someday),
+	rmso=\E[27m,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
+	    %p5%t;2%;m%?%p9%t\016%e\017%;,
+	smso=\E[7m, use=ecma+italics, use=screen,
 
 #### Tmux
 
@@ -14254,10 +14278,10 @@ regent40+|Adds Regent 40+,
 	is2=\EB, use=regent40,
 # It uses a different code for mapping acs vs dim/blink.
 regent60|regent200|adds200|Adds Regent 60,
-	acsc=jLkDl@mHnhq`tXuTv\\wPxd, dch1=\EE, is2=\EV\EB,
-	kbs=^H, kcbt=\EO, kdch1=\EE, kich1=\EF, krmir=\EF, rmacs=\E2,
-	rmir=\EF, rmso=\ER\E0@\EV, smacs=\E1, smir=\EF,
-	smso=\ER\E0P\EV, ed=\Ek, kF1=^B!\r, kF2=^B"\r, kF3=^B#\r,
+	acsc=jLkDl@mHnhq`tXuTv\\wPxd, dch1=\EE, ed=\Ek,
+	is2=\EV\EB, kbs=^H, kcbt=\EO, kdch1=\EE, kich1=\EF,
+	krmir=\EF, rmacs=\E2, rmir=\EF, rmso=\ER\E0@\EV, smacs=\E1,
+	smir=\EF, smso=\ER\E0P\EV, kF1=^B!\r, kF2=^B"\r, kF3=^B#\r,
 	kF4=^B$\r, kF5=^B%\r, kF6=^B&\r, kF7=^B'\r, kF8=^B(\r,
 	use=regent40+,
 # From: <edward@onyx.berkeley.edu> Thu Jul  9 09:27:33 1981
@@ -24128,10 +24152,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	p2 = x-ordinate
 #	p3 = button
 #	p4 = state, e.g., pressed or released
-#	p6 = y-ordinate starting region
-#	p7 = x-ordinate starting region
-#	p8 = y-ordinate ending region
-#	p9 = x-ordinate ending region
+#	p5 = y-ordinate starting region
+#	p6 = x-ordinate starting region
+#	p7 = y-ordinate ending region
+#	p8 = x-ordinate ending region
 # Other extensions, used in xm:
 #	%u = UTF-8
 #
@@ -26012,5 +26036,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2019-02-23
 #	+ fix typo in adds200 -TD
+#
+# 2019-03-30
+#	+ add "screen5", to mention italics (report by Stefan Assmann)
+#	+ modify description of xterm+x11hilite to eliminate unused p5 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

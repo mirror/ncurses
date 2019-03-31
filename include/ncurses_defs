@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.87 2019/02/02 20:04:14 tom Exp $
+# $Id: ncurses_defs,v 1.89 2019/03/30 21:31:18 tom Exp $
 ##############################################################################
 # Copyright (c) 2000-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -97,6 +97,7 @@ HAVE_LIBPANEL
 HAVE_LIB_PCRE2
 HAVE_LIMITS_H
 HAVE_LINK
+HAVE_LOCALECONV
 HAVE_LOCALE_H
 HAVE_LONG_FILE_NAMES
 HAVE_MATH_H
@@ -233,6 +234,7 @@ TERMPATH	"none"
 TIME_WITH_SYS_TIME
 TYPEOF_CHTYPE
 USE_COLORFGBG
+USE_FOPEN_BIN_R
 USE_GETCAP
 USE_GETCAP_CACHE
 USE_HARD_TABS

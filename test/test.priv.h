@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.178 2019/02/17 01:03:18 tom Exp $ */
+/* $Id: test.priv.h,v 1.180 2019/03/30 20:19:38 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -240,6 +240,10 @@
 
 #ifndef HAVE_STDINT_H
 #define HAVE_STDINT_H 0
+#endif
+
+#ifndef HAVE_STRSTR
+#define HAVE_STRSTR 0
 #endif
 
 #ifndef HAVE_SYS_IOCTL_H
@@ -930,6 +934,18 @@ extern char *strnames[], *strcodes[], *strfnames[];
 # endif
 #endif
 #endif
+
+/*
+ * Ultrix 3.1
+ */
+#ifndef STDOUT_FILENO
+#define STDOUT_FILENO 1
+#endif
+
+#if !HAVE_STRSTR
+extern char * _nc_strstr (const char *, const char *);
+#define strstr(a,b) _nc_strstr((a),(b))
+#endif	/* !HAVE_STRSTR */
 
 /* Use this to quiet gcc's -Wwrite-strings warnings, but accommodate SVr4
  * curses which doesn't have const parameters declared (so far) in the places

@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.861 2019/01/01 01:49:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.862 2019/03/30 21:53:01 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1902,6 +1902,49 @@ AC_DEFUN([CF_FIXUP_ADAFLAGS],[
 		;;
 	esac
 	AC_MSG_RESULT($ADAFLAGS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_FOPEN_BIN_R version: 1 updated: 2019/03/30 17:52:21
+dnl --------------
+dnl Check if fopen works when the "b" (binary) flag is added to the mode
+dnl parameter.  POSIX ignores the "b", which c89 specified.  Some very old
+dnl systems do not accept it.
+AC_DEFUN([CF_FOPEN_BIN_R],[
+AC_CACHE_CHECK(if fopen accepts explicit binary mode,cf_cv_fopen_bin_r,[
+	AC_TRY_RUN([
+#include <stdio.h>
+int main(void) {
+	FILE *fp = fopen("conftest.tmp", "wb");
+	int rc = 0;
+	if (fp != 0) {
+		int p, q;
+		for (p = 0; p < 256; ++p) {
+			fputc(p, fp);
+		}
+		fclose(fp);
+		fp = fopen("conftest.tmp", "rb");
+		if (fp != 0) {
+			for (p = 0; p < 256; ++p) {
+				q = fgetc(fp);
+				if (q != p) {
+					rc = 1;
+					break;
+				}
+			}
+		} else {
+			rc = 1;
+		}
+	} else {
+		rc = 1;
+	}
+	${cf_cv_main_return:-return} (rc);
+}
+],
+		[cf_cv_fopen_bin_r=yes],
+		[cf_cv_fopen_bin_r=no],
+		[cf_cv_fopen_bin_r=unknown])
+])
+test "x$cf_cv_fopen_bin_r" != xno && AC_DEFINE(USE_FOPEN_BIN_R)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FORGET_TOOL version: 1 updated: 2013/04/06 18:03:09
