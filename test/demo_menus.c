@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.65 2017/11/24 21:03:30 tom Exp $
+ * $Id: demo_menus.c,v 1.66 2019/04/06 20:42:48 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -764,7 +764,7 @@ move_menus(MENU * current, int by_y, int by_x)
     }
 }
 
-#ifdef KEY_RESIZE
+#if defined(KEY_RESIZE) && NCURSES_EXT_FUNCS
 static void
 resize_menu(MENU ** menu)
 {
@@ -792,7 +792,7 @@ resize_menus(MENU * current)
     resize_menu(&mpTrace);
 #endif
 }
-#endif
+#endif /* defined(KEY_RESIZE) && NCURSES_EXT_FUNCS */
 
 static void
 show_status(int ch, MENU * menu)
@@ -846,7 +846,7 @@ perform_menus(void)
 	case KEY_SRIGHT:
 	    move_menus(last_menu, 0, 1);
 	    continue;
-#ifdef KEY_RESIZE
+#if defined(KEY_RESIZE) && NCURSES_EXT_FUNCS
 	case KEY_RESIZE:
 	    resize_menus(last_menu);
 	    continue;

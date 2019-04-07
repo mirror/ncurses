@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.271 2019/03/17 00:46:55 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.272 2019/04/06 20:18:54 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1666,6 +1666,7 @@ check_printer(TERMTYPE2 *tp)
 #endif
 }
 
+#if NCURSES_XNAMES
 static bool
 uses_SGR_39_49(const char *value)
 {
@@ -1679,7 +1680,6 @@ uses_SGR_39_49(const char *value)
 static void
 check_screen(TERMTYPE2 *tp)
 {
-#if NCURSES_XNAMES
     if (_nc_user_definable) {
 	int have_XT = tigetflag("XT");
 	int have_XM = tigetflag("XM");
@@ -1735,8 +1735,10 @@ check_screen(TERMTYPE2 *tp)
 	    }
 	}
     }
-#endif
 }
+#else
+#define check_screen(tp)	/* nothing */
+#endif
 
 /*
  * Returns the expected number of parameters for the given capability.
@@ -1836,6 +1838,7 @@ expected_params(const char *name)
  * Check for user-capabilities that happen to be used in ncurses' terminal
  * database.
  */
+#if NCURSES_XNAMES
 static struct user_table_entry const *
 lookup_user_capability(const char *name)
 {
@@ -1845,6 +1848,7 @@ lookup_user_capability(const char *name)
     }
     return result;
 }
+#endif
 
 /*
  * If a given name is likely to be a user-capability, return the number of
@@ -1866,12 +1870,15 @@ is_user_capability(const char *name)
 	(name[1] >= '0' && name[1] <= '9') &&
 	name[2] == '\0') {
 	result = (name[1] == '6') ? 2 : 0;
-    } else if (using_extensions) {
+    }
+#if NCURSES_XNAMES
+    else if (using_extensions) {
 	struct user_table_entry const *p = lookup_user_capability(name);
 	if (p != 0) {
 	    result = (int) p->ute_argc;
 	}
     }
+#endif
     return result;
 }
 
@@ -1918,6 +1925,7 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	s++;
     }
 
+#if NCURSES_XNAMES
     if (extended) {
 	int check = is_user_capability(name);
 	if (check != actual) {
@@ -1929,6 +1937,7 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	}
 	expected = actual;
     }
+#endif
 
     if (params[0]) {
 	_nc_warning("%s refers to parameter 0 (%%p0), which is not allowed", name);
@@ -1957,13 +1966,16 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	    analyzed = popcount;
 	}
 	if (actual != analyzed && expected != analyzed) {
+#if NCURSES_XNAMES
 	    int user_cap = is_user_capability(name);
 	    if ((user_cap == analyzed) && using_extensions) {
 		;		/* ignore */
 	    } else if (user_cap >= 0) {
 		_nc_warning("tparm will use %d parameters for %s, expected %d",
 			    analyzed, name, user_cap);
-	    } else {
+	    } else
+#endif
+	    {
 		_nc_warning("tparm analyzed %d parameters for %s, expected %d",
 			    analyzed, name, actual);
 	    }
@@ -2805,6 +2817,7 @@ check_sgr_param(TERMTYPE2 *tp, int code, const char *name, char *value)
     }
 }
 
+#if NCURSES_XNAMES
 static int
 standard_type(const char *name)
 {
@@ -2853,6 +2866,7 @@ check_user_capability_type(const char *name, int actual)
 	}
     }
 }
+#endif
 
 /* other sanity-checks (things that we don't want in the normal
  * logic that reads a terminfo entry)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2017 Free Software Foundation, Inc.                        *
+ * Copyright (c) 2017,2019 Free Software Foundation, Inc.                   *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.21 2017/06/17 21:19:25 tom Exp $
+ * $Id: sp_tinfo.c,v 1.22 2019/04/06 20:42:57 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -185,10 +185,12 @@ show_char(MYDATA * data, const char *name, int value)
 static void
 do_stuff(MYDATA * data)
 {
-    char *s;
     SCREEN *sp = data->sp;
+#if NCURSES_EXT_FUNCS
+    char *s;
     int my_code = 1234;
     const char *my_text = "\033[?m";
+#endif
 
     set_curterm_sp(sp, data->term);
 
@@ -211,14 +213,18 @@ do_stuff(MYDATA * data)
     show_string(data, "unctrl", unctrl_sp(sp, 033));
     fflush(data->fp);
 
+#if NCURSES_EXT_FUNCS
     define_key_sp(sp, my_text, my_code);
     has_key_sp(sp, 0);
     key_defined_sp(sp, my_text);
     if ((s = keybound_sp(sp, my_code, 0)) != 0)
 	free(s);
+#endif
     keyname_sp(sp, '?');
+#if NCURSES_EXT_FUNCS
     keyok_sp(sp, my_code, FALSE);
     keyok_sp(sp, my_code, TRUE);
+#endif
 
     savetty_sp(sp);
 
@@ -227,7 +233,9 @@ do_stuff(MYDATA * data)
     /*
      * These functions are low-level settings for ncurses.
      */
+#if NCURSES_EXT_FUNCS
     set_tabsize_sp(sp, 5);	/* waddch */
+#endif
     typeahead_sp(sp, FALSE);	/* waddch */
     use_env_sp(sp, FALSE);	/* newterm */
     use_tioctl_sp(sp, FALSE);	/* newterm */
