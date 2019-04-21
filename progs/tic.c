@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.272 2019/04/06 20:18:54 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.274 2019/04/20 20:28:19 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1937,6 +1937,8 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	}
 	expected = actual;
     }
+#else
+    (void) extended;
 #endif
 
     if (params[0]) {
@@ -2316,8 +2318,7 @@ static void
 check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 {
     const char *name = ExtStrname(tp, i, strnames);
-    int params = (((i < (int) SIZEOF(parametrized)) &&
-		   (i < STRCOUNT))
+    int params = ((i < (int) SIZEOF(parametrized))
 		  ? parametrized[i]
 		  : ((*value == 'k')
 		     ? 0
@@ -2327,6 +2328,7 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
     char *tc_value;
     bool embedded;
 
+    assert(SIZEOF(parametrized) == STRCOUNT);
     if ((ti_value = _nc_tic_expand(value, TRUE, to_char)) == ABSENT_STRING) {
 	_nc_warning("tic-expansion of %s failed", name);
     } else if ((tc_value = _nc_infotocap(name, ti_value, params)) == ABSENT_STRING) {

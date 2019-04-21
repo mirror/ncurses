@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.181 2019/04/13 22:54:18 tom Exp $ */
+/* $Id: test.priv.h,v 1.182 2019/04/20 20:15:39 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -733,12 +733,37 @@ extern "C" {
 #define _nc_SLIMIT(n)		/* nothing */
 #endif
 
+/*
+ * X/Open Curses does not define the arrays of terminfo/termcap names as SVr4
+ * curses did, and some implementations provide them anyway, but undeclared.
+ */
 #ifdef DECL_CURSES_DATA_BOOLNAMES
 extern char *boolnames[], *boolcodes[], *boolfnames[];
 extern char *numnames[], *numcodes[], *numfnames[];
 extern char *strnames[], *strcodes[], *strfnames[];
 #endif
 
+/*
+ * Again, an SVr4 curses feature latent in the libraries but not in headers.
+ */
+#ifndef DECL_CURSES_DATA_TABSIZE
+#define DECL_CURSES_DATA_TABSIZE 0
+#endif
+
+#if DECL_CURSES_DATA_TABSIZE
+extern int TABSIZE;
+#undef  HAVE_CURSES_DATA_TABSIZE
+#define HAVE_CURSES_DATA_TABSIZE 1
+#endif
+
+#ifndef HAVE_CURSES_DATA_TABSIZE
+#define HAVE_CURSES_DATA_TABSIZE 0
+#endif
+
+/*
+ * X/Open Curses provides termname(), whose return value is analogous to the
+ * SVr4 curses variable ttytype[].
+ */
 #ifndef HAVE_CURSES_DATA_TTYTYPE
 #define HAVE_CURSES_DATA_TTYTYPE 0
 #endif

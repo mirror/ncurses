@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.514 2019/01/21 20:15:28 tom Exp $
+$Id: ncurses.c,v 1.515 2019/04/20 20:34:11 tom Exp $
 
 ***************************************************************************/
 
@@ -7876,7 +7876,7 @@ main(int argc, char *argv[])
 {
     int c;
     int my_e_param = 1;
-#ifdef NCURSES_VERSION
+#if HAVE_USE_DEFAULT_COLORS
     int default_fg = COLOR_WHITE;
     int default_bg = COLOR_BLACK;
     bool assumed_colors = FALSE;
@@ -7892,7 +7892,7 @@ main(int argc, char *argv[])
 
     while ((c = getopt(argc, argv, "a:dEe:fhmp:s:Tt:x")) != -1) {
 	switch (c) {
-#ifdef NCURSES_VERSION
+#if HAVE_USE_DEFAULT_COLORS
 	case 'a':
 	    assumed_colors = TRUE;
 	    switch (sscanf(optarg, "%d,%d", &default_fg, &default_bg)) {

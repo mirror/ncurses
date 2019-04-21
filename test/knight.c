@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.44 2018/05/12 13:23:24 tom Exp $
+ * $Id: knight.c,v 1.45 2019/04/20 20:34:55 tom Exp $
  */
 
 #include <test.priv.h>
@@ -75,7 +75,9 @@ static WINDOW *boardwin;	/* the board window */
 static WINDOW *helpwin;		/* the help window */
 static WINDOW *msgwin;		/* the message window */
 
+#if HAVE_USE_DEFAULT_COLORS
 static bool d_option;
+#endif
 
 static chtype minus = '-';	/* possible-move character */
 static chtype oldch;

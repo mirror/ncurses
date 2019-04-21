@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.171 2019/01/21 15:11:51 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.172 2019/04/20 18:54:48 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1078,8 +1078,7 @@ fmt_entry(TERMTYPE2 *tterm,
 		WRAP_CONCAT;
 	    } else if (TcOutput()) {
 		char *srccap = _nc_tic_expand(capability, TRUE, numbers);
-		int params = (((i < (int) SIZEOF(parametrized)) &&
-			       (i < STRCOUNT))
+		int params = ((i < (int) SIZEOF(parametrized))
 			      ? parametrized[i]
 			      : ((*srccap == 'k')
 				 ? 0

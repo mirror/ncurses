@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.128 2019/02/02 20:03:13 tom Exp $
+ * $Id: picsmap.c,v 1.129 2019/04/20 20:33:51 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1449,6 +1449,7 @@ dump_picture(PICS_HEAD * pics)
 static void
 init_display(const char *palette_path, int opt_d)
 {
+    (void) opt_d;
     if (isatty(fileno(stdout))) {
 	in_curses = TRUE;
 	initscr();
