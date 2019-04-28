@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.30 2018/04/14 19:24:54 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.31 2019/04/27 23:28:31 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -61,7 +61,7 @@ merge_names(char **dst, char **a, int na, char **b, int nb)
 	} else if (cmp > 0) {
 	    dst[n++] = *b++;
 	    nb--;
-	} else if (cmp == 0) {
+	} else {
 	    dst[n++] = *a;
 	    a++, b++;
 	    na--, nb--;
@@ -78,19 +78,27 @@ merge_names(char **dst, char **a, int na, char **b, int nb)
 }
 
 static bool
-find_name(char **table, int length, char *name)
+find_name(char **table, int item, int length, const char *name)
 {
-    while (length-- > 0) {
-	if (!strcmp(*table++, name)) {
-	    DEBUG(4, ("found name '%s'", name));
-	    return TRUE;
+    int n;
+    int result = -1;
+
+    for (n = item; n < length; ++n) {
+	if (!strcmp(table[n], name)) {
+	    DEBUG(4, ("found name '%s' @%d", name, n));
+	    result = n;
+	    break;
 	}
     }
-    DEBUG(4, ("did not find name '%s'", name));
-    return FALSE;
+    if (result < 0) {
+	DEBUG(4, ("did not find name '%s'", name));
+    }
+    return (result >= 0);
 }
 
 #define EXTEND_NUM(num, ext) \
+	DEBUG(4, ("extending " #num " from %d to %d", \
+	 to->num, (unsigned short) (to->num + (ext - to->ext)))); \
 	to->num = (unsigned short) (to->num + (ext - to->ext))
 
 static void
@@ -100,15 +108,29 @@ realign_data(TERMTYPE2 *to, char **ext_Names,
 	     int ext_Strings)
 {
     int n, m, base;
-    int limit = (to->ext_Booleans + to->ext_Numbers + to->ext_Strings);
+    int to_Booleans = to->ext_Booleans;
+    int to_Numbers = to->ext_Numbers;
+    int to_Strings = to->ext_Strings;
+    int to1, to2, from;
+
+    DEBUG(4, ("realign_data %d/%d/%d vs %d/%d/%d",
+	      ext_Booleans,
+	      ext_Numbers,
+	      ext_Strings,
+	      to->ext_Booleans,
+	      to->ext_Numbers,
+	      to->ext_Strings));
 
     if (to->ext_Booleans != ext_Booleans) {
+	to1 = 0;
+	to2 = to_Booleans + to1;
+	from = 0;
 	EXTEND_NUM(num_Booleans, ext_Booleans);
 	TYPE_REALLOC(NCURSES_SBOOL, to->num_Booleans, to->Booleans);
 	for (n = to->ext_Booleans - 1,
 	     m = ext_Booleans - 1,
 	     base = to->num_Booleans - (m + 1); m >= 0; m--) {
-	    if (find_name(to->ext_Names, limit, ext_Names[m])) {
+	    if (find_name(to->ext_Names, to1, to2, ext_Names[m + from])) {
 		to->Booleans[base + m] = to->Booleans[base + n--];
 	    } else {
 		to->Booleans[base + m] = FALSE;
@@ -118,12 +140,15 @@ realign_data(TERMTYPE2 *to, char **ext_Names,
     }
 
     if (to->ext_Numbers != ext_Numbers) {
+	to1 = to_Booleans;
+	to2 = to_Numbers + to1;
+	from = ext_Booleans;
 	EXTEND_NUM(num_Numbers, ext_Numbers);
 	TYPE_REALLOC(NCURSES_INT2, to->num_Numbers, to->Numbers);
 	for (n = to->ext_Numbers - 1,
 	     m = ext_Numbers - 1,
 	     base = to->num_Numbers - (m + 1); m >= 0; m--) {
-	    if (find_name(to->ext_Names, limit, ext_Names[m + ext_Booleans])) {
+	    if (find_name(to->ext_Names, to1, to2, ext_Names[m + from])) {
 		to->Numbers[base + m] = to->Numbers[base + n--];
 	    } else {
 		to->Numbers[base + m] = ABSENT_NUMERIC;
@@ -131,13 +156,17 @@ realign_data(TERMTYPE2 *to, char **ext_Names,
 	}
 	to->ext_Numbers = UShort(ext_Numbers);
     }
+
     if (to->ext_Strings != ext_Strings) {
+	to1 = to_Booleans + to_Numbers;
+	to2 = to_Strings + to1;
+	from = ext_Booleans + ext_Numbers;
 	EXTEND_NUM(num_Strings, ext_Strings);
 	TYPE_REALLOC(char *, to->num_Strings, to->Strings);
 	for (n = to->ext_Strings - 1,
 	     m = ext_Strings - 1,
 	     base = to->num_Strings - (m + 1); m >= 0; m--) {
-	    if (find_name(to->ext_Names, limit, ext_Names[m + ext_Booleans + ext_Numbers])) {
+	    if (find_name(to->ext_Names, to1, to2, ext_Names[m + from])) {
 		to->Strings[base + m] = to->Strings[base + n--];
 	    } else {
 		to->Strings[base + m] = ABSENT_STRING;
