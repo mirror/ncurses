@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.620 2019/03/30 21:31:37 tom Exp $
+ * $Id: curses.priv.h,v 1.621 2019/05/04 20:29:09 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2037,6 +2037,12 @@ extern NCURSES_EXPORT(void) _nc_expanded (void);
 			NAMESIZE - 1); \
 	    ttytype[NAMESIZE - 1] = '\0'; \
 	}
+
+#if !NCURSES_WCWIDTH_GRAPHICS
+extern NCURSES_EXPORT(int) _nc_wacs_width(unsigned);
+#else
+#define _nc_wacs_width(ch) wcwidth(ch)
+#endif
 
 /* charable.c */
 #if USE_WIDEC_SUPPORT

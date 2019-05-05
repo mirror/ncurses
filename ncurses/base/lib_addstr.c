@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -44,7 +44,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_addstr.c,v 1.54 2017/03/25 21:10:03 tom Exp $")
+MODULE_ID("$Id: lib_addstr.c,v 1.55 2019/05/04 20:46:24 tom Exp $")
 
 NCURSES_EXPORT(int)
 waddnstr(WINDOW *win, const char *astr, int n)
@@ -183,7 +183,7 @@ wadd_wchnstr(WINDOW *win, const cchar_t *astr, int n)
 	if (isWidecExt(astr[i]))
 	    continue;
 
-	len = wcwidth(CharOf(astr[i]));
+	len = _nc_wacs_width(CharOf(astr[i]));
 
 	if (x + len - 1 <= win->_maxx) {
 	    line->text[x] = _nc_render(win, astr[i]);

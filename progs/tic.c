@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.274 2019/04/20 20:28:19 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.275 2019/05/04 14:41:06 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1200,6 +1200,8 @@ same_color(NCURSES_CONST char *oldcap, NCURSES_CONST char *newcap, int limit)
 static void
 check_colors(TERMTYPE2 *tp)
 {
+    char *value;
+
     if ((max_colors > 0) != (max_pairs > 0)
 	|| ((max_colors > max_pairs) && (initialize_pair == 0)))
 	_nc_warning("inconsistent values for max_colors (%d) and max_pairs (%d)",
@@ -1246,6 +1248,15 @@ check_colors(TERMTYPE2 *tp)
 	if (VALID_STRING(initialize_pair) ||
 	    VALID_STRING(initialize_color)) {
 	    _nc_warning("expected ccc because initc is given");
+	}
+    }
+    value = tigetstr("RGB");
+    if (VALID_STRING(value)) {
+	int r, g, b;
+	char bad;
+	int code = sscanf(value, "%d/%d/%d%c", &r, &g, &b, &bad);
+	if (code != 3 || r <= 0 || g <= 0 || b <= 0) {
+	    _nc_warning("unexpected value for RGB capability: %s", value);
 	}
     }
 }

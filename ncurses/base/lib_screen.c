@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.94 2019/03/23 23:47:16 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.95 2019/05/04 20:31:31 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -447,7 +447,7 @@ read_row(char *source, NCURSES_CH_T * prior, NCURSES_CH_T * target, int length)
 	int len;
 
 	source = decode_cchar(source, prior, target);
-	len = wcwidth(target->chars[0]);
+	len = _nc_wacs_width(target->chars[0]);
 	if (len > 1) {
 	    int n;
 
@@ -894,7 +894,7 @@ putwin(WINDOW *win, FILE *filep)
 		returnCode(code);
 	    for (x = 0; x <= win->_maxx; x++) {
 #if NCURSES_WIDECHAR
-		int len = wcwidth(data[x].chars[0]);
+		int len = _nc_wacs_width(data[x].chars[0]);
 		encode_cell(buffer, TOP_SLIMIT CHREF(data[x]), CHREF(last_cell));
 		last_cell = data[x];
 		PUTS(buffer);

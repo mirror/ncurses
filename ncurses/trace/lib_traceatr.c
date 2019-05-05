@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_traceatr.c,v 1.92 2018/05/05 17:49:17 tom Exp $")
+MODULE_ID("$Id: lib_traceatr.c,v 1.93 2019/05/04 20:46:24 tom Exp $")
 
 #define COLOR_OF(c) ((c < 0) ? "default" : (c > 7 ? color_of(c) : colors[c].name))
 
@@ -365,7 +365,7 @@ _tracecchar_t2(int bufnum, const cchar_t *ch)
 			char temp[80];
 			_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 				    "{%d:\\u%lx}",
-				    wcwidth(ch->chars[PUTC_i]),
+				    _nc_wacs_width(ch->chars[PUTC_i]),
 				    (unsigned long) ch->chars[PUTC_i]);
 			(void) _nc_trace_bufcat(bufnum, temp);
 			break;

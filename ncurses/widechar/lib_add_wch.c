@@ -39,7 +39,7 @@
 #include <wctype.h>
 #endif
 
-MODULE_ID("$Id: lib_add_wch.c,v 1.14 2019/01/19 15:46:25 tom Exp $")
+MODULE_ID("$Id: lib_add_wch.c,v 1.15 2019/05/04 20:31:31 tom Exp $")
 
 /* clone/adapt lib_addch.c */
 static const cchar_t blankchar = NewChar(BLANK_TEXT);
@@ -195,7 +195,7 @@ wadd_wch_literal(WINDOW *win, cchar_t ch)
      * adjustments.
      */
     {
-	int len = wcwidth(CharOf(ch));
+	int len = _nc_wacs_width(CharOf(ch));
 	int i;
 	int j;
 	wchar_t *chars;
