@@ -36,7 +36,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.132 2019/05/04 20:46:24 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.133 2019/05/11 19:51:02 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -125,7 +125,7 @@ newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T *ypos)
 	if (*ypos == win->_regbottom) {
 	    *ypos = win->_regbottom;
 	    result = TRUE;
-	} else {
+	} else if (*ypos < win->_maxy) {
 	    *ypos = (NCURSES_SIZE_T) (*ypos + 1);
 	}
     } else if (*ypos < win->_maxy) {
@@ -343,6 +343,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 		    return ERR;
 		x = win->_curx;
 		y = win->_cury;
+		CHECK_POSITION(win, x, y);
 		line = win->_line + y;
 	    }
 	    /*
@@ -447,6 +448,7 @@ waddch_nosync(WINDOW *win, const NCURSES_CH_T ch)
      */
     x = win->_curx;
     y = win->_cury;
+    CHECK_POSITION(win, x, y);
 
     switch (t) {
     case '\t':

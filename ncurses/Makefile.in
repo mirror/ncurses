@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.160 2019/03/09 23:39:14 tom Exp $
+# $Id: Makefile.in,v 1.161 2019/05/11 14:15:21 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -233,11 +233,13 @@ keys.list :	$(tinfo)/MKkeys_list.sh
 	AWK=$(AWK) $(SHELL) $(tinfo)/MKkeys_list.sh $(CAPLIST) | LC_ALL=C sort >$@
 
 make_keys$(BUILD_EXEEXT) : \
+		build.priv.h \
 		$(tinfo)/make_keys.c \
 		names.c
 	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 make_hash$(BUILD_EXEEXT) : \
+		build.priv.h \
 		$(tinfo)/make_hash.c \
 		../include/hashsize.h
 	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_hash.c $(BUILD_LDFLAGS) $(BUILD_LIBS)

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010,2012 Free Software Foundation, Inc.                   *
+ * Copyright (c) 2010-2012,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  ****************************************************************************/
 
 /*
- * $Id: build.priv.h,v 1.9 2012/02/22 22:17:02 tom Exp $
+ * $Id: build.priv.h,v 1.10 2019/05/11 14:14:00 tom Exp $
  *
  *	build.priv.h
  *
@@ -77,7 +77,7 @@ extern "C" {
 #define EXIT_FAILURE 1
 #endif
 
-#define FreeAndNull(p)   free(p); p = 0
+#define FreeAndNull(p)   do { free(p); p = 0; } while (0)
 #define UChar(c)         ((unsigned char)(c))
 #define SIZEOF(v)        (sizeof(v) / sizeof(v[0]))
 

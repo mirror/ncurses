@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.172 2019/04/20 18:54:48 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.173 2019/05/11 21:02:24 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -718,6 +718,33 @@ indent_DYN(DYNBUF * buffer, int level)
 	strncpy_DYN(buffer, "\t", (size_t) 1);
 }
 
+/*
+ * Check if the current line which was begun consists only of a tab and the
+ * given leading text.
+ */
+static bool
+leading_DYN(DYNBUF * buffer, const char *leading)
+{
+    bool result = FALSE;
+    size_t need = strlen(leading);
+    if (buffer->used > need) {
+	need = buffer->used - need;
+	if (!strcmp(buffer->text + need, leading)) {
+	    result = TRUE;
+	    while (--need != 0) {
+		if (buffer->text[need] == '\n') {
+		    break;
+		}
+		if (buffer->text[need] != '\t') {
+		    result = FALSE;
+		    break;
+		}
+	    }
+	}
+    }
+    return result;
+}
+
 bool
 has_params(const char *src)
 {
@@ -821,7 +848,7 @@ fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
 	    }
 	    break;
 	case 'p':
-	    if (percent && params) {
+	    if (percent && params && !leading_DYN(&tmpbuf, "%")) {
 		tmpbuf.text[tmpbuf.used - 1] = '\n';
 		indent_DYN(&tmpbuf, level + 1);
 		strncpy_DYN(&tmpbuf, "%", (size_t) 1);

@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.275 2019/05/04 14:41:06 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.276 2019/05/10 21:00:25 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1939,7 +1939,7 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 #if NCURSES_XNAMES
     if (extended) {
 	int check = is_user_capability(name);
-	if (check != actual) {
+	if (check != actual && (check >= 0 && actual >= 0)) {
 	    _nc_warning("extended %s capability has %d parameters, expected %d",
 			name, actual, check);
 	} else if (debug_level > 1) {
