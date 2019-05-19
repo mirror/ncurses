@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.67 2018/05/19 21:07:46 tom Exp @
+  * @Id: tic.1m,v 1.68 2019/05/18 21:59:56 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -284,74 +284,75 @@
        <STRONG>-w</STRONG><EM>n</EM>  specifies the width of the output.  The parameter is optional.  If
             it is omitted, it defaults to 60.
 
-       <STRONG>-x</STRONG>   Treat  unknown capabilities as user-defined.  That is, if you sup-
-            ply a capability name which <STRONG>tic</STRONG> does not recognize, it will  infer
-            its  type  (boolean, number or string) from the syntax and make an
-            extended table entry for that.   User-defined  capability  strings
-            whose name begins with "k" are treated as function keys.
+       <STRONG>-x</STRONG>   Treat  unknown  capabilities  as  user-defined (see <STRONG>user_caps(5)</STRONG>).
+            That is, if you supply a capability name which <STRONG>tic</STRONG> does not recog-
+            nize,  it will infer its type (boolean, number or string) from the
+            syntax and make an extended table entry  for  that.   User-defined
+            capability strings whose name begins with "k" are treated as func-
+            tion keys.
 
 
 </PRE><H3><a name="h3-PARAMETERS">PARAMETERS</a></H3><PRE>
-       <EM>file</EM>   contains  one  or  more <STRONG>terminfo</STRONG> terminal descriptions in source
-              format  [see  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].   Each  description  in   the   file
+       <EM>file</EM>   contains one or more <STRONG>terminfo</STRONG> terminal  descriptions  in  source
+              format   [see   <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>].   Each  description  in  the  file
               describes the capabilities of a particular terminal.
 
-              If  <EM>file</EM>  is "-", then the data is read from the standard input.
+              If <EM>file</EM> is "-", then the data is read from the  standard  input.
               The <EM>file</EM> parameter may also be the path of a character-device.
 
 
 </PRE><H3><a name="h3-PROCESSING">PROCESSING</a></H3><PRE>
-       All but one of the capabilities recognized by  <STRONG>tic</STRONG>  are  documented  in
+       All  but  one  of  the capabilities recognized by <STRONG>tic</STRONG> are documented in
        <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  The exception is the <STRONG>use</STRONG> capability.
 
        When a <STRONG>use</STRONG>=<EM>entry</EM>-<EM>name</EM> field is discovered in a terminal entry currently
-       being compiled, <STRONG>tic</STRONG> reads in the  binary  from  <STRONG>/usr/share/terminfo</STRONG>  to
-       complete  the  entry.   (Entries  created from <EM>file</EM> will be used first.
-       <STRONG>tic</STRONG> duplicates the capabilities in <EM>entry</EM>-<EM>name</EM> for  the  current  entry,
+       being  compiled,  <STRONG>tic</STRONG>  reads  in the binary from <STRONG>/usr/share/terminfo</STRONG> to
+       complete the entry.  (Entries created from <EM>file</EM>  will  be  used  first.
+       <STRONG>tic</STRONG>  duplicates  the  capabilities in <EM>entry</EM>-<EM>name</EM> for the current entry,
        with the exception of those capabilities that explicitly are defined in
        the current entry.
 
-       When an entry, e.g., <STRONG>entry_name_1</STRONG>, contains a  <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  field,
-       any   canceled   capabilities  in  <EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  must  also  appear  in
-       <STRONG>entry_name_1</STRONG> before <STRONG>use=</STRONG> for  these  capabilities  to  be  canceled  in
+       When  an  entry, e.g., <STRONG>entry_name_1</STRONG>, contains a <STRONG>use=</STRONG><EM>entry</EM>_<EM>name</EM>_<EM>2</EM> field,
+       any  canceled  capabilities  in  <EM>entry</EM>_<EM>name</EM>_<EM>2</EM>  must  also   appear   in
+       <STRONG>entry_name_1</STRONG>  before  <STRONG>use=</STRONG>  for  these  capabilities  to be canceled in
        <STRONG>entry_name_1</STRONG>.
 
        Total compiled entries cannot exceed 4096 bytes.  The name field cannot
-       exceed 512 bytes.  Terminal names exceeding the  maximum  alias  length
+       exceed  512  bytes.   Terminal names exceeding the maximum alias length
        (32 characters on systems with long filenames, 14 characters otherwise)
-       will be truncated to the maximum alias length  and  a  warning  message
+       will  be  truncated  to  the maximum alias length and a warning message
        will be printed.
 
 
 </PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
-       There  is  some  evidence  that  historic  <STRONG>tic</STRONG>  implementations treated
-       description fields with no whitespace in them as additional aliases  or
+       There is  some  evidence  that  historic  <STRONG>tic</STRONG>  implementations  treated
+       description  fields with no whitespace in them as additional aliases or
        short names.  This <STRONG>tic</STRONG> does not do that, but it does warn when descrip-
-       tion fields may be treated that way and check them for dangerous  char-
+       tion  fields may be treated that way and check them for dangerous char-
        acters.
 
 
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       Unlike  the  SVr4 <STRONG>tic</STRONG> command, this implementation can actually compile
-       termcap sources.  In fact, entries in terminfo and termcap  syntax  can
-       be  mixed  in  a  single  source file.  See <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for the list of
+       Unlike the SVr4 <STRONG>tic</STRONG> command, this implementation can  actually  compile
+       termcap  sources.   In fact, entries in terminfo and termcap syntax can
+       be mixed in a single source file.  See  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  for  the  list  of
        termcap names taken to be equivalent to terminfo names.
 
-       The SVr4 manual pages are not clear on the  resolution  rules  for  <STRONG>use</STRONG>
-       capabilities.   This  implementation  of <STRONG>tic</STRONG> will find <STRONG>use</STRONG> targets any-
-       where in the source file, or anywhere in the file tree rooted  at  <STRONG>TER-</STRONG>
-       <STRONG>MINFO</STRONG>  (if <STRONG>TERMINFO</STRONG> is defined), or in the user's <EM>$HOME/.terminfo</EM> data-
+       The  SVr4  manual  pages  are not clear on the resolution rules for <STRONG>use</STRONG>
+       capabilities.  This implementation of <STRONG>tic</STRONG> will find  <STRONG>use</STRONG>  targets  any-
+       where  in  the source file, or anywhere in the file tree rooted at <STRONG>TER-</STRONG>
+       <STRONG>MINFO</STRONG> (if <STRONG>TERMINFO</STRONG> is defined), or in the user's <EM>$HOME/.terminfo</EM>  data-
        base (if it exists), or (finally) anywhere in the system's file tree of
        compiled entries.
 
-       The  error  messages  from this <STRONG>tic</STRONG> have the same format as GNU C error
+       The error messages from this <STRONG>tic</STRONG> have the same format as  GNU  C  error
        messages, and can be parsed by GNU Emacs's compile facility.
 
-       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>,  <STRONG>-t</STRONG>
+       The  <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>, <STRONG>-t</STRONG>
        and <STRONG>-x</STRONG> options are not supported under SVr4.  The SVr4 <STRONG>-c</STRONG> mode does not
        report bad use links.
 
-       System V does  not  compile  entries  to  or  read  entries  from  your
+       System  V  does  not  compile  entries  to  or  read  entries from your
        <EM>$HOME/.terminfo</EM> database unless TERMINFO is explicitly set to it.
 
 
@@ -362,9 +363,9 @@
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
-       <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+       <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190323).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190518).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

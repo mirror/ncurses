@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.73 2018/07/28 22:08:59 tom Exp $
+.\" $Id: infocmp.1m,v 1.74 2019/05/18 22:00:55 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -553,7 +553,7 @@ Use the \fB\-W\fP option to do this.
 changes the output to \fIwidth\fR characters.
 .TP
 \fB\-x\fR
-print information for user-defined capabilities.
+print information for user-defined capabilities (see \fBuser_caps(\*n)\fP.
 These are extensions to the terminfo repertoire which can be loaded
 using the \fB\-x\fR option of \fB@TIC@\fP.
 .SH FILES
@@ -602,6 +602,7 @@ The \fB\-F\fR option of \fB@INFOCMP@\fR(1M) should be a \fB@TOE@\fR(1M) mode.
 \fB@TOE@\fR(1M),
 \fBcurses\fR(3X),
 \fBterminfo\fR(\*n).
+\fBuser_caps\fR(\*n).
 .sp
 https://invisible-island.net/ncurses/tctest.html
 .PP

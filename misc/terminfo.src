@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.729 $
-#	$Date: 2019/03/30 22:59:53 $
+#	$Revision: 1.738 $
+#	$Date: 2019/05/18 23:53:50 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2737,6 +2737,10 @@ vt340|dec-vt340|vt330|dec-vt330|dec vt340 graphics terminal with 24 line page,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	tsl=\E[2$~\E[1$}\E[1;%dH,
 
+# Left/right margins are supported in xterm since patch #279 (2012/05/10)
+vt420+lrmm|VT420 left/right margins,
+	mgc=\E[?69l, smglr=\E[?69h\E[%i%p1%d;%p2%ds,
+
 # DEC doesn't supply a vt400 description, so we add Daniel Glasser's
 # (originally written with vt420 as its primary name, and usable for it).
 #
@@ -4337,10 +4341,10 @@ xterm-xfree86|xterm terminal emulator (XFree86),
 # This version reflects the current xterm features.
 xterm-new|modern xterm terminal emulator,
 	npc,
-	indn=\E[%p1%dS, kb2=\EOE, kcbt=\E[Z, kent=\EOM,
-	rin=\E[%p1%dT, use=ansi+rep, use=ecma+strikeout,
-	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
-	use=xterm-basic,
+	indn=\E[%p1%dS, kcbt=\E[Z, kent=\EOM, rin=\E[%p1%dT,
+	use=ansi+rep, use=ecma+strikeout, use=xterm+keypad,
+	use=vt420+lrmm, use=xterm+sm+1006, use=xterm+pcfkeys,
+	use=xterm+tmux, use=xterm-basic,
 
 # This fragment is for people who cannot agree on what the backspace key
 # should send.
@@ -4521,6 +4525,38 @@ xterm+titlestack|xterm 251 feature,
 
 xterm+alt+title|xterm 90 and 251 features combined,
 	rmcup=\E[?1049l\E[23;0;0t, smcup=\E[?1049h\E[22;0;0t,
+
+# https://invisible-island.net/xterm/xterm.faq.html#xterm_keypad
+#
+# Xterm's emulation of the VT100 numeric keypad on a PC-keyboard runs into the
+# problem that the keypad layout is different, and that the natural choice for
+# PF1 is NumLock (which happens to be reserved for other use).  To work around
+# that, PF1-PF4 are emulated via F1-F4, which leaves the "/", "*" and "+" not
+# directly related to VT100.
+#
+# With the VT220 keypad block that uses the 1-9 keys as suggested in
+# terminfo(5), the other keys can be handled with user-defined capabilities:
+#
+#   _______________________________________
+#  | NumLock |    /    |    *    |    -    |
+#  |         |   $Oo   |   $Oj   |   $OS   |
+#  |_________|__kpDIV__|__kpMUL__|__kpSUB__|
+#  |    7         8         9    |         |
+#  |   $Ow   |   $Ox   |   $Oy   |    +    |
+#  |_ka1__K1_|_________|_ka3__K3_|   $Ok   |
+#  |    4    |    5    |    6    |  kpADD  |
+#  |   $Ot   |   $Ou   |   $Ov   |         |
+#  |_________|_kb2__K2_|_________|_________|
+#  |    1    |    2    |    3    |         |
+#  |   $Oq   |   $Or   |   $Os   |         |
+#  |_kc1__K4_|_________|_kc3__K5_|  enter  |
+#  |         0         |   .     |   $OM   |
+#  |        $Op        |  $On    |         |
+#  |___________________|_________|_kent_@8_|
+#
+xterm+keypad|xterm emulating VT100/VT220 numeric keypad,
+	kp5=\EOE, kpADD=\EOk, kpCMA=\EOl, kpDIV=\EOo, kpDOT=\EOn,
+	kpMUL=\EOj, kpSUB=\EOm, kpZRO=\EOp, use=vt220+keypad,
 #
 # Those chunks use the new-style (the xterm oldFunctionKeys resource is false).
 # Alternatively, the same scheme with old-style function keys as in xterm-r6
@@ -4583,8 +4619,7 @@ xterm-16color|xterm with 16 colors like aixterm,
 	ccc,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
 	      %{1000}%/%2.2X/%p4%{255}%*%{1000}%/%2.2X\E\\,
-	oc=\E]104\007, rs1=\Ec\E]104\007, use=ibm+16color,
-	use=xterm-new,
+	use=xterm+osc104, use=ibm+16color, use=xterm-new,
 
 # 256-colors is a compile-time feature of XFree86 xterm beginning with
 # xterm patch #111 (1999/7/10) -TD
@@ -4599,6 +4634,12 @@ xterm+256color|xterm 256-color feature,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
 	      ;%p1%d%;m,
 	setb@, setf@,
+
+# xterm OSC 104 resets the color palette.  Using it as part of xterm+256color
+# has the drawback that some of the xterm-alikes which use that building block
+# require a different approach to rs1 -TD
+xterm+osc104|reset color palette,
+	oc=\E]104\007, rs1=\Ec\E]104\007,
 
 # palette is hardcoded...
 xterm+256setaf|xterm 256-color (set-only),
@@ -4632,9 +4673,9 @@ xterm+88color|xterm 88-color feature,
 
 # These variants of XFree86 3.9.16 xterm are built as a configure option.
 xterm-256color|xterm with 256 colors,
-	rs1=\Ec\E]104\007, use=xterm+256color, use=xterm-new,
+	use=xterm+osc104, use=xterm+256color, use=xterm-new,
 xterm-88color|xterm with 88 colors,
-	rs1=\Ec\E]104\007, use=xterm+88color,
+	use=xterm+osc104, use=xterm+88color,
 	use=xterm-256color,
 
 # Emacs 26.1 and later support direct color mode in terminals, using a
@@ -6457,10 +6498,10 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 #### TERMINATOR
 # https://github.com/software-jessies-org/jessies/wiki/Terminator
 #
-# Tested using their Debian package org.jessies.terminator 6.104.3256 on 64-bit
+# Tested using the Debian package org.jessies.terminator 6.104.3256 on 64-bit
 # Debian/current -TD (2011/8/20)
 #
-# There are some packaging problems:
+# There were some packaging problems:
 # a) using Java, the program starts off using 50Mb, and climbs from there,
 #    up to 114Mb after testing (no scrollback).
 # b) it insists on reinstalling its terminal description in $HOME/.terminfo
@@ -6494,8 +6535,40 @@ st-256color|stterm-256color|simpleterm with 256 colors,
 # c) modified smacs/rmacs to use SCS rather than SI/SO
 # d) removed bce
 # e) removed km
+#
+# Revisiting in May 2019, the Debian package was no longer available, and a
+# developer-provided ".deb" does not work.  However, a usable Windows ".msi"
+# (which relies upon Cygwin) can be tested.  The developers provide a terminfo,
+# but some of the features it lists do not work reliably (bce, italics, invis).
+#
+# tack:
+#	tbc fails
+#	invis attribute fails
+#	key-definitions could be expanded, with some work:
+#	+ supports xterm-style cursor key-modifiers for shift
+#	+ supports xterm-style function key-modifiers for shift,control,alt
+#	+ supports xterm-style editing key-modifiers for shift,control,alt
+#	(kbs=^?)
+# ncurses test-program:
+#	"C" menu shows that bce implementation is incomplete
+#	italics did not work
+#	dim worked once in tack, but not in ncurses test-program
+#	"F" thick-line characters do not display
+# vttest:
+#	terminal does not respond to 80/132-column switching
+#	wrapping at the right margin is erratic
+#	there are several problems in the cursor-movements and screen-features
+#	no vt52, no double-sized characters
+#	Device attributes response says it is a vanilla VT100
+#	does not respond to xterm mouse controls
+#	alternate screen tests do not fill the screen, return wrong position
+#	window modify/report operations do not work
+#	miscellaneous ISO-6429 tests, e.g., REP, do not work
+#	CBT, CHT, HPR, CNL,CPL, VPR do not work
+#
+# removed the cancel for "hs", removed cbt, invis, corrected sgr -TD
 terminator|Terminator no line wrap,
-	eo, mir, msgr, xenl, xon,
+	bce, eo, mir, msgr, xenl, xon,
 	colors#0x100, cols#80, it#8, lines#24, lm#0, pairs#0x10000,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bold=\E[1m, civis=\E[?25l, clear=\E[H\E[2J,
@@ -6503,28 +6576,27 @@ terminator|Terminator no line wrap,
 	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=\n,
 	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH,
 	cuu=\E[%p1%dA, cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P,
-	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
-	enacs=\E(B\E)0, flash=^G, home=\E[H, hpa=\E[%i%p1%dG,
-	ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L, ind=\n,
-	is1=\E[?47l\E=\E[?1l,
-	is2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l, kbs=^H,
+	dim=\E[2m, dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K,
+	el1=\E[1K, enacs=\E(B\E)0, flash=^G, home=\E[H,
+	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL, il1=\E[L,
+	ind=\n, indn=\E[%p1%dS, is1=\E[?47l\E=\E[?1l,
+	is2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l, kbs=^?,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kdch1=\E[3~, kend=\E[4~, kf1=\EOP, kf10=\E[21~,
 	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~,
 	kf15=\E[28~, kf16=\E[29~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[1~, kich1=\E[2~, knp=\E[6~, kpp=\E[5~,
-	op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM, rmacs=\E(B,
-	rmcup=\E[?47l\E8, rmir=\E[4l, rmso=\E[27m, rmul=\E[24m,
-	rs1=\E>\E[1;3;4;5;6l\E[?7h\E[m\E[r\E[2J\E[H,
-	rs2=\E[r\E[m\E[2J\E[H\E[?7h\E[?1;3;4;6l\E[4l\E>,
-	s0ds=\E(B, s1ds=\E(0, sc=\E7, setab=\E[48;5;%p1%dm,
-	setaf=\E[38;5;%p1%dm,
-	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t
-	    \E(0%e\E(B%;,
-	sgr0=\E[m\E(B, smacs=\E(0, smcup=\E7\E[?47h, smir=\E[4h,
-	smso=\E[7m, smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd,
-	use=xterm+sl-twm,
+	op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM, rin=\E[%p1%dT,
+	ritm=\E[23m, rmacs=\E(B, rmcup=\E[?1049l, rmir=\E[4l,
+	rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
+	rs2=\E[!p\E[?3;4l\E[4l\E>, s0ds=\E(B, s1ds=\E(0, sc=\E7,
+	setab=\E[48;5;%p1%dm, setaf=\E[38;5;%p1%dm,
+	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p5%t;2%;%?%p1%p3%|%t;7
+	    %;m%?%p9%t\E(0%e\E(B%;,
+	sgr0=\E[m\E(B, sitm=\E[3m, smacs=\E(0, smcup=\E[?1049h,
+	smir=\E[4h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	tsl=\E]2;%p1, vpa=\E[%i%p1%dd, use=xterm+sl-twm,
 
 #### TERMINOLOGY
 # https://www.enlightenment.org/about-terminology
@@ -22337,7 +22409,7 @@ ti700|ti733|ti735|ti745|ti800|ti silent 700/733/735/745 or omni 800,
 ti703|ti707|Texas Instruments Silent 703/707,
 	am, hc, os, xenl,
 	cols#80, it#8,
-	bel=^G, cr=\r$<162>, cub1=^H, cud1=\n, cuf1=\s, ht=^I, ind=\n,
+	bel=^G, cr=\r$<162>, cub1=^H, cud1=\n, cuf1=\s, ind=\n,
 	is2=\EPC\\, nel=\r\n,
 ti703-w|ti707-w|Texas Instruments Silent 703/707,
 	cols#132,
@@ -26040,5 +26112,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2019-03-30
 #	+ add "screen5", to mention italics (report by Stefan Assmann)
 #	+ modify description of xterm+x11hilite to eliminate unused p5 -TD
+#
+# 2019-05-18
+#	+ update xterm-new to xterm patch #345 -TD
+#	+ add/use xterm+keypad in xterm-new (report by Alain D D Williams) -TD
+#	+ update terminator entry -TD
+#	+ remove hard-tabs from ti703 (report by Robert Clausecker)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

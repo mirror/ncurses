@@ -53,7 +53,7 @@
 .SH NAME
 user_caps \- user-defined terminfo capabilities
 .SH SYNOPSIS
-.B tic -x, infocmp -x
+.B @TIC@ -x, @INFOCMP@ -x
 .SH DESCRIPTION
 .SS Background
 .PP
@@ -94,6 +94,38 @@ while others were added (out of order) to comply with X/Open Curses.
 While ncurses' repertoire of predefined capabilities is closest to Solaris,
 Solaris's terminfo database has a few differences from
 the list published by X/Open Curses.
+For example, ncurses can be configured with tables which match the
+terminal databases for AIX, HP-UX or OSF/1,
+rather than the default Solaris-like configuration.
+.bP
+In SVr4 curses and ncurses,
+the terminal database is defined at compile-time using a text file
+which lists the different terminal capabilities.
+.IP
+In principle, the text-file can be extended,
+but doing this requires recompiling and reinstalling the library.
+The text-file used in ncurses for terminal capabilities includes
+details for various systems past the documented X/Open Curses features.
+For example, ncurses supports these capabilities in each configuration:
+.RS 8
+.TP 5
+memory_lock
+(meml)
+lock memory above cursor
+.TP 5
+memory_unlock
+(memu)
+unlock memory
+.TP 5
+box_chars_1
+(box1)
+box characters primary set
+.RE
+.IP
+The memory lock/unlock capabilities were included because they were used
+in the X11R6 terminal description for \fBxterm\fP.
+The \fIbox1\fP capability is used in @TIC@ to help with terminal descriptions
+written for AIX. 
 .PP
 During the 1990s, some users were reluctant to use terminfo
 in spite of its performance advantages over termcap:
@@ -116,14 +148,14 @@ with other applications.
 These are referred to as \fIuser-defined capabilities\fP because no
 modifications to the toolset's predefined capability names are needed.
 .PP
-The ncurses utilities \fBtic\fP and \fBinfocmp\fP have a command-line
+The ncurses utilities \fB@TIC@\fP and \fB@INFOCMP@\fP have a command-line
 option \*(``\-x\*('' to control whether the nonstandard capabilities
 are stored or retrieved.
 A library function \fBuse_extended_names\fP
 is provided for the same purpose.
 .PP
 When compiling a terminal database, if \*(``\-x\*('' is set,
-\fBtic\fP will store a user-defined capability if the capability name is not
+\fB@TIC@\fP will store a user-defined capability if the capability name is not
 one of the predefined names.
 .PP
 Because ncurses provides a termcap library interface,
@@ -300,14 +332,14 @@ would be returned for those keys by \fBwgetch\fP(3X).
 .PP
 .SH PORTABILITY
 .PP
-The \*(``\-x\*('' extension feature of \fBtic\fP and \fBinfocmp\fP
+The \*(``\-x\*('' extension feature of \fB@TIC@\fP and \fB@INFOCMP@\fP
 has been adopted in NetBSD curses.
 That implementation stores user-defined capabilities,
 but makes no use of these capabilities itself.
 .SH SEE ALSO
 .PP
-\fBtic\fR(1),
-\fBinfocmp\fR(1).
+\fB@TIC@\fR(1M),
+\fB@INFOCMP@\fR(1M).
 .SH AUTHORS
 .PP
 Thomas E. Dickey
