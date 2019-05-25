@@ -52,7 +52,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.14 2019/02/23 18:33:19 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.17 2019/05/25 22:36:53 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -413,38 +413,6 @@ set_conversions(TTY * tty_settings)
     tty_settings->c_lflag |= (ECHOE | ECHOK);
 }
 
-/*
- * Set the hardware tabs on the terminal, using the 'ct' (clear all tabs),
- * 'st' (set one tab) and 'ch' (horizontal cursor addressing) capabilities.
- * This is done before 'if' and 'is', so they can recover in case of error.
- *
- * Return TRUE if we set any tab stops, FALSE if not.
- */
-static bool
-reset_tabstops(int wide)
-{
-    if ((init_tabs != 8) && (VALID_STRING(set_tab) && VALID_STRING(clear_all_tabs))) {
-	int c;
-
-	(void) putc('\r', my_file);	/* Force to left margin. */
-	tputs(clear_all_tabs, 0, out_char);
-
-	for (c = 8; c < wide; c += 8) {
-	    /* Get to the right column.  In BSD tset, this used to try a bunch
-	     * of half-clever things with cup and hpa, for an average saving of
-	     * somewhat less than two character times per tab stop, less than
-	     * .01 sec at 2400cps.  We lost all this cruft because it seemed to
-	     * be introducing some odd bugs.
-	     * -----------12345678----------- */
-	    (void) fputs("        ", my_file);
-	    tputs(set_tab, 0, out_char);
-	}
-	putc('\r', my_file);
-	return (TRUE);
-    }
-    return (FALSE);
-}
-
 static bool
 sent_string(const char *s)
 {
@@ -456,7 +424,48 @@ sent_string(const char *s)
     return sent;
 }
 
-#define PUTCHAR(c) fputc(c, my_file)
+static bool
+to_left_margin(void)
+{
+    if (VALID_STRING(carriage_return)) {
+	sent_string(carriage_return);
+    } else {
+	out_char('\r');
+    }
+    return TRUE;
+}
+
+/*
+ * Set the hardware tabs on the terminal, using the 'ct' (clear all tabs),
+ * 'st' (set one tab) and 'ch' (horizontal cursor addressing) capabilities.
+ * This is done before 'if' and 'is', so they can recover in case of error.
+ *
+ * Return TRUE if we set any tab stops, FALSE if not.
+ */
+static bool
+reset_tabstops(int wide)
+{
+    if ((init_tabs != 8)
+	&& VALID_NUMERIC(init_tabs)
+	&& VALID_STRING(set_tab)
+	&& VALID_STRING(clear_all_tabs)) {
+	int c;
+
+	to_left_margin();
+	tputs(clear_all_tabs, 0, out_char);
+	if (init_tabs > 1) {
+	    if (init_tabs > wide)
+		init_tabs = (short) wide;
+	    for (c = init_tabs; c < wide; c += init_tabs) {
+		fprintf(my_file, "%*s", init_tabs, " ");
+		tputs(set_tab, 0, out_char);
+	    }
+	    to_left_margin();
+	}
+	return (TRUE);
+    }
+    return (FALSE);
+}
 
 /* Output startup string. */
 bool
@@ -504,26 +513,19 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 		&& VALID_STRING(set_left_margin)
 		&& VALID_STRING(set_right_margin)) {
 	    need_flush |= sent_string(clear_margins);
-	    if (carriage_return != 0) {
-		need_flush |= sent_string(carriage_return);
-	    } else {
-		PUTCHAR('\r');
-	    }
+	    need_flush |= to_left_margin();
 	    need_flush |= sent_string(set_left_margin);
 	    if (VALID_STRING(parm_right_cursor)) {
 		need_flush |= sent_string(TPARM_1(parm_right_cursor,
 						  columns - 1));
 	    } else {
 		for (i = 0; i < columns - 1; i++) {
-		    PUTCHAR(' ');
+		    out_char(' ');
+		    need_flush = TRUE;
 		}
 	    }
 	    need_flush |= sent_string(set_right_margin);
-	    if (VALID_STRING(carriage_return)) {
-		need_flush |= sent_string(carriage_return);
-	    } else {
-		PUTCHAR('\r');
-	    }
+	    need_flush |= to_left_margin();
 	}
 
 	need_flush |= reset_tabstops(columns);
