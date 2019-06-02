@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_variables.3x,v 1.12 2019/02/16 23:43:23 tom Exp $
+.\" $Id: curs_variables.3x,v 1.13 2019/06/01 22:51:21 tom Exp $
 .TH curs_variables 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -153,13 +153,17 @@ the physical screen with \fBmvcur\fP(3X).
 .bP
 This implementation uses the current value of \fBTABSIZE\fP only for
 updating the virtual screen.
-It uses the terminal description's \fBinit_tabs\fP capability for
-computing tab stops on the physical screen.
+It uses the terminal description's \fBit\fP (\fBinit_tabs\fP) capability for
+computing hardware tabs (i.e., tab stops on the physical screen).
 .bP
 Other implementations differ.
 For instance, NetBSD curses allows \fBTABSIZE\fP to be set through
 an environment variable.
 This implementation does not.
+.IP
+NetBSD curses does not support hardware tabs;
+it uses the \fBinit_tabs\fP capability and the \fBTABSIZE\fP variable
+only for updating the virtual screen.
 .PP
 \fBESCDELAY\fP is an extension in AIX curses:
 .bP

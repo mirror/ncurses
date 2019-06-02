@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.621 2019/05/04 20:29:09 tom Exp $
+ * $Id: curses.priv.h,v 1.623 2019/06/01 23:41:36 tom Exp $
  *
  *	curses.priv.h
  *
@@ -482,7 +482,14 @@ typedef union {
 #define SET_WINDOW_PAIR(w,p)	(w)->_color = (p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b) && GetPair(a) == GetPair(b))
 
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vid_puts)(NCURSES_SP_ARGx attr, (NCURSES_PAIRS_T) pair, 0, NCURSES_OUTC_FUNC)
+#define VIDPUTS(sp,attr,pair)	do { \
+				    int vid_pair = pair; \
+				    NCURSES_SP_NAME(vid_puts)( \
+					NCURSES_SP_ARGx attr, \
+					(NCURSES_PAIRS_T) pair, \
+					&vid_pair, \
+					NCURSES_OUTC_FUNC); \
+				} while (0)
 
 #else /* !NCURSES_EXT_COLORS */
 
@@ -495,7 +502,7 @@ typedef union {
 				WINDOW_ATTRS(w) |= ColorPair(p)
 #define SameAttrOf(a,b)		(AttrOf(a) == AttrOf(b))
 
-#define VIDATTR(sp,attr,pair)	NCURSES_SP_NAME(vidputs)(NCURSES_SP_ARGx attr, NCURSES_OUTC_FUNC)
+#define VIDPUTS(sp,attr,pair)	NCURSES_SP_NAME(vidputs)(NCURSES_SP_ARGx attr, NCURSES_OUTC_FUNC)
 
 #endif /* NCURSES_EXT_COLORS */
 
@@ -1951,7 +1958,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 #if USE_XMC_SUPPORT
 #define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
 				attr_t chg = AttrOf(SCREEN_ATTRS(sp)); \
-				VIDATTR(sp, AttrOf(c), GetPair(c)); \
+				VIDPUTS(sp, AttrOf(c), GetPair(c)); \
 				if (magic_cookie_glitch > 0 \
 				 && XMC_CHANGES((chg ^ AttrOf(SCREEN_ATTRS(sp))))) { \
 					T(("%s @%d before glitch %d,%d", \
@@ -1963,7 +1970,7 @@ extern	NCURSES_EXPORT(void) name (void); \
 			}
 #else
 #define UpdateAttrs(sp,c) if (!SameAttrOf(SCREEN_ATTRS(sp), c)) { \
-				    VIDATTR(sp, AttrOf(c), GetPair(c)); \
+				    VIDPUTS(sp, AttrOf(c), GetPair(c)); \
 			}
 #endif
 

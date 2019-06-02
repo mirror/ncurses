@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2015,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_spacing.3x,v 1.14 2018/07/28 22:20:54 tom Exp $
+.\" $Id: menu_spacing.3x,v 1.15 2019/06/01 22:33:45 tom Exp $
 .TH menu_spacing 3X ""
 .SH NAME
 \fBset_menu_spacing\fP,
@@ -61,7 +61,7 @@ The menu system inserts the blank lines between item rows, these lines
 will contain the pad character in the appropriate positions.
 The \fBspc_columns\fR parameter controls
 the number of blanks between columns of items.
-It must not be larger than TABSIZE.
+It must not be larger than \fBTABSIZE\fP.
 A value of 0 for all the spacing values resets them to the default,
 which is 1 for all of them.
 .br

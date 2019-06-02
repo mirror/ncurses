@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.302 2019/05/04 22:43:40 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.303 2019/06/01 23:42:36 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -487,7 +487,7 @@ wrap_cursor(NCURSES_SP_DCL0)
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before wrapping",
 			       (unsigned long) AttrOf(SCREEN_ATTRS(SP_PARM)),
 			       _traceattr(AttrOf(SCREEN_ATTRS(SP_PARM)))));
-	    (void) VIDATTR(SP_PARM, A_NORMAL, 0);
+	    VIDPUTS(SP_PARM, A_NORMAL, 0);
 	}
     } else {
 	SP_PARM->_curscol--;

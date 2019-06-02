@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.90 2019/01/20 20:21:46 tom Exp $
+.\" $Id: terminfo.tail,v 1.93 2019/06/01 22:32:15 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -286,7 +286,7 @@ series, as well as hard copy and APL terminals.)
 If there is a code to move the cursor to the left edge of the current
 row, give this as
 .BR cr .
-(Normally this will be carriage return, control M.)
+(Normally this will be carriage return, control/M.)
 If there is a code to produce an audible signal (bell, beep, etc)
 give this as
 .BR bel .
@@ -1082,13 +1082,17 @@ sequences to make sure that the change becomes visible.
 .PP
 .SS Tabs and Initialization
 .PP
+A few capabilities are used only for tabs:
+.bP
 If the terminal has hardware tabs, the command to advance to the next
 tab stop can be given as
 .B ht
-(usually control I).
+(usually control/I).
+.bP
 A \*(``back-tab\*('' command which moves leftward to the preceding tab stop can
 be given as
 .BR cbt .
+.IP
 By convention, if the teletype modes indicate that tabs are being
 expanded by the computer rather than being sent to the terminal,
 programs should not use
@@ -1097,13 +1101,15 @@ or
 .B cbt
 even if they are present, since the user may not have the tab stops
 properly set.
+.bP
 If the terminal has hardware tabs which are initially set every
 .I n
 spaces when the terminal is powered up,
 the numeric parameter
 .B it
 is given, showing the number of spaces the tabs are set to.
-This is normally used by the \fB@TSET@\fP
+.IP
+The \fBit\fP capability is normally used by the \fB@TSET@\fP
 command to determine whether to set the mode for hardware tab expansion,
 and whether to set the tab stops.
 If the terminal has tab stops that can be saved in non-volatile memory,
@@ -1111,14 +1117,18 @@ the terminfo description can assume that they are properly set.
 .PP
 Other capabilities
 include
+.bP
 .BR is1 ,
 .BR is2 ,
 and
 .BR is3 ,
 initialization strings for the terminal,
+.bP
 .BR iprog ,
 the path name of a program to be run to initialize the terminal,
+.bP
 and \fBif\fR, the name of a file containing long initialization strings.
+.PP
 These strings are expected to set the terminal into modes consistent
 with the rest of the terminfo description.
 They are normally sent to the terminal, by the
@@ -1177,7 +1187,8 @@ analogous to
 and
 .B is3
 respectively.
-These strings are output by the \fB@RESET@\fP program,
+These strings are output by the \fB@RESET@\fP program
+(an alias of \fB@TSET@\fP),
 which is used when the terminal gets into a wedged state.
 Commands are normally placed in
 .BR rs1 ,
@@ -1208,8 +1219,9 @@ If any of
 .BR rs3 ,
 or
 .B rf
-reset capability strings are missing, the \fB@RESET@\fP 
-program falls back upon the corresponding initialization capability string.
+reset capability strings are missing,
+the \fB@RESET@\fP program
+falls back upon the corresponding initialization capability string.
 .PP
 If there are commands to set and clear tab stops, they can be given as
 .B tbc
@@ -1222,6 +1234,33 @@ described by this, the sequence can be placed in
 .B is2
 or
 .BR if .
+.PP
+The \fB@TPUT@ reset\fP command uses the same capability strings
+as the \fB@RESET@\fP command,
+although the two programs (\fB@TPUT@\fP and \fB@RESET@\fP)
+provide different command-line options.
+.PP
+In practice, these terminfo capabilities are not often used in
+initialization of tabs
+(though they are required for the \fB@TABS@\fP program):
+.bP
+Almost all hardware terminals (at least those which supported tabs)
+initialized those to every \fIeight\fP columns:
+.IP
+The only exception was the AT&T 2300 series,
+which set tabs to every \fIfive\fP columns.
+.bP
+In particular, developers of the hardware terminals which are commonly used
+as models for modern terminal emulators provided documentation demonstrating
+that \fIeight\fP columns were the standard.
+.bP
+Because of this, the terminal initialization programs
+\fB@TPUT@\fP and \fB@TSET@\fP
+use the
+\fBtbc\fP (\fBclear_all_tabs\fP) and
+\fBhts\fP (\fBset_tab\fP) capabilities directly
+only when the \fBit\fP (\fBinit_tabs\fP) capability
+is set to a value other than \fIeight\fP.
 .SS Delays and Padding
 .PP
 Many older and slower terminals do not support either XON/XOFF or DTR
@@ -1548,7 +1587,7 @@ and
 This is primarily useful for superscripts and subscripts on hard-copy terminals.
 If a hard-copy terminal can eject to the next page (form feed), give this as
 .B ff
-(usually control L).
+(usually control/L).
 .PP
 If there is a command to repeat a given character a given number of
 times (to save time transmitting a large number of identical characters)
@@ -1661,9 +1700,9 @@ delete and insert line.
 The ncurses implementation ignores this glitch.
 .PP
 The Beehive Superbee, which is unable to correctly transmit the escape
-or control C characters, has
+or control/C characters, has
 .BR xsb ,
-indicating that the f1 key is used for escape and f2 for control C.
+indicating that the f1 key is used for escape and f2 for control/C.
 (Only certain Superbees have this problem, depending on the ROM.)
 Note that in older terminfo versions, this capability was called
 \*(``beehive_glitch\*(''; it is now \*(``no_esc_ctl_c\*(''.
@@ -1836,10 +1875,12 @@ Supports both the SVr4 set and the AIX extensions.
 \*d/?/*
 files containing terminal descriptions
 .SH SEE ALSO
+\fB@TABS@\fR(1M),
 \fB@TIC@\fR(1M),
 \fB@INFOCMP@\fR(1M),
 \fBcurses\fR(3X),
 \fBcurs_color\fR(3X),
+\fBcurs_variables\fR(3X),
 \fBprintf\fR(3),
 \fBterm\fR(\*n).
 \fBterm_variables\fR(3X).

@@ -159,7 +159,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.148 2019/02/24 00:31:57 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.150 2019/06/01 23:42:09 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -991,7 +991,7 @@ _nc_real_mvcur(NCURSES_SP_DCLx
 	    TR(TRACE_CHARPUT, ("turning off (%#lx) %s before move",
 			       (unsigned long) AttrOf(oldattr),
 			       _traceattr(AttrOf(oldattr))));
-	    (void) VIDATTR(SP_PARM, A_NORMAL, 0);
+	    VIDPUTS(SP_PARM, A_NORMAL, 0);
 	}
 
 	if (xold >= screen_columns(SP_PARM)) {
@@ -1045,7 +1045,7 @@ _nc_real_mvcur(NCURSES_SP_DCLx
 	    TR(TRACE_CHARPUT, ("turning on (%#lx) %s after move",
 			       (unsigned long) AttrOf(oldattr),
 			       _traceattr(AttrOf(oldattr))));
-	    (void) VIDATTR(SP_PARM, AttrOf(oldattr), GetPair(oldattr));
+	    VIDPUTS(SP_PARM, AttrOf(oldattr), GetPair(oldattr));
 	}
     }
     returnCode(code);
