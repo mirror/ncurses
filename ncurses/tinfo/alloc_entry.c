@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.62 2018/04/14 20:32:09 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.63 2019/06/08 14:29:28 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -227,12 +227,17 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
 {
     TERMTYPE2 *to = &(target->tterm);
     TERMTYPE2 *from = &(source->tterm);
+#if NCURSES_XNAMES
+    TERMTYPE2 copy;
+#endif
     unsigned i;
 
     if (source == 0 || from == 0 || target == 0 || to == 0)
 	return;
 
 #if NCURSES_XNAMES
+    _nc_copy_termtype2(&copy, from);
+    from = &copy;
     _nc_align_termtype(to, from);
 #endif
     for_each_boolean(i, from) {
@@ -272,6 +277,16 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
 		to->Strings[i] = mergestring;
 	}
     }
+#if NCURSES_XNAMES
+    /* Discard the data allocated in _nc_copy_termtype2, but do not use
+     * _nc_free_termtype2 because that frees the string-table (which is
+     * not allocated by _nc_copy_termtype2).
+     */
+    free(copy.Booleans);
+    free(copy.Numbers);
+    free(copy.Strings);
+    free(copy.ext_Names);
+#endif
 }
 
 #if NO_LEAKS

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.738 $
-#	$Date: 2019/05/18 23:53:50 $
+#	$Revision: 1.742 $
+#	$Date: 2019/06/09 20:01:43 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -34,6 +34,10 @@
 # license from xterm.
 #
 #------------------------------------------------------------------------------
+# https://invisible-island.net/ncurses/ncurses.faq.html#terminfo_copying
+# https://invisible-island.net/personal/copyrights.html#removing_notes
+#------------------------------------------------------------------------------
+#
 #	Version 10.2.1
 #	terminfo syntax
 #
@@ -380,6 +384,9 @@ ansi+sgrdim|ANSI graphic renditions; assuming terminal has dim; not bold,
 	sgr=\E[%?%p1%t7;%;%?%p2%t4;%;%?%p3%t7;%;%?%p4%t5;%;%?%p5%t2;
 	    %;%?%p7%t8;%;m,
 	use=ansi+sgr, use=ansi+sgrso, use=ansi+sgrul,
+
+# ECMA-48 does not specify scroll-regions, but most people consider it to be
+# "ANSI" because it is widely-supported.  See ecma+index for the standard form.
 ansi+csr|ANSI scroll-region plus cursor save & restore,
 	csr=\E[%i%p1%d;%p2%dr, rc=\E8, sc=\E7,
 
@@ -472,6 +479,11 @@ ecma+sgr|attribute capabilities for true ECMA-48 terminals,
 
 ecma+strikeout|ECMA-48 strikeout/crossed-out,
 	rmxx=\E[29m, smxx=\E[9m,
+
+# ECMA-48 does not include the VT100 indexing and scroll-margins.  It has its
+# own variation.
+ecma+index|ECMA-48 scroll up/down,
+	indn=\E[%p1%dS, rin=\E[%p1%dT,
 
 # For comparison, here are all the capabilities implied by the Intel
 # Binary Compatibility Standard (level 2) that fit within terminfo.
@@ -3970,6 +3982,70 @@ putty+fnkeys+sco|SCO fn-keys for PuTTY,
 	kf5=\E[Q, kf6=\E[R, kf7=\E[S, kf8=\E[T, kf9=\E[U, khome=\E[H,
 	kich1=\E[L, knp=\E[G, kpp=\E[I,
 
+#### mintty
+# https://github.com/mintty/mintty
+#
+# Originally a fork (and reduction) of PuTTY, this has grown from 15ksloc in
+# 2013 to 38ksloc in 2019.  That is still smaller than PuTTY (160ksloc), but
+# larger than rxvt (31ksloc).
+#
+# Version 3.0 responds to DA as a VT400, however it does not implement the
+# application keypad.  The assignment of cursor-keys versus modifiers differs
+# from xterm (alt-left and alt-right send modifier 7, i.e., alt+control).
+#
+# Thomas Wolff suggested these extensions:
+#	blink2   turn on rapid blinking
+#	blink0   turn off blinking
+#	norm     turn off bold and half-bright mode
+#	opaq     turn off blank mode
+#	smul2    begin double underline mode
+#	smol     begin overline mode
+#	rmol     exit overline mode
+#	Font0    use default font
+#	Font1    use alternative font 1
+#	...
+#	Font10   use alternative font 10
+#	setal    set (under)line color
+#	ol       set default (under)line color
+#	overs    overstrike (print characters over each other)
+#
+# but see vte-2018 (use Smol/Rmol rather than smol/rmol).
+mintty|Cygwin Terminal,
+	setal=\E[5%p1%dm, use=xterm+256color,
+	use=mintty+common,
+mintty-direct|Cygwin Terminal direct-color,
+	setal=\E[%?%p1%{8}%<%t5%p1%d%e58\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	use=xterm+direct, use=mintty+common,
+mintty+common|shared capabilities for mintty,
+	km@, npc,
+	kcbt=\E[Z, kent=\EOM, rmm@, rmpch=\E[10m,
+	rs1=\Ec\E]104\007, rshm=\E[22m, rsubm=\E[75m,
+	rsupm=\E[75m, smm@, smpch=\E[11m, sshm=\E[1\:2m,
+	ssubm=\E[74m, ssupm=\E[73m, Rmol=\E[55m, Smol=\E[53m,
+	Smulx=\E[4\:%p1%dm, blink2=\E[6m, norm=\E[22m,
+	opaq=\E[28m, smul2=\E[21m, use=ansi+rep,
+	use=ecma+strikeout, use=ecma+index, use=vt420+lrmm,
+	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
+	use=xterm-basic,
+# 2019-06-09: These capabilities are commented-out for compatibility with
+# existing releases 5.9-6.1, and may be considered for inclusion after the
+# release of ncurses 6.2:
+#	Font0=\E[10m,
+#	Font1=\E[11m,
+#	Font2=\E[12m,
+#	Font3=\E[13m,
+#	Font4=\E[14m,
+#	Font5=\E[15m,
+#	Font6=\E[16m,
+#	Font7=\E[17m,
+#	Font8=\E[18m,
+#	Font9=\E[19m,
+#	Font10=\E[20m,
+#	blink0=\E[25m,
+#	ol=\E[59m,
+#	overs=\E[8\:7m,
+
 #### TeraTerm
 
 # This entry is for Tera Term Pro version 2.3, for MS-Windows 95/NT written by
@@ -5407,9 +5483,11 @@ vte-2017|VTE 0.50.2,
 # VTE 0.51.2 and gnome-terminal 3.28.2 copied a feature from KovId's TTY
 # late in 2017 for changing the appearance of underlines, which was
 # incorporated into Debian and Fedora testing-packages in February and March
-# 2018, respectively.
+# 2018, respectively. Overline (Smol/Rmol) has been supported since December
+# 2017.
 vte-2018|VTE 0.51.2,
-	Smulx=\E[4\:%p1%dm, use=vte-2017,
+	Rmol=\E[55m, Smol=\E[53m, Smulx=\E[4\:%p1%dm,
+	use=vte-2017,
 
 vte|VTE aka GNOME Terminal,
 	use=vte-2018,
@@ -5546,7 +5624,7 @@ konsole-base|KDE console window,
 	kdch1=\E[3~, kend=\E[4~, kf1@, kf10@, kf11@, kf12@, kf13@, kf14@,
 	kf15@, kf16@, kf17@, kf18@, kf19@, kf2@, kf20@, kf3@, kf4@, kf5@, kf6@,
 	kf7@, kf8@, kf9@, kfnd@, khome=\E[1~, kslt@, rin=\E[%p1%dT,
-	rmam=\E[?7l, rmso=\E[27m, rmul=\E[24m,
+	rmam=\E[?7l, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>\E[?1000l\E[?25h,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
 	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
@@ -5715,7 +5793,7 @@ mlterm2|multi lingual terminal emulator,
 	kpp=\E[5~, kri=\EO1;2A, kslt=\E[4~, mc0=\E[i, nel=\EE,
 	op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM, rin=\E[%p1%dT,
 	rmacs=\E(B, rmam=\E[?7l, rmcup=\E[?1049l, rmir=\E[4l,
-	rmkx=\E[?1l\E>, rmso=\E[27m, rmul=\E[24m,
+	rmkx=\E[?1l\E>, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[?1;3;4;6l\E[4l\E>\E[?1000l,
 	sc=\E7, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e
@@ -23907,7 +23985,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #   (including the System V console) support an attribute 6 that undoes this
 #   braindamage (this is required by iBCS2).
 #
-# * Some older versions of ANSI.SYS have a bug that causes thems to require
+# * Some older versions of ANSI.SYS have a bug that causes them to require
 #   ESC [ Pn k as EL rather than the ANSI ESC [ Pn K.  (This is not ECMA-48
 #   compatible.)
 
@@ -26118,5 +26196,15 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add/use xterm+keypad in xterm-new (report by Alain D D Williams) -TD
 #	+ update terminator entry -TD
 #	+ remove hard-tabs from ti703 (report by Robert Clausecker)
+#	+ add Smol/Rmol for tmux, vte-2018 -Nicholas Marriott
+#
+# 2019-06-01
+#	+ add rs1 to konsole, mlterm -TD
+#
+# 2019-06-08
+#	+ add mintty, mintty-direct (Thomas Wolff)
+# 2019-06-09
+#	+ comment-out some user-defined capabilities in mintty+common to allow
+#	  builds with existing releases 5.9-6.1 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
