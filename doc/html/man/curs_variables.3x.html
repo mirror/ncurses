@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_variables.3x,v 1.12 2019/02/16 23:43:23 tom Exp @
+  * @Id: curs_variables.3x,v 1.13 2019/06/01 22:51:21 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -158,13 +158,17 @@
            <STRONG><A HREF="addch.3x.html">ch(3x)</A></STRONG> as well as the physical screen with <STRONG><A HREF="curs_terminfo.3x.html">mvcur(3x)</A></STRONG>.
 
        <STRONG>o</STRONG>   This implementation uses the current value of <STRONG>TABSIZE</STRONG> only for  up-
-           dating  the  virtual  screen.   It  uses the terminal description's
-           <STRONG>init_tabs</STRONG> capability  for  computing  tab  stops  on  the  physical
-           screen.
+           dating  the  virtual screen.  It uses the terminal description's <STRONG>it</STRONG>
+           (<STRONG>init_tabs</STRONG>) capability for computing hardware tabs (i.e., tab stops
+           on the physical screen).
 
        <STRONG>o</STRONG>   Other  implementations  differ.  For instance, NetBSD curses allows
            <STRONG>TABSIZE</STRONG> to be set through an environment variable.  This  implemen-
            tation does not.
+
+           NetBSD curses does not support hardware tabs; it uses the <STRONG>init_tabs</STRONG>
+           capability and the <STRONG>TABSIZE</STRONG> variable only for updating  the  virtual
+           screen.
 
        <STRONG>ESCDELAY</STRONG> is an extension in AIX curses:
 

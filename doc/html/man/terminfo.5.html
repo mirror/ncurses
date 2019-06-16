@@ -33,7 +33,7 @@
   ****************************************************************************
   * @Id: terminfo.head,v 1.35 2018/07/28 22:29:09 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.90 2019/01/20 20:21:46 tom Exp @
+  * @Id: terminfo.tail,v 1.93 2019/06/01 22:32:15 tom Exp @
   * Beginning of terminfo.tail file
   * This file is part of ncurses.
   * See "terminfo.head" for copyright.
@@ -74,7 +74,7 @@
        <EM>Terminfo</EM> describes terminals by giving a set of capabilities which they
        have, by specifying how to perform screen operations, and by specifying
        padding  requirements  and  initialization  sequences.   This describes
-       <STRONG>ncurses</STRONG> version 6.1 (patch 20190518).
+       <STRONG>ncurses</STRONG> version 6.1 (patch 20190615).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -1326,7 +1326,7 @@
        applies to storage scope terminals, such as TEKTRONIX 4010  series,  as
        well  as  hard copy and APL terminals.)  If there is a code to move the
        cursor to the left edge of the current row, give this as <STRONG>cr</STRONG>.  (Normally
-       this  will  be carriage return, control M.)  If there is a code to pro-
+       this  will  be carriage return, control/M.)  If there is a code to pro-
        duce an audible signal (bell, beep, etc) give this as <STRONG>bel</STRONG>.
 
        If there is a code to move the cursor one position to the left (such as
@@ -1862,29 +1862,42 @@
 
 
 </PRE><H3><a name="h3-Tabs-and-Initialization">Tabs and Initialization</a></H3><PRE>
-       If  the  terminal has hardware tabs, the command to advance to the next
-       tab stop can be given as <STRONG>ht</STRONG> (usually control I).  A "back-tab"  command
-       which moves leftward to the preceding tab stop can be given as <STRONG>cbt</STRONG>.  By
-       convention, if the teletype modes indicate that tabs are being expanded
-       by the computer rather than being sent to the terminal, programs should
-       not use <STRONG>ht</STRONG> or <STRONG>cbt</STRONG> even if they are present, since the user may not have
-       the  tab  stops  properly set.  If the terminal has hardware tabs which
-       are initially set every <EM>n</EM> spaces when the terminal is powered  up,  the
-       numeric  parameter  <STRONG>it</STRONG>  is given, showing the number of spaces the tabs
-       are set to.  This is normally used by the  <STRONG>tset</STRONG>  command  to  determine
-       whether  to set the mode for hardware tab expansion, and whether to set
-       the tab stops.  If the terminal has tab stops that can be saved in non-
-       volatile  memory,  the  terminfo  description  can assume that they are
-       properly set.
+       A few capabilities are used only for tabs:
 
-       Other capabilities include <STRONG>is1</STRONG>, <STRONG>is2</STRONG>, and  <STRONG>is3</STRONG>,  initialization  strings
-       for  the  terminal, <STRONG>iprog</STRONG>, the path name of a program to be run to ini-
-       tialize the terminal, and <STRONG>if</STRONG>, the name of a file containing  long  ini-
-       tialization  strings.   These  strings are expected to set the terminal
-       into modes consistent with the rest of the terminfo description.   They
-       are  normally sent to the terminal, by the <EM>init</EM> option of the <STRONG>tput</STRONG> pro-
-       gram, each time the user logs in.  They will be printed in the  follow-
-       ing order:
+       <STRONG>o</STRONG>   If  the  terminal  has hardware tabs, the command to advance to the
+           next tab stop can be given as <STRONG>ht</STRONG> (usually control/I).
+
+       <STRONG>o</STRONG>   A "back-tab" command which moves leftward to the preceding tab stop
+           can be given as <STRONG>cbt</STRONG>.
+
+           By  convention,  if the teletype modes indicate that tabs are being
+           expanded by the computer rather than being sent  to  the  terminal,
+           programs  should  not use <STRONG>ht</STRONG> or <STRONG>cbt</STRONG> even if they are present, since
+           the user may not have the tab stops properly set.
+
+       <STRONG>o</STRONG>   If the terminal has hardware tabs which are initially set  every  <EM>n</EM>
+           spaces when the terminal is powered up, the numeric parameter <STRONG>it</STRONG> is
+           given, showing the number of spaces the tabs are set to.
+
+           The <STRONG>it</STRONG> capability is normally used by the <STRONG>tset</STRONG> command to determine
+           whether  to set the mode for hardware tab expansion, and whether to
+           set the tab stops.  If the terminal has tab stops that can be saved
+           in  non-volatile  memory,  the terminfo description can assume that
+           they are properly set.
+
+       Other capabilities include
+
+       <STRONG>o</STRONG>   <STRONG>is1</STRONG>, <STRONG>is2</STRONG>, and <STRONG>is3</STRONG>, initialization strings for the terminal,
+
+       <STRONG>o</STRONG>   <STRONG>iprog</STRONG>, the path name of a program to be run to initialize the  ter-
+           minal,
+
+       <STRONG>o</STRONG>   and <STRONG>if</STRONG>, the name of a file containing long initialization strings.
+
+       These  strings  are  expected to set the terminal into modes consistent
+       with the rest of the terminfo description.  They are normally  sent  to
+       the  terminal,  by  the  <EM>init</EM> option of the <STRONG>tput</STRONG> program, each time the
+       user logs in.  They will be printed in the following order:
 
               run the program
                      <STRONG>iprog</STRONG>
@@ -1903,92 +1916,114 @@
               and finally
                      output <STRONG>is3</STRONG>.
 
-       Most  initialization  is  done with <STRONG>is2</STRONG>.  Special terminal modes can be
-       set up without duplicating strings by putting the common  sequences  in
+       Most initialization is done with <STRONG>is2</STRONG>.  Special terminal  modes  can  be
+       set  up  without duplicating strings by putting the common sequences in
        <STRONG>is2</STRONG> and special cases in <STRONG>is1</STRONG> and <STRONG>is3</STRONG>.
 
-       A  set  of  sequences  that  does a harder reset from a totally unknown
+       A set of sequences that does a harder  reset  from  a  totally  unknown
        state can be given as <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rf</STRONG> and <STRONG>rs3</STRONG>, analogous to <STRONG>is1</STRONG> <STRONG>,</STRONG> <STRONG>is2</STRONG> <STRONG>,</STRONG> <STRONG>if</STRONG>
-       and  <STRONG>is3</STRONG>  respectively.  These strings are output by the <STRONG>reset</STRONG> program,
-       which is used when the terminal gets into a wedged state.  Commands are
-       normally  placed  in  <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG> <STRONG>rs3</STRONG> and <STRONG>rf</STRONG> only if they produce annoying
-       effects on the screen and are not necessary when logging in.  For exam-
-       ple, the command to set the vt100 into 80-column mode would normally be
-       part of <STRONG>is2</STRONG>, but it causes an annoying glitch of the screen and is  not
-       normally  needed  since  the  terminal  is usually already in 80 column
-       mode.
+       and <STRONG>is3</STRONG> respectively.  These strings are output by  the  <STRONG>reset</STRONG>  program
+       (an  alias of <STRONG>tset</STRONG>), which is used when the terminal gets into a wedged
+       state.  Commands are normally placed in <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG> <STRONG>rs3</STRONG>  and  <STRONG>rf</STRONG>  only  if
+       they  produce annoying effects on the screen and are not necessary when
+       logging in.  For example, the command to set the vt100  into  80-column
+       mode would normally be part of <STRONG>is2</STRONG>, but it causes an annoying glitch of
+       the screen and is not normally needed since  the  terminal  is  usually
+       already in 80 column mode.
 
-       The <STRONG>reset</STRONG> program writes strings including <STRONG>iprog</STRONG>,  etc.,  in  the  same
-       order  as  the  <EM>init</EM> program, using <STRONG>rs1</STRONG>, etc., instead of <STRONG>is1</STRONG>, etc.  If
-       any of <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rs3</STRONG>, or <STRONG>rf</STRONG> reset capability strings are  missing,  the
+       The  <STRONG>reset</STRONG>  program  writes  strings including <STRONG>iprog</STRONG>, etc., in the same
+       order as the <EM>init</EM> program, using <STRONG>rs1</STRONG>, etc., instead of  <STRONG>is1</STRONG>,  etc.   If
+       any  of  <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rs3</STRONG>, or <STRONG>rf</STRONG> reset capability strings are missing, the
        <STRONG>reset</STRONG> program falls back upon the corresponding initialization capabil-
        ity string.
 
-       If there are commands to set and clear tab stops, they can be given  as
+       If  there are commands to set and clear tab stops, they can be given as
        <STRONG>tbc</STRONG> (clear all tab stops) and <STRONG>hts</STRONG> (set a tab stop in the current column
-       of every row).  If a more complex sequence is needed to  set  the  tabs
+       of  every  row).   If a more complex sequence is needed to set the tabs
        than can be described by this, the sequence can be placed in <STRONG>is2</STRONG> or <STRONG>if</STRONG>.
+
+       The <STRONG>tput</STRONG> <STRONG>reset</STRONG> command uses the same capability strings  as  the  <STRONG>reset</STRONG>
+       command,  although  the two programs (<STRONG>tput</STRONG> and <STRONG>reset</STRONG>) provide different
+       command-line options.
+
+       In practice, these terminfo capabilities are not often used in initial-
+       ization of tabs (though they are required for the <STRONG>tabs</STRONG> program):
+
+       <STRONG>o</STRONG>   Almost all hardware terminals (at least those which supported tabs)
+           initialized those to every <EM>eight</EM> columns:
+
+           The only exception was the AT&amp;T 2300  series,  which  set  tabs  to
+           every <EM>five</EM> columns.
+
+       <STRONG>o</STRONG>   In  particular, developers of the hardware terminals which are com-
+           monly used as models for modern terminal emulators  provided  docu-
+           mentation demonstrating that <EM>eight</EM> columns were the standard.
+
+       <STRONG>o</STRONG>   Because of this, the terminal initialization programs <STRONG>tput</STRONG> and <STRONG>tset</STRONG>
+           use  the  <STRONG>tbc</STRONG>  (<STRONG>clear_all_tabs</STRONG>)  and  <STRONG>hts</STRONG>  (<STRONG>set_tab</STRONG>)   capabilities
+           directly  only when the <STRONG>it</STRONG> (<STRONG>init_tabs</STRONG>) capability is set to a value
+           other than <EM>eight</EM>.
 
 
 </PRE><H3><a name="h3-Delays-and-Padding">Delays and Padding</a></H3><PRE>
-       Many  older  and slower terminals do not support either XON/XOFF or DTR
-       handshaking, including hard copy terminals and some very  archaic  CRTs
-       (including,  for example, DEC VT100s).  These may require padding char-
+       Many older and slower terminals do not support either XON/XOFF  or  DTR
+       handshaking,  including  hard copy terminals and some very archaic CRTs
+       (including, for example, DEC VT100s).  These may require padding  char-
        acters after certain cursor motions and screen changes.
 
        If the terminal uses xon/xoff handshaking for flow control (that is, it
-       automatically  emits  ^S  back  to  the host when its input buffers are
-       close to full), set <STRONG>xon</STRONG>.  This capability suppresses  the  emission  of
-       padding.   You can also set it for memory-mapped console devices effec-
-       tively that do not have a  speed  limit.   Padding  information  should
+       automatically emits ^S back to the host  when  its  input  buffers  are
+       close  to  full),  set <STRONG>xon</STRONG>.  This capability suppresses the emission of
+       padding.  You can also set it for memory-mapped console devices  effec-
+       tively  that  do  not  have  a speed limit.  Padding information should
        still be included so that routines can make better decisions about rel-
        ative costs, but actual pad characters will not be transmitted.
 
        If <STRONG>pb</STRONG> (padding baud rate) is given, padding is suppressed at baud rates
-       below  the  value  of  <STRONG>pb</STRONG>.  If the entry has no padding baud rate, then
+       below the value of <STRONG>pb</STRONG>.  If the entry has no  padding  baud  rate,  then
        whether padding is emitted or not is completely controlled by <STRONG>xon</STRONG>.
 
-       If the terminal requires other than a null (zero) character as  a  pad,
-       then  this  can  be  given as <STRONG>pad</STRONG>.  Only the first character of the <STRONG>pad</STRONG>
+       If  the  terminal requires other than a null (zero) character as a pad,
+       then this can be given as <STRONG>pad</STRONG>.  Only the first  character  of  the  <STRONG>pad</STRONG>
        string is used.
 
 
 </PRE><H3><a name="h3-Status-Lines">Status Lines</a></H3><PRE>
-       Some terminals have an extra "status line" which is not  normally  used
+       Some  terminals  have an extra "status line" which is not normally used
        by software (and thus not counted in the terminal's <STRONG>lines</STRONG> capability).
 
-       The  simplest case is a status line which is cursor-addressable but not
+       The simplest case is a status line which is cursor-addressable but  not
        part of the main scrolling region on the screen; the Heathkit H19 has a
-       status  line  of  this  kind,  as  would a 24-line VT100 with a 23-line
+       status line of this kind, as would  a  24-line  VT100  with  a  23-line
        scrolling region set up on initialization.  This situation is indicated
        by the <STRONG>hs</STRONG> capability.
 
-       Some  terminals  with status lines need special sequences to access the
-       status line.  These may be expressed as a string with single  parameter
-       <STRONG>tsl</STRONG>  which takes the cursor to a given zero-origin column on the status
-       line.  The capability <STRONG>fsl</STRONG> must return to the main-screen  cursor  posi-
-       tions  before the last <STRONG>tsl</STRONG>.  You may need to embed the string values of
-       <STRONG>sc</STRONG> (save cursor) and <STRONG>rc</STRONG> (restore cursor) in <STRONG>tsl</STRONG> and <STRONG>fsl</STRONG>  to  accomplish
+       Some terminals with status lines need special sequences to  access  the
+       status  line.  These may be expressed as a string with single parameter
+       <STRONG>tsl</STRONG> which takes the cursor to a given zero-origin column on the  status
+       line.   The  capability <STRONG>fsl</STRONG> must return to the main-screen cursor posi-
+       tions before the last <STRONG>tsl</STRONG>.  You may need to embed the string values  of
+       <STRONG>sc</STRONG>  (save  cursor) and <STRONG>rc</STRONG> (restore cursor) in <STRONG>tsl</STRONG> and <STRONG>fsl</STRONG> to accomplish
        this.
 
-       The  status  line is normally assumed to be the same width as the width
-       of the terminal.  If this is  untrue,  you  can  specify  it  with  the
+       The status line is normally assumed to be the same width as  the  width
+       of  the  terminal.   If  this  is  untrue,  you can specify it with the
        numeric capability <STRONG>wsl</STRONG>.
 
        A command to erase or blank the status line may be specified as <STRONG>dsl</STRONG>.
 
-       The  boolean  capability  <STRONG>eslok</STRONG>  specifies that escape sequences, tabs,
+       The boolean capability <STRONG>eslok</STRONG> specifies  that  escape  sequences,  tabs,
        etc., work ordinarily in the status line.
 
-       The <STRONG>ncurses</STRONG> implementation does not yet use any of these  capabilities.
+       The  <STRONG>ncurses</STRONG> implementation does not yet use any of these capabilities.
        They are documented here in case they ever become important.
 
 
 </PRE><H3><a name="h3-Line-Graphics">Line Graphics</a></H3><PRE>
-       Many  terminals have alternate character sets useful for forms-drawing.
+       Many terminals have alternate character sets useful for  forms-drawing.
        Terminfo and <STRONG>curses</STRONG> have built-in support for most of the drawing char-
-       acters  supported  by  the  VT100,  with  some characters from the AT&amp;T
-       4410v1 added.  This alternate character set may  be  specified  by  the
+       acters supported by the VT100,  with  some  characters  from  the  AT&amp;T
+       4410v1  added.   This  alternate  character set may be specified by the
        <STRONG>acsc</STRONG> capability.
 
          <STRONG>Glyph</STRONG>                       <STRONG>ACS</STRONG>            <STRONG>Ascii</STRONG>     <STRONG>acsc</STRONG>     <STRONG>acsc</STRONG>
@@ -2004,7 +2039,6 @@
          degree symbol               ACS_DEGREE     \         f        0x66
          plus/minus                  ACS_PLMINUS    #         g        0x67
          board of squares            ACS_BOARD      #         h        0x68
-
          lantern symbol              ACS_LANTERN    #         i        0x69
          lower right corner          ACS_LRCORNER   +         j        0x6a
          upper right corner          ACS_URCORNER   +         k        0x6b
@@ -2030,34 +2064,34 @@
 
        A few notes apply to the table itself:
 
-       <STRONG>o</STRONG>   X/Open  Curses  incorrectly  states that the mapping for <EM>lantern</EM> is
-           uppercase "I" although Unix implementations use the  lowercase  "i"
+       <STRONG>o</STRONG>   X/Open Curses incorrectly states that the mapping  for  <EM>lantern</EM>  is
+           uppercase  "I"  although Unix implementations use the lowercase "i"
            mapping.
 
-       <STRONG>o</STRONG>   The  DEC  VT100  implemented graphics using the alternate character
-           set feature, temporarily switching <EM>modes</EM> and sending characters  in
+       <STRONG>o</STRONG>   The DEC VT100 implemented graphics using  the  alternate  character
+           set  feature, temporarily switching <EM>modes</EM> and sending characters in
            the range 0x60 (96) to 0x7e (126) (the <STRONG>acsc</STRONG> <STRONG>Value</STRONG> column in the ta-
            ble).
 
        <STRONG>o</STRONG>   The AT&amp;T terminal added graphics characters outside that range.
 
-           Some of the characters within the range do  not  match  the  VT100;
-           presumably  they  were  used in the AT&amp;T terminal: <EM>board</EM> <EM>of</EM> <EM>squares</EM>
-           replaces the VT100 <EM>newline</EM> symbol, while  <EM>lantern</EM>  <EM>symbol</EM>  replaces
+           Some  of  the  characters  within the range do not match the VT100;
+           presumably they were used in the AT&amp;T terminal:  <EM>board</EM>  <EM>of</EM>  <EM>squares</EM>
+           replaces  the  VT100  <EM>newline</EM> symbol, while <EM>lantern</EM> <EM>symbol</EM> replaces
            the VT100 <EM>vertical</EM> <EM>tab</EM> symbol.  The other VT100 symbols for control
-           characters (<EM>horizontal</EM> <EM>tab</EM>, <EM>carriage</EM> <EM>return</EM> and <EM>line-feed</EM>) are  not
+           characters  (<EM>horizontal</EM> <EM>tab</EM>, <EM>carriage</EM> <EM>return</EM> and <EM>line-feed</EM>) are not
            (re)used in curses.
 
-       The  best  way to define a new device's graphics set is to add a column
-       to a copy of this table for your terminal, giving the  character  which
-       (when  emitted  between  <STRONG>smacs</STRONG>/<STRONG>rmacs</STRONG>  switches) will be rendered as the
+       The best way to define a new device's graphics set is to add  a  column
+       to  a  copy of this table for your terminal, giving the character which
+       (when emitted between <STRONG>smacs</STRONG>/<STRONG>rmacs</STRONG> switches) will  be  rendered  as  the
        corresponding graphic.  Then read off the VT100/your terminal character
        pairs right to left in sequence; these become the ACSC string.
 
 
 </PRE><H3><a name="h3-Color-Handling">Color Handling</a></H3><PRE>
-       The  curses  library  functions <STRONG>init_pair</STRONG> and <STRONG>init_color</STRONG> manipulate the
-       <EM>color</EM>  <EM>pairs</EM>  and  <EM>color</EM>  <EM>values</EM>  discussed  in   this   section   (see
+       The curses library functions <STRONG>init_pair</STRONG> and  <STRONG>init_color</STRONG>  manipulate  the
+       <EM>color</EM>   <EM>pairs</EM>   and   <EM>color</EM>  <EM>values</EM>  discussed  in  this  section  (see
        <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG> for details on these and related functions).
 
        Most color terminals are either "Tektronix-like" or "HP-like":
@@ -2066,43 +2100,43 @@
            is usually 8), and can set character-cell foreground and background
            characters independently, mixing them into <EM>N</EM> * <EM>N</EM> color-pairs.
 
-       <STRONG>o</STRONG>   On  HP-like  terminals,  the user must set each color pair up sepa-
-           rately (foreground and background are not independently  settable).
+       <STRONG>o</STRONG>   On HP-like terminals, the user must set each color  pair  up  sepa-
+           rately  (foreground and background are not independently settable).
            Up to <EM>M</EM> color-pairs may be set up from 2*<EM>M</EM> different colors.  ANSI-
            compatible terminals are Tektronix-like.
 
        Some basic color capabilities are independent of the color method.  The
-       numeric  capabilities  <STRONG>colors</STRONG>  and <STRONG>pairs</STRONG> specify the maximum numbers of
-       colors and color-pairs that can be displayed  simultaneously.   The  <STRONG>op</STRONG>
+       numeric capabilities <STRONG>colors</STRONG> and <STRONG>pairs</STRONG> specify the  maximum  numbers  of
+       colors  and  color-pairs  that can be displayed simultaneously.  The <STRONG>op</STRONG>
        (original pair) string resets foreground and background colors to their
-       default values for the terminal.  The <STRONG>oc</STRONG> string resets  all  colors  or
-       color-pairs  to  their default values for the terminal.  Some terminals
+       default  values  for  the terminal.  The <STRONG>oc</STRONG> string resets all colors or
+       color-pairs to their default values for the terminal.   Some  terminals
        (including many PC terminal emulators) erase screen areas with the cur-
-       rent  background  color  rather  than  the power-up default background;
+       rent background color rather  than  the  power-up  default  background;
        these should have the boolean capability <STRONG>bce</STRONG>.
 
        While the curses library works with <EM>color</EM> <EM>pairs</EM> (reflecting the inabil-
-       ity  of  some  devices to set foreground and background colors indepen-
+       ity of some devices to set foreground and  background  colors  indepen-
        dently), there are separate capabilities for setting these features:
 
-       <STRONG>o</STRONG>   To change the current foreground or  background  color  on  a  Tek-
-           tronix-type  terminal,  use  <STRONG>setaf</STRONG>  (set ANSI foreground) and <STRONG>setab</STRONG>
-           (set ANSI background) or <STRONG>setf</STRONG> (set foreground) and <STRONG>setb</STRONG> (set  back-
-           ground).   These  take  one  parameter, the color number.  The SVr4
-           documentation describes only <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>; the XPG4 draft says  that
-           "If  the  terminal supports ANSI escape sequences to set background
-           and foreground, they should be coded as <STRONG>setaf</STRONG>  and  <STRONG>setab</STRONG>,  respec-
+       <STRONG>o</STRONG>   To  change  the  current  foreground  or background color on a Tek-
+           tronix-type terminal, use <STRONG>setaf</STRONG> (set  ANSI  foreground)  and  <STRONG>setab</STRONG>
+           (set  ANSI background) or <STRONG>setf</STRONG> (set foreground) and <STRONG>setb</STRONG> (set back-
+           ground).  These take one parameter, the  color  number.   The  SVr4
+           documentation  describes only <STRONG>setaf</STRONG>/<STRONG>setab</STRONG>; the XPG4 draft says that
+           "If the terminal supports ANSI escape sequences to  set  background
+           and  foreground,  they  should be coded as <STRONG>setaf</STRONG> and <STRONG>setab</STRONG>, respec-
            tively.
 
-       <STRONG>o</STRONG>   If  the  terminal supports other escape sequences to set background
-           and foreground, they should be coded  as  <STRONG>setf</STRONG>  and  <STRONG>setb</STRONG>,  respec-
-           tively.   The  <STRONG>vidputs</STRONG>  and the <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> functions use the <STRONG>setaf</STRONG>
+       <STRONG>o</STRONG>   If the terminal supports other escape sequences to  set  background
+           and  foreground,  they  should  be  coded as <STRONG>setf</STRONG> and <STRONG>setb</STRONG>, respec-
+           tively.  The <STRONG>vidputs</STRONG> and the <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> functions  use  the  <STRONG>setaf</STRONG>
            and <STRONG>setab</STRONG> capabilities if they are defined.
 
-       The <STRONG>setaf</STRONG>/<STRONG>setab</STRONG> and <STRONG>setf</STRONG>/<STRONG>setb</STRONG> capabilities take a single numeric  argu-
-       ment  each.  Argument values 0-7 of <STRONG>setaf</STRONG>/<STRONG>setab</STRONG> are portably defined as
-       follows (the middle column is the symbolic  #define  available  in  the
-       header  for the <STRONG>curses</STRONG> or <STRONG>ncurses</STRONG> libraries).  The terminal hardware is
+       The  <STRONG>setaf</STRONG>/<STRONG>setab</STRONG> and <STRONG>setf</STRONG>/<STRONG>setb</STRONG> capabilities take a single numeric argu-
+       ment each.  Argument values 0-7 of <STRONG>setaf</STRONG>/<STRONG>setab</STRONG> are portably defined  as
+       follows  (the  middle  column  is the symbolic #define available in the
+       header for the <STRONG>curses</STRONG> or <STRONG>ncurses</STRONG> libraries).  The terminal hardware  is
        free to map these as it likes, but the RGB values indicate normal loca-
        tions in color space.
 
@@ -2112,6 +2146,7 @@
                     green     <STRONG>COLOR_GREEN</STRONG>       2     0,max,0
                     yellow    <STRONG>COLOR_YELLOW</STRONG>      3     max,max,0
                     blue      <STRONG>COLOR_BLUE</STRONG>        4     0,0,max
+
                     magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max,0,max
                     cyan      <STRONG>COLOR_CYAN</STRONG>        6     0,max,max
                     white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max
@@ -2132,28 +2167,28 @@
        It is important to not confuse the two sets of color capabilities; oth-
        erwise red/blue will be interchanged on the display.
 
-       On  an  HP-like terminal, use <STRONG>scp</STRONG> with a color-pair number parameter to
+       On an HP-like terminal, use <STRONG>scp</STRONG> with a color-pair number  parameter  to
        set which color pair is current.
 
        Some terminals allow the <EM>color</EM> <EM>values</EM> to be modified:
 
-       <STRONG>o</STRONG>   On a Tektronix-like terminal, the capability <STRONG>ccc</STRONG> may be present  to
-           indicate  that colors can be modified.  If so, the <STRONG>initc</STRONG> capability
+       <STRONG>o</STRONG>   On  a Tektronix-like terminal, the capability <STRONG>ccc</STRONG> may be present to
+           indicate that colors can be modified.  If so, the <STRONG>initc</STRONG>  capability
            will take a color number (0 to <STRONG>colors</STRONG> - 1)and three more parameters
-           which  describe the color.  These three parameters default to being
+           which describe the color.  These three parameters default to  being
            interpreted as RGB (Red, Green, Blue) values.  If the boolean capa-
-           bility  <STRONG>hls</STRONG>  is  present,  they are instead as HLS (Hue, Lightness,
+           bility <STRONG>hls</STRONG> is present, they are instead  as  HLS  (Hue,  Lightness,
            Saturation) indices.  The ranges are terminal-dependent.
 
-       <STRONG>o</STRONG>   On an HP-like terminal, <STRONG>initp</STRONG> may give a capability for changing  a
+       <STRONG>o</STRONG>   On  an HP-like terminal, <STRONG>initp</STRONG> may give a capability for changing a
            color-pair value.  It will take seven parameters; a color-pair num-
-           ber (0 to <STRONG>max_pairs</STRONG> - 1), and two triples  describing  first  back-
-           ground  and then foreground colors.  These parameters must be (Red,
+           ber  (0  to  <STRONG>max_pairs</STRONG> - 1), and two triples describing first back-
+           ground and then foreground colors.  These parameters must be  (Red,
            Green, Blue) or (Hue, Lightness, Saturation) depending on <STRONG>hls</STRONG>.
 
-       On some color terminals, colors collide with highlights.  You can  reg-
-       ister  these collisions with the <STRONG>ncv</STRONG> capability.  This is a bit-mask of
-       attributes not to be used when colors are enabled.  The  correspondence
+       On  some color terminals, colors collide with highlights.  You can reg-
+       ister these collisions with the <STRONG>ncv</STRONG> capability.  This is a bit-mask  of
+       attributes  not to be used when colors are enabled.  The correspondence
        with the attributes understood by <STRONG>curses</STRONG> is as follows:
 
                   <STRONG>Attribute</STRONG>              <STRONG>Bit</STRONG>   <STRONG>Decimal</STRONG>      <STRONG>Set</STRONG> <STRONG>by</STRONG>
@@ -2174,134 +2209,134 @@
                   A_VERTICAL             14    16384        sgr1
                   A_ITALIC               15    32768        sitm
 
-       For  example, on many IBM PC consoles, the underline attribute collides
-       with the foreground color blue and is  not  available  in  color  mode.
+       For example, on many IBM PC consoles, the underline attribute  collides
+       with  the  foreground  color  blue  and is not available in color mode.
        These should have an <STRONG>ncv</STRONG> capability of 2.
 
-       SVr4  curses does nothing with <STRONG>ncv</STRONG>, ncurses recognizes it and optimizes
+       SVr4 curses does nothing with <STRONG>ncv</STRONG>, ncurses recognizes it and  optimizes
        the output in favor of colors.
 
 
 </PRE><H3><a name="h3-Miscellaneous">Miscellaneous</a></H3><PRE>
-       If the terminal requires other than a null (zero) character as  a  pad,
-       then  this  can  be  given as pad.  Only the first character of the pad
+       If  the  terminal requires other than a null (zero) character as a pad,
+       then this can be given as pad.  Only the first  character  of  the  pad
        string is used.  If the terminal does not have a pad character, specify
-       npc.   Note that ncurses implements the termcap-compatible <STRONG>PC</STRONG> variable;
-       though the application may set this value to  something  other  than  a
-       null,  ncurses will test <STRONG>npc</STRONG> first and use napms if the terminal has no
+       npc.  Note that ncurses implements the termcap-compatible <STRONG>PC</STRONG>  variable;
+       though  the  application  may  set this value to something other than a
+       null, ncurses will test <STRONG>npc</STRONG> first and use napms if the terminal has  no
        pad character.
 
-       If the terminal can move up or down half a line, this can be  indicated
+       If  the terminal can move up or down half a line, this can be indicated
        with <STRONG>hu</STRONG> (half-line up) and <STRONG>hd</STRONG> (half-line down).  This is primarily use-
        ful for superscripts and subscripts on hard-copy terminals.  If a hard-
-       copy  terminal  can eject to the next page (form feed), give this as <STRONG>ff</STRONG>
-       (usually control L).
+       copy terminal can eject to the next page (form feed), give this  as  <STRONG>ff</STRONG>
+       (usually control/L).
 
-       If there is a command to repeat a given character  a  given  number  of
-       times  (to  save  time transmitting a large number of identical charac-
-       ters) this can be indicated with the  parameterized  string  <STRONG>rep</STRONG>.   The
-       first  parameter  is the character to be repeated and the second is the
+       If  there  is  a  command to repeat a given character a given number of
+       times (to save time transmitting a large number  of  identical  charac-
+       ters)  this  can  be  indicated with the parameterized string <STRONG>rep</STRONG>.  The
+       first parameter is the character to be repeated and the second  is  the
        number of times to repeat it.  Thus, tparm(repeat_char, 'x', 10) is the
        same as "xxxxxxxxxx".
 
        If the terminal has a settable command character, such as the TEKTRONIX
-       4025, this can be indicated with <STRONG>cmdch</STRONG>.  A prototype command  character
-       is  chosen  which is used in all capabilities.  This character is given
-       in the <STRONG>cmdch</STRONG> capability to identify it.  The  following  convention  is
+       4025,  this can be indicated with <STRONG>cmdch</STRONG>.  A prototype command character
+       is chosen which is used in all capabilities.  This character  is  given
+       in  the  <STRONG>cmdch</STRONG>  capability to identify it.  The following convention is
        supported on some UNIX systems: The environment is to be searched for a
-       <STRONG>CC</STRONG> variable, and if found, all occurrences of the  prototype  character
+       <STRONG>CC</STRONG>  variable,  and if found, all occurrences of the prototype character
        are replaced with the character in the environment variable.
 
-       Terminal  descriptions  that  do not represent a specific kind of known
-       terminal, such as <EM>switch</EM>, <EM>dialup</EM>, <EM>patch</EM>, and  <EM>network</EM>,  should  include
-       the  <STRONG>gn</STRONG> (generic) capability so that programs can complain that they do
-       not know how to talk to the terminal.  (This capability does not  apply
-       to  <EM>virtual</EM>  terminal  descriptions  for which the escape sequences are
+       Terminal descriptions that do not represent a specific  kind  of  known
+       terminal,  such  as  <EM>switch</EM>, <EM>dialup</EM>, <EM>patch</EM>, and <EM>network</EM>, should include
+       the <STRONG>gn</STRONG> (generic) capability so that programs can complain that they  do
+       not  know how to talk to the terminal.  (This capability does not apply
+       to <EM>virtual</EM> terminal descriptions for which  the  escape  sequences  are
        known.)
 
        If the terminal has a "meta key" which acts as a shift key, setting the
-       8th  bit  of any character transmitted, this fact can be indicated with
-       <STRONG>km</STRONG>.  Otherwise, software will assume that the 8th bit is parity and  it
-       will  usually be cleared.  If strings exist to turn this "meta mode" on
+       8th bit of any character transmitted, this fact can be  indicated  with
+       <STRONG>km</STRONG>.   Otherwise, software will assume that the 8th bit is parity and it
+       will usually be cleared.  If strings exist to turn this "meta mode"  on
        and off, they can be given as <STRONG>smm</STRONG> and <STRONG>rmm</STRONG>.
 
        If the terminal has more lines of memory than will fit on the screen at
-       once,  the number of lines of memory can be indicated with <STRONG>lm</STRONG>.  A value
+       once, the number of lines of memory can be indicated with <STRONG>lm</STRONG>.  A  value
        of <STRONG>lm</STRONG>#0 indicates that the number of lines is not fixed, but that there
        is still more memory than fits on the screen.
 
-       If  the terminal is one of those supported by the UNIX virtual terminal
+       If the terminal is one of those supported by the UNIX virtual  terminal
        protocol, the terminal number can be given as <STRONG>vt</STRONG>.
 
-       Media copy strings which control an auxiliary printer connected to  the
-       terminal  can  be  given as <STRONG>mc0</STRONG>: print the contents of the screen, <STRONG>mc4</STRONG>:
-       turn off the printer, and <STRONG>mc5</STRONG>: turn on the printer.  When  the  printer
-       is  on,  all text sent to the terminal will be sent to the printer.  It
-       is undefined whether the text is also displayed on the terminal  screen
-       when  the  printer  is  on.   A variation <STRONG>mc5p</STRONG> takes one parameter, and
+       Media  copy strings which control an auxiliary printer connected to the
+       terminal can be given as <STRONG>mc0</STRONG>: print the contents of  the  screen,  <STRONG>mc4</STRONG>:
+       turn  off  the printer, and <STRONG>mc5</STRONG>: turn on the printer.  When the printer
+       is on, all text sent to the terminal will be sent to the  printer.   It
+       is  undefined whether the text is also displayed on the terminal screen
+       when the printer is on.  A variation  <STRONG>mc5p</STRONG>  takes  one  parameter,  and
        leaves the printer on for as many characters as the value of the param-
        eter, then turns the printer off.  The parameter should not exceed 255.
-       All text, including <STRONG>mc4</STRONG>, is transparently passed to the  printer  while
+       All  text,  including <STRONG>mc4</STRONG>, is transparently passed to the printer while
        an <STRONG>mc5p</STRONG> is in effect.
 
 
 </PRE><H3><a name="h3-Glitches-and-Braindamage">Glitches and Braindamage</a></H3><PRE>
-       Hazeltine  terminals, which do not allow "~" characters to be displayed
+       Hazeltine terminals, which do not allow "~" characters to be  displayed
        should indicate <STRONG>hz</STRONG>.
 
-       Terminals which ignore a line-feed immediately after an <STRONG>am</STRONG>  wrap,  such
+       Terminals  which  ignore a line-feed immediately after an <STRONG>am</STRONG> wrap, such
        as the Concept and vt100, should indicate <STRONG>xenl</STRONG>.
 
-       If  <STRONG>el</STRONG>  is  required  to get rid of standout (instead of merely writing
+       If <STRONG>el</STRONG> is required to get rid of standout  (instead  of  merely  writing
        normal text on top of it), <STRONG>xhp</STRONG> should be given.
 
        Teleray terminals, where tabs turn all characters moved over to blanks,
-       should  indicate  <STRONG>xt</STRONG> (destructive tabs).  Note: the variable indicating
-       this is now "dest_tabs_magic_smso"; in  older  versions,  it  was  tel-
+       should indicate <STRONG>xt</STRONG> (destructive tabs).  Note: the  variable  indicating
+       this  is  now  "dest_tabs_magic_smso";  in  older versions, it was tel-
        eray_glitch.  This glitch is also taken to mean that it is not possible
        to position the cursor on top of a "magic cookie", that to erase stand-
-       out  mode  it  is instead necessary to use delete and insert line.  The
+       out mode it is instead necessary to use delete and  insert  line.   The
        ncurses implementation ignores this glitch.
 
-       The Beehive Superbee, which is unable to correctly transmit the  escape
-       or  control  C  characters, has <STRONG>xsb</STRONG>, indicating that the f1 key is used
-       for escape and f2 for control C.  (Only  certain  Superbees  have  this
-       problem,  depending on the ROM.)  Note that in older terminfo versions,
+       The  Beehive Superbee, which is unable to correctly transmit the escape
+       or control/C characters, has <STRONG>xsb</STRONG>, indicating that the f1  key  is  used
+       for  escape  and  f2  for control/C.  (Only certain Superbees have this
+       problem, depending on the ROM.)  Note that in older terminfo  versions,
        this capability was called "beehive_glitch"; it is now "no_esc_ctl_c".
 
-       Other specific terminal problems may be corrected by adding more  capa-
+       Other  specific terminal problems may be corrected by adding more capa-
        bilities of the form <STRONG>x</STRONG><EM>x</EM>.
 
 
 </PRE><H3><a name="h3-Pitfalls-of-Long-Entries">Pitfalls of Long Entries</a></H3><PRE>
-       Long  terminfo  entries are unlikely to be a problem; to date, no entry
-       has even approached terminfo's 4096-byte string-table maximum.   Unfor-
-       tunately,  the  termcap translations are much more strictly limited (to
-       1023 bytes), thus termcap translations of  long  terminfo  entries  can
+       Long terminfo entries are unlikely to be a problem; to date,  no  entry
+       has  even approached terminfo's 4096-byte string-table maximum.  Unfor-
+       tunately, the termcap translations are much more strictly  limited  (to
+       1023  bytes),  thus  termcap  translations of long terminfo entries can
        cause problems.
 
-       The  man  pages  for  4.3BSD and older versions of <STRONG>tgetent</STRONG> instruct the
-       user to allocate a 1024-byte buffer for the termcap entry.   The  entry
-       gets  null-terminated by the termcap library, so that makes the maximum
-       safe length for a termcap entry 1k-1 (1023) bytes.  Depending  on  what
-       the  application  and the termcap library being used does, and where in
-       the termcap file the terminal type that <STRONG>tgetent</STRONG> is  searching  for  is,
+       The man pages for 4.3BSD and older versions  of  <STRONG>tgetent</STRONG>  instruct  the
+       user  to  allocate a 1024-byte buffer for the termcap entry.  The entry
+       gets null-terminated by the termcap library, so that makes the  maximum
+       safe  length  for a termcap entry 1k-1 (1023) bytes.  Depending on what
+       the application and the termcap library being used does, and  where  in
+       the  termcap  file  the terminal type that <STRONG>tgetent</STRONG> is searching for is,
        several bad things can happen.
 
-       Some  termcap libraries print a warning message or exit if they find an
+       Some termcap libraries print a warning message or exit if they find  an
        entry that's longer than 1023 bytes; others do not; others truncate the
-       entries  to  1023  bytes.  Some application programs allocate more than
+       entries to 1023 bytes.  Some application programs  allocate  more  than
        the recommended 1K for the termcap entry; others do not.
 
-       Each termcap entry has two important sizes associated with  it:  before
-       "tc"  expansion, and after "tc" expansion.  "tc" is the capability that
+       Each  termcap  entry has two important sizes associated with it: before
+       "tc" expansion, and after "tc" expansion.  "tc" is the capability  that
        tacks on another termcap entry to the end of the current one, to add on
        its capabilities.  If a termcap entry does not use the "tc" capability,
        then of course the two lengths are the same.
 
-       The "before tc expansion" length is the most important one, because  it
-       affects  more than just users of that particular terminal.  This is the
-       length of the entry as it exists in /etc/termcap, minus the  backslash-
+       The  "before tc expansion" length is the most important one, because it
+       affects more than just users of that particular terminal.  This is  the
+       length  of the entry as it exists in /etc/termcap, minus the backslash-
        newline pairs, which <STRONG>tgetent</STRONG> strips out while reading it.  Some termcap
        libraries strip off the final newline, too (GNU termcap does not).  Now
        suppose:
@@ -2310,87 +2345,87 @@
 
        <STRONG>o</STRONG>   and the application has only allocated a 1k buffer,
 
-       <STRONG>o</STRONG>   and  the termcap library (like the one in BSD/OS 1.1 and GNU) reads
-           the whole entry into the buffer, no matter what its length, to  see
+       <STRONG>o</STRONG>   and the termcap library (like the one in BSD/OS 1.1 and GNU)  reads
+           the  whole entry into the buffer, no matter what its length, to see
            if it is the entry it wants,
 
-       <STRONG>o</STRONG>   and  <STRONG>tgetent</STRONG>  is  searching  for a terminal type that either is the
-           long entry, appears in the termcap file after the  long  entry,  or
-           does  not  appear in the file at all (so that <STRONG>tgetent</STRONG> has to search
+       <STRONG>o</STRONG>   and <STRONG>tgetent</STRONG> is searching for a terminal type  that  either  is  the
+           long  entry,  appears  in the termcap file after the long entry, or
+           does not appear in the file at all (so that <STRONG>tgetent</STRONG> has  to  search
            the whole termcap file).
 
-       Then <STRONG>tgetent</STRONG> will overwrite memory, perhaps  its  stack,  and  probably
-       core  dump the program.  Programs like telnet are particularly vulnera-
-       ble; modern telnets pass along values like the terminal type  automati-
-       cally.   The  results are almost as undesirable with a termcap library,
-       like SunOS 4.1.3 and Ultrix 4.4, that prints warning messages  when  it
-       reads  an  overly  long  termcap entry.  If a termcap library truncates
-       long entries, like OSF/1 3.0, it is  immune  to  dying  here  but  will
+       Then  <STRONG>tgetent</STRONG>  will  overwrite  memory, perhaps its stack, and probably
+       core dump the program.  Programs like telnet are particularly  vulnera-
+       ble;  modern telnets pass along values like the terminal type automati-
+       cally.  The results are almost as undesirable with a  termcap  library,
+       like  SunOS  4.1.3 and Ultrix 4.4, that prints warning messages when it
+       reads an overly long termcap entry.  If  a  termcap  library  truncates
+       long  entries,  like  OSF/1  3.0,  it  is immune to dying here but will
        return incorrect data for the terminal.
 
-       The  "after  tc  expansion"  length  will  have a similar effect to the
+       The "after tc expansion" length will  have  a  similar  effect  to  the
        above, but only for people who actually set TERM to that terminal type,
-       since  <STRONG>tgetent</STRONG>  only  does "tc" expansion once it is found the terminal
+       since <STRONG>tgetent</STRONG> only does "tc" expansion once it is  found  the  terminal
        type it was looking for, not while searching.
 
-       In summary, a termcap entry that is longer than 1023 bytes  can  cause,
-       on  various  combinations of termcap libraries and applications, a core
-       dump, warnings, or incorrect operation.  If it is too long even  before
-       "tc"  expansion,  it will have this effect even for users of some other
-       terminal types and users whose TERM variable does not  have  a  termcap
+       In  summary,  a termcap entry that is longer than 1023 bytes can cause,
+       on various combinations of termcap libraries and applications,  a  core
+       dump,  warnings, or incorrect operation.  If it is too long even before
+       "tc" expansion, it will have this effect even for users of  some  other
+       terminal  types  and  users whose TERM variable does not have a termcap
        entry.
 
-       When  in  -C (translate to termcap) mode, the <STRONG>ncurses</STRONG> implementation of
-       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG> issues warning messages when the pre-tc  length  of  a  termcap
-       translation  is  too  long.  The -c (check) option also checks resolved
+       When in -C (translate to termcap) mode, the <STRONG>ncurses</STRONG>  implementation  of
+       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>  issues  warning  messages  when the pre-tc length of a termcap
+       translation is too long.  The -c (check) option  also  checks  resolved
        (after tc expansion) lengths.
 
 
 </PRE><H3><a name="h3-Binary-Compatibility">Binary Compatibility</a></H3><PRE>
-       It is not wise to count  on  portability  of  binary  terminfo  entries
-       between  commercial  UNIX  versions.   The problem is that there are at
-       least two versions of terminfo (under HP-UX  and  AIX)  which  diverged
-       from  System  V terminfo after SVr1, and have added extension capabili-
-       ties to the string table that (in the binary format) collide with  Sys-
+       It  is  not  wise  to  count  on portability of binary terminfo entries
+       between commercial UNIX versions.  The problem is  that  there  are  at
+       least  two  versions  of  terminfo (under HP-UX and AIX) which diverged
+       from System V terminfo after SVr1, and have added  extension  capabili-
+       ties  to the string table that (in the binary format) collide with Sys-
        tem V and XSI Curses extensions.
 
 
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       Searching   for  terminal  descriptions  in  <STRONG>$HOME/.terminfo</STRONG>  and  TER-
+       Searching  for  terminal  descriptions  in  <STRONG>$HOME/.terminfo</STRONG>  and   TER-
        MINFO_DIRS is not supported by older implementations.
 
-       Some SVr4 <STRONG>curses</STRONG> implementations, and all  previous  to  SVr4,  do  not
+       Some  SVr4  <STRONG>curses</STRONG>  implementations,  and  all previous to SVr4, do not
        interpret the %A and %O operators in parameter strings.
 
-       SVr4/XPG4  do  not  specify  whether <STRONG>msgr</STRONG> licenses movement while in an
-       alternate-character-set mode (such modes may, among other  things,  map
-       CR  and  NL  to  characters  that  do  not trigger local motions).  The
-       <STRONG>ncurses</STRONG> implementation ignores <STRONG>msgr</STRONG> in <STRONG>ALTCHARSET</STRONG>  mode.   This  raises
-       the  possibility that an XPG4 implementation making the opposite inter-
-       pretation may need terminfo entries  made  for  <STRONG>ncurses</STRONG>  to  have  <STRONG>msgr</STRONG>
+       SVr4/XPG4 do not specify whether <STRONG>msgr</STRONG> licenses  movement  while  in  an
+       alternate-character-set  mode  (such modes may, among other things, map
+       CR and NL to characters  that  do  not  trigger  local  motions).   The
+       <STRONG>ncurses</STRONG>  implementation  ignores  <STRONG>msgr</STRONG> in <STRONG>ALTCHARSET</STRONG> mode.  This raises
+       the possibility that an XPG4 implementation making the opposite  inter-
+       pretation  may  need  terminfo  entries  made  for <STRONG>ncurses</STRONG> to have <STRONG>msgr</STRONG>
        turned off.
 
        The <STRONG>ncurses</STRONG> library handles insert-character and insert-character modes
-       in a slightly non-standard way to get better  update  efficiency.   See
+       in  a  slightly  non-standard way to get better update efficiency.  See
        the <STRONG>Insert/Delete</STRONG> <STRONG>Character</STRONG> subsection above.
 
-       The  parameter  substitutions  for  <STRONG>set_clock</STRONG> and <STRONG>display_clock</STRONG> are not
-       documented in SVr4 or the XSI Curses standard.  They are  deduced  from
+       The parameter substitutions for <STRONG>set_clock</STRONG>  and  <STRONG>display_clock</STRONG>  are  not
+       documented  in  SVr4 or the XSI Curses standard.  They are deduced from
        the documentation for the AT&amp;T 505 terminal.
 
-       Be  careful  assigning the <STRONG>kmous</STRONG> capability.  The <STRONG>ncurses</STRONG> library wants
-       to interpret it as <STRONG>KEY_MOUSE</STRONG>, for use by terminals and  emulators  like
-       xterm  that can return mouse-tracking information in the keyboard-input
+       Be careful assigning the <STRONG>kmous</STRONG> capability.  The <STRONG>ncurses</STRONG>  library  wants
+       to  interpret  it as <STRONG>KEY_MOUSE</STRONG>, for use by terminals and emulators like
+       xterm that can return mouse-tracking information in the  keyboard-input
        stream.
 
-       X/Open Curses does not mention  italics.   Portable  applications  must
-       assume  that  numeric  capabilities  are  signed  16-bit  values.  This
-       includes the <EM>no</EM><STRONG>_</STRONG><EM>color</EM><STRONG>_</STRONG><EM>video</EM> (ncv) capability.   The  32768  mask  value
-       used  for  italics with ncv can be confused with an absent or cancelled
-       ncv.  If italics should work with colors, then the ncv  value  must  be
+       X/Open  Curses  does  not  mention italics.  Portable applications must
+       assume that  numeric  capabilities  are  signed  16-bit  values.   This
+       includes  the  <EM>no</EM><STRONG>_</STRONG><EM>color</EM><STRONG>_</STRONG><EM>video</EM>  (ncv)  capability.  The 32768 mask value
+       used for italics with ncv can be confused with an absent  or  cancelled
+       ncv.   If  italics  should work with colors, then the ncv value must be
        specified, even if it is zero.
 
-       Different  commercial  ports  of  terminfo and curses support different
+       Different commercial ports of terminfo  and  curses  support  different
        subsets of the XSI Curses standard and (in some cases) different exten-
        sion sets.  Here is a summary, accurate as of October 1995:
 
@@ -2400,15 +2435,15 @@
            capability (<STRONG>set_pglen</STRONG>).
 
        <STRONG>o</STRONG>   <STRONG>SVr1,</STRONG> <STRONG>Ultrix</STRONG> -- These support a restricted subset of terminfo capa-
-           bilities.   The  booleans  end  with  <STRONG>xon_xoff</STRONG>;  the  numerics with
+           bilities.  The  booleans  end  with  <STRONG>xon_xoff</STRONG>;  the  numerics  with
            <STRONG>width_status_line</STRONG>; and the strings with <STRONG>prtr_non</STRONG>.
 
-       <STRONG>o</STRONG>   <STRONG>HP/UX</STRONG> -- Supports the  SVr1  subset,  plus  the  SVr[234]  numerics
-           <STRONG>num_labels</STRONG>,   <STRONG>label_height</STRONG>,  <STRONG>label_width</STRONG>,  plus  function  keys  11
-           through 63, plus <STRONG>plab_norm</STRONG>,  <STRONG>label_on</STRONG>,  and  <STRONG>label_off</STRONG>,  plus  some
+       <STRONG>o</STRONG>   <STRONG>HP/UX</STRONG>  --  Supports  the  SVr1  subset,  plus the SVr[234] numerics
+           <STRONG>num_labels</STRONG>,  <STRONG>label_height</STRONG>,  <STRONG>label_width</STRONG>,  plus  function  keys   11
+           through  63,  plus  <STRONG>plab_norm</STRONG>,  <STRONG>label_on</STRONG>,  and <STRONG>label_off</STRONG>, plus some
            incompatible extensions in the string table.
 
-       <STRONG>o</STRONG>   <STRONG>AIX</STRONG>  -- Supports the SVr1 subset, plus function keys 11 through 63,
+       <STRONG>o</STRONG>   <STRONG>AIX</STRONG> -- Supports the SVr1 subset, plus function keys 11 through  63,
            plus a number of incompatible string table extensions.
 
        <STRONG>o</STRONG>   <STRONG>OSF</STRONG> -- Supports both the SVr4 set and the AIX extensions.
@@ -2419,8 +2454,8 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>,  <STRONG>printf(3)</STRONG>,  <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
-       <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
+       <STRONG><A HREF="tabs.1m.html">tabs(1m)</A></STRONG>,  <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>, <STRONG>curs_vari-</STRONG>
+       <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>, <STRONG>printf(3)</STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>

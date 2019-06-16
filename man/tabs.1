@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.20 2019/02/16 23:56:38 tom Exp $
+.\" $Id: tabs.1,v 1.25 2019/06/15 23:08:12 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -76,6 +76,15 @@ Curses and other full-screen applications may use hardware tabs
 in optimizing their output to the terminal.
 If the hardware tabstops differ from the information in the terminal
 database, the result is unpredictable.
+Before running curses programs,
+you should either reset tab-stops to the standard interval
+.NS
+tabs -8
+.NE
+.PP
+or use the \fB@RESET@\fP program,
+since the normal initialization sequences do not ensure that tab-stops
+are reset.
 .SH OPTIONS
 .SS General Options
 .TP 5
@@ -165,7 +174,10 @@ describes a \fBtabs\fP utility.
 However
 .bP
 This standard describes a \fB+m\fP option, to set a terminal's left-margin.
-Very few of the entries in the terminal database provide this capability.
+Very few of the entries in the terminal database provide the
+\fBsmgl\fP (\fBset_left_margin\fP) or
+\fBsmglp\fP (\fBset_left_margin_parm\fP)
+capability needed to support the feature.
 .bP
 There is no counterpart in X/Open Curses Issue 7 for this utility,
 unlike \fB@TPUT@(1)\fP.
@@ -173,11 +185,44 @@ unlike \fB@TPUT@(1)\fP.
 The \fB\-d\fP (debug) and \fB\-n\fP (no-op) options are extensions not provided
 by other implementations.
 .PP
+A \fBtabs\fP utility appeared in PWB/Unix 1.0 (1977),
+and thereafter in 3BSD (1979).
+It supported a single \*(``\-n\*('' option
+(to cause the first tab stop to be set on the left margin).
+That option is not documented by POSIX.
+Initially, \fBtabs\fP used built-in tables rather than the terminal database,
+to support a half-dozen terminal types.
+It also had built-in logic to support the left-margin,
+as well as a feature for copying the tab settings from a file.
+.PP
+Later versions of Unix, e.g., SVr4,
+added support for the terminal database,
+but kept the tables, as a fallback.
+In an earlier development effort,
+the tab-stop initialization provided by \fBtset\fP (1982)
+and incorporated into \fBtput\fP uses the terminal database,
+.PP
+POSIX documents no limits on the number of tab stops.
 Documentation for other implementations states that there is a limit on the
 number of tab stops.
 While some terminals may not accept an arbitrary number
 of tab stops, this implementation will attempt to set tab stops up to the
 right margin of the screen, if the given list happens to be that long.
+.PP
+The \fIRationale\fP section of the POSIX documentation goes into some
+detail about the ways the committee considered redesigning the
+\fBtabs\fP and \fBtput\fP utilities,
+without proposing an improved solution.
+It comments that
+.RS 5
+.PP
+no known historical version of tabs supports the capability of setting
+arbitrary tab stops.
+.RE
+.PP
+However, the \fIExplicit Lists\fP described in this manual page
+were implemented in PWB/Unix.
+Those provide the capability of setting abitrary tab stops.
 .SH SEE ALSO
 \fB@TSET@\fR(1),
 \fB@INFOCMP@\fR(1M),

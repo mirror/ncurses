@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.20 2019/02/16 23:56:38 tom Exp @
+  * @Id: tabs.1,v 1.25 2019/06/15 23:08:12 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -70,7 +70,13 @@
        tions running in the terminal, if at all.  Curses and other full-screen
        applications  may  use  hardware tabs in optimizing their output to the
        terminal.  If the hardware tabstops differ from the information in  the
-       terminal database, the result is unpredictable.
+       terminal  database, the result is unpredictable.  Before running curses
+       programs, you should either reset tab-stops to the standard interval
+
+           tabs -8
+
+       or use the <STRONG>reset</STRONG> program, since the normal initialization sequences  do
+       not ensure that tab-stops are reset.
 
 
 </PRE><H2><a name="h2-OPTIONS">OPTIONS</a></H2><PRE>
@@ -151,26 +157,51 @@
        (POSIX.1-2008) describes a <STRONG>tabs</STRONG> utility.  However
 
        <STRONG>o</STRONG>   This  standard describes a <STRONG>+m</STRONG> option, to set a terminal's left-mar-
-           gin.  Very few of the entries in the terminal database provide this
-           capability.
+           gin.  Very few of the entries in the terminal database provide  the
+           <STRONG>smgl</STRONG>  (<STRONG>set_left_margin</STRONG>)  or <STRONG>smglp</STRONG> (<STRONG>set_left_margin_parm</STRONG>) capability
+           needed to support the feature.
 
-       <STRONG>o</STRONG>   There  is no counterpart in X/Open Curses Issue 7 for this utility,
+       <STRONG>o</STRONG>   There is no counterpart in X/Open Curses Issue 7 for this  utility,
            unlike <STRONG>tput(1)</STRONG>.
 
-       The <STRONG>-d</STRONG> (debug) and <STRONG>-n</STRONG> (no-op) options are extensions  not  provided  by
+       The  <STRONG>-d</STRONG>  (debug)  and <STRONG>-n</STRONG> (no-op) options are extensions not provided by
        other implementations.
 
-       Documentation for other implementations states that there is a limit on
-       the number of tab stops.  While some terminals may not accept an  arbi-
-       trary  number of tab stops, this implementation will attempt to set tab
-       stops up to the right margin of the screen, if the given  list  happens
-       to be that long.
+       A <STRONG>tabs</STRONG> utility appeared in PWB/Unix 1.0 (1977), and thereafter in  3BSD
+       (1979).  It supported a single "-n" option (to cause the first tab stop
+       to be set on the left margin).  That option is not documented by POSIX.
+       Initially, <STRONG>tabs</STRONG> used built-in tables rather than the terminal database,
+       to support a half-dozen terminal types.  It also had built-in logic  to
+       support  the left-margin, as well as a feature for copying the tab set-
+       tings from a file.
+
+       Later versions of Unix, e.g., SVr4,  added  support  for  the  terminal
+       database,  but  kept the tables, as a fallback.  In an earlier develop-
+       ment effort, the tab-stop initialization provided by  <STRONG>tset</STRONG>  (1982)  and
+       incorporated into <STRONG>tput</STRONG> uses the terminal database,
+
+       POSIX  documents  no  limits on the number of tab stops.  Documentation
+       for other implementations states that there is a limit on the number of
+       tab  stops.  While some terminals may not accept an arbitrary number of
+       tab stops, this implementation will attempt to set tab stops up to  the
+       right margin of the screen, if the given list happens to be that long.
+
+       The  <EM>Rationale</EM> section of the POSIX documentation goes into some detail
+       about the ways the committee considered redesigning the <STRONG>tabs</STRONG>  and  <STRONG>tput</STRONG>
+       utilities, without proposing an improved solution.  It comments that
+
+            no  known  historical  version  of tabs supports the capability of
+            setting arbitrary tab stops.
+
+       However, the <EM>Explicit</EM> <EM>Lists</EM> described in this manual page  were  imple-
+       mented  in  PWB/Unix.  Those provide the capability of setting abitrary
+       tab stops.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190518).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190615).
 
 
 

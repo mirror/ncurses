@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3329 2019/06/09 20:07:36 tom Exp $
+-- $Id: NEWS,v 1.3332 2019/06/15 23:39:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190615
+	+ expand the portability section of the man/tabs.1 manual page.
+	+ regenerate HTML manpages.
 
 20190609
 	+ add mintty, mintty-direct (adapted from patch by Thomas Wolff).
