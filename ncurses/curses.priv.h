@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.623 2019/06/01 23:41:36 tom Exp $
+ * $Id: curses.priv.h,v 1.624 2019/06/23 15:20:49 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1766,12 +1766,16 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define TPUTS_TRACE(s)	_nc_tputs_trace = s;
 #endif
 
+#ifdef HAVE_CONSISTENT_GETENV
 #define START_TRACE() \
 	if ((_nc_tracing & TRACE_MAXIMUM) == 0) { \
 	    int t = _nc_getenv_num("NCURSES_TRACE"); \
 	    if (t >= 0) \
 		trace((unsigned) t); \
 	}
+#else
+#define START_TRACE() /* nothing */
+#endif
 
 /*
  * Many of the _tracef() calls use static buffers; lock the trace state before

@@ -39,7 +39,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_acs.c,v 1.48 2019/05/04 23:03:08 tom Exp $")
+MODULE_ID("$Id: lib_acs.c,v 1.49 2019/06/23 16:22:10 tom Exp $")
 
 #if BROKEN_LINKER || USE_REENTRANT
 #define MyBuffer _nc_prescreen.real_acs_map
@@ -317,7 +317,7 @@ _nc_wacs_width(unsigned ch)
 	result = 1;
 	break;
     default:
-	result = (wcwidth) (ch);
+	result = wcwidth(ch);
 	break;
     }
     return result;

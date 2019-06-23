@@ -84,7 +84,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.303 2019/06/01 23:42:36 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.304 2019/06/23 16:22:17 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -210,7 +210,7 @@ GoTo(NCURSES_SP_DCLx int const row, int const col)
 }
 
 #if !NCURSES_WCWIDTH_GRAPHICS
-#define is_wacs_value(ch) (_nc_wacs_width(ch) == 1 && (wcwidth)(ch) > 1)
+#define is_wacs_value(ch) (_nc_wacs_width(ch) == 1 && wcwidth(ch) > 1)
 #endif /* !NCURSES_WCWIDTH_GRAPHICS */
 
 static NCURSES_INLINE void

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2015-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2015-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.11 2017/06/24 18:35:25 tom Exp $
+ * $Id: test_sgr.c,v 1.12 2019/06/22 00:20:06 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -182,22 +182,23 @@ brute_force(const char *name)
     char *my_bold;
     char *my_revs;
     char *my_smso;
+    char *my_name = strdup(name);
 
     if (db_list) {
 	putenv(next_dbitem());
     }
 
     if (!q_opt)
-	printf("Terminal type \"%s\"\n", name);
+	printf("Terminal type \"%s\"\n", my_name);
 
     if (no_init) {
 	START_TRACE();
     } else {
-	setupterm((NCURSES_CONST char *) name, 1, (int *) 0);
+	setupterm((NCURSES_CONST char *) my_name, 1, (int *) 0);
     }
 
     if (!q_opt) {
-	if (strcmp(name, ttytype))
+	if (strcmp(my_name, ttytype))
 	    printf("... actual \"%s\"\n", ttytype);
     }
 

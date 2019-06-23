@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.679 2019/03/30 21:44:53 tom Exp $
+dnl $Id: configure.in,v 1.682 2019/06/23 21:26:48 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.679 $)
+AC_REVISION($Revision: 1.682 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1642,6 +1642,14 @@ wctype.h \
 )
 
 CF_GETOPT_HEADER
+
+CF_CHECK_ENVIRON(environ)
+CF_CHECK_GETENV
+if test "x$cf_cv_consistent_getenv" = xno && \
+	test "x$cf_with_trace" = xyes
+then
+	AC_MSG_WARN(The NCURSES_TRACE environment variable is not supported with this configuration)
+fi
 
 # check for ISC (this may also define _POSIX_SOURCE)
 # Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -30,7 +30,7 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_mingw.h,v 1.5 2018/06/24 00:06:37 tom Exp $ */
+/* $Id: nc_mingw.h,v 1.6 2019/06/23 19:55:08 tom Exp $ */
 
 #ifndef NC_MINGW_H
 #define NC_MINGW_H 1
@@ -63,7 +63,7 @@ extern int _nc_gettimeofday(struct timeval *, void *);
 #define getlogin() "username"
 
 #undef wcwidth
-#define wcwidth(ucs) _nc_wcwidth(ucs)
+#define wcwidth(ucs) _nc_wcwidth((wchar_t)(ucs))
 extern int _nc_wcwidth(wchar_t);
 
 #endif /* _WIN32 */

@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.862 2019/03/30 21:53:01 tom Exp $
+dnl $Id: aclocal.m4,v 1.869 2019/06/23 19:53:31 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -925,6 +925,35 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_ENVIRON version: 3 updated: 2010/05/26 16:44:57
+dnl ----------------
+dnl Check for data that is usually declared in <unistd.h>, e.g., the 'environ'
+dnl variable.  Define a DECL_xxx symbol if we must declare it ourselves.
+dnl
+dnl $1 = the name to check
+dnl $2 = the assumed type
+AC_DEFUN([CF_CHECK_ENVIRON],
+[
+AC_CACHE_CHECK(if external $1 is declared, cf_cv_dcl_$1,[
+    AC_TRY_COMPILE([
+#ifdef HAVE_STDLIB_H
+#include <stdlib.h>
+#endif
+#include <unistd.h> ],
+    ifelse([$2],,int,[$2]) x = (ifelse([$2],,int,[$2])) $1,
+    [cf_cv_dcl_$1=yes],
+    [cf_cv_dcl_$1=no])
+])
+
+if test "$cf_cv_dcl_$1" = no ; then
+    CF_UPPER(cf_result,decl_$1)
+    AC_DEFINE_UNQUOTED($cf_result)
+fi
+
+# It's possible (for near-UNIX clones) that the data doesn't exist
+CF_CHECK_EXTERN_DATA($1,ifelse([$2],,int,[$2]))
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_ERRNO version: 12 updated: 2015/04/18 08:56:57
 dnl --------------
 dnl Check for data that is usually declared in <stdio.h> or <errno.h>, e.g.,
@@ -980,6 +1009,132 @@ if test "$cf_cv_have_$1" = yes ; then
 	AC_DEFINE_UNQUOTED($cf_result)
 fi
 
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_GETENV version: 1 updated: 2019/06/23 15:28:15
+dnl ---------------
+dnl Check if repeated getenv calls return the same pointer, e.g., it does not
+dnl discard the previous pointer when returning a new one.
+AC_DEFUN([CF_CHECK_GETENV],
+[
+AC_REQUIRE([CF_CHECK_ENVIRON])
+AC_CHECK_FUNC( getenv, ,, AC_MSG_ERROR(getenv not found) )
+AC_CHECK_FUNCS( putenv setenv strdup )
+AC_CACHE_CHECK(if getenv returns consistent values,cf_cv_consistent_getenv,[
+AC_TRY_RUN([
+#include <stdlib.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <string.h>
+#include <sys/types.h>
+
+#if defined(HAVE_ENVIRON) && defined(DECL_ENVIRON) && !defined(environ)
+extern char **environ;	/* POSIX, but some systems are not... */
+#endif
+
+#if defined(HAVE_STRDUP)
+#define str_alloc(s) strdup(s)
+#else
+#define str_alloc(s) strcpy(malloc(strlen(s) + 1, s))
+#endif
+
+static void set_value(const char *name, const char *value)
+{
+#if defined(HAVE_SETENV)
+	setenv(name, value, 1);
+#elif defined(HAVE_PUTENV)
+	char buffer[1024];
+	sprintf(buffer, "%s=%s", name, value);
+	putenv(str_alloc(buffer));
+#else
+#error neither putenv/setenv found
+#endif
+}
+int main(void)
+{
+	int pass;
+	size_t numenv, limit, j;
+	char **mynames;
+	char **myvalues;
+	char **mypointer;
+	char *equals;
+	for (numenv = 0; environ[numenv]; ++numenv) ;
+	limit = numenv + 10;
+	mynames = (char **) calloc(limit + 1, sizeof(char *));
+	myvalues = (char **) calloc(limit + 1, sizeof(char *));
+	mypointer = (char **) calloc(limit + 1, sizeof(char *));
+#if defined(HAVE_ENVIRON)
+	for (j = 0; environ[j]; ++j) {
+		mynames[j] = str_alloc(environ[j]);
+		equals = strchr(mynames[j], '=');
+		if (equals != 0) {
+			*equals++ = '\0';
+			myvalues[j] = str_alloc(equals);
+		} else {
+			myvalues[j] = str_alloc("");
+		}
+	}
+#endif
+	for (j = numenv; j < limit; ++j) {
+		char name[80];
+		char value[80];
+		size_t found;
+		size_t k = 0;
+		do {
+			size_t jk;
+			found = 0;
+			sprintf(name, "TERM%lu", (unsigned long) k);
+			for (jk = 0; jk < j; ++jk) {
+				if (!strcmp(name, mynames[jk])) {
+					found = 1;
+					++k;
+					break;
+				}
+			}
+		} while (found);
+		sprintf(value, "%lu:%p", (unsigned long) k, &mynames[j]);
+		set_value(name, value);
+		mynames[j] = str_alloc(name);
+		myvalues[j] = str_alloc(value);
+	}
+	for (pass = 0; pass < 3; ++pass) {
+		for (j = 0; j < limit; ++j) {
+			char *value = getenv(mynames[j]);
+			if (pass) {
+				if (value == 0) {
+					fprintf(stderr, "getenv returned null for %s\n", mynames[j]);
+					${cf_cv_main_return:-return}(1);
+				} else if (value != mypointer[j]) {
+					fprintf(stderr, "getenv returned different pointer for %s\n", mynames[j]);
+					${cf_cv_main_return:-return}(1);
+				} else if (strcmp(value, myvalues[j])) {
+					fprintf(stderr, "getenv returned different value for %s\n", mynames[j]);
+					${cf_cv_main_return:-return}(1);
+				}
+			} else {
+				size_t k;
+				mypointer[j] = value;
+				for (k = 0; k < j; ++k) {
+					if (mypointer[j] == mypointer[k]) {
+						fprintf(stderr, "getenv returned same pointer for %s and %s\n", mynames[j], mynames[k]);
+						${cf_cv_main_return:-return}(1);
+					}
+				}
+			}
+		}
+	}
+	${cf_cv_main_return:-return}(0);
+}
+],
+[cf_cv_consistent_getenv=yes],
+[cf_cv_consistent_getenv=no],
+[cf_cv_consistent_getenv=unknown])
+])
+
+if test "x$cf_cv_consistent_getenv" = xno
+then
+	AC_DEFINE(HAVE_CONSISTENT_GETENV,1,[Define to 1 if getenv repeatably returns the same value for a given name])
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_GPM_WGETCH version: 3 updated: 2017/01/21 11:06:25
@@ -1252,6 +1407,60 @@ cf_save_CFLAGS="$cf_save_CFLAGS -Qunused-arguments"
 	AC_MSG_RESULT($ifelse([$2],,CLANG_COMPILER,[$2]))
 fi
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_CONST_X_STRING version: 1 updated: 2019/04/08 17:50:29
+dnl -----------------
+dnl The X11R4-X11R6 Xt specification uses an ambiguous String type for most
+dnl character-strings.
+dnl
+dnl It is ambiguous because the specification accommodated the pre-ANSI
+dnl compilers bundled by more than one vendor in lieu of providing a standard C
+dnl compiler other than by costly add-ons.  Because of this, the specification
+dnl did not take into account the use of const for telling the compiler that
+dnl string literals would be in readonly memory.
+dnl
+dnl As a workaround, one could (starting with X11R5) define XTSTRINGDEFINES, to
+dnl let the compiler decide how to represent Xt's strings which were #define'd. 
+dnl That does not solve the problem of using the block of Xt's strings which
+dnl are compiled into the library (and is less efficient than one might want).
+dnl
+dnl Xt specification 7 introduces the _CONST_X_STRING symbol which is used both
+dnl when compiling the library and compiling using the library, to tell the
+dnl compiler that String is const.
+AC_DEFUN([CF_CONST_X_STRING],
+[
+AC_TRY_COMPILE(
+[
+#include <stdlib.h>
+#include <X11/Intrinsic.h>
+],
+[String foo = malloc(1)],[
+
+AC_CACHE_CHECK(for X11/Xt const-feature,cf_cv_const_x_string,[
+	AC_TRY_COMPILE(
+		[
+#define _CONST_X_STRING	/* X11R7.8 (perhaps) */
+#undef  XTSTRINGDEFINES	/* X11R5 and later */
+#include <stdlib.h>
+#include <X11/Intrinsic.h>
+		],[String foo = malloc(1); *foo = 0],[
+			cf_cv_const_x_string=no
+		],[
+			cf_cv_const_x_string=yes
+		])
+])
+
+case $cf_cv_const_x_string in
+(no)
+	CF_APPEND_TEXT(CPPFLAGS,-DXTSTRINGDEFINES)
+	;;
+(*)
+	CF_APPEND_TEXT(CPPFLAGS,-D_CONST_X_STRING)
+	;;
+esac
+
+])
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CPP_PARAM_INIT version: 7 updated: 2017/01/21 11:06:25
 dnl -----------------
@@ -2343,7 +2552,7 @@ if test "$GCC" = yes ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GCC_WARNINGS version: 33 updated: 2018/06/20 20:23:13
+dnl CF_GCC_WARNINGS version: 35 updated: 2019/06/16 09:45:01
 dnl ---------------
 dnl Check if the compiler supports useful warning options.  There's a few that
 dnl we don't use, simply because they're too noisy:
@@ -2367,12 +2576,11 @@ AC_DEFUN([CF_GCC_WARNINGS],
 AC_REQUIRE([CF_GCC_VERSION])
 CF_INTEL_COMPILER(GCC,INTEL_COMPILER,CFLAGS)
 CF_CLANG_COMPILER(GCC,CLANG_COMPILER,CFLAGS)
-
+if test "x$have_x" = xyes; then CF_CONST_X_STRING fi
 cat > conftest.$ac_ext <<EOF
 #line __oline__ "${as_me:-configure}"
 int main(int argc, char *argv[[]]) { return (argv[[argc-1]] == 0) ; }
 EOF
-
 if test "$INTEL_COMPILER" = yes
 then
 # The "-wdXXX" options suppress warnings:
@@ -2407,7 +2615,6 @@ then
 		fi
 	done
 	CFLAGS="$cf_save_CFLAGS"
-
 elif test "$GCC" = yes
 then
 	AC_CHECKING([for $CC warning options])
@@ -2436,9 +2643,6 @@ then
 		if AC_TRY_EVAL(ac_compile); then
 			test -n "$verbose" && AC_MSG_RESULT(... -$cf_opt)
 			case $cf_opt in
-			(Wcast-qual)
-				CF_APPEND_TEXT(CPPFLAGS,-DXTSTRINGDEFINES)
-				;;
 			(Winline)
 				case $GCC_VERSION in
 				([[34]].*)
@@ -6564,12 +6768,12 @@ define([CF_SHARED_SONAME],
 	fi
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_SIGWINCH version: 1 updated: 2006/04/02 16:41:09
+dnl CF_SIGWINCH version: 2 updated: 2019/03/23 19:54:44
 dnl -----------
 dnl Use this macro after CF_XOPEN_SOURCE, but do not require it (not all
 dnl programs need this test).
 dnl
-dnl This is really a MacOS X 10.4.3 workaround.  Defining _POSIX_C_SOURCE
+dnl This is really a Mac OS X 10.4.3 workaround.  Defining _POSIX_C_SOURCE
 dnl forces SIGWINCH to be undefined (breaks xterm, ncurses).  Oddly, the struct
 dnl winsize declaration is left alone - we may revisit this if Apple choose to
 dnl break that part of the interface as well.

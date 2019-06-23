@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995               *
  *     and: Eric S. Raymond <esr@snark.thyrsus.com>                         *
- *     and: Thomas E. Dickey                        1996-2003               *
+ *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
 /*
@@ -45,7 +45,7 @@
 #include <sys/termio.h>		/* needed for ISC */
 #endif
 
-MODULE_ID("$Id: lib_initscr.c,v 1.43 2017/06/17 18:42:45 tom Exp $")
+MODULE_ID("$Id: lib_initscr.c,v 1.44 2019/06/22 00:02:01 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 initscr(void)
@@ -60,14 +60,18 @@ initscr(void)
 
     /* Portable applications must not call initscr() more than once */
     if (!_nc_globals.init_screen) {
-	NCURSES_CONST char *name;
+	const char *env;
+	char *name;
 
 	_nc_globals.init_screen = TRUE;
 
-	if ((name = getenv("TERM")) == 0
-	    || *name == '\0') {
-	    static char unknown_name[] = "unknown";
-	    name = unknown_name;
+	if ((env = getenv("TERM")) == 0
+	    || *env == '\0') {
+	    env = "unknown";
+	}
+	if ((name = strdup(env)) == NULL) {
+	    fprintf(stderr, "Error opening allocating $TERM.\n");
+	    ExitProgram(EXIT_FAILURE);
 	}
 #ifdef __CYGWIN__
 	/*
@@ -97,6 +101,7 @@ initscr(void)
 #else
 	def_prog_mode();
 #endif
+	free(name);
     }
     result = stdscr;
     _nc_unlock_global(curses);

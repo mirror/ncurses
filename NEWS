@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3332 2019/06/15 23:39:53 tom Exp $
+-- $Id: NEWS,v 1.3337 2019/06/23 21:18:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190623
+	+ improve the tabs.1 manual page to distinguish the PWB/Unix and 7th
+	  Edition versions of the tabs utility.
+	+ add configure check for getenv() to work around implementation shown
+	  in Emscripten #6766, use that to optionally suppress START_TRACE
+	  macro, whose call to getenv() may not work properly (report by Ilya
+	  Ig Petrov).
+	+ modify initialization functions to avoid relying upon persistent
+	  data for the result from getenv().
+	+ update config.guess, config.sub
 
 20190615
 	+ expand the portability section of the man/tabs.1 manual page.
