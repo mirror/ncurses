@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.869 2019/06/23 19:53:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.876 2019/06/30 23:46:29 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5606,6 +5606,51 @@ ifelse([$1],,,[$1=$PATH_SEPARATOR])
 	AC_MSG_RESULT($PATH_SEPARATOR)
 ])dnl
 dnl ---------------------------------------------------------------------------
+dnl CF_PATH_PROG version: 10 updated: 2019/06/30 19:44:43
+dnl ------------
+dnl Check for a given program, defining corresponding symbol.
+dnl	$1 = environment variable, which is suffixed by "_PATH" in the #define.
+dnl	$2 = program name to find.
+dnl	$3 = optional list of additional program names to test.
+dnl $4 = $PATH
+dnl
+dnl If there is more than one token in the result, #define the remaining tokens
+dnl to $1_ARGS.  We need this for 'install' in particular.
+dnl
+dnl FIXME: we should allow this to be overridden by environment variables
+dnl
+AC_DEFUN([CF_PATH_PROG],[
+AC_REQUIRE([CF_PATHSEP])
+test -z "[$]$1" && $1=$2
+AC_PATH_PROGS($1,[$]$1 $2 ifelse($3,,,$3),[$]$1, ifelse($4,,,$4))
+
+cf_path_prog=""
+cf_path_args=""
+IFS="${IFS:- 	}"; cf_save_ifs="$IFS"; IFS="${IFS}$PATH_SEPARATOR"
+for cf_temp in $ac_cv_path_$1
+do
+	if test -z "$cf_path_prog" ; then
+		if test "$with_full_paths" = yes ; then
+			CF_PATH_SYNTAX(cf_temp,break)
+			cf_path_prog="$cf_temp"
+		else
+			cf_path_prog="`basename $cf_temp`"
+		fi
+	elif test -z "$cf_path_args" ; then
+		cf_path_args="$cf_temp"
+	else
+		cf_path_args="$cf_path_args $cf_temp"
+	fi
+done
+IFS="$cf_save_ifs"
+
+if test -n "$cf_path_prog" ; then
+	CF_MSG_LOG(defining path for ${cf_path_prog})
+	AC_DEFINE_UNQUOTED($1_PATH,"$cf_path_prog",Define to pathname $1)
+	test -n "$cf_path_args" && AC_DEFINE_UNQUOTED($1_ARGS,"$cf_path_args",Define to provide args for $1)
+fi
+])dnl
+dnl ---------------------------------------------------------------------------
 dnl CF_PATH_SYNTAX version: 16 updated: 2015/04/18 08:56:57
 dnl --------------
 dnl Check the argument to see that it looks like a pathname.  Rewrite it if it
@@ -8316,6 +8361,32 @@ fi
 
 AC_SUBST(PKG_CONFIG_LIBDIR)
 ])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_PATH_PROG version: 1 updated: 2019/06/30 19:44:43
+dnl -----------------
+dnl Check for a given program, like CF_PATH_PROG, but allow override using a
+dnl "--with-xxx" option.
+dnl
+dnl Parameters:
+dnl		$1 = environment variable to set/update
+dnl		$2 = program name
+dnl		$3 = help-text
+dnl		$4 = $PATH
+AC_DEFUN([CF_WITH_PATH_PROG],[
+AC_ARG_WITH($2-path,
+	[  --with-$2-path=XXX     specify path of $2 ifelse($3,,,$3)],
+	[AC_MSG_CHECKING(for $2 program ifelse($3,,,$3))
+		$1=$withval
+		AC_MSG_RESULT([$]$1)
+		CF_PATH_SYNTAX($1)
+	],
+	[CF_PATH_PROG($1,$2,,ifelse($4,,,$4))
+		if test -z "[$]$1"
+		then
+			AC_MSG_WARN(no $2 program found ifelse($3,,,$3))
+		fi
+	])
+])
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_PTHREAD version: 7 updated: 2015/04/18 08:56:57
 dnl ---------------

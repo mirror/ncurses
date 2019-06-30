@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.161 2019/05/11 14:15:21 tom Exp $
+# $Id: Makefile.in,v 1.163 2019/06/30 14:57:27 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -159,7 +159,8 @@ CAPLIST		= $(TERMINFO_CAPS) $(top_srcdir)/include/Caps-ncurses
 
 TERMINFO	= @TERMINFO@
 TERMINFO_SRC	= @TERMINFO_SRC@
-TIC_PATH	= @TIC_PATH@
+TIC_PATH	= @TIC@
+INFOCMP_PATH	= @INFOCMP@
 
 AUTO_SRC = \
 	./codes.c \
@@ -221,7 +222,7 @@ $(DESTDIR)$(libdir) :
 ../lib : ; mkdir $@
 
 ./fallback.c : $(tinfo)/MKfallback.sh
-	$(SHELL) -e $(tinfo)/MKfallback.sh $(TERMINFO) $(TERMINFO_SRC) $(TIC_PATH) $(FALLBACK_LIST) >$@
+	$(SHELL) -e $(tinfo)/MKfallback.sh $(TERMINFO) $(TERMINFO_SRC) $(TIC_PATH) $(INFOCMP_PATH) $(FALLBACK_LIST) >$@
 
 ./lib_gen.c : $(base)/MKlib_gen.sh ../include/curses.h
 	$(SHELL) -e $(base)/MKlib_gen.sh "$(CPP) $(CPPFLAGS)" "$(AWK)" generated <../include/curses.h >$@

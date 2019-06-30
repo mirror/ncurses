@@ -50,7 +50,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.113 2019/03/23 23:47:16 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.114 2019/06/29 23:07:18 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -405,7 +405,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
 
     _nc_SPRINTF(filename, _nc_SLIMIT(sizeof(filename))
 		LEAF_FMT "/%.*s", UChar(first_name[0]),
-		(int) (sizeof(filename) - LEAF_LEN - 2),
+		(int) (sizeof(filename) - (LEAF_LEN + 2)),
 		first_name);
 
     if (saved)
@@ -466,7 +466,8 @@ _nc_write_entry(TERMTYPE2 *const tp)
 
 	check_writeable(ptr[0]);
 	_nc_SPRINTF(linkname, _nc_SLIMIT(sizeof(linkname))
-		    LEAF_FMT "/%.*s", ptr[0], (int) sizeof(linkname) - 3, ptr);
+		    LEAF_FMT "/%.*s", ptr[0],
+		    (int) sizeof(linkname) - (2 + LEAF_LEN), ptr);
 
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");

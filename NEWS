@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3337 2019/06/23 21:18:23 tom Exp $
+-- $Id: NEWS,v 1.3342 2019/06/30 10:45:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190630
+	+ add --with-tic-path and --with-infocmp-path to work around problems
+	  building fallback source using pre-6.0 tic/infocmp.
+	+ add a check in tic for paired indn/rin
+	+ correct a buffer-limit in write_entry.c for systems that use caseless
+	  filenames.
+	+ add ms-terminal -TD
+	+ add vscode, vscode-direct -TD
 
 20190623
 	+ improve the tabs.1 manual page to distinguish the PWB/Unix and 7th

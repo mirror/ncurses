@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKfallback.sh,v 1.21 2017/04/12 00:50:50 tom Exp $
+# $Id: MKfallback.sh,v 1.22 2019/06/30 10:44:15 tom Exp $
 #
 # MKfallback.sh -- create fallback table for entry reads
 #
@@ -43,6 +43,9 @@ terminfo_src=$1
 shift
 
 tic_path=$1
+shift
+
+infocmp_path=$1
 shift
 
 case $tic_path in #(vi
@@ -89,7 +92,7 @@ EOF
 	for x in $*
 	do
 		echo "/* $x */"
-		infocmp -E $x | sed -e 's/\<short\>/NCURSES_INT2/g'
+		$infocmp_path -E $x | sed -e 's/\<short\>/NCURSES_INT2/g'
 	done
 
 	cat <<EOF
@@ -100,7 +103,7 @@ EOF
 	for x in $*
 	do
 		echo "$comma /* $x */"
-		infocmp -e $x
+		$infocmp_path -e $x
 		comma=","
 	done
 

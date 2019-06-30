@@ -50,6 +50,8 @@ CONFIG_OPTIONS = \
 	--with-cxx-shared \
 	--with-develop \
 	--with-fallbacks=unknown,rxvt \
+	--with-tic-path=/usr/bin/tic$(MY_ABI) \
+	--with-infocmp-path=/usr/bin/infocmp$(MY_ABI) \
 	--with-shared \
 	--with-trace \
 	--with-xterm-kbs=DEL \

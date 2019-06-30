@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.212 2019/01/19 17:42:30 tom Exp $
+-- $Id: INSTALL,v 1.213 2019/06/30 15:28:56 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -903,6 +903,8 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Specify a list of fallback terminal descriptions which will be
 	compiled into the ncurses library.  See CONFIGURING FALLBACK ENTRIES.
 
+	See also "--with-tic-path" and "--with-infocmp-path".
+
     --with-gpm
 	use Alessandro Rubini's GPM library to provide mouse support on the
 	Linux console.  Prior to ncurses 5.5, this introduced a dependency on
@@ -953,6 +955,10 @@ SUMMARY OF CONFIGURE OPTIONS:
 		/usr/lib/db4/libdb.so
 
 	See also the --enable-getcap option.
+
+    --with-infocmp-path[=XXX]
+	Use this option to override the automatic detection of tic in your
+	$PATH when building fallbacks (see "--with-fallbacks").
 
     --with-install-prefix=XXX
 	Allows you to specify an alternate location for installing ncurses
@@ -1172,6 +1178,10 @@ SUMMARY OF CONFIGURE OPTIONS:
     --with-termpath=XXX
 	Specify a search-list of termcap files which will be compiled into the
 	ncurses library (default:  /etc/termcap:/usr/share/misc/termcap)
+
+    --with-tic-path[=XXX]
+	Use this option to override the automatic detection of tic in your
+	$PATH when building fallbacks (see "--with-fallbacks").
 
     --with-ticlib[=XXX]
 	When building the ncurses library, build a separate library for
@@ -2120,9 +2130,10 @@ CONFIGURING FALLBACK ENTRIES:
 			$TERMINFO \
 			../misc/terminfo.src \
 			`which tic` \
+			`which infocmp` \
 			linux vt100 xterm >fallback.c
 
-	The first three parameters of the script are normally supplied by
+	The first four parameters of the script are normally supplied by
 	the configured makefiles via the "--with-fallbacks" option.  They
 	are
 
@@ -2130,6 +2141,8 @@ CONFIGURING FALLBACK ENTRIES:
 		2) the source for the terminfo entries
 		3) the location of the tic program, used to create a terminfo
 		   database.
+		4) the location of the infocmp program, used to print a terminfo
+		   description.
 
 	Then just rebuild and reinstall the library as you would normally.
 	You can restore the default empty fallback list with
@@ -2138,6 +2151,7 @@ CONFIGURING FALLBACK ENTRIES:
 			$TERMINFO \
 			../misc/terminfo.src \
 			`which tic` \
+			`which infocmp` \
 			>fallback.c
 
 	The overhead for an empty fallback list is one trivial stub function.

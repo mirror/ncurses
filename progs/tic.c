@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.276 2019/05/10 21:00:25 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.277 2019/06/29 23:23:22 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2929,6 +2929,11 @@ check_termtype(TERMTYPE2 *tp, bool literal)
     check_keypad(tp);
     check_printer(tp);
     check_screen(tp);
+
+    /*
+     * These are probably both or none.
+     */
+    PAIRED(parm_index, parm_rindex);
 
     /*
      * These may be mismatched because the terminal description relies on

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.682 2019/06/23 21:26:48 tom Exp $
+dnl $Id: configure.in,v 1.688 2019/06/30 15:21:02 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.682 $)
+AC_REVISION($Revision: 1.688 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -628,6 +628,22 @@ USE_FALLBACKS=
 test -z "$FALLBACK_LIST" && USE_FALLBACKS="#"
 AC_SUBST(FALLBACK_LIST)
 AC_SUBST(USE_FALLBACKS)
+
+# The fallback feature in ncurses relies upon tic/infocmp outside the build
+# tree for generating the terminal descriptions that will be compiled into the
+# library.  If your toolchain is old, it may not handle current terminal
+# databases.  Use configure-options to point to the tools which will be used,
+# rather than the first ones found on the $PATH.
+if test -n "$FALLBACK_LIST"
+then
+	CF_WITH_PATH_PROG(TIC,     tic,     [for fallbacks], $PATH:/usr/local/ncurses/bin)
+	CF_WITH_PATH_PROG(INFOCMP, infocmp, [for fallbacks], $PATH:/usr/local/ncurses/bin)
+else
+	: ${TIC:=tic}
+	: ${INFOCMP:=infocmp}
+fi
+AC_SUBST(TIC)
+AC_SUBST(INFOCMP)
 
 AC_MSG_CHECKING(if you want modern xterm or antique)
 AC_ARG_WITH(xterm-new,
@@ -2220,16 +2236,6 @@ if test "x$enable_pc_files" = xyes && test -z "$MAKE_PC_FILES" ; then
 SUB_MAKEFILES="$SUB_MAKEFILES misc/gen-pkgconfig:misc/gen-pkgconfig.in"
 fi
 AC_SUBST(cross_compiling)
-
-AC_PATH_PROG(TIC_PATH,tic,unknown,$PATH:/usr/local/ncurses/bin)
-if test -n "$FALLBACK_LIST"
-then
-	if test "$TIC_PATH" = unknown
-	then
-		AC_MSG_WARN(no tic program found for fallbacks)
-	fi
-fi
-AC_SUBST(TIC_PATH)
 
 if test "x$cf_with_tests" != xno ; then
 	MAKE_TESTS=

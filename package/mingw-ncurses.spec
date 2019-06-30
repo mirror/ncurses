@@ -3,7 +3,7 @@
 Summary: shared libraries for terminal handling
 Name: mingw32-ncurses6
 Version: 6.1
-Release: 20190623
+Release: 20190630
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -68,6 +68,8 @@ This package is used for testing ABI %{MY_ABI} with cross-compiles to MinGW.
 	--with-cxx-shared \\\
 	--with-develop \\\
 	--with-fallbacks=unknown,xterm \\\
+	--with-tic-path=/usr/bin/tic${MY_ABI} \\\
+	--with-infocmp-path=/usr/bin/infocmp${MY_ABI} \\\
 	--with-install-prefix=$RPM_BUILD_ROOT \\\
 	--with-pc-suffix=%{MY_ABI} \\\
 	--with-pcre2 \\\
@@ -144,6 +146,9 @@ rm -rf $RPM_BUILD_ROOT
 %{mingw64_libdir}/*
 
 %changelog
+
+* Sun Jun 30 2019 Thomas E. Dickey
+- use tic-path and infocmp-path options for fallbacks
 
 * Sat Feb 10 2018 Thomas E. Dickey
 - add several development features
