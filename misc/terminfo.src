@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.749 $
-#	$Date: 2019/06/30 20:05:21 $
+#	$Revision: 1.757 $
+#	$Date: 2019/07/06 20:35:26 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4225,6 +4225,8 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 
 # Windows 10 1903
 # Version 0.2.1715.0
+# https://github.com/microsoft/terminal
+#
 # The task manager shows this as "OpenConsole.exe", which differs
 # from the "Windows Command Processor" used for the command-prompt.
 #
@@ -4247,9 +4249,9 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 # - a few generic xterm features are supported (set window title), but
 #   others are missing (such as the mouse).
 # - the cursor visible/invisible works in the PowerShell tab, not in "Legacy"
-# tack: 
+# tack:
 # - blink, dim, bold, invis, protect do not work
-# - bce works (but per vttest, with ED, EL, not BCE)
+# - bce works (but per vttest, with ED, EL, not ECH)
 # - does not support keypad application mode
 # - implements most of the xterm modified keys; sometimes modifiers are ignored
 #   or simply incorrect
@@ -4262,7 +4264,8 @@ ms-terminal|Windows10 terminal,
 	use=xterm+pcfkeys, use=xterm-basic,
 
 #### Visual Studio
-# Visual Studio Code 1.35.1
+# Visual Studio Code 1.35.1 uses xterm.js (see https://xtermjs.org/).
+# https://code.visualstudio.com/docs/editor/integrated-terminal
 #
 # This sets TERM to xterm-256color, which is a little more successful than
 # Windows Terminal.
@@ -4289,11 +4292,11 @@ ms-terminal|Windows10 terminal,
 # - mouse mode is not reset by reset-sequence
 # - supports italics and dim, but not cross-out or double-underline
 # - color-palette cannot be changed
-vscode|Visual Studio Code terminal,
+vscode|xterm.js|Visual Studio Code terminal using xterm.js,
 	npc,
 	kcbt=\E[Z, rmkx=\E[?1l, smkx=\E[?1h, use=xterm+256setaf,
 	use=ecma+index, use=xterm+sm+1006, use=xterm+pcfkeys,
-	use=xterm-basic, use=xterm-basic,
+	use=xterm-basic,
 vscode-direct|Visual Studio Code with direct-colors,
 	use=xterm+indirect, use=vscode,
 
@@ -7011,6 +7014,62 @@ kitty+common|KovId's TTY common properties,
 	vpa=\E[%i%p1%dd, use=ecma+index, use=xterm+sl-twm,
 	use=xterm+pce2, use=xterm+pcc2, use=ecma+italics,
 	use=xterm+alt1049,
+
+######## WEB CLIENTS
+
+#### DomTerm
+# https://domterm.org
+#
+# Quoting its webpage:
+#	The domterm command runs a server that manages sessions (usually shell
+#	processes).  The user interface and terminal emulation is handled by a
+#	JavaScript library that can run in a regular web browser or an embedded
+#	browser such as Electron, using Web Sockets to talk to the server.
+#
+# it can connect to, and display in, a web browser, or as a standalone Qt
+# application.  Either way, it displays in the current desktop session.
+#
+# Testing current code (2019/07/06) with Fedora 30:
+# tack
+#	no flash
+#	no beep
+#	no dim
+#	no blink
+#	no invis
+#	no italics
+#	ok smxx/rmxx
+#	bce screen shows diagonal lines...
+#	kf6 sends nothing
+#	kf11 toggles maximize
+#	cursor-key application mode works
+#	numeric keypad application does not work; keys always send face-codes
+#	sends utf-8 for meta, like xterm
+# vttest
+#	has problems with menu #1 (wrapping)
+#	DA = vt200 with 132 columns, color
+#	DA2 = 990, 100300 ("\E[>990;100300;0c")
+#	no VT52, no double-size characters
+#	vt220 ECH test works, SRM, DECSCA do not
+#	S7C1T/S8C1t does not work
+#	DECUDK does not work
+#	CNL does not work; the other ECMA-48 cursor-movement tests work
+#	REP sort-of works (does not match xterm)
+#	SD/SU work, but not SL/SR
+#	window reporting: works for size in chars/pixels, but not other tests
+#	X10 mouse clicks work -- but return 4 rather than 1 for codes
+#	any-event mouse mode acts like any-button mode
+#	implements SGR mouse-mode
+# other:
+#	does not implement initc
+#	does accept either colons or semicolon in 38/48 SGR.
+domterm|DomTerm web client,
+	npc,
+	bel@, blink@, dim@, invis@, kcbt=\E[Z, ritm@, rmkx=\E[?1l,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
+	    %t;7%;m,
+	sitm@, smkx=\E[?1h, use=xterm+256setaf, use=ecma+index,
+	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm-basic,
+	use=xterm-basic,
 
 ######## UNIX VIRTUAL TERMINALS, VIRTUAL CONSOLES, AND TELNET CLIENTS
 #
@@ -26281,5 +26340,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add ms-terminal -TD
 #	+ add vscode, vscode-direct -TD
 #	+ use ecma+index in screen, st -TD
+#
+# 2019-07-06
+#	+ add domterm -TD
+#	+ improve comments for recent changes, add alias xterm.js -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
