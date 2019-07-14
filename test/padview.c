@@ -28,7 +28,7 @@
 /*
  * clone of view.c, using pads
  *
- * $Id: padview.c,v 1.13 2019/01/21 19:47:07 tom Exp $
+ * $Id: padview.c,v 1.14 2019/07/13 20:41:47 tom Exp $
  */
 
 #include <test.priv.h>
@@ -191,7 +191,7 @@ read_file(const char *filename)
 	failed("cannot allocate pad workspace");
     if (try_color) {
 	wattrset(my_pad, COLOR_PAIR(my_pair));
-	wbkgd(my_pad, (chtype) COLOR_PAIR(my_pair));
+	wbkgd(my_pad, (chtype) (' ' | COLOR_PAIR(my_pair)));
     }
 
     /*
@@ -347,17 +347,21 @@ main(int argc, char *argv[])
 	nodelay(stdscr, TRUE);
     idlok(stdscr, TRUE);	/* allow use of insert/delete line */
 
-    my_pad = read_file(fname = argv[optind]);
-
     if (try_color) {
 	if (has_colors()) {
 	    start_color();
 	    init_pair(my_pair, COLOR_WHITE, COLOR_BLUE);
-	    bkgd((chtype) COLOR_PAIR(my_pair));
+	    bkgd((chtype) (' ' | COLOR_PAIR(my_pair)));
 	} else {
 	    try_color = FALSE;
 	}
     }
+
+    /*
+     * Do this after starting color, otherwise the pad's background will be
+     * uncolored after the ncurses 6.1.20181208 fixes.
+     */
+    my_pad = read_file(fname = argv[optind]);
 
     my_row = 0;
     while (!done) {

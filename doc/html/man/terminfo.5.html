@@ -5,7 +5,7 @@
   * Note: this must be run through tbl before nroff.
   * The magic cookie on the first line triggers this under some man programs.
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -31,9 +31,9 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.head,v 1.35 2018/07/28 22:29:09 tom Exp @
+  * @Id: terminfo.head,v 1.36 2019/07/13 23:17:33 tom Exp @
   * Head of terminfo man page ends here
-  * @Id: terminfo.tail,v 1.93 2019/06/01 22:32:15 tom Exp @
+  * @Id: terminfo.tail,v 1.95 2019/07/13 23:29:04 tom Exp @
   * Beginning of terminfo.tail file
   * This file is part of ncurses.
   * See "terminfo.head" for copyright.
@@ -74,7 +74,7 @@
        <EM>Terminfo</EM> describes terminals by giving a set of capabilities which they
        have, by specifying how to perform screen operations, and by specifying
        padding  requirements  and  initialization  sequences.   This describes
-       <STRONG>ncurses</STRONG> version 6.1 (patch 20190623).
+       <STRONG>ncurses</STRONG> version 6.1 (patch 20190713).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -124,7 +124,7 @@
        ing  up the terminal should have a root name, thus "hp2621".  This name
        should not contain hyphens.  Modes that the hardware can be in, or user
        preferences,  should be indicated by appending a hyphen and a mode suf-
-       fix.  Thus, a vt100 in 132 column mode would be vt100-w.  The following
+       fix.  Thus, a vt100 in 132-column mode would be vt100-w.  The following
        suffixes should be used where possible:
 
             <STRONG>Suffix</STRONG>                  <STRONG>Meaning</STRONG>                   <STRONG>Example</STRONG>
@@ -1902,10 +1902,14 @@
               run the program
                      <STRONG>iprog</STRONG>
 
-              output <STRONG>is1</STRONG> <STRONG>is2</STRONG>
+              output
+                     <STRONG>is1</STRONG> and
+                     <STRONG>is2</STRONG>
 
               set the margins using
-                     <STRONG>mgc</STRONG>, <STRONG>smgl</STRONG> and <STRONG>smgr</STRONG>
+                     <STRONG>mgc</STRONG> or
+                     <STRONG>smglp</STRONG> and <STRONG>smgrp</STRONG> or
+                     <STRONG>smgl</STRONG> and <STRONG>smgr</STRONG>
 
               set tabs using
                      <STRONG>tbc</STRONG> and <STRONG>hts</STRONG>
@@ -1913,8 +1917,8 @@
               print the file
                      <STRONG>if</STRONG>
 
-              and finally
-                     output <STRONG>is3</STRONG>.
+              and finally output
+                     <STRONG>is3</STRONG>.
 
        Most initialization is done with <STRONG>is2</STRONG>.  Special terminal  modes  can  be
        set  up  without duplicating strings by putting the common sequences in
@@ -1922,14 +1926,14 @@
 
        A set of sequences that does a harder  reset  from  a  totally  unknown
        state can be given as <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG>, <STRONG>rf</STRONG> and <STRONG>rs3</STRONG>, analogous to <STRONG>is1</STRONG> <STRONG>,</STRONG> <STRONG>is2</STRONG> <STRONG>,</STRONG> <STRONG>if</STRONG>
-       and <STRONG>is3</STRONG> respectively.  These strings are output by  the  <STRONG>reset</STRONG>  program
-       (an  alias of <STRONG>tset</STRONG>), which is used when the terminal gets into a wedged
-       state.  Commands are normally placed in <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG> <STRONG>rs3</STRONG>  and  <STRONG>rf</STRONG>  only  if
-       they  produce annoying effects on the screen and are not necessary when
-       logging in.  For example, the command to set the vt100  into  80-column
-       mode would normally be part of <STRONG>is2</STRONG>, but it causes an annoying glitch of
-       the screen and is not normally needed since  the  terminal  is  usually
-       already in 80 column mode.
+       and <STRONG>is3</STRONG> respectively.  These strings are  output  by  <EM>reset</EM>  option  of
+       <STRONG>tput</STRONG>,  or  by  the <STRONG>reset</STRONG> program (an alias of <STRONG>tset</STRONG>), which is used when
+       the terminal gets into a wedged state.  Commands are normally placed in
+       <STRONG>rs1</STRONG>, <STRONG>rs2</STRONG> <STRONG>rs3</STRONG> and <STRONG>rf</STRONG> only if they produce annoying effects on the screen
+       and are not necessary when logging in.  For example, the command to set
+       the  vt100  into  80-column  mode would normally be part of <STRONG>is2</STRONG>, but it
+       causes an annoying glitch of the screen  and  is  not  normally  needed
+       since the terminal is usually already in 80-column mode.
 
        The  <STRONG>reset</STRONG>  program  writes  strings including <STRONG>iprog</STRONG>, etc., in the same
        order as the <EM>init</EM> program, using <STRONG>rs1</STRONG>, etc., instead of  <STRONG>is1</STRONG>,  etc.   If
@@ -2146,7 +2150,6 @@
                     green     <STRONG>COLOR_GREEN</STRONG>       2     0,max,0
                     yellow    <STRONG>COLOR_YELLOW</STRONG>      3     max,max,0
                     blue      <STRONG>COLOR_BLUE</STRONG>        4     0,0,max
-
                     magenta   <STRONG>COLOR_MAGENTA</STRONG>     5     max,0,max
                     cyan      <STRONG>COLOR_CYAN</STRONG>        6     0,max,max
                     white     <STRONG>COLOR_WHITE</STRONG>       7     max,max,max

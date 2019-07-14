@@ -1,4 +1,4 @@
-.\" $Id: terminfo.tail,v 1.93 2019/06/01 22:32:15 tom Exp $
+.\" $Id: terminfo.tail,v 1.95 2019/07/13 23:29:04 tom Exp $
 .\" Beginning of terminfo.tail file
 .\" This file is part of ncurses.
 .\" See "terminfo.head" for copyright.
@@ -1141,14 +1141,17 @@ run the program
 .B iprog
 .TP
 output
-.B is1
-.B is2
+.br
+\fBis1\fP and
+.br
+\fBis2\fP
 .TP
 set the margins using
-.BR mgc ,
-.B smgl
-and
-.B smgr
+\fBmgc\fP or
+.br
+\fBsmglp\fP and \fBsmgrp\fP or
+.br
+\fBsmgl\fP and \fBsmgr\fP
 .TP
 set tabs using
 .B tbc
@@ -1156,11 +1159,10 @@ and
 .B hts
 .TP
 print the file
-.B if
+\fBif\fP
 .TP
-and finally
-output
-.BR is3 .
+and finally output
+\fBis3\fP.
 .RE
 .PP
 Most initialization is done with
@@ -1187,7 +1189,9 @@ analogous to
 and
 .B is3
 respectively.
-These strings are output by the \fB@RESET@\fP program
+These strings are output
+by \fIreset\fP option of \fB@TPUT@\fP,
+or by the \fB@RESET@\fP program
 (an alias of \fB@TSET@\fP),
 which is used when the terminal gets into a wedged state.
 Commands are normally placed in
@@ -1202,7 +1206,7 @@ For example, the command to set the vt100 into 80-column mode would
 normally be part of
 .BR is2 ,
 but it causes an annoying glitch of the screen and is not normally
-needed since the terminal is usually already in 80 column mode.
+needed since the terminal is usually already in 80-column mode.
 .PP
 The \fB@RESET@\fP program writes strings including
 .BR iprog ,

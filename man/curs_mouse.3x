@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.50 2018/12/29 23:40:47 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.51 2019/07/13 23:45:12 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -394,7 +394,7 @@ report sequence will appear in the string read.
 .PP
 Mouse events under xterm will not be detected correctly in a window with
 its keypad bit off, since they are interpreted as a variety of function key.
-Your terminfo description should have \fBkmous\fR set to "\\E[M"
+Your terminfo description should have \fBkmous\fR set to \*(``\\E[M\*(''
 (the beginning of the response from xterm for mouse clicks).
 Other values for \fBkmous\fR are permitted,
 but under the same assumption,
@@ -402,11 +402,13 @@ i.e., it is the beginning of the response.
 .PP
 Because there are no standard terminal responses that would serve to identify
 terminals which support the xterm mouse protocol, \fBncurses\fR assumes that
-if your $TERM environment variable contains \*(``xterm\*('',
-or \fBkmous\fR is defined in
-the terminal description, then the terminal may send mouse events.
-The \fBkmous\fP capability is checked first, allowing the
-use of newer xterm mouse protocols.
+if \fBkmous\fR is defined in the terminal description,
+or if the terminal description's primary name or aliases
+contain the string \*(``xterm\*('',
+then the terminal may send mouse events.
+The \fBkmous\fP capability is checked first,
+allowing the use of newer xterm mouse protocols
+such as xterm's private mode 1006.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_kernel\fR(3X),

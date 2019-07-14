@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.50 2018/12/29 23:40:47 tom Exp @
+  * @Id: curs_mouse.3x,v 1.51 2019/07/13 23:45:12 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -347,10 +347,11 @@
 
        Because  there  are  no standard terminal responses that would serve to
        identify terminals which support the xterm mouse protocol, <STRONG>ncurses</STRONG>  as-
-       sumes  that  if  your  $TERM  environment variable contains "xterm", or
-       <STRONG>kmous</STRONG> is defined in the terminal description,  then  the  terminal  may
-       send mouse events.  The <STRONG>kmous</STRONG> capability is checked first, allowing the
-       use of newer xterm mouse protocols.
+       sumes  that  if <STRONG>kmous</STRONG> is defined in the terminal description, or if the
+       terminal description's primary  name  or  aliases  contain  the  string
+       "xterm", then the terminal may send mouse events.  The <STRONG>kmous</STRONG> capability
+       is checked first, allowing the use of newer xterm mouse protocols  such
+       as xterm's private mode 1006.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

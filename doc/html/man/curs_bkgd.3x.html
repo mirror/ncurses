@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_bkgd.3x,v 1.28 2018/12/09 00:45:05 tom Exp @
+  * @Id: curs_bkgd.3x,v 1.29 2019/07/13 21:01:06 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -120,6 +120,12 @@
            attributes, first removing those which may have come from the  cur-
            rent  background,  and  then  adding  attributes from the new back-
            ground.
+
+       If the background's character value is zero, a space is assumed.
+
+       If the terminal does not support  color,  or  if  color  has  not  been
+       started   with   <STRONG>start_color</STRONG>,  the  new  background  character's  color
+       attribute will be ignored.
 
 
 </PRE><H3><a name="h3-getbkgd">getbkgd</a></H3><PRE>

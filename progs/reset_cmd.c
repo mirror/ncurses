@@ -52,7 +52,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.17 2019/05/25 22:36:53 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.18 2019/07/13 21:35:13 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -495,6 +495,9 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 				  ? reset_2string
 				  : init_2string);
 
+	if (VALID_STRING(clear_margins)) {
+	    need_flush |= sent_string(clear_margins);
+	} else
 #if defined(set_lr_margin)
 	if (VALID_STRING(set_lr_margin)) {
 	    need_flush |= sent_string(TPARM_2(set_lr_margin, 0,
@@ -509,10 +512,8 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 					      columns - 1));
 	} else
 #endif
-	    if (VALID_STRING(clear_margins)
-		&& VALID_STRING(set_left_margin)
+	    if (VALID_STRING(set_left_margin)
 		&& VALID_STRING(set_right_margin)) {
-	    need_flush |= sent_string(clear_margins);
 	    need_flush |= to_left_margin();
 	    need_flush |= sent_string(set_left_margin);
 	    if (VALID_STRING(parm_right_cursor)) {
