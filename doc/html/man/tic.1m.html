@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.69 2019/05/18 22:48:40 tom Exp @
+  * @Id: tic.1m,v 1.74 2019/07/20 17:57:09 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -324,35 +324,108 @@
        will be printed.
 
 
-</PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
-       There is  some  evidence  that  historic  <STRONG>tic</STRONG>  implementations  treated
-       description  fields with no whitespace in them as additional aliases or
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+       System V Release 2 provided  a  <STRONG>tic</STRONG>  utility.   It  accepted  a  single
+       option:  <STRONG>-v</STRONG>  (optionally  followed  by  a  number).   According to Ross
+       Ridge's comment in <EM>mytinfo</EM>, this version of <STRONG>tic</STRONG> was unable to represent
+       cancelled capabilities.
+
+       System  V  Release 3 provided a different <STRONG>tic</STRONG> utility, written by Pavel
+       Curtis, (originally named "compile" in <EM>pcurses</EM>).  This added an  option
+       <STRONG>-c</STRONG>  to check the file for errors, with the caveat that errors in "use="
+       links would not be reported.  System V Release 3 documented a few warn-
+       ing messages which did not appear in <EM>pcurses</EM>.  While the program itself
+       was changed little as development continued with System  V  Release  4,
+       the table of capabilities grew from 180 (<EM>pcurses</EM>) to 464 (Solaris).
+
+       In  early  development of ncurses (1993), Zeyd Ben-Halim used the table
+       from <EM>mytinfo</EM> to extend the  <EM>pcurses</EM>  table  to  469  capabilities  (456
+       matched  SVr4, 8 were only in SVr4, 13 were not in SVr4).  Of those 13,
+       11 were ultimately discarded (perhaps to  match  the  draft  of  X/Open
+       Curses).   The exceptions were <STRONG>memory_lock_above</STRONG> and <STRONG>memory_unlock</STRONG> (see
+       <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>).
+
+       Eric Raymond incorporated parts of <EM>mytinfo</EM> into  ncurses  to  implement
+       the  termcap-to-terminfo  source conversion, and extended that to begin
+       development of the corresponding terminfo-to-termcap source conversion,
+       Thomas  Dickey  completed  that  development over the course of several
+       years.
+
+       In 1999, Thomas Dickey added the  <STRONG>-x</STRONG>  option  to  support  user-defined
+       capabilities.
+
+       In  2010,  Roy  Marples provided a <STRONG>tic</STRONG> program and terminfo library for
+       NetBSD.  This implementation  adapts  several  features  from  ncurses,
+       including <STRONG>tic</STRONG>'s <STRONG>-x</STRONG> option.
+
+       The  <STRONG>-c</STRONG>  option  tells <STRONG>tic</STRONG> to check for problems in the terminfo source
+       file.  Continued development provides additional checks:
+
+       <STRONG>o</STRONG>   <EM>pcurses</EM> had 8 warnings
+
+       <STRONG>o</STRONG>   ncurses in 1996 had 16 warnings
+
+       <STRONG>o</STRONG>   Solaris (SVr4) curses has 28 warnings
+
+       <STRONG>o</STRONG>   NetBSD tic in 2019 has 19 warnings.
+
+       <STRONG>o</STRONG>   ncurses in 2019 has 96 warnings
+
+       The checking done in ncurses' <STRONG>tic</STRONG> helps with the conversion to termcap,
+       as well as pointing out errors and inconsistencies.  It is also used to
+       ensure consistency with the user-defined capabilities.  There  are  527
+       distinct  capabilities  in ncurses' terminal database; 128 of those are
+       user-defined.
+
+
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       X/Open Curses, Issue 7 (2009) provides a brief description of <STRONG>tic</STRONG>.   It
+       lists  one  option:  <STRONG>-c</STRONG>.  The omission of <STRONG>-v</STRONG> is unexpected.  The change
+       history states that  the  description  is  derived  from  True64  UNIX.
+       According  to  its  manual  pages,  that  system  also supported the <STRONG>-v</STRONG>
+       option.
+
+       Shortly after Issue 7 was released,  Tru64  was  discontinued.   As  of
+       2019,  the  surviving  implementations  of <STRONG>tic</STRONG> are SVr4 (AIX, HP-UX and
+       Solaris), ncurses and NetBSD curses.
+
+       The X/Open rationale states that some implementations of <STRONG>tic</STRONG> read  ter-
+       minal  descriptions  from  the  standard input if the <EM>file</EM> parameter is
+       omitted.  None of these implementations do that.  Further, it  comments
+       that some may choose to read from "./terminfo.src" but that is obsoles-
+       cent behavior from SVr2, and is not (for example) a documented  feature
+       of SVr3.
+
+
+</PRE><H3><a name="h3-COMPATIBILITY">COMPATIBILITY</a></H3><PRE>
+       There  is  some  evidence  that  historic  <STRONG>tic</STRONG>  implementations treated
+       description fields with no whitespace in them as additional aliases  or
        short names.  This <STRONG>tic</STRONG> does not do that, but it does warn when descrip-
-       tion  fields may be treated that way and check them for dangerous char-
+       tion fields may be treated that way and check them for dangerous  char-
        acters.
 
 
-</PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       Unlike the SVr4 <STRONG>tic</STRONG> command, this implementation can  actually  compile
-       termcap  sources.   In fact, entries in terminfo and termcap syntax can
-       be mixed in a single source file.  See  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  for  the  list  of
+</PRE><H3><a name="h3-EXTENSIONS">EXTENSIONS</a></H3><PRE>
+       Unlike  the  SVr4 <STRONG>tic</STRONG> command, this implementation can actually compile
+       termcap sources.  In fact, entries in terminfo and termcap  syntax  can
+       be  mixed  in  a  single  source file.  See <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> for the list of
        termcap names taken to be equivalent to terminfo names.
 
-       The  SVr4  manual  pages  are not clear on the resolution rules for <STRONG>use</STRONG>
-       capabilities.  This implementation of <STRONG>tic</STRONG> will find  <STRONG>use</STRONG>  targets  any-
-       where  in  the source file, or anywhere in the file tree rooted at <STRONG>TER-</STRONG>
-       <STRONG>MINFO</STRONG> (if <STRONG>TERMINFO</STRONG> is defined), or in the user's <EM>$HOME/.terminfo</EM>  data-
+       The SVr4 manual pages are not clear on the  resolution  rules  for  <STRONG>use</STRONG>
+       capabilities.   This  implementation  of <STRONG>tic</STRONG> will find <STRONG>use</STRONG> targets any-
+       where in the source file, or anywhere in the file tree rooted  at  <STRONG>TER-</STRONG>
+       <STRONG>MINFO</STRONG>  (if <STRONG>TERMINFO</STRONG> is defined), or in the user's <EM>$HOME/.terminfo</EM> data-
        base (if it exists), or (finally) anywhere in the system's file tree of
        compiled entries.
 
-       The error messages from this <STRONG>tic</STRONG> have the same format as  GNU  C  error
+       The  error  messages  from this <STRONG>tic</STRONG> have the same format as GNU C error
        messages, and can be parsed by GNU Emacs's compile facility.
 
-       The  <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>, <STRONG>-t</STRONG>
+       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-C</STRONG>, <STRONG>-G</STRONG>, <STRONG>-I</STRONG>, <STRONG>-N</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-o</STRONG>, <STRONG>-r</STRONG>, <STRONG>-s</STRONG>,  <STRONG>-t</STRONG>
        and <STRONG>-x</STRONG> options are not supported under SVr4.  The SVr4 <STRONG>-c</STRONG> mode does not
-       report bad use links.
+       report bad "use=" links.
 
-       System  V  does  not  compile  entries  to  or  read  entries from your
+       System V does  not  compile  entries  to  or  read  entries  from  your
        <EM>$HOME/.terminfo</EM> database unless TERMINFO is explicitly set to it.
 
 
@@ -365,7 +438,7 @@
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
        <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190713).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190720).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -387,8 +460,13 @@
 <li><a href="#h3-PROCESSING">PROCESSING</a></li>
 </ul>
 </li>
-<li><a href="#h2-COMPATIBILITY">COMPATIBILITY</a></li>
-<li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
+<li><a href="#h2-HISTORY">HISTORY</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a>
+<ul>
+<li><a href="#h3-COMPATIBILITY">COMPATIBILITY</a></li>
+<li><a href="#h3-EXTENSIONS">EXTENSIONS</a></li>
+</ul>
+</li>
 <li><a href="#h2-FILES">FILES</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-AUTHOR">AUTHOR</a></li>

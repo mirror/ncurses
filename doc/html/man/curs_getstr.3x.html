@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.26 2018/09/01 20:34:52 tom Exp @
+  * @Id: curs_getstr.3x,v 1.28 2019/07/20 19:14:56 tom Exp @
   * X/Open says also until EOf
   * X/Open says then an EOS is added to the result
   * X/Open doesn't mention n&lt;0
@@ -125,9 +125,9 @@
        The  functions  <STRONG>getnstr</STRONG>, <STRONG>mvgetnstr</STRONG>, and <STRONG>mvwgetnstr</STRONG> were present but not
        documented in SVr4.
 
-       X/Open Curses issue 5 (2007) stated that these functions "read at  most
+       X/Open Curses, Issue 5 (2007) stated that these functions "read at most
        <EM>n</EM>  bytes"  but  did not state whether the terminating NUL is counted in
-       that limit.  X/Open Curses issue 7 (2009)  changed  that  to  say  they
+       that limit.  X/Open Curses, Issue 7 (2009) changed  that  to  say  they
        "read at most <EM>n</EM>-1 bytes" to allow for the terminating NUL.  As of 2018,
        some implementations do, some do not count it:
 

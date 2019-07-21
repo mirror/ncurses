@@ -41,7 +41,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.154 2019/03/23 23:47:16 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.155 2019/07/20 20:23:11 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -694,7 +694,7 @@ decode_quickdump(char *target, const char *source)
     char *base = target;
     int result = 0;
 
-    if (!strncmp(source, "b64:", 4)) {
+    if (!strncmp(source, "b64:", (size_t) 4)) {
 	source += 4;
 	while (*source != '\0') {
 	    int bits[4];
@@ -712,7 +712,7 @@ decode_quickdump(char *target, const char *source)
 		}
 	    }
 	}
-    } else if (!strncmp(source, "hex:", 4)) {
+    } else if (!strncmp(source, "hex:", (size_t) 4)) {
 	source += 4;
 	while (*source != '\0') {
 	    int ch = decode_hex(&source);

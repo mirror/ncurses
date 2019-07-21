@@ -41,7 +41,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.95 2019/05/04 20:31:31 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.96 2019/07/20 20:23:21 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -514,13 +514,13 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
      * Read the first 4 bytes to determine first if this is an old-format
      * screen-dump, or new-format.
      */
-    if (read_block(&tmp, 4, filep) < 0) {
+    if (read_block(&tmp, (size_t) 4, filep) < 0) {
 	returnWin(0);
     }
     /*
      * If this is a new-format file, and we do not support it, give up.
      */
-    if (!memcmp(&tmp, my_magic, 4)) {
+    if (!memcmp(&tmp, my_magic, (size_t) 4)) {
 #if NCURSES_EXT_PUTWIN
 	if (read_win(&tmp, filep) < 0)
 #endif
@@ -823,7 +823,7 @@ putwin(WINDOW *win, FILE *filep)
 	    attr_t attr;
 
 	    *buffer = '\0';
-	    if (!strncmp(name, "_pad.", 5) && !(win->_flags & _ISPAD)) {
+	    if (!strncmp(name, "_pad.", (size_t) 5) && !(win->_flags & _ISPAD)) {
 		continue;
 	    }
 	    switch (scr_params[y].type) {

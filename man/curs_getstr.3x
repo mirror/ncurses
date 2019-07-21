@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.26 2018/09/01 20:34:52 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.28 2019/07/20 19:14:56 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -140,10 +140,10 @@ string by those implementations was predictable but not useful
 The functions \fBgetnstr\fR, \fBmvgetnstr\fR, and \fBmvwgetnstr\fR were
 present but not documented in SVr4.
 .PP
-X/Open Curses issue 5 (2007) stated that these functions
+X/Open Curses, Issue 5 (2007) stated that these functions
 \*(``read at most \fIn\fP bytes\*(''
 but did not state whether the terminating NUL is counted in that limit.
-X/Open Curses issue 7 (2009) changed that to say they
+X/Open Curses, Issue 7 (2009) changed that to say they
 \*(``read at most \fIn\fP\-1 bytes\*(''
 to allow for the terminating NUL.
 As of 2018, some implementations do, some do not count it:

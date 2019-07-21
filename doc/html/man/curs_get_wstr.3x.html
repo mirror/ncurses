@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2002-2017,2018 Free Software Foundation, Inc.              *
+  * Copyright (c) 2002-2018,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wstr.3x,v 1.16 2018/09/01 20:58:10 tom Exp @
+  * @Id: curs_get_wstr.3x,v 1.18 2019/07/20 19:14:56 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -141,22 +141,23 @@
        <STRONG>wchar_t</STRONG>  is  a  unsigned type.  All of the vendors implement this using
        <STRONG>wint_t</STRONG>, following the standard.
 
-       X/Open Curses issue 7 is unclear regarding whether the terminating <EM>null</EM>
-       <STRONG>wchar_t</STRONG>  value is counted in the length parameter <EM>n</EM>.  X/Open Curses is-
-       sue 7 revised the corresponding description of <STRONG>wgetnstr</STRONG> to address this
-       issue.   The unrevised description of <STRONG>wget_nwstr</STRONG> can be interpreted ei-
-       ther way.  This implementation counts the terminator in the length.
+       X/Open Curses, Issue 7 (2009) is unclear regarding whether  the  termi-
+       nating <EM>null</EM> <STRONG>wchar_t</STRONG> value is counted in the length parameter <EM>n</EM>.  X/Open
+       Curses, Issue 7 revised the corresponding description  of  <STRONG>wgetnstr</STRONG>  to
+       address this issue.  The unrevised description of <STRONG>wget_nwstr</STRONG> can be in-
+       terpreted either way.  This implementation counts the terminator in the
+       length.
 
-       X/Open Curses does not specify what happens if the length  <EM>n</EM>  is  nega-
+       X/Open  Curses  does  not specify what happens if the length <EM>n</EM> is nega-
        tive.
 
-       <STRONG>o</STRONG>   For  analogy  with  <STRONG>wgetnstr</STRONG>,  ncurses  6.2  uses a limit (based on
+       <STRONG>o</STRONG>   For analogy with <STRONG>wgetnstr</STRONG>, ncurses  6.2  uses  a  limit  (based  on
            <STRONG>LINE_MAX</STRONG>).
 
-       <STRONG>o</STRONG>   Some other implementations (such as Solaris xcurses) do  the  same,
+       <STRONG>o</STRONG>   Some  other  implementations (such as Solaris xcurses) do the same,
            while others (PDCurses) do not allow this.
 
-       <STRONG>o</STRONG>   NetBSD  7 curses imitates ncurses 6.1 in this regard, treating a <STRONG>-1</STRONG>
+       <STRONG>o</STRONG>   NetBSD 7 curses imitates ncurses 6.1 in this regard, treating a  <STRONG>-1</STRONG>
            as an indefinite number of characters.
 
 

@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.78 2019/03/10 00:06:02 tom Exp $
+ * $Id: tic.h,v 1.79 2019/07/20 20:19:54 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -93,7 +93,7 @@ extern "C" {
 
 #define IS_TIC_MAGIC(p)	(LOW_MSB(p) == MAGIC || LOW_MSB(p) == MAGIC2)
 
-#define quick_prefix(s) (!strncmp((s), "b64:", 4) || !strncmp((s), "hex:", 4))
+#define quick_prefix(s) (!strncmp((s), "b64:", (size_t)4) || !strncmp((s), "hex:", (size_t)4))
 
 /*
  * The "maximum" here is misleading; XSI guarantees minimum values, which a

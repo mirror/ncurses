@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: infocmp.1m,v 1.74 2019/05/18 22:00:55 tom Exp @
+  * @Id: infocmp.1m,v 1.75 2019/07/20 18:42:11 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -457,17 +457,48 @@
        /usr/share/terminfo Compiled terminal description database.
 
 
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+       Although System V Release 2 provided a terminfo library, it had no doc-
+       umented tool for decompiling the terminal  descriptions.   Tony  Hansen
+       (AT&amp;T) wrote the first <STRONG>infocmp</STRONG> in early 1984, for System V Release 3.
+
+       Eric  Raymond used the AT&amp;T documentation in 1995 to provide an equiva-
+       lent <STRONG>infocmp</STRONG> for ncurses.  In addition, he added  a  few  new  features
+       such as:
+
+       <STRONG>o</STRONG>   the  <STRONG>-e</STRONG> option, to support <EM>fallback</EM> (compiled-in) terminal descrip-
+           tions
+
+       <STRONG>o</STRONG>   the <STRONG>-i</STRONG> option, to help with analysis
+
+       Later, Thomas Dickey added the <STRONG>-x</STRONG> (user-defined  capabilities)  option,
+       and  the  <STRONG>-E</STRONG> option to support fallback entries with user-defined capa-
+       bilities.
+
+       For a complete list, see the <EM>EXTENSIONS</EM> section.
+
+       In 2010, Roy Marples provided an <STRONG>infocmp</STRONG> program  for  NetBSD.   It  is
+       less  capable  than  the  SVr4  or ncurses versions (e.g., it lacks the
+       sorting options documented in X/Open), but does include the  <STRONG>-x</STRONG>  option
+       adapted from ncurses.
+
+
+</PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
+       X/Open  Curses,  Issue  7 (2009) provides a description of <STRONG>infocmp</STRONG>.  It
+       does not mention the options used for converting to termcap format.
+
+
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       The  <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-Q</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-i</STRONG>, <STRONG>-l</STRONG>, <STRONG>-p</STRONG>, <STRONG>-q</STRONG>
+       The <STRONG>-0</STRONG>, <STRONG>-1</STRONG>, <STRONG>-E</STRONG>, <STRONG>-F</STRONG>, <STRONG>-G</STRONG>, <STRONG>-Q</STRONG>, <STRONG>-R</STRONG>, <STRONG>-T</STRONG>, <STRONG>-V</STRONG>, <STRONG>-a</STRONG>, <STRONG>-e</STRONG>, <STRONG>-f</STRONG>, <STRONG>-g</STRONG>, <STRONG>-i</STRONG>, <STRONG>-l</STRONG>, <STRONG>-p</STRONG>,  <STRONG>-q</STRONG>
        and <STRONG>-t</STRONG> options are not supported in SVr4 curses.
 
        SVr4 infocmp does not distinguish between absent and cancelled capabil-
        ities.  Also, it shows missing integer capabilities as <STRONG>-1</STRONG> (the internal
-       value used to represent missing integers).  This  implementation  shows
+       value  used  to represent missing integers).  This implementation shows
        those as "NULL", for consistency with missing strings.
 
-       The  <STRONG>-r</STRONG>  option's  notion of "termcap" capabilities is System V Release
-       4's.  Actual BSD curses versions will have a more restricted  set.   To
+       The <STRONG>-r</STRONG> option's notion of "termcap" capabilities is  System  V  Release
+       4's.   Actual  BSD curses versions will have a more restricted set.  To
        see only the 4.4BSD set, use <STRONG>-r</STRONG> <STRONG>-RBSD</STRONG>.
 
 
@@ -476,12 +507,12 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,  <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG>ter-</STRONG>
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,  <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,  <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,  <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG>ter-</STRONG>
        <STRONG><A HREF="terminfo.5.html">minfo(5)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
 
        https://invisible-island.net/ncurses/tctest.html
 
-       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190713).
+       This describes <STRONG>ncurses</STRONG> version 6.1 (patch 20190720).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -506,6 +537,8 @@
 </ul>
 </li>
 <li><a href="#h2-FILES">FILES</a></li>
+<li><a href="#h2-HISTORY">HISTORY</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
 <li><a href="#h2-BUGS">BUGS</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

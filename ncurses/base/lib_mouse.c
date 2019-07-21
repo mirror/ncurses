@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.181 2018/11/24 17:28:37 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.182 2019/07/20 20:42:43 tom Exp $")
 
 #include <tic.h>
 
@@ -1103,7 +1103,7 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 #else
 			    sp->_ifd,
 #endif
-			    kbuf + grabbed, 1);
+			    (kbuf + grabbed), (size_t) 1);
 	if (res == -1)
 	    break;
 	grabbed += (size_t) res;
@@ -1188,7 +1188,7 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
 #else
 			    sp->_ifd,
 #endif
-			    kbuf + grabbed, 1);
+			    (kbuf + grabbed), (size_t) 1);
 	if (res == -1)
 	    break;
 	if ((grabbed + MAX_KBUF) >= (int) sizeof(kbuf)) {
