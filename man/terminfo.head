@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.36 2019/07/13 23:17:33 tom Exp $
+.\" $Id: terminfo.head,v 1.38 2019/07/27 11:51:04 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -58,16 +58,23 @@ terminfo \- terminal capability data base
 \*d/*/*
 .SH DESCRIPTION
 .I Terminfo
-is a data base describing terminals, used by screen-oriented programs such as
+is a data base describing terminals,
+used by screen-oriented programs such as
 \fBnvi\fR(1),
-\fBrogue\fR(1)
-and libraries such as
-\fBcurses\fR(3X).
+\fBlynx\fR(1),
+\fBmutt\fR(1),
+and other curses applications,
+using high-level calls to libraries such as \fBcurses\fR(3X).
+It is also used via low-level calls by non-curses applications
+which may be screen-oriented (such as \fB@CLEAR@\fP(1))
+or non-screen (such as \fB@TABS@\fP(1)).
+.PP
 .I Terminfo
 describes terminals by giving a set of capabilities which they
 have, by specifying how to perform screen operations, and by
 specifying padding requirements and initialization sequences.
-This describes \fBncurses\fR
+.PP
+This manual describes \fBncurses\fR
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SS Terminfo Entry Syntax
 .PP

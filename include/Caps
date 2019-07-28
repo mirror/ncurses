@@ -29,7 +29,7 @@
 # Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995
 #    and: Eric S. Raymond <esr@snark.thyrsus.com>
 #
-# $Id: Caps,v 1.42 2019/04/13 19:54:05 tom Exp $
+# $Id: Caps,v 1.44 2019/07/27 00:36:44 tom Exp $
 #
 # This is the master termcap/terminfo capability table.
 #
@@ -843,9 +843,9 @@ gnu_has_meta_key		OTMT	bool	MT	-		-	----E	has meta key
 # comma-separated list of capabilities for which there are corresponding keys.
 # The `kn' code is accepted but ignored.
 #
-# The `ma' capability seems to have been designed to map between the rogue(2)
-# motion keys (including jkhl) and characters emitted by arrow keys on some
-# primitive pre-ANSI terminals.  It's so obsolete it's fossilized...
+# The `ma' capability was a 4.0BSD feature used by vi version 2.
+# It consists of pairs of characters corresponding to kl, kr, ku, kd, and kh.
+# Besides being obsolete, that interpretation conflicts with max_attributes.
 #
 # Here is a description of memory_lock_above and memory_unlock:
 # "You can 'freeze' data on the screen by turning on Memory Lock in a line of
@@ -871,7 +871,7 @@ horizontal_tab_delay		OTdT	num	dT	-		-	YB-G-	padding required for ^I
 # vertical_tab_delay		OTdV	num	dV	-		-	-B---	padding required for ^V
 number_of_function_keys		OTkn	num	kn	-		-	-B-G-	count of function keys
 other_non_function_keys		OTko	str	ko	-		-	-B-G-	list of self-mapped keycaps
-arrow_key_map			OTma	str	ma	-		-	YBC--	map arrow keys rogue(1) motion keys
+arrow_key_map			OTma	str	ma	-		-	YBC--	map motion-keys for vi version 2
 # memory_lock_above		OTml	str	ml	-		-	-B---	lock visible screen memory above the current line
 # memory_unlock			OTmu	str	mu	-		-	-B---	unlock visible screen memory above the current line
 has_hardware_tabs		OTpt	bool	pt	-		-	YB---	has 8-char tabs invoked with ^I

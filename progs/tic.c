@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.277 2019/06/29 23:23:22 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.278 2019/07/27 22:44:21 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1024,10 +1024,14 @@ main(int argc, char *argv[])
 		    if (!quiet) {
 			(void) fseek(tmp_fp, qp->cstart, SEEK_SET);
 			while (j-- > 0) {
-			    if (infodump)
-				(void) putchar(fgetc(tmp_fp));
-			    else
-				put_translate(fgetc(tmp_fp));
+			    int ch = fgetc(tmp_fp);
+			    if (ch == EOF || ferror(tmp_fp)) {
+				break;
+			    } else if (infodump) {
+				(void) putchar(ch);
+			    } else {
+				put_translate(ch);
+			    }
 			}
 		    }
 

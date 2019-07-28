@@ -132,20 +132,33 @@
 A Brief History of Curses
 
    Historically, the first ancestor of curses was the routines written to
-   provide   screen-handling   for   the   game  rogue;  these  used  the
+   provide   screen-handling   for   the   vi   editor;  these  used  the
    already-existing  termcap  database  facility  for describing terminal
    capabilities. These routines were abstracted into a documented library
-   and first released with the early BSD UNIX versions.
+   and  first released with the early BSD UNIX versions. All of this work
+   was done by students at the University of California.
 
-   System  III UNIX from Bell Labs featured a rewritten and much-improved
-   curses  library.  It introduced the terminfo format. Terminfo is based
-   on  Berkeley's termcap database, but contains a number of improvements
-   and  extensions.  Parameterized  capabilities strings were introduced,
-   making  it  possible to describe multiple video attributes, and colors
-   and  to  handle far more unusual terminals than possible with termcap.
-   In  the  later  AT&T  System  V  releases,  curses evolved to use more
-   facilities and offer more capabilities, going far beyond BSD curses in
-   power and flexibility.
+   After  graduation,  one  of  those  students went to work at AT&T Bell
+   Labs,  and  made  an  improved  termcap library called terminfo (i.e.,
+   "libterm").  That  was  subsequently  released  in System V Release 2.
+   Thereafter,  other  developers  added  to  the  terminfo  library. For
+   instance,  a  student at Cornell University wrote an improved terminfo
+   library  as well as a tool (tic) to compile the terminal descriptions.
+   As  a  general  rule,  AT&T  did  not  identify  the developers in the
+   source-code  or  documentation;  the  tic and infocmp programs are the
+   exceptions.
+
+   System  V  Release  3  (System  III  UNIX)  from  Bell Labs featured a
+   rewritten  and  much-improved  curses  library,l  along  with  the tic
+   program.
+
+   To  recap,  terminfo  is  based  on  Berkeley's  termcap database, but
+   contains  a  number  of  improvements  and  extensions.  Parameterized
+   capabilities  strings  were introduced, making it possible to describe
+   multiple  video  attributes, and colors and to handle far more unusual
+   terminals  than  possible  with  termcap.  In  the later AT&T System V
+   releases,  curses  evolved  to  use  more  facilities  and  offer more
+   capabilities, going far beyond BSD curses in power and flexibility.
 
 Scope of This Document
 
@@ -2394,7 +2407,6 @@ typedef int     (*HOOK)();       /* pointer to function returning int */
 
 FIELDTYPE *new_fieldtype(HOOK f_validate, /* field validator */
                          HOOK c_validate) /* character validator */
-
 
 int free_fieldtype(FIELDTYPE *ftype);     /* type to free */
 

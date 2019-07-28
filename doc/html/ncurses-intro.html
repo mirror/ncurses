@@ -1,5 +1,5 @@
 <!--
-  $Id: ncurses-intro.html,v 1.48 2019/03/16 19:39:05 tom Exp $
+  $Id: ncurses-intro.html,v 1.51 2019/07/27 11:47:10 tom Exp $
   ****************************************************************************
   * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
   *                                                                          *
@@ -33,7 +33,7 @@
 <html>
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+  "HTML Tidy for HTML5 for Linux version 5.2.0">
 
   <title>Writing Programs with NCURSES</title>
   <link rel="author" href="mailto:bugs-ncurses@gnu.org">
@@ -94,8 +94,7 @@
 
             <li><a href="#input">Input</a></li>
 
-            <li><a href="#formschars">Using Forms
-            Characters</a></li>
+            <li><a href="#formschars">Using Forms Characters</a></li>
 
             <li><a href="#attributes">Character Attributes and
             Color</a></li>
@@ -112,11 +111,9 @@
           <ul>
             <li><a href="#init">Initialization and Wrapup</a></li>
 
-            <li><a href="#flush">Causing Output to the
-            Terminal</a></li>
+            <li><a href="#flush">Causing Output to the Terminal</a></li>
 
-            <li><a href="#lowlevel">Low-Level Capability
-            Access</a></li>
+            <li><a href="#lowlevel">Low-Level Capability Access</a></li>
 
             <li><a href="#debugging">Debugging</a></li>
           </ul>
@@ -176,8 +173,7 @@
 
         <li><a href="#hiding">Hiding Panels</a></li>
 
-        <li><a href="#pmisc">Miscellaneous Other
-        Facilities</a></li>
+        <li><a href="#pmisc">Miscellaneous Other Facilities</a></li>
       </ul>
     </li>
 
@@ -185,8 +181,7 @@
       <a href="#menu">The Menu Library</a>
 
       <ul>
-        <li><a href="#mcompile">Compiling with the menu
-        Library</a></li>
+        <li><a href="#mcompile">Compiling with the menu Library</a></li>
 
         <li><a href="#moverview">Overview of Menus</a></li>
 
@@ -225,11 +220,9 @@
             <li><a href="#flocation">Changing the Field
             Location</a></li>
 
-            <li><a href="#fjust">The Justification
-            Attribute</a></li>
+            <li><a href="#fjust">The Justification Attribute</a></li>
 
-            <li><a href="#fdispatts">Field Display
-            Attributes</a></li>
+            <li><a href="#fdispatts">Field Display Attributes</a></li>
 
             <li><a href="#foptions">Field Option Bits</a></li>
 
@@ -259,8 +252,7 @@
           </ul>
         </li>
 
-        <li><a href="#fbuffer">Direct Field Buffer
-        Manipulation</a></li>
+        <li><a href="#fbuffer">Direct Field Buffer Manipulation</a></li>
 
         <li><a href="#formattrs">Attributes of Forms</a></li>
 
@@ -315,10 +307,10 @@
       </ul>
     </li>
   </ul>
+
   <hr>
 
-  <h1><a name="introduction" id=
-  "introduction">Introduction</a></h1>
+  <h1><a name="introduction" id="introduction">Introduction</a></h1>
 
   <p>This document is an introduction to programming with
   <code>curses</code>. It is not an exhaustive reference for the
@@ -356,20 +348,35 @@
   <code>curses</code> will typically be a great deal simpler and
   less expensive than one using an X toolkit.</p>
 
-  <h2><a name="history" id="history">A Brief History of
-  Curses</a></h2>
+  <h2><a name="history" id="history">A Brief History of Curses</a></h2>
 
   <p>Historically, the first ancestor of <code>curses</code> was
-  the routines written to provide screen-handling for the game
-  <code>rogue</code>; these used the already-existing
+  the routines written to provide screen-handling for the
+  <code>vi</code> editor; these used the already-existing
   <code>termcap</code> database facility for describing terminal
   capabilities. These routines were abstracted into a documented
-  library and first released with the early BSD UNIX versions.</p>
+  library and first released with the early BSD UNIX versions. All
+  of this work was done by students at the University of
+  California.</p>
 
-  <p>System III UNIX from Bell Labs featured a rewritten and
-  much-improved <code>curses</code> library. It introduced the
-  terminfo format. Terminfo is based on Berkeley's termcap
-  database, but contains a number of improvements and extensions.
+  <p>After graduation, one of those students went to work at
+  AT&amp;T Bell Labs, and made an improved <code>termcap</code>
+  library called <code>terminfo</code> (i.e.,
+  &ldquo;libterm&rdquo;). That was subsequently released in System
+  V Release 2. Thereafter, other developers added to the terminfo
+  library. For instance, a student at Cornell University wrote an
+  improved terminfo library as well as a tool (<code>tic</code>) to
+  compile the terminal descriptions. As a general rule, AT&amp;T
+  did not identify the developers in the source-code or
+  documentation; the <code>tic</code> and <code>infocmp</code>
+  programs are the exceptions.</p>
+
+  <p>System V Release 3 (System III UNIX) from Bell Labs featured a
+  rewritten and much-improved <code>curses</code> library,l along
+  with the <code>tic</code> program.</p>
+
+  <p>To recap, terminfo is based on Berkeley's termcap database,
+  but contains a number of improvements and extensions.
   Parameterized capabilities strings were introduced, making it
   possible to describe multiple video attributes, and colors and to
   handle far more unusual terminals than possible with termcap. In
@@ -468,8 +475,7 @@
 
   <h1><a name="curses" id="curses">The Curses Library</a></h1>
 
-  <h2><a name="overview" id="overview">An Overview of
-  Curses</a></h2>
+  <h2><a name="overview" id="overview">An Overview of Curses</a></h2>
 
   <h3><a name="compiling" id="compiling">Compiling Programs using
   Curses</a></h3>
@@ -477,6 +483,7 @@
   <p>In order to use the library, it is necessary to have certain
   types and variables defined. Therefore, the programmer must have
   a line:</p>
+
   <pre>
           #include &lt;curses.h&gt;
 </pre>
@@ -552,23 +559,27 @@
   avoid clumsiness, most I/O routines can be preceded by the prefix
   &ldquo;mv&rdquo; and the desired (y, x) coordinates prepended to
   the arguments to the function. For example, the calls</p>
+
   <pre>
           move(y, x);
           addch(ch);
 </pre>
 
   <p>can be replaced by</p>
+
   <pre>
           mvaddch(y, x, ch);
 </pre>
 
   <p>and</p>
+
   <pre>
           wmove(win, y, x);
           waddch(win, ch);
 </pre>
 
   <p>can be replaced by</p>
+
   <pre>
           mvwaddch(win, y, x, ch);
 </pre>
@@ -581,6 +592,7 @@
 
   <p>The <code>curses</code> library sets some variables describing
   the terminal capabilities.</p>
+
   <pre>
       type   name      description
       ------------------------------------------------------------------
@@ -593,24 +605,29 @@
   usefulness:</p>
 
   <dl>
-    <dt><code>bool</code></dt>
+    <dt><code>bool</code>
+    </dt>
 
     <dd>boolean type, actually a &ldquo;char&rdquo; (e.g.,
     <code>bool doneit;</code>)</dd>
 
-    <dt><code>TRUE</code></dt>
+    <dt><code>TRUE</code>
+    </dt>
 
     <dd>boolean &ldquo;true&rdquo; flag (1).</dd>
 
-    <dt><code>FALSE</code></dt>
+    <dt><code>FALSE</code>
+    </dt>
 
     <dd>boolean &ldquo;false&rdquo; flag (0).</dd>
 
-    <dt><code>ERR</code></dt>
+    <dt><code>ERR</code>
+    </dt>
 
     <dd>error flag returned by routines on a failure (-1).</dd>
 
-    <dt><code>OK</code></dt>
+    <dt><code>OK</code>
+    </dt>
 
     <dd>error flag returned by routines when things go right.</dd>
   </dl>
@@ -624,6 +641,7 @@
   mentioned above.</p>
 
   <p>Here is a sample program to motivate the discussion:</p>
+
   <pre>
 #include &lt;stdlib.h&gt;
 #include &lt;curses.h&gt;
@@ -935,8 +953,7 @@ static void finish(int sig)
   anytime after the call to initscr, <code>endwin()</code> should
   be called before exiting.</p>
 
-  <h2><a name="functions" id="functions">Function
-  Descriptions</a></h2>
+  <h2><a name="functions" id="functions">Function Descriptions</a></h2>
 
   <p>We describe the detailed behavior of some important curses
   functions here, as a supplement to the manual page
@@ -945,7 +962,8 @@ static void finish(int sig)
   <h3><a name="init" id="init">Initialization and Wrapup</a></h3>
 
   <dl>
-    <dt><code>initscr()</code></dt>
+    <dt><code>initscr()</code>
+    </dt>
 
     <dd>The first function called should almost always be
     <code>initscr()</code>. This will determine the terminal type
@@ -958,7 +976,8 @@ static void finish(int sig)
     <code>ripoffline()</code>, <code>use_env()</code>, and, if you
     are using multiple terminals, <code>newterm()</code>.)</dd>
 
-    <dt><code>endwin()</code></dt>
+    <dt><code>endwin()</code>
+    </dt>
 
     <dd>Your program should always call <code>endwin()</code>
     before exiting or shelling out of the program. This function
@@ -969,7 +988,8 @@ static void finish(int sig)
     program will restore the ncurses screen from before the
     escape.</dd>
 
-    <dt><code>newterm(type, ofp, ifp)</code></dt>
+    <dt><code>newterm(type, ofp, ifp)</code>
+    </dt>
 
     <dd>A program which outputs to more than one terminal should
     use <code>newterm()</code> instead of <code>initscr()</code>.
@@ -985,7 +1005,8 @@ static void finish(int sig)
     <code>endwin()</code> should called once at wrapup time for
     each terminal opened using this function.</dd>
 
-    <dt><code>set_term(new)</code></dt>
+    <dt><code>set_term(new)</code>
+    </dt>
 
     <dd>This function is used to switch to a different terminal
     previously opened by <code>newterm()</code>. The screen
@@ -993,15 +1014,15 @@ static void finish(int sig)
     previous terminal is returned by the function. All other calls
     affect only the current terminal.</dd>
 
-    <dt><code>delscreen(sp)</code></dt>
+    <dt><code>delscreen(sp)</code>
+    </dt>
 
     <dd>The inverse of <code>newterm()</code>; deallocates the data
     structures associated with a given <code>SCREEN</code>
     reference.</dd>
   </dl>
 
-  <h3><a name="flush" id="flush">Causing Output to the
-  Terminal</a></h3>
+  <h3><a name="flush" id="flush">Causing Output to the Terminal</a></h3>
 
   <dl>
     <dt><code>refresh()</code> and <code>wrefresh(win)</code></dt>
@@ -1044,7 +1065,8 @@ static void finish(int sig)
   Access</a></h3>
 
   <dl>
-    <dt><code>setupterm(term, filenum, errret)</code></dt>
+    <dt><code>setupterm(term, filenum, errret)</code>
+    </dt>
 
     <dd>
       This routine is called to initialize a terminal's
@@ -1090,7 +1112,8 @@ static void finish(int sig)
   </blockquote>
 
   <dl>
-    <dt><code>trace()</code></dt>
+    <dt><code>trace()</code>
+    </dt>
 
     <dd>This function can be used to explicitly set a trace level.
     If the trace level is nonzero, execution of your program will
@@ -1103,7 +1126,8 @@ static void finish(int sig)
     value to the environment variable
     <code>NCURSES_TRACE</code>).</dd>
 
-    <dt><code>_tracef()</code></dt>
+    <dt><code>_tracef()</code>
+    </dt>
 
     <dd>This function can be used to output your own debugging
     information. It is only available only if you link with
@@ -1192,6 +1216,7 @@ static void finish(int sig)
   <code>refresh()</code>, <code>FALSE</code> otherwise.</p>
 
   <p>Here is some sample code for shellout:</p>
+
   <pre>
     addstr("Shelling out...");
     def_prog_mode();           /* save current tty modes */
@@ -1381,8 +1406,7 @@ static void finish(int sig)
   <p>This change in behavior conforms <code>ncurses</code> to
   System V Release 4 and the XSI Curses standard.</p>
 
-  <h2><a name="xsifuncs" id="xsifuncs">XSI Curses
-  Conformance</a></h2>
+  <h2><a name="xsifuncs" id="xsifuncs">XSI Curses Conformance</a></h2>
 
   <p>The <code>ncurses</code> library is intended to be base-level
   conformant with the XSI Curses standard from X/Open. Many
@@ -1424,6 +1448,7 @@ static void finish(int sig)
 
   <p>Your panels-using modules must import the panels library
   declarations with</p>
+
   <pre>
           #include &lt;panel.h&gt;
 </pre>
@@ -1435,8 +1460,7 @@ static void finish(int sig)
   still good practice to put <code>-lpanel</code> first and
   <code>-lncurses</code> second.</p>
 
-  <h2><a name="poverview" id="poverview">Overview of
-  Panels</a></h2>
+  <h2><a name="poverview" id="poverview">Overview of Panels</a></h2>
 
   <p>A panel object is a window that is implicitly treated as part
   of a <dfn>deck</dfn> including all other panel objects. The deck
@@ -1521,8 +1545,7 @@ static void finish(int sig)
   cannot do <code>top_panel()</code> or <code>bottom_panel</code>
   on a hidden panel(). Other panels operations are applicable.</p>
 
-  <h2><a name="pmisc" id="pmisc">Miscellaneous Other
-  Facilities</a></h2>
+  <h2><a name="pmisc" id="pmisc">Miscellaneous Other Facilities</a></h2>
 
   <p>It is possible to navigate the deck using the functions
   <code>panel_above()</code> and <code>panel_below</code>. Handed a
@@ -1551,6 +1574,7 @@ static void finish(int sig)
 
   <p>Your menu-using modules must import the menu library
   declarations with</p>
+
   <pre>
           #include &lt;menu.h&gt;
 </pre>
@@ -1757,8 +1781,7 @@ static void finish(int sig)
   commands. The <code>menu_driver()</code> code ignores them and
   returns <code>E_UNKNOWN_COMMAND</code>.</p>
 
-  <h2><a name="mmisc" id="mmisc">Miscellaneous Other
-  Features</a></h2>
+  <h2><a name="mmisc" id="mmisc">Miscellaneous Other Features</a></h2>
 
   <p>Various menu options can affect the processing and visual
   appearance and input processing of menus. See <code>menu_opts(3x)
@@ -1796,6 +1819,7 @@ static void finish(int sig)
 
   <p>Your form-using modules must import the form library
   declarations with</p>
+
   <pre>
           #include &lt;form.h&gt;
 </pre>
@@ -1881,6 +1905,7 @@ static void finish(int sig)
 
   <p>The basic function for creating fields is
   <code>new_field()</code>:</p>
+
   <pre>
 FIELD *new_field(int height, int width,   /* new field size */
                  int top, int left,       /* upper left corner */
@@ -1914,6 +1939,7 @@ FIELD *new_field(int height, int width,   /* new field size */
   terminator. The sixth argument is the number of additional data
   buffers to allocate for the field; your application can use them
   for its own purposes.</p>
+
   <pre>
 FIELD *dup_field(FIELD *field,            /* field to copy */
                  int top, int left);      /* location of new copy */
@@ -1923,6 +1949,7 @@ FIELD *dup_field(FIELD *field,            /* field to copy */
   field at a new location. Size and buffering information are
   copied; some attribute flags and status bits are not (see the
   <code>form_field_new(3X)</code> for details).</p>
+
   <pre>
 FIELD *link_field(FIELD *field,           /* field to copy */
                   int top, int left);     /* location of new copy */
@@ -1947,6 +1974,7 @@ FIELD *link_field(FIELD *field,           /* field to copy */
   an out-of-memory error or out-of-bounds arguments.</p>
 
   <p>To connect fields to a form, use</p>
+
   <pre>
 FORM *new_form(FIELD **fields);
 </pre>
@@ -1989,6 +2017,7 @@ FORM *new_form(FIELD **fields);
   Data</a></h3>
 
   <p>You can retrieve field sizes and locations through:</p>
+
   <pre>
 int field_info(FIELD *field,              /* field from which to fetch */
                int *height, *int width,   /* field size */
@@ -2006,6 +2035,7 @@ int field_info(FIELD *field,              /* field from which to fetch */
   Location</a></h3>
 
   <p>It is possible to move a field's location on the screen:</p>
+
   <pre>
 int move_field(FIELD *field,              /* field to alter */
                int top, int left);        /* new upper-left corner */
@@ -2014,11 +2044,11 @@ int move_field(FIELD *field,              /* field to alter */
   <p>You can, of course. query the current location through
   <code>field_info()</code>.</p>
 
-  <h3><a name="fjust" id="fjust">The Justification
-  Attribute</a></h3>
+  <h3><a name="fjust" id="fjust">The Justification Attribute</a></h3>
 
   <p>One-line fields may be unjustified, justified right, justified
   left, or centered. Here is how you manipulate this attribute:</p>
+
   <pre>
 int set_field_just(FIELD *field,          /* field to alter */
                    int justmode);         /* mode to set */
@@ -2042,6 +2072,7 @@ int field_just(FIELD *field);             /* fetch mode of field */
   <p>This group of four field attributes controls the visual
   appearance of the field on the screen, without affecting in any
   way the data in the field buffer.</p>
+
   <pre>
 int set_field_fore(FIELD *field,          /* field to alter */
                    chtype attr);          /* attribute to set */
@@ -2075,6 +2106,7 @@ chtype new_page(FIELD *field);            /* field to query */
   <p>There is also a large collection of field option bits you can
   set to control various aspects of forms processing. You can
   manipulate them with these functions:</p>
+
   <pre>
 int set_field_opts(FIELD *field,          /* field to alter */
                    int attr);             /* attribute to set */
@@ -2179,6 +2211,7 @@ int field_opts(FIELD *field);             /* field to query */
   <p>Every field has a status flag, which is set to FALSE when the
   field is created and TRUE when the value in field buffer 0
   changes. This flag can be queried and set directly:</p>
+
   <pre>
 int set_field_status(FIELD *field,      /* field to alter */
                    int status);         /* mode to set */
@@ -2208,6 +2241,7 @@ int field_status(FIELD *field);         /* fetch mode of field */
   is not used by the forms library. It is intended to be used by
   applications to store private per-field data. You can manipulate
   it with:</p>
+
   <pre>
 int set_field_userptr(FIELD *field,       /* field to alter */
                    char *userptr);        /* mode to set */
@@ -2222,8 +2256,7 @@ System V compatibility.)
   pointer.) When a new field is created, the default-field user
   pointer is copied to initialize the new field's user pointer.</p>
 
-  <h2><a name="fdynamic" id="fdynamic">Variable-Sized
-  Fields</a></h2>
+  <h2><a name="fdynamic" id="fdynamic">Variable-Sized Fields</a></h2>
 
   <p>Normally, a field is fixed at the size specified for it at
   creation time. If, however, you turn off its O_STATIC bit, it
@@ -2242,6 +2275,7 @@ System V compatibility.)
   <p>Normally, a dynamic field is allowed to grow without limit.
   But it is possible to set an upper limit on the size of a dynamic
   field. You do it with this function:</p>
+
   <pre>
 int set_max_field(FIELD *field,     /* field to alter (may not be NULL) */
                    int max_size);   /* upper limit on field size */
@@ -2277,8 +2311,7 @@ int set_max_field(FIELD *field,     /* field to alter (may not be NULL) */
     size.</li>
   </ul>
 
-  <h2><a name="fvalidation" id="fvalidation">Field
-  Validation</a></h2>
+  <h2><a name="fvalidation" id="fvalidation">Field Validation</a></h2>
 
   <p>By default, a field will accept any data that will fit in its
   input buffer. However, it is possible to attach a validation type
@@ -2295,6 +2328,7 @@ int set_max_field(FIELD *field,     /* field to alter (may not be NULL) */
   pre-defined validation types, and gives you the capability to
   define custom ones of your own. You can examine and change field
   validation attributes with the following functions:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    FIELDTYPE *ftype,      /* type to associate */
@@ -2316,6 +2350,7 @@ FIELDTYPE *field_type(FIELD *field);      /* field to query */
   <p>This field type accepts alphabetic data; no blanks, no digits,
   no special characters (this is checked at character-entry time).
   It is set up with:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    TYPE_ALPHA,            /* type to associate */
@@ -2333,6 +2368,7 @@ int set_field_type(FIELD *field,          /* field to alter */
   <p>This field type accepts alphabetic data and digits; no blanks,
   no special characters (this is checked at character-entry time).
   It is set up with:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    TYPE_ALNUM,            /* type to associate */
@@ -2350,6 +2386,7 @@ int set_field_type(FIELD *field,          /* field to alter */
   <p>This type allows you to restrict a field's values to be among
   a specified set of string values (for example, the two-letter
   postal codes for U.S. states). It is set up with:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    TYPE_ENUM,             /* type to associate */
@@ -2379,11 +2416,11 @@ int set_field_type(FIELD *field,          /* field to alter */
   <code>REQ_PREV_CHOICE</code> input requests can be particularly
   useful with these fields.</p>
 
-  <h3><a name="ftype_integer" id=
-  "ftype_integer">TYPE_INTEGER</a></h3>
+  <h3><a name="ftype_integer" id="ftype_integer">TYPE_INTEGER</a></h3>
 
   <p>This field type accepts an integer. It is set up as
   follows:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    TYPE_INTEGER,          /* type to associate */
@@ -2403,11 +2440,11 @@ int set_field_type(FIELD *field,          /* field to alter */
   <p>A <code>TYPE_INTEGER</code> value buffer can conveniently be
   interpreted with the C library function <code>atoi(3)</code>.</p>
 
-  <h3><a name="ftype_numeric" id=
-  "ftype_numeric">TYPE_NUMERIC</a></h3>
+  <h3><a name="ftype_numeric" id="ftype_numeric">TYPE_NUMERIC</a></h3>
 
   <p>This field type accepts a decimal number. It is set up as
   follows:</p>
+
   <pre>
 int set_field_type(FIELD *field,              /* field to alter */
                    TYPE_NUMERIC,              /* type to associate */
@@ -2433,6 +2470,7 @@ int set_field_type(FIELD *field,              /* field to alter */
 
   <p>This field type accepts data matching a regular expression. It
   is set up as follows:</p>
+
   <pre>
 int set_field_type(FIELD *field,          /* field to alter */
                    TYPE_REGEXP,           /* type to associate */
@@ -2449,6 +2487,7 @@ int set_field_type(FIELD *field,          /* field to alter */
   <p>The chief attribute of a field is its buffer contents. When a
   form has been completed, your application usually needs to know
   the state of each field buffer. You can find this out with:</p>
+
   <pre>
 char *field_buffer(FIELD *field,          /* field to query */
                    int bufindex);         /* number of buffer to query */
@@ -2458,6 +2497,7 @@ char *field_buffer(FIELD *field,          /* field to query */
   is set by the user's editing actions on that field. It is
   sometimes useful to be able to set the value of the zero-numbered
   (or some other) buffer from your application:</p>
+
   <pre>
 int set_field_buffer(FIELD *field,        /* field to alter */
                    int bufindex,          /* number of buffer to alter */
@@ -2482,8 +2522,7 @@ int set_field_buffer(FIELD *field,        /* field to alter */
   <code>REQ_VALIDATION</code> request has been processed by the
   forms driver.</p>
 
-  <h2><a name="formattrs" id="formattrs">Attributes of
-  Forms</a></h2>
+  <h2><a name="formattrs" id="formattrs">Attributes of Forms</a></h2>
 
   <p>As with field attributes, form attributes inherit a default
   from a system default form structure. These defaults can be
@@ -2492,6 +2531,7 @@ int set_field_buffer(FIELD *field,        /* field to alter */
 
   <p>The principal attribute of a form is its field list. You can
   query and change this list with:</p>
+
   <pre>
 int set_form_fields(FORM *form,           /* form to alter */
                     FIELD **fields);      /* fields to connect */
@@ -2514,8 +2554,7 @@ int field_count(FORM *form);              /* count connect fields */
   number of fields connected to a given from. It returns -1 if the
   form-pointer argument is NULL.</p>
 
-  <h2><a name="fdisplay" id="fdisplay">Control of Form
-  Display</a></h2>
+  <h2><a name="fdisplay" id="fdisplay">Control of Form Display</a></h2>
 
   <p>In the overview section, you saw that to display a form you
   normally start by defining its size (and fields), posting it, and
@@ -2546,6 +2585,7 @@ int field_count(FORM *form);              /* count connect fields */
   <p>In order to declare your own frame window for a form, you will
   need to know the size of the form's bounding rectangle. You can
   get this information with:</p>
+
   <pre>
 int scale_form(FORM *form,                /* form to query */
                int *rows,                 /* form rows */
@@ -2555,6 +2595,7 @@ int scale_form(FORM *form,                /* form to query */
   <p>The form dimensions are passed back in the locations pointed
   to by the arguments. Once you have this information, you can use
   it to declare of windows, then use one of these functions:</p>
+
   <pre>
 int set_form_win(FORM *form,              /* form to alter */
                  WINDOW *win);            /* frame window to connect */
@@ -2574,6 +2615,7 @@ WINDOW *form_sub(FORM *form);             /* fetch form subwindow of form */
   <p>It is possible to check from your application whether all of a
   scrollable field is actually displayed within the menu subwindow.
   Use these functions:</p>
+
   <pre>
 int data_ahead(FORM *form);               /* form to be queried */
 
@@ -2591,6 +2633,7 @@ int data_behind(FORM *form);              /* form to be queried */
 
   <p>Finally, there is a function to restore the form window's
   cursor to the value expected by the forms driver:</p>
+
   <pre>
 int pos_form_cursor(FORM *)               /* form to be queried */
 </pre>
@@ -2606,6 +2649,7 @@ int pos_form_cursor(FORM *)               /* form to be queried */
   input requests for form navigation, editing, and validation
   requests, just as <code>menu_driver</code> does for menus (see
   the section on <a href="#minput">menu input handling</a>).</p>
+
   <pre>
 int form_driver(FORM *form,               /* form to pass input to */
                 int request);             /* form request code */
@@ -2627,19 +2671,23 @@ int form_driver(FORM *form,               /* form to pass input to */
   triggering display of a new form screen.</p>
 
   <dl>
-    <dt><code>REQ_NEXT_PAGE</code></dt>
+    <dt><code>REQ_NEXT_PAGE</code>
+    </dt>
 
     <dd>Move to the next form page.</dd>
 
-    <dt><code>REQ_PREV_PAGE</code></dt>
+    <dt><code>REQ_PREV_PAGE</code>
+    </dt>
 
     <dd>Move to the previous form page.</dd>
 
-    <dt><code>REQ_FIRST_PAGE</code></dt>
+    <dt><code>REQ_FIRST_PAGE</code>
+    </dt>
 
     <dd>Move to the first form page.</dd>
 
-    <dt><code>REQ_LAST_PAGE</code></dt>
+    <dt><code>REQ_LAST_PAGE</code>
+    </dt>
 
     <dd>Move to the last form page.</dd>
   </dl>
@@ -2656,51 +2704,63 @@ int form_driver(FORM *form,               /* form to pass input to */
   page.</p>
 
   <dl>
-    <dt><code>REQ_NEXT_FIELD</code></dt>
+    <dt><code>REQ_NEXT_FIELD</code>
+    </dt>
 
     <dd>Move to next field.</dd>
 
-    <dt><code>REQ_PREV_FIELD</code></dt>
+    <dt><code>REQ_PREV_FIELD</code>
+    </dt>
 
     <dd>Move to previous field.</dd>
 
-    <dt><code>REQ_FIRST_FIELD</code></dt>
+    <dt><code>REQ_FIRST_FIELD</code>
+    </dt>
 
     <dd>Move to the first field.</dd>
 
-    <dt><code>REQ_LAST_FIELD</code></dt>
+    <dt><code>REQ_LAST_FIELD</code>
+    </dt>
 
     <dd>Move to the last field.</dd>
 
-    <dt><code>REQ_SNEXT_FIELD</code></dt>
+    <dt><code>REQ_SNEXT_FIELD</code>
+    </dt>
 
     <dd>Move to sorted next field.</dd>
 
-    <dt><code>REQ_SPREV_FIELD</code></dt>
+    <dt><code>REQ_SPREV_FIELD</code>
+    </dt>
 
     <dd>Move to sorted previous field.</dd>
 
-    <dt><code>REQ_SFIRST_FIELD</code></dt>
+    <dt><code>REQ_SFIRST_FIELD</code>
+    </dt>
 
     <dd>Move to the sorted first field.</dd>
 
-    <dt><code>REQ_SLAST_FIELD</code></dt>
+    <dt><code>REQ_SLAST_FIELD</code>
+    </dt>
 
     <dd>Move to the sorted last field.</dd>
 
-    <dt><code>REQ_LEFT_FIELD</code></dt>
+    <dt><code>REQ_LEFT_FIELD</code>
+    </dt>
 
     <dd>Move left to field.</dd>
 
-    <dt><code>REQ_RIGHT_FIELD</code></dt>
+    <dt><code>REQ_RIGHT_FIELD</code>
+    </dt>
 
     <dd>Move right to field.</dd>
 
-    <dt><code>REQ_UP_FIELD</code></dt>
+    <dt><code>REQ_UP_FIELD</code>
+    </dt>
 
     <dd>Move up to field.</dd>
 
-    <dt><code>REQ_DOWN_FIELD</code></dt>
+    <dt><code>REQ_DOWN_FIELD</code>
+    </dt>
 
     <dd>Move down to field.</dd>
   </dl>
@@ -2738,59 +2798,73 @@ int form_driver(FORM *form,               /* form to pass input to */
   currently selected field.</p>
 
   <dl>
-    <dt><code>REQ_NEXT_CHAR</code></dt>
+    <dt><code>REQ_NEXT_CHAR</code>
+    </dt>
 
     <dd>Move to next character.</dd>
 
-    <dt><code>REQ_PREV_CHAR</code></dt>
+    <dt><code>REQ_PREV_CHAR</code>
+    </dt>
 
     <dd>Move to previous character.</dd>
 
-    <dt><code>REQ_NEXT_LINE</code></dt>
+    <dt><code>REQ_NEXT_LINE</code>
+    </dt>
 
     <dd>Move to next line.</dd>
 
-    <dt><code>REQ_PREV_LINE</code></dt>
+    <dt><code>REQ_PREV_LINE</code>
+    </dt>
 
     <dd>Move to previous line.</dd>
 
-    <dt><code>REQ_NEXT_WORD</code></dt>
+    <dt><code>REQ_NEXT_WORD</code>
+    </dt>
 
     <dd>Move to next word.</dd>
 
-    <dt><code>REQ_PREV_WORD</code></dt>
+    <dt><code>REQ_PREV_WORD</code>
+    </dt>
 
     <dd>Move to previous word.</dd>
 
-    <dt><code>REQ_BEG_FIELD</code></dt>
+    <dt><code>REQ_BEG_FIELD</code>
+    </dt>
 
     <dd>Move to beginning of field.</dd>
 
-    <dt><code>REQ_END_FIELD</code></dt>
+    <dt><code>REQ_END_FIELD</code>
+    </dt>
 
     <dd>Move to end of field.</dd>
 
-    <dt><code>REQ_BEG_LINE</code></dt>
+    <dt><code>REQ_BEG_LINE</code>
+    </dt>
 
     <dd>Move to beginning of line.</dd>
 
-    <dt><code>REQ_END_LINE</code></dt>
+    <dt><code>REQ_END_LINE</code>
+    </dt>
 
     <dd>Move to end of line.</dd>
 
-    <dt><code>REQ_LEFT_CHAR</code></dt>
+    <dt><code>REQ_LEFT_CHAR</code>
+    </dt>
 
     <dd>Move left in field.</dd>
 
-    <dt><code>REQ_RIGHT_CHAR</code></dt>
+    <dt><code>REQ_RIGHT_CHAR</code>
+    </dt>
 
     <dd>Move right in field.</dd>
 
-    <dt><code>REQ_UP_CHAR</code></dt>
+    <dt><code>REQ_UP_CHAR</code>
+    </dt>
 
     <dd>Move up in field.</dd>
 
-    <dt><code>REQ_DOWN_CHAR</code></dt>
+    <dt><code>REQ_DOWN_CHAR</code>
+    </dt>
 
     <dd>Move down in field.</dd>
   </dl>
@@ -2811,51 +2885,63 @@ int form_driver(FORM *form,               /* form to pass input to */
   requests:</p>
 
   <dl>
-    <dt><code>REQ_SCR_FLINE</code></dt>
+    <dt><code>REQ_SCR_FLINE</code>
+    </dt>
 
     <dd>Scroll vertically forward a line.</dd>
 
-    <dt><code>REQ_SCR_BLINE</code></dt>
+    <dt><code>REQ_SCR_BLINE</code>
+    </dt>
 
     <dd>Scroll vertically backward a line.</dd>
 
-    <dt><code>REQ_SCR_FPAGE</code></dt>
+    <dt><code>REQ_SCR_FPAGE</code>
+    </dt>
 
     <dd>Scroll vertically forward a page.</dd>
 
-    <dt><code>REQ_SCR_BPAGE</code></dt>
+    <dt><code>REQ_SCR_BPAGE</code>
+    </dt>
 
     <dd>Scroll vertically backward a page.</dd>
 
-    <dt><code>REQ_SCR_FHPAGE</code></dt>
+    <dt><code>REQ_SCR_FHPAGE</code>
+    </dt>
 
     <dd>Scroll vertically forward half a page.</dd>
 
-    <dt><code>REQ_SCR_BHPAGE</code></dt>
+    <dt><code>REQ_SCR_BHPAGE</code>
+    </dt>
 
     <dd>Scroll vertically backward half a page.</dd>
 
-    <dt><code>REQ_SCR_FCHAR</code></dt>
+    <dt><code>REQ_SCR_FCHAR</code>
+    </dt>
 
     <dd>Scroll horizontally forward a character.</dd>
 
-    <dt><code>REQ_SCR_BCHAR</code></dt>
+    <dt><code>REQ_SCR_BCHAR</code>
+    </dt>
 
     <dd>Scroll horizontally backward a character.</dd>
 
-    <dt><code>REQ_SCR_HFLINE</code></dt>
+    <dt><code>REQ_SCR_HFLINE</code>
+    </dt>
 
     <dd>Scroll horizontally one field width forward.</dd>
 
-    <dt><code>REQ_SCR_HBLINE</code></dt>
+    <dt><code>REQ_SCR_HBLINE</code>
+    </dt>
 
     <dd>Scroll horizontally one field width backward.</dd>
 
-    <dt><code>REQ_SCR_HFHALF</code></dt>
+    <dt><code>REQ_SCR_HFHALF</code>
+    </dt>
 
     <dd>Scroll horizontally one half field width forward.</dd>
 
-    <dt><code>REQ_SCR_HBHALF</code></dt>
+    <dt><code>REQ_SCR_HBHALF</code>
+    </dt>
 
     <dd>Scroll horizontally one half field width backward.</dd>
   </dl>
@@ -2874,51 +2960,63 @@ int form_driver(FORM *form,               /* form to pass input to */
   the edit mode:</p>
 
   <dl>
-    <dt><code>REQ_INS_MODE</code></dt>
+    <dt><code>REQ_INS_MODE</code>
+    </dt>
 
     <dd>Set insertion mode.</dd>
 
-    <dt><code>REQ_OVL_MODE</code></dt>
+    <dt><code>REQ_OVL_MODE</code>
+    </dt>
 
     <dd>Set overlay mode.</dd>
 
-    <dt><code>REQ_NEW_LINE</code></dt>
+    <dt><code>REQ_NEW_LINE</code>
+    </dt>
 
     <dd>New line request (see below for explanation).</dd>
 
-    <dt><code>REQ_INS_CHAR</code></dt>
+    <dt><code>REQ_INS_CHAR</code>
+    </dt>
 
     <dd>Insert space at character location.</dd>
 
-    <dt><code>REQ_INS_LINE</code></dt>
+    <dt><code>REQ_INS_LINE</code>
+    </dt>
 
     <dd>Insert blank line at character location.</dd>
 
-    <dt><code>REQ_DEL_CHAR</code></dt>
+    <dt><code>REQ_DEL_CHAR</code>
+    </dt>
 
     <dd>Delete character at cursor.</dd>
 
-    <dt><code>REQ_DEL_PREV</code></dt>
+    <dt><code>REQ_DEL_PREV</code>
+    </dt>
 
     <dd>Delete previous word at cursor.</dd>
 
-    <dt><code>REQ_DEL_LINE</code></dt>
+    <dt><code>REQ_DEL_LINE</code>
+    </dt>
 
     <dd>Delete line at cursor.</dd>
 
-    <dt><code>REQ_DEL_WORD</code></dt>
+    <dt><code>REQ_DEL_WORD</code>
+    </dt>
 
     <dd>Delete word at cursor.</dd>
 
-    <dt><code>REQ_CLR_EOL</code></dt>
+    <dt><code>REQ_CLR_EOL</code>
+    </dt>
 
     <dd>Clear to end of line.</dd>
 
-    <dt><code>REQ_CLR_EOF</code></dt>
+    <dt><code>REQ_CLR_EOF</code>
+    </dt>
 
     <dd>Clear to end of field.</dd>
 
-    <dt><code>REQ_CLEAR_FIELD</code></dt>
+    <dt><code>REQ_CLEAR_FIELD</code>
+    </dt>
 
     <dd>Clear entire field.</dd>
   </dl>
@@ -2975,12 +3073,14 @@ int form_driver(FORM *form,               /* form to pass input to */
   into the field buffer:</p>
 
   <dl>
-    <dt><code>REQ_NEXT_CHOICE</code></dt>
+    <dt><code>REQ_NEXT_CHOICE</code>
+    </dt>
 
     <dd>Place the successor value of the current value in the
     buffer.</dd>
 
-    <dt><code>REQ_PREV_CHOICE</code></dt>
+    <dt><code>REQ_PREV_CHOICE</code>
+    </dt>
 
     <dd>Place the predecessor value of the current value in the
     buffer.</dd>
@@ -2991,8 +3091,7 @@ int form_driver(FORM *form,               /* form to pass input to */
   field type of your own (see <a href="#fcustom">Custom Validation
   Types</a>), you can associate our own ordering functions.</p>
 
-  <h3><a name="fappcmds" id="fappcmds">Application
-  Commands</a></h3>
+  <h3><a name="fappcmds" id="fappcmds">Application Commands</a></h3>
 
   <p>Form requests are represented as integers above the
   <code>curses</code> value greater than <code>KEY_MAX</code> and
@@ -3005,6 +3104,7 @@ int form_driver(FORM *form,               /* form to pass input to */
   <p>It is possible to set function hooks to be executed whenever
   the current field or form changes. Here are the functions that
   support this:</p>
+
   <pre>
 typedef void    (*HOOK)();       /* pointer to function returning void */
 
@@ -3086,6 +3186,7 @@ HOOK field_term(FORM *form);     /* form to query */
   move the focus for editing and viewing under control of your
   application, or ask which field it currently is in. The following
   functions help you accomplish this:</p>
+
   <pre>
 int set_current_field(FORM *form,         /* form to alter */
                       FIELD *field);      /* field to shift to */
@@ -3106,6 +3207,7 @@ int field_index(FORM *form,               /* form to query */
   resets this.</p>
 
   <p>It is also possible to move around by pages.</p>
+
   <pre>
 int set_form_page(FORM *form,             /* form to alter */
                   int page);              /* page to go to (0-origin) */
@@ -3120,6 +3222,7 @@ int form_page(FORM *form);                /* return form's current page */
 
   <p>Like fields, forms may have control option bits. They can be
   changed or queried with these functions:</p>
+
   <pre>
 int set_form_opts(FORM *form,             /* form to alter */
                   int attr);              /* attribute to set */
@@ -3155,8 +3258,7 @@ int form_opts(FORM *form);                /* form to query */
   <p>The option values are bit-masks and can be composed with
   logical-or in the obvious way.</p>
 
-  <h2><a name="fcustom" id="fcustom">Custom Validation
-  Types</a></h2>
+  <h2><a name="fcustom" id="fcustom">Custom Validation Types</a></h2>
 
   <p>The <code>form</code> library gives you the capability to
   define custom validation types of your own. Further, the optional
@@ -3170,6 +3272,7 @@ int form_opts(FORM *form);                /* form to query */
 
   <p>The simplest way to create a custom data type is to compose it
   from two preexisting ones:</p>
+
   <pre>
 FIELD *link_fieldtype(FIELDTYPE *type1,
                       FIELDTYPE *type2);
@@ -3200,12 +3303,12 @@ FIELD *link_fieldtype(FIELDTYPE *type1,
   </ul>
 
   <p>Here is how you do that:</p>
+
   <pre>
 typedef int     (*HOOK)();       /* pointer to function returning int */
 
 FIELDTYPE *new_fieldtype(HOOK f_validate, /* field validator */
                          HOOK c_validate) /* character validator */
-
 
 int free_fieldtype(FIELDTYPE *ftype);     /* type to free */
 </pre>
@@ -3246,6 +3349,7 @@ int free_fieldtype(FIELDTYPE *ftype);     /* type to free */
   pile will be passed to the validation functions.</p>
 
   <p>Here is how you make the association:</p>
+
   <pre>
 typedef char    *(*PTRHOOK)();    /* pointer to function returning (char *) */
 typedef void    (*VOIDHOOK)();    /* pointer to function returning void */
@@ -3259,7 +3363,8 @@ int set_fieldtype_arg(FIELDTYPE *type,    /* type to alter */
   <p>Here is how the storage-management hooks are used:</p>
 
   <dl>
-    <dt><code>make_str</code></dt>
+    <dt><code>make_str</code>
+    </dt>
 
     <dd>This function is called by <code>set_field_type()</code>.
     It gets one argument, a <code>va_list</code> of the
@@ -3268,14 +3373,16 @@ int set_fieldtype_arg(FIELDTYPE *type,    /* type to alter */
     pointer to a data structure that encapsulates those
     arguments.</dd>
 
-    <dt><code>copy_str</code></dt>
+    <dt><code>copy_str</code>
+    </dt>
 
     <dd>This function is called by form library functions that
     allocate new field instances. It is expected to take a pile
     pointer, copy the pile to allocated storage, and return the
     address of the pile copy.</dd>
 
-    <dt><code>free_str</code></dt>
+    <dt><code>free_str</code>
+    </dt>
 
     <dd>This function is called by field- and type-deallocation
     routines in the library. It takes a pile pointer argument, and
@@ -3296,6 +3403,7 @@ int set_fieldtype_arg(FIELDTYPE *type,    /* type to alter */
   it is possible to define successor and predecessor functions to
   support the <code>REQ_NEXT_CHOICE</code> and
   <code>REQ_PREV_CHOICE</code> requests. Here is how:</p>
+
   <pre>
 typedef int     (*INTHOOK)();     /* pointer to function returning int */
 
@@ -3313,8 +3421,7 @@ int set_fieldtype_arg(FIELDTYPE *type,    /* type to alter */
   (a legal next or previous value was set) or FALSE to indicate
   failure.</p>
 
-  <h3><a name="fcustprobs" id="fcustprobs">Avoiding
-  Problems</a></h3>
+  <h3><a name="fcustprobs" id="fcustprobs">Avoiding Problems</a></h3>
 
   <p>The interface for defining custom types is complicated and
   tricky. Rather than attempting to create a custom type entirely
