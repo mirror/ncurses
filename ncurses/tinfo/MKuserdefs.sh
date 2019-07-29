@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: MKuserdefs.sh,v 1.8 2019/03/17 00:46:17 tom Exp $
+# $Id: MKuserdefs.sh,v 1.9 2019/07/28 19:12:18 tom Exp $
 AWK=${1-awk}; shift 1
 OPT1=${1-0}; shift 1
 
@@ -55,6 +55,8 @@ cat "$@" | ./make_hash 1 user $OPT1
 
 cat <<EOF
 
+#define USERTABSIZE SIZEOF(user_names_data)
+
 #if $OPT1
 static void
 next_string(const char *strings, unsigned *offset)
@@ -68,11 +70,11 @@ _nc_build_names(struct user_table_entry **actual,
 		const char *strings)
 {
     if (*actual == 0) {
-	*actual = typeCalloc(struct user_table_entry, CAPTABSIZE);
+	*actual = typeCalloc(struct user_table_entry, USERTABSIZE);
 	if (*actual != 0) {
 	    unsigned n;
 	    unsigned len = 0;
-	    for (n = 0; n < CAPTABSIZE; ++n) {
+	    for (n = 0; n < USERTABSIZE; ++n) {
 		(*actual)[n].ute_name = strings + len;
 		(*actual)[n].ute_type = (int) source[n].ute_type;
 		(*actual)[n].ute_argc = source[n].ute_argc;

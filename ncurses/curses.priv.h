@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.624 2019/06/23 15:20:49 tom Exp $
+ * $Id: curses.priv.h,v 1.625 2019/07/28 18:32:05 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2178,18 +2178,20 @@ extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 #define SETUP_FAIL ERR
 
-#define ret_error(code, fmt, arg)	if (errret) {\
-					    *errret = code;\
+#define ret_error(rc, fmt, p, q)	if (errret) {\
+					    *errret = rc;\
+					    q;\
 					    returnCode(SETUP_FAIL);\
 					} else {\
-					    fprintf(stderr, fmt, arg);\
+					    fprintf(stderr, fmt, p);\
+					    q;\
 					    ExitTerminfo(EXIT_FAILURE);\
 					}
 
-#define ret_error1(code, fmt, arg)	ret_error(code, "'%s': " fmt, arg)
+#define ret_error1(rc, fmt, p, q)	ret_error(rc, "'%s': " fmt, p, q)
 
-#define ret_error0(code, msg)		if (errret) {\
-					    *errret = code;\
+#define ret_error0(rc, msg)		if (errret) {\
+					    *errret = rc;\
 					    returnCode(SETUP_FAIL);\
 					} else {\
 					    fprintf(stderr, msg);\

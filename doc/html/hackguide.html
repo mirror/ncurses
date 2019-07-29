@@ -1,5 +1,5 @@
 <!--
-  $Id: hackguide.html,v 1.31 2019/03/16 19:39:05 tom Exp $
+  $Id: hackguide.html,v 1.32 2019/07/28 18:08:54 tom Exp $
   ****************************************************************************
   * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
   *                                                                          *
@@ -33,7 +33,7 @@
 <html>
 <head>
   <meta name="generator" content=
-  "HTML Tidy for Linux (vers 25 March 2009), see www.w3.org">
+  "HTML Tidy for HTML5 for Linux version 5.2.0">
 
   <title>A Hacker's Guide to Ncurses Internals</title>
   <link rel="author" href="mailto:bugs-ncurses@gnu.org">
@@ -63,8 +63,7 @@ this one.
       </ul>
     </li>
 
-    <li><a href="#portability">Portability and
-    Configuration</a></li>
+    <li><a href="#portability">Portability and Configuration</a></li>
 
     <li><a href="#documentation">Documentation Conventions</a></li>
 
@@ -233,7 +232,8 @@ this one.
     These have to be viewable through traditional <em>man(1)</em>
     programs.</li>
 
-    <li><strong>Write everything else in HTML.</strong></li>
+    <li><strong>Write everything else in HTML.</strong>
+    </li>
   </ol>
 
   <p>When in doubt, HTMLize a master and use <em>lynx(1)</em> to
@@ -256,6 +256,7 @@ this one.
   majordomo list; to join, write to
   <code>bug-ncurses-request@gnu.org</code> with a message
   containing the line:</p>
+
   <pre>
              subscribe &lt;name&gt;@&lt;host.domain&gt;
 </pre>
@@ -365,7 +366,7 @@ this one.
 
       <p>Tell us about every terminal on which you have reproduced
       the bug &mdash; and every terminal on which you cannot.
-      Ideally, sent us terminfo sources for all of these (yours
+      Ideally, send us terminfo sources for all of these (yours
       might differ from ours).</p>
 
       <p>Include your ncurses version and your OS/machine type, of
@@ -547,7 +548,7 @@ this one.
 
   <p>Here are some more details about mouse event handling:</p>
 
-  <p>The <code>lib_mouse()</code>code is logically split into a
+  <p>The <code>lib_mouse()</code> code is logically split into a
   lower level that accepts event reports in a device-dependent
   format and an upper level that parses mouse gestures and filters
   events. The mediating data structure is a circular queue of event
@@ -566,8 +567,7 @@ this one.
   reports (low-level events) into a gesture (a high-level or
   composite event).</p>
 
-  <h3><a name="output" id="output">Output and Screen
-  Updating</a></h3>
+  <h3><a name="output" id="output">Output and Screen Updating</a></h3>
 
   <p>With the single exception of character echoes during a
   <code>wgetnstr()</code> call (which simulates cooked-mode line
@@ -585,27 +585,35 @@ this one.
   <code>lib_mvcur.c</code>. Essentially, what happens looks like
   this:</p>
 
-  <p>The <code>hashmap.c</code> module tries to detect vertical
-  motion changes between the real and virtual screens. This
-  information is represented by the oldindex members in the newscr
-  structure. These are modified by vertical-motion and clear
-  operations, and both are re-initialized after each update. To
-  this change-journalling information, the hashmap code adds
-  deductions made using a modified Heckel algorithm on hash values
-  generated from the line contents.</p>
+  <ul>
+    <li>
+      <p>The <code>hashmap.c</code> module tries to detect vertical
+      motion changes between the real and virtual screens. This
+      information is represented by the oldindex members in the
+      newscr structure. These are modified by vertical-motion and
+      clear operations, and both are re-initialized after each
+      update. To this change-journalling information, the hashmap
+      code adds deductions made using a modified Heckel algorithm
+      on hash values generated from the line contents.</p>
+    </li>
 
-  <p>The <code>hardscroll.c</code> module computes an optimum set
-  of scroll, insertion, and deletion operations to make the indices
-  match. It calls <code>_nc_mvcur_scrolln()</code> in
-  <code>lib_mvcur.c</code> to do those motions.</p>
+    <li>
+      <p>The <code>hardscroll.c</code> module computes an optimum
+      set of scroll, insertion, and deletion operations to make the
+      indices match. It calls <code>_nc_mvcur_scrolln()</code> in
+      <code>lib_mvcur.c</code> to do those motions.</p>
+    </li>
 
-  <p>Then <code>lib_doupdate.c</code> goes to work. Its job is to
-  do line-by-line transformations of <code>curscr</code> lines to
-  <code>newscr</code> lines. Its main tool is the routine
-  <code>mvcur()</code> in <code>lib_mvcur.c</code>. This routine
-  does cursor-movement optimization, attempting to get from given
-  screen location A to given location B in the fewest output
-  characters possible.</p>
+    <li>
+      <p>Then <code>lib_doupdate.c</code> goes to work. Its job is
+      to do line-by-line transformations of <code>curscr</code>
+      lines to <code>newscr</code> lines. Its main tool is the
+      routine <code>mvcur()</code> in <code>lib_mvcur.c</code>.
+      This routine does cursor-movement optimization, attempting to
+      get from given screen location A to given location B in the
+      fewest output characters possible.</p>
+    </li>
+  </ul>
 
   <p>If you want to work on screen optimizations, you should use
   the fact that (in the trace-enabled version of the library)
@@ -621,8 +629,7 @@ this one.
   <code>include/curses.h.in</code> for mask values, near the
   end.</p>
 
-  <h1><a name="fmnote" id="fmnote">The Forms and Menu
-  Libraries</a></h1>
+  <h1><a name="fmnote" id="fmnote">The Forms and Menu Libraries</a></h1>
 
   <p>The forms and menu libraries should work reliably in any
   environment you can port ncurses to. The only portability issue
@@ -639,8 +646,7 @@ this one.
   This version has been slightly cleaned up for
   <code>ncurses</code>.</p>
 
-  <h1><a name="tic" id="tic">A Tour of the Terminfo
-  Compiler</a></h1>
+  <h1><a name="tic" id="tic">A Tour of the Terminfo Compiler</a></h1>
 
   <p>The <strong>ncurses</strong> implementation of
   <strong>tic</strong> is rather complex internally; it has to do a
@@ -950,11 +956,13 @@ this one.
 
     <dd>gettimeofday(), select().</dd>
   </dl>
+
   <hr>
 
   <address>
     Eric S. Raymond &lt;esr@snark.thyrsus.com&gt;
-  </address>(Note: This is <em>not</em> the <a href="#bugtrack">bug
+  </address>
+  (Note: This is <em>not</em> the <a href="#bugtrack">bug
   address</a>!)
 </body>
 </html>

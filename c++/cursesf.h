@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.32 2014/08/09 22:06:11 Adam.Jiang Exp $
+// $Id: cursesf.h,v 1.33 2019/07/28 19:55:27 tom Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
@@ -151,7 +151,7 @@ public:
   {
   }
 
-  virtual ~NCursesFormField ();
+  virtual ~NCursesFormField () THROWS(NCursesException);
 
   // Duplicate the field at a new position
   inline NCursesFormField* dup(int first_row, int first_col)
@@ -470,7 +470,7 @@ public:
   {
   }
 
-  virtual ~NCursesForm();
+  virtual ~NCursesForm() THROWS(NCursesException);
 
   // Set the default attributes for the form
   virtual void setDefaultAttributes();
@@ -645,7 +645,7 @@ public:
 	OnError(::set_field_userptr(field, STATIC_CAST(void *)(p_UserData)));
   }
 
-  virtual ~NCursesUserField() {};
+  virtual ~NCursesUserField() THROWS(NCursesException) {};
 
   inline const T* UserData (void) const {
     return reinterpret_cast<const T*>(::field_userptr (field));
@@ -702,7 +702,7 @@ public:
 				     (p_UserData)));
   };
 
-  virtual ~NCursesUserForm() {
+  virtual ~NCursesUserForm() THROWS(NCursesException) {
   };
 
   inline T* UserData (void) {

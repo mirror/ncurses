@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.53 2017/11/21 00:37:23 tom Exp $
+// $Id: cursesw.h,v 1.54 2019/07/28 19:55:27 tom Exp $
 
 extern "C" {
 #  include   <curses.h>
@@ -837,7 +837,7 @@ public:
   {
   }
 
-  virtual ~NCursesWindow();
+  virtual ~NCursesWindow() THROWS(NCursesException);
 
   NCursesWindow Clone();
   // Make an exact copy of the window.
@@ -1485,7 +1485,7 @@ public:
   {
   }
 
-  virtual ~NCursesPad() {}
+  virtual ~NCursesPad() THROWS(NCursesException) {}
 
   int echochar(const chtype ch) { return ::pechochar(w, ch); }
   // Put the attributed character onto the pad and immediately do a
@@ -1546,7 +1546,7 @@ public:
   }
   // Construct the FramedPad with the given Window win as viewport.
 
-  virtual ~NCursesFramedPad() {
+  virtual ~NCursesFramedPad() THROWS(NCursesException) {
     delete getSubWindow();
   }
 

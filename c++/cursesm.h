@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2012,2014 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2014,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesm.h,v 1.30 2014/08/09 22:06:18 Adam.Jiang Exp $
+// $Id: cursesm.h,v 1.31 2019/07/28 19:55:27 tom Exp $
 
 #ifndef NCURSES_CURSESM_H_incl
 #define NCURSES_CURSESM_H_incl 1
@@ -85,7 +85,7 @@ public:
     (void) rhs;
   }
 
-  virtual ~NCursesMenuItem ();
+  virtual ~NCursesMenuItem () THROWS(NCursesException);
   // Release the items memory
 
   inline const char* name () const {
@@ -179,7 +179,7 @@ public:
   {
   }
 
-  virtual ~NCursesMenuCallbackItem();
+  virtual ~NCursesMenuCallbackItem() THROWS(NCursesException);
 
   bool action();
 };
@@ -332,7 +332,7 @@ public:
   {
   }
 
-  virtual ~NCursesMenu ();
+  virtual ~NCursesMenu () THROWS(NCursesException);
 
   // Retrieve the menus subwindow
   inline NCursesWindow& subWindow() const {
@@ -606,7 +606,7 @@ public:
 	OnError (::set_item_userptr (item, const_cast<void *>(reinterpret_cast<const void*>(p_UserData))));
   }
 
-  virtual ~NCursesUserItem() {}
+  virtual ~NCursesUserItem() THROWS(NCursesException) {}
 
   inline const T* UserData (void) const {
     return reinterpret_cast<const T*>(::item_userptr (item));
@@ -657,7 +657,7 @@ public:
 	set_user (const_cast<void *>(reinterpret_cast<const void*>(p_UserData)));
   };
 
-  virtual ~NCursesUserMenu() {
+  virtual ~NCursesUserMenu() THROWS(NCursesException) {
   };
 
   inline T* UserData (void) {

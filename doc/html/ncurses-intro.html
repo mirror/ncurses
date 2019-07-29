@@ -1,5 +1,5 @@
 <!--
-  $Id: ncurses-intro.html,v 1.51 2019/07/27 11:47:10 tom Exp $
+  $Id: ncurses-intro.html,v 1.53 2019/07/28 16:53:26 tom Exp $
   ****************************************************************************
   * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
   *                                                                          *
@@ -352,28 +352,30 @@
 
   <p>Historically, the first ancestor of <code>curses</code> was
   the routines written to provide screen-handling for the
-  <code>vi</code> editor; these used the already-existing
-  <code>termcap</code> database facility for describing terminal
+  <code>vi</code> editor; these used the <code>termcap</code>
+  database facility (both released in 3BSD) for describing terminal
   capabilities. These routines were abstracted into a documented
   library and first released with the early BSD UNIX versions. All
-  of this work was done by students at the University of
-  California.</p>
+  of this work was done by students at the University of California
+  (Berkeley campus). The curses library was first published in
+  4.0BSD, a year after 3BSD (i.e., late 1980).</p>
 
   <p>After graduation, one of those students went to work at
   AT&amp;T Bell Labs, and made an improved <code>termcap</code>
   library called <code>terminfo</code> (i.e.,
-  &ldquo;libterm&rdquo;). That was subsequently released in System
-  V Release 2. Thereafter, other developers added to the terminfo
-  library. For instance, a student at Cornell University wrote an
-  improved terminfo library as well as a tool (<code>tic</code>) to
-  compile the terminal descriptions. As a general rule, AT&amp;T
-  did not identify the developers in the source-code or
-  documentation; the <code>tic</code> and <code>infocmp</code>
-  programs are the exceptions.</p>
+  &ldquo;libterm&rdquo;), and adapted the curses library to use
+  this. That was subsequently released in System V Release 2 (early
+  1984). Thereafter, other developers added to the curses and
+  terminfo libraries. For instance, a student at Cornell University
+  wrote an improved terminfo library as well as a tool
+  (<code>tic</code>) to compile the terminal descriptions. As a
+  general rule, AT&amp;T did not identify the developers in the
+  source-code or documentation; the <code>tic</code> and
+  <code>infocmp</code> programs are the exceptions.</p>
 
   <p>System V Release 3 (System III UNIX) from Bell Labs featured a
-  rewritten and much-improved <code>curses</code> library,l along
-  with the <code>tic</code> program.</p>
+  rewritten and much-improved <code>curses</code> library, along
+  with the <code>tic</code> program (late 1986).</p>
 
   <p>To recap, terminfo is based on Berkeley's termcap database,
   but contains a number of improvements and extensions.

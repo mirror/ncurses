@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.12 2019/06/22 00:20:06 tom Exp $
+ * $Id: test_sgr.c,v 1.13 2019/07/28 18:13:39 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -299,6 +299,7 @@ brute_force(const char *name)
 	    free(values[count]);
 	}
     }
+    free(my_name);
     del_curterm(cur_term);
 }
 

@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.200 2019/06/22 00:15:32 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.202 2019/07/28 19:33:40 tom Exp $")
 
 /****************************************************************************
  *
@@ -662,7 +662,8 @@ TINFO_SETUP_TERM(TERMINAL **tp,
     if (strlen(myname) > MAX_NAME_SIZE) {
 	ret_error(TGETENT_ERR,
 		  "TERM environment must be <= %d characters.\n",
-		  MAX_NAME_SIZE);
+		  MAX_NAME_SIZE,
+		  free(myname));
     }
 
     T(("your terminal name is %s", myname));
@@ -713,8 +714,9 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	termp = typeCalloc(TERMINAL, 1);
 #endif
 	if (termp == 0) {
-	    ret_error0(TGETENT_ERR,
-		       "Not enough memory to create terminal structure.\n");
+	    ret_error1(TGETENT_ERR,
+		       "Not enough memory to create terminal structure.\n",
+		       myname, free(myname));
 	}
 #if HAVE_SYSCONF
 	{
@@ -742,8 +744,9 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	    termp->Filedes = (short) Filedes;
 	    termp->_termname = strdup(myname);
 	} else {
-	    ret_error0(errret ? *errret : TGETENT_ERR,
-		       "Could not find any driver to handle this terminal.\n");
+	    ret_error1(errret ? *errret : TGETENT_ERR,
+		       "Could not find any driver to handle terminal.\n",
+		       myname, free(myname));
 	}
 #else
 #if NCURSES_USE_DATABASE || NCURSES_USE_TERMCAP
@@ -768,9 +771,11 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	if (status != TGETENT_YES) {
 	    del_curterm(termp);
 	    if (status == TGETENT_ERR) {
+		free(myname);
 		ret_error0(status, "terminals database is inaccessible\n");
 	    } else if (status == TGETENT_NO) {
-		ret_error1(status, "unknown terminal type.\n", myname);
+		ret_error1(status, "unknown terminal type.\n",
+			   myname, free(myname));
 	    }
 	}
 #if NCURSES_EXT_NUMBERS
@@ -828,13 +833,16 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	if ((VALID_STRING(cursor_address)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
-	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", myname);
+	    ret_error1(TGETENT_YES, "terminal is not really generic.\n",
+		       myname, free(myname));
 	} else {
 	    del_curterm(termp);
-	    ret_error1(TGETENT_NO, "I need something more specific.\n", myname);
+	    ret_error1(TGETENT_NO, "I need something more specific.\n",
+		       myname, free(myname));
 	}
     } else if (hard_copy) {
-	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", myname);
+	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n",
+		   myname, free(myname));
     }
 #endif
     free(myname);

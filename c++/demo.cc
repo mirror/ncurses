@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -35,7 +35,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.43 2018/06/24 00:07:22 tom Exp $
+ * $Id: demo.cc,v 1.44 2019/07/28 19:55:27 tom Exp $
  */
 
 #include "internal.h"
@@ -176,7 +176,7 @@ public:
     : NCursesUserItem<T>(p_name, static_cast<const char*>(0), p_UserData)
   {}
 
-  virtual ~MyAction() {}
+  virtual ~MyAction() THROWS(NCursesException) {}
 
   bool action() {
     SillyDemo a;
@@ -295,7 +295,7 @@ public:
   {
   }
 
-  ~TestForm() {
+  ~TestForm() THROWS(NCursesException) {
     delete mft;
     delete ift;
     delete eft;
@@ -473,7 +473,7 @@ public:
   {
   }
 
-  ~MyMenu()
+  ~MyMenu() THROWS(NCursesException)
   {
     P->hide();
     delete P;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.63 2018/11/24 22:17:03 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.64 2019/07/28 18:43:09 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -144,6 +144,8 @@ get_baudrate(TERMINAL *termp)
 #undef SETUP_FAIL
 #define SETUP_FAIL FALSE
 
+#define NO_COPY {}
+
 static bool
 drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 {
@@ -184,7 +186,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	if (status == TGETENT_ERR) {
 	    ret_error0(status, "terminals database is inaccessible\n");
 	} else if (status == TGETENT_NO) {
-	    ret_error1(status, "unknown terminal type.\n", tname);
+	    ret_error1(status, "unknown terminal type.\n",
+		       tname, NO_COPY);
 	}
     }
     result = TRUE;
@@ -225,15 +228,18 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	     || (VALID_STRING(cursor_down) && VALID_STRING(cursor_home)))
 	    && VALID_STRING(clear_screen)) {
 	    cleanup_termtype();
-	    ret_error1(TGETENT_YES, "terminal is not really generic.\n", tname);
+	    ret_error1(TGETENT_YES, "terminal is not really generic.\n",
+		       tname, NO_COPY);
 	} else {
 	    cleanup_termtype();
-	    ret_error1(TGETENT_NO, "I need something more specific.\n", tname);
+	    ret_error1(TGETENT_NO, "I need something more specific.\n",
+		       tname, NO_COPY);
 	}
     }
     if (hard_copy) {
 	cleanup_termtype();
-	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n", tname);
+	ret_error1(TGETENT_YES, "I can't handle hardcopy terminals.\n",
+		   tname, NO_COPY);
     }
 
     returnBool(result);

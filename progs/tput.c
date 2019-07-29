@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -50,7 +50,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.79 2018/06/30 15:56:01 Nicholas.Marriott Exp $")
+MODULE_ID("$Id: tput.c,v 1.80 2019/07/28 18:18:41 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -230,7 +230,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 	     * representations
 	     */
 
-	    for (k = 1; k < argc; k++) {
+	    for (k = 1; (k < argc) && (k < NUM_PARM); k++) {
 		char *tmp = 0;
 		strings[k] = argv[k];
 		numbers[k] = strtol(argv[k], &tmp, 0);
