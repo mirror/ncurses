@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3356 2019/07/28 18:49:10 tom Exp $
+-- $Id: NEWS,v 1.3359 2019/08/03 22:31:47 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190803
+	+ improve loop limits in _nc_scroll_window() to handle a case where
+	  the scrolled data is a pad which is taller than the window (patch
+	  by Rob King).
+	+ amend the change to screen, because tmux relies upon that entry
+	  and does not support that feature (Debian #933572) -TD
+	+ updated ms-terminal entry & notes -TD
+	+ updated kitty entry & notes -TD
+	+ updated alacritty+common entry & notes -TD
+	+ use xterm+sl-twm for consistency -TD
 
 20190728
 	+ fix a few more coverity warnings.

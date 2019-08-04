@@ -47,7 +47,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.96 2019/03/16 23:31:40 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.97 2019/08/03 23:10:38 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -530,9 +530,12 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 		break;
 
 	    case NUMBER:
+#if !NCURSES_EXT_NUMBERS
 		if (_nc_curr_token.tk_valnumber > MAX_NUMBER) {
 		    entryp->tterm.Numbers[entry_ptr->nte_index] = MAX_NUMBER;
-		} else {
+		} else
+#endif
+		{
 		    entryp->tterm.Numbers[entry_ptr->nte_index] =
 			(NCURSES_INT2) _nc_curr_token.tk_valnumber;
 		}
