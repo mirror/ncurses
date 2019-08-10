@@ -51,7 +51,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.64 2019/07/28 18:43:09 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.66 2019/08/10 18:36:08 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -188,6 +188,8 @@ drv_CanHandle(TERMINAL_CONTROL_BLOCK * TCB, const char *tname, int *errret)
 	} else if (status == TGETENT_NO) {
 	    ret_error1(status, "unknown terminal type.\n",
 		       tname, NO_COPY);
+	} else {
+	    ret_error0(status, "unexpected return-code\n");
 	}
     }
     result = TRUE;
@@ -1340,23 +1342,29 @@ drv_keyok(TERMINAL_CONTROL_BLOCK * TCB, int c, int flag)
 	unsigned ch = (unsigned) c;
 	if (flag) {
 	    while ((s = _nc_expand_try(sp->_key_ok,
-				       ch, &count, (size_t) 0)) != 0
-		   && _nc_remove_key(&(sp->_key_ok), ch)) {
-		code = _nc_add_to_try(&(sp->_keytry), s, ch);
-		free(s);
-		count = 0;
-		if (code != OK)
-		    break;
+				       ch, &count, (size_t) 0)) != 0) {
+		if (_nc_remove_key(&(sp->_key_ok), ch)) {
+		    code = _nc_add_to_try(&(sp->_keytry), s, ch);
+		    free(s);
+		    count = 0;
+		    if (code != OK)
+			break;
+		} else {
+		    free(s);
+		}
 	    }
 	} else {
 	    while ((s = _nc_expand_try(sp->_keytry,
-				       ch, &count, (size_t) 0)) != 0
-		   && _nc_remove_key(&(sp->_keytry), ch)) {
-		code = _nc_add_to_try(&(sp->_key_ok), s, ch);
-		free(s);
-		count = 0;
-		if (code != OK)
-		    break;
+				       ch, &count, (size_t) 0)) != 0) {
+		if (_nc_remove_key(&(sp->_keytry), ch)) {
+		    code = _nc_add_to_try(&(sp->_key_ok), s, ch);
+		    free(s);
+		    count = 0;
+		    if (code != OK)
+			break;
+		} else {
+		    free(s);
+		}
 	    }
 	}
     }

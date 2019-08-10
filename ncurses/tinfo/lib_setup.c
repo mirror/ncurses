@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.202 2019/07/28 19:33:40 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.204 2019/08/10 17:08:00 tom Exp $")
 
 /****************************************************************************
  *
@@ -446,23 +446,24 @@ _nc_update_screensize(SCREEN *sp)
     int old_cols = columns;
 #endif
 
-    TINFO_GET_SIZE(sp, sp->_term, &new_lines, &new_cols);
-
-    /*
-     * See is_term_resized() and resizeterm().
-     * We're doing it this way because those functions belong to the upper
-     * ncurses library, while this resides in the lower terminfo library.
-     */
-    if (sp != 0 && sp->_resize != 0) {
-	if ((new_lines != old_lines) || (new_cols != old_cols)) {
-	    sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
-	} else if (sp->_sig_winch && (sp->_ungetch != 0)) {
-	    sp->_ungetch(SP_PARM, KEY_RESIZE);	/* so application can know this */
+    if (sp != 0) {
+	TINFO_GET_SIZE(sp, sp->_term, &new_lines, &new_cols);
+	/*
+	 * See is_term_resized() and resizeterm().
+	 * We're doing it this way because those functions belong to the upper
+	 * ncurses library, while this resides in the lower terminfo library.
+	 */
+	if (sp->_resize != 0) {
+	    if ((new_lines != old_lines) || (new_cols != old_cols)) {
+		sp->_resize(NCURSES_SP_ARGx new_lines, new_cols);
+	    } else if (sp->_sig_winch && (sp->_ungetch != 0)) {
+		sp->_ungetch(SP_PARM, KEY_RESIZE);	/* so application can know this */
+	    }
+	    sp->_sig_winch = FALSE;
 	}
-	sp->_sig_winch = FALSE;
     }
 }
-#endif
+#endif /* USE_SIZECHANGE */
 
 /****************************************************************************
  *
@@ -776,6 +777,8 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	    } else if (status == TGETENT_NO) {
 		ret_error1(status, "unknown terminal type.\n",
 			   myname, free(myname));
+	    } else {
+		ret_error0(status, "unexpected return-code\n");
 	    }
 	}
 #if NCURSES_EXT_NUMBERS

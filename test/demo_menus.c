@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.66 2019/04/06 20:42:48 tom Exp $
+ * $Id: demo_menus.c,v 1.67 2019/08/10 19:25:27 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -110,6 +110,8 @@ static WINDOW *status;
 static bool loaded_file = FALSE;
 
 static char empty[1];
+
+#ifdef TRACE
 static void failed(const char *s) GCC_NORETURN;
 
 static void
@@ -119,6 +121,7 @@ failed(const char *s)
     endwin();
     ExitProgram(EXIT_FAILURE);
 }
+#endif
 
 /* Common function to allow ^T to toggle trace-mode in the middle of a test
  * so that trace-files can be made smaller.

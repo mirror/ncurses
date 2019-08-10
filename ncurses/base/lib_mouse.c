@@ -84,7 +84,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.182 2019/07/20 20:42:43 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.183 2019/08/10 17:11:50 tom Exp $")
 
 #include <tic.h>
 
@@ -438,7 +438,7 @@ allow_gpm_mouse(SCREEN *sp GCC_UNUSED)
 
 #if USE_WEAK_SYMBOLS
     /* Danger Robinson: do not use dlopen for libgpm if already loaded */
-    if ((Gpm_Wgetch)) {
+    if ((Gpm_Wgetch) != 0) {
 	if (!sp->_mouse_gpm_loaded) {
 	    T(("GPM library was already dlopen'd, not by us"));
 	}
