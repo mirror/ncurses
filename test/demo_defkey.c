@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2002-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2002-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.28 2018/02/12 09:57:31 tom Exp $
+ * $Id: demo_defkey.c,v 1.29 2019/08/17 21:49:19 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -45,10 +45,10 @@ static void
 log_last_line(WINDOW *win)
 {
     FILE *fp;
-    int y, x, n;
-    char temp[256];
 
     if ((fp = fopen(MY_LOGFILE, "a")) != 0) {
+	char temp[256];
+	int y, x, n;
 	int need = sizeof(temp) - 1;
 	if (need > COLS)
 	    need = COLS;
@@ -98,11 +98,12 @@ static char *
 visible(const char *string)
 {
     char *result = 0;
-    size_t need = 1;
-    int pass;
-    int n;
 
     if (string != 0 && *string != '\0') {
+	int pass;
+	int n;
+	size_t need = 1;
+
 	for (pass = 0; pass < 2; ++pass) {
 	    for (n = 0; string[n] != '\0'; ++n) {
 		char temp[80];
@@ -185,7 +186,6 @@ duplicate(WINDOW *win, NCURSES_CONST char *name, int code)
 
     if (value != 0) {
 	const char *prefix = 0;
-	char temp[BUFSIZ];
 
 	if (!(strncmp) (value, "\033[", (size_t) 2)) {
 	    prefix = "\033O";
@@ -193,6 +193,7 @@ duplicate(WINDOW *win, NCURSES_CONST char *name, int code)
 	    prefix = "\033[";
 	}
 	if (prefix != 0) {
+	    char temp[BUFSIZ];
 	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 			"%s%s", prefix, value + 2);
 	    really_define_key(win, temp, code);

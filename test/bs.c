@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -34,7 +34,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.73 2018/05/12 15:07:51 tom Exp $
+ * $Id: bs.c,v 1.74 2019/08/17 21:49:19 tom Exp $
  */
 
 #include <test.priv.h>
@@ -548,14 +548,15 @@ initgame(void)
 static int
 getcoord(int atcpu)
 {
-    int ny, nx, c;
-
     if (atcpu)
 	cgoto(cury, curx);
     else
 	pgoto(cury, curx);
     (void) refresh();
+
     for (;;) {
+	int ny, nx, c;
+
 	if (atcpu) {
 	    MvPrintw(CYBASE + BDEPTH + 1, CXBASE + 11, "(%d, %c)",
 		     curx, 'A' + cury);
@@ -731,10 +732,9 @@ static int
 awinna(void)
 {
     int i, j;
-    ship_t *ss;
 
     for (i = 0; i < 2; ++i) {
-	ss = (i) ? cpuship : plyship;
+	ship_t *ss = (i) ? cpuship : plyship;
 	for (j = 0; j < SHIPTYPES; ++j, ++ss)
 	    if (ss->length > ss->hits)
 		break;
@@ -761,9 +761,11 @@ hitship(int x, int y)
 	    if (++ss->hits < ss->length)	/* still afloat? */
 		return ((ship_t *) NULL);
 	    else {		/* sunk! */
-		int i, j;
+		int i;
 
-		if (!closepack)
+		if (!closepack) {
+		    int j;
+
 		    for (j = -1; j <= 1; j++) {
 			int bx = ss->x + j * xincr[(ss->dir + 2) % dir_MAX];
 			int by = ss->y + j * yincr[(ss->dir + 2) % dir_MAX];
@@ -792,6 +794,7 @@ hitship(int x, int y)
 			    }
 			}
 		    }
+		}
 
 		for (i = 0; i < ss->length; ++i) {
 		    int x1 = ss->x + i * xincr[ss->dir];
@@ -884,12 +887,12 @@ plyturn(void)
 static int
 sgetc(const char *s)
 {
-    const char *s1;
-    int ch;
-
     (void) refresh();
+
     for (;;) {
-	ch = getch();
+	int ch = getch();
+	const char *s1;
+
 	if (islower(ch))
 	    ch = toupper(ch);
 	if (is_QUIT(ch))
@@ -1161,9 +1164,9 @@ playagain(void)
 static void
 do_options(int c, char *op[])
 {
-    register int i;
-
     if (c > 1) {
+	int i;
+
 	for (i = 1; i < c; i++) {
 	    switch (op[i][0]) {
 	    default:

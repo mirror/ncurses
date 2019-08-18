@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1999-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1999-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.45 2017/10/19 21:14:25 tom Exp $
+ * $Id: cardfile.c,v 1.46 2019/08/17 21:49:40 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -125,10 +125,12 @@ add_title(const char *title)
 static void
 add_content(CARD * card, const char *content)
 {
-    size_t total, offset;
+    size_t total;
 
     content = skip(content);
     if ((total = strlen(content)) != 0) {
+	size_t offset;
+
 	if (card->content != 0 && (offset = strlen(card->content)) != 0) {
 	    total += 1 + offset;
 	    card->content = typeRealloc(char, total + 1, card->content);
@@ -173,10 +175,11 @@ static void
 read_data(char *fname)
 {
     FILE *fp;
-    CARD *card = 0;
-    char buffer[BUFSIZ];
 
     if ((fp = fopen(fname, "r")) != 0) {
+	CARD *card = 0;
+	char buffer[BUFSIZ];
+
 	while (fgets(buffer, sizeof(buffer), fp)) {
 	    trim(buffer);
 	    if (isspace(UChar(*buffer))) {
@@ -197,15 +200,17 @@ static void
 write_data(const char *fname)
 {
     FILE *fp;
-    CARD *p = 0;
-    int n;
 
     if (!strcmp(fname, default_name))
 	fname = "cardfile.out";
 
     if ((fp = fopen(fname, "w")) != 0) {
+	CARD *p = 0;
+
 	for (p = all_cards; p != 0; p = p->link) {
 	    FIELD **f = form_fields(p->form);
+	    int n;
+
 	    for (n = 0; f[n] != 0; n++) {
 		char *s = field_buffer(f[n], 0);
 		if (s != 0
@@ -365,7 +370,7 @@ show_legend(void)
 
 #if (defined(KEY_RESIZE) && HAVE_WRESIZE) || NO_LEAKS
 static void
-free_form_fields(FIELD ** f)
+free_form_fields(FIELD **f)
 {
     int n;
 
@@ -391,7 +396,6 @@ cardfile(char *fname)
     int form_high;
     int y;
     int x;
-    int ch = ERR;
     int finished = FALSE;
 
     show_legend();
@@ -432,6 +436,8 @@ cardfile(char *fname)
     order_cards(top_card, visible_cards);
 
     while (!finished) {
+	int ch = ERR;
+
 	update_panels();
 	doupdate();
 
@@ -522,13 +528,11 @@ cardfile(char *fname)
     }
 #if NO_LEAKS
     while (all_cards != 0) {
-	FIELD **f;
-
 	p = all_cards;
 	all_cards = all_cards->link;
 
 	if (isVisible(p)) {
-	    f = form_fields(p->form);
+	    FIELD **f = form_fields(p->form);
 
 	    unpost_form(p->form);	/* ...so we can free it */
 	    free_form(p->form);	/* this also disconnects the fields */

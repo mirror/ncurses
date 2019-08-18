@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_content.c,v 1.10 2019/01/21 01:05:44 tom Exp $
+ * $Id: color_content.c,v 1.11 2019/08/17 21:29:13 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -251,7 +251,6 @@ int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     int i;
-    int repeat;
 
     while ((i = getopt(argc, argv, "f:il:npr:sx")) != -1) {
 	switch (i) {
@@ -305,6 +304,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    }
 	}
     } else {
+	int repeat;
 
 	for (repeat = 0; repeat < r_opt; ++repeat) {
 	    run_test();

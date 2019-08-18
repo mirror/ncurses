@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2003-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2003-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.55 2018/07/14 23:26:02 tom Exp $
+ * $Id: demo_forms.c,v 1.56 2019/08/17 21:49:19 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -338,9 +338,6 @@ static void
 show_current_field(WINDOW *win, FORM *form)
 {
     FIELD *field;
-    FIELDTYPE *type;
-    char *buffer;
-    int nbuf;
     int field_rows, field_cols, field_max;
     int currow, curcol;
 
@@ -355,7 +352,11 @@ show_current_field(WINDOW *win, FORM *form)
     if (data_behind(form))
 	waddstr(win, " behind");
     waddch(win, '\n');
+
     if ((field = current_field(form)) != 0) {
+	FIELDTYPE *type;
+	int nbuf;
+
 	wprintw(win, "Page %d%s, Field %d/%d%s:",
 		form_page(form),
 		new_page(field) ? "*" : "",
@@ -411,6 +412,7 @@ show_current_field(WINDOW *win, FORM *form)
 
 	waddstr(win, "\n");
 	for (nbuf = 0; nbuf <= 2; ++nbuf) {
+	    char *buffer;
 	    if ((buffer = field_buffer(field, nbuf)) != 0) {
 		wprintw(win, "buffer %d:", nbuf);
 		(void) wattrset(win, A_REVERSE);
@@ -430,13 +432,11 @@ show_current_field(WINDOW *win, FORM *form)
 static void
 demo_forms(void)
 {
-    WINDOW *w;
     FORM *form;
     FIELD *f[100];		/* will memset to zero */
-    int finished = 0, c;
+    int c;
     unsigned n = 0;
     int pg;
-    WINDOW *also;
     const char *fname;
     static const char *my_enum[] =
     {"first", "second", "third", 0};
@@ -544,6 +544,9 @@ demo_forms(void)
     f[n] = (FIELD *) 0;
 
     if ((form = new_form(f)) != 0) {
+	WINDOW *w;
+	WINDOW *also;
+	int finished = 0;
 
 	display_form(form);
 

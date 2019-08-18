@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,7 +36,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.52 2018/12/09 00:09:17 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.53 2019/08/17 20:59:41 tom Exp $")
 
 /*
  * Set the window's background information.
@@ -145,6 +145,11 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	memset(&old_bkgd, 0, sizeof(old_bkgd));
 	(void) wgetbkgrnd(win, &old_bkgd);
 
+	if (!memcmp(&old_bkgd, &new_bkgd, sizeof(new_bkgd))) {
+	    T(("...unchanged"));
+	    returnCode(OK);
+	}
+
 	old_char = old_bkgd;
 	RemAttr(old_char, ~A_CHARTEXT);
 	old_attr = AttrOf(old_bkgd);
@@ -153,6 +158,8 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	if (!(old_attr & A_COLOR)) {
 	    old_pair = 0;
 	}
+	T(("... old background char %s, attr %s, pair %d",
+	   _tracechar(CharOf(old_char)), _traceattr(old_attr), old_pair));
 
 	new_char = new_bkgd;
 	RemAttr(new_char, ~A_CHARTEXT);
@@ -163,15 +170,20 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	if (!Charable(new_bkgd)) {
 	    new_char = old_char;
 	}
+	if (!(new_attr & A_COLOR)) {
+	    new_pair = 0;
+	}
+	T(("... new background char %s, attr %s, pair %d",
+	   _tracechar(CharOf(new_char)), _traceattr(new_attr), new_pair));
 
 	(void) wbkgrndset(win, CHREF(new_bkgd));
 
 	/* SVr4 updates color pair if old/new match, otherwise just attrs */
 	if ((new_pair != 0) && (new_pair == old_pair)) {
-	    SetAttr(win->_nc_bkgd, new_attr);
-	    SetPair(win->_nc_bkgd, new_pair);
+	    WINDOW_ATTRS(win) = new_attr;
+	    SET_WINDOW_PAIR(win, new_pair);
 	} else {
-	    SetAttr(win->_nc_bkgd, new_attr);
+	    WINDOW_ATTRS(win) = new_attr;
 	}
 
 	for (y = 0; y <= win->_maxy; y++) {
@@ -195,7 +207,7 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 				| (new_attr & ALL_BUT_COLOR));
 		    }
 		} else {
-		    SetAttr(*cp, new_attr);
+		    SetAttr(*cp, (tmp_attr & ~old_attr) | new_attr);
 		    SetPair(*cp, new_pair);
 		}
 	    }

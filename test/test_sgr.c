@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.13 2019/07/28 18:13:39 tom Exp $
+ * $Id: test_sgr.c,v 1.14 2019/08/17 21:36:44 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -147,7 +147,7 @@ dumpit(unsigned bits, unsigned ignore, const char *sgr, const char *sgr0)
     static char params[] = "SURBDBIPA";
     unsigned n;
 
-    printf("%4d ", bits);
+    printf("%4u ", bits);
     bits &= ~ignore;
     for (n = 0; n < MAXPAR; ++n) {
 	putchar((int) ((bits & (unsigned) (1 << n)) ? params[n] : '-'));

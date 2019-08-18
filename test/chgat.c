@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2012,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: chgat.c,v 1.17 2017/09/28 23:04:14 tom Exp $
+ * $Id: chgat.c,v 1.18 2019/08/17 21:49:19 tom Exp $
  *
  * test-driver for chgat/wchgat/mvchgat/mvwchgat
  */
@@ -75,10 +75,11 @@ color_params(size_t state, short *pair)
     };
     /* *INDENT-ON* */
 
-    static bool first = TRUE;
     const char *result = 0;
 
     if (has_colors()) {
+	static bool first = TRUE;
+
 	if (first) {
 	    size_t n;
 

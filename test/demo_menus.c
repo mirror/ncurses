@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.67 2019/08/10 19:25:27 tom Exp $
+ * $Id: demo_menus.c,v 1.68 2019/08/17 21:45:32 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -309,12 +309,11 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
 static void
 menu_destroy(MENU * m)
 {
-    int count;
-
     Trace(("menu_destroy %p", (void *) m));
     if (m != 0) {
 	ITEM **items = menu_items(m);
 	const char *blob = 0;
+	int count;
 
 	count = item_count(m);
 	Trace(("menu_destroy %p count %d", (void *) m, count));
@@ -429,7 +428,6 @@ build_select_menu(MenuNo number, char *filename)
 	    && (sb.st_mode & S_IFMT) == S_IFREG
 	    && sb.st_size != 0) {
 	    size_t size = (size_t) sb.st_size;
-	    unsigned j, k;
 	    char *blob = typeMalloc(char, size + 1);
 	    MENU_DATA *list = typeCalloc(MENU_DATA, size + 1);
 
@@ -442,6 +440,7 @@ build_select_menu(MenuNo number, char *filename)
 		if (fp != 0) {
 		    if (fread(blob, sizeof(char), size, fp) == size) {
 			bool mark = TRUE;
+			unsigned j, k;
 			for (j = k = 0; j < size; ++j) {
 			    if (mark) {
 				list[k++].name = blob + j;
@@ -609,7 +608,6 @@ perform_trace_menu(int cmd)
 /* interactively set the trace level */
 {
     ITEM **ip;
-    unsigned newtrace;
     int result;
 
     for (ip = menu_items(mpTrace); *ip; ip++) {
@@ -625,7 +623,7 @@ perform_trace_menu(int cmd)
 
     if (result == E_OK) {
 	if (update_trace_menu(mpTrace) || cmd == REQ_TOGGLE_ITEM) {
-	    newtrace = 0;
+	    unsigned newtrace = 0;
 	    for (ip = menu_items(mpTrace); *ip; ip++) {
 		if (item_value(*ip)) {
 		    MENU_DATA *td = (MENU_DATA *) item_userptr(*ip);

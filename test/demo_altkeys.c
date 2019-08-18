@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2005-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2005-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.12 2018/12/29 17:52:53 tom Exp $
+ * $Id: demo_altkeys.c,v 1.13 2019/08/17 21:49:40 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -47,11 +47,12 @@ static void
 log_last_line(WINDOW *win)
 {
     FILE *fp;
-    int y, x, n;
-    char temp[256];
 
     if ((fp = fopen(MY_LOGFILE, "a")) != 0) {
+	char temp[256];
+	int y, x, n;
 	int need = sizeof(temp) - 1;
+
 	if (need > COLS)
 	    need = COLS;
 	getyx(win, y, x);
@@ -75,8 +76,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     int n;
     int ch;
 #if HAVE_GETTIMEOFDAY
-    int secs, msecs;
-    struct timeval current, previous;
+    struct timeval previous;
 #endif
 
     unlink(MY_LOGFILE);
@@ -119,8 +119,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     while ((ch = getch()) != ERR) {
 	bool escaped = (ch >= MY_KEYS);
 	const char *name = keyname(escaped ? (ch - MY_KEYS) : ch);
-
 #if HAVE_GETTIMEOFDAY
+	int secs, msecs;
+	struct timeval current;
+
 	gettimeofday(&current, 0);
 	secs = (int) (current.tv_sec - previous.tv_sec);
 	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);
