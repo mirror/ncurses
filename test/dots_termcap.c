@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.18 2019/01/21 14:20:18 tom Exp $
+ * $Id: dots_termcap.c,v 1.19 2019/08/24 22:25:55 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -201,7 +201,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-    int x, y, z, p;
+    int ch;
     int num_colors;
     int num_lines;
     int num_columns;
@@ -216,8 +216,8 @@ main(int argc, char *argv[])
     size_t need;
     char *my_env;
 
-    while ((x = getopt(argc, argv, "T:em:s:")) != -1) {
-	switch (x) {
+    while ((ch = getopt(argc, argv, "T:em:s:")) != -1) {
+	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
 	    my_env = malloc(need);
@@ -246,8 +246,8 @@ main(int argc, char *argv[])
 
     srand((unsigned) time(0));
 
-    InitAndCatch(z = tgetent(buffer, name), onsig);
-    if (z < 0) {
+    InitAndCatch(ch = tgetent(buffer, name), onsig);
+    if (ch < 0) {
 	fprintf(stderr, "terminal description not found\n");
 	ExitProgram(EXIT_FAILURE);
     } else {
@@ -278,13 +278,13 @@ main(int argc, char *argv[])
     started = time((time_t *) 0);
 
     while (!interrupted) {
-	x = (int) (c * ranf()) + m_option;
-	y = (int) (r * ranf()) + m_option;
-	p = (ranf() > 0.9) ? '*' : ' ';
+	int x = (int) (c * ranf()) + m_option;
+	int y = (int) (r * ranf()) + m_option;
+	int p = (ranf() > 0.9) ? '*' : ' ';
 
 	tputs(tgoto(t_cm, x, y), 1, outc);
 	if (num_colors > 0) {
-	    z = (int) (ranf() * num_colors);
+	    int z = (int) (ranf() * num_colors);
 	    if (ranf() > 0.01) {
 		tputs(tgoto(t_AF, 0, z), 1, outc);
 	    } else {

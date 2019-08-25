@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.45 2017/09/30 15:43:08 tom Exp $
+ * $Id: newdemo.c,v 1.46 2019/08/24 23:02:49 tom Exp $
  */
 
 #include <test.priv.h>
@@ -61,11 +61,12 @@ static int
 WaitForUser(WINDOW *win)
 {
     time_t t;
-    chtype key;
 
     nodelay(win, TRUE);
     t = time((time_t *) 0);
+
     while (1) {
+	chtype key;
 	if ((int) (key = (chtype) wgetch(win)) != ERR) {
 	    if (key == 'q' || key == 'Q')
 		return 1;
@@ -221,12 +222,10 @@ int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     WINDOW *win;
-    int w, x, y, i, j, k;
+    int x, y, i, k;
     char buffer[SIZEOF(messages) * 80];
-    const char *message;
     int width, height;
     chtype save[80];
-    chtype c;
 
     setlocale(LC_ALL, "");
 
@@ -244,6 +243,11 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     }
 
     while (1) {
+	int w;
+	int j;
+	chtype c;
+	const char *message;
+
 	set_colors(win, 1, COLOR_WHITE, COLOR_BLUE);
 	werase(win);
 

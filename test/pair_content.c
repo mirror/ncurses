@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: pair_content.c,v 1.12 2019/01/21 01:05:22 tom Exp $
+ * $Id: pair_content.c,v 1.13 2019/08/24 23:02:49 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -237,7 +237,6 @@ int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     int i;
-    int repeat;
 
     while ((i = getopt(argc, argv, "f:il:npr:sx")) != -1) {
 	switch (i) {
@@ -291,6 +290,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    }
 	}
     } else {
+	int repeat;
 
 	for (repeat = 0; repeat < r_opt; ++repeat) {
 	    run_test();

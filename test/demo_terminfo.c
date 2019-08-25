@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2009-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2009-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.48 2017/11/24 20:49:11 tom Exp $
+ * $Id: demo_terminfo.c,v 1.49 2019/08/24 23:11:01 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -150,7 +150,8 @@ next_dbitem(void)
 	    db_item++;
 	}
     }
-    printf("** %s\n", result);
+    if (result != 0)
+	printf("** %s\n", result);
     return result;
 }
 
@@ -362,7 +363,6 @@ demo_terminfo(char *name)
     }
 #ifdef NCURSES_VERSION
     if (x_opt && (my_blob == 0)) {
-	int mod;
 	if (y_opt) {
 #if NCURSES_XNAMES
 	    TERMTYPE *term = (TERMTYPE *) cur_term;
@@ -389,6 +389,7 @@ demo_terminfo(char *name)
 		"kLFT", "kNXT", "kPRV", "kRIT", "kUP",
 	    };
 	    for (n = 0; n < SIZEOF(xterm_keys); ++n) {
+		int mod;
 		for (mod = 0; mod < 8; ++mod) {
 		    if (mod == 0) {
 			/* these happen to be standard - avoid duplicates */
@@ -728,7 +729,6 @@ copy_code_list(NCURSES_CONST char *const *list)
     size_t count;
     size_t length = 1;
     char **result = 0;
-    char *blob = 0;
     char *unused = 0;
 
     for (pass = 0; pass < 2; ++pass) {
@@ -743,7 +743,7 @@ copy_code_list(NCURSES_CONST char *const *list)
 	    }
 	}
 	if (pass == 0) {
-	    blob = malloc(length);
+	    char *blob = malloc(length);
 	    result = typeCalloc(char *, count + 1);
 	    unused = blob;
 	    if (blob == 0 || result == 0)

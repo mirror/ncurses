@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.14 2019/01/21 14:20:18 tom Exp $
+ * $Id: dots_curses.c,v 1.15 2019/08/24 21:50:35 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -113,7 +113,7 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-    int x, y, z, p;
+    int ch;
     int fg, bg;
     double r;
     double c;
@@ -125,8 +125,8 @@ main(int argc, char *argv[])
     size_t need;
     char *my_env;
 
-    while ((x = getopt(argc, argv, "T:dem:s:")) != -1) {
-	switch (x) {
+    while ((ch = getopt(argc, argv, "T:dem:s:")) != -1) {
+	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
 	    my_env = malloc(need);
@@ -185,13 +185,13 @@ main(int argc, char *argv[])
     fg = COLOR_WHITE;
     bg = COLOR_BLACK;
     while (!interrupted) {
-	x = (int) (c * ranf()) + m_option;
-	y = (int) (r * ranf()) + m_option;
-	p = (ranf() > 0.9) ? '*' : ' ';
+	int x = (int) (c * ranf()) + m_option;
+	int y = (int) (r * ranf()) + m_option;
+	int p = (ranf() > 0.9) ? '*' : ' ';
 
 	move(y, x);
 	if (has_colors()) {
-	    z = (int) (ranf() * COLORS);
+	    int z = (int) (ranf() * COLORS);
 	    if (ranf() > 0.01) {
 		set_colors(fg = z, bg);
 		attron(COLOR_PAIR(mypair(fg, bg)));

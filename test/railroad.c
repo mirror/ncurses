@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2000-2013,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2000-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2000
  *
- * $Id: railroad.c,v 1.22 2017/09/30 17:55:22 tom Exp $
+ * $Id: railroad.c,v 1.23 2019/08/24 23:11:01 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -113,7 +113,7 @@ static void
 ShowSign(char *string)
 {
     char *base = string;
-    int ch, first, last;
+    int first, last;
 
     if (moveit != 0) {
 	tputs(tgoto(moveit, 0, height - 1), 1, outc);
@@ -121,7 +121,7 @@ ShowSign(char *string)
     }
 
     while (*string != 0) {
-	ch = *string;
+	int ch = *string;
 	if (ch != ' ') {
 	    if (moveit != 0) {
 		for (first = length - 2; first >= (string - base); first--) {

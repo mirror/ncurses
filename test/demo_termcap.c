@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.57 2019/01/21 22:50:46 tom Exp $
+ * $Id: demo_termcap.c,v 1.58 2019/08/24 21:47:19 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -159,7 +159,8 @@ next_dbitem(void)
 	    db_item++;
 	}
     }
-    printf("** %s\n", result);
+    if (result != 0)
+	printf("** %s\n", result);
     return result;
 }
 
@@ -327,8 +328,6 @@ dump_xname(NCURSES_CONST char *cap)
 static void
 demo_termcap(NCURSES_CONST char *name)
 {
-    unsigned n;
-    NCURSES_CONST char *cap;
     char buffer[1024];
 
     if (db_list) {
@@ -337,6 +336,8 @@ demo_termcap(NCURSES_CONST char *name)
     if (!q_opt)
 	printf("Terminal type \"%s\"\n", name);
     if (tgetent(buffer, name) >= 0) {
+	NCURSES_CONST char *cap;
+	unsigned n;
 
 	if (b_opt) {
 	    for (n = 0;; ++n) {
@@ -698,7 +699,6 @@ copy_code_list(NCURSES_CONST char *const *list)
     size_t count;
     size_t length = 1;
     char **result = 0;
-    char *blob = 0;
     char *unused = 0;
 
     for (pass = 0; pass < 2; ++pass) {
@@ -713,7 +713,7 @@ copy_code_list(NCURSES_CONST char *const *list)
 	    }
 	}
 	if (pass == 0) {
-	    blob = malloc(length);
+	    char *blob = malloc(length);
 	    result = typeCalloc(char *, count + 1);
 	    unused = blob;
 	    if (blob == 0 || result == 0)

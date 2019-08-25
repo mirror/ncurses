@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.51 2017/09/30 18:10:05 tom Exp $
+ * $Id: gdc.c,v 1.52 2019/08/24 23:11:01 tom Exp $
  */
 
 #include <test.priv.h>
@@ -86,7 +86,6 @@ static void
 drawbox(bool scrolling)
 {
     chtype bottom[XLENGTH + 1];
-    int n;
 
     if (hascolor)
 	(void) attrset(AttrArg(COLOR_PAIR(PAIR_FRAMES), 0));
@@ -97,6 +96,7 @@ drawbox(bool scrolling)
 
     MvAddCh(YBASE + YDEPTH, XBASE - 1, ACS_LLCORNER);
     if ((mvinchnstr(YBASE + YDEPTH, XBASE, bottom, XLENGTH)) != ERR) {
+	int n;
 	for (n = 0; n < XLENGTH; n++) {
 	    if (!scrolling)
 		bottom[n] &= ~A_COLOR;
@@ -251,9 +251,9 @@ main(int argc, char *argv[])
     if (optind < argc) {
 	count = atoi(argv[optind++]);
 	assert(count >= 0);
+	if (optind < argc)
+	    usage();
     }
-    if (optind < argc)
-	usage();
 
     InitAndCatch({
 	if (redirected) {

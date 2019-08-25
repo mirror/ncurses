@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.13 2019/01/21 14:59:34 tom Exp $
+ * $Id: extended_color.c,v 1.14 2019/08/24 23:09:18 tom Exp $
  */
 
 #include <test.priv.h>
@@ -209,8 +209,8 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     printw("Drawing soft-key tabs with pair 2\n");
     slk_attrset(A_BOLD);	/* reverse-video is hard to see */
-    i = if_opt_s(extended_slk_color_sp(sp, 2),
-		 extended_slk_color(2));
+    (void) if_opt_s(extended_slk_color_sp(sp, 2),
+		    extended_slk_color(2));
     for (i = 1; i <= 8; ++i) {
 	char temp[80];
 	_nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "(SLK-%d)", i);

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2008-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2008-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: insdelln.c,v 1.12 2017/09/07 08:24:24 tom Exp $
+ * $Id: insdelln.c,v 1.13 2019/08/24 23:11:01 tom Exp $
  *
  * test-driver for deleteln, wdeleteln, insdelln, winsdelln, insertln, winsertln
  */
@@ -70,10 +70,10 @@ color_params(unsigned state, int *pair)
     };
     /* *INDENT-ON* */
 
-    static bool first = TRUE;
     const char *result = 0;
 
     if (has_colors()) {
+	static bool first = TRUE;
 	if (first) {
 	    unsigned n;
 

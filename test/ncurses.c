@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.516 2019/08/10 19:38:41 tom Exp $
+$Id: ncurses.c,v 1.517 2019/08/24 23:09:03 tom Exp $
 
 ***************************************************************************/
 
@@ -226,7 +226,7 @@ wGetchar(WINDOW *win)
 static void
 wGetstring(WINDOW *win, char *buffer, int limit)
 {
-    int y0, x0, x, ch;
+    int y0, x0, x;
     bool done = FALSE;
 
     echo();
@@ -235,6 +235,7 @@ wGetstring(WINDOW *win, char *buffer, int limit)
 
     x = (int) strlen(buffer);
     while (!done) {
+	int ch;
 	if (x > (int) strlen(buffer))
 	    x = (int) strlen(buffer);
 	wmove(win, y0, x0);
@@ -579,7 +580,6 @@ mouse_decode(MEVENT const *ep)
 static void
 show_mouse(WINDOW *win)
 {
-    int y, x;
     MEVENT event;
     bool outside;
     bool show_loc;
@@ -602,6 +602,7 @@ show_mouse(WINDOW *win)
     show_loc = wmouse_trafo(win, &event.y, &event.x, FALSE);
 
     if (show_loc) {
+	int y, x;
 	getyx(win, y, x);
 	wmove(win, event.y, event.x);
 	waddch(win, '*');
@@ -818,7 +819,6 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 {
     char buf[BUFSIZ];
     int first_y, first_x;
-    int c;
     int incount = 0;
     GetchFlags flags;
 
@@ -832,6 +832,8 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
     scrollok(win, TRUE);
 
     for (;;) {
+	int c;
+
 	while ((c = wGetchar(win)) == ERR) {
 	    incount++;
 	    if (blocking_getch(flags, delay)) {
@@ -1076,7 +1078,6 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     wint_t c;
     int incount = 0;
     GetchFlags flags;
-    int code;
     char *temp;
 
     init_getch(win, flags, delay);
@@ -1089,6 +1090,8 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
     scrollok(win, TRUE);
 
     for (;;) {
+	int code;
+
 	while ((code = wGet_wchar(win, &c)) == ERR) {
 	    incount++;
 	    if (blocking_getch(flags, delay)) {
@@ -1385,9 +1388,10 @@ adjust_attr_string(int adjust)
 {
     char save = attr_test_string[0];
     int first = ((int) UChar(save)) + adjust;
-    int j, k;
 
     if (first >= ATTRSTRING_1ST) {
+	int j, k;
+
 	for (j = 0, k = first; j < MAX_ATTRSTRING; ++j, ++k) {
 	    if (k > ATTRSTRING_END)
 		break;
@@ -1451,10 +1455,9 @@ show_attr(WINDOW *win, int row, int skip, bool arrow, chtype attr, const char *n
     werase(win);
     if (attr & A_ALTCHARSET) {
 	const char *s;
-	chtype ch;
 
 	for (s = attr_test_string; *s != '\0'; ++s) {
-	    ch = UChar(*s);
+	    chtype ch = UChar(*s);
 	    (void) waddch(win, ch | attr);
 	}
     } else {
@@ -1662,12 +1665,13 @@ attr_test(bool recur GCC_UNUSED)
     NCURSES_COLOR_T bg = COLOR_BLACK;
     NCURSES_COLOR_T tx = -1;
     int ac = 0;
-    unsigned j, k;
     WINDOW *my_wins[SIZEOF(attrs_to_test)];
     ATTR_TBL my_list[SIZEOF(attrs_to_test)];
     unsigned my_size = init_attr_list(my_list, termattrs());
 
     if (my_size > 1) {
+	unsigned j, k;
+
 	for (j = 0; j < my_size; ++j) {
 	    my_wins[j] = subwin(stdscr,
 				1, LEN_ATTRSTRING,
@@ -1791,9 +1795,10 @@ wide_adjust_attr_string(int adjust)
 {
     wchar_t save = wide_attr_test_string[0];
     int first = ((int) normal_wchar(save)) + adjust;
-    int j, k;
 
     if (first >= ATTRSTRING_1ST) {
+	int j, k;
+
 	for (j = 0, k = first; j < MAX_ATTRSTRING; ++j, ++k) {
 	    if (k > ATTRSTRING_END)
 		break;
@@ -1843,10 +1848,11 @@ get_wide_background(void)
     attr_t attr;
     cchar_t ch;
     NCURSES_PAIRS_T pair;
-    wchar_t wch[CCHARW_MAX];
 
     memset(&ch, 0, sizeof(ch));
     if (getbkgrnd(&ch) != ERR) {
+	wchar_t wch[CCHARW_MAX];
+
 	if (getcchar(&ch, wch, &attr, &pair, 0) != ERR) {
 	    result = attr;
 	}
@@ -2022,12 +2028,13 @@ x_attr_test(bool recur GCC_UNUSED)
     NCURSES_COLOR_T bg = COLOR_BLACK;
     NCURSES_COLOR_T tx = -1;
     int ac = 0;
-    unsigned j, k;
     W_ATTR_TBL my_list[SIZEOF(w_attrs_to_test)];
     WINDOW *my_wins[SIZEOF(w_attrs_to_test)];
     unsigned my_size = init_w_attr_list(my_list, term_attrs());
 
     if (my_size > 1) {
+	unsigned j, k;
+
 	for (j = 0; j < my_size; ++j) {
 	    my_wins[j] = subwin(stdscr,
 				1, LEN_ATTRSTRING,
@@ -2133,13 +2140,11 @@ show_color_name(int y, int x, int color, bool wide, int zoom)
 	int width = 8;
 
 	if (wide || zoom) {
-	    int have;
-
 	    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp))
 			"%02d", color);
 	    if (wide)
 		width = 4;
-	    if ((have = (int) strlen(temp)) >= width) {
+	    if ((int) strlen(temp) >= width) {
 		int pwr2 = 0;
 		while ((1 << pwr2) < color)
 		    ++pwr2;
@@ -2516,7 +2521,7 @@ x_color_test(bool recur GCC_UNUSED)
     int base_row = 0;
     int grid_top = top + 3;
     int page_size = (LINES - grid_top);
-    int pairs_max = (unsigned short) (-1);
+    int pairs_max;
     int colors_max = COLORS;
     int col_limit;
     int row_limit;
@@ -2839,14 +2844,16 @@ init_all_colors(bool xterm_colors, char *palette_file)
      */
     if (xterm_colors) {
 	int n;
-	int got;
 	char result[BUFSIZ];
 	int check_n;
 	unsigned check_r, check_g, check_b;
 
 	raw();
 	noecho();
+
 	for (n = 0; n < MaxColors; ++n) {
+	    int got;
+
 	    fprintf(stderr, "\033]4;%d;?\007", n);
 	    got = (int) read(0, result, sizeof(result) - 1);
 	    if (got < 0)
@@ -3500,14 +3507,15 @@ x_slk_test(bool recur GCC_UNUSED)
 		char *temp = strdup(s);
 		size_t used = strlen(temp);
 		size_t want = SLKLEN;
-		size_t test;
 #ifndef state_unused
 		mbstate_t state;
 #endif
 
 		buf[0] = L'\0';
 		while (want > 0 && used != 0) {
+		    size_t test;
 		    const char *base = s;
+
 		    reset_mbytes(state);
 		    test = count_mbytes(base, 0, &state);
 		    if (test == (size_t) -1) {
@@ -3923,15 +3931,14 @@ acs_test(bool recur GCC_UNUSED)
 static cchar_t *
 merge_wide_attr(cchar_t *dst, const cchar_t *src, attr_t attr, NCURSES_PAIRS_T pair)
 {
-    int count;
 
     *dst = *src;
     do {
+	int count;
 	TEST_CCHAR(src, count, {
 	    attr |= (test_attrs & A_ALTCHARSET);
 	    setcchar(dst, test_wch, attr, pair, NULL);
-	}
-	, {
+	}, {
 	    ;
 	});
     } while (0);
@@ -4003,7 +4010,6 @@ show_upper_widechars(unsigned first, int repeat, int space, attr_t attr, NCURSES
 	wchar_t codes[10];
 	char tmp[80];
 	int count = repeat;
-	int y, x;
 
 	_nc_SPRINTF(tmp, _nc_SLIMIT(sizeof(tmp))
 		    "%3ld (0x%lx)", (long) code, (long) code);
@@ -4014,6 +4020,8 @@ show_upper_widechars(unsigned first, int repeat, int space, attr_t attr, NCURSES
 	setcchar(&temp, codes, attr, pair, 0);
 
 	do {
+	    int y, x;
+
 	    /*
 	     * Give non-spacing characters something to combine with.  If we
 	     * don't, they'll bunch up in a heap on the space after the ":".
@@ -4653,13 +4661,15 @@ newwin_legend(FRAME * curp)
     };
 #undef DATA
     size_t n;
-    int x;
     bool do_keypad = HaveKeypad(curp);
     bool do_scroll = HaveScroll(curp);
     char buf[BUFSIZ];
 
     move(LINES - 4, 0);
+
     for (n = 0; n < SIZEOF(legend); n++) {
+	int x;
+
 	switch (legend[n].code) {
 	default:
 	    _nc_STRCPY(buf, legend[n].msg, sizeof(buf));
@@ -5003,7 +5013,7 @@ scroll_test(bool recur GCC_UNUSED)
 	case CTRL('X'):	/* resize window */
 	    if (current) {
 		pair *tmp, ul, lr;
-		int i, mx, my;
+		int mx, my;
 
 		move(0, 0);
 		clrtoeol();
@@ -5032,11 +5042,13 @@ scroll_test(bool recur GCC_UNUSED)
 		    wclrtobot(current->wind);
 		    wmove(current->wind, lr.y, lr.x);
 		}
-		if (mx > tmp->x - ul.x)
+		if (mx > tmp->x - ul.x) {
+		    int i;
 		    for (i = 0; i < my; i++) {
 			wmove(current->wind, i, tmp->x - ul.x + 1);
 			wclrtoeol(current->wind);
 		    }
+		}
 		wnoutrefresh(current->wind);
 
 		memcpy(&lr, tmp, sizeof(pair));
@@ -5850,13 +5862,13 @@ padgetch(WINDOW *win)
 {
     static int count;
     static int last;
-    int c;
 
     if ((pending_pan = (count > 0)) != FALSE) {
 	count--;
 	pending_pan = (count != 0);
     } else {
 	for (;;) {
+	    int c;
 	    switch (c = wGetchar(win)) {
 	    case '!':
 		ShellOut(FALSE);
@@ -6210,10 +6222,10 @@ static char *
 tracetrace(unsigned tlevel)
 {
     static char *buf;
-    static size_t need = 12;
     int n;
 
     if (buf == 0) {
+	static size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
 	buf = typeMalloc(char, need);
@@ -6425,9 +6437,9 @@ edit_secure(FIELD *me, int c)
 	size_t have = (source ? strlen(source) : 0) + 1;
 	size_t need = 80 + have;
 	char *temp = malloc(need);
-	size_t len;
 
 	if (temp != 0) {
+	    size_t len;
 	    _nc_STRNCPY(temp, source ? source : "", have + 1);
 	    len = (size_t) (char *) field_userptr(me);
 	    if (c <= KEY_MAX) {
@@ -6530,7 +6542,6 @@ form_virtualize(FORM *f, WINDOW *w)
 
     static int mode = REQ_INS_MODE;
     int c = wGetchar(w);
-    unsigned n;
     FIELD *me = current_field(f);
     bool current = TRUE;
 
@@ -6542,6 +6553,7 @@ form_virtualize(FORM *f, WINDOW *w)
 	}
 	c = mode;
     } else {
+	unsigned n;
 	for (n = 0; n < SIZEOF(lookup); n++) {
 	    if (lookup[n].code == c) {
 		c = lookup[n].result;
@@ -6676,12 +6688,11 @@ CHAR_CHECK_CB(pw_char_check)
 static int
 form_test(bool recur GCC_UNUSED)
 {
-    WINDOW *w;
     FORM *form;
     FIELD *f[12], *secure;
     FIELDTYPE *fty_middle = new_fieldtype(mi_field_check, mi_char_check);
     FIELDTYPE *fty_passwd = new_fieldtype(pw_field_check, pw_char_check);
-    int finished = 0, c;
+    int c;
     unsigned n = 0;
 
 #ifdef NCURSES_MOUSE_VERSION
@@ -6731,6 +6742,8 @@ form_test(bool recur GCC_UNUSED)
     f[n] = (FIELD *) 0;
 
     if ((form = new_form(f)) != 0) {
+	WINDOW *w;
+	int finished = 0;
 
 	display_form(form);
 
@@ -7024,11 +7037,8 @@ overlap_test_2_attr(WINDOW *win, int flavor, int col)
 static int
 overlap_help(int state, int flavors[OVERLAP_FLAVORS])
 {
-    int row;
-    int col;
     int item;
     int limit[OVERLAP_FLAVORS];
-    const char *ths, *tht;
     char msg[80];
 
     if (state < 0)
@@ -7037,10 +7047,10 @@ overlap_help(int state, int flavors[OVERLAP_FLAVORS])
     assert(state >= 0 && state < OVERLAP_FLAVORS);
 
     for (item = 0; item < (2 * OVERLAP_FLAVORS); ++item) {
-	row = item / 2;
-	col = item % 2;
-	ths = col ? "B" : "A";
-	tht = col ? "A" : "B";
+	int row = item / 2;
+	int col = item % 2;
+	const char *ths = col ? "B" : "A";
+	const char *tht = col ? "A" : "B";
 
 	switch ((otBASE) row) {
 	case otBASE_refresh:

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2012,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: inchs.c,v 1.16 2017/09/06 09:20:42 tom Exp $
+ * $Id: inchs.c,v 1.17 2019/08/24 23:11:01 tom Exp $
  *
  * Author: Thomas E Dickey
  */
@@ -87,7 +87,6 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
     int ch, j;
     int txt_x = 0, txt_y = 0;
     int base_y;
-    int limit;
     chtype text[MAX_COLS];
 
     if (argv[level] == 0) {
@@ -132,6 +131,8 @@ test_inchs(int level, char **argv, WINDOW *chrwin, WINDOW *strwin)
     }
 
     while (!Quit(j = mvwgetch(txtwin, txt_y, txt_x))) {
+	int limit;
+
 	switch (j) {
 	case KEY_DOWN:
 	case 'j':

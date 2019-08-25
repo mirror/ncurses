@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.18 2017/10/18 23:04:52 tom Exp $
+ * $Id: echochar.c,v 1.19 2019/08/24 23:11:01 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -81,7 +81,7 @@ int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
-    int ch, x, y, z, p;
+    int ch;
     double r;
     double c;
     bool use_colors;
@@ -121,13 +121,13 @@ main(int argc GCC_UNUSED,
     started = time((time_t *) 0);
 
     while (!interrupted) {
-	x = (int) (c * ranf()) + 2;
-	y = (int) (r * ranf()) + 2;
-	p = (ranf() > 0.9) ? '*' : ' ';
+	int x = (int) (c * ranf()) + 2;
+	int y = (int) (r * ranf()) + 2;
+	int p = (ranf() > 0.9) ? '*' : ' ';
 
 	move(y, x);
 	if (use_colors > 0) {
-	    z = (int) (ranf() * COLORS);
+	    int z = (int) (ranf() * COLORS);
 	    if (ranf() > 0.01) {
 		set_color(my_pairs, z, last_bg);
 		last_fg = z;

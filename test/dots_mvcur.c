@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.20 2019/01/21 14:20:18 tom Exp $
+ * $Id: dots_mvcur.c,v 1.21 2019/08/24 22:19:28 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -138,7 +138,7 @@ main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
 {
     int x0 = 1, y0 = 1;
-    int x, y, z, p;
+    int ch;
     double r;
     double c;
     SCREEN *sp;
@@ -149,8 +149,8 @@ main(int argc GCC_UNUSED,
     size_t need;
     char *my_env;
 
-    while ((x = getopt(argc, argv, "T:efm:s:")) != -1) {
-	switch (x) {
+    while ((ch = getopt(argc, argv, "T:efm:s:")) != -1) {
+	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
 	    my_env = malloc(need);
@@ -205,9 +205,9 @@ main(int argc GCC_UNUSED,
     started = time((time_t *) 0);
 
     while (!interrupted) {
-	x = (int) (c * ranf()) + m_option;
-	y = (int) (r * ranf()) + m_option;
-	p = (ranf() > 0.9) ? '*' : ' ';
+	int x = (int) (c * ranf()) + m_option;
+	int y = (int) (r * ranf()) + m_option;
+	int p = (ranf() > 0.9) ? '*' : ' ';
 
 	if (mvcur(y0, x0, y, x) != ERR) {
 	    x0 = x;
@@ -215,7 +215,7 @@ main(int argc GCC_UNUSED,
 	}
 
 	if (my_colors > 0) {
-	    z = (int) (ranf() * my_colors);
+	    int z = (int) (ranf() * my_colors);
 	    if (ranf() > 0.01) {
 		tputs(tparm2(set_a_foreground, z), 1, outc);
 	    } else {

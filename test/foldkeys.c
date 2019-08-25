@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2006-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.7 2018/12/29 17:53:03 tom Exp $
+ * $Id: foldkeys.c,v 1.8 2019/08/24 23:11:01 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -53,10 +53,10 @@ static void
 log_last_line(WINDOW *win)
 {
     FILE *fp;
-    int y, x, n;
-    char temp[256];
 
     if ((fp = fopen(MY_LOGFILE, "a")) != 0) {
+	char temp[256];
+	int y, x, n;
 	int need = sizeof(temp) - 1;
 	if (need > COLS)
 	    need = COLS;
@@ -195,8 +195,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     int ch;
 #if HAVE_GETTIMEOFDAY
-    int secs, msecs;
-    struct timeval current, previous;
+    struct timeval previous;
 #endif
 
     if (newterm(0, stdout, stdin) == 0) {
@@ -224,6 +223,9 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	const char *name = keyname(escaped ? (ch - MY_KEYS) : ch);
 
 #if HAVE_GETTIMEOFDAY
+	int secs, msecs;
+	struct timeval current;
+
 	gettimeofday(&current, 0);
 	secs = (int) (current.tv_sec - previous.tv_sec);
 	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);

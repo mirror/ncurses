@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2016-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2016-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.24 2018/05/20 18:56:56 tom Exp $
+ * $Id: list_keys.c,v 1.25 2019/08/24 23:11:01 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -88,7 +88,6 @@ static int
 show_key(const char *name, bool show)
 {
     int width = 0;
-    char buffer[10];
     NCURSES_CONST char *value = tigetstr((NCURSES_CONST char *) name);
 
     if (show && t_opt)
@@ -96,6 +95,7 @@ show_key(const char *name, bool show)
 
     if (value != 0 && value != (char *) -1) {
 	while (*value != 0) {
+	    char buffer[10];
 	    int ch = UChar(*value++);
 	    switch (ch) {
 	    case '\177':
@@ -197,8 +197,8 @@ compare_keys(const void *a, const void *b)
 static void
 draw_line(int width)
 {
-    int j;
     if (!t_opt) {
+	int j;
 	for (j = 0; j < width; ++j) {
 	    printf("-");
 	}
@@ -285,8 +285,8 @@ list_keys(TERMINAL **terms, int count)
     }
 #if NCURSES_XNAMES
     if (x_opt) {
-	TERMTYPE *term;
 	for (k = 0; k < count; ++k) {
+	    TERMTYPE *term;
 	    set_curterm(terms[k]);
 	    term = (TERMTYPE *) cur_term;
 	    total += (size_t) (NUM_STRINGS(term) - STRCOUNT);
@@ -305,9 +305,11 @@ list_keys(TERMINAL **terms, int count)
     }
 #if NCURSES_XNAMES
     if (x_opt) {
-	TERMTYPE *term;
 	int m, n;
+
 	for (k = 0; k < count; ++k) {
+	    TERMTYPE *term;
+
 	    set_curterm(terms[k]);
 	    term = (TERMTYPE *) cur_term;
 	    for (n = STRCOUNT; n < NUM_STRINGS(term); ++n) {

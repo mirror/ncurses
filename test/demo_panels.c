@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2007-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 2007-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.42 2018/05/20 19:21:18 tom Exp $
+ * $Id: demo_panels.c,v 1.43 2019/08/24 23:11:01 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */
@@ -250,7 +250,6 @@ my_remove_panel(PANEL **pans, int which)
 static void
 my_create_panel(PANEL **pans, int which, FillPanel myFill)
 {
-    PANEL *pan = 0;
     int code;
     short pair = (short) which;
     short fg = (short) ((pair == COLOR_BLUE) ? COLOR_WHITE : COLOR_BLACK);
@@ -281,7 +280,10 @@ my_create_panel(PANEL **pans, int which, FillPanel myFill)
 	if (code > 0) {
 	    int tly = MIN(y0, y1);
 	    int tlx = MIN(x0, x1);
-	    pan = mkpanel(pair, ABS(y1 - y0) + 1, ABS(x1 - x0) + 1, tly, tlx);
+	    PANEL *pan = mkpanel(pair,
+				 ABS(y1 - y0) + 1,
+				 ABS(x1 - x0) + 1,
+				 tly, tlx);
 	    /* finish */
 	    myFill(pan);
 	    pans[which] = pan;
@@ -465,7 +467,7 @@ which_panel(PANEL *px[MAX_PANELS + 1], PANEL *pan)
 }
 
 static void
-show_panels(PANEL *px[MAX_PANELS + 1])
+show_help(WINDOW *win)
 {
     static const char *help[] =
     {
@@ -481,7 +483,17 @@ show_panels(PANEL *px[MAX_PANELS + 1])
 	"  s - show the panel",
 	"  t - put the panel on the top of the stack"
     };
+    int j;
 
+    for (j = 0; j < (int) SIZEOF(help); ++j) {
+	if (wprintw(win, "%s\n", help[j]) == ERR)
+	    break;
+    }
+}
+
+static void
+show_panels(PANEL *px[MAX_PANELS + 1])
+{
     struct {
 	bool valid;
 	bool hidden;
@@ -490,7 +502,6 @@ show_panels(PANEL *px[MAX_PANELS + 1])
     } table[MAX_PANELS + 1];
 
     WINDOW *win;
-    PANEL *pan;
     int j;
 
     memset(table, 0, sizeof(table));
@@ -504,6 +515,8 @@ show_panels(PANEL *px[MAX_PANELS + 1])
     }
 
     if ((win = newwin(LINES - 1, COLS, 0, 0)) != 0) {
+	PANEL *pan;
+
 	keypad(win, TRUE);
 	if ((pan = new_panel(win)) != 0) {
 	    werase(win);
@@ -527,10 +540,7 @@ show_panels(PANEL *px[MAX_PANELS + 1])
 		    waddch(win, '\n');
 		}
 	    }
-	    for (j = 0; j < (int) SIZEOF(help); ++j) {
-		if (wprintw(win, "%s\n", help[j]) == ERR)
-		    break;
-	    }
+	    show_help(win);
 	    wgetch(win);
 	    del_panel(pan);
 	    pflush();
@@ -626,7 +636,6 @@ get_command(PANEL *px[MAX_PANELS + 1], char *buffer, int limit)
 {
     int length = 0;
     int y0, x0;
-    int c0, ch;
     WINDOW *win;
 
     getyx(stdscr, y0, x0);
@@ -645,9 +654,9 @@ get_command(PANEL *px[MAX_PANELS + 1], char *buffer, int limit)
 	}
 	(void) wgetch(win);
     } else {
-	c0 = 0;
+	int c0 = 0;
 	for (;;) {
-	    ch = wgetch(win);
+	    int ch = wgetch(win);
 	    if (ch == ERR || ch == QUIT || ch == ESCAPE) {
 		buffer[0] = '\0';
 		break;

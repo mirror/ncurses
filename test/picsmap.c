@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.129 2019/04/20 20:33:51 tom Exp $
+ * $Id: picsmap.c,v 1.130 2019/08/24 23:07:34 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -430,9 +430,7 @@ read_file(const char *filename)
     if (is_file(filename, &sb)) {
 	size_t size = (size_t) sb.st_size;
 	char *blob = typeCalloc(char, size + 1);
-	bool had_line = TRUE;
 	bool binary = FALSE;
-	unsigned j;
 	unsigned k = 0;
 
 	result = typeCalloc(char *, size + 1);
@@ -442,7 +440,11 @@ read_file(const char *filename)
 	    FILE *fp = fopen(filename, "r");
 	    if (fp != 0) {
 		logmsg("opened %s", filename);
+
 		if (fread(blob, sizeof(char), size, fp) == size) {
+		    bool had_line = TRUE;
+		    unsigned j;
+
 		    for (j = 0; (size_t) j < size; ++j) {
 			if (blob[j] == '\0' ||
 			    (UChar(blob[j]) < 32 &&
@@ -683,9 +685,9 @@ init_palette(const char *palette_file)
 	if ((power2 != COLORS) || ((shift % 3) != 0)) {
 	    if (all_colors == 0) {
 		init_palette(getenv("TERM"));
-	    }
-	    if (all_colors == 0) {
-		giveup("With %d colors, you need a palette-file", COLORS);
+		if (all_colors == 0) {
+		    giveup("With %d colors, you need a palette-file", COLORS);
+		}
 	    }
 	}
     }
@@ -876,7 +878,6 @@ match_colors(const char *source, int cpp, char *arg1, char *arg2, char *arg3)
 	arg1[cpp] = '\0';
 	result = 1;
     } else {
-	char *t;
 	const char *s = skip_cs(source);
 	size_t have = strlen(source);
 
@@ -884,6 +885,7 @@ match_colors(const char *source, int cpp, char *arg1, char *arg2, char *arg3)
 	    memcpy(arg1, s, (size_t) cpp);
 	    s += cpp;
 	    while (*s++ == '\t') {
+		char *t;
 		for (t = arg2; (*s != '\0') && strchr("\t\"", *s) == 0;) {
 		    if (*s == ' ') {
 			s = skip_cs(s);
@@ -1333,9 +1335,9 @@ parse_img(const char *filename)
 		/* subsequent lines begin "col,row: (r,g,b,a) #RGB" */
 		int r, g, b, nocolor;
 		unsigned check;
-		int which, c;
 		char *t;
 		char *s = t = strchr(buffer, '#');
+
 		if (s != 0) {
 		    /* after the "#RGB", there are differences - just ignore */
 		    while (*s != '\0' && !isspace(UChar(*s)))
@@ -1347,6 +1349,8 @@ parse_img(const char *filename)
 			    &col, &row,
 			    &r, &g, &b, &nocolor,
 			    &check)) {
+		    int which, c;
+
 		    if ((s - t) > 8)	/* 6 hex digits vs 8 */
 			check /= 256;
 		    if (r > MaxRGB ||
@@ -1474,7 +1478,6 @@ show_picture(PICS_HEAD * pics)
 {
     int y, x;
     int n;
-    int my_pair, my_color;
 
     debugmsg("called show_picture");
     logmsg("...using %dx%d screen", LINES, COLS);
@@ -1487,8 +1490,8 @@ show_picture(PICS_HEAD * pics)
     if (has_colors()) {
 	logmsg("...using %d colors", pics->colors);
 	for (n = 0; n < pics->colors; ++n) {
-	    my_pair = (n + 1);
-	    my_color = map_color(fg_color(pics, n));
+	    int my_pair = (n + 1);
+	    int my_color = map_color(fg_color(pics, n));
 #if USE_EXTENDED_COLORS
 	    if (use_extended_pairs) {
 		init_extended_pair(my_pair, my_color, my_color);
@@ -1507,7 +1510,10 @@ show_picture(PICS_HEAD * pics)
 	if (y >= LINES)
 	    break;
 	move(y, 0);
+
 	for (x = 0; x < pics->wide; ++x) {
+	    int my_pair;
+
 	    if (x >= COLS)
 		break;
 	    n = (y * pics->wide + x);
@@ -1557,11 +1563,9 @@ compare_fg_counts(const void *a, const void *b)
 static void
 report_colors(PICS_HEAD * pics)
 {
-    int j, k;
-    int high;
-    int wide = 4;
     int accum;
     double level;
+    int j;
     int shift;
     int total;
     char buffer[256];
@@ -1575,6 +1579,8 @@ report_colors(PICS_HEAD * pics)
      */
     if (debugging && (pics->colors < 1000)) {
 	int digits = 0;
+	int high;
+	int wide = 4;
 	for (j = pics->colors; j != 0; j /= 10) {
 	    ++digits;
 	    if (j < 10)
@@ -1585,6 +1591,7 @@ report_colors(PICS_HEAD * pics)
 	logmsg("These colors were used:");
 	high = (pics->colors + wide - 1) / wide;
 	for (j = 0; j < high && j < pics->colors; ++j) {
+	    int k;
 	    char *s = buffer;
 	    *s = '\0';
 	    for (k = 0; k < wide; ++k) {

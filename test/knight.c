@@ -33,7 +33,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.45 2019/04/20 20:34:55 tom Exp $
+ * $Id: knight.c,v 1.46 2019/08/24 22:40:52 tom Exp $
  */
 
 #include <test.priv.h>
@@ -328,21 +328,20 @@ mark_possibles(SQUARES squares, int y, int x, chtype mark)
 static bool
 find_next_move(SQUARES squares, HISTORY * doneData, int doneSize, int *y, int *x)
 {
-    unsigned j, k;
-    int found = -1;
-    int first = -1;
-    int next = -1;
-    int oldy, oldx;
-    int newy, newx;
     bool result = FALSE;
 
     if (doneSize > 1) {
-	oldy = doneData[doneSize - 1].y;
-	oldx = doneData[doneSize - 1].x;
+	unsigned j;
+	int oldy = doneData[doneSize - 1].y;
+	int oldx = doneData[doneSize - 1].x;
+	int found = -1;
+	int first = -1;
+	int next = -1;
+
 	for (j = 0; j < MAX_OFFSET * 2; j++) {
-	    k = j % MAX_OFFSET;
-	    newy = oldy + offsets[k].y;
-	    newx = oldx + offsets[k].x;
+	    unsigned k = j % MAX_OFFSET;
+	    int newy = oldy + offsets[k].y;
+	    int newx = oldx + offsets[k].x;
 	    if (isUnusedYX(squares, newy, newx)) {
 		if (first < 0)
 		    first = (int) k;
@@ -502,12 +501,11 @@ recurBack(SQUARES squares, int y, int x, int total)
     int result;
 
     if (total < maxmoves) {
-	int try_x, try_y;
 	unsigned k;
 
 	for (k = 0; k < MAX_OFFSET; k++) {
-	    try_x = x + offsets[k].x;
-	    try_y = y + offsets[k].y;
+	    int try_x = x + offsets[k].x;
+	    int try_y = y + offsets[k].y;
 	    if (isUnusedYX(squares, try_y, try_x)) {
 		++test_test;
 		squares[try_y][try_x] = total + 1;

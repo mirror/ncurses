@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.17 2019/01/21 14:20:18 tom Exp $
+ * $Id: dots_xcurses.c,v 1.18 2019/08/24 22:31:43 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -139,10 +139,8 @@ usage(void)
 int
 main(int argc, char *argv[])
 {
-    int x, y, z, p;
     int fg, bg, ch;
     wchar_t wch[2];
-    int pair;
     double r;
     double c;
 #if HAVE_USE_DEFAULT_COLORS
@@ -205,6 +203,7 @@ main(int argc, char *argv[])
 	{
 	    for (fg = 0; fg < COLORS; fg++) {
 		for (bg = 0; bg < COLORS; bg++) {
+		    int pair;
 		    if (interrupted) {
 			cleanup();
 			ExitProgram(EXIT_FAILURE);
@@ -224,16 +223,15 @@ main(int argc, char *argv[])
 
     fg = COLOR_WHITE;
     bg = COLOR_BLACK;
-    pair = 0;
     wch[1] = 0;
     while (!interrupted) {
-	x = (int) (c * ranf()) + m_option;
-	y = (int) (r * ranf()) + m_option;
-	p = (ranf() > 0.9) ? '*' : ' ';
+	int x = (int) (c * ranf()) + m_option;
+	int y = (int) (r * ranf()) + m_option;
+	int p = (ranf() > 0.9) ? '*' : ' ';
 
 	move(y, x);
 	if (has_colors()) {
-	    z = (int) (ranf() * COLORS);
+	    int z = (int) (ranf() * COLORS);
 	    if (ranf() > 0.01) {
 		set_colors(fg = z, bg);
 	    } else {

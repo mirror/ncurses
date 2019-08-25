@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.68 2019/08/17 21:45:32 tom Exp $
+ * $Id: demo_menus.c,v 1.69 2019/08/24 21:41:50 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -586,13 +586,14 @@ static bool
 update_trace_menu(MENU * m)
 {
     ITEM **items;
-    ITEM *i, **p;
+    ITEM *i;
     bool changed = FALSE;
 
     items = menu_items(m);
     i = current_item(m);
     if (i == items[0]) {
 	if (item_value(i)) {
+	    ITEM **p;
 	    for (p = items + 1; *p != 0; p++)
 		if (item_value(*p)) {
 		    set_item_value(*p, FALSE);
