@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 2010-2016,2018 Free Software Foundation, Inc.              *
+dnl Copyright (c) 2010-2018,2019 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.68 2018/11/10 22:08:09 tom Exp $
+dnl $Id: configure.in,v 1.71 2019/08/31 21:16:49 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.68 $)
+AC_REVISION($Revision: 1.71 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -544,6 +544,12 @@ if test "$DFT_LWR_MODEL" = shared ; then
 		;;
 	esac
 fi
+
+USE_ARG_SUFFIX=${DFT_ARG_SUFFIX}
+AC_SUBST(USE_ARG_SUFFIX)
+
+USE_LIB_SUFFIX=${DFT_ARG_SUFFIX}
+AC_SUBST(USE_LIB_SUFFIX)
 
 USE_CFG_SUFFIX=${DFT_ARG_SUFFIX}
 AC_SUBST(USE_CFG_SUFFIX)

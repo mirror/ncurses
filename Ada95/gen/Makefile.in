@@ -28,7 +28,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.88 2019/03/16 21:43:34 tom Exp $
+#  $Id: Makefile.in,v 1.89 2019/08/31 15:44:14 tom Exp $
 #
 .SUFFIXES:
 
@@ -98,7 +98,7 @@ ADACURSES_CONFIG = adacurses@USE_CFG_SUFFIX@-config
 WRAPPER		= @NCURSES_SHLIB2@
 
 PROG_GENERATE	= ./generate$x
-GENERATE	= $(PROG_GENERATE) '@DFT_ARG_SUFFIX@'
+GENERATE	= $(PROG_GENERATE) '@USE_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl 2>/dev/null`

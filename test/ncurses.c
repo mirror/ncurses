@@ -6222,10 +6222,10 @@ static char *
 tracetrace(unsigned tlevel)
 {
     static char *buf;
+    static size_t need = 12;
     int n;
 
     if (buf == 0) {
-	static size_t need = 12;
 	for (n = 0; t_tbl[n].name != 0; n++)
 	    need += strlen(t_tbl[n].name) + 2;
 	buf = typeMalloc(char, need);

@@ -204,7 +204,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 {
     WINDOW *win;
     PANEL *pan = 0;
-    char *userdata = typeMalloc(char, 5);
+    char *userdata = typeMalloc(char, 6);
 
     if ((win = newwin(rows, cols, tly, tlx)) != 0) {
 	keypad(win, TRUE);
@@ -222,7 +222,7 @@ mkpanel(short color, int rows, int cols, int tly, int tlx)
 	    wbkgdset(win, A_BOLD | ' ');
 	}
     }
-    _nc_SPRINTF(userdata, _nc_SLIMIT(3) "p%d", color % 8);
+    _nc_SPRINTF(userdata, _nc_SLIMIT(4) "p%d", color % 8);
     set_panel_userptr(pan, (NCURSES_CONST void *) userdata);
     return pan;
 }
