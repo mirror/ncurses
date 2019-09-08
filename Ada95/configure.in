@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.71 2019/08/31 21:16:49 tom Exp $
+dnl $Id: configure.in,v 1.72 2019/09/07 22:50:06 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.71 $)
+AC_REVISION($Revision: 1.72 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -497,6 +497,9 @@ if test "$cf_with_ada" != "no" ; then
 		CF_WITH_ADA_INCLUDE
 		CF_WITH_ADA_OBJECTS
 		CF_WITH_ADA_SHAREDLIB
+
+		# allow the Ada binding to be renamed
+		CF_WITH_ADA_LIBNAME(AdaCurses)
 	else
 		AC_MSG_ERROR(No usable Ada compiler found)
 	fi

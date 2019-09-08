@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.517 2019/08/24 23:09:03 tom Exp $
+$Id: ncurses.c,v 1.518 2019/08/31 23:22:40 tom Exp $
 
 ***************************************************************************/
 

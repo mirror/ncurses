@@ -94,7 +94,7 @@
 ./Ada95/samples/sample-curses_demo-mouse.ads
 ./Ada95/samples/sample-curses_demo.adb
 ./Ada95/samples/sample-curses_demo.ads
-./Ada95/samples/sample-explanation.adb
+./Ada95/samples/sample-explanation.adb_p
 ./Ada95/samples/sample-explanation.ads
 ./Ada95/samples/sample-form_demo-aux.adb
 ./Ada95/samples/sample-form_demo-aux.ads
@@ -133,7 +133,7 @@
 ./Ada95/src/c_varargs_to_ada.c
 ./Ada95/src/c_varargs_to_ada.h
 ./Ada95/src/library-cfg.sh
-./Ada95/src/library.gpr
+./Ada95/src/library.gpr.in
 ./Ada95/src/modules
 ./Ada95/src/ncurses_compat.c
 ./Ada95/src/terminal_interface-curses-aux.adb

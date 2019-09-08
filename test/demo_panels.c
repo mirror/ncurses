@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_panels.c,v 1.43 2019/08/24 23:11:01 tom Exp $
+ * $Id: demo_panels.c,v 1.44 2019/08/31 23:24:11 tom Exp $
  *
  * Demonstrate a variety of functions from the panel library.
  */

@@ -1,8 +1,8 @@
-Summary: AdaCurses - Ada95 binding for ncurses
+Summary: Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.16 2017/12/09 20:41:28 tom Exp $
+# $Id: AdaCurses.spec,v 1.19 2019/09/08 01:00:18 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -17,13 +17,13 @@ This is the Ada95 binding from the ncurses MAJOR.MINOR distribution, for
 patch-date YYYYMMDD.
 
 In addition to a library, this package installs sample programs in
-"bin/AdaCurses" to avoid conflict with other packages.
+"bin/%{AppProgram}" to avoid conflict with other packages.
 %prep
 
 %define debug_package %{nil}
 
 # http://fedoraproject.org/wiki/EPEL:Packaging_Autoprovides_and_Requires_Filtering
-%filter_from_requires /libAdaCurses.so.1/d
+%filter_from_requires /lib%{AppProgram}.so.1/d
 %filter_setup
 
 %setup -q -n %{AppProgram}-%{AppRelease}
@@ -31,6 +31,7 @@ In addition to a library, this package installs sample programs in
 %build
 
 %define ada_libdir %{_prefix}/lib/ada/adalib
+%define ada_include %{_prefix}/share/ada/adainclude
 
 INSTALL_PROGRAM='${INSTALL}' \
 	./configure \
@@ -38,6 +39,8 @@ INSTALL_PROGRAM='${INSTALL}' \
 		--prefix=%{_prefix} \
 		--bindir=%{_bindir} \
 		--libdir=%{_libdir} \
+		--with-ada-include=%{ada_include} \
+		--with-ada-objects=%{ada_libdir} \
 		--mandir=%{_mandir} \
 		--datadir=%{_datadir} \
 		--disable-rpath-link \
@@ -64,15 +67,17 @@ make install               DESTDIR=$RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/adacurses*-config
 %{_bindir}/%{AppProgram}/*
-%{_libdir}/libAdaCurses.*
-%{ada_libdir}/libAdaCurses.*
-%{ada_libdir}/terminal_interface*
+%{ada_libdir}/lib%{AppProgram}.*
 %{_mandir}/man1/adacurses*-config.1*
 %{_datadir}/%{AppProgram}/*
-%{_datadir}/ada/adainclude/terminal_interface*
+%{ada_include}/terminal_interface*
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Sep 07 2019 Thomas Dickey
+- use AppProgram to replace "AdaCurses" globally
+- amend install-paths to work with Fedora30
 
 * Thu Mar 31 2011 Thomas Dickey
 - use --with-shared option for consistency with --with-ada-sharelib

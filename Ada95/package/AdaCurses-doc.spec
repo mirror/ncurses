@@ -3,7 +3,7 @@ Summary: AdaCurses - Ada95 binding documentation for ncurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
 %define AppPackage %{AppProgram}-doc
-# $Id: AdaCurses-doc.spec,v 1.5 2018/05/26 20:26:20 tom Exp $
+# $Id: AdaCurses-doc.spec,v 1.6 2019/09/07 20:37:52 tom Exp $
 Name: %{AppPackage}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -41,10 +41,13 @@ INSTALL_PROGRAM='${INSTALL}' \
 
 %files
 %defattr(-,root,root)
-%{_datadir}/doc/AdaCurses
+%{_datadir}/doc/%{AppProgram}
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Sep 07 2019 Thomas Dickey
+- use AppProgram to replace "AdaCurses" globally
 
 * Sat Mar 26 2011 Thomas Dickey
 - initial version

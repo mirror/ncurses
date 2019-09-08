@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.688 2019/06/30 15:21:02 tom Exp $
+dnl $Id: configure.in,v 1.689 2019/09/07 20:06:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.688 $)
+AC_REVISION($Revision: 1.689 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -58,7 +58,7 @@ CF_ABI_DEFAULTS
 
 ###	Checks for programs.
 AC_ARG_WITH(ada,
-	[  --without-ada           suppress check for Ada95, don't build demo],
+	[  --without-ada           suppress check for Ada compiler, don't build demo],
 	[cf_with_ada=$withval],
 	[cf_with_ada=yes])
 
@@ -154,7 +154,7 @@ AC_ARG_WITH(cxx-binding,
 	[cf_with_cxx_binding=$cf_with_cxx])
 AC_MSG_RESULT($cf_with_cxx_binding)
 
-AC_MSG_CHECKING(if you want to build with Ada95)
+AC_MSG_CHECKING(if you want to build with Ada)
 AC_MSG_RESULT($cf_with_ada)
 
 AC_MSG_CHECKING(if you want to install terminal database)
@@ -1884,7 +1884,7 @@ else
 fi
 AC_SUBST(USE_CXX_BOOL)
 
-CF_HELP_MESSAGE(Ada95 Binding Options:)
+CF_HELP_MESSAGE(Ada Binding Options:)
 
 dnl If the Ada95 source-tree is present, add that to the build unless it will
 dnl not work, or was not requested.
@@ -1901,7 +1901,7 @@ dnl libtool -TD 20070714
 	fi
 
 dnl Check for availability of GNU Ada Translator (GNAT).
-dnl At the moment we support no other Ada95 compiler.
+dnl At the moment we support no other Ada compiler.
 	if test "$cf_with_ada" != "no" ; then
 		CF_PROG_GNAT
 		if test	"x$cf_cv_prog_gnat_correct" = xyes; then
@@ -1922,6 +1922,9 @@ dnl At the moment we support no other Ada95 compiler.
 			CF_WITH_ADA_INCLUDE
 			CF_WITH_ADA_OBJECTS
 			CF_WITH_ADA_SHAREDLIB
+
+			# allow the Ada binding to be renamed
+			CF_WITH_ADA_LIBNAME(AdaCurses)
 		fi
 	fi
 else
@@ -2201,6 +2204,7 @@ AC_DEFINE(HAVE_SLK_COLOR,1,[Define to 1 if we have slk_color for test-programs])
 CF_SRC_MODULES($modules_to_build)
 
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = "xyes"; then
+   SUB_MAKEFILES="$SUB_MAKEFILES Ada95/src/library.gpr:Ada95/src/library.gpr.in"
    SUB_MAKEFILES="$SUB_MAKEFILES Ada95/gen/adacurses${USE_CFG_SUFFIX}-config:Ada95/gen/adacurses-config.in"
    SUB_MAKEFILES="$SUB_MAKEFILES man/adacurses${USE_CFG_SUFFIX}-config.1:man/MKada_config.in"
 fi
@@ -2345,8 +2349,6 @@ else
 fi
 AC_SUBST(MAKE_DATABASE)
 
-SUB_SCRIPTS=
-
 dnl Override the package used for exported symbols
 if test -n "$PACKAGE"
 then
@@ -2397,7 +2399,6 @@ AC_OUTPUT( \
 	include/ncurses_dll.h \
 	include/termcap.h \
 	include/unctrl.h \
-	$SUB_SCRIPTS \
 	$SUB_MAKEFILES \
 	Makefile,[
 if test "x$cf_with_tests" != xno ; then

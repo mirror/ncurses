@@ -27,15 +27,13 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# $Id: library-cfg.sh,v 1.5 2019/08/31 15:32:51 tom Exp $
+# $Id: library-cfg.sh,v 1.6 2019/09/07 20:27:26 tom Exp $
 #
 # Work around incompatible behavior introduced with gnat6, which causes
 # gnatmake to attempt to compile all of the C objects which might be part of
 # the project.  This can only work if we provide the compiler flags (done here
 # by making a copy of the project file with that information filled in).
 model=$1
-shift 1
-suffix=$1
 shift 1
 input=$1
 shift 1
@@ -61,10 +59,6 @@ SCRIPT=library-cfg.tmp
 cat >$SCRIPT <<EOF
 /for Library_Options use /{
 	s,-- ,$SHARE,
-	s,-lform,-lform$suffix,g
-	s,-lmenu,-lmenu$suffix,g
-	s,-lpanel,-lpanel$suffix,g
-	s,-lncurses,-lncurses$suffix,g
 }
 /for Default_Switches ("C") use/{
 	s,-- ,,
