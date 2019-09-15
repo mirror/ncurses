@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.72 2019/09/07 22:50:06 tom Exp $
+dnl $Id: configure.in,v 1.73 2019/09/14 19:33:07 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20030208)
-AC_REVISION($Revision: 1.72 $)
+AC_REVISION($Revision: 1.73 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -609,6 +609,7 @@ AC_SUBST(ADAGEN_LDFLAGS)
 
 AC_OUTPUT( \
 	$SUB_MAKEFILES \
+	src/library.gpr:src/library.gpr.in \
 	doc/adacurses${DFT_ARG_SUFFIX}-config.1:doc/MKada_config.in \
 	Makefile,[
 if test -z "$USE_OLD_MAKERULES" ; then

@@ -2,7 +2,7 @@ Summary: Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.19 2019/09/08 01:00:18 tom Exp $
+# $Id: AdaCurses.spec,v 1.24 2019/09/15 00:07:32 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -22,9 +22,13 @@ In addition to a library, this package installs sample programs in
 
 %define debug_package %{nil}
 
+%define need_filter %(if grep -E -i '(mageia|red hat|fedora)' /etc/issue >/dev/null; then echo 1; elif test -f /etc/fedora-release; then echo 1; else echo 0; fi)
+
+%if %{need_filter} == 1
 # http://fedoraproject.org/wiki/EPEL:Packaging_Autoprovides_and_Requires_Filtering
 %filter_from_requires /lib%{AppProgram}.so.1/d
 %filter_setup
+%endif
 
 %setup -q -n %{AppProgram}-%{AppRelease}
 
@@ -52,12 +56,12 @@ make
 %install
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
-make install               DESTDIR=$RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
 
 ( cd samples &&
   make install.examples \
-  	DESTDIR=$RPM_BUILD_ROOT \
-	BINDIR=$RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
+    DESTDIR=$RPM_BUILD_ROOT \
+    BINDIR=$RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
 )
 
 %clean
@@ -67,13 +71,19 @@ make install               DESTDIR=$RPM_BUILD_ROOT
 %defattr(-,root,root)
 %{_bindir}/adacurses*-config
 %{_bindir}/%{AppProgram}/*
-%{ada_libdir}/lib%{AppProgram}.*
+%{ada_libdir}/
+%if %{need_filter} == 1
+%{_libdir}/lib%{AppProgram}.*
+%endif
 %{_mandir}/man1/adacurses*-config.1*
 %{_datadir}/%{AppProgram}/*
-%{ada_include}/terminal_interface*
+%{ada_include}/
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Sep 14 2019 Thomas Dickey
+- build-fixes for Fedora29, OpenSUSE
 
 * Sat Sep 07 2019 Thomas Dickey
 - use AppProgram to replace "AdaCurses" globally
