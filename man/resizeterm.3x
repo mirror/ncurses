@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.25 2018/07/28 22:20:54 tom Exp $
+.\" $Id: resizeterm.3x,v 1.26 2019/09/21 23:44:41 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -61,14 +61,24 @@ such as the \fBLINES\fP and \fBCOLS\fP variables.
 .PP
 Most of the work is done by the inner function \fBresize_term\fR.
 The outer function \fBresizeterm\fR adds bookkeeping
-for the \fBSIGWINCH\fP handler.
+for the \fBSIGWINCH\fP handler,
+as well as repainting the soft-key area (see \fBslk_touch\fP(3X)).
+.PP
 When resizing the windows,
 \fBresize_term\fR blank-fills the areas that are extended.
 The calling application should fill in these areas with appropriate data.
+.PP
 The \fBresize_term\fR function attempts to resize all windows.
 However, due to the calling convention of pads,
 it is not possible to resize these
 without additional interaction with the application.
+.PP
+When resizing windows, \fBresize_term\fR recursively adjusts subwindows,
+keeping them within the updated parent window's limits.
+If a top-level window happens to extend to the screen's limits,
+then on resizing the window, \fBresize_term\fR will keep the window
+extending to the corresponding limit, regardless of whether the
+screen has shrunk or grown.
 .SS is_term_resized
 .PP
 A support function \fBis_term_resized\fR is provided so that applications
