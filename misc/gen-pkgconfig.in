@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.34 2018/06/09 22:21:33 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.36 2019/09/28 12:53:53 tom Exp $
 ##############################################################################
-# Copyright (c) 2009-2015,2018 Free Software Foundation, Inc.                #
+# Copyright (c) 2009-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -46,6 +46,7 @@ CXX_NAME=@CXX_NAME@
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
+RPATH_LIST=@RPATH_LIST@
 PRIVATE_LIBS="@PRIVATE_LIBS@"
 
 suffix=@PC_MODULE_SUFFIX@
@@ -66,10 +67,10 @@ MENU_LIBRARY="${MENU_NAME}@USE_ARG_SUFFIX@"
 FORM_LIBRARY="${FORM_NAME}@USE_ARG_SUFFIX@"
 
 CFLAGS="@PKG_CFLAGS@"
-if test "$includedir" != "/usr/include" ; then
+if [ "$includedir" != "/usr/include" ]; then
 	includetop=`echo "$includedir" | sed -e 's,/include/[^/]*$,/include,'`
-	test "$includetop" = "/usr/include" && includetop="$includedir"
-	if test "x$includetop" != "x$includedir"
+	[ "$includetop" = "/usr/include" ] && includetop="$includedir"
+	if [ "x$includetop" != "x$includedir" ]
 	then
 		CFLAGS="$CFLAGS -I${includetop}"
 	fi
@@ -77,10 +78,10 @@ if test "$includedir" != "/usr/include" ; then
 fi
 
 LDFLAGS=
-if test "$libdir" != "/usr/lib" ; then
+if [ "$libdir" != "/usr/lib" ]; then
 	LDFLAGS="$LDFLAGS -L\${libdir}"
 fi
-if test "x@EXTRA_LDFLAGS@" != "x" ; then
+if [ "x@EXTRA_LDFLAGS@" != "x" ]; then
 	LDFLAGS="$LDFLAGS @EXTRA_LDFLAGS@"
 fi
 
@@ -88,8 +89,8 @@ fi
 # functions or curses variables (which also reside in tinfo) can be linked
 # using the -lncurses option.
 NEED_TINFO=no
-if test "x@TINFO_LIBS@" != "x" && \
-   test "x$TINFO_ARG_SUFFIX" != "x$MAIN_LIBRARY"
+if [ "x@TINFO_LIBS@" != "x" ] && \
+   [ "x$TINFO_ARG_SUFFIX" != "x$MAIN_LIBRARY" ]
 then
 	NEED_TINFO=yes
 fi
@@ -102,10 +103,10 @@ do
 	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"
 	reqs=
 
-	if test $name = $MAIN_LIBRARY ; then
+	if [ $name = $MAIN_LIBRARY ]; then
 		desc="$desc library"
-		test $NEED_TINFO = yes && LIBS="$LIBS -l$TINFO_ARG_SUFFIX"
-	elif test $name = $SUB_LIBRARY ; then
+		[ $NEED_TINFO = yes ] && LIBS="$LIBS -l$TINFO_ARG_SUFFIX"
+	elif [ $name = $SUB_LIBRARY ]; then
 		desc="$desc terminal interface library"
 	elif expr $name : ".*${CXX_NAME}.*" >/dev/null ; then
 		reqs="$PANEL_LIBRARY${suffix}, $MENU_LIBRARY${suffix}, $FORM_LIBRARY${suffix}, $MAIN_LIBRARY${suffix}"
@@ -115,15 +116,15 @@ do
 		desc="$desc add-on library"
 	fi
 
-	if test $name != $SUB_LIBRARY && \
-	   test $SUB_LIBRARY != $MAIN_LIBRARY && \
-	   test $name != $TINFO_NAME && \
-	   test $NEED_TINFO != yes ; then
-		test -n "$reqs" && reqs="$reqs, "
+	if [ $name != $SUB_LIBRARY ] && \
+	   [ $SUB_LIBRARY != $MAIN_LIBRARY ] && \
+	   [ $name != $TINFO_NAME ] && \
+	   [ $NEED_TINFO != yes ] ; then
+		[ -n "$reqs" ] && reqs="$reqs, "
 		reqs="${reqs}${SUB_LIBRARY}${suffix}"
 	fi
 
-	if test $name = $MAIN_LIBRARY
+	if [ $name = $MAIN_LIBRARY ]
 	then
 		main_libs="$PRIVATE_LIBS"
 	else
@@ -154,4 +155,4 @@ Cflags: $CFLAGS
 EOF
 
 done
-# vile:shmode
+# vile:shmode ts=4 sw=4

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3376 2019/09/21 23:47:04 tom Exp $
+-- $Id: NEWS,v 1.3380 2019/09/28 12:57:39 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20190928
+	+ amend the ncurse*-config and pc-files to take into account the rpath
+	  hack which differed between those files.
+	+ improve -L option filtering in ncurses*-config
+	+ improve recovery from error when reading command-character in
+	  test/ncurses.c, showing the relevant error message and not exiting on
+	  EINTR (cf: 20180922)
 
 20190921
 	+ add a note in resizeterm manpage about top-level windows which touch

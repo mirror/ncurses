@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.763 $
-#	$Date: 2019/08/03 21:42:15 $
+#	$Revision: 1.765 $
+#	$Date: 2019/09/22 18:48:45 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3292,7 +3292,7 @@ nsterm-c-s|AppKit Terminal.app v51+ w/MacRoman charset (full color w/statusline)
 # tracked under rdar://problem/7365108 and rdar://problem/7365134
 # in Apple's bug reporter.
 #
-# In OS X 10.7 (Leopard) the TERM which can be set in the preferences dialog
+# In OS X 10.5 (Leopard) the TERM which can be set in the preferences dialog
 # defaults to xterm-color.  Alternative selections are ansi, dtterm, rxvt,
 # vt52, vt100, vt102 and xterm.
 nsterm-16color|AppKit Terminal.app v240.2+ with Mac OS X version 10.5,
@@ -3364,7 +3364,7 @@ nsterm-bce|AppKit Terminal.app v71+/v100.1.8+ with Mac OS X version 10.3/10.4 (b
 
 # This is tested with OS X 10.8 (Mountain Lion), 2012/08/11
 #	TERM_PROGRAM_VERSION=309
-# Earlier reports state that these differences also apply to OS X 10.7 (Leopard),
+# Earlier reports state that these differences also apply to OS X 10.7 (Lion),
 #	TERM_PROGRAM_VERSION=303
 nsterm-build309|Terminal.app in OS X 10.8,
 	use=xterm+256setaf, use=nsterm-bce,
@@ -26371,5 +26371,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ updated kitty entry & notes -TD
 #	+ updated alacritty+common entry & notes -TD
 #	+ use xterm+sl-twm for consistency -TD
+#
+# 2019-09-22
+#	+ correct a comment -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

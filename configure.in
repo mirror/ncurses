@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.689 2019/09/07 20:06:52 tom Exp $
+dnl $Id: configure.in,v 1.690 2019/09/27 21:12:34 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.689 $)
+AC_REVISION($Revision: 1.690 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2390,6 +2390,9 @@ fi
 AC_SUBST(ADAGEN_LDFLAGS)
 AC_SUBST(CHECK_BUILD)
 AC_SUBST(PRIVATE_LIBS)
+
+# This is used for the *-config script and *.pc data files.
+CF_LD_SEARCHPATH
 
 AC_DEFINE(HAVE_CURSES_DATA_BOOLNAMES,1,[definition needed for in-tree build of tack])
 
