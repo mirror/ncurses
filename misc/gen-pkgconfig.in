@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.36 2019/09/28 12:53:53 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.38 2019/10/05 22:25:47 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -70,11 +70,11 @@ CFLAGS="@PKG_CFLAGS@"
 if [ "$includedir" != "/usr/include" ]; then
 	includetop=`echo "$includedir" | sed -e 's,/include/[^/]*$,/include,'`
 	[ "$includetop" = "/usr/include" ] && includetop="$includedir"
+	CFLAGS="$CFLAGS -I\${includedir}"
 	if [ "x$includetop" != "x$includedir" ]
 	then
 		CFLAGS="$CFLAGS -I${includetop}"
 	fi
-	CFLAGS="$CFLAGS -I\${includedir}"
 fi
 
 LDFLAGS=
@@ -106,6 +106,7 @@ do
 	if [ $name = $MAIN_LIBRARY ]; then
 		desc="$desc library"
 		[ $NEED_TINFO = yes ] && LIBS="$LIBS -l$TINFO_ARG_SUFFIX"
+		[ -n "@LIBS@" ] && LIBS="$LIBS @LIBS@"
 	elif [ $name = $SUB_LIBRARY ]; then
 		desc="$desc terminal interface library"
 	elif expr $name : ".*${CXX_NAME}.*" >/dev/null ; then

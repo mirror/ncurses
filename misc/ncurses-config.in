@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.39 2019/09/28 12:54:17 tom Exp $
+# $Id: ncurses-config.in,v 1.40 2019/10/05 22:24:20 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -86,7 +86,7 @@ if [ x@WITH_OVERWRITE@ = xno ]; then
 	esac
 fi
 
-LIBS="@LIBS@ @PRIVATE_LIBS@"
+LIBS="@LIBS@"
 if [ "@TINFO_NAME@" = "@LIB_NAME@" ]; then
 	LIBS="-l${THIS} $LIBS"
 else
