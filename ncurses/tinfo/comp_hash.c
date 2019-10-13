@@ -44,7 +44,7 @@
 #include <tic.h>
 #include <hashsize.h>
 
-MODULE_ID("$Id: comp_hash.c,v 1.49 2019/03/10 00:06:48 tom Exp $")
+MODULE_ID("$Id: comp_hash.c,v 1.51 2019/10/12 16:32:13 tom Exp $")
 
 /*
  * Finds the entry for the given string in the hash table if present.
@@ -63,7 +63,9 @@ _nc_find_entry(const char *string,
 
     hashvalue = data->hash_of(string);
 
-    if (data->table_data[hashvalue] >= 0) {
+    if (hashvalue >= 0
+	&& (unsigned) hashvalue < data->table_size
+	&& data->table_data[hashvalue] >= 0) {
 
 	real_table = _nc_get_table(termcap);
 	ptr = real_table + data->table_data[hashvalue];
@@ -96,7 +98,9 @@ _nc_find_type_entry(const char *string,
     const HashData *data = _nc_get_hash_info(termcap);
     int hashvalue = data->hash_of(string);
 
-    if (data->table_data[hashvalue] >= 0) {
+    if (hashvalue >= 0
+	&& (unsigned) hashvalue < data->table_size
+	&& data->table_data[hashvalue] >= 0) {
 	const struct name_table_entry *const table = _nc_get_table(termcap);
 
 	ptr = table + data->table_data[hashvalue];
@@ -124,7 +128,9 @@ _nc_find_user_entry(const char *string)
 
     hashvalue = data->hash_of(string);
 
-    if (data->table_data[hashvalue] >= 0) {
+    if (hashvalue >= 0
+	&& (unsigned) hashvalue < data->table_size
+	&& data->table_data[hashvalue] >= 0) {
 
 	real_table = _nc_get_userdefs_table();
 	ptr = real_table + data->table_data[hashvalue];

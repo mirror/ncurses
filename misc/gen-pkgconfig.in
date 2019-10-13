@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.38 2019/10/05 22:25:47 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.40 2019/10/12 22:27:10 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -77,13 +77,39 @@ if [ "$includedir" != "/usr/include" ]; then
 	fi
 fi
 
-LDFLAGS=
-if [ "$libdir" != "/usr/lib" ]; then
-	LDFLAGS="$LDFLAGS -L\${libdir}"
-fi
-if [ "x@EXTRA_LDFLAGS@" != "x" ]; then
-	LDFLAGS="$LDFLAGS @EXTRA_LDFLAGS@"
-fi
+lib_flags=
+for opt in -L$libdir @LDFLAGS@ @EXTRA_LDFLAGS@ @LIBS@
+do
+	case $opt in
+	-l*) # LIBS is handled specially below
+		continue
+		;;
+	-Wl,-z,*) # ignore flags used to manipulate shared image
+		continue
+		;;
+	-L*)
+		[ -d ${opt##-L} ] || continue
+		case ${opt##-L} in
+		@LD_SEARCHPATH@) # skip standard libdir
+			continue
+			;;
+		*)
+			found=no
+			for check in $lib_flags
+			do
+				if [ "x$check" = "x$opt" ]
+				then
+					found=yes
+					break
+				fi
+			done
+			[ $found = yes ] && continue
+			;;
+		esac
+		;;
+	esac
+	lib_flags="$lib_flags $opt"
+done
 
 # Check if we should specify the tinfo library explicitly so that terminfo
 # functions or curses variables (which also reside in tinfo) can be linked
@@ -150,7 +176,7 @@ Description: $desc
 Version: \${version}
 URL: https://invisible-island.net/ncurses
 Requires.private: $reqs
-Libs: $LDFLAGS $LIBS
+Libs: $lib_flags $LIBS
 Libs.private: @LIBS@ $main_libs
 Cflags: $CFLAGS
 EOF

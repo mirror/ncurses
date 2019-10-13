@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.40 2019/10/05 22:24:20 tom Exp $
+# $Id: ncurses-config.in,v 1.41 2019/10/12 21:25:17 tom Exp $
 ##############################################################################
 # Copyright (c) 2006-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -103,6 +103,9 @@ lib_flags=
 for opt in -L$libdir @LDFLAGS@ @EXTRA_LDFLAGS@ $LIBS
 do
 	case $opt in
+	-Wl,-z,*) # ignore flags used to manipulate shared image
+		continue
+		;;
 	-L*)
 		[ -d ${opt##-L} ] || continue
 		case ${opt##-L} in

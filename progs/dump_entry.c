@@ -39,7 +39,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.173 2019/05/11 21:02:24 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.175 2019/10/12 15:59:07 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1136,7 +1136,8 @@ fmt_entry(TERMTYPE2 *tterm,
 				*d++ = '\\';
 				*d = ':';
 			    } else if (*d == '\\') {
-				*++d = *s++;
+				if ((*++d = *s++) == '\0')
+				    break;
 			    }
 			    d++;
 			    *d = '\0';
@@ -1396,7 +1397,7 @@ one_one_mapping(const char *mapping)
 
     if (VALID_STRING(mapping)) {
 	int n = 0;
-	while (mapping[n] != '\0') {
+	while (mapping[n] != '\0' && mapping[n + 1] != '\0') {
 	    if (isLine(mapping[n]) &&
 		mapping[n] != mapping[n + 1]) {
 		result = FALSE;

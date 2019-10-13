@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3382 2019/10/05 22:53:18 tom Exp $
+-- $Id: NEWS,v 1.3389 2019/10/12 21:17:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,12 +45,26 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20191012
+	+ amend recent changes to ncurses*-config and pc-files to filter out
+	  Debian linker-flags (report by Sven Joachim, cf: 20150516).
+	+ clarify relationship between tic, infocmp and captoinfo in manpage.
+	+ check for invalid hashcode in _nc_find_type_entry and
+	  _nc_find_name_entry.
+	> fix several errata in tic (reports/testcases by "zjuchenyuan"):
+	+ check for invalid hashcode in _nc_find_entry.
+	+ check for missing character after backslash in fmt_entry
+	+ check for acsc with odd length in dump_entry in check for one-one
+	  mapping (cf: 20060415);
+	+ check length when converting from old AIX box_chars_1 capability,
+	  overlooked in changes to eliminate strcpy (cf: 20001007).
+
 20191005
 	+ modify the ncurse*-config and pc-files to more closely match for the
 	  -I and -l options.
 
 20190928
-	+ amend the ncurse*-config and pc-files to take into account the rpath
+	+ amend the ncurses*-config and pc-files to take into account the rpath
 	  hack which differed between those files.
 	+ improve -L option filtering in ncurses*-config
 	+ improve recovery from error when reading command-character in
