@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.278 2019/07/27 22:44:21 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.279 2019/10/15 22:18:29 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -218,7 +218,8 @@ write_it(ENTRY * ep)
 	    while ((ch = *t++) != 0) {
 		*d++ = (char) ch;
 		if (ch == '\\') {
-		    *d++ = *t++;
+		    if ((*d++ = *t++) == '\0')
+			break;
 		} else if ((ch == '%')
 			   && (*t == L_BRACE)) {
 		    char *v = 0;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -97,7 +97,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.96 2018/05/12 16:46:55 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.97 2019/10/15 23:13:35 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -210,7 +210,7 @@ cvtchar(register const char *sp)
 	    break;
 	default:
 	    c = UChar(*sp);
-	    len = 2;
+	    len = (c != '\0') ? 2 : 1;
 	    break;
 	}
 	break;
@@ -224,13 +224,13 @@ cvtchar(register const char *sp)
 	break;
     default:
 	c = UChar(*sp);
-	len = 1;
+	len = (c != '\0') ? 1 : 0;
     }
     if (isgraph(c) && c != ',' && c != '\'' && c != '\\' && c != ':') {
 	dp = save_string(dp, "%\'");
 	dp = save_char(dp, c);
 	dp = save_char(dp, '\'');
-    } else {
+    } else if (c != '\0') {
 	dp = save_string(dp, "%{");
 	if (c > 99)
 	    dp = save_char(dp, c / 100 + '0');
@@ -313,7 +313,7 @@ _nc_captoinfo(const char *cap, const char *s, int const parameterized)
     if (s == 0)
 	s = "";
     if (parameterized >= 0 && isdigit(UChar(*s)))
-	for (capstart = s;; s++)
+	for (capstart = s; *s != '\0'; s++)
 	    if (!(isdigit(UChar(*s)) || *s == '*' || *s == '.'))
 		break;
 
@@ -360,13 +360,18 @@ _nc_captoinfo(const char *cap, const char *s, int const parameterized)
 		dp = save_string(dp, "%{2}%*%-");
 		break;
 	    case '>':
-		getparm(param, 2);
 		/* %?%{x}%>%t%{y}%+%; */
-		dp = save_string(dp, "%?");
-		s += cvtchar(s);
-		dp = save_string(dp, "%>%t");
-		s += cvtchar(s);
-		dp = save_string(dp, "%+%;");
+		if (s[0] && s[1]) {
+		    getparm(param, 2);
+		    dp = save_string(dp, "%?");
+		    s += cvtchar(s);
+		    dp = save_string(dp, "%>%t");
+		    s += cvtchar(s);
+		    dp = save_string(dp, "%+%;");
+		} else {
+		    _nc_warning("expected two characters after %%>");
+		    dp = save_string(dp, "%>");
+		}
 		break;
 	    case 'a':
 		if ((*s == '=' || *s == '+' || *s == '-'
@@ -492,7 +497,8 @@ _nc_captoinfo(const char *cap, const char *s, int const parameterized)
 	    }
 	    break;
 	default:
-	    dp = save_char(dp, *s++);
+	    if (*s != '\0')
+		dp = save_char(dp, *s++);
 	    break;
 	}
     }
@@ -503,7 +509,7 @@ _nc_captoinfo(const char *cap, const char *s, int const parameterized)
      */
     if (capstart) {
 	dp = save_string(dp, "$<");
-	for (s = capstart;; s++)
+	for (s = capstart; *s != '\0'; s++)
 	    if (isdigit(UChar(*s)) || *s == '*' || *s == '.')
 		dp = save_char(dp, *s);
 	    else
