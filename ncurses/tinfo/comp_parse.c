@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -47,7 +47,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.106 2018/05/26 14:16:46 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.107 2019/10/19 20:47:43 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void NCURSES_API(*_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -180,11 +180,11 @@ remove_collision(char *n1, char *n2)
 			++qend;
 		    while ((*qstart++ = *qend++) != '\0') ;
 		    fprintf(stderr, "...now\t%s\n", p2);
+		    removed = TRUE;
 		} else {
 		    fprintf(stderr, "Cannot remove alias '%.*s'\n",
 			    (int) (qend - qstart), qstart);
 		}
-		removed = TRUE;
 		break;
 	    }
 	}

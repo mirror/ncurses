@@ -43,7 +43,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.28 2019/07/27 23:06:54 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.29 2019/10/19 21:02:19 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -164,13 +164,11 @@ parse_columns(char *buffer)
 
     int col = 0;
 
-#if NO_LEAKS
     if (buffer == 0) {
 	free(list);
 	list = 0;
 	return 0;
     }
-#endif
 
     if (*buffer != '#') {
 	if (list == 0) {
@@ -433,12 +431,11 @@ main(int argc, char **argv)
     }
 
     free(hash_table);
-#if NO_LEAKS
     for (n = 0; (n < tablesize); ++n) {
 	free((void *) name_table[n].ute_name);
     }
     free(name_table);
     parse_columns(0);
-#endif
+
     return EXIT_SUCCESS;
 }

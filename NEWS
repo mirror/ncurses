@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3393 2019/10/16 00:04:31 tom Exp $
+-- $Id: NEWS,v 1.3396 2019/10/19 21:16:45 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191019
+	+ modify make_hash to not require --disable-leaks, to simplify building
+	  with address-sanitizer.
+	+ modify tic to exit if it cannot remove a conflicting name, because
+	  treating that as a partial success can cause an infinite loop in
+	  use-resolution (report/testcase by Hongxu Chen, cf: 20111001).
 
 20191015
 	+ improve buffer-checks in captoinfo.c, for some cases when the
