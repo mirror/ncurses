@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3396 2019/10/19 21:16:45 tom Exp $
+-- $Id: NEWS,v 1.3399 2019/10/27 00:10:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191026
+	+ add a note in man/curs_add_wch.3x about Unicode terminology for the
+	  line-drawing characters (report by Nick Black).
+	+ improve comment in lib_tgoto.c regarding the use of \200 where a
+	  \0 would be intended by the caller (report by "64 bit", cf: 20000923).
+	+ modify linux-16color to accommodate Linux console driver change in
+	  early 2018 (report by Dino Petrucci).
 
 20191019
 	+ modify make_hash to not require --disable-leaks, to simplify building

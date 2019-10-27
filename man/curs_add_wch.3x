@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2001-2015,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2001-2017,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wch.3x,v 1.24 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_add_wch.3x,v 1.25 2019/10/27 00:07:13 tom Exp $
 .TH curs_add_wch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -155,7 +155,28 @@ WACS_VLINE	0x2502 	|	x	vertical line
 .TE
 .PP
 The wide-character configuration of ncurses also defines symbols
-for double-lines:
+for thick lines (\fBacsc\fP \*(``J\*('' to \*(``V\*(''):
+.TS
+l l l l l
+l l l l l
+_ _ _ _ _
+lw(1.5i) lw5 lw5 lw5 lw20.
+\fBACS\fR	\fBUnicode\fP	\fBASCII\fR	\fBacsc\fP	\fBGlyph\fR
+\fBName\fR	\fBDefault\fP	\fBDefault\fR	\fBchar\fP	\fBName\fR
+WACS_T_BTEE	0x253b	+	V	thick tee pointing up
+WACS_T_HLINE	0x2501	-	Q	thick horizontal line
+WACS_T_LLCORNER	0x2517	+	M	thick lower left corner
+WACS_T_LRCORNER	0x251b	+	J	thick lower right corner
+WACS_T_LTEE	0x252b	+	T	thick tee pointing right
+WACS_T_PLUS	0x254b	+	N	thick large plus
+WACS_T_RTEE	0x2523	+	U	thick tee pointing left
+WACS_T_TTEE	0x2533	+	W	thick tee pointing down
+WACS_T_ULCORNER	0x250f	+	L	thick upper left corner
+WACS_T_URCORNER	0x2513	+	K	thick upper right corner
+WACS_T_VLINE	0x2503	|	X	thick vertical line
+.TE
+.PP
+and for double-lines (\fBacsc\fP \*(``A\*('' to \*(``I\*(''):
 .PP
 .TS
 l l l l l
@@ -177,26 +198,15 @@ WACS_D_URCORNER	0x2557	+	B	double upper right corner
 WACS_D_VLINE	0x2551	|	Y	double vertical line
 .TE
 .PP
-and for thick lines:
-.TS
-l l l l l
-l l l l l
-_ _ _ _ _
-lw(1.5i) lw5 lw5 lw5 lw20.
-\fBACS\fR	\fBUnicode\fP	\fBASCII\fR	\fBacsc\fP	\fBGlyph\fR
-\fBName\fR	\fBDefault\fP	\fBDefault\fR	\fBchar\fP	\fBName\fR
-WACS_T_BTEE	0x253b	+	V	thick tee pointing up
-WACS_T_HLINE	0x2501	-	Q	thick horizontal line
-WACS_T_LLCORNER	0x2517	+	M	thick lower left corner
-WACS_T_LRCORNER	0x251b	+	J	thick lower right corner
-WACS_T_LTEE	0x252b	+	T	thick tee pointing right
-WACS_T_PLUS	0x254b	+	N	thick large plus
-WACS_T_RTEE	0x2523	+	U	thick tee pointing left
-WACS_T_TTEE	0x2533	+	W	thick tee pointing down
-WACS_T_ULCORNER	0x250f	+	L	thick upper left corner
-WACS_T_URCORNER	0x2513	+	K	thick upper right corner
-WACS_T_VLINE	0x2503	|	X	thick vertical line
-.TE
+Unicode's descriptions for these characters differs slightly from ncurses,
+by introducing the term \*(``light\*('' (along with less important details).
+Here are its descriptions for the normal, thick, and double horizontal lines:
+.bP
+U+2500 BOX DRAWINGS LIGHT HORIZONTAL
+.bP
+U+2501 BOX DRAWINGS HEAVY HORIZONTAL
+.bP
+U+2550 BOX DRAWINGS DOUBLE HORIZONTAL
 .SH RETURN VALUE
 .PP
 All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success.

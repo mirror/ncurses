@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2001-2015,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 2001-2017,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.24 2017/11/18 23:47:37 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.25 2019/10/27 00:07:13 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -138,24 +138,7 @@
        WACS_VLINE        0x2502     |         x       vertical line
 
        The wide-character configuration of ncurses also  defines  symbols  for
-       double-lines:
-
-       <STRONG>ACS</STRONG>               <STRONG>Unicode</STRONG>   <STRONG>ASCII</STRONG>     <STRONG>acsc</STRONG>    <STRONG>Glyph</STRONG>
-       <STRONG>Name</STRONG>              <STRONG>Default</STRONG>   <STRONG>Default</STRONG>   <STRONG>char</STRONG>    <STRONG>Name</STRONG>
-       ------------------------------------------------------------------------
-       WACS_D_BTEE       0x2569    +         H       double tee pointing up
-       WACS_D_HLINE      0x2550    -         R       double horizontal line
-       WACS_D_LLCORNER   0x255a    +         D       double lower left corner
-       WACS_D_LRCORNER   0x255d    +         A       double lower right corner
-       WACS_D_LTEE       0x2560    +         F       double tee pointing right
-       WACS_D_PLUS       0x256c    +         E       double large plus
-       WACS_D_RTEE       0x2563    +         G       double tee pointing left
-       WACS_D_TTEE       0x2566    +         I       double tee pointing down
-       WACS_D_ULCORNER   0x2554    +         C       double upper left corner
-       WACS_D_URCORNER   0x2557    +         B       double upper right corner
-       WACS_D_VLINE      0x2551    |         Y       double vertical line
-
-       and for thick lines:
+       thick lines (<STRONG>acsc</STRONG> "J" to "V"):
 
        <STRONG>ACS</STRONG>               <STRONG>Unicode</STRONG>   <STRONG>ASCII</STRONG>     <STRONG>acsc</STRONG>    <STRONG>Glyph</STRONG>
        <STRONG>Name</STRONG>              <STRONG>Default</STRONG>   <STRONG>Default</STRONG>   <STRONG>char</STRONG>    <STRONG>Name</STRONG>
@@ -172,11 +155,39 @@
        WACS_T_URCORNER   0x2513    +         K       thick upper right corner
        WACS_T_VLINE      0x2503    |         X       thick vertical line
 
+       and for double-lines (<STRONG>acsc</STRONG> "A" to "I"):
+
+       <STRONG>ACS</STRONG>               <STRONG>Unicode</STRONG>   <STRONG>ASCII</STRONG>     <STRONG>acsc</STRONG>    <STRONG>Glyph</STRONG>
+       <STRONG>Name</STRONG>              <STRONG>Default</STRONG>   <STRONG>Default</STRONG>   <STRONG>char</STRONG>    <STRONG>Name</STRONG>
+       ------------------------------------------------------------------------
+       WACS_D_BTEE       0x2569    +         H       double tee pointing up
+       WACS_D_HLINE      0x2550    -         R       double horizontal line
+       WACS_D_LLCORNER   0x255a    +         D       double lower left corner
+       WACS_D_LRCORNER   0x255d    +         A       double lower right corner
+       WACS_D_LTEE       0x2560    +         F       double tee pointing right
+       WACS_D_PLUS       0x256c    +         E       double large plus
+       WACS_D_RTEE       0x2563    +         G       double tee pointing left
+       WACS_D_TTEE       0x2566    +         I       double tee pointing down
+       WACS_D_ULCORNER   0x2554    +         C       double upper left corner
+       WACS_D_URCORNER   0x2557    +         B       double upper right corner
+       WACS_D_VLINE      0x2551    |         Y       double vertical line
+
+       Unicode's  descriptions  for  these  characters  differs  slightly from
+       ncurses, by introducing the term "light"  (along  with  less  important
+       details).   Here are its descriptions for the normal, thick, and double
+       horizontal lines:
+
+       <STRONG>o</STRONG>   U+2500 BOX DRAWINGS LIGHT HORIZONTAL
+
+       <STRONG>o</STRONG>   U+2501 BOX DRAWINGS HEAVY HORIZONTAL
+
+       <STRONG>o</STRONG>   U+2550 BOX DRAWINGS DOUBLE HORIZONTAL
+
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on success.
 
-       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       Functions with a "mv" prefix first  perform  a  cursor  movement  using
        <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
@@ -186,71 +197,71 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       All  of these functions are described in the XSI Curses standard, Issue
-       4.  The defaults specified for line-drawing  characters  apply  in  the
+       All of these functions are described in the XSI Curses standard,  Issue
+       4.   The  defaults  specified  for line-drawing characters apply in the
        POSIX locale.
 
-       X/Open  Curses  makes it clear that the WACS_ symbols should be defined
+       X/Open Curses makes it clear that the WACS_ symbols should  be  defined
        as a pointer to <STRONG>cchar_t</STRONG> data, e.g., in the discussion of <STRONG>border_set</STRONG>.  A
        few implementations are problematic:
 
        <STRONG>o</STRONG>   NetBSD curses defines the symbols as a <STRONG>wchar_t</STRONG> within a <STRONG>cchar_t</STRONG>.
 
        <STRONG>o</STRONG>   HPUX curses equates some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the analogous <EM>WACS</EM><STRONG>_</STRONG>
-           symbols as if the <EM>ACS</EM><STRONG>_</STRONG> symbols were wide  characters.   The  misde-
-           fined  symbols  are the arrows and other symbols which are not used
+           symbols  as  if  the <EM>ACS</EM><STRONG>_</STRONG> symbols were wide characters.  The misde-
+           fined symbols are the arrows and other symbols which are  not  used
            for line-drawing.
 
        X/Open Curses does not define symbols for thick- or double-lines.  SVr4
-       curses  implementations  defined their line-drawing symbols in terms of
-       intermediate symbols.  This implementation extends those symbols,  pro-
+       curses implementations defined their line-drawing symbols in  terms  of
+       intermediate  symbols.  This implementation extends those symbols, pro-
        viding new definitions which are not in the SVr4 implementations.
 
-       Not  all  Unicode-capable  terminals  provide  support  for VT100-style
+       Not all  Unicode-capable  terminals  provide  support  for  VT100-style
        alternate character sets (i.e., the <STRONG>acsc</STRONG> capability), with their corre-
-       sponding  line-drawing  characters.   X/Open Curses did not address the
-       aspect of integrating Unicode with line-drawing  characters.   Existing
-       implementations  of  Unix curses (AIX, HPUX, Solaris) use only the <STRONG>acsc</STRONG>
-       character-mapping to provide this feature.  As a result,  those  imple-
-       mentations  can  only use single-byte line-drawing characters.  Ncurses
-       5.3 (2002) provided a table of Unicode values to solve these  problems.
+       sponding line-drawing characters.  X/Open Curses did  not  address  the
+       aspect  of  integrating Unicode with line-drawing characters.  Existing
+       implementations of Unix curses (AIX, HPUX, Solaris) use only  the  <STRONG>acsc</STRONG>
+       character-mapping  to  provide this feature.  As a result, those imple-
+       mentations can only use single-byte line-drawing  characters.   Ncurses
+       5.3  (2002) provided a table of Unicode values to solve these problems.
        NetBSD curses incorporated that table in 2010.
 
        In this implementation, the Unicode values are used instead of the ter-
-       minal description's <STRONG>acsc</STRONG> mapping as discussed in  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>  for  the
-       environment  variable  <STRONG>NCURSES_NO_UTF8_ACS</STRONG>.   In contrast, for the same
+       minal  description's  <STRONG>acsc</STRONG>  mapping as discussed in <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> for the
+       environment variable <STRONG>NCURSES_NO_UTF8_ACS</STRONG>.  In contrast,  for  the  same
        cases, the line-drawing characters described in <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG> will use
        only the ASCII default values.
 
-       Having  Unicode available does not solve all of the problems with line-
+       Having Unicode available does not solve all of the problems with  line-
        drawing for curses:
 
-       <STRONG>o</STRONG>   The closest Unicode equivalents to the VT100 graphics  <EM>S1</EM>,  <EM>S3</EM>,  <EM>S7</EM>
-           and  <EM>S9</EM> frequently are not displayed at the regular intervals which
+       <STRONG>o</STRONG>   The  closest  Unicode  equivalents to the VT100 graphics <EM>S1</EM>, <EM>S3</EM>, <EM>S7</EM>
+           and <EM>S9</EM> frequently are not displayed at the regular intervals  which
            the terminal used.
 
-       <STRONG>o</STRONG>   The <EM>lantern</EM> is a special case.  It originated with  the  AT&amp;T  4410
-           terminal  in the early 1980s.  There is no accessible documentation
+       <STRONG>o</STRONG>   The  <EM>lantern</EM>  is  a special case.  It originated with the AT&amp;T 4410
+           terminal in the early 1980s.  There is no accessible  documentation
            depicting the lantern symbol on the AT&amp;T terminal.
 
            Lacking documentation, most readers assume that a <EM>storm</EM> <EM>lantern</EM> was
            intended.  But there are several possibilities, all with problems.
 
-           Unicode  6.0  (2010)  does provide two lantern symbols: U+1F383 and
-           U+1F3EE.  Those were not available  in  2002,  and  are  irrelevant
-           since  they  lie  outside the BMP and as a result are not generally
+           Unicode 6.0 (2010) does provide two lantern  symbols:  U+1F383  and
+           U+1F3EE.   Those  were  not  available  in 2002, and are irrelevant
+           since they lie outside the BMP and as a result  are  not  generally
            available in terminals.  They are not storm lanterns, in any case.
 
            Most <EM>storm</EM> <EM>lanterns</EM> have a tapering glass chimney (to guard against
            tipping); some have a wire grid protecting the chimney.
 
-           For  the  tapering  appearance,   U+2603 was adequate.  In use on a
+           For the tapering appearance,  U+2603 was adequate.   In  use  on  a
            terminal, no one can tell what the image represents.  Unicode calls
            it a snowman.
 
-           Others  have suggested these alternatives: S U+00A7 (section mark),
+           Others have suggested these alternatives: S U+00A7 (section  mark),
            <STRONG>O</STRONG> U+0398 (theta), <STRONG>O</STRONG> U+03A6 (phi), d U+03B4 (delta),  U+2327 (x in a
-           rectangle),   U+256C  (forms  double  vertical and horizontal), and
+           rectangle),  U+256C (forms double  vertical  and  horizontal),  and
            U+2612 (ballot box with x).
 
 

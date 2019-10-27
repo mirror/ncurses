@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.765 $
-#	$Date: 2019/09/22 18:48:45 $
+#	$Revision: 1.766 $
+#	$Date: 2019/10/26 17:00:56 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1126,10 +1126,16 @@ fbterm|FbTerm for Linux with framebuffer,
 # console font but bright background colors turn into dim ones when
 # you use a 512-character console font. This uses bold for bright
 # foreground colors and blink for bright background colors.
+#
+# Interestingly, the original version of this entry in 2009 used a documented
+# (but nonstandard) SGR 21, which was supported in the Linux console since 1992
+# as an equivalent for SGR 22.  Long after (early 2018), someone modified the
+# console driver to make it ignore SGR 21 because the ECMA-48 standard
+# suggested a different use for that particular code.
 linux-16color|linux console with 16 colors,
 	colors#16, ncv#42, pairs#0x100,
 	setab=\E[4%p1%{8}%m%d%?%p1%{7}%>%t;5%e;25%;m,
-	setaf=\E[3%p1%{8}%m%d%?%p1%{7}%>%t;1%e;21%;m,
+	setaf=\E[3%p1%{8}%m%d%?%p1%{7}%>%t;1%e;22%;m,
 	use=linux,
 
 # bterm (bogl 0.1.18)
@@ -26374,5 +26380,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2019-09-22
 #	+ correct a comment -TD
+#
+# 2019-10-26
+#	+ modify linux-16color to accommodate Linux console driver change in
+#	  early 2018 (report by Dino Petrucci).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
