@@ -48,7 +48,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.204 2019/08/10 17:08:00 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.206 2019/11/03 00:07:45 tom Exp $")
 
 /****************************************************************************
  *
@@ -173,16 +173,20 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(set_tabsize) (NCURSES_SP_DCLx int value)
 {
     int code = OK;
-#if USE_REENTRANT
-    if (SP_PARM) {
-	SP_PARM->_TABSIZE = value;
-    } else {
+    if (value <= 0) {
 	code = ERR;
-    }
+    } else {
+#if USE_REENTRANT
+	if (SP_PARM) {
+	    SP_PARM->_TABSIZE = value;
+	} else {
+	    code = ERR;
+	}
 #else
-    (void) SP_PARM;
-    TABSIZE = value;
+	(void) SP_PARM;
+	TABSIZE = value;
 #endif
+    }
     return code;
 }
 

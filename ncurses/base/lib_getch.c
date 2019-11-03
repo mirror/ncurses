@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -42,7 +42,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.137 2018/06/24 00:06:37 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.138 2019/11/03 00:11:16 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -69,16 +69,20 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(set_escdelay) (NCURSES_SP_DCLx int value)
 {
     int code = OK;
-#if USE_REENTRANT
-    if (SP_PARM) {
-	SET_ESCDELAY(value);
-    } else {
+    if (value < 0) {
 	code = ERR;
-    }
+    } else {
+#if USE_REENTRANT
+	if (SP_PARM) {
+	    SET_ESCDELAY(value);
+	} else {
+	    code = ERR;
+	}
 #else
-    (void) SP_PARM;
-    ESCDELAY = value;
+	(void) SP_PARM;
+	ESCDELAY = value;
 #endif
+    }
     return code;
 }
 
@@ -87,12 +91,16 @@ NCURSES_EXPORT(int)
 set_escdelay(int value)
 {
     int code;
+    if (value < 0) {
+	code = ERR;
+    } else {
 #if USE_REENTRANT
-    code = NCURSES_SP_NAME(set_escdelay) (CURRENT_SCREEN, value);
+	code = NCURSES_SP_NAME(set_escdelay) (CURRENT_SCREEN, value);
 #else
-    ESCDELAY = value;
-    code = OK;
+	ESCDELAY = value;
+	code = OK;
 #endif
+    }
     return code;
 }
 #endif

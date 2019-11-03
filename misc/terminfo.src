@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.766 $
-#	$Date: 2019/10/26 17:00:56 $
+#	$Revision: 1.767 $
+#	$Date: 2019/11/02 16:55:15 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4403,6 +4403,15 @@ xterm-r6|xterm X11R6 version,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	use=xterm+kbs, use=vt100+enq,
 xterm-old|antique xterm version,
+	use=xterm-r6,
+# The monochrome version began as a copy of "xtermm" (from Solaris), and was
+# initially part of the xterm sources (in XFree86).  But "xterm" continued to
+# grow, while "xterm-mono" had none of the newer features.  Additionally,
+# inheriting from "xtermm" runs into several problems, including different
+# function keys as well as the fact that the mouse support is not compatible. 
+# This entry restores the original intent, intentionally not an alias to
+# simplify maintenance -TD
+xterm-mono|monochrome xterm,
 	use=xterm-r6,
 # This is the base xterm entry for the xterm supplied with XFree86 3.2 & up.
 # The name has been changed and some aliases have been removed.
@@ -26384,5 +26393,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2019-10-26
 #	+ modify linux-16color to accommodate Linux console driver change in
 #	  early 2018 (report by Dino Petrucci).
+#
+# 2019-11-02
+#	+ add "xterm-mono" to help packagers (report by Sven Joachim) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

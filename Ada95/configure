@@ -4252,19 +4252,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$PKG_CONFIG --libs $cf_ncuconfig_root`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$PKG_CONFIG --libs $cf_ncuconfig_root`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -4629,19 +4629,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$NCURSES_CONFIG --libs`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$NCURSES_CONFIG --libs`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -5647,38 +5647,38 @@ fi
 	;;
 esac
 
-cf_add_libs="$cf_ncurses_LIBS"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in $cf_ncurses_LIBS; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
 if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
 then
 
-cf_add_libs="-l$cf_nculib_root"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in -l$cf_nculib_root; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -6516,19 +6516,19 @@ echo "${as_me:-configure}:6511: testing adding $cf_add_libdir to library-path ..
 	done
 fi
 
-cf_add_libs="$cf_cv_library_file_utf8"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in $cf_cv_library_file_utf8; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -6649,19 +6649,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$PKG_CONFIG --libs $cf_ncuconfig_root`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$PKG_CONFIG --libs $cf_ncuconfig_root`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -7026,19 +7026,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$NCURSES_CONFIG --libs`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$NCURSES_CONFIG --libs`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -8052,38 +8052,38 @@ fi
 	;;
 esac
 
-cf_add_libs="$cf_ncurses_LIBS"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in $cf_ncurses_LIBS; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
 if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
 then
 
-cf_add_libs="-l$cf_nculib_root"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in -l$cf_nculib_root; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -8486,19 +8486,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$PKG_CONFIG --libs $cf_ncuconfig_root`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$PKG_CONFIG --libs $cf_ncuconfig_root`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -8863,19 +8863,19 @@ if test -n "$cf_new_extra_cppflags" ; then
 
 fi
 
-cf_add_libs="`$NCURSES_CONFIG --libs`"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in `$NCURSES_CONFIG --libs`; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -9881,38 +9881,38 @@ fi
 	;;
 esac
 
-cf_add_libs="$cf_ncurses_LIBS"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in $cf_ncurses_LIBS; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
 if ( test -n "$cf_cv_curses_dir" && test "$cf_cv_curses_dir" != "no" )
 then
 
-cf_add_libs="-l$cf_nculib_root"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in -l$cf_nculib_root; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -10356,19 +10356,19 @@ echo "${ECHO_T}$LD_RPATH_OPT" >&6
 echo $ECHO_N "checking if we need a space after rpath option... $ECHO_C" >&6
 		cf_save_LIBS="$LIBS"
 
-cf_add_libs="${LD_RPATH_OPT}$libdir"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in ${LD_RPATH_OPT}$libdir; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -13453,19 +13453,19 @@ EOF
 echo $ECHO_N "checking if we can link with the $cf_lib_pthread library... $ECHO_C" >&6
 	    cf_save_LIBS="$LIBS"
 
-cf_add_libs="-l$cf_lib_pthread"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in -l$cf_lib_pthread; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
@@ -13513,19 +13513,19 @@ echo "${ECHO_T}$with_pthread" >&6
 
 	if test "$with_pthread" = yes ; then
 
-cf_add_libs="-l$cf_lib_pthread"
-# Filter out duplicates - this happens with badly-designed ".pc" files...
-for cf_add_1lib in $LIBS
-do
-	for cf_add_2lib in $cf_add_libs
-	do
-		if test "x$cf_add_1lib" = "x$cf_add_2lib"
-		then
+cf_add_libs="$LIBS"
+# reverse order
+cf_add_0lib=
+for cf_add_1lib in -l$cf_lib_pthread; do cf_add_0lib="$cf_add_1lib $cf_add_0lib"; done
+# filter duplicates
+for cf_add_1lib in $cf_add_0lib; do
+	for cf_add_2lib in $cf_add_libs; do
+		if test "x$cf_add_1lib" = "x$cf_add_2lib"; then
 			cf_add_1lib=
 			break
 		fi
 	done
-	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_libs $cf_add_1lib"
+	test -n "$cf_add_1lib" && cf_add_libs="$cf_add_1lib $cf_add_libs"
 done
 LIBS="$cf_add_libs"
 
