@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3401 2019/11/03 00:12:08 tom Exp $
+-- $Id: NEWS,v 1.3404 2019/11/10 00:18:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191109
+	+ add warning-check in tic for terminals with parm_dch vs parm_ich.
+	+ drop ich1 from rxvt-basic, Eterm and mlterm to improve compatibility
+	  with old non-curses programs -TD
+	+ reviewed st 0.8.2, updated some details -TD
+	+ use ansi+rep several places -TD
+	+ corrected tic's check for ich1 (report by Sebastian J. Bronner,
+	  cf: 20020901).
 
 20191102
 	+ check parameter of set_escdelay, return ERR if negative.

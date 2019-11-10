@@ -48,7 +48,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.279 2019/10/15 22:18:29 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.281 2019/11/09 18:51:36 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2939,6 +2939,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
      * These are probably both or none.
      */
     PAIRED(parm_index, parm_rindex);
+    PAIRED(parm_ich, parm_dch);
 
     /*
      * These may be mismatched because the terminal description relies on
@@ -3055,7 +3056,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
      * ncurses handles it.
      */
     if ((PRESENT(enter_insert_mode) || PRESENT(exit_insert_mode))
-	&& PRESENT(parm_ich)) {
+	&& PRESENT(insert_character)) {
 	_nc_warning("non-curses applications may be confused by ich1 with smir/rmir");
     }
 
