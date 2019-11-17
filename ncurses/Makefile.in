@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.163 2019/06/30 14:57:27 tom Exp $
+# $Id: Makefile.in,v 1.164 2019/11/16 20:42:40 tom Exp $
 ##############################################################################
 # Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -126,12 +126,12 @@ CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@
 CFLAGS_DEFAULT	= $(CFLAGS_@DFT_UPR_MODEL@)
 
 LINK		= $(LIBTOOL)
-LDFLAGS		= @LDFLAGS@ @LD_MODEL@ @LIBS@
+LDFLAGS		= @LDFLAGS@ @LD_MODEL@
 
 SHLIB_DIRS	= -L../lib
-SHLIB_LIST	= $(SHLIB_DIRS) @SHLIB_LIST@
-TINFO_LIST	= $(SHLIB_DIRS) @TINFO_LIST@
-TICS_LIST	= $(SHLIB_DIRS) @TICS_LIST@
+SHLIB_LIST	= $(SHLIB_DIRS) @SHLIB_LIST@ @LIBS@
+TINFO_LIST	= $(SHLIB_DIRS) @TINFO_LIST@ @LIBS@
+TICS_LIST	= $(SHLIB_DIRS) @TICS_LIST@ @LIBS@
 
 RPATH_LIST	= @RPATH_LIST@
 RESULTING_SYMS	= @RESULTING_SYMS@

@@ -28,14 +28,14 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.690 2019/09/27 21:12:34 tom Exp $
+dnl $Id: configure.in,v 1.691 2019/11/16 15:54:47 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl See https://invisible-island.net/autoconf/ for additional information.
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.690 $)
+AC_REVISION($Revision: 1.691 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1616,7 +1616,7 @@ CF_DISABLE_GNAT_PROJECTS
 case $cf_cv_system_name in
 (*mingw32*|*mingw64*)
 	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501 -DWIN32_LEAN_AND_MEAN"
-	LIBS=" -lpsapi $LIBS"
+	# Note: WINVER may be a problem with Windows 10
 	;;
 (*)
 AC_CHECK_FUNC(gettimeofday,

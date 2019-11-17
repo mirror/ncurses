@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3404 2019/11/10 00:18:59 tom Exp $
+-- $Id: NEWS,v 1.3407 2019/11/16 20:48:27 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191116
+	+ modify ncurses/Makefile.in to fix a case where Debian/testing changes
+	  to the ld --as-needed configuration broke ncurses-examples test
+	  packages.
+	+ drop library-dependency on psapi for MinGW port, since win_driver.c
+	  defines PSAPI_VERSION to 2, making it use GetProcessImageFileName
+	  from kernel32.dll (prompted by patch by Simon Sobish, cf: 20140503).
 
 20191109
 	+ add warning-check in tic for terminals with parm_dch vs parm_ich.
