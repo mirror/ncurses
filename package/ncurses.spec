@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.1
-Release: 20191116
+Release: 20191123
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -114,7 +114,12 @@ rm -f test/ncurses
 ( cd test && make ncurses LOCAL_LIBDIR=%{_libdir} && mv ncurses $RPM_BUILD_ROOT/%{_bindir}/ncurses%{MY_ABI} )
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+if rm -rf $RPM_BUILD_ROOT; then
+  echo OK
+else
+  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
+fi
+exit 0
 
 %files
 %defattr(-,root,root,-)
@@ -123,6 +128,9 @@ rm -rf $RPM_BUILD_ROOT
 %{_libdir}/*
 
 %changelog
+
+* Sat Nov 16 2019 Thomas Dickey
+- modify clean-rule to work around Fedora NFS bugs.
 
 * Sat Aug 25 2018 Thomas E. Dickey
 - split spec-file into ncurses6 and ncursest6 to work around toolset breakage

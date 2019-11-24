@@ -2,7 +2,7 @@ Summary: Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.24 2019/09/15 00:07:32 tom Exp $
+# $Id: AdaCurses.spec,v 1.25 2019/11/23 21:15:31 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -65,7 +65,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 )
 
 %clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+if rm -rf $RPM_BUILD_ROOT; then
+  echo OK
+else
+  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
+fi
+exit 0
 
 %files
 %defattr(-,root,root)
@@ -81,6 +86,9 @@ make install DESTDIR=$RPM_BUILD_ROOT
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Nov 16 2019 Thomas Dickey
+- modify clean-rule to work around Fedora NFS bugs.
 
 * Sat Sep 14 2019 Thomas Dickey
 - build-fixes for Fedora29, OpenSUSE

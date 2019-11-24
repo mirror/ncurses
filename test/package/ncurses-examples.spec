@@ -3,7 +3,7 @@ Summary: example/test programs from ncurses
 %global AltProgram ncursest-examples
 %global AppVersion MAJOR.MINOR
 %global AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.14 2019/02/03 01:17:27 tom Exp $
+# $Id: ncurses-examples.spec,v 1.16 2019/11/23 21:11:34 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -86,7 +86,12 @@ make install DESTDIR=$RPM_BUILD_ROOT
 popd
 
 %clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+if rm -rf $RPM_BUILD_ROOT; then
+  echo OK
+else
+  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
+fi
+exit 0
 
 %files -n %{AppProgram}
 %defattr(-,root,root)
@@ -100,6 +105,9 @@ popd
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Nov 16 2019 Thomas Dickey
+- modify clean-rule to work around Fedora NFS bugs.
 
 * Sat Nov 11 2017 Thomas Dickey
 - add example data-files

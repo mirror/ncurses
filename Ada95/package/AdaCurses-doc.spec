@@ -3,7 +3,7 @@ Summary: AdaCurses - Ada95 binding documentation for ncurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
 %define AppPackage %{AppProgram}-doc
-# $Id: AdaCurses-doc.spec,v 1.6 2019/09/07 20:37:52 tom Exp $
+# $Id: AdaCurses-doc.spec,v 1.7 2019/11/23 21:15:53 tom Exp $
 Name: %{AppPackage}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -37,7 +37,12 @@ INSTALL_PROGRAM='${INSTALL}' \
 (cd doc && make install.html DESTDIR=$RPM_BUILD_ROOT )
 
 %clean
-[ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
+if rm -rf $RPM_BUILD_ROOT; then
+  echo OK
+else
+  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
+fi
+exit 0
 
 %files
 %defattr(-,root,root)
@@ -45,6 +50,9 @@ INSTALL_PROGRAM='${INSTALL}' \
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Nov 16 2019 Thomas Dickey
+- modify clean-rule to work around Fedora NFS bugs.
 
 * Sat Sep 07 2019 Thomas Dickey
 - use AppProgram to replace "AdaCurses" globally

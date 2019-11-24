@@ -4,7 +4,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %global AppProgram ncurses-examples
 %global AppVersion MAJOR.MINOR
 %global AppRelease YYYYMMDD
-# $Id: mingw-ncurses-examples.spec,v 1.8 2019/01/27 00:22:16 tom Exp $
+# $Id: mingw-ncurses-examples.spec,v 1.9 2019/11/23 21:13:52 tom Exp $
 Name: mingw32-ncurses6-examples
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -97,7 +97,12 @@ pushd BUILD-W64
 popd
 
 %clean
-rm -rf $RPM_BUILD_ROOT
+if rm -rf $RPM_BUILD_ROOT; then
+  echo OK
+else
+  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
+fi
+exit 0
 
 %defattr(-,root,root,-)
 
@@ -110,6 +115,9 @@ rm -rf $RPM_BUILD_ROOT
 %{mingw64_datadir}/*
 
 %changelog
+
+* Sat Nov 16 2019 Thomas Dickey
+- modify clean-rule to work around Fedora NFS bugs.
 
 * Sat Oct 19 2013 Thomas E. Dickey
 - initial version
