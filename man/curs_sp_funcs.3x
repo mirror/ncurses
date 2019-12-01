@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.16 2019/04/13 16:41:08 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.17 2019/11/30 21:01:26 tom Exp $
 .TH curs_sp_funcs 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .na
 .hy 0
 .SH NAME
@@ -349,7 +353,7 @@ to make it useful for checking if the extension is provided.
 NCURSES_SP_NAME
 The new functions are named using the macro \fINCURSES_SP_NAME\fP,
 which hides the actual implementation.
-Currently this adds a "_sp" suffix to the name of the unextended function.
+Currently this adds a \*(``_sp\*('' suffix to the name of the unextended function.
 This manual page indexes the extensions showing the full name.
 However the proper usage of these functions uses the macro,
 to provide for the possibility of changing the naming convention

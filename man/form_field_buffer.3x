@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.23 2019/01/20 20:19:03 tom Exp $
+.\" $Id: form_field_buffer.3x,v 1.24 2019/11/30 21:02:22 tom Exp $
 .TH form_field_buffer 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -115,7 +119,7 @@ System error occurred (see \fBerrno\fR(3)).
 .B E_BAD_ARGUMENT
 Routine detected an incorrect or out-of-range argument.
 .SH SEE ALSO
-\fBcurses\fR(3X) and related pages whose names begin "form_" for detailed
+\fBcurses\fR(3X) and related pages whose names begin \*(``form_\*('' for detailed
 descriptions of the entry points.
 .SH NOTES
 The header file \fB<form.h>\fR automatically includes the header file

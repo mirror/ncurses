@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.55 2019/03/23 21:51:12 tom Exp $
+.\" $Id: curs_util.3x,v 1.56 2019/11/30 21:04:02 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -114,8 +114,8 @@ Values above 256 may be the names of the names of function keys.
 .bP
 Otherwise (if there is no corresponding name) the function returns null,
 to denote an error.
-X/Open also lists an "UNKNOWN KEY" return value, which some implementations
-return rather than null.
+X/Open also lists an \*(``UNKNOWN KEY\*('' return value,
+which some implementations return rather than null.
 .LP
 The corresponding \fBkey_name\fR returns a character string corresponding
 to the wide-character value \fIw\fR.
@@ -289,7 +289,7 @@ The \fBkeyname\fP function may return the names of user-defined
 string capabilities which are defined in the terminfo entry via the \fB\-x\fP
 option of \fB@TIC@\fP.
 This implementation automatically assigns at run-time keycodes to
-user-defined strings which begin with "k".
+user-defined strings which begin with \*(``k\*(''.
 The keycodes start at KEY_MAX, but are not guaranteed to be
 the same value for different runs because user-defined codes are
 merged from all terminal descriptions which have been loaded.

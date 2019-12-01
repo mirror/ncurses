@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.47 2019/02/16 23:50:17 tom Exp $
+.\" $Id: curs_addch.3x,v 1.50 2019/11/30 20:07:00 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -185,6 +185,31 @@ The defaults specified for forms-drawing characters apply in the POSIX locale.
 X/Open Curses states that the \fIACS_\fP definitions are \fBchar\fP constants.
 For the wide-character implementation (see \fBcurs_add_wch\fP),
 there are analogous \fIWACS_\fP definitions which are \fBcchar_t\fP constants.
+Some implementations are problematic:
+.bP
+Some implementations define the ACS symbols to a constant
+(such as Solaris), while others define those to entries in an array.
+.IP
+This implementation uses an array \fBacs_map\fP, as done in SVr4 curses.
+NetBSD also uses an array, actually named \fB_acs_char\fP, with a \fB#define\fP
+for compatibility.
+.bP
+HPUX curses equates some of the \fIACS_\fP symbols
+to the analogous \fIWACS_\fP symbols as if the \fIACS_\fP symbols were
+wide characters.
+The misdefined symbols are the arrows
+and other symbols which are not used for line-drawing.
+.bP
+X/Open Curses (issues 2 through 7) has a typographical error
+for the ACS_LANTERN symbol, equating its \*(``VT100+ Character\*(''
+to \fBI\fP (capital I), while the header files for SVr4 curses
+and the various implementations use \fBi\fP (lowercase).
+.IP
+None of the terminal descriptions on Unix platforms use uppercase-I,
+except for Solaris (i.e., \fIscreen\fP's terminal description,
+apparently based on the X/Open documentation around 1995).
+On the other hand, the terminal description \fIgs6300\fP
+(AT&T PC6300 with EMOTS Terminal Emulator) uses lowercase-i.
 .LP
 Some ACS symbols
 (ACS_S3,
@@ -224,7 +249,7 @@ that the non-character information (attributes and color) was
 separated from the character information which is packed in a \fBchtype\fP
 to pass to \fBwaddch\fP.
 .PP
-In this implementation, \fBchtype\fP holds eight bits.
+In this implementation, \fBchtype\fP holds an eight-bit character.
 But ncurses allows multibyte characters to be passed in a succession
 of calls to \fBwaddch\fP.
 The other implementations do not do this;

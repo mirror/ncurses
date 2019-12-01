@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.141 2019/02/16 15:07:20 tom Exp $
+.\" $Id: ncurses.3x,v 1.143 2019/11/30 20:47:07 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -267,7 +267,7 @@ There are two common configurations of the library:
 .RS 3
 .TP 5
 .I ncurses
-the "normal" library, which handles 8-bit characters.
+the \*(``normal\*('' library, which handles 8-bit characters.
 The normal (8-bit) library stores characters combined with attributes
 in \fBchtype\fP data.
 .IP
@@ -278,9 +278,10 @@ In either case, the data is stored in something like an integer.
 Each cell (row and column) in a \fBWINDOW\fP is stored as a \fBchtype\fP.
 .TP 5
 .I ncursesw
-the so-called "wide" library, which handles multibyte characters
+the so-called \*(``wide\*('' library, which handles multibyte characters
 (see the section on \fBALTERNATE CONFIGURATIONS\fP).
-The "wide" library includes all of the calls from the "normal" library.
+The \*(``wide\*('' library includes all of the calls
+from the \*(``normal\*('' library.
 It adds about one third more calls using data types which store
 multibyte characters:
 .RS 5
@@ -294,9 +295,13 @@ may be more than one character per cell.
 The video attributes and color are stored in separate fields of the structure.
 .IP
 Each cell (row and column) in a \fBWINDOW\fP is stored as a \fBcchar_t\fP.
+.IP
+The \fBsetcchar\fP(3X) and \fBgetcchar\fP(3X)
+functions store and retrieve the data from
+a \fBcchar_t\fP structure.
 .TP 5
 .B wchar_t
-stores a "wide" character.
+stores a \*(``wide\*('' character.
 Like \fBchtype\fP, this may be an integer.
 .TP 5
 .B wint_t
@@ -304,10 +309,10 @@ stores a \fBwchar_t\fP or \fBWEOF\fP \- not the same, though both may have
 the same size.
 .RE
 .IP
-The "wide" library provides new functions which are analogous to
-functions in the "normal" library.
+The \*(``wide\*('' library provides new functions which are analogous to
+functions in the \*(``normal\*('' library.
 There is a naming convention which relates many of the normal/wide variants:
-a "_w" is inserted into the name.
+a \*(``_w\*('' is inserted into the name.
 For example, \fBwaddch\fP becomes \fBwadd_wch\fP.
 .RE
 .PP
@@ -928,7 +933,7 @@ Setting it to an empty value disables the GPM interface;
 using the built-in support for xterm, etc.
 .PP
 If the environment variable is absent,
-ncurses will attempt to open GPM if \fBTERM\fP contains "linux".
+ncurses will attempt to open GPM if \fBTERM\fP contains \*(``linux\*(''.
 .SS NCURSES_NO_HARD_TABS
 .PP
 \fBNcurses\fP may use tabs as part of the cursor movement optimization.
@@ -945,7 +950,7 @@ setting this environment variable.
 .SS NCURSES_NO_PADDING
 .PP
 Most of the terminal descriptions in the terminfo database are written
-for real "hardware" terminals.
+for real \*(``hardware\*('' terminals.
 Many people use terminal emulators
 which run in a windowing environment and use curses-based applications.
 Terminal emulators can duplicate
@@ -1019,7 +1024,7 @@ and is likely to work for terminal emulators.
 .PP
 When setting this variable, you should set it to a nonzero value.
 Setting it to zero (or to a nonnumber)
-disables the special check for "linux" and "screen".
+disables the special check for \*(``linux\*('' and \*(``screen\*(''.
 .PP
 As an alternative to the environment variable,
 ncurses checks for an extended terminfo capability \fBU8\fP.
@@ -1041,7 +1046,7 @@ xterm-utf8|xterm relying on UTF-8 line-graphics,
 .ft
 .RE
 .PP
-The name "U8" is chosen to be two characters,
+The name \*(``U8\*('' is chosen to be two characters,
 to permit it to be used by applications that use ncurses'
 termcap interface.
 .SS NCURSES_TRACE
@@ -1217,7 +1222,7 @@ to build executables.
 The configure script renames the library and
 (if the \fB\-\-disable\-overwrite\fP option is used)
 puts the header files in a different subdirectory.
-All of the library names have a "w" appended to them,
+All of the library names have a \*(``w\*('' appended to them,
 i.e., instead of
 .NS
 \fB\-lncurses\fR
@@ -1263,8 +1268,8 @@ from the same set of headers.
 .TP 5
 \-\-with\-pthread
 The configure script renames the library.
-All of the library names have a "t" appended to them
-(before any "w" added by \fB\-\-enable\-widec\fP).
+All of the library names have a \*(``t\*('' appended to them
+(before any \*(``w\*('' added by \fB\-\-enable\-widec\fP).
 .IP
 The global variables such as \fBLINES\fP are replaced by macros to
 allow read-only access.
@@ -1280,8 +1285,8 @@ Some applications (very few) may require changes to work with this convention.
 \-\-with\-profile
 The shared and normal (static) library names differ by their suffixes,
 e.g., \fBlibncurses.so\fP and \fBlibncurses.a\fP.
-The debug and profiling libraries add a "_g" and a "_p" to the root
-names respectively,
+The debug and profiling libraries add a \*(``_g\*(''
+and a \*(``_p\*('' to the root names respectively,
 e.g., \fBlibncurses_g.a\fP and \fBlibncurses_p.a\fP.
 .TP 5
 \-\-with\-trace
@@ -1297,7 +1302,7 @@ directory containing initialization files for the terminal capability database
 terminal capability database
 .SH SEE ALSO
 \fBterminfo\fR(\*n) and related pages whose names begin
-"curs_" for detailed routine descriptions.
+\*(``curs_\*('' for detailed routine descriptions.
 .br
 \fBcurs_variables\fR(3X)
 .br

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.64 2018/07/28 22:15:59 tom Exp $
+.\" $Id: curs_attr.3x,v 1.65 2019/11/30 21:06:30 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -262,7 +262,7 @@ The routine \fBstandend\fR is the same
 as \fBattrset(A_NORMAL)\fR or \fBattrset(0)\fR, that is, it turns off all
 attributes.
 .PP
-X/Open does not mark these "restricted", because
+X/Open does not mark these \*(``restricted\*('', because
 .bP
 they have well established legacy use, and
 .bP
@@ -512,7 +512,7 @@ Use \fBtouchwin\fR to force the screen to match the updated attributes.
 The XSI Curses standard states that whether the traditional functions
 \fBattron\fR/\fBattroff\fR/\fBattrset\fR can manipulate attributes other than
 \fBA_BLINK\fR, \fBA_BOLD\fR, \fBA_DIM\fR, \fBA_REVERSE\fR, \fBA_STANDOUT\fR, or
-\fBA_UNDERLINE\fR is "unspecified".
+\fBA_UNDERLINE\fR is \*(``unspecified\*(''.
 Under this implementation as well as
 SVr4 curses, these functions correctly manipulate all other highlights
 (specifically, \fBA_ALTCHARSET\fR, \fBA_PROTECT\fR, and \fBA_INVIS\fR).
@@ -590,7 +590,7 @@ for \fBwcolor_set\fP is outside the range 0..COLOR_PAIRS\-1.
 does not return an error if either of the parameters of \fBwattr_get\fP
 used for retrieving attribute or color-pair values is \fBNULL\fP.
 .PP
-Functions with a "mv" prefix first perform a cursor movement using
+Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .\" ---------------------------------------------------------------------------

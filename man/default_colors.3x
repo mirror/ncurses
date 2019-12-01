@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2016,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -28,8 +28,12 @@
 .\"
 .\" Author: Thomas E. Dickey 1997,1999,2000,2005
 .\"
-.\" $Id: default_colors.3x,v 1.27 2018/07/28 22:08:59 tom Exp $
+.\" $Id: default_colors.3x,v 1.28 2019/11/30 21:06:30 tom Exp $
 .TH default_colors 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .SH NAME
 \fBuse_default_colors\fR,
 \fBassume_default_colors\fR \- use terminal's default colors
@@ -52,7 +56,7 @@ Some applications are designed to work with the default background,
 using colors only for text.
 For example, there are several implementations of the \fBls\fP program
 which use colors to denote different file types or permissions.
-These "color ls" programs do not necessarily modify the background color,
+These \*(``color ls\*('' programs do not necessarily modify the background color,
 typically using only the \fBsetaf\fP terminfo capability to set the
 foreground color.
 Full-screen applications that use default colors can achieve similar
@@ -111,7 +115,7 @@ of the screen.
 The bottom portion of the screen, which is of adjustable
 size, is left uncolored to display the results from shell commands.
 The top portion of the screen colors filenames using a scheme like the
-"color ls" programs.
+\*(``color ls\*('' programs.
 Attempting to manage the background color of the screen for this application
 would give unsatisfactory results for a variety of reasons.
 This extension was devised after

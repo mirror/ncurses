@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.97 2019/07/20 10:20:57 tom Exp $
+.\" $Id: terminfo.tail,v 1.98 2019/11/30 20:54:32 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -478,7 +478,7 @@ set static variable \fI[a\-z]\fP to \fIpop()\fP
 \fB%g\fP\fI[A\-Z]\fP
 get static variable \fI[a\-z]\fP and push it
 .IP
-The terms "static" and "dynamic" are misleading.
+The terms \*(``static\*('' and \*(``dynamic\*('' are misleading.
 Historically, these are simply two different sets of variables,
 whose values are not reset between calls to \fBtparm\fP(3X).
 However, that fact is not documented in other implementations.
@@ -1763,14 +1763,14 @@ Some application programs allocate more than
 the recommended 1K for the termcap entry; others do not.
 .PP
 Each termcap entry has two important sizes associated with it: before
-"tc" expansion, and after "tc" expansion.
-"tc" is the capability that
+\*(``tc\*('' expansion, and after \*(``tc\*('' expansion.
+\*(``tc\*('' is the capability that
 tacks on another termcap entry to the end of the current one, to add
 on its capabilities.
-If a termcap entry does not use the "tc"
+If a termcap entry does not use the \*(``tc\*(''
 capability, then of course the two lengths are the same.
 .PP
-The "before tc expansion" length is the most important one, because it
+The \*(``before tc expansion\*('' length is the most important one, because it
 affects more than just users of that particular terminal.
 This is the
 length of the entry as it exists in /etc/termcap, minus the
@@ -1802,16 +1802,16 @@ If a
 termcap library truncates long entries, like OSF/1 3.0, it is immune to dying
 here but will return incorrect data for the terminal.
 .PP
-The "after tc expansion" length will have a similar effect to the
+The \*(``after tc expansion\*('' length will have a similar effect to the
 above, but only for people who actually set TERM to that terminal
-type, since \fBtgetent\fP only does "tc" expansion once it is found the
+type, since \fBtgetent\fP only does \*(``tc\*('' expansion once it is found the
 terminal type it was looking for, not while searching.
 .PP
 In summary, a termcap entry that is longer than 1023 bytes can cause,
 on various combinations of termcap libraries and applications, a core
 dump, warnings, or incorrect operation.
 If it is too long even before
-"tc" expansion, it will have this effect even for users of some other
+\*(``tc\*('' expansion, it will have this effect even for users of some other
 terminal types and users whose TERM variable does not have a termcap
 entry.
 .PP

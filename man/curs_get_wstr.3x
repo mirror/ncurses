@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wstr.3x,v 1.18 2019/07/20 19:14:56 tom Exp $
+.\" $Id: curs_get_wstr.3x,v 1.19 2019/11/30 20:59:22 tom Exp $
 .TH curs_get_wstr 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -164,7 +168,7 @@ Functions using a window parameter return an error if it is null.
 returns an error if the associated call to \fBwget_wch\fP failed.
 .RE
 .PP
-Functions with a "mv" prefix first perform a cursor movement using
+Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH PORTABILITY

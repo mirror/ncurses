@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.47 2019/02/16 23:50:17 tom Exp @
+  * @Id: curs_addch.3x,v 1.50 2019/11/30 20:07:00 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -186,7 +186,31 @@
 </PRE><H3><a name="h3-ACS-Symbols">ACS Symbols</a></H3><PRE>
        X/Open Curses states that the <EM>ACS</EM><STRONG>_</STRONG> definitions are <STRONG>char</STRONG> constants.  For
        the wide-character implementation (see <STRONG>curs_add_wch</STRONG>), there are  analo-
-       gous <EM>WACS</EM><STRONG>_</STRONG> definitions which are <STRONG>cchar_t</STRONG> constants.
+       gous  <EM>WACS</EM><STRONG>_</STRONG>  definitions which are <STRONG>cchar_t</STRONG> constants.  Some implementa-
+       tions are problematic:
+
+       <STRONG>o</STRONG>   Some implementations define the ACS symbols to a constant (such  as
+           Solaris), while others define those to entries in an array.
+
+           This  implementation uses an array <STRONG>acs_map</STRONG>, as done in SVr4 curses.
+           NetBSD also uses an array, actually named <STRONG>_acs_char</STRONG>, with a <STRONG>#define</STRONG>
+           for compatibility.
+
+       <STRONG>o</STRONG>   HPUX curses equates some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the analogous <EM>WACS</EM><STRONG>_</STRONG>
+           symbols as if the <EM>ACS</EM><STRONG>_</STRONG> symbols were wide  characters.   The  misde-
+           fined  symbols  are the arrows and other symbols which are not used
+           for line-drawing.
+
+       <STRONG>o</STRONG>   X/Open Curses (issues 2 through 7) has a  typographical  error  for
+           the ACS_LANTERN symbol, equating its "VT100+ Character" to <STRONG>I</STRONG> (capi-
+           tal I), while the header files for  SVr4  curses  and  the  various
+           implementations use <STRONG>i</STRONG> (lowercase).
+
+           None  of the terminal descriptions on Unix platforms use uppercase-
+           I, except for Solaris (i.e., <EM>screen</EM>'s terminal description,  appar-
+           ently based on the X/Open documentation around 1995).  On the other
+           hand, the terminal description <EM>gs6300</EM> (AT&amp;T PC6300 with EMOTS  Ter-
+           minal Emulator) uses lowercase-i.
 
        Some  ACS  symbols  (ACS_S3,  ACS_S7,  ACS_LEQUAL,  ACS_GEQUAL, ACS_PI,
        ACS_NEQUAL, ACS_STERLING) were not documented in any publicly  released
@@ -217,11 +241,11 @@
        acter information (attributes and color) was separated from the charac-
        ter information which is packed in a <STRONG>chtype</STRONG> to pass to <STRONG>waddch</STRONG>.
 
-       In this implementation, <STRONG>chtype</STRONG> holds eight bits.   But  ncurses  allows
-       multibyte  characters  to be passed in a succession of calls to <STRONG>waddch</STRONG>.
-       The other implementations do not do  this;  a  call  to  <STRONG>waddch</STRONG>  passes
-       exactly one character which may be rendered as one or more cells on the
-       screen depending on whether it is printable.
+       In this implementation,  <STRONG>chtype</STRONG>  holds  an  eight-bit  character.   But
+       ncurses  allows  multibyte  characters  to be passed in a succession of
+       calls to <STRONG>waddch</STRONG>.  The other implementations do not do this; a  call  to
+       <STRONG>waddch</STRONG>  passes  exactly  one  character which may be rendered as one or
+       more cells on the screen depending on whether it is printable.
 
        Depending on the locale settings, ncurses will inspect the byte  passed
        in  each  call  to <STRONG>waddch</STRONG>, and check if the latest call will continue a

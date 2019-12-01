@@ -26,8 +26,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.41 2019/03/23 21:51:12 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.42 2019/11/30 21:01:40 tom Exp $
 .TH curs_termcap 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -213,7 +217,7 @@ if the string is indeed terminfo-style by looking for "%p" parameters or
 appear to be terminfo).
 .PP
 Because terminfo conventions for representing padding in string capabilities
-differ from termcap's, \fBtputs("50");\fR will put out a literal "50" rather
+differ from termcap's, \fBtputs("50");\fR will put out a literal \*(``50\*('' rather
 than busy-waiting for 50 milliseconds.
 Cope with it.
 .PP

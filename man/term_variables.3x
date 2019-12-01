@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.10 2019/03/23 21:51:12 tom Exp $
+.\" $Id: term_variables.3x,v 1.11 2019/11/30 20:51:36 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -101,7 +101,7 @@ the \fBacs_map\fP array holds information used to translate cells
 with the \fBA_ALTCHARSET\fP video attribute into line-drawing characters.
 .PP
 The encoding of the information in this array has changed periodically.
-Application developers need only know that it is used for the "ACS_"
+Application developers need only know that it is used for the \*(``ACS_\*(''
 constants in <curses.h>.
 .PP
 The comparable data for the wide-character library is a private variable.
@@ -123,7 +123,7 @@ These are available to other applications,
 although the hash-tables used by
 the terminfo and termcap functions are not available.
 .PP
-The long terminfo capability names use a "l" (ell) in their names:
+The long terminfo capability names use a \*(``l\*('' (ell) in their names:
 \fBboolfnames\fP,
 \fBnumfnames\fP, and
 \fBstrfnames\fP.

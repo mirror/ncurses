@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_info.3x,v 1.15 2019/01/20 20:31:42 tom Exp $
+.\" $Id: form_field_info.3x,v 1.16 2019/11/30 21:02:29 tom Exp $
 .TH form_field_info 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .SH NAME
 \fBdynamic_field_info\fP,
 \fBfield_info\fR \- retrieve field characteristics
@@ -65,7 +69,7 @@ System error occurred (see \fBerrno\fR(3)).
 .B E_BAD_ARGUMENT
 Routine detected an incorrect or out-of-range argument.
 .SH SEE ALSO
-\fBcurses\fR(3X) and related pages whose names begin "form_" for detailed
+\fBcurses\fR(3X) and related pages whose names begin \*(``form_\*('' for detailed
 descriptions of the entry points.
 .SH NOTES
 The header file \fB<form.h>\fR automatically includes the header file

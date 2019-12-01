@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.75 2019/10/12 20:56:38 tom Exp $
+.\" $Id: tic.1m,v 1.76 2019/11/30 20:51:55 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -98,7 +98,7 @@ default directory name (only adding a ".db" suffix).
 .PP
 In either case (directory or hashed database),
 \fB@TIC@\fP will create the container if it does not exist.
-For a directory, this would be the "terminfo" leaf,
+For a directory, this would be the \*(``terminfo\*('' leaf,
 versus a "terminfo.db" file.
 .PP
 The results are normally placed in the system terminfo database \fB\*d\fR.
@@ -282,7 +282,7 @@ versions of terminfo like those on SVr1, Ultrix, or HP/UX that do not support
 the full set of SVR4/XSI Curses terminfo; and outright broken ports like AIX 3.x
 that have their own extensions incompatible with SVr4/XSI.
 Available subsets
-are "SVr1", "Ultrix", "HP", "BSD" and "AIX";
+are \*(``SVr1\*('', \*(``Ultrix\*('', \*(``HP\*('', \*(``BSD\*('' and \*(``AIX\*('';
 see \fBterminfo\fR(\*n) for details.
 .TP
 \fB\-r\fR
