@@ -28,7 +28,7 @@
 /*
  * clone of view.c, using pads
  *
- * $Id: padview.c,v 1.14 2019/07/13 20:41:47 tom Exp $
+ * $Id: padview.c,v 1.15 2019/12/07 18:06:12 tom Exp $
  */
 
 #include <test.priv.h>
@@ -324,11 +324,11 @@ main(int argc, char *argv[])
 		int tvalue = (int) strtol(optarg, &next, 0);
 		if (tvalue < 0 || (next != 0 && *next != 0))
 		    usage();
-		trace((unsigned) tvalue);
+		curses_trace((unsigned) tvalue);
 	    }
 	    break;
 	case 't':
-	    trace(TRACE_CALLS);
+	    curses_trace(TRACE_CALLS);
 	    break;
 #endif
 	default:

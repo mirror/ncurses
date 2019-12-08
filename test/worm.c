@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -52,7 +52,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.79 2018/07/21 21:40:00 tom Exp $
+  $Id: worm.c,v 1.80 2019/12/07 19:04:09 tom Exp $
 */
 
 #include <test.priv.h>
@@ -608,10 +608,10 @@ main(int argc, char *argv[])
 #ifdef TRACE
 	    if (trace_start || trace_end) {
 		if (generation == trace_start) {
-		    trace(TRACE_CALLS);
+		    curses_trace(TRACE_CALLS);
 		    get_input();
 		} else if (generation == trace_end) {
-		    trace(0);
+		    curses_trace(0);
 		    get_input();
 		}
 

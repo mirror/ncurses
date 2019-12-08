@@ -47,7 +47,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.92 2019/03/23 23:47:16 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.94 2019/12/07 22:32:36 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -91,10 +91,14 @@ NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 #define MyPath		_nc_globals.trace_fname
 #define MyLevel		_nc_globals.trace_level
 #define MyNested	_nc_globals.nested_tracef
+#endif /* TRACE */
 
-NCURSES_EXPORT(void)
-trace(const unsigned int tracelevel)
+NCURSES_EXPORT(unsigned)
+curses_trace(unsigned tracelevel)
 {
+    unsigned result;
+#if defined(TRACE)
+    result = _nc_tracing;
     if ((MyFP == 0) && tracelevel) {
 	MyInit = TRUE;
 	if (MyFD >= 0) {
@@ -146,6 +150,18 @@ trace(const unsigned int tracelevel)
 	_nc_tracing = tracelevel;
 	_tracef("tracelevel=%#x", tracelevel);
     }
+#else
+    (void) tracelevel;
+    result = 0;
+#endif
+    return result;
+}
+
+#if defined(TRACE)
+NCURSES_EXPORT(void)
+trace(const unsigned int tracelevel)
+{
+    curses_trace(tracelevel);
 }
 
 static void

@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.625 2019/07/28 18:32:05 tom Exp $
+ * $Id: curses.priv.h,v 1.626 2019/12/07 20:08:06 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1771,7 +1771,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 	if ((_nc_tracing & TRACE_MAXIMUM) == 0) { \
 	    int t = _nc_getenv_num("NCURSES_TRACE"); \
 	    if (t >= 0) \
-		trace((unsigned) t); \
+		curses_trace((unsigned) t); \
 	}
 #else
 #define START_TRACE() /* nothing */

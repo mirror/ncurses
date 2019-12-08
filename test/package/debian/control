@@ -9,7 +9,7 @@ Homepage: https://invisible-island.net/ncurses/ncurses-examples.html
 Package: ncurses-examples
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: ncurses-examples - example/test programs from ncurses
+Description: example/test programs from ncurses
  These are the example/test programs from the ncurses distribution.
  .
  This package installs in "bin/ncurses-examples" to avoid conflict with other
@@ -18,7 +18,7 @@ Description: ncurses-examples - example/test programs from ncurses
 Package: ncursest-examples
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: ncurses-examples - example/test programs from ncurses
+Description: example/test programs from ncurses
  These are the example/test programs from the ncurses distribution, using
  the thread configuration.
  .

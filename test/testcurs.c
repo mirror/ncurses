@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.53 2017/12/23 21:38:26 tom Exp $
+ * $Id: testcurs.c,v 1.54 2019/12/07 18:06:12 tom Exp $
  */
 
 #include <test.priv.h>
@@ -59,7 +59,7 @@ initTest(WINDOW **win)
     PDC_debug("initTest called\n");
 #endif
 #ifdef TRACE
-    trace(TRACE_MAXIMUM);
+    curses_trace(TRACE_MAXIMUM);
 #endif
     initscr();
 #ifdef PDCDEBUG

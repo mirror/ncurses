@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.69 2019/08/24 21:41:50 tom Exp $
+ * $Id: demo_menus.c,v 1.70 2019/12/07 18:06:12 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -139,7 +139,7 @@ wGetchar(WINDOW *win)
 	} else {
 	    _nc_tracing = save_trace;
 	}
-	trace(_nc_tracing);
+	curses_trace(_nc_tracing);
 	if (_nc_tracing)
 	    Trace(("TOGGLE-TRACING ON"));
     }
@@ -631,7 +631,7 @@ perform_trace_menu(int cmd)
 		    newtrace |= td->mask;
 		}
 	    }
-	    trace(newtrace);
+	    curses_trace(newtrace);
 	    Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
 	    MvWPrintw(status, 1, 0,
@@ -1016,7 +1016,7 @@ main(int argc, char *argv[])
 #endif /* HAVE_RIPOFFLINE */
 #ifdef TRACE
 	case 't':
-	    trace((unsigned) strtoul(optarg, 0, 0));
+	    curses_trace((unsigned) strtoul(optarg, 0, 0));
 	    break;
 #endif
 	default:

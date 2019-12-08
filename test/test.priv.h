@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.182 2019/04/20 20:15:39 tom Exp $ */
+/* $Id: test.priv.h,v 1.183 2019/12/07 19:03:20 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -976,9 +976,9 @@ extern int TABSIZE;
 #endif
 
 #if !HAVE_STRSTR
-extern char * _nc_strstr (const char *, const char *);
+extern char *_nc_strstr(const char *, const char *);
 #define strstr(a,b) _nc_strstr((a),(b))
-#endif	/* !HAVE_STRSTR */
+#endif /* !HAVE_STRSTR */
 
 /* Use this to quiet gcc's -Wwrite-strings warnings, but accommodate SVr4
  * curses which doesn't have const parameters declared (so far) in the places
@@ -1129,7 +1129,7 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 	if ((_nc_tracing & TRACE_MAXIMUM) == 0) { \
 	    int t = _nc_getenv_num("NCURSES_TRACE"); \
 	    if (t >= 0) \
-		trace((unsigned) t); \
+		curses_trace((unsigned) t); \
 	}
 extern unsigned _nc_tracing;
 extern int _nc_getenv_num(const char *);

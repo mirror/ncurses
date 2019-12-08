@@ -33,7 +33,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.79 2019/07/20 20:19:54 tom Exp $
+ * $Id: tic.h,v 1.80 2019/12/07 16:05:22 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -361,7 +361,7 @@ extern NCURSES_EXPORT(int) _nc_tic_written (void);
 #endif /* NCURSES_INTERNALS */
 
 /*
- * These entrypoints are used by tack.
+ * These entrypoints were used by tack before 1.08.
  */
 
 #undef  NCURSES_TACK_1_08

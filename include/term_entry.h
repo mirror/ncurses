@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -32,7 +32,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.57 2018/05/26 13:50:53 tom Exp $ */
+/* $Id: term_entry.h,v 1.58 2019/12/07 16:11:15 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -208,7 +208,7 @@ extern NCURSES_EXPORT(void) _nc_trace_xnames (TERMTYPE *);
 #endif /* NCURSES_INTERNALS */
 
 /*
- * These entrypoints are used by tack.
+ * These entrypoints were used by tack before 1.08.
  */
 
 #undef  NCURSES_TACK_1_08

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2000-2016,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2000-2017,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,11 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.19 2017/11/18 23:47:37 tom Exp $
+.\" $Id: curs_trace.3x,v 1.20 2019/12/07 18:55:02 tom Exp $
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -35,6 +39,7 @@
 .na
 .hy 0
 .SH NAME
+\fBcurses_trace\fR,
 \fBtrace\fR,
 \fB_tracef\fR,
 \fB_traceattr\fR,
@@ -52,7 +57,7 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fR
+\fBunsigned curses_trace(const unsigned \fP\fIparam\fP\fB);\fR
 .sp
 \fBvoid _tracef(const char *\fP\fIformat\fP\fB, ...);\fR
 .sp
@@ -75,34 +80,54 @@
 \fBchar *_nc_tracebits(void);\fR
 .br
 \fBchar *_tracemouse(const MEVENT *\fP\fIevent\fP\fB);\fR
+.sp
+/* deprecated */
+.br
+\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fR
 .SH DESCRIPTION
-The \fBtrace\fR routines are used for debugging the ncurses libraries,
+The \fIcurses trace\fR routines are used for debugging the ncurses libraries,
 as well as applications which use the ncurses libraries.
-These functions are normally available only with the debugging library
-e.g., \fIlibncurses_g.a\fR, but may be compiled into any model (shared, static,
+Some limitations apply:
+.bP
+Aside from \fBcurses_trace\fP,
+the other functions are normally available only with the debugging library
+e.g., \fIlibncurses_g.a\fR.
+.IP
+All of the trace functions may be compiled into any model (shared, static,
 profile) by defining the symbol \fBTRACE\fR.
-Additionally, some functions are only available with the wide-character
-configuration of the libraries.
+.bP
+Additionally, the functions which use \fBcchar_t\fP
+are only available with the wide-character configuration of the libraries.
 .SS Functions
 The principal parts of this interface are
 .bP
-\fBtrace\fR, which selectively enables different tracing features, and
+\fBcurses_trace\fR, which selectively enables different tracing features, and
 .bP
 \fB_tracef\fR, which writes formatted data to the \fItrace\fR file.
-.PP
-Calling \fBtrace\fR with a nonzero parameter creates the file \fBtrace\fR
-in the current directory for output.
-If the file already exists, no tracing is done.
-.PP
+.IP
 The other functions either return a pointer to a string-area
-(allocated by the corresponding function),
-or return no value (such as \fB_tracedump\fP, which implements the
-screen dump for \fBTRACE_UPDATE\fP).
-The caller should not free these
-strings, since the allocation is reused on successive calls.
+(allocated by the corresponding function), or return no value
+(such as \fB_tracedump\fP,
+which implements the screen dump for \fBTRACE_UPDATE\fP).
+The caller should not free these strings,
+since the allocation is reused on successive calls.
 To work around the problem of a single string-area per function,
 some use a buffer-number parameter, telling the library to allocate
 additional string-areas.
+.PP
+The \fBcurses_trace\fR function is always available,
+whether or not the other trace functions are available:
+.bP
+If tracing is available,
+calling \fBcurses_trace\fR with a nonzero parameter
+updates the trace mask,
+and returns the previous trace mask.
+.IP
+When the trace mask is nonzero,
+ncurses creates the file \*(``trace\*('' in the current directory for output.
+If the file already exists, no tracing is done.
+.bP
+If tracing is not available, \fBcurses_trace\fP returns zero (0).
 .SS Trace Parameter
 The trace parameter is formed by OR'ing
 values from the list of \fBTRACE_\fP\fIxxx\fR definitions in \fB<curses.h>\fR.
@@ -114,7 +139,7 @@ turn off tracing by passing a zero parameter.
 The library flushes the output file,
 but retains an open file-descriptor to the trace file
 so that it can resume tracing later if a nonzero parameter is passed
-to the \fBtrace\fP function.
+to the \fBcurses_trace\fP function.
 .TP 5
 .B TRACE_TIMES
 trace user and system times of updates.
@@ -164,13 +189,13 @@ trace changes to video attributes and colors.
 .B TRACE_MAXIMUM
 maximum trace level, enables all of the separate trace features.
 .PP
-Some tracing features are enabled whenever the \fBtrace\fR parameter
+Some tracing features are enabled whenever the \fBcurses_trace\fR parameter
 is nonzero.
 Some features overlap.
 The specific names are used as a guideline.
 .SS Initialization
 These functions check the \fBNCURSES_TRACE\fP environment variable,
-to set the tracing feature as if \fBtrace\fP was called:
+to set the tracing feature as if \fBcurses_trace\fP was called:
 .RS 4
 .PP
 .na
@@ -194,8 +219,8 @@ use_tioctl
 .SS Command-line Utilities
 .PP
 The command-line utilities such as \fBtic\fP(1) provide a verbose option
-which extends the set of messages written using the \fBtrace\fP function.
-Both of these (\fB\-v\fP and \fBtrace\fP)
+which extends the set of messages written using the \fBcurses_trace\fP function.
+Both of these (\fB\-v\fP and \fBcurses_trace\fP)
 use the same variable (\fB_nc_tracing\fP),
 which determines the messages which are written.
 .PP
@@ -216,15 +241,49 @@ to the \fB_tracef\fR routine.
 .SH PORTABILITY
 These functions are not part of the XSI interface.
 Some other curses implementations are known to
-have similar, undocumented features,
-but they are not compatible with ncurses.
+have similar features,
+but they are not compatible with ncurses:
+.bP
+SVr4 provided \fBtraceon\fP and \fBtraceoff\fP,
+to control whether debugging information was written
+to the \*(``trace\*('' file.
+While the functions were always available,
+this feature was only enabled
+if \fBDEBUG\fP was defined when building the library.
+.IP
+The SVr4 tracing feature is undocumented.
+.bP
+PDCurses provides \fBtraceon\fP and \fBtraceoff\fP,
+which (like SVr4) are always available,
+and enable tracing
+to the \*(``trace\*('' file
+only when a debug-library is built.
+.IP
+PDCurses has a short description of these functions,
+with a note that they are not present in X/Open Curses,
+ncurses or NetBSD.
+It does not mention SVr4,
+but the functions' inclusion in a header file section
+labeled \*(``Quasi-standard\*('' hints at the origin.
+.bP
+NetBSD does not provide functions for enabling/disabling traces.
+It uses environment variables
+\fBCURSES_TRACE_MASK\fP and
+\fBCURSES_TRACE_FILE\fP to determine what is traced,
+and where the results are written.
+This is available only when a debug-library is built.
+.IP
+The NetBSD tracing feature is undocumented.
 .PP
-A few functions are not provided when symbol versioning is used:
+A few ncurses functions are not provided when symbol versioning is used:
 .RS 4
 .PP
 _nc_tracebits,
 _tracedump,
 _tracemouse
 .RE
+.PP
+The original \fBtrace\fP routine was deprecated because
+it often conflicted with application names.
 .SH SEE ALSO
 \fBcurses\fR(3X).

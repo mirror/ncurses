@@ -37,7 +37,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.27 2019/03/09 23:41:08 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.28 2019/12/07 20:28:55 tom Exp $")
 
 /****************************************************************************
  *
@@ -148,7 +148,7 @@ _nc_leaks_tinfo(void)
 
 #ifdef TRACE
     T((T_RETURN("")));
-    trace(0);
+    curses_trace(0);
     _nc_trace_buf(-1, (size_t) 0);
 #endif
 

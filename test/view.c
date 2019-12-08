@@ -51,7 +51,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.136 2019/01/27 00:52:06 tom Exp $
+ * $Id: view.c,v 1.137 2019/12/07 19:03:07 tom Exp $
  */
 
 #include <test.priv.h>
@@ -88,7 +88,7 @@ failed(const char *msg)
 }
 
 static int
-ch_len(NCURSES_CH_T * src)
+ch_len(NCURSES_CH_T *src)
 {
     int result = 0;
 #if USE_WIDEC_SUPPORT
@@ -299,11 +299,13 @@ read_file(const char *filename)
     }
     width = (width + 1) * 5;
     my_win = newwin(2, width, 0, 0);
-    if (my_win == 0)
+    if (my_win == 0) {
 	failed("cannot allocate temporary window");
+    }
 
-    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) num_lines + 2)) == 0)
+    if ((vec_lines = typeCalloc(NCURSES_CH_T *, (size_t) num_lines + 2)) == 0) {
 	failed("cannot allocate line-vector #2");
+    }
 
     /*
      * Use the curses library for rendering, including tab-conversion.  This
@@ -348,8 +350,9 @@ read_file(const char *filename)
 	    x = width - 1;
 	wmove(my_win, 0, 0);
 	/* "x + 1" works with standard curses; some implementations are buggy */
-	if ((vec_lines[k] = typeCalloc(NCURSES_CH_T, x + width + 1)) == 0)
+	if ((vec_lines[k] = typeCalloc(NCURSES_CH_T, x + width + 1)) == 0) {
 	    failed("cannot allocate line-vector #3");
+	}
 #if USE_WIDEC_SUPPORT
 	win_wchnstr(my_win, vec_lines[k], x);
 #else
@@ -450,11 +453,11 @@ main(int argc, char *argv[])
 		int tvalue = (int) strtol(optarg, &next, 0);
 		if (tvalue < 0 || (next != 0 && *next != 0))
 		    usage();
-		trace((unsigned) tvalue);
+		curses_trace((unsigned) tvalue);
 	    }
 	    break;
 	case 't':
-	    trace(TRACE_CALLS);
+	    curses_trace(TRACE_CALLS);
 	    break;
 #endif
 	default:

@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.519 2019/09/22 19:12:40 tom Exp $
+$Id: ncurses.c,v 1.520 2019/12/07 19:04:52 tom Exp $
 
 ***************************************************************************/
 
@@ -210,7 +210,7 @@ wGetchar(WINDOW *win)
 	} else {
 	    _nc_tracing = save_trace;
 	}
-	trace(_nc_tracing);
+	curses_trace(_nc_tracing);
 	if (_nc_tracing)
 	    Trace(("TOGGLE-TRACING ON"));
     }
@@ -344,7 +344,7 @@ wGet_wchar(WINDOW *win, wint_t *result)
 	} else {
 	    _nc_tracing = save_trace;
 	}
-	trace(_nc_tracing);
+	curses_trace(_nc_tracing);
 	if (_nc_tracing)
 	    Trace(("TOGGLE-TRACING ON"));
     }
@@ -3734,7 +3734,6 @@ show_box_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     MvAddCh(LINES / 2, 0,        colored_chtype(ACS_LTEE,  attr, pair));
     MvAddCh(LINES / 2, COLS - 1, colored_chtype(ACS_RTEE,  attr, pair));
     /* *INDENT-ON* */
-
 }
 
 static int
@@ -4282,7 +4281,6 @@ show_wbox_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     (void) mvadd_wch(LINES / 2,   0,        MERGE_ATTR(0, WACS_LTEE));
     (void) mvadd_wch(LINES / 2,   COLS - 1, MERGE_ATTR(0, WACS_RTEE));
     /* *INDENT-ON* */
-
 }
 
 #undef MERGE_ATTR
@@ -4355,7 +4353,6 @@ show_utf8_chars(int repeat, attr_t attr, NCURSES_PAIRS_T pair)
     n = SHOW_UTF8(n, "WACS_S7",		"\342\216\274");
     (void) SHOW_UTF8(n, "WACS_S9",	"\342\216\275");
     /* *INDENT-ON* */
-
 }
 
 /* display the wide-ACS character set */
@@ -6345,7 +6342,7 @@ trace_set(bool recur GCC_UNUSED)
     for (ip = menu_items(m); *ip; ip++)
 	if (item_value(*ip))
 	    newtrace |= t_tbl[item_index(*ip)].mask;
-    trace(newtrace);
+    curses_trace(newtrace);
     Trace(("trace level interactively set to %s", tracetrace(_nc_tracing)));
 
     MvPrintw(LINES - 2, 0,
@@ -7992,10 +7989,10 @@ main(int argc, char *argv[])
 #ifdef TRACE
     /* enable debugging */
 #if !USE_LIBMENU
-    trace(save_trace);
+    curses_trace(save_trace);
 #else
     if (!isatty(fileno(stdin)))
-	trace(save_trace);
+	curses_trace(save_trace);
 #endif /* USE_LIBMENU */
 #endif /* TRACE */
 
