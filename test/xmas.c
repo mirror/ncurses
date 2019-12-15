@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.33 2017/09/30 19:14:13 tom Exp $
+ * $Id: xmas.c,v 1.34 2019/12/14 23:25:29 tom Exp $
  */
 #include <test.priv.h>
 
@@ -638,7 +638,7 @@ done(int sig GCC_UNUSED)
 {
     move(LINES - 1, 0);
     refresh();
-    exit_curses();
+    stop_curses();
 
 #if NO_LEAKS
     if (my_pairs != 0)
@@ -749,7 +749,7 @@ main(int argc, char *argv[])
 	(w_holiday = newwin(1, 26, 3, 27)) == 0 ||
 
 	(w_del_msg = newwin(1, 19, 23, 60)) == 0) {
-	exit_curses();
+	stop_curses();
 	fprintf(stderr, "Cannot create windows - screen too small\n");
 	ExitProgram(EXIT_FAILURE);
     }

@@ -52,7 +52,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.80 2019/12/07 19:04:09 tom Exp $
+  $Id: worm.c,v 1.81 2019/12/14 23:25:29 tom Exp $
 */
 
 #include <test.priv.h>
@@ -215,7 +215,7 @@ static void
 failed(const char *s)
 {
     perror(s);
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_FAILURE);
 }
 #endif
@@ -224,7 +224,7 @@ static void
 cleanup(void)
 {
     USING_WINDOW1(stdscr, wrefresh, safe_wrefresh);
-    exit_curses();
+    stop_curses();
 }
 
 static void

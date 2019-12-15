@@ -40,7 +40,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.520 2019/12/07 19:04:52 tom Exp $
+$Id: ncurses.c,v 1.521 2019/12/14 23:25:29 tom Exp $
 
 ***************************************************************************/
 
@@ -7329,7 +7329,7 @@ overlap_test(bool recur GCC_UNUSED)
     delwin(win2);
     delwin(win1);
     erase();
-    exit_curses();
+    stop_curses();
     return OK;
 }
 
@@ -7529,7 +7529,7 @@ x_overlap_test(bool recur GCC_UNUSED)
     delwin(win2);
     delwin(win1);
     erase();
-    exit_curses();
+    stop_curses();
     return OK;
 }
 #endif /* USE_WIDEC_SUPPORT */
@@ -7619,7 +7619,7 @@ settings_test(bool recur GCC_UNUSED)
 #endif
     Pause();
     erase();
-    exit_curses();
+    stop_curses();
     return OK;
 }
 

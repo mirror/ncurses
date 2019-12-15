@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 2008-2010,2017 Free Software Foundation, Inc.              *
+.\" Copyright (c) 2008-2017,2019 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_memleaks.3x,v 1.6 2017/08/22 08:35:37 Sven.Joachim Exp $
+.\" $Id: curs_memleaks.3x,v 1.7 2019/12/14 23:21:32 tom Exp $
 .TH curs_memleaks 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,6 +43,12 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
+\fBvoid exit_curses(int);\fR
+.br
+\fBvoid exit_terminfo(int);\fR
+.sp
+/* deprecated */
+.br
 \fBvoid _nc_freeall(void);\fR
 .br
 \fBvoid _nc_free_and_exit(int);\fR
@@ -51,10 +57,6 @@
 .SH DESCRIPTION
 These functions are used to simplify analysis of memory leaks in the ncurses
 library.
-They are normally not available;
-they must be configured into the library
-at build time using the \fB\-\-disable-leaks\fP option.
-That compiles-in code that frees memory that normally would not be freed.
 .PP
 Any implementation of curses must not free the memory associated with
 a screen, since (even after calling \fBendwin\fP), it must be available
@@ -65,8 +67,8 @@ When using the specially configured debugging version of the ncurses library,
 applications can call functions which free those chunks of memory,
 simplifying the process of memory-leak checking.
 .PP
-These functions are named with a \*(``_nc_\*('' prefix because they are not
-intended for use in the non-debugging library:
+Some of the functions are named with a \*(``_nc_\*('' prefix
+because they are not intended for use in the non-debugging library:
 .TP 5
 \fB_nc_freeall\fP
 This frees (almost) all of the memory allocated by ncurses.
@@ -82,6 +84,17 @@ Simply exiting (with the given exit-code) is safer.
 Use this function if only the low-level terminfo functions (and
 corresponding library) are used.
 Like \fB_nc_free_and_exit\fP, it exits the program after freeing memory.
+.PP
+The functions prefixed \*(``_nc\*('' are normally not available;
+they must be configured into the library
+at build time using the \fB\-\-disable-leaks\fP option.
+That compiles-in code that frees memory that normally would not be freed.
+.PP
+The \fBexit_curses\fP and \fBexit_terminfo\fP functions
+call \fB_nc_free_and_exit\fP and \fB_nc_free_tinfo\fP if
+the library is configured to support memory-leak checking.
+If the library is not configured to support memory-leak checking,
+they simply call \fBexit\fP.
 .SH RETURN VALUE
 These functions do not return a value.
 .SH PORTABILITY

@@ -34,7 +34,7 @@
  * This can't be part of the ncurses test-program, because ncurses rips off the
  * bottom line to do labels.
  *
- * $Id: lrtest.c,v 1.25 2019/12/07 18:07:04 tom Exp $
+ * $Id: lrtest.c,v 1.26 2019/12/14 23:25:29 tom Exp $
  */
 
 #include <test.priv.h>
@@ -174,7 +174,7 @@ main(
 	refresh();
     }
 
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_SUCCESS);
 }
 

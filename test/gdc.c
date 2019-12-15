@@ -33,7 +33,7 @@
  * modified 10-18-89 for curses (jrl)
  * 10-18-89 added signal handling
  *
- * $Id: gdc.c,v 1.52 2019/08/24 23:11:01 tom Exp $
+ * $Id: gdc.c,v 1.53 2019/12/14 23:25:29 tom Exp $
  */
 
 #include <test.priv.h>
@@ -66,7 +66,7 @@ sighndl(int signo)
     signal(signo, sighndl);
     sigtermed = signo;
     if (redirected) {
-	exit_curses();
+	stop_curses();
 	ExitProgram(EXIT_FAILURE);
     }
 }
@@ -76,7 +76,7 @@ check_term(void)
 {
     if (sigtermed) {
 	(void) standend();
-	exit_curses();
+	stop_curses();
 	fprintf(stderr, "gdc terminated by signal %d\n", sigtermed);
 	ExitProgram(EXIT_FAILURE);
     }
@@ -447,6 +447,6 @@ main(int argc, char *argv[])
 	}
     } while (--count);
     (void) standend();
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_SUCCESS);
 }

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2015,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -73,7 +73,7 @@ AUTHOR
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: hashmap.c,v 1.66 2016/05/28 23:32:40 tom Exp $")
+MODULE_ID("$Id: hashmap.c,v 1.67 2019/12/15 00:57:15 tom Exp $")
 
 #ifdef HASHDEBUG
 
@@ -119,7 +119,7 @@ static NCURSES_CH_T newtext[MAXLINES][TEXTWIDTH(sp)];
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
 static NCURSES_INLINE unsigned long
-hash(SCREEN *sp, NCURSES_CH_T * text)
+hash(SCREEN *sp, NCURSES_CH_T *text)
 {
     int i;
     NCURSES_CH_T ch;
@@ -135,7 +135,7 @@ hash(SCREEN *sp, NCURSES_CH_T * text)
 
 /* approximate update cost */
 static int
-update_cost(SCREEN *sp, NCURSES_CH_T * from, NCURSES_CH_T * to)
+update_cost(SCREEN *sp, NCURSES_CH_T *from, NCURSES_CH_T *to)
 {
     int cost = 0;
     int i;
@@ -149,7 +149,7 @@ update_cost(SCREEN *sp, NCURSES_CH_T * from, NCURSES_CH_T * to)
 }
 
 static int
-update_cost_from_blank(SCREEN *sp, NCURSES_CH_T * to)
+update_cost_from_blank(SCREEN *sp, NCURSES_CH_T *to)
 {
     int cost = 0;
     int i;
@@ -583,11 +583,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    break;
 	}
     }
-#if NO_LEAKS
-    _nc_free_and_exit(EXIT_SUCCESS);
-#else
-    return EXIT_SUCCESS;
-#endif
+    exit_curses(EXIT_SUCCESS);
 }
 
 #endif /* HASHDEBUG */

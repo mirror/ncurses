@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.130 2019/08/24 23:07:34 tom Exp $
+ * $Id: picsmap.c,v 1.131 2019/12/14 23:51:39 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -103,7 +103,7 @@ typedef struct {
 #define P2I(n) (((int)(my_intptr_t)(n)) - 1)
 #define I2P(n) (void *)(my_intptr_t)((n) + 1)
 
-#define stop_curses() if (in_curses) endwin()
+#define pause_curses() if (in_curses) stop_curses()
 
 #define debugmsg if (debugging) logmsg
 #define debugmsg2 if (debugging) logmsg2
@@ -187,7 +187,7 @@ close_log(void)
 static void
 cleanup(int code)
 {
-    stop_curses();
+    pause_curses();
     close_log();
     ExitProgram(code);
     /* NOTREACHED */
@@ -423,7 +423,7 @@ read_file(const char *filename)
     struct stat sb;
 
     if (!quiet) {
-	stop_curses();
+	pause_curses();
 	printf("** %s\n", filename);
     }
 
@@ -511,7 +511,7 @@ usage(void)
     };
     size_t n;
 
-    stop_curses();
+    pause_curses();
 
     fflush(stdout);
     for (n = 0; n < SIZEOF(msg); n++)
@@ -524,7 +524,7 @@ giveup(const char *fmt, ...)
 {
     va_list ap;
 
-    stop_curses();
+    pause_curses();
     fflush(stdout);
 
     va_start(ap, fmt);
@@ -1469,7 +1469,7 @@ init_display(const char *palette_path, int opt_d)
 	    init_palette(palette_path);
 	}
 	scrollok(stdscr, FALSE);
-	exit_curses();
+	stop_curses();
     }
 }
 

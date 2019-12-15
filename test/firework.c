@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2014,2017 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: firework.c,v 1.35 2017/09/30 15:42:24 tom Exp $
+ * $Id: firework.c,v 1.36 2019/12/14 23:26:09 tom Exp $
  */
 #include <test.priv.h>
 
@@ -37,7 +37,7 @@ static short my_bg = COLOR_BLACK;
 static void
 cleanup(void)
 {
-    exit_curses();
+    stop_curses();
 }
 
 static void

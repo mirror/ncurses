@@ -34,6 +34,7 @@
 /* ./tty/hardscroll.c */
 
 #include <curses.priv.h>
+
 #undef _nc_oldnums
 int	*_nc_oldnums;
 
@@ -3168,6 +3169,11 @@ void	_nc_free_and_exit(
 		int	code)
 		{ /* void */ }
 
+#undef exit_curses
+void	exit_curses(
+		int	code)
+		{ /* void */ }
+
 /* ./widechar/charable.c */
 
 #undef _nc_is_charable
@@ -3925,6 +3931,11 @@ void	_nc_free_entries(
 void	_nc_leaks_tinfo(void)
 		{ /* void */ }
 
+#undef exit_terminfo
+void	exit_terminfo(
+		int	code)
+		{ /* void */ }
+
 /* ./fallback.c */
 
 #undef _nc_fallback2
@@ -4679,6 +4690,11 @@ unsigned _nc_tracing;
 const char *_nc_tputs_trace = {0};
 #undef _nc_outchars
 long	_nc_outchars;
+
+#undef curses_trace
+unsigned curses_trace(
+		unsigned tracelevel)
+		{ return(*(unsigned *)0); }
 
 #undef trace
 void	trace(

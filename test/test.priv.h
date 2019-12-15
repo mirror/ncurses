@@ -29,7 +29,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.183 2019/12/07 19:03:20 tom Exp $ */
+/* $Id: test.priv.h,v 1.184 2019/12/14 23:25:29 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -885,9 +885,9 @@ extern int TABSIZE;
  * ncurses restores the cursor in endwin().  Other libraries may not.
  */
 #ifdef NCURSES_VERSION
-#define exit_curses() endwin()
+#define stop_curses() endwin()
 #else
-#define exit_curses() do { endwin(); curs_set(1); } while (0)
+#define stop_curses() do { endwin(); curs_set(1); } while (0)
 #endif
 
 /* ncurses implements tparm() with varargs, X/Open with a fixed-parameter list
@@ -904,7 +904,7 @@ extern int TABSIZE;
 #include <nc_alloc.h>
 #if HAVE_NC_FREEALL && defined(USE_TINFO)
 #undef ExitProgram
-#define ExitProgram(code) _nc_free_tinfo(code)
+#define ExitProgram(code) exit_terminfo(code)
 #endif
 #else
 #define typeMalloc(type,n) (type *) malloc((size_t)(n) * sizeof(type))

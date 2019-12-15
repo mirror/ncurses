@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.39 2018/12/29 17:23:42 tom Exp $ */
+/* $Id: tclock.c,v 1.40 2019/12/14 23:25:29 tom Exp $ */
 
 #define NEED_TIME_H
 #include <test.priv.h>
@@ -282,7 +282,7 @@ main(int argc, char *argv[])
 
     }
 
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_SUCCESS);
 }
 #else

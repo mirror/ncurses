@@ -2,7 +2,7 @@
  *  newdemo.c	-	A demo program using PDCurses. The program illustrate
  *  	 		the use of colours for text output.
  *
- * $Id: newdemo.c,v 1.46 2019/08/24 23:02:49 tom Exp $
+ * $Id: newdemo.c,v 1.47 2019/12/14 23:25:29 tom Exp $
  */
 
 #include <test.priv.h>
@@ -50,7 +50,7 @@ static const char *messages[] =
 static void
 trap(int sig GCC_UNUSED)
 {
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -238,7 +238,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     height = 14;		/* Create a drawing window */
     win = newwin(height, width, (LINES - height) / 2, (COLS - width) / 2);
     if (win == NULL) {
-	exit_curses();
+	stop_curses();
 	ExitProgram(EXIT_FAILURE);
     }
 
@@ -362,6 +362,6 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	if (WaitForUser(win) == 1)
 	    break;
     }
-    exit_curses();
+    stop_curses();
     ExitProgram(EXIT_SUCCESS);
 }

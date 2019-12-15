@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2008-2010,2017 Free Software Foundation, Inc.              *
+  * Copyright (c) 2008-2017,2019 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -53,6 +53,10 @@
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
+       <STRONG>void</STRONG> <STRONG>exit_curses(int);</STRONG>
+       <STRONG>void</STRONG> <STRONG>exit_terminfo(int);</STRONG>
+
+       /* deprecated */
        <STRONG>void</STRONG> <STRONG>_nc_freeall(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>_nc_free_and_exit(int);</STRONG>
        <STRONG>void</STRONG> <STRONG>_nc_free_tinfo(int);</STRONG>
@@ -60,22 +64,19 @@
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These functions are used to simplify analysis of memory  leaks  in  the
-       ncurses library.  They are normally not available; they must be config-
-       ured into the library at build time using the  <STRONG>--disable-leaks</STRONG>  option.
-       That  compiles-in  code  that  frees  memory that normally would not be
-       freed.
+       ncurses library.
 
        Any implementation of curses must not free the memory associated with a
        screen, since (even after calling <STRONG>endwin</STRONG>), it must be available for use
-       in the next call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  There are also chunks of memory  held
+       in  the next call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  There are also chunks of memory held
        for performance reasons.  That makes it hard to analyze curses applica-
-       tions for memory leaks.  When using the specially configured  debugging
-       version  of  the ncurses library, applications can call functions which
-       free those chunks of memory, simplifying  the  process  of  memory-leak
+       tions  for memory leaks.  When using the specially configured debugging
+       version of the ncurses library, applications can call  functions  which
+       free  those  chunks  of  memory, simplifying the process of memory-leak
        checking.
 
-       These functions are named with a "_nc_" prefix because they are not in-
-       tended for use in the non-debugging library:
+       Some of the functions are named with a "_nc_" prefix because  they  are
+       not intended for use in the non-debugging library:
 
        <STRONG>_nc_freeall</STRONG>
             This frees (almost) all of the memory allocated by ncurses.
@@ -87,9 +88,19 @@
             ply exiting (with the given exit-code) is safer.
 
        <STRONG>_nc_free_tinfo</STRONG>
-            Use  this  function  if only the low-level terminfo functions (and
+            Use this function if only the low-level  terminfo  functions  (and
             corresponding library) are used.  Like <STRONG>_nc_free_and_exit</STRONG>, it exits
             the program after freeing memory.
+
+       The functions prefixed "_nc" are normally not available; they  must  be
+       configured into the library at build time using the <STRONG>--disable-leaks</STRONG> op-
+       tion.  That compiles-in code that frees memory that normally would  not
+       be freed.
+
+       The  <STRONG>exit_curses</STRONG> and <STRONG>exit_terminfo</STRONG> functions call <STRONG>_nc_free_and_exit</STRONG> and
+       <STRONG>_nc_free_tinfo</STRONG> if the library  is  configured  to  support  memory-leak
+       checking.   If  the  library  is  not configured to support memory-leak
+       checking, they simply call <STRONG>exit</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>

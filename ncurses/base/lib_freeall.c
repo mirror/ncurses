@@ -39,7 +39,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.70 2019/12/07 20:28:03 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.71 2019/12/15 00:30:49 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -159,7 +159,7 @@ NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
     exit(code);
 }
 
-#else
+#else /* !HAVE_NC_FREEALL */
 NCURSES_EXPORT(void)
 _nc_freeall(void)
 {
@@ -175,7 +175,7 @@ NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
     }
     exit(code);
 }
-#endif
+#endif /* HAVE_NC_FREEALL */
 
 #if NCURSES_SP_FUNCS
 NCURSES_EXPORT(void)
@@ -184,3 +184,16 @@ _nc_free_and_exit(int code)
     NCURSES_SP_NAME(_nc_free_and_exit) (CURRENT_SCREEN, code);
 }
 #endif
+
+NCURSES_EXPORT(void)
+exit_curses(int code)
+{
+#if NO_LEAKS
+#if NCURSES_SP_FUNCS
+    NCURSES_SP_NAME(_nc_free_and_exit) (CURRENT_SCREEN, code);
+#else
+    _nc_free_and_exit(code);	/* deprecated... */
+#endif
+#endif
+    exit(code);
+}

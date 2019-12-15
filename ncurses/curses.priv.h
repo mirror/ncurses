@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.626 2019/12/07 20:08:06 tom Exp $
+ * $Id: curses.priv.h,v 1.627 2019/12/14 22:36:12 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2170,11 +2170,7 @@ extern NCURSES_EXPORT(void)   _nc_forget_prescr(void);
 extern NCURSES_EXPORT(int)    _nc_ripoffline(int, int(*)(WINDOW*, int));
 
 /* lib_setup.c */
-#if NO_LEAKS
-#define ExitTerminfo(code)    _nc_free_tinfo(code)
-#else
-#define ExitTerminfo(code)    exit(code)
-#endif
+#define ExitTerminfo(code)    exit_terminfo(code)
 
 #define SETUP_FAIL ERR
 
@@ -2264,7 +2260,6 @@ extern NCURSES_EXPORT(int) _nc_timed_wait (SCREEN *, int, int, int * EVENTLIST_2
 extern NCURSES_EXPORT(void) _nc_init_termtype (TERMTYPE2 *const);
 extern NCURSES_EXPORT(void) _nc_do_color (int, int, int, NCURSES_OUTC);
 extern NCURSES_EXPORT(void) _nc_flush (void);
-extern NCURSES_EXPORT(void) _nc_free_and_exit (int) GCC_NORETURN;
 extern NCURSES_EXPORT(void) _nc_free_entry (ENTRY *, TERMTYPE2 *);
 extern NCURSES_EXPORT(void) _nc_freeall (void);
 extern NCURSES_EXPORT(void) _nc_hash_map (void);

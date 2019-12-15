@@ -2577,6 +2577,11 @@ void	_nc_free_and_exit(
 		int	code)
 		{ /* void */ }
 
+#undef exit_curses
+void	exit_curses(
+		int	code)
+		{ /* void */ }
+
 /* ./expanded.c */
 
 #undef _nc_toggle_attr_on
@@ -2985,6 +2990,11 @@ void	_nc_free_entries(
 
 #undef _nc_leaks_tinfo
 void	_nc_leaks_tinfo(void)
+		{ /* void */ }
+
+#undef exit_terminfo
+void	exit_terminfo(
+		int	code)
 		{ /* void */ }
 
 /* ./fallback.c */
@@ -3731,6 +3741,11 @@ unsigned _nc_tracing;
 const char *_nc_tputs_trace = {0};
 #undef _nc_outchars
 long	_nc_outchars;
+
+#undef curses_trace
+unsigned curses_trace(
+		unsigned tracelevel)
+		{ return(*(unsigned *)0); }
 
 #undef trace
 void	trace(
