@@ -48,7 +48,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.140 2019/01/21 01:55:18 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.142 2019/12/22 00:57:53 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -803,7 +803,7 @@ NCURSES_SP_NAME(has_colors) (NCURSES_SP_DCL0)
     int code = FALSE;
 
     (void) SP_PARM;
-    T((T_CALLED("has_colors()")));
+    T((T_CALLED("has_colors(%p)"), (void *) SP_PARM));
     if (HasTerminal(SP_PARM)) {
 #ifdef USE_TERM_DRIVER
 	code = HasColor;

@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3416 2019/12/14 21:26:03 tom Exp $
+-- $Id: NEWS,v 1.3420 2019/12/21 22:43:54 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191221
+	+ correct pathname used in Ada95 sample programs for explain.txt, to
+	  work with test-packages.
+	+ improve tracemunch:
+	  + keep track of TERMINAL* values
+	  + if tracing was first turned on after initialization, attempt to
+	    show distinct screen, window and terminal names anyway.
+	+ ensure that GCC_NORETURN is defined in term.h, because the prototype
+	  for exit_terminfo() uses it (report by Werner Fink).
 
 20191214
 	+ add exit_curses() and exit_terminfo() to replace internal symbols for
