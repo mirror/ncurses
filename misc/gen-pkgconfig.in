@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.40 2019/10/12 22:27:10 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.42 2019/12/25 23:09:13 tom Exp $
 ##############################################################################
 # Copyright (c) 2009-2018,2019 Free Software Foundation, Inc.                #
 #                                                                            #
@@ -46,14 +46,15 @@ CXX_NAME=@CXX_NAME@
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
-RPATH_LIST=@RPATH_LIST@
-PRIVATE_LIBS="@PRIVATE_LIBS@"
 
 suffix=@PC_MODULE_SUFFIX@
 prefix="@prefix@"
 exec_prefix="@exec_prefix@"
 includedir="@includedir@@includesubdir@"
 libdir="@libdir@"
+
+RPATH_LIST=@RPATH_LIST@
+PRIVATE_LIBS="@PRIVATE_LIBS@"
 
 show_prefix='@prefix@'
 show_exec_prefix='@exec_prefix@'
@@ -82,6 +83,9 @@ for opt in -L$libdir @LDFLAGS@ @EXTRA_LDFLAGS@ @LIBS@
 do
 	case $opt in
 	-l*) # LIBS is handled specially below
+		continue
+		;;
+	-specs*) # ignore linker specs-files which were used to build library
 		continue
 		;;
 	-Wl,-z,*) # ignore flags used to manipulate shared image

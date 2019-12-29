@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3420 2019/12/21 22:43:54 tom Exp $
+-- $Id: NEWS,v 1.3422 2019/12/25 23:16:49 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20191228
+	+ in gen-pkgconfig.in, move the RPATH_LIST and PRIVATE_LIBS assignments
+	  past the various prefix/libdir assignments, to allow for using those
+	  symbols, e.g., as done via CF_SHARED_OPTS.
+	+ improve ncurses*-config and pc-files by filtering out linker-specs.
+	+ modify test-package to more closely match Fedora's configuration
+	  for PIE/PIC feature and debug-packages.
 
 20191221
 	+ correct pathname used in Ada95 sample programs for explain.txt, to

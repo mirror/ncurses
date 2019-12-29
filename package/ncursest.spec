@@ -1,14 +1,11 @@
 Summary: Curses library with POSIX thread support.
 Name: ncursest6
 Version: 6.1
-Release: 20191221
+Release: 20191228
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
 # URL: https://invisible-island.net/ncurses/
-
-%define CC_NORMAL -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
-%define CC_STRICT %{CC_NORMAL} -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
 %global MY_ABI 6
 
@@ -33,8 +30,11 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 %global is_redhat   %(test -f /etc/redhat-release && echo 1 || echo 0)
 %global is_suse     %(test -f /etc/SuSE-release && echo 1 || echo 0)
 
-# nor are debug-symbols
+%if %{is_redhat}
+# generate debug/debug-source packages.
+%else
 %define debug_package %{nil}
+%endif
 
 %if %{is_mandriva}
 %define _disable_ld_as_needed 1
@@ -54,7 +54,6 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 %setup -q -n ncurses-%{version}-%{release}
 
 %build
-%define my_srcdir ..
 %define CFG_OPTS \\\
 	--target %{_target_platform} \\\
 	--prefix=%{_prefix} \\\
@@ -101,8 +100,6 @@ This package is used for testing ABI %{MY_ABI} with POSIX threads.
 	--without-debug \\\
 	--without-normal
 
-CFLAGS="%{CC_NORMAL}" \
-RPATH_LIST=../lib:%{_libdir} \
 %configure %{CFG_OPTS} \
 	--enable-interop \
 	--enable-sp-funcs \
@@ -116,6 +113,11 @@ rm -rf $RPM_BUILD_ROOT
 make install.libs install.progs
 rm -f test/ncurses
 ( cd test && make ncurses LOCAL_LIBDIR=%{_libdir} && mv ncurses $RPM_BUILD_ROOT/%{_bindir}/ncursest%{MY_ABI} )
+
+%if %{is_redhat}
+%ldconfig_scriptlets libs
+%ldconfig_scriptlets c++-libs
+%endif
 
 %clean
 if rm -rf $RPM_BUILD_ROOT; then
@@ -132,6 +134,11 @@ exit 0
 %{_libdir}/*
 
 %changelog
+
+* Tue Dec 24 2019 Thomas Dickey
+- drop custom CC_NORMAL warning flags because setting CFLAGS interferes with
+  matching Fedora's PIE/PIC configuration.  Also, generate debug/debug-source
+  packages.
 
 * Sat Nov 16 2019 Thomas Dickey
 - modify clean-rule to work around Fedora NFS bugs.
