@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.885 2019/11/02 20:32:27 tom Exp $
+dnl $Id: aclocal.m4,v 1.889 2019/12/31 13:58:42 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -346,7 +346,7 @@ if test -n "$1" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_LIBS version: 2 updated: 2014/07/13 14:33:27
+dnl CF_ADD_LIBS version: 3 updated: 2019/11/02 16:47:33
 dnl -----------
 dnl Add one or more libraries, used to enforce consistency.  Libraries are
 dnl prepended to an existing list, since their dependencies are assumed to
@@ -1137,17 +1137,17 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_GNAT_VERSION version: 1 updated: 2019/09/21 18:08:42
+dnl CF_CHECK_GNAT_VERSION version: 2 updated: 2019/12/31 08:53:54
 dnl ---------------------
 AC_DEFUN([CF_CHECK_GNAT_VERSION],
 [
 AC_REQUIRE([CF_GNAT_VERSION])
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|20[[0-9]][[0-9]])
 	cf_cv_prog_gnat_correct=yes
 	;;
 (*)
-	AC_MSG_WARN(Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding.)
+	AC_MSG_WARN(Unsupported GNAT version $cf_cv_gnat_version. We require 3.11 or better. Disabling Ada95 binding.)
 	cf_cv_prog_gnat_correct=no
 	;;
 esac
@@ -2130,7 +2130,7 @@ AC_DEFUN([CF_FIXUP_ADAFLAGS],[
 	AC_MSG_RESULT($ADAFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FOPEN_BIN_R version: 1 updated: 2019/03/30 17:52:21
+dnl CF_FOPEN_BIN_R version: 2 updated: 2019/12/31 08:53:54
 dnl --------------
 dnl Check if fopen works when the "b" (binary) flag is added to the mode
 dnl parameter.  POSIX ignores the "b", which c89 specified.  Some very old
@@ -2170,7 +2170,7 @@ int main(void) {
 		[cf_cv_fopen_bin_r=no],
 		[cf_cv_fopen_bin_r=unknown])
 ])
-test "x$cf_cv_fopen_bin_r" != xno && AC_DEFINE(USE_FOPEN_BIN_R)
+test "x$cf_cv_fopen_bin_r" != xno && AC_DEFINE(USE_FOPEN_BIN_R,1,[Define to 1 if fopen accepts explicit binary mode])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FORGET_TOOL version: 1 updated: 2013/04/06 18:03:09
@@ -2723,14 +2723,14 @@ test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
 AC_SUBST(GNATPREP_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_GENERICS version: 3 updated: 2015/04/17 21:13:04
+dnl CF_GNAT_GENERICS version: 4 updated: 2019/12/31 08:53:54
 dnl ----------------
 AC_DEFUN([CF_GNAT_GENERICS],
 [
 AC_REQUIRE([CF_GNAT_VERSION])
 
 AC_MSG_CHECKING(if GNAT supports generics)
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.[[1-9]]*|[[4-9]].*)
 	cf_gnat_generics=yes
 	;;
@@ -2753,7 +2753,7 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 9 updated: 2018/01/14 15:46:09
+dnl CF_GNAT_PROJECTS version: 10 updated: 2019/12/31 08:53:54
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
 dnl GNAT libraries are a further development, using the project feature.
@@ -2767,7 +2767,7 @@ cf_gnat_projects=no
 
 if test "$enable_gnat_projects" != no ; then
 AC_MSG_CHECKING(if GNAT supports project files)
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.[[0-9]]*)
 	;;
 (*)
@@ -2963,20 +2963,20 @@ fi
 rm -rf conftest* *~conftest*
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_VERSION version: 21 updated: 2019/09/21 18:08:42
+dnl CF_GNAT_VERSION version: 22 updated: 2019/12/31 08:53:54
 dnl ---------------
 dnl $1 = cache variable to update
 dnl $2 = program name
 dnl Verify version of GNAT or related tool
 AC_DEFUN([CF_GNAT_VERSION],
 [
-AC_CACHE_CHECK(for ifelse($2,,gnat,$2) version, cf_gnat_version,[
-cf_gnat_version=`ifelse($2,,${cf_ada_make:-gnatmake},$2) --version 2>&1 | \
+AC_CACHE_CHECK(for ifelse($2,,gnat,$2) version, cf_cv_gnat_version,[
+cf_cv_gnat_version=`ifelse($2,,${cf_ada_make:-gnatmake},$2) --version 2>&1 | \
 	grep '[[0-9]].[[0-9]][[0-9]]*' |\
 	sed -e '2,$d' -e 's/[[^0-9 \.]]//g' -e 's/^[[ ]]*//' -e 's/ .*//'`
 ])
-test -z "$cf_gnat_version" && cf_gnat_version=no
-ifelse($1,,,[eval $1=$cf_gnat_version; unset cf_gnat_version])
+test -z "$cf_cv_gnat_version" && cf_cv_gnat_version=no
+ifelse($1,,,[eval $1=$cf_cv_gnat_version; unset cf_cv_gnat_version])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNU_SOURCE version: 10 updated: 2018/12/10 20:09:41
@@ -3471,11 +3471,12 @@ test -d "$oldincludedir" && {
 $1="[$]$1 $cf_header_path_list"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HELP_MESSAGE version: 3 updated: 1998/01/14 10:56:23
+dnl CF_HELP_MESSAGE version: 4 updated: 2019/12/31 08:53:54
 dnl ---------------
 dnl Insert text into the help-message, for readability, from AC_ARG_WITH.
 AC_DEFUN([CF_HELP_MESSAGE],
-[AC_DIVERT_HELP([$1])dnl
+[CF_ACVERSION_CHECK(2.53,[],[
+AC_DIVERT_HELP($1)])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_INCLUDE_DIRS version: 10 updated: 2014/09/19 20:58:42
@@ -5985,11 +5986,15 @@ AC_PROG_AWK
 test -z "$AWK" && AC_MSG_ERROR(No awk program found)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_CC version: 4 updated: 2014/07/12 18:57:58
+dnl CF_PROG_CC version: 5 updated: 2019/12/31 08:53:54
 dnl ----------
 dnl standard check for CC, plus followup sanity checks
 dnl $1 = optional parameter to pass to AC_PROG_CC to specify compiler name
 AC_DEFUN([CF_PROG_CC],[
+CF_ACVERSION_CHECK(2.53,
+	[AC_MSG_WARN(this will incorrectly handle gnatgcc choice)
+	 AC_REQUIRE([AC_PROG_CC])],
+	[])
 ifelse($1,,[AC_PROG_CC],[AC_PROG_CC($1)])
 CF_GCC_VERSION
 CF_ACVERSION_CHECK(2.52,
@@ -6054,7 +6059,7 @@ AC_DEFUN([CF_PROG_EGREP],
 	test -z "$EGREP" && AC_MSG_ERROR(No egrep program found)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_GNAT version: 9 updated: 2019/09/21 18:08:42
+dnl CF_PROG_GNAT version: 10 updated: 2019/12/31 08:53:54
 dnl ------------
 dnl Check for gnat/gnatmake/etc, ensure that the toolset is complete.
 AC_DEFUN([CF_PROG_GNAT],[
@@ -6068,14 +6073,14 @@ do
 	eval cf_cv_PATH_$cf_upper_prog_gnat=[$]ac_cv_path_cf_TEMP_gnat
 
 	if test "x$cf_TEMP_gnat" != xno; then
-		unset cf_gnat_version
+		unset cf_cv_gnat_version
 		unset cf_TEMP_gnat
 		CF_GNAT_VERSION(cf_TEMP_gnat,$cf_prog_gnat)
 	fi
 	eval cf_cv_VERSION_$cf_upper_prog_gnat=[$]cf_TEMP_gnat
 
 	unset cf_TEMP_gnat
-	unset cf_gnat_version
+	unset cf_cv_gnat_version
 	unset ac_cv_path_cf_TEMP_gnat
 done
 
@@ -6197,11 +6202,16 @@ fi
 AC_SUBST(LDCONFIG)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 3 updated: 2016/05/22 15:25:54
+dnl CF_PROG_LINT version: 4 updated: 2019/11/20 18:55:37
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
 AC_CHECK_PROGS(LINT, lint cppcheck splint)
+case "x$LINT" in
+(xcppcheck|x*/cppcheck)
+	test -z "$LINT_OPTS" && LINT_OPTS="--enable=all"
+	;;
+esac
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -8774,7 +8784,7 @@ AC_SUBST(VERSIONED_SYMS)
 AC_SUBST(WILDCARD_SYMS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_X11_RGB version: 1 updated: 2017/11/25 17:32:16
+dnl CF_WITH_X11_RGB version: 2 updated: 2019/12/31 08:53:54
 dnl ---------------
 dnl Handle configure option "--with-x11-rgb", setting these shell
 dnl variables:
@@ -8850,7 +8860,7 @@ fi
 
 AC_MSG_RESULT($RGB_PATH)
 AC_SUBST(RGB_PATH)
-AC_DEFINE_UNQUOTED(RGB_PATH,"$cf_path")
+AC_DEFINE_UNQUOTED(RGB_PATH,"$cf_path",[Define to the full pathname of rgb.txt])
 
 no_x11_rgb=
 if test "$RGB_PATH" = no

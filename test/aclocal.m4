@@ -26,7 +26,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.166 2019/11/02 20:55:33 tom Exp $
+dnl $Id: aclocal.m4,v 1.168 2019/12/31 14:02:08 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -1974,11 +1974,12 @@ test -d "$oldincludedir" && {
 $1="[$]$1 $cf_header_path_list"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_HELP_MESSAGE version: 3 updated: 1998/01/14 10:56:23
+dnl CF_HELP_MESSAGE version: 4 updated: 2019/12/31 08:53:54
 dnl ---------------
 dnl Insert text into the help-message, for readability, from AC_ARG_WITH.
 AC_DEFUN([CF_HELP_MESSAGE],
-[AC_DIVERT_HELP([$1])dnl
+[CF_ACVERSION_CHECK(2.53,[],[
+AC_DIVERT_HELP($1)])dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_INHERIT_SCRIPT version: 2 updated: 2003/03/01 23:50:42
@@ -3063,11 +3064,15 @@ done
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_CC version: 4 updated: 2014/07/12 18:57:58
+dnl CF_PROG_CC version: 5 updated: 2019/12/31 08:53:54
 dnl ----------
 dnl standard check for CC, plus followup sanity checks
 dnl $1 = optional parameter to pass to AC_PROG_CC to specify compiler name
 AC_DEFUN([CF_PROG_CC],[
+CF_ACVERSION_CHECK(2.53,
+	[AC_MSG_WARN(this will incorrectly handle gnatgcc choice)
+	 AC_REQUIRE([AC_PROG_CC])],
+	[])
 ifelse($1,,[AC_PROG_CC],[AC_PROG_CC($1)])
 CF_GCC_VERSION
 CF_ACVERSION_CHECK(2.52,
@@ -3094,11 +3099,16 @@ case $INSTALL in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 3 updated: 2016/05/22 15:25:54
+dnl CF_PROG_LINT version: 4 updated: 2019/11/20 18:55:37
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
 AC_CHECK_PROGS(LINT, lint cppcheck splint)
+case "x$LINT" in
+(xcppcheck|x*/cppcheck)
+	test -z "$LINT_OPTS" && LINT_OPTS="--enable=all"
+	;;
+esac
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
@@ -3777,7 +3787,7 @@ CF_NO_LEAKS_OPTION(valgrind,
 	[USE_VALGRIND])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_X11_RGB version: 1 updated: 2017/11/25 17:32:16
+dnl CF_WITH_X11_RGB version: 2 updated: 2019/12/31 08:53:54
 dnl ---------------
 dnl Handle configure option "--with-x11-rgb", setting these shell
 dnl variables:
@@ -3853,7 +3863,7 @@ fi
 
 AC_MSG_RESULT($RGB_PATH)
 AC_SUBST(RGB_PATH)
-AC_DEFINE_UNQUOTED(RGB_PATH,"$cf_path")
+AC_DEFINE_UNQUOTED(RGB_PATH,"$cf_path",[Define to the full pathname of rgb.txt])
 
 no_x11_rgb=
 if test "$RGB_PATH" = no

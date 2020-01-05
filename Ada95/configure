@@ -15724,30 +15724,30 @@ fi
 	eval cf_cv_PATH_$cf_upper_prog_gnat=$ac_cv_path_cf_TEMP_gnat
 
 	if test "x$cf_TEMP_gnat" != xno; then
-		unset cf_gnat_version
+		unset cf_cv_gnat_version
 		unset cf_TEMP_gnat
 
 echo "$as_me:15730: checking for $cf_prog_gnat version" >&5
 echo $ECHO_N "checking for $cf_prog_gnat version... $ECHO_C" >&6
-if test "${cf_gnat_version+set}" = set; then
+if test "${cf_cv_gnat_version+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-cf_gnat_version=`$cf_prog_gnat --version 2>&1 | \
+cf_cv_gnat_version=`$cf_prog_gnat --version 2>&1 | \
 	grep '[0-9].[0-9][0-9]*' |\
 	sed -e '2,$d' -e 's/[^0-9 \.]//g' -e 's/^[ ]*//' -e 's/ .*//'`
 
 fi
-echo "$as_me:15741: result: $cf_gnat_version" >&5
-echo "${ECHO_T}$cf_gnat_version" >&6
-test -z "$cf_gnat_version" && cf_gnat_version=no
-eval cf_TEMP_gnat=$cf_gnat_version; unset cf_gnat_version
+echo "$as_me:15741: result: $cf_cv_gnat_version" >&5
+echo "${ECHO_T}$cf_cv_gnat_version" >&6
+test -z "$cf_cv_gnat_version" && cf_cv_gnat_version=no
+eval cf_TEMP_gnat=$cf_cv_gnat_version; unset cf_cv_gnat_version
 
 	fi
 	eval cf_cv_VERSION_$cf_upper_prog_gnat=$cf_TEMP_gnat
 
 	unset cf_TEMP_gnat
-	unset cf_gnat_version
+	unset cf_cv_gnat_version
 	unset ac_cv_path_cf_TEMP_gnat
 done
 
@@ -15804,26 +15804,26 @@ echo "${ECHO_T}missing" >&6
 
 echo "$as_me:15805: checking for gnat version" >&5
 echo $ECHO_N "checking for gnat version... $ECHO_C" >&6
-if test "${cf_gnat_version+set}" = set; then
+if test "${cf_cv_gnat_version+set}" = set; then
   echo $ECHO_N "(cached) $ECHO_C" >&6
 else
 
-cf_gnat_version=`${cf_ada_make:-gnatmake} --version 2>&1 | \
+cf_cv_gnat_version=`${cf_ada_make:-gnatmake} --version 2>&1 | \
 	grep '[0-9].[0-9][0-9]*' |\
 	sed -e '2,$d' -e 's/[^0-9 \.]//g' -e 's/^[ ]*//' -e 's/ .*//'`
 
 fi
-echo "$as_me:15816: result: $cf_gnat_version" >&5
-echo "${ECHO_T}$cf_gnat_version" >&6
-test -z "$cf_gnat_version" && cf_gnat_version=no
+echo "$as_me:15816: result: $cf_cv_gnat_version" >&5
+echo "${ECHO_T}$cf_cv_gnat_version" >&6
+test -z "$cf_cv_gnat_version" && cf_cv_gnat_version=no
 
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.1[1-9]*|3.[2-9]*|[4-9].*|20[0-9][0-9])
 	cf_cv_prog_gnat_correct=yes
 	;;
 (*)
-	{ echo "$as_me:15825: WARNING: Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&5
-echo "$as_me: WARNING: Unsupported GNAT version $cf_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&2;}
+	{ echo "$as_me:15825: WARNING: Unsupported GNAT version $cf_cv_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&5
+echo "$as_me: WARNING: Unsupported GNAT version $cf_cv_gnat_version. We require 3.11 or better. Disabling Ada95 binding." >&2;}
 	cf_cv_prog_gnat_correct=no
 	;;
 esac
@@ -15941,7 +15941,7 @@ test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
 
 echo "$as_me:15942: checking if GNAT supports generics" >&5
 echo $ECHO_N "checking if GNAT supports generics... $ECHO_C" >&6
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.[1-9]*|[4-9].*)
 	cf_gnat_generics=yes
 	;;
@@ -16024,7 +16024,7 @@ cf_gnat_projects=no
 if test "$enable_gnat_projects" != no ; then
 echo "$as_me:16025: checking if GNAT supports project files" >&5
 echo $ECHO_N "checking if GNAT supports project files... $ECHO_C" >&6
-case $cf_gnat_version in
+case $cf_cv_gnat_version in
 (3.[0-9]*)
 	;;
 (*)
