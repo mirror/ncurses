@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,7 +28,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.155 2019/12/31 09:42:42 tom Exp $
+dnl $Id: configure.in,v 1.156 2020/01/12 00:00:16 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -38,9 +38,10 @@ dnl It's only for testing purposes.
 dnl
 dnl For additional information, see
 dnl		https://invisible-island.net/autoconf/
+dnl		https://invisible-island.net/autoconf/my-autoconf.html
 dnl		https://invisible-island.net/ncurses/ncurses-examples.html
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.52.20170501)
+AC_PREREQ(2.52.20200111)
 AC_INIT(ncurses.c)
 AC_CONFIG_HEADER(ncurses_cfg.h:ncurses_tst.hin)
 

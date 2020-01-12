@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
+dnl Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.              *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
 dnl copy of this software and associated documentation files (the            *
@@ -28,16 +28,20 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.691 2019/11/16 15:54:47 tom Exp $
+dnl $Id: configure.in,v 1.693 2020/01/11 23:27:16 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
-dnl See https://invisible-island.net/autoconf/ for additional information.
+dnl For additional information, see
+dnl     https://invisible-island.net/autoconf/
+dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
-AC_PREREQ(2.52.20170501)
-AC_REVISION($Revision: 1.691 $)
+AC_PREREQ(2.52.20200111)
+AC_REVISION($Revision: 1.693 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
+
+AC_DEFUN([AC_PATH_XTRA],[])dnl ignore dependencies on this
 
 CF_TOP_BUILDDIR
 CF_SUBST_NCURSES_VERSION
