@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -43,7 +43,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: make_hash.c,v 1.29 2019/10/19 21:02:19 tom Exp $")
+MODULE_ID("$Id: make_hash.c,v 1.30 2020/01/18 17:02:38 tom Exp $")
 
 /*
  *	_nc_make_hash_table()
@@ -89,7 +89,7 @@ strmalloc(char *s)
  *
  *	Computes the hashing function on the given string.
  *
- *	The current hash function is the sum of each consectutive pair
+ *	The current hash function is the sum of each consecutive pair
  *	of characters, taken as two-byte integers, mod HASHTABSIZE.
  *
  */

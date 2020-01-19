@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 1998-2012,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2016,2020 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -37,7 +37,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.32 2016/03/26 21:51:52 tom Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.33 2020/01/18 17:02:13 tom Exp $")
 
 /* Macros */
 
@@ -138,7 +138,7 @@ _nc_Match_Next_Character_In_Item_Name
       /* we artificially position one item back, because in the do...while
          loop we start with the next item. This means, that with a new
          pattern search we always start the scan with the actual item. If
-         we do a NEXT_PATTERN oder PREV_PATTERN search, we start with the
+         we do a NEXT_PATTERN or PREV_PATTERN search, we start with the
          one after or before the actual item. */
       if (--idx < 0)
 	idx = menu->nitems - 1;

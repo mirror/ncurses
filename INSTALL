@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright (c) 1998-2018,2019 Free Software Foundation, Inc.               --
+-- Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.               --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
 -- copy of this software and associated documentation files (the             --
@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.214 2019/09/07 22:44:40 tom Exp $
+-- $Id: INSTALL,v 1.215 2020/01/18 17:02:13 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -492,7 +492,7 @@ SUMMARY OF CONFIGURE OPTIONS:
 
     --disable-wattr-macros
 	The 6.0 ABI adds support for extended colors and for extended mouse.
-	The former is a noticeable problem when developers inadvertantly
+	The former is a noticeable problem when developers inadvertently
 	compile using the ncurses6 header files and link with an ncurses5
 	library, because the wattr* macros use a new field in the WINDOW
 	structure.  These macros are used in several applications.
@@ -2158,7 +2158,7 @@ CONFIGURING FALLBACK ENTRIES:
 			>fallback.c
 
 	The overhead for an empty fallback list is one trivial stub function.
-	Any non-empty fallback list is const-ed and therefore lives in sharable
+	Any non-empty fallback list is const'd and therefore lives in shareable
 	text space.  You can look at the comment trailing each initializer in
 	the generated ncurses/fallback.c file to see the core cost of the
 	fallbacks.  A good rule of thumb for modern vt100-like entries is that

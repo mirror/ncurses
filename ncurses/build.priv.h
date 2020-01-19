@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2010-2012,2019 Free Software Foundation, Inc.              *
+ * Copyright (c) 2010-2019,2020 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,11 +31,11 @@
  ****************************************************************************/
 
 /*
- * $Id: build.priv.h,v 1.10 2019/05/11 14:14:00 tom Exp $
+ * $Id: build.priv.h,v 1.11 2020/01/18 17:03:32 tom Exp $
  *
  *	build.priv.h
  *
- *	This is a reduced version of curses.priv.h, for build-time utilties.
+ *	This is a reduced version of curses.priv.h, for build-time utilities.
  *	Because it has fewer dependencies, this simplifies cross-compiling.
  *
  */
@@ -54,7 +54,7 @@ extern "C" {
 #if USE_RCS_IDS
 #define MODULE_ID(id) static const char Ident[] = id;
 #else
-#define MODULE_ID(id) /*nothing*/
+#define MODULE_ID(id)		/*nothing */
 #endif
 
 #include <stdlib.h>
@@ -66,7 +66,7 @@ extern "C" {
 
 #include <errno.h>
 
-#include <curses.h>	/* we'll use -Ipath directive to get the right one! */
+#include <curses.h>		/* we'll use -Ipath directive to get the right one! */
 
 /* usually in <unistd.h> */
 #ifndef EXIT_SUCCESS
@@ -89,20 +89,19 @@ extern "C" {
 #define NCURSES_ARRAY(name) \
 	NCURSES_WRAPPED_VAR(NCURSES_CONST char * const *, name)
 
-NCURSES_ARRAY(boolnames);
-NCURSES_ARRAY(boolfnames);
-NCURSES_ARRAY(numnames);
-NCURSES_ARRAY(numfnames);
-NCURSES_ARRAY(strnames);
-NCURSES_ARRAY(strfnames);
+    NCURSES_ARRAY(boolnames);
+    NCURSES_ARRAY(boolfnames);
+    NCURSES_ARRAY(numnames);
+    NCURSES_ARRAY(numfnames);
+    NCURSES_ARRAY(strnames);
+    NCURSES_ARRAY(strfnames);
 #endif
 
 #if NO_LEAKS
-NCURSES_EXPORT(void) _nc_names_leaks(void);
+    NCURSES_EXPORT(void) _nc_names_leaks(void);
 #endif
 
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* CURSES_PRIV_H */
+#endif				/* CURSES_PRIV_H */

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1999-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1999-2018,2020 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.60 2018/07/28 22:08:59 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.63 2020/01/18 23:55:46 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -432,6 +432,104 @@ It does not detect I/O errors:
 X/Open states that \fBtputs\fP ignores the return value
 of the output function \fIputc\fP.
 .RE
+.SH HISTORY
+.PP
+SVr2 introduced the terminfo feature.
+Its programming manual mentioned these low-level functions:
+.TS
+l l
+_ _
+l l.
+\fBFunction\fR	\fBDescription\fR
+fixterm	restore tty to \*(``in curses\*('' state
+gettmode	establish current tty modes
+mvcur	low level cursor motion
+putp	T{
+utility function that uses \fBtputs\fP to send characters via \fBputchar\fP.
+T}
+resetterm	set tty modes to \*(``out of curses\*('' state
+resetty	reset tty flags to stored value
+saveterm	save current modes as \*(``in curses\*('' state
+savetty	store current tty flags
+setterm	establish terminal with given type
+setupterm	establish terminal with given type
+tparm	instantiate a string expression with parameters
+tputs	apply padding information to a string
+vidattr	like \fBvidputs\fP, but outputs through \fBputchar\fP
+vidputs	T{
+output a string to put terminal in a specified video attribute mode
+T}
+.TE
+.PP
+The programming manual also mentioned
+functions provided for termcap compatibility
+(commenting that they \*(``may go away at a later date\*(''):
+.TS
+l l
+_ _
+l l.
+\fBFunction\fR	\fBDescription\fR
+tgetent	look up termcap entry for given \fIname\fP
+tgetflag	get boolean entry for given \fIid\fP
+tgetnum	get numeric entry for given \fIid\fP
+tgetstr	get string entry for given \fIid\fP
+tgoto	apply parameters to given capability
+tputs	T{
+apply padding to capability, calling a function to put characters
+T}
+.TE
+.PP
+Early terminfo programs obtained capability values from the
+\fBTERMINAL\fP structure initialized by \fBsetupterm\fR.
+.PP
+SVr3 extended terminfo by adding functions to retrieve capability values
+(like the termcap interface),
+and reusing tgoto and tputs:
+.TS
+l l
+_ _
+l l.
+\fBFunction\fR	\fBDescription\fR
+tigetflag	get boolean entry for given \fIid\fP
+tigetnum	get numeric entry for given \fIid\fP
+tigetstr	get string entry for given \fIid\fP
+.TE
+.PP
+SVr3 also replaced several of the SVr2 terminfo functions
+which had no counterpart in the termcap interface,
+documenting them as obsolete:
+.TS
+l l
+_ _
+l l.
+\fBFunction\fR	\fBReplaced by\fP
+crmode	cbreak	
+fixterm	reset_prog_mode	
+gettmode	N/A	
+nocrmode	nocbreak	
+resetterm	reset_shell_mode	
+saveterm	def_prog_mode	
+setterm	setupterm	
+.TE
+.PP
+SVr3 kept the \fBmvcur\fP, \fBvidattr\fP and \fBvidputs\fP functions,
+along with \fBputp\fP, \fBtparm\fP and \fBtputs\fP.
+The latter were needed to support padding,
+and handling functions such as \fBvidattr\fP
+(which used more than the two parameters supported by \fBtgoto\fP).
+.PP
+SVr3 introduced the functions for switching between terminal
+descriptions, e.g., \fBset_curterm\fP.
+The various global variables such as \fBboolnames\fP were mentioned
+in the programming manual at this point.
+.PP
+SVr4 added the \fBvid_attr\fP and \fBvid_puts\fP functions.
+.PP
+There are other low-level functions declared in the curses header files
+on Unix systems,
+but none were documented.
+The functions marked \*(``obsolete\*('' remained in use
+by the Unix \fBvi\fP editor.
 .SH PORTABILITY
 .SS Legacy functions
 .PP

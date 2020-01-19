@@ -7,7 +7,7 @@
 --                                 B O D Y                                  --
 --                                                                          --
 ------------------------------------------------------------------------------
--- Copyright (c) 2000-2008,2018 Free Software Foundation, Inc.              --
+-- Copyright (c) 2000-2018,2020 Free Software Foundation, Inc.              --
 --                                                                          --
 -- Permission is hereby granted, free of charge, to any person obtaining a  --
 -- copy of this software and associated documentation files (the            --
@@ -35,8 +35,8 @@
 ------------------------------------------------------------------------------
 --  Author: Eugene V. Melaragno <aldomel@ix.netcom.com> 2000
 --  Version Control
---  $Revision: 1.9 $
---  $Date: 2018/07/07 23:33:16 $
+--  $Revision: 1.10 $
+--  $Date: 2020/01/18 17:02:13 $
 --  Binding Version 01.00
 ------------------------------------------------------------------------------
 --  TODO use Default_Character where appropriate
@@ -186,7 +186,7 @@ package body ncurses2.m is
       Erase (Win);
       Move_Cursor (Win, 0, 0);
       Add (Win, "header:"  & Columns'Img & " columns");
-      --  'Img is a GNAT extention
+      --  'Img is a GNAT extension
       Refresh_Without_Update (Win);
       return 0; -- Curses_OK;
    end rip_header;

@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.              *
+ * Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -31,7 +31,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.54 2019/07/28 19:55:27 tom Exp $
+// $Id: cursesw.h,v 1.55 2020/01/18 17:02:13 tom Exp $
 
 extern "C" {
 #  include   <curses.h>
@@ -1255,7 +1255,7 @@ public:
   // Return TRUE if window is marked as changed, FALSE otherwise
 
   int            leaveok(bool bf) { return ::leaveok(w, bf); }
-  // If bf is TRUE, curses will leave the cursor after an update whereever
+  // If bf is TRUE, curses will leave the cursor after an update wherever
   // it is after the update.
 
   int            redrawln(int from, int n) { return ::wredrawln(w, from, n); }

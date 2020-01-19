@@ -25,7 +25,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3428 2020/01/12 00:20:47 tom Exp $
+-- $Id: NEWS,v 1.3431 2020/01/19 02:02:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -44,6 +44,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200118
+	+ expanded description of XM in user_caps.5
+	+ improve xm example for xterm+x11mouse, xterm+sm+1006 -TD
+	+ add history section to curs_slk.3x and curs_terminfo.3x manpages.
+	+ update alacritty entries for 0.4.0 (prompted by patch by
+	  Christian Durr) -TD
+	+ correct spelling errors found with codespell.
+	+ fix for test/configure, from xterm #352.
 
 20200111
 	+ improve configure macros which check for the X11/Intrinsic.h header,
@@ -1080,7 +1089,7 @@ it is not possible to add this information.
 	+ modify several test-programs which call use_default_colors() to
 	  consistently do this only if "-d" option is given.
 	+ additional changes to test with non-standard variants of curses:
-	  + modify a loop limit in firework.c to work around absense of limit
+	  + modify a loop limit in firework.c to work around absence of limit
 	    checks in some libraries.
 	  + fill the last row of a window with "?" in firstlast if waddch does
 	    not return ERR on the lower-right corner.
@@ -3191,7 +3200,7 @@ it is not possible to add this information.
 	+ updated termcap manpage to document legacy termcap behavior for
 	  matching capability names.
 	+ modify name-comparison for tgetstr, etc., to accommodate legacy
-	  applications as well as to improve compatbility with BSD 4.2
+	  applications as well as to improve compatibility with BSD 4.2
 	  termcap implementations (Debian #698299) (cf: 980725).
 
 20130112
@@ -3709,7 +3718,7 @@ it is not possible to add this information.
 	  + modify stat() calls to ignore the st_size member
 	  + drop mk-dlls.sh script.
 	  + change recommended regular expression library.
-	  + modify rain.c to allow for threaded configuraton.
+	  + modify rain.c to allow for threaded configuration.
 	  + modify tset.c to allow for case when size-change logic is not used.
 
 20111231
@@ -4329,7 +4338,7 @@ it is not possible to add this information.
 	  when weak-symbols are used, allowing the pthread configuration to
 	  more closely match the non-thread naming (report by Werner Fink).
 	+ modify configure check for tic program, used for fallbacks, to a
-	  warning if not found.  This makes it simpler to use additonal
+	  warning if not found.  This makes it simpler to use additional
 	  scripts to bootstrap the fallbacks code using tic from the build
 	  tree (report by Werner Fink).
 	+ fix several places in configure script using ${variable-value} form.
@@ -10061,7 +10070,7 @@ it is not possible to add this information.
 	  current directory (reported by Mike Castle <dalgoda@ix.netcom.com>).
 	+ modify terminfo/termcap translation to suppress acsc before trying
 	  sgr if the entry would be too large (patch by Todd C Miller).
-	+ document a special case of incompatiblity between ncurses 4.2 and
+	+ document a special case of incompatibility between ncurses 4.2 and
 	  5.0, add a section for this in INSTALL.
 	+ add TRACE_DATABASE flag for trace().
 
@@ -10635,7 +10644,7 @@ it is not possible to add this information.
 	+ resolve ambiguity of kend/kll/kslt and khome/kfnd/kich1 strings in
 	  xterm and ncsa terminfo entries by removing the unneeded ones.  Note
 	  that some entries will return kend & khome versus kslt and kfnd, for
-	  PC-style keyboards versus strict vt220 compatiblity - TD
+	  PC-style keyboards versus strict vt220 compatibility - TD
 	+ add function keybound(), which returns the definition associated with
 	  a given keycode.
 	+ modify define_key() to undefine the given string when no keycode is
@@ -10722,7 +10731,7 @@ it is not possible to add this information.
 	+ add configure --with-shlib-version option to allow installing shared
 	  libraries named according to release or ABI versions.  This
 	  parameterizes some existing logic in the configure script, and is
-	  intended for compatiblity upgrades on Digital Unix, which used
+	  intended for compatibility upgrades on Digital Unix, which used
 	  versioned libraries in ncurses 4.2, but no longer does (cf:  980425).
 	+ resync configure script against autoconf 2.13 + patches
 	+ minor improvements for teraterm terminfo entry based on the program's
@@ -11203,7 +11212,7 @@ it is not possible to add this information.
 980523
 	+ correct maxx/maxy expression for num_columns/num_lines in derwin
 	  (patch by Alexander V Lukyanov).
-	+ add /usr/share/lib/terminfo and /usr/lib/terminfo as compatibilty
+	+ add /usr/share/lib/terminfo and /usr/lib/terminfo as compatibility
 	  fallbacks to _nc_read_entry(), along with --with-terminfo-dirs
 	  configure option (suggested by Mike Hopkirk).
 	+ modify config.guess to recognize Unixware 2.1 and 7 (patch by Mike
@@ -11289,7 +11298,7 @@ it is not possible to add this information.
 	+ remove spurious trailing blanks in glibc addon-scripts (patch by
 	  H.J.Lu).
 	+ insert a few braces at locations where gcc-2.8.x asks to use them to
-	  avoid ambigous else's, use -fpic rather than -fPIC for Linux (patch
+	  avoid ambiguous else's, use -fpic rather than -fPIC for Linux (patch
 	  by Juergen Pfeifer).
 
 980404
@@ -11739,7 +11748,7 @@ it is not possible to add this information.
 	> patch by Juergen Pfeifer:
 	+ factor lib_menu and lib_form into smaller modules
 	+ clean up the interface between panel and SCREEN
-	+ minor changes to the Ada95 mouse support implemenation
+	+ minor changes to the Ada95 mouse support implementation
 	+ minor bugfix in C++ binding to ripoff windows
 	+ fix a few Ada95 html documentation pages
 
@@ -11950,7 +11959,7 @@ it is not possible to add this information.
 	+ Enhance form/frm_driver.c:  Allow growth of dynamic fields also on
 	  navigation requests.
 	+ Fixed a bug in form/fty_enum.c:  wrong position of postincrement in
-	  case-insensitiva comparision routine.
+	  case-insensitiva comparison routine.
 	+ Enhanced form/lib_adabind.c with function _nc_get_field() to get a
 	  forms field by index.
 	+ Enhanced menu/m_adabind.c with function _nc_get_item() to get a menus
@@ -12061,7 +12070,7 @@ it is not possible to add this information.
 	  4.  correctly handle input errors (i.e., EINTR) without loss of raw
 	      keys
 	  5.  recognize ESC KEY_LEFT and similar
-	  6.  correctly handle the case of receiption of KEY_MOUSE from gpm
+	  6.  correctly handle the case of reception of KEY_MOUSE from gpm
 	+ correct off-by-one indexing error in _nc_mouse_parse(), that caused
 	  single mouse events (press/release) to be ignored in favor of
 	  composed events (click).  Improves on a fix from integrating gpm
@@ -12302,7 +12311,7 @@ it is not possible to add this information.
 	  than total lines (patch by Alexander V. Lukyanov).
 	+ correct loop limits for table-lookup of enumerated value in form
 	  (patch by Juergen Pfeifer).
-	+ improve threshhold computation for determining when to call ClrToEOL
+	+ improve threshold computation for determining when to call ClrToEOL
 	  (patch by Alexander V. Lukyanov).
 
 970531
@@ -13537,7 +13546,7 @@ it is not possible to add this information.
 * tset(1) added
 * mouse support for xterm.
 * most data tables are now const and accordingly live in shareable text space.
-* Obey the XPG4/SVr4 practice that echo() is initally off.
+* Obey the XPG4/SVr4 practice that echo() is initially off.
 * tic is much better at translating XENIX and AIX termcap entries now.
 * tic can interpret ko capabilities now.
 * integrated Juergen Pfeifer's forms library.
@@ -13553,7 +13562,7 @@ it is not possible to add this information.
 * Fixed a ^Z-handling bug that was tanking lynx(1).
 * HJ Lu's patches for ELF shared libraries under Linux
 * terminfo.src 9.8.2
-* tweaks for compiling in seperate directories.
+* tweaks for compiling in separate directories.
 * Thomas Dickey's patches to support NeXT's brain-dead linker
 * Eric Raymond's patches to fix problems with long termcap entries.
 * more support for shared libraries under SunOS and IRIX.
@@ -13634,7 +13643,7 @@ it is not possible to add this information.
 * tic can understand termcap now, especially if it is called captoinfo.
 * The Linux Standard Console terminfo entry is called linux insead of console.
   It also uses the kernel's new method of changing charsets.
-* initscr() will EXIT upon error (as the docs say) This wil mostly happen if
+* initscr() will EXIT upon error (as the docs say) This will mostly happen if
   you try to run on an undefined terminal.
 * I can get things running on AIX but tic can't compile terminfo. I have to
   compile entries on another machine. Volunteers to hunt this bug are welcome.
@@ -13873,7 +13882,7 @@ Other changes and notes from 1.8.2 include:
 * cleaned up vidputs()
 * general cleanup of the code
 * more attention to portability to other systems
-* added terminfos for hp70092 (wont work until changes to lib_update.c are
+* added terminfos for hp70092 (won't work until changes to lib_update.c are
   made) and 386BSD pcvt drivers.
 
 Thanks to Hellmuth Michaelis for his help.

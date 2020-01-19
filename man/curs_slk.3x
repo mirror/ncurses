@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright (c) 1998-2017,2018 Free Software Foundation, Inc.              *
+.\" Copyright (c) 1998-2018,2020 Free Software Foundation, Inc.              *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
 .\" copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.34 2018/07/28 22:20:54 tom Exp $
+.\" $Id: curs_slk.3x,v 1.35 2020/01/18 22:49:38 tom Exp $
 .TH curs_slk 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -242,6 +242,29 @@ the \fIlabnum\fP parameter is outside the range of label counts, or
 if the format parameter is outside the range 0..2, or if
 memory for the labels cannot be allocated.
 .RE
+.SH HISTORY
+SVr3 introduced these functions:
+  slk_clear
+  slk_init
+  slk_label
+  slk_noutrefresh
+  slk_refresh
+  slk_restore
+  slk_set
+  slk_touch
+.PP
+SVr4 added these functions:
+  slk_attroff
+  slk_attron
+  slk_attrset
+  slk_start
+.PP
+X/Open Curses added these:
+  slk_attr_off
+  slk_attr_on
+  slk_attr_set
+  slk_color
+  slk_wset
 .SH EXTENSIONS
 .PP
 X/Open Curses documents the \fIopts\fP argument as reserved for future use,

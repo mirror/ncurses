@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.773 $
-#	$Date: 2019/11/09 23:52:28 $
+#	$Revision: 1.779 $
+#	$Date: 2020/01/19 01:09:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3453,7 +3453,7 @@ nsterm|nsterm-256color|Apple_Terminal|AppKit Terminal.app,
 #
 # According to its documentation, iTerm uses terminfo to obtain function key
 # definitions.  For example, if it is started with TERM=xterm, it uses key
-# definitons from that terminal description from the local OSX machine.  Those
+# definitions from that terminal description from the local OSX machine.  Those
 # $TERM settings may be augmented using the bookmark and profile dialogs.
 # However, the behavior seen with tack does not agree with either the terminfo
 # description or the function keys in its "xterm" profile.
@@ -5192,7 +5192,7 @@ xterm-x10mouse|X10 xterm mouse,
 # no new information.
 xterm+x11mouse|X11 xterm mouse protocol,
 	kmous=\E[M, XM=\E[?1000%?%p1%{1}%=%th%el%;,
-	xm=\E[M%?%p4%t3%e%p3%'\s'%+%c%;%p2%'!'%+%c%p1%'!'%+%c,
+	xm=\E[M%?%p4%t%p3%e%{3}%;%'\s'%+%c%p2%'!'%+%c%p1%'!'%+%c,
 xterm-x11mouse|X11 mouse,
 	use=xterm+x11mouse, use=xterm,
 
@@ -5255,10 +5255,11 @@ xterm-1005|xterm UTF-8 mouse,
 # from the non-1005 responses.
 #
 # As an alternative (and fixing the longstanding limitation of X11 mouse
-# protocol regarding button-releases), I provided this:
+# protocol regarding button-releases), I provided the 1006 mode, referring
+# to it as "SGR 1006" since the replies resemble the SGR control string:
 xterm+sm+1006|xterm SGR-mouse,
 	kmous=\E[<, XM=\E[?1006;1000%?%p1%{1}%=%th%el%;,
-	xm=\E[<%p1%d;%p2%d;%p3%d;%?%p4%tM%em%;,
+	xm=\E[<%i%p3%d;%p1%d;%p2%d;%?%p4%tM%em%;,
 xterm-1006|xterm SGR-mouse,
 	use=xterm+sm+1006, use=xterm,
 
@@ -5287,7 +5288,7 @@ kterm-color|kterm-co|kterm with ANSI colors,
 # These (xtermc and xtermm) are distributed with Solaris.  They refer to a
 # variant of xterm which is apparently no longer supported, but are interesting
 # because they illustrate SVr4 curses mouse controls - T.Dickey
-xtermm|xterm terminal emulator (monocrome),
+xtermm|xterm terminal emulator (monochrome),
 	OTbs, am, km, mir, msgr, xenl,
 	btns#3, cols#80, it#8, lines#24,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
@@ -6890,6 +6891,7 @@ terminology|EFL-based terminal emulator,
 
 #### Alacritty
 # https://github.com/jwilm/alacritty
+# Version 0.4.0 (2019/11/25)
 # Version 0.3.3 (2019/08/03)
 # Version 0.2.1 (2018/10/03)
 # Project started in 2016/02, uses Rust and OpenGL, and in contrast to (most X
@@ -6902,9 +6904,10 @@ terminology|EFL-based terminal emulator,
 #	otherwise, passes wrapping test
 #	no DECSCNM
 #	identifies as a vt102
+#	numeric keypad does not send expected codes (seen in 0.4.0)
 #	passes bce test
 #	vt220:
-#		ECH works (0.2.1 left text on right margin)
+#		ECH works in 0.3.3 (0.2.1 left text on right margin)
 #		no SRM, DECSCA
 #	vt320:
 #		fails DECXCPR
@@ -6920,12 +6923,16 @@ terminology|EFL-based terminal emulator,
 #		no X10 mouse
 #		has normal and highlight mouse
 #		has any-event and button-event mouse
-#		cursor-position wrong after alternate-screen
+#		+ does support SGR-mouse
+#		+ does not correctly support focus in/out events (seen in 0.4.0)
+#		cursor-position wrong after alternate-screen (fixed in 0.4.0)
 #		none of the dtterm controls work
 # tack:
 #	bell and flash do not work
+#	blink does not work
 #	italics and crossed-out work (latter did not work in 0.2.1)
-#	function-keys work up to kf36; those using two modifiers do not work
+#	function-keys work up (tested combinations which window manager allows)
+#	treats meta as escape-prefix
 #
 # The program sources include "alacritty" and "alacritty-direct", which are
 # copied from "xterm-256color" and "xterm-direct" (but using semicolon for
@@ -6937,14 +6944,14 @@ alacritty|alacritty terminal emulator,
 alacritty-direct|alacritty with direct color indexing,
 	use=xterm+indirect, use=alacritty+common,
 
-# removed ech, since it fails vttest -TD
+# cancel km, since it is not actually meta mode -TD
 # added ecma+strikeout in 0.3.3 -TD
 # added xterm+sl-twm in 0.3.3 -TD
 alacritty+common|base fragment for alacritty,
-	npc,
-	ech@, kb2=\EOE, kbs=^?, kcbt=\E[Z, kent=\EOM, Se=\E[0 q,
-	use=ecma+index, use=xterm-basic, use=xterm+app,
-	use=ansi+rep, use=xterm+sm+1006, use=xterm+tmux,
+	km@, npc,
+	kb2=\EOE, kbs=^?, kcbt=\E[Z, kent=\EOM, Se=\E[0 q,
+	use=ecma+index, use=xterm+sm+1006, use=xterm-basic,
+	use=xterm+app, use=ansi+rep, use=xterm+tmux,
 	use=ecma+strikeout, use=xterm+sl-twm, use=ecma+italics,
 	use=xterm+pce2, use=xterm+pcc2, use=xterm+pcf2,
 
@@ -23140,8 +23147,8 @@ fos|fortune|Fortune system,
 
 #### Masscomp consoles
 #
-# Masscomp has gone out of business.  Their product line was purchased by
-# comany in Georgia (US) called "XS International", parts and service may
+# Masscomp has gone out of business.  Their product line was purchased by a
+# company in Georgia (US) called "XS International", parts and service may
 # still be available through them.
 #
 
@@ -24477,7 +24484,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #    goes to the first column of the "status line".
 # XM is a string capability which overrides ncurses's built-in string which
 #    enables/disables xterm mouse mode.
-# xm shows the format of the mouse responses.  Parameters are (from zero):
+# xm shows the format of the mouse responses.  Parameters:
 #	p1 = y-ordinate
 #	p2 = x-ordinate
 #	p3 = button
@@ -26419,5 +26426,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  with old non-curses programs -TD
 #	+ reviewed st 0.8.2, updated some details -TD
 #	+ use ansi+rep several places -TD
+#
+# 2020-01-12
+#	+ update alacritty entries for 0.4.0 (prompted by patch by
+#	  Christian Durr) -TD
+#
+# 2020-01-18
+#	+ spelling fixes per codespell -TD
+#	+ improve xm example for xterm+x11mouse, xterm+sm+1006 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

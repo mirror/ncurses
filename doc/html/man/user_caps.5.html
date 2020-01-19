@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright (c) 2017-2018,2019 Free Software Foundation, Inc.              *
+  * Copyright (c) 2017-2019,2020 Free Software Foundation, Inc.              *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: user_caps.5,v 1.10 2019/05/18 22:48:40 tom Exp @
+  * @Id: user_caps.5,v 1.11 2020/01/19 02:01:39 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -236,6 +236,72 @@
 
           XM <EM>string</EM>, override ncurses's built-in string which enables/disables
              <STRONG>xterm</STRONG> mouse mode.
+
+             ncurses  sends a character sequence to the terminal to initialize
+             mouse mode, and when the user clicks the  mouse  buttons  or  (in
+             certain  modes) moves the mouse, handles the characters sent back
+             by the terminal to tell it what was done with the mouse.
+
+             The mouse protocol is enabled when the <EM>mask</EM> passed in the  <STRONG>mouse-</STRONG>
+             <STRONG>mask</STRONG>  function  is  nonzero.   By  default,  ncurses  handles the
+             responses for the X11 xterm mouse protocol.  It also knows  about
+             the  <EM>SGR</EM>  <EM>1006</EM>  xterm mouse protocol, but must to be told to look
+             for this specifically.  It will not be able to guess  which  mode
+             is  used, because the responses are enough alike that only confu-
+             sion would result.
+
+             The <STRONG>XM</STRONG> capability has a single parameter.  If nonzero, the  mouse
+             protocol  should  be enabled.  If zero, the mouse protocol should
+             be disabled.  ncurses inspects this capability if it is  present,
+             to  see whether the 1006 protocol is used.  If so, it expects the
+             responses to use the <EM>SGR</EM> <EM>1006</EM> xterm mouse protocol.
+
+             The xterm mouse protocol is used  by  other  terminal  emulators.
+             The  terminal database uses building-blocks for the various xterm
+             mouse protocols which can be used in customized terminal descrip-
+             tions.
+
+             The terminal database building blocks for this mouse feature also
+             have  an  experimental  capability  <EM>xm</EM>.   The   "xm"   capability
+             describes  the mouse response.  Currently there is no interpreter
+             which would use this information to make the mouse  support  com-
+             pletely data-driven.
+
+             <EM>xm</EM> shows the format of the mouse responses.  In this experimental
+             capability, the parameters are
+
+               <EM>p1</EM>   y-ordinate
+
+               <EM>p2</EM>   x-ordinate
+
+               <EM>p3</EM>   button
+
+               <EM>p4</EM>   state, e.g., pressed or released
+
+               <EM>p5</EM>   y-ordinate starting region
+
+               <EM>p6</EM>   x-ordinate starting region
+
+               <EM>p7</EM>   y-ordinate ending region
+
+               <EM>p8</EM>   x-ordinate ending region
+
+             Here are examples from the terminal database for  the  most  com-
+             monly used xterm mouse protocols:
+
+               xterm+x11mouse|X11 xterm mouse protocol,
+                       kmous=\E[M, XM=\E[?1000%?%p1%{1}%=%th%el%;,
+                       xm=\E[M
+                          %?%p4%t%p3%e%{3}%;%' '%+%c
+                          %p2%'!'%+%c
+                          %p1%'!'%+%c,
+
+               xterm+sm+1006|xterm SGR-mouse,
+                       kmous=\E[&lt;, XM=\E[?1006;1000%?%p1%{1}%=%th%el%;,
+                       xm=\E[&lt;%i%p3%d;
+                          %p1%d;
+                          %p2%d;
+                          %?%p4%tM%em%;,
 
 
 </PRE><H3><a name="h3-Extended-key-definitions">Extended key-definitions</a></H3><PRE>

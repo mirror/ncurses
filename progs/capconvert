@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright (c) 1998-2017,2019 Free Software Foundation, Inc.                #
+# Copyright (c) 1998-2019,2020 Free Software Foundation, Inc.                #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: capconvert,v 1.7 2019/03/02 22:51:42 tom Exp $
+# $Id: capconvert,v 1.8 2020/01/18 17:02:38 tom Exp $
 #
 # capconvert -- automated conversion from termcap to terminfo
 #
@@ -179,7 +179,7 @@ else
 		echo "I am going to assume this is the terminfo source included with"
 		echo "the ncurses distribution.  If this assumption is wrong, please"
 		echo "interrupt me now!  OK to continue?"
-		read ans;
+		read answer;
 	;;
 	2)
 		echo "I see more than one possible terminfo source.  Here they are:"
@@ -251,7 +251,7 @@ else
 	echo "Done."
 	echo "Note that editing TERMCAP will no longer change the data curses sees."
 fi
-echo "To do that, decompile the terminal decription you want with infocmp(1),"
+echo "To do that, decompile the terminal description you want with infocmp(1),"
 echo "edit to taste, and recompile using tic(1)."
 
 # capconvert ends here

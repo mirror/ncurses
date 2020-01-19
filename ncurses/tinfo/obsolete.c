@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright (c) 2013-2014,2016 Free Software Foundation, Inc.              *
+ * Copyright (c) 2013-2016,2020 Free Software Foundation, Inc.              *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -36,10 +36,10 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: obsolete.c,v 1.4 2016/09/10 18:39:51 tom Exp $")
+MODULE_ID("$Id: obsolete.c,v 1.5 2020/01/18 17:02:38 tom Exp $")
 
 /*
- * Obsolete entrypoint retained for binary compatbility.
+ * Obsolete entrypoint retained for binary compatibility.
  */
 NCURSES_EXPORT(void)
 NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_DCLx FILE *ofp, int buffered)
