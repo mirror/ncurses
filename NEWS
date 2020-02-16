@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3446 2020/02/12 02:21:21 tom Exp $
+-- $Id: NEWS,v 1.3450 2020/02/15 18:56:00 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200215
+	+ improve manual page for panel library, extending the portability
+	  section as well as documenting error-returns.
+	+ show tic's version when installing terminal database in run_tic.sh
+	+ correct check for gcc vs other compilers used in ncurses 6.0, from
+	  FreeBSD patch by Kyle Evans (cf: 20150725).
+	+ add notes for 6.2 to INSTALL.
 
 20200212 6.2 release for upload to ftp.gnu.org
 	+ update release notes
