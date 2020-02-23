@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.168 2020/02/02 23:34:34 tom Exp $
+# $Id: Makefile.in,v 1.169 2020/02/22 15:45:23 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -178,16 +178,21 @@ AUTO_SRC = \
 	keys.list
 
 HEADER_DEPS	= \
-	$(srcdir)/curses.priv.h \
-	../include/ncurses_dll.h \
 	../include/ncurses_cfg.h \
+	../include/ncurses_def.h \
+	../include/ncurses_dll.h \
 	../include/curses.h \
-	$(INCDIR)/nc_panel.h \
 	../include/term.h \
-	$(INCDIR)/term_entry.h \
-	$(INCDIR)/nc_tparm.h \
+	../include/unctrl.h \
 	$(INCDIR)/nc_alloc.h \
-	$(INCDIR)/nc_mingw.h
+	$(INCDIR)/nc_mingw.h \
+	$(INCDIR)/nc_panel.h \
+	$(INCDIR)/nc_string.h \
+	$(INCDIR)/nc_termios.h \
+	$(INCDIR)/nc_tparm.h \
+	$(INCDIR)/term_entry.h \
+	$(srcdir)/curses.priv.h \
+	$(srcdir)/new_pair.h
 
 TEST_DEPS	= ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
 TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 

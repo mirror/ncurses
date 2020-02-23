@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.144 2020/02/02 23:34:34 tom Exp $
+.\" $Id: ncurses.3x,v 1.145 2020/02/23 01:05:45 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1354,6 +1354,10 @@ The EXTENDED XSI Curses functionality
 A small number of local differences (that is, individual differences between
 the XSI Curses and \fBncurses\fR calls) are described in \fBPORTABILITY\fR
 sections of the library man pages.
+.SS Error checking
+.PP
+In many cases, X/Open Curses is vague about error conditions,
+omitting some of the SVr4 documentation.
 .PP
 Unlike other implementations, this one checks parameters such as pointers
 to WINDOW structures to ensure they are not null.
@@ -1363,8 +1367,12 @@ The standard interface does not provide a way for the library
 to tell an application which of several possible errors were detected.
 Relying on this (or some other) extension will adversely affect the
 portability of curses applications.
+.SS Extensions versus portability
 .PP
-This implementation also contains several extensions:
+Most of the extensions provided by ncurses have not been standardized.
+Some have been incorporated into other implementations, such as
+PDCurses or NetBSD curses.
+Here are a few to consider:
 .bP
 The routine \fBhas_key\fR is not part of XPG4, nor is it present in SVr4.
 See the \fBcurs_getch\fR(3X) manual page for details.
@@ -1394,6 +1402,7 @@ See \fBcurs_threads\fR(3X) for details.
 This implementation can also be configured to provide a set of functions which
 improve the ability to manage multiple screens.
 See \fBcurs_sp_funcs\fR(3X) for details.
+.SS Padding differences
 .PP
 In historic curses versions, delays embedded in the capabilities \fBcr\fR,
 \fBind\fR, \fBcub1\fR, \fBff\fR and \fBtab\fR activated corresponding delay
@@ -1402,9 +1411,79 @@ In this implementation, all padding is done by sending NUL bytes.
 This method is slightly more expensive, but narrows the interface
 to the UNIX kernel significantly and increases the package's portability
 correspondingly.
-.SH NOTES
+.SS Header files
 The header file \fB<curses.h>\fR automatically includes the header files
 \fB<stdio.h>\fR and \fB<unctrl.h>\fR.
+.PP
+X/Open Curses has more to say,
+but does not finish the story:
+.RS 4
+.PP
+The inclusion of <curses.h> may make visible all symbols
+from the headers <stdio.h>, <term.h>, <termios.h>, and <wchar.h>.
+.RE
+.PP
+Here is a more complete story:
+.bP
+Starting with BSD curses, all implementations have included <stdio.h>.
+.IP
+BSD curses included <curses.h> and <unctrl.h> from an internal header
+"curses.ext" ("ext" was a short name for \fIexterns\fP).
+.IP
+BSD curses used <stdio.h> internally (for \fBprintw\fP and \fBscanw\fP),
+but nothing in <curses.h> itself relied upon <stdio.h>.
+.bP
+SVr2 curses added \fBnewterm\fP(3X), which relies upon <stdio.h>.
+That is, the function prototype uses \fBFILE\fP.
+.IP
+SVr4 curses added \fBputwin\fP and \fBgetwin\fP, which also use <stdio.h>.
+.IP
+X/Open Curses documents all three of these functions.
+.IP
+SVr4 curses and X/Open Curses do not require the developer to
+include <stdio.h> before including <curses.h>.
+Both document curses showing <curses.h> as the only required header.
+.IP
+As a result, standard <curses.h> will always include <stdio.h>.
+.bP
+X/Open Curses is inconsistent with respect to SVr4 regarding <unctrl.h>.
+.IP
+As noted in \fBcurs_util\fP(3X), ncurses includes <unctrl.h> from
+<curses.h> (like SVr4).
+.bP
+X/Open's comments about <term.h> and <termios.h> may refer to HP-UX and AIX:
+.IP
+HP-UX curses includes <term.h> from <curses.h>
+to declare \fBsetupterm\fP in curses.h,
+but ncurses (and Solaris curses) do not.
+.IP
+AIX curses includes <term.h> and <termios.h>.
+Again, ncurses (and Solaris curses) do not.
+.bP
+X/Open says that <curses.h> \fImay\fP include <term.h>,
+but there is no requirement that it do that.
+.IP
+Some programs use functions declared in both <curses.h> and <term.h>,
+and must include both headers in the same module.
+Very old versions of AIX curses required including <curses.h>
+before including <term.h>.
+.IP
+Because ncurses header files include the headers needed to
+define datatypes used in the headers,
+ncurses header files can be included in any order.
+But for portability, you should include <curses.h> before <term.h>.
+.bP
+X/Open Curses says \fI"may make visible"\fP
+because including a header file does not necessarily make all symbols
+in it visible (there are ifdef's to consider).
+.IP
+For instance, in ncurses <wchar.h> \fImay\fP be included if
+the proper symbol is defined, and if ncurses is configured for
+wide-character support.
+If the header is included, its symbols may be made visible.
+That depends on the value used for \fB_XOPEN_SOURCE\fP
+feature test macro.
+.SH NOTES
 .PP
 If standard output from a \fBncurses\fR program is re-directed to something
 which is not a tty, screen updates will be directed to standard error.

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.66 2020/02/02 23:34:34 tom Exp $
+# $Id: Makefile.in,v 1.67 2020/02/22 16:35:47 tom Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 1998-2015,2018 Free Software Foundation, Inc.                    #
@@ -92,7 +92,9 @@ CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
-CPPFLAGS	= -I${top_srcdir}/ncurses -DHAVE_CONFIG_H @CPPFLAGS@
+INCDIR		= $(top_srcdir)/include
+BASE_DIR 	= $(top_srcdir)/ncurses
+CPPFLAGS	= -I$(BASE_DIR) -DHAVE_CONFIG_H @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
@@ -157,9 +159,22 @@ $(DESTDIR)$(libdir) :
 	cp $(srcdir)/mf_common.h $@
 
 HEADER_DEPS = \
+	../include/curses.h \
+	../include/ncurses_cfg.h \
+	../include/ncurses_def.h \
+	../include/ncurses_dll.h \
+	../include/term.h \
+	../include/unctrl.h \
+	$(BASE_DIR)/curses.priv.h \
+	$(BASE_DIR)/new_pair.h \
+	$(INCDIR)/nc_alloc.h \
+	$(INCDIR)/nc_panel.h \
+	$(INCDIR)/nc_string.h \
+	$(INCDIR)/nc_termios.h \
+	$(INCDIR)/nc_tparm.h \
+	$(INCDIR)/term_entry.h \
 	$(srcdir)/menu.priv.h \
-	$(AUTO_SRC) \
-	../include/curses.h
+	$(AUTO_SRC)
 
 tags:
 	$(CTAGS) *.[ch]

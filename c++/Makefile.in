@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.119 2020/02/02 23:34:34 tom Exp $
+# $Id: Makefile.in,v 1.121 2020/02/22 17:29:13 tom Exp $
 ##############################################################################
 # Copyright 2018,2020 Thomas E. Dickey                                       #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -186,29 +186,35 @@ realclean :: distclean
 
 ###############################################################################
 
-internal_h	= $(srcdir)/internal.h \
-		  $(INCDIR)/ncurses_cfg.h \
-		  $(INCDIR)/nc_mingw.h \
-		  $(INCDIR)/nc_string.h
-
-etip_h		= etip.h \
-		  $(INCDIR)/ncurses_dll.h
+HEADER_DEPS	= \
+	etip.h \
+	../include/curses.h \
+	../include/eti.h \
+	../include/form.h \
+	../include/menu.h \
+	../include/ncurses_cfg.h \
+	../include/ncurses_def.h \
+	../include/ncurses_dll.h \
+	../include/panel.h \
+	../include/unctrl.h \
+	$(INCDIR)/nc_mingw.h \
+	$(INCDIR)/nc_string.h \
+	$(srcdir)/cursesp.h \
+	$(srcdir)/cursesw.h \
+	$(srcdir)/cursslk.h \
+	$(srcdir)/internal.h
 
 cursesw_h	= $(srcdir)/cursesw.h \
-		  $(etip_h) \
-		  $(INCDIR)/curses.h
+		  $(HEADER_DEPS)
 
 cursesp_h	= $(srcdir)/cursesp.h \
-		  $(cursesw_h) \
-		  $(INCDIR)/panel.h
+		  $(cursesw_h)
 
 cursesf_h	= $(srcdir)/cursesf.h \
-		  $(cursesp_h) \
-		  $(INCDIR)/form.h
+		  $(cursesp_h)
 
 cursesm_h	= $(srcdir)/cursesm.h \
-		  $(cursesp_h) \
-		  $(INCDIR)/menu.h
+		  $(cursesp_h)
 
 cursslk_h	= $(srcdir)/cursslk.h \
 		  $(cursesw_h)
@@ -230,7 +236,7 @@ $(INCDIR)/panel.h :
 OBJS_DEMO = $(MODEL)/demo$o
 
 $(MODEL)/demo$o : $(srcdir)/demo.cc \
-		$(internal_h) \
+		$(HEADER_DEPS) \
 		$(cursesf_h) \
 		$(cursesm_h) \
 		$(cursesapp_h)

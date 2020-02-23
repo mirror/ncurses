@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3450 2020/02/15 18:56:00 tom Exp $
+-- $Id: NEWS,v 1.3453 2020/02/23 01:08:47 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200222
+	+ expanded note in ncurses.3x regarding automatically-included headers
+	+ improve vt50h and vt52 based on DECScope manual -TD
+	+ add/use vt52+keypad and vt52-basic -TD
+	+ check/workaround for line-too-long in Ada95 generate utility when
+	  building out-of-tree.
+	+ improve/update HEADER_DEPS in */Makefile.in
+	+ add "check" rule to include/Makefile, to demonstrate that the headers
+	  include all of the required headers for the types used.
 
 20200215
 	+ improve manual page for panel library, extending the portability

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.779 $
-#	$Date: 2020/01/19 01:09:38 $
+#	$Revision: 1.787 $
+#	$Date: 2020/02/22 23:05:24 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2168,12 +2168,19 @@ bsdos-ppc|PowerPC BSD/OS Console,
 # to a crude plotting feature) -TD
 vt52|dec vt52,
 	OTbs,
+	it#8, lines#24,
+	acsc=+h.k0affggolpnqprrss, home=\EH, kbs=^H, nel=\r\n,
+	ri=\EI, rmacs=\EG, rmkx=\E>, smacs=\EF, smkx=\E=, u8=\E/[KL],
+	use=vt50h,
+
+# This is more likely the "vt52" that you would see in emulation, i.e., no
+# keypad, no graphics.
+vt52-basic|vt52 for emulators,
 	cols#80, it#8, lines#24,
-	acsc=+h.k0affggolpnqprrss, bel=^G, clear=\EH\EJ, cr=\r,
-	cub1=\ED, cud1=\EB, cuf1=\EC,
-	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, ed=\EJ,
-	el=\EK, home=\EH, ht=^I, ind=\n, kbs=^H, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, nel=\r\n, ri=\EI, rmacs=\EG, smacs=\EF,
+	bel=^G, clear=\EH\EJ, cr=\r, cub1=\ED, cud1=\EB, cuf1=\EC,
+	cup=\EY%p1%' '%+%c%p2%' '%+%c, cuu1=\EA, ed=\EJ, el=\EK,
+	home=\EH, ht=^I, ind=\n, kbs=^H, kcub1=\ED, kcud1=\EB,
+	kcuf1=\EC, kcuu1=\EA, nel=\r\n, ri=\EI,
 
 #### DEC VT100 and compatibles
 #
@@ -9451,7 +9458,7 @@ gator|HP 9000 model 237 emulating AAA,
 	rep=%p1%c\E[%p2%db$<1*/>, rev=\E[7m, rmso=\E[m,
 	rmul=\E[m, sgr0=\E[m, smso=\E[7m, smul=\E[4m,
 gator-52|HP 9000 model 237 emulating VT52,
-	cols#128, lines#47, use=vt52,
+	cols#128, lines#47, use=vt52-basic,
 gator-52t|HP 9000 model 237 emulating extra-tall VT52,
 	lines#94, use=gator-52,
 
@@ -16983,8 +16990,8 @@ hz1520-noesc|hazeltine 1520,
 # Be sure the auto lf/cr switch is set to cr.
 hz1552|hazeltine 1552,
 	OTbs,
-	cud1=\n, dl1=\EO, il1=\EE, kf1=\EP, kf2=\EQ, kf3=\ER, lf1=blue,
-	lf2=red, lf3=green, use=vt52,
+	cud1=\n, dl1=\EO, il1=\EE, lf1=blue, lf2=red, lf3=green,
+	use=vt52,
 hz1552-rv|hazeltine 1552 reverse video,
 	cud1=\n, rmso=\ET, smso=\ES, use=hz1552,
 # Note: h2000 won't work well because of a clash between upper case and ~'s.
@@ -21693,11 +21700,41 @@ dp8242|datapoint 8242,
 
 #### DEC terminals (Obsolete types: DECwriter and vt40/42/50)
 #
-# These entries are DEC's official terminfos for its older terminals.
-# Contact Bill Hedberg <hedberg@hannah.enet.dec.com> of Terminal Support
-# Engineering for more information.  Updated terminfos and termcaps
-# are kept available at ftp://gatekeeper.dec.com/pub/DEC/termcaps.
+# These entries came from DEC's official terminfos for its older terminals
+# (which happen to be identical to the AT&T/SCO terminal descriptions),
+# Bill Hedberg <hedberg@hannah.enet.dec.com> of Terminal Support Engineering
+# may have had more information.  Updated terminfos and termcaps were available
+# at ftp://gatekeeper.dec.com/pub/DEC/termcaps.
+
+# DEC's terminfos did not describe the auxiliary keypad.
 #
+# DECScope of course had no "function keys", but this building block assigns
+# the three blank keys at the top of the auxiliary (numeric) keypad, using
+# the same analogy as vt100 (also lacking function-keys).
+#
+# These assignments use the same layout for 0-9 as vt100+keypad; the vt52
+# keypad had its cursor-keys on the right-column as shown -TD
+#   _______________________________________
+#  |   PF1   |   PF2   |   PF3   | c-up    |
+#  |   \EP   |   \EQ   |   \ER   |   \EA   |
+#  |_kf1__k1_|_kf2__k2_|_kf3__k3_|kcuu1_k4_|
+#  |    7         8         9      c-down  |
+#  |   \E?w  |   \E?x  |   \E?y  |   \EB   |
+#  |_kf9__k9_|_kf10_k;_|_kf0__k0_|kcud1____|
+#  |    4    |    5    |    6    | c-right |
+#  |   \E?t  |   \E?u  |   \E?v  |   \EC   |
+#  |_kf5__k5_|_kf6__k6_|_kf7__k7_|kcuf1_k8_|
+#  |    1    |    2    |    3    | c-left  |
+#  |   \E?q  |   \E?r  |   \E?s  |   \ED   |
+#  |_ka1__K1_|_kb2__K2_|_ka3__K3_|kcub1____|
+#  |         0         |   .     |  enter  |
+#  |        \E?p       |  \E?n   |  \E?M   |
+#  |___kc1_______K4____|_kc3__K5_|_kent_@8_|
+#
+vt52+keypad|DECScope auxiliary keypad,
+	ka1=\E?q, ka3=\E?s, kb2=\E?r, kc1=\E?p, kc3=\E?n, kf0=\E?y,
+	kf1=\EP, kf2=\EQ, kf3=\ER, kf5=\E?t, kf6=\E?u, kf7=\E?v,
+	kf8=\E?w, kf9=\E?x,
 
 gt40|dec gt40,
 	OTbs, os,
@@ -21707,17 +21744,17 @@ gt42|dec gt42,
 	OTbs, os,
 	cols#72, lines#40,
 	bel=^G, cr=\r, cub1=^H, cud1=\n,
+
 vt50|dec vt50,
 	OTbs,
 	cols#80, lines#12,
 	bel=^G, clear=\EH\EJ, cr=\r, cub1=^H, cud1=\n, cuf1=\EC,
-	cuu1=\EA, ed=\EJ, el=\EK, ht=^I, ind=\n,
+	cuu1=\EA, ed=\EJ, el=\EK, ht=^I, ind=\n, u8=\E/A, u9=\EZ,
 vt50h|dec vt50h,
-	OTbs,
-	cols#80, lines#12,
-	bel=^G, clear=\EH\EJ, cr=\r, cub1=^H, cud1=\n, cuf1=\EC,
-	cup=\EY%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, ed=\EJ,
-	el=\EK, ht=^I, ind=\n, ri=\EI,
+	cub1=\ED, cud1=\EB, cup=\EY%p1%{32}%+%c%p2%{32}%+%c,
+	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, u8=\E/[HJ],
+	use=vt52+keypad, use=vt50,
+
 # (vt61: there's a BSD termcap that claims <dl1=\EPd>, <il1=\EPf.> <kbs=^H>)
 vt61|vt-61|vt61.5|dec vt61,
 	cols#80, lines#24,
@@ -26434,5 +26471,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-01-18
 #	+ spelling fixes per codespell -TD
 #	+ improve xm example for xterm+x11mouse, xterm+sm+1006 -TD
+#
+# 2020-02-22
+#	+ improve vt50h and vt52 based on DECScope manual -TD
+#	+ add/use vt52+keypad and vt52-basic -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

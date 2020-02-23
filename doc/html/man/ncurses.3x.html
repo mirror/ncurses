@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.144 2020/02/02 23:34:34 tom Exp @
+  * @Id: ncurses.3x,v 1.145 2020/02/23 01:05:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200215).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200222).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -1277,28 +1277,37 @@
        between  the XSI Curses and <STRONG>ncurses</STRONG> calls) are described in <STRONG>PORTABILITY</STRONG>
        sections of the library man pages.
 
+
+</PRE><H3><a name="h3-Error-checking">Error checking</a></H3><PRE>
+       In many cases, X/Open Curses is vague about error conditions,  omitting
+       some of the SVr4 documentation.
+
        Unlike other implementations, this one checks parameters such as point-
-       ers  to WINDOW structures to ensure they are not null.  The main reason
-       for providing this behavior is to guard against programmer error.   The
-       standard  interface  does  not provide a way for the library to tell an
+       ers to WINDOW structures to ensure they are not null.  The main  reason
+       for  providing this behavior is to guard against programmer error.  The
+       standard interface does not provide a way for the library  to  tell  an
        application which of several possible errors were detected.  Relying on
        this (or some other) extension will adversely affect the portability of
        curses applications.
 
-       This implementation also contains several extensions:
+
+</PRE><H3><a name="h3-Extensions-versus-portability">Extensions versus portability</a></H3><PRE>
+       Most  of the extensions provided by ncurses have not been standardized.
+       Some  have  been  incorporated  into  other  implementations,  such  as
+       PDCurses or NetBSD curses.  Here are a few to consider:
 
        <STRONG>o</STRONG>   The routine <STRONG>has_key</STRONG> is not part of XPG4, nor is it present in SVr4.
            See the <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG> manual page for details.
 
-       <STRONG>o</STRONG>   The  routine  <STRONG>slk_attr</STRONG>  is  not  part of XPG4, nor is it present in
+       <STRONG>o</STRONG>   The routine <STRONG>slk_attr</STRONG> is not part of XPG4,  nor  is  it  present  in
            SVr4.  See the <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG> manual page for details.
 
-       <STRONG>o</STRONG>   The routines <STRONG>getmouse</STRONG>, <STRONG>mousemask</STRONG>,  <STRONG>ungetmouse</STRONG>,  <STRONG>mouseinterval</STRONG>,  and
-           <STRONG>wenclose</STRONG>  relating  to  mouse interfacing are not part of XPG4, nor
-           are they present in SVr4.  See the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual  page  for
+       <STRONG>o</STRONG>   The  routines  <STRONG>getmouse</STRONG>,  <STRONG>mousemask</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mouseinterval</STRONG>, and
+           <STRONG>wenclose</STRONG> relating to mouse interfacing are not part  of  XPG4,  nor
+           are  they  present in SVr4.  See the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual page for
            details.
 
-       <STRONG>o</STRONG>   The  routine  <STRONG>mcprint</STRONG> was not present in any previous curses imple-
+       <STRONG>o</STRONG>   The routine <STRONG>mcprint</STRONG> was not present in any previous  curses  imple-
            mentation.  See the <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG> manual page for details.
 
        <STRONG>o</STRONG>   The routine <STRONG>wresize</STRONG> is not part of XPG4, nor is it present in SVr4.
@@ -1308,26 +1317,97 @@
            tion programs.  See <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG> for the discussion of <STRONG>is_scrol-</STRONG>
            <STRONG>lok</STRONG>, etc.
 
-       <STRONG>o</STRONG>   This  implementation  can be configured to provide rudimentary sup-
-           port for multi-threaded  applications.   See  <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>  for
+       <STRONG>o</STRONG>   This implementation can be configured to provide  rudimentary  sup-
+           port  for  multi-threaded  applications.   See <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG> for
            details.
 
-       <STRONG>o</STRONG>   This  implementation  can  also  be  configured to provide a set of
-           functions which improve the ability  to  manage  multiple  screens.
+       <STRONG>o</STRONG>   This implementation can also be configured  to  provide  a  set  of
+           functions  which  improve  the  ability to manage multiple screens.
            See <STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG> for details.
 
-       In  historic  curses  versions, delays embedded in the capabilities <STRONG>cr</STRONG>,
-       <STRONG>ind</STRONG>, <STRONG>cub1</STRONG>, <STRONG>ff</STRONG> and <STRONG>tab</STRONG> activated corresponding delay bits  in  the  UNIX
+
+</PRE><H3><a name="h3-Padding-differences">Padding differences</a></H3><PRE>
+       In historic curses versions, delays embedded in  the  capabilities  <STRONG>cr</STRONG>,
+       <STRONG>ind</STRONG>,  <STRONG>cub1</STRONG>,  <STRONG>ff</STRONG>  and <STRONG>tab</STRONG> activated corresponding delay bits in the UNIX
        tty driver.  In this implementation, all padding is done by sending NUL
-       bytes.  This method is slightly more expensive, but narrows the  inter-
-       face  to  the  UNIX  kernel  significantly  and increases the package's
+       bytes.   This method is slightly more expensive, but narrows the inter-
+       face to the UNIX  kernel  significantly  and  increases  the  package's
        portability correspondingly.
 
 
-</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header file <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes  the  header  files
+</PRE><H3><a name="h3-Header-files">Header files</a></H3><PRE>
+       The  header  file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes the header files
        <STRONG>&lt;stdio.h&gt;</STRONG> and <STRONG>&lt;unctrl.h&gt;</STRONG>.
 
+       X/Open Curses has more to say, but does not finish the story:
+
+           The inclusion of &lt;curses.h&gt; may make visible all symbols  from  the
+           headers &lt;stdio.h&gt;, &lt;term.h&gt;, &lt;termios.h&gt;, and &lt;wchar.h&gt;.
+
+       Here is a more complete story:
+
+       <STRONG>o</STRONG>   Starting   with  BSD  curses,  all  implementations  have  included
+           &lt;stdio.h&gt;.
+
+           BSD curses included &lt;curses.h&gt;  and  &lt;unctrl.h&gt;  from  an  internal
+           header "curses.ext" ("ext" was a short name for <EM>externs</EM>).
+
+           BSD  curses  used  &lt;stdio.h&gt; internally (for <STRONG>printw</STRONG> and <STRONG>scanw</STRONG>), but
+           nothing in &lt;curses.h&gt; itself relied upon &lt;stdio.h&gt;.
+
+       <STRONG>o</STRONG>   SVr2 curses added <STRONG><A HREF="curs_initscr.3x.html">newterm(3x)</A></STRONG>, which relies upon  &lt;stdio.h&gt;.   That
+           is, the function prototype uses <STRONG>FILE</STRONG>.
+
+           SVr4 curses added <STRONG>putwin</STRONG> and <STRONG>getwin</STRONG>, which also use &lt;stdio.h&gt;.
+
+           X/Open Curses documents all three of these functions.
+
+           SVr4  curses  and  X/Open  Curses  do  not require the developer to
+           include  &lt;stdio.h&gt;  before  including  &lt;curses.h&gt;.   Both  document
+           curses showing &lt;curses.h&gt; as the only required header.
+
+           As a result, standard &lt;curses.h&gt; will always include &lt;stdio.h&gt;.
+
+       <STRONG>o</STRONG>   X/Open  Curses is inconsistent with respect to SVr4 regarding &lt;unc-
+           trl.h&gt;.
+
+           As  noted  in  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>,  ncurses  includes  &lt;unctrl.h&gt;   from
+           &lt;curses.h&gt; (like SVr4).
+
+       <STRONG>o</STRONG>   X/Open's comments about &lt;term.h&gt; and &lt;termios.h&gt; may refer to HP-UX
+           and AIX:
+
+           HP-UX curses includes &lt;term.h&gt; from &lt;curses.h&gt; to declare <STRONG>setupterm</STRONG>
+           in curses.h, but ncurses (and Solaris curses) do not.
+
+           AIX  curses includes &lt;term.h&gt; and &lt;termios.h&gt;.  Again, ncurses (and
+           Solaris curses) do not.
+
+       <STRONG>o</STRONG>   X/Open says that &lt;curses.h&gt; <EM>may</EM> include &lt;term.h&gt;, but there  is  no
+           requirement that it do that.
+
+           Some  programs  use  functions  declared  in  both  &lt;curses.h&gt;  and
+           &lt;term.h&gt;, and must include both headers in the same  module.   Very
+           old  versions  of  AIX  curses required including &lt;curses.h&gt; before
+           including &lt;term.h&gt;.
+
+           Because ncurses header files include the headers needed  to  define
+           datatypes used in the headers, ncurses header files can be included
+           in any order.  But for portability, you should  include  &lt;curses.h&gt;
+           before &lt;term.h&gt;.
+
+       <STRONG>o</STRONG>   X/Open  Curses  says  <EM>"may</EM> <EM>make</EM> <EM>visible"</EM> because including a header
+           file does not necessarily make all symbols in it visible (there are
+           ifdef's to consider).
+
+           For  instance,  in  ncurses &lt;wchar.h&gt; <EM>may</EM> be included if the proper
+           symbol is defined, and if ncurses is configured for  wide-character
+           support.   If the header is included, its symbols may be made visi-
+           ble.  That depends on the value used for <STRONG>_XOPEN_SOURCE</STRONG> feature test
+           macro.
+
+
+</PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        If  standard  output from a <STRONG>ncurses</STRONG> program is re-directed to something
        which is not a tty, screen updates will be directed to standard  error.
        This was an undocumented feature of AT&amp;T System V Release 3 curses.
@@ -1384,7 +1464,14 @@
 <li><a href="#h2-FILES">FILES</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 <li><a href="#h2-EXTENSIONS">EXTENSIONS</a></li>
-<li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
+<li><a href="#h2-PORTABILITY">PORTABILITY</a>
+<ul>
+<li><a href="#h3-Error-checking">Error checking</a></li>
+<li><a href="#h3-Extensions-versus-portability">Extensions versus portability</a></li>
+<li><a href="#h3-Padding-differences">Padding differences</a></li>
+<li><a href="#h3-Header-files">Header files</a></li>
+</ul>
+</li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-AUTHORS">AUTHORS</a></li>
 </ul>
