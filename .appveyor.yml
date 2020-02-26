@@ -1,0 +1,25 @@
+image: Visual Studio 2017
+
+environment:
+  PATH: C:\\Python37;C:\\Python37\Scripts;%PATH%
+  matrix:
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=False -s compiler.runtime=MT
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=False
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=False
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=True
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=True
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=False -o ncurses:with_extended_colors=False
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=False -o ncurses:with_extended_colors=True
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=True  -o ncurses:with_extended_colors=False
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=True  -o ncurses:with_extended_colors=True
+    - INSTALL_OPTS: -o ncurses:shared=False -o ncurses:with_widec=False -o ncurses:with_extended_colors=True -pr ./mingw8
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=False -o ncurses:with_extended_colors=True -pr ./mingw8
+    - INSTALL_OPTS: -o ncurses:shared=True  -o ncurses:with_widec=True  -o ncurses:with_extended_colors=True -pr ./mingw8
+
+install:
+  - python -m pip install conan
+  - python -m conans.conan user
+
+build_script:
+  - python -m conans.conan create . %INSTALL_OPTS%

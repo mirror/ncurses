@@ -1,0 +1,15 @@
+[settings]
+os=Windows
+os_build=Windows
+arch=x86_64
+arch_build=x86_64
+compiler=gcc
+compiler.version=8
+compiler.threads=posix
+compiler.exception=seh
+compiler.libcxx=libstdc++
+build_type=Release
+[options]
+[build_requires]
+*:mingw_installer/1.0@conan/stable
+[env]
