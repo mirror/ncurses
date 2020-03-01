@@ -31,7 +31,7 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_mingw.h,v 1.7 2020/02/02 23:34:34 tom Exp $ */
+/* $Id: nc_mingw.h,v 1.8 2020/02/29 15:46:00 anonymous.maarten Exp $ */
 
 #ifndef NC_MINGW_H
 #define NC_MINGW_H 1
@@ -52,7 +52,9 @@
 #undef gettimeofday
 #define gettimeofday(tv,tz) _nc_gettimeofday(tv,tz)
 
+#if HAVE_SYS_TIME_H
 #include <sys/time.h>		/* for struct timeval */
+#endif
 
 extern int _nc_gettimeofday(struct timeval *, void *);
 

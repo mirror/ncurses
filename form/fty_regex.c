@@ -35,12 +35,12 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.28 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.29 2020/02/29 15:46:00 anonymous.maarten Exp $")
 
 #if HAVE_REGEX_H_FUNCS || HAVE_LIB_PCRE2	/* We prefer POSIX regex */
 
-#if HAVE_PCRE2_POSIX_H
-#include <pcre2-posix.h>
+#if HAVE_PCRE2POSIX_H
+#include <pcre2posix.h>
 #elif HAVE_PCREPOSIX_H
 #include <pcreposix.h>
 #else

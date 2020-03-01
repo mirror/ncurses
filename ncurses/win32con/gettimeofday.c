@@ -36,9 +36,13 @@
 
 #include <windows.h>
 
-MODULE_ID("$Id: gettimeofday.c,v 1.4 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: gettimeofday.c,v 1.5 2020/02/29 15:46:00 anonymous.maarten Exp $")
 
 #define JAN1970 116444736000000000LL	/* the value for 01/01/1970 00:00 */
+
+#ifdef _MSC_VER
+#include <winsock2.h>
+#endif
 
 int
 gettimeofday(struct timeval *tv, void *tz GCC_UNUSED)

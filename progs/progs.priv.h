@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.48 2020/02/02 23:34:34 tom Exp $
+ * $Id: progs.priv.h,v 1.49 2020/02/29 20:57:36 tom Exp $
  *
  *	progs.priv.h
  *
@@ -155,6 +155,10 @@ extern int optind;
 #endif /* gcc workarounds */
 
 /* usually in <unistd.h> */
+#ifndef STDIN_FILENO
+#define STDIN_FILENO 0
+#endif
+
 #ifndef STDOUT_FILENO
 #define STDOUT_FILENO 1
 #endif

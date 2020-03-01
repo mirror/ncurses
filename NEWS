@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3453 2020/02/23 01:08:47 tom Exp $
+-- $Id: NEWS,v 1.3455 2020/02/29 23:15:52 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,24 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200229
+	+ modify CF_NCURSES_CONFIG to work around xcode's c99 "-W" option,
+	  which conflicts with conventional use for passing linker options.
+	> fixes for building with Visual Studio C++ and msys2 (patches by
+	  "Maarten Anonymous"):
+	+ check for pcre2posix.h instead of pcre2-posix.h
+	+ add case in CF_SHARED_OPTS for msys2 + msvc
+	+ add fallback definition for STDIN_FILENO in progs.priv.h
+	+ modify win_driver.c to use _alloca() rather than gcc's variable
+	  length array feature.
+	+ add NCURSES_IMPEXP to ncurses wrapped-variable declarations
+	+ remove NCURSES_IMPEXP from class variables in c++/cursslk.h
+	+ remove fallback prototype for exit() from c++/etip.h.in
+	+ use configured check for <sys/time.h> in a couple of places
+	+ conditionally include winsock.h in ncurses/win32con/gettimeofday.c,
+	  because Visual Studio needs this for the timestruct declaration.
+	+ adjust syntax in a couple of files using the NCURSES_API symbol.
 
 20200222
 	+ expanded note in ncurses.3x regarding automatically-included headers
