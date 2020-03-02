@@ -37,7 +37,9 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.54 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.55 2020/03/02 01:34:48 tom Exp $")
+
+static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
 
 /*
  * Set the window's background information.
@@ -141,6 +143,14 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	if (!SP->_pair_limit) {
 	    RemAttr(new_bkgd, A_COLOR);
 	    SetPair(new_bkgd, 0);
+	}
+
+	/* avoid setting background-character to a null */
+	if (CharOf(new_bkgd) == 0) {
+	    NCURSES_CH_T tmp_bkgd = blank;
+	    SetAttr(tmp_bkgd, AttrOf(new_bkgd));
+	    SetPair(tmp_bkgd, GetPair(new_bkgd));
+	    new_bkgd = tmp_bkgd;
 	}
 
 	memset(&old_bkgd, 0, sizeof(old_bkgd));
