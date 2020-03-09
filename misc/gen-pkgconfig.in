@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.44 2020/02/12 00:09:26 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.45 2020/03/08 01:57:33 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
@@ -44,6 +44,7 @@ PANEL_NAME=@PANEL_NAME@
 MENU_NAME=@MENU_NAME@
 FORM_NAME=@FORM_NAME@
 CXX_NAME=@CXX_NAME@
+
 DFT_DEP_SUFFIX=@DFT_DEP_SUFFIX@
 TINFO_ARG_SUFFIX=@TINFO_ARG_SUFFIX@
 CXX_LIB_SUFFIX=@CXX_LIB_SUFFIX@
@@ -64,9 +65,11 @@ show_libdir='@libdir@'
 
 MAIN_LIBRARY="${LIB_NAME}@USE_ARG_SUFFIX@"
 SUB_LIBRARY="${TINFO_ARG_SUFFIX}"
-PANEL_LIBRARY="${PANEL_NAME}@USE_ARG_SUFFIX@"
-MENU_LIBRARY="${MENU_NAME}@USE_ARG_SUFFIX@"
+
+CXX_LIBRARY="${CXX_NAME}@USE_ARG_SUFFIX@"
 FORM_LIBRARY="${FORM_NAME}@USE_ARG_SUFFIX@"
+MENU_LIBRARY="${MENU_NAME}@USE_ARG_SUFFIX@"
+PANEL_LIBRARY="${PANEL_NAME}@USE_ARG_SUFFIX@"
 
 CFLAGS="@PKG_CFLAGS@"
 if [ "$includedir" != "/usr/include" ]; then
@@ -138,6 +141,12 @@ CFGVER=`pkg-config --version 2>/dev/null |head -n 1 | awk -F. '/0.[0-9][0-9]/{pr
 for name in @PC_MODULES_TO_MAKE@
 do
 	name="${name}"
+	case $name in
+	form*)		name="$FORM_LIBRARY" 	;;
+	menu*)		name="$MENU_LIBRARY" 	;;
+	panel*)		name="$PANEL_LIBRARY"	;;
+	ncurses++*)	name="$CXX_LIBRARY"		;;
+	esac
 	LIBS="-l$name"
 
 	desc="ncurses @NCURSES_MAJOR@.@NCURSES_MINOR@"

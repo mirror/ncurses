@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3456 2020/03/02 01:55:08 tom Exp $
+-- $Id: NEWS,v 1.3461 2020/03/08 14:28:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200308
+	+ update copyright notices in test-packages.
+	+ modify tracemunch to guard against errors in its known_p1 table.
+	+ add several --with-xxx-libname options, to help with pkgsrc (prompted
+	  by discussion with Thomas Klausner).
 
 20200301
 	+ modify wbkgd() and wbkgrnd() to avoid storing a null in the

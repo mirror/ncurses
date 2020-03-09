@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.897 2020/02/29 21:30:04 anonymous.maarten Exp $
+dnl $Id: aclocal.m4,v 1.903 2020/03/08 01:05:14 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4015,7 +4015,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 88 updated: 2018/08/18 12:19:21
+dnl CF_LIB_RULES version: 89 updated: 2020/03/07 20:05:14
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -4103,8 +4103,13 @@ CF_EOF
 		for cf_item in $cf_LIST_MODELS
 		do
 			CF_LIB_SUFFIX($cf_item,cf_suffix,cf_depsuf)
-			cf_libname=$cf_dir
-			test "$cf_dir" = c++ && cf_libname=ncurses++
+			if test "$cf_dir" = "c++"
+			then
+				CF_MAP_LIB_BASENAME(cf_libname,cxx)
+			else
+				CF_MAP_LIB_BASENAME(cf_libname,$cf_dir)
+			fi
+			test -z "$cf_libname" && cf_libname="$cf_dir"
 			if test $cf_item = shared ; then
 				if test -n "${LIB_SUFFIX}"
 				then
@@ -4282,8 +4287,10 @@ CF_EOF
 					;;
 				esac
 			elif test $cf_dir = c++ ; then
-				cf_libname=ncurses++$USE_LIB_SUFFIX
+				CF_MAP_LIB_BASENAME(cf_libname,cxx)
+				cf_libname=${cf_libname}$USE_LIB_SUFFIX
 			else
+				CF_MAP_LIB_BASENAME(cf_libname,$cf_dir)
 				cf_libname=${cf_libname}$USE_LIB_SUFFIX
 			fi
 			if test -n "${USE_ARG_SUFFIX}" ; then
@@ -5479,6 +5486,17 @@ exit 0
 CF_EOF
 chmod 755 $cf_edit_man
 
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_MAP_LIB_BASENAME version: 1 updated: 2020/03/07 20:05:14
+dnl -------------------
+dnl Convert a default-libname to the actual one used via CF_WITH_LIB_BASENAME.
+dnl
+dnl $1 = variable to set
+dnl $2 = default-libname
+AC_DEFUN([CF_MAP_LIB_BASENAME],[
+CF_UPPER(cf_map_lib_basename,$2)
+eval $1=\$${cf_map_lib_basename}_NAME
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_MATH_LIB version: 9 updated: 2017/01/21 11:06:25
@@ -7195,7 +7213,7 @@ if test "$cf_cv_sizechange" != no ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SRC_MODULES version: 31 updated: 2019/09/21 18:08:42
+dnl CF_SRC_MODULES version: 32 updated: 2020/03/07 20:05:14
 dnl --------------
 dnl For each parameter, test if the source-directory exists, and if it contains
 dnl a 'modules' file.  If so, add to the list $cf_cv_src_modules which we'll
@@ -7249,14 +7267,15 @@ do
 			CF_UPPER(cf_have_include,$cf_dir)
 			AC_DEFINE_UNQUOTED(HAVE_${cf_have_include}_H)
 			AC_DEFINE_UNQUOTED(HAVE_LIB${cf_have_include})
-			TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${cf_dir}${DFT_DEP_SUFFIX} $TEST_DEPS"
-			TEST_DEP2="${LIB_2ND}/${LIB_PREFIX}${cf_dir}${DFT_DEP_SUFFIX} $TEST_DEP2"
+			CF_MAP_LIB_BASENAME(TEST_ROOT,$cf_dir)
+			TEST_DEPS="${LIB_DIR}/${LIB_PREFIX}${TEST_ROOT}${DFT_DEP_SUFFIX} $TEST_DEPS"
+			TEST_DEP2="${LIB_2ND}/${LIB_PREFIX}${TEST_ROOT}${DFT_DEP_SUFFIX} $TEST_DEP2"
 			if test "$DFT_LWR_MODEL" = "libtool"; then
 				TEST_ARGS="${TEST_DEPS}"
 				TEST_ARG2="${TEST_DEP2}"
 			else
-				TEST_ARGS="-l${cf_dir}${USE_ARG_SUFFIX} $TEST_ARGS"
-				TEST_ARG2="-l${cf_dir}${USE_ARG_SUFFIX} $TEST_ARG2"
+				TEST_ARGS="-l${TEST_ROOT}${USE_ARG_SUFFIX} $TEST_ARGS"
+				TEST_ARG2="-l${TEST_ROOT}${USE_ARG_SUFFIX} $TEST_ARG2"
 			fi
 			PC_MODULES_TO_MAKE="${PC_MODULES_TO_MAKE} ${cf_dir}${USE_ARG_SUFFIX}"
 		fi
@@ -8372,6 +8391,35 @@ case .$with_libtool_opts in
 esac
 
 AC_SUBST(LIBTOOL_OPTS)
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_LIB_BASENAME version: 1 updated: 2020/03/07 20:05:14
+dnl --------------------
+dnl Allow for overriding the basename of a library, i.e., the part to which
+dnl prefixes/suffixes are attached.
+dnl
+dnl $1 = variable to set
+dnl $2 = option name
+dnl $3 = default basename for library, if omitted use $2
+AC_DEFUN([CF_WITH_LIB_BASENAME],
+[
+AC_MSG_CHECKING(for desired basename for $2 library)
+AC_ARG_WITH($2-libname,
+	[  --with-$2-libname=XXX override ifelse($3,,$2,$3) basename of library],
+	[with_lib_basename=$withval],
+	[with_lib_basename=ifelse($3,,$2,$3)])
+$1="$with_lib_basename"
+
+case "x[$]$1" in
+(x|xno|xnone|xyes)
+	$1=ifelse($3,,$2,$3)
+	;;
+(*)
+	;;
+esac
+
+AC_MSG_RESULT([$]$1)
+AC_SUBST($1)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_LIB_PREFIX version: 1 updated: 2012/01/21 19:28:10

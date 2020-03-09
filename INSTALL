@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.217 2020/02/15 13:39:30 tom Exp $
+-- $Id: INSTALL,v 1.221 2020/03/08 14:27:08 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -438,6 +438,23 @@ SUMMARY OF CONFIGURE OPTIONS:
 	include directly from the subdirectory will fail to compile correctly.
 	Without some special effort, it will either fail to compile at all,
 	or the compiler may find a different unctrl.h file.
+
+	In addition to the curses library, a system may provide its own
+	versions of the add-on libraries (form, menu, panel), which would
+	not be compatible with ncurses.  These options allow you to rename
+	ncurses' add-on libraries to avoid conflicts when linking:
+
+		--with-form-libname=XXX
+		--with-menu-libname=XXX
+		--with-panel-libname=XXX
+
+	Rather than renaming them abitrarily, a prefix or suffix is
+	recommended.  An "n" prefix provides consistency with ncurses versus
+	curses, i.e.,
+
+		--with-form-libname=nform
+		--with-menu-libname=nmenu
+		--with-panel-libname=npanel
 
     --disable-relink
 	If --enable-rpath is given, the generated makefiles normally will
@@ -864,6 +881,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	Specify a suffix for the ncursesw6-config file, etc., used to work
 	around conflicts with packages.
 
+    --with-cxx-libname=NAME
+	Override the basename of the ncurses++ library (default: "ncurses++")
+
     --with-cxx-shared
 	When --with-shared is set, build libncurses++ as a shared library.
 	This implicitly relies upon building with gcc/g++, since other
@@ -908,6 +928,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	compiled into the ncurses library.  See CONFIGURING FALLBACK ENTRIES.
 
 	See also "--with-tic-path" and "--with-infocmp-path".
+
+    --with-form-libname=NAME
+	Override the basename of the form library (default: "form")
 
     --with-gpm
 	use Alessandro Rubini's GPM library to provide mouse support on the
@@ -1043,6 +1066,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	by running them through tbl to generate tables understandable by
 	nroff.
 
+    --with-menu-libname=NAME
+	Override the basename of the menu library (default: "menu")
+
     --with-mmask-t=TYPE
 	Override type of mmask_t, which stores the mouse mask.  Prior to
 	ncurses 5.5, this was always unsigned long, but with ncurses 5.5, it
@@ -1069,6 +1095,9 @@ SUMMARY OF CONFIGURE OPTIONS:
 	applications that required knowledge of the ospeed variable, i.e.,
 	those using termcap, do not use the higher speeds.  Your application
 	(or system, in general) may or may not.
+
+    --with-panel-libname=NAME
+	Override the basename of the panel library (default: "panel")
 
     --with-pc-suffix=SUFFIX
 	If ".pc" files are installed, optionally add a suffix to the files

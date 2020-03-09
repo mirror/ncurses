@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.177 2020/02/27 10:21:59 tom Exp $
+dnl $Id: aclocal.m4,v 1.178 2020/03/08 14:13:15 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -3794,6 +3794,35 @@ if test "$with_dmalloc" = yes ; then
 	AC_CHECK_HEADER(dmalloc.h,
 		[AC_CHECK_LIB(dmalloc,[dmalloc_debug]ifelse([$1],,[],[,$1]))])
 fi
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_WITH_LIB_BASENAME version: 1 updated: 2020/03/07 20:05:14
+dnl --------------------
+dnl Allow for overriding the basename of a library, i.e., the part to which
+dnl prefixes/suffixes are attached.
+dnl
+dnl $1 = variable to set
+dnl $2 = option name
+dnl $3 = default basename for library, if omitted use $2
+AC_DEFUN([CF_WITH_LIB_BASENAME],
+[
+AC_MSG_CHECKING(for desired basename for $2 library)
+AC_ARG_WITH($2-libname,
+	[  --with-$2-libname=XXX override ifelse($3,,$2,$3) basename of library],
+	[with_lib_basename=$withval],
+	[with_lib_basename=ifelse($3,,$2,$3)])
+$1="$with_lib_basename"
+
+case "x[$]$1" in
+(x|xno|xnone|xyes)
+	$1=ifelse($3,,$2,$3)
+	;;
+(*)
+	;;
+esac
+
+AC_MSG_RESULT([$]$1)
+AC_SUBST($1)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_WITH_NCURSES_ETC version: 5 updated: 2016/02/20 19:23:20

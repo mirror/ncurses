@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.697 2020/02/08 20:56:13 tom Exp $
+dnl $Id: configure.in,v 1.700 2020/03/08 00:53:28 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.697 $)
+AC_REVISION($Revision: 1.700 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2193,6 +2193,12 @@ AC_SUBST(NCURSES_TREE)
 ### predefined stuff for the test programs
 AC_DEFINE(HAVE_SLK_COLOR,1,[Define to 1 if we have slk_color for test-programs])
 
+# pkgsrc uses these
+CF_WITH_LIB_BASENAME(FORM_NAME,form)
+CF_WITH_LIB_BASENAME(MENU_NAME,menu)
+CF_WITH_LIB_BASENAME(PANEL_NAME,panel)
+CF_WITH_LIB_BASENAME(CXX_NAME,cxx,ncurses++)
+
 ### Construct the list of subdirectories for which we'll customize makefiles
 ### with the appropriate compile-rules.
 
@@ -2245,17 +2251,6 @@ AC_SUBST(MAKE_TESTS)
 
 ADAHTML_DIR=../../doc/html/ada
 AC_SUBST(ADAHTML_DIR)
-
-# these could be configurable, but are not currently
-PANEL_NAME=panel
-MENU_NAME=menu
-FORM_NAME=form
-CXX_NAME=ncurses++
-
-AC_SUBST(PANEL_NAME)
-AC_SUBST(MENU_NAME)
-AC_SUBST(FORM_NAME)
-AC_SUBST(CXX_NAME)
 
 # workaround for OS/2 (20151017)
 case $cf_cv_system_name in
@@ -2413,12 +2408,14 @@ fi
 ### Special initialization commands, used to pass information from the
 ### configuration-run into config.status
 
-AWK="$AWK"
 ALTERNATE_SYMS="$ALTERNATE_SYMS"
+AWK="$AWK"
+CXX_NAME="$CXX_NAME"
 DFT_ARG_SUFFIX="$DFT_ARG_SUFFIX"
 DFT_LWR_MODEL="$DFT_LWR_MODEL"
 ECHO_LD="$ECHO_LD"
 EXTRA_SUFFIX="$EXTRA_SUFFIX"
+FORM_NAME="$FORM_NAME"
 LDCONFIG="$LDCONFIG"
 LIBTOOL_VERSION="$LIBTOOL_VERSION"
 LIB_NAME="$LIB_NAME"
@@ -2428,10 +2425,12 @@ LIB_SUFFIX="$LIB_SUFFIX"
 LIB_TRACING="$LIB_TRACING"
 LN_S="$LN_S"
 MAKE_TERMINFO="$MAKE_TERMINFO"
+MENU_NAME="$MENU_NAME"
 NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
 NCURSES_OSPEED="$NCURSES_OSPEED"
 NCURSES_PATCH="$NCURSES_PATCH"
+PANEL_NAME="$PANEL_NAME"
 SRC_SUBDIRS="$SRC_SUBDIRS"
 TERMINFO="$TERMINFO"
 TICS_ARG_SUFFIX="$TICS_ARG_SUFFIX"
