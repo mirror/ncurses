@@ -1,0 +1,3 @@
+*.hin~
+autom4te.cache
+include/stamp-h.in
