@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.145 2020/02/23 01:05:45 tom Exp @
+  * @Id: ncurses.3x,v 1.146 2020/03/14 23:13:18 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200222).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200314).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -1406,10 +1406,29 @@
            ble.  That depends on the value used for <STRONG>_XOPEN_SOURCE</STRONG> feature test
            macro.
 
+       <STRONG>o</STRONG>   X/Open  Curses  documents  one  required header, in a special case:
+           &lt;stdarg.h&gt;  before  &lt;curses.h&gt;  to  prototype  the  <STRONG>vw_printw</STRONG>   and
+           <STRONG>vw_scanw</STRONG>  functions  (as well as the obsolete the <STRONG>vwprintw</STRONG> and <STRONG>vws-</STRONG>
+           <STRONG>canw</STRONG> functions).  Each of those uses a <STRONG>va_list</STRONG> parameter.
+
+           The two obsolete functions were  introduced  in  SVr3.   The  other
+           functions  were  introduced  in  X/Open  Curses.   In between, SVr4
+           curses provided for  the  possibility  that  an  application  might
+           include either &lt;varargs.h&gt; or &lt;stdarg.h&gt;.  Initially, that was done
+           by using <STRONG>void*</STRONG> for the <STRONG>va_list</STRONG> parameter.  Later,  a  special  type
+           (defined  in &lt;stdio.h&gt;) was introduced, to allow for compiler type-
+           checking.  That special type is always available, because &lt;stdio.h&gt;
+           is always included by &lt;curses.h&gt;.
+
+           None of the X/Open Curses implementations require an application to
+           include &lt;stdarg.h&gt;  before  &lt;curses.h&gt;  because  they  either  have
+           allowed  for  a  special type, or (like ncurses) include &lt;stdarg.h&gt;
+           directly to provide a portable interface.
+
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       If  standard  output from a <STRONG>ncurses</STRONG> program is re-directed to something
-       which is not a tty, screen updates will be directed to standard  error.
+       If standard output from a <STRONG>ncurses</STRONG> program is re-directed  to  something
+       which  is not a tty, screen updates will be directed to standard error.
        This was an undocumented feature of AT&amp;T System V Release 3 curses.
 
 

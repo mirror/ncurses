@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.145 2020/02/23 01:05:45 tom Exp $
+.\" $Id: ncurses.3x,v 1.146 2020/03/14 23:13:18 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1483,6 +1483,29 @@ wide-character support.
 If the header is included, its symbols may be made visible.
 That depends on the value used for \fB_XOPEN_SOURCE\fP
 feature test macro.
+.bP
+X/Open Curses documents one required header,
+in a special case: <stdarg.h> before <curses.h> to prototype
+the \fBvw_printw\fP and \fBvw_scanw\fP functions
+(as well as the obsolete
+the \fBvwprintw\fP and \fBvwscanw\fP functions).
+Each of those uses a \fBva_list\fP parameter.
+.IP
+The two obsolete functions were introduced in SVr3.
+The other functions were introduced in X/Open Curses.
+In between, SVr4 curses provided for the possibility that
+an application might include either <varargs.h> or <stdarg.h>.
+Initially, that was done by using \fBvoid*\fP for the \fBva_list\fP
+parameter.
+Later, a special type (defined in <stdio.h>) was introduced,
+to allow for compiler type-checking.
+That special type is always available,
+because <stdio.h> is always included by <curses.h>.
+.IP
+None of the X/Open Curses implementations require an application
+to include <stdarg.h> before <curses.h> because they either
+have allowed for a special type, or (like ncurses) include <stdarg.h>
+directly to provide a portable interface.
 .SH NOTES
 .PP
 If standard output from a \fBncurses\fR program is re-directed to something
