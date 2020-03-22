@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.146 2020/03/14 23:13:18 tom Exp @
+  * @Id: ncurses.3x,v 1.147 2020/03/21 23:38:25 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200314).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200321).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -756,6 +756,12 @@
        <STRONG>setscrreg</STRONG>,  <STRONG>wsetscrreg</STRONG>,  <STRONG>getyx</STRONG>,  <STRONG>getbegyx</STRONG>,  and  <STRONG>getmaxyx</STRONG> are undefined
        (i.e., these should not be used as the right-hand  side  of  assignment
        statements).
+
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       the window pointer is null.  Most "mv"-prefixed functions (except vari-
+       adic functions such as <STRONG>mvprintw</STRONG>) are provided both as macros and  func-
+       tions.
 
        Routines that return pointers return <STRONG>NULL</STRONG> on error.
 

@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3463 2020/03/15 00:15:32 tom Exp $
+-- $Id: NEWS,v 1.3466 2020/03/22 00:28:35 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200321
+	+ improve configure-checks to reduce warnings about unused variables.
+	+ improve description of error-returns in waddch and waddnstr manual
+	  pages (prompted by patch by Benno Schulenberg).
+	+ add test/move_field.c to demonstrate move_field(), and a stub for
+	  a corresponding demo of dup_field().
 
 20200314
 	+ add history note to curs_scanw.3x for <stdarg.h> and <varargs.h>

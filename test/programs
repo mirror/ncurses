@@ -1,4 +1,4 @@
-# $Id: programs,v 1.45 2020/02/02 23:34:34 tom Exp $
+# $Id: programs,v 1.46 2020/03/21 15:55:22 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 2006-2016,2017 Free Software Foundation, Inc.                    #
@@ -55,6 +55,7 @@ dots_curses	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_curses
 dots_mvcur	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_mvcur
 dots_termcap	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	dots_termcap
 dots_xcurses	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	dots_xcurses
+dup_field	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	dup_field edit_field popup_msg
 echochar	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	echochar
 extended_color	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	extended_color
 filter		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	filter
@@ -75,6 +76,7 @@ keynames	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	keynames
 knight		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	knight
 list_keys	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	list_keys
 lrtest		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	lrtest
+move_field	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	move_field edit_field popup_msg
 movewindow	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	movewindow popup_msg
 ncurses		$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	ncurses
 newdemo		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	newdemo

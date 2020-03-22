@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.51 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_addch.3x,v 1.52 2020/03/21 23:47:23 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -173,106 +173,117 @@
        <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
+       If  it  is  not  possible  to  add  a  complete  character, an error is
+       returned:
+
+       <STRONG>o</STRONG>   If <STRONG>scrollok</STRONG> is not enabled, writing a character at the lower  right
+           margin  succeeds.   However, an error is returned because it is not
+           possible to wrap to a new line
+
+       <STRONG>o</STRONG>   If an error is detected when converting a multibyte character to  a
+           sequence  of  bytes,  or  if  it  is not possible to add all of the
+           resulting bytes in the window, an error is returned.
+
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        Note that <STRONG>addch</STRONG>, <STRONG>mvaddch</STRONG>, <STRONG>mvwaddch</STRONG>, and <STRONG>echochar</STRONG> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       All  these functions are described in the XSI Curses standard, Issue 4.
-       The defaults specified for forms-drawing characters apply in the  POSIX
+       All these functions are described in the XSI Curses standard, Issue  4.
+       The  defaults specified for forms-drawing characters apply in the POSIX
        locale.
 
 
 </PRE><H3><a name="h3-ACS-Symbols">ACS Symbols</a></H3><PRE>
        X/Open Curses states that the <EM>ACS</EM><STRONG>_</STRONG> definitions are <STRONG>char</STRONG> constants.  For
-       the wide-character implementation (see <STRONG>curs_add_wch</STRONG>), there are  analo-
-       gous  <EM>WACS</EM><STRONG>_</STRONG>  definitions which are <STRONG>cchar_t</STRONG> constants.  Some implementa-
+       the  wide-character implementation (see <STRONG>curs_add_wch</STRONG>), there are analo-
+       gous <EM>WACS</EM><STRONG>_</STRONG> definitions which are <STRONG>cchar_t</STRONG> constants.   Some  implementa-
        tions are problematic:
 
-       <STRONG>o</STRONG>   Some implementations define the ACS symbols to a constant (such  as
+       <STRONG>o</STRONG>   Some  implementations define the ACS symbols to a constant (such as
            Solaris), while others define those to entries in an array.
 
-           This  implementation uses an array <STRONG>acs_map</STRONG>, as done in SVr4 curses.
+           This implementation uses an array <STRONG>acs_map</STRONG>, as done in SVr4  curses.
            NetBSD also uses an array, actually named <STRONG>_acs_char</STRONG>, with a <STRONG>#define</STRONG>
            for compatibility.
 
        <STRONG>o</STRONG>   HPUX curses equates some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the analogous <EM>WACS</EM><STRONG>_</STRONG>
-           symbols as if the <EM>ACS</EM><STRONG>_</STRONG> symbols were wide  characters.   The  misde-
-           fined  symbols  are the arrows and other symbols which are not used
+           symbols  as  if  the <EM>ACS</EM><STRONG>_</STRONG> symbols were wide characters.  The misde-
+           fined symbols are the arrows and other symbols which are  not  used
            for line-drawing.
 
-       <STRONG>o</STRONG>   X/Open Curses (issues 2 through 7) has a  typographical  error  for
+       <STRONG>o</STRONG>   X/Open  Curses  (issues  2 through 7) has a typographical error for
            the ACS_LANTERN symbol, equating its "VT100+ Character" to <STRONG>I</STRONG> (capi-
-           tal I), while the header files for  SVr4  curses  and  the  various
+           tal  I),  while  the  header  files for SVr4 curses and the various
            implementations use <STRONG>i</STRONG> (lowercase).
 
-           None  of the terminal descriptions on Unix platforms use uppercase-
-           I, except for Solaris (i.e., <EM>screen</EM>'s terminal description,  appar-
+           None of the terminal descriptions on Unix platforms use  uppercase-
+           I,  except for Solaris (i.e., <EM>screen</EM>'s terminal description, appar-
            ently based on the X/Open documentation around 1995).  On the other
-           hand, the terminal description <EM>gs6300</EM> (AT&amp;T PC6300 with EMOTS  Ter-
+           hand,  the terminal description <EM>gs6300</EM> (AT&amp;T PC6300 with EMOTS Ter-
            minal Emulator) uses lowercase-i.
 
-       Some  ACS  symbols  (ACS_S3,  ACS_S7,  ACS_LEQUAL,  ACS_GEQUAL, ACS_PI,
-       ACS_NEQUAL, ACS_STERLING) were not documented in any publicly  released
-       System  V.   However,  many  publicly  available terminfos include <STRONG>acsc</STRONG>
-       strings in which their key characters (pryz{|})  are  embedded,  and  a
-       second-hand  list  of  their  character descriptions has come to light.
+       Some ACS  symbols  (ACS_S3,  ACS_S7,  ACS_LEQUAL,  ACS_GEQUAL,  ACS_PI,
+       ACS_NEQUAL,  ACS_STERLING) were not documented in any publicly released
+       System V.  However, many  publicly  available  terminfos  include  <STRONG>acsc</STRONG>
+       strings  in  which  their  key characters (pryz{|}) are embedded, and a
+       second-hand list of their character descriptions  has  come  to  light.
        The ACS-prefixed names for them were invented for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.
 
        The <EM>displayed</EM> values for the <EM>ACS</EM><STRONG>_</STRONG> and <EM>WACS</EM><STRONG>_</STRONG> constants depend on
 
        <STRONG>o</STRONG>   the library configuration, i.e., <STRONG>ncurses</STRONG> versus <STRONG>ncursesw</STRONG>, where the
-           latter  is  capable  of displaying Unicode while the former is not,
+           latter is capable of displaying Unicode while the  former  is  not,
            and
 
        <STRONG>o</STRONG>   whether the <EM>locale</EM> uses UTF-8 encoding.
 
-       In certain cases, the terminal is unable to display line-drawing  char-
+       In  certain cases, the terminal is unable to display line-drawing char-
        acters except by using UTF-8 (see the discussion of <STRONG>NCURSES_NO_UTF8_ACS</STRONG>
        in <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>).
 
 
 </PRE><H3><a name="h3-Character-Set">Character Set</a></H3><PRE>
-       X/Open Curses assumes that the parameter passed to  <STRONG>waddch</STRONG>  contains  a
-       single  character.   As  discussed in <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>, that character may
-       have been more than eight bits in an SVr3 or SVr4  implementation,  but
-       in  the  X/Open Curses model, the details are not given.  The important
+       X/Open  Curses  assumes  that the parameter passed to <STRONG>waddch</STRONG> contains a
+       single character.  As discussed in <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,  that  character  may
+       have  been  more than eight bits in an SVr3 or SVr4 implementation, but
+       in the X/Open Curses model, the details are not given.   The  important
        distinction between SVr4 curses and X/Open Curses is that the non-char-
        acter information (attributes and color) was separated from the charac-
        ter information which is packed in a <STRONG>chtype</STRONG> to pass to <STRONG>waddch</STRONG>.
 
-       In this implementation,  <STRONG>chtype</STRONG>  holds  an  eight-bit  character.   But
-       ncurses  allows  multibyte  characters  to be passed in a succession of
-       calls to <STRONG>waddch</STRONG>.  The other implementations do not do this; a  call  to
-       <STRONG>waddch</STRONG>  passes  exactly  one  character which may be rendered as one or
+       In  this  implementation,  <STRONG>chtype</STRONG>  holds  an  eight-bit character.  But
+       ncurses allows multibyte characters to be passed  in  a  succession  of
+       calls  to  <STRONG>waddch</STRONG>.  The other implementations do not do this; a call to
+       <STRONG>waddch</STRONG> passes exactly one character which may be  rendered  as  one  or
        more cells on the screen depending on whether it is printable.
 
-       Depending on the locale settings, ncurses will inspect the byte  passed
-       in  each  call  to <STRONG>waddch</STRONG>, and check if the latest call will continue a
+       Depending  on the locale settings, ncurses will inspect the byte passed
+       in each call to <STRONG>waddch</STRONG>, and check if the latest call  will  continue  a
        multibyte sequence.  When a character is <EM>complete</EM>, ncurses displays the
        character and moves to the next position in the screen.
 
-       If  the  calling  application  interrupts  the succession of bytes in a
+       If the calling application interrupts the  succession  of  bytes  in  a
        multibyte character by moving the current location (e.g., using <STRONG>wmove</STRONG>),
        ncurses discards the partially built character, starting over again.
 
-       For  portability to other implementations, do not rely upon this behav-
+       For portability to other implementations, do not rely upon this  behav-
        ior:
 
-       <STRONG>o</STRONG>   check if a character can be represented as a  single  byte  in  the
+       <STRONG>o</STRONG>   check  if  a  character  can be represented as a single byte in the
            current locale before attempting call <STRONG>waddch</STRONG>, and
 
        <STRONG>o</STRONG>   call <STRONG>wadd_wch</STRONG> for characters which cannot be handled by <STRONG>waddch</STRONG>.
 
 
 </PRE><H3><a name="h3-TABSIZE">TABSIZE</a></H3><PRE>
-       The  <STRONG>TABSIZE</STRONG>  variable  is  implemented  in  SVr4 and other versions of
-       curses, but is not part of X/Open curses  (see  <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>  for
+       The <STRONG>TABSIZE</STRONG> variable is implemented  in  SVr4  and  other  versions  of
+       curses,  but  is  not part of X/Open curses (see <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG> for
        more details).
 
        If <EM>ch</EM> is a carriage return, the cursor is moved to the beginning of the
-       current row of the window.  This is true of other implementations,  but
+       current  row of the window.  This is true of other implementations, but
        is not documented.
 
 
@@ -280,7 +291,7 @@
        <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>,  <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>,  <STRONG><A HREF="curs_inch.3x.html">curs_inch(3x)</A></STRONG>,  <STRONG>curs_out-</STRONG>
        <STRONG><A HREF="curs_outopts.3x.html">opts(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>.
 
-       Comparable functions  in  the  wide-character  (ncursesw)  library  are
+       Comparable  functions  in  the  wide-character  (ncursesw)  library are
        described in <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>.
 
 

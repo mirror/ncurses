@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.123 2020/03/08 16:15:42 tom Exp $
+# $Id: Makefile.in,v 1.124 2020/03/21 16:09:06 tom Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -138,15 +138,16 @@ LINT_OPTS	= @LINT_OPTS@
 LINT_LIBS	= -lform -lmenu -lpanel -lncurses @LIBS@
 
 INCDIR		= $(top_srcdir)/include
+incdir		= ../include
 
 HEADER_DEPS	= \
-	../include/curses.h \
-	../include/term.h \
-	../include/ncurses_cfg.h \
-	../include/ncurses_def.h \
-	../include/ncurses_dll.h \
-	../include/term.h \
-	../include/unctrl.h \
+	$(incdir)/curses.h \
+	$(incdir)/term.h \
+	$(incdir)/ncurses_cfg.h \
+	$(incdir)/ncurses_def.h \
+	$(incdir)/ncurses_dll.h \
+	$(incdir)/term.h \
+	$(incdir)/unctrl.h \
 	$(INCDIR)/nc_alloc.h
 
 # The rest is generated from the "programs" and "modules" files...

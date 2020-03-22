@@ -1123,6 +1123,7 @@
 ./test/dots_xcurses.c
 ./test/dump_window.c
 ./test/dump_window.h
+./test/dup_field.c
 ./test/echochar.c
 ./test/edit_field.c
 ./test/edit_field.h
@@ -1155,6 +1156,7 @@
 ./test/mini.xterm_48x48.xpm
 ./test/mk-test.awk
 ./test/modules
+./test/move_field.c
 ./test/movewindow.c
 ./test/ncurses.c
 ./test/ncurses_tst.hin

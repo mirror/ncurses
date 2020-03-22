@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.51 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_addch.3x,v 1.52 2020/03/21 23:47:23 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -175,6 +175,19 @@ unless otherwise noted in the preceding routine descriptions.
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
+.PP
+If it is not possible to add a complete character,
+an error is returned:
+.bP
+If \fBscrollok\fR is not enabled,
+writing a character at the lower right margin succeeds.
+However, an error is returned because
+it is not possible to wrap to a new line
+.bP
+If an error is detected when converting a multibyte character to a sequence
+of bytes,
+or if it is not possible to add all of the resulting bytes in the window,
+an error is returned.
 .SH NOTES
 Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
 \fBechochar\fR may be macros.

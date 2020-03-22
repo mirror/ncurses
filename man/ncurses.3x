@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.146 2020/03/14 23:13:18 tom Exp $
+.\" $Id: ncurses.3x,v 1.147 2020/03/21 23:38:25 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -798,6 +798,13 @@ The return values of
 \fBgetbegyx\fR, and
 \fBgetmaxyx\fR are undefined (i.e., these should not be used as the
 right-hand side of assignment statements).
+.PP
+Functions with a \*(``mv\*('' prefix first perform a cursor movement using
+\fBwmove\fP, and return an error if the position is outside the window,
+or if the window pointer is null.
+Most \*(``mv\*(''-prefixed functions
+(except variadic functions such as \fBmvprintw\fP)
+are provided both as macros and functions.
 .PP
 Routines that return pointers return \fBNULL\fR on error.
 .SH ENVIRONMENT
