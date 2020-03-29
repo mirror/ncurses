@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_new.3x,v 1.16 2020/02/02 23:34:34 tom Exp $
+.\" $Id: mitem_new.3x,v 1.17 2020/03/28 19:06:28 tom Exp $
 .TH mitem_new 3X ""
 .SH NAME
 \fBnew_item\fP,
@@ -56,7 +56,7 @@ is the responsibility of the application to release the memory for the
 name or the description of the item.
 .SH RETURN VALUE
 The function \fBnew_item\fR returns \fBNULL\fR on error.
-It sets errno according to the function's failure:
+It sets \fBerrno\fP according to the function's failure:
 .TP 5
 .B E_BAD_ARGUMENT
 Routine detected an incorrect or out-of-range argument.

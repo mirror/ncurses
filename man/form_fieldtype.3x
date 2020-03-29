@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_fieldtype.3x,v 1.20 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_fieldtype.3x,v 1.21 2020/03/28 19:06:28 tom Exp $
 .TH form_fieldtype 3X ""
 .SH NAME
 \fBform_fieldtype\fR \- define validation-field types
@@ -99,7 +99,7 @@ These functions take the field pointer and an
 argument-block structure as arguments.
 .SH RETURN VALUE
 The pointer-valued routines return NULL on error.
-They set errno according to their success:
+They set \fBerrno\fP according to their success:
 .TP 5
 .B E_OK
 The routine succeeded.

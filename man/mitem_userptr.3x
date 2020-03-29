@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_userptr.3x,v 1.14 2020/02/02 23:34:34 tom Exp $
+.\" $Id: mitem_userptr.3x,v 1.15 2020/03/28 19:06:28 tom Exp $
 .TH mitem_userptr 3X ""
 .SH NAME
 \fBset_item_userptr\fP,
@@ -47,7 +47,7 @@ These functions get and set
 that field.
 .SH RETURN VALUE
 The function \fBitem_userptr\fR returns a pointer (possibly \fBNULL\fR).
-It does not set errno.
+It does not set \fBerrno\fP.
 .PP
 The \fBset_item_userptr\fP always returns \fBE_OK\fP (success).
 .

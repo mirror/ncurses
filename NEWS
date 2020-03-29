@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3466 2020/03/22 00:28:35 tom Exp $
+-- $Id: NEWS,v 1.3469 2020/03/28 23:33:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200328
+	+ correct length of buffer copied in dup_field().
+	+ remove "$(srcdir)/" from path of library.gpr, needed for out-of-tree
+	  builds of Ada95 (patch by Adam Van Ymeren).
 
 20200321
 	+ improve configure-checks to reduce warnings about unused variables.

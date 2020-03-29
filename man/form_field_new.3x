@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_new.3x,v 1.21 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_field_new.3x,v 1.22 2020/03/28 19:06:28 tom Exp $
 .TH form_field_new 3X ""
 .SH NAME
 \fBnew_field\fR,
@@ -67,9 +67,9 @@ Attribute data is separate.
 .PP
 The function \fBfree_field\fR de-allocates storage associated with a field.
 .SH RETURN VALUE
-The function, \fBnew_field\fR, \fBdup_field\fR, \fBlink_field\fR return
+The functions \fBnew_field\fR, \fBdup_field\fR, \fBlink_field\fR return
 \fBNULL\fR on error.
-They set errno according to their success:
+They set \fBerrno\fP according to their success:
 .TP 5
 .B E_OK
 The routine succeeded.

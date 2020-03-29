@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_new.3x,v 1.15 2020/02/02 23:34:34 tom Exp $
+.\" $Id: menu_new.3x,v 1.16 2020/03/28 19:06:28 tom Exp $
 .TH menu_new 3X ""
 .SH NAME
 \fBnew_menu\fP,
@@ -48,7 +48,7 @@ The function \fBfree_menu\fR disconnects \fImenu\fR from its item array
 and frees the storage allocated for the menu.
 .SH RETURN VALUE
 The function \fBnew_menu\fR returns \fBNULL\fR on error.
-It sets errno according to the function's failure:
+It sets \fBerrno\fP according to the function's failure:
 .TP 5
 .B E_NOT_CONNECTED
 No items are connected to the menu.

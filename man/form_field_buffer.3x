@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.25 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_field_buffer.3x,v 1.26 2020/03/28 19:06:28 tom Exp $
 .TH form_field_buffer 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -99,7 +99,7 @@ The function \fBset_max_field\fR sets the maximum size for a dynamic field.
 An argument of 0 turns off any maximum size threshold for that field.
 .SH RETURN VALUE
 The \fBfield_buffer\fR function returns NULL on error.
-It sets errno according to their success:
+It sets \fBerrno\fP according to their success:
 .TP 5
 .B E_OK
 The routine succeeded.

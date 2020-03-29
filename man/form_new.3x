@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_new.3x,v 1.12 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_new.3x,v 1.13 2020/03/28 19:06:28 tom Exp $
 .TH form_new 3X ""
 .SH NAME
 \fBnew_form\fR,
@@ -48,7 +48,7 @@ The function \fBfree_form\fR disconnects \fIform\fR from its field array
 and frees the storage allocated for the form.
 .SH RETURN VALUE
 The function \fBnew_form\fR returns \fBNULL\fR on error.
-It sets errno according to the function's success:
+It sets \fBerrno\fP according to the function's success:
 .TP 5
 .B E_OK
 The routine succeeded.

@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_requestname.3x,v 1.12 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_requestname.3x,v 1.13 2020/03/28 19:06:28 tom Exp $
 .TH form_requestname 3X ""
 .SH NAME
 \fBform_request_by_name\fP,
@@ -48,11 +48,11 @@ The function \fBform_request_by_name\fR searches in the name-table for a request
 with the given name and returns its request code.
 Otherwise E_NO_MATCH is returned.
 .SH RETURN VALUE
-\fBform_request_name\fR returns \fBNULL\fR on error and sets errno
+\fBform_request_name\fR returns \fBNULL\fR on error and sets \fBerrno\fP
 to \fBE_BAD_ARGUMENT\fR.
 .br
 \fBform_request_by_name\fR returns \fBE_NO_MATCH\fR on error.
-It does not set errno.
+It does not set \fBerrno\fP.
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBform\fR(3X).
 .SH NOTES

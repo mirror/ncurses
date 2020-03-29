@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.14 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_print.3x,v 1.15 2020/03/28 19:06:28 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
 \fBmcprint\fR \- ship binary data to printer
@@ -51,7 +51,7 @@ rule of thumb is to sleep for a second after shipping each 80-character line.
 .SH RETURN VALUE
 The \fBmcprint\fR function returns \fBERR\fR if the write operation aborted
 for some reason.
-In this case, errno will contain either an error associated
+In this case, \fBerrno\fP will contain either an error associated
 with \fBwrite\fP(2) or one of the following:
 .TP 5
 ENODEV

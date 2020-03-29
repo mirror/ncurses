@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: move_field.c,v 1.5 2020/03/21 22:04:03 tom Exp $
+ * $Id: move_field.c,v 1.6 2020/03/28 17:43:03 tom Exp $
  *
  * Demonstrate move_field().
  */
@@ -269,7 +269,7 @@ my_edit_field(FORM *form, int *result)
 }
 
 static FIELD **
-copy_fields(FIELD **source, int length)
+copy_fields(FIELD **source, size_t length)
 {
     FIELD **target = calloc(length + 1, sizeof(FIELD *));
     memcpy(target, source, length * sizeof(FIELD *));
@@ -305,8 +305,9 @@ do_demo(FORM *form)
     FIELD *my_field = current_field(form);
 
     if (count > 0 && my_field != NULL) {
-	FIELD **old_fields = copy_fields(form_fields(form), count);
-	FIELD **new_fields = copy_fields(form_fields(form), count);
+	size_t needed = (size_t) count;
+	FIELD **old_fields = copy_fields(form_fields(form), needed);
+	FIELD **new_fields = copy_fields(form_fields(form), needed);
 	int ch;
 
 	if (old_fields != NULL && new_fields != NULL) {

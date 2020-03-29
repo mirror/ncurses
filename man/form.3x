@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form.3x,v 1.34 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form.3x,v 1.35 2020/03/28 19:06:28 tom Exp $
 .TH form 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -163,7 +163,7 @@ unpost_form	\fBform_post\fR(3X)
 .TE
 .SH RETURN VALUE
 Routines that return pointers return \fBNULL\fR on error,
-and set errno to the corresponding error-code returned by functions
+and set \fBerrno\fP to the corresponding error-code returned by functions
 returning an integer.
 Routines that return
 an integer return one of the following error codes:
