@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.64 2020/02/15 14:58:02 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.65 2020/04/04 20:56:30 tom Exp $)
 #
 ##############################################################################
 # Copyright 2018,2020 Thomas E. Dickey                                       #
@@ -433,6 +433,7 @@ BEGIN		{
 		print "#include <ncurses_cfg.h>"
 		print ""
 		print "#undef NCURSES_NOMACROS	/* _this_ file uses macros */"
+		print "#define NCURSES_NOMACROS 1"
 		print ""
 		print "#include <curses.priv.h>"
 		print ""

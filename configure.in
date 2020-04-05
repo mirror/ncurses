@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.700 2020/03/08 00:53:28 tom Exp $
+dnl $Id: configure.in,v 1.705 2020/04/04 23:33:09 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.700 $)
+AC_REVISION($Revision: 1.705 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1446,6 +1446,38 @@ AC_ARG_ENABLE(colorfgbg,
 	[with_colorfgbg=no])
 AC_MSG_RESULT($with_colorfgbg)
 test "x$with_colorfgbg" = xyes && AC_DEFINE(USE_COLORFGBG,1,[Define to 1 to compile-in experimental $COLORFGBG code])
+
+###   use option --enable-fvisibility to turn on use of gcc-specific feature
+AC_MSG_CHECKING(if you want to use gcc -fvisibility option)
+AC_ARG_ENABLE(fvisibility,
+	[  --enable-fvisibility    compile with -fvisibility=hidden],
+	[cf_with_fvisibility=$enableval],
+	[cf_with_fvisibility=no])
+AC_MSG_RESULT($cf_with_fvisibility)
+
+NCURSES_IMPEXP=
+NCURSES_CXX_IMPEXP=
+if test "x$cf_with_fvisibility" = xyes; then
+	CF_CHECK_FVISIBILITY($CC,CFLAGS,cf_cv_fvisibility_hidden)
+	if test "x$cf_cv_fvisibility_hidden" = xyes
+	then
+		CF_ADD_CFLAGS([-fvisibility=hidden])
+		NCURSES_IMPEXP="__attribute__ ((visibility(\"default\")))"
+	fi
+	if test -n "$CXX"
+	then
+		AC_LANG_PUSH(C++)
+		CF_CHECK_FVISIBILITY($CXX,CXXFLAGS,cf_cv_fvisibility_hidden2)
+		if test "x$cf_cv_fvisibility_hidden2" = xyes
+		then
+			CF_ADD_CXXFLAGS([-fvisibility=hidden])
+			NCURSES_CXX_IMPEXP="__attribute__ ((visibility(\"default\")))"
+		fi
+		AC_LANG_POP
+	fi
+fi
+AC_SUBST(NCURSES_IMPEXP)
+AC_SUBST(NCURSES_CXX_IMPEXP)
 
 ###   use option --enable-interop to turn on use of bindings used for interop
 AC_MSG_CHECKING(if you want interop bindings)

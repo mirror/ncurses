@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.221 2020/03/08 14:27:08 tom Exp $
+-- $Id: INSTALL,v 1.222 2020/04/05 00:05:52 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -603,6 +603,12 @@ SUMMARY OF CONFIGURE OPTIONS:
 	still read binary screen dumps from the "same" configuration of
 	ncurses.  This does not change the ABI (the binary interface seen by
 	calling applications).
+
+    --enable-fvisibility
+    	Use the gcc "-fvisibility=hidden" option to make symbols which are not
+	explicitly exported, "hidden".  Doing this may reduce the number of
+	symbols exported in the C++ binding; it should have less effect on the
+	C libraries when symbol-versioning is used.
 
     --enable-getcap
 	Use the 4.4BSD getcap code if available, or a bundled version of it to
