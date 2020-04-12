@@ -42,7 +42,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.97 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.98 2020/04/06 00:33:50 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -67,7 +67,7 @@ MODULE_ID("$Id: lib_screen.c,v 1.97 2020/02/02 23:34:34 tom Exp $")
  * format.  It happens to be unused in the file 5.22 database (2015/03/07).
  */
 static const char my_magic[] =
-{'\210', '\210', '\210', '\210'};
+{'\210', '\210', '\210', '\210', 0};
 
 #if NCURSES_EXT_PUTWIN
 typedef enum {
