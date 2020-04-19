@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.787 $
-#	$Date: 2020/02/22 23:05:24 $
+#	$Revision: 1.788 $
+#	$Date: 2020/04/18 16:46:32 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5059,7 +5059,7 @@ xterm-vt52|xterm emulating dec vt52,
 	cup=\EY%p1%' '%+%c%p2%' '%+%c, cuu1=\EA, ed=\EJ, el=\EK,
 	home=\EH, ht=^I, ind=\n, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
 	kcuu1=\EA, nel=\r\n, ri=\EI, rmacs=\EG, smacs=\EF,
-	use=xterm+kbs,
+	use=xterm+kbs, use=vt52+keypad,
 
 xterm-noapp|xterm with cursor keys in normal mode,
 	rmcup@, rmkx=\E>, smcup@, smkx=\E=, use=xterm+noapp,
@@ -26475,5 +26475,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-02-22
 #	+ improve vt50h and vt52 based on DECScope manual -TD
 #	+ add/use vt52+keypad and vt52-basic -TD
+#
+# 2020-04-18
+#	+ use vt52+keypad in xterm-vt52, from xterm #354 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
