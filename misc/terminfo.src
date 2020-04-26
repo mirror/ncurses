@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.788 $
-#	$Date: 2020/04/18 16:46:32 $
+#	$Revision: 1.790 $
+#	$Date: 2020/04/26 00:38:36 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3864,16 +3864,22 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 #	Control responses, wrapping and tabs are buggy, failing a couple of
 #	screens in vttest.
 #
-#	xterm mouse support is not implemented (unrelease version may).
+#	xterm mouse support is not implemented (unreleased version may).
 #
 # Several features such as backspace/delete are optional; this entry documents
-# the default behavior -TD
+# the default behavior.  None of the combinations of keyboard settings match
+# those used for xterm -TD
 #
 # PuTTY recognizes xterm's 1049 mode for switching to/from alternate screen,
 # but implements it incorrectly as mentioned here:
 #	http://stackoverflow.com/questions/24613237/terminal-retains-bg-color-after-closing-vim-using-color-scheme-and-putty-256co/37869114#37869114
-# PuTTY recognized xterm's 1006 mode since late 2015; subsequent release was
+#
+# PuTTY recognized xterm's 1006 mouse mode in late 2015; subsequent release was
 # in 2017 (0.70) -TD
+#
+# PuTTY 0.71 (March 2019) provided a workable "rep" capability.  It also
+# changed longstanding keypad assignments, so that these no longer apply:
+#	kLFT=\E[D, kRIT=\E[C, kb2=\E[G,
 putty|PuTTY terminal emulator,
 	am, bce, bw, ccc, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64, U8#1,
@@ -3897,13 +3903,13 @@ putty|PuTTY terminal emulator,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/
 	      %02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
-	kLFT=\E[D, kRIT=\E[C, kb2=\E[G, kbs=^?, kcbt=\E[Z,
-	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
-	kdch1=\E[3~, kend=\E[4~, khome=\E[1~, kich1=\E[2~,
-	kind=\E[B, knp=\E[6~, kpp=\E[5~, kri=\E[A, kspd=^Z, nel=\r\n,
-	oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
-	rmam=\E[?7l, rmcup=\E[2J\E[?47l, rmir=\E[4l,
-	rmkx=\E[?1l\E>, rmpch=\E[10m, rmso=\E[27m, rmul=\E[24m,
+	kbs=^?, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
+	kcuu1=\EOA, kdch1=\E[3~, kend=\E[4~, khome=\E[1~,
+	kich1=\E[2~, kind=\E[B, knp=\E[6~, kpp=\E[5~, kri=\E[A,
+	kspd=^Z, nel=\r\n, oc=\E]R, op=\E[39;49m, rc=\E8, rev=\E[7m,
+	ri=\EM, rmacs=^O, rmam=\E[?7l, rmcup=\E[2J\E[?47l,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmpch=\E[10m, rmso=\E[27m,
+	rmul=\E[24m,
 	rs2=\E<\E["p\E[50;6"p\Ec\E[?3l\E]R\E[?1000l,
 	s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m, sc=\E7,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
@@ -3913,7 +3919,7 @@ putty|PuTTY terminal emulator,
 	smir=\E[4h, smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J,
 	use=ecma+index, use=xterm+sm+1006, use=putty+fnkeys,
-	use=vt102+enq, use=xterm+sl,
+	use=vt102+enq, use=xterm+sl, use=vt100+fnkeys,
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
@@ -3996,8 +4002,8 @@ putty+fnkeys+sco|SCO fn-keys for PuTTY,
 # https://github.com/mintty/mintty
 #
 # Originally a fork (and reduction) of PuTTY, this has grown from 15ksloc in
-# 2013 to 38ksloc in 2019.  That is still smaller than PuTTY (160ksloc), but
-# larger than rxvt (31ksloc).
+# 2013 to 41ksloc in 2020.  That is still smaller than PuTTY (160ksloc), but
+# larger than rxvt (31ksloc) and slightly smaller than rxvt-unicode (42ksloc).
 #
 # Version 3.0 responds to DA as a VT400, however it does not implement the
 # application keypad.  The assignment of cursor-keys versus modifiers differs
@@ -26478,5 +26484,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-04-18
 #	+ use vt52+keypad in xterm-vt52, from xterm #354 -TD
+#
+# 2020-04-25
+#	+ use vt100+fnkeys in putty -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
