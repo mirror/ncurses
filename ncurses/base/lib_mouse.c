@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.184 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.186 2020/05/02 21:13:04 tom Exp $")
 
 #include <tic.h>
 
@@ -142,19 +142,29 @@ make an error
 #define	MASK_RESERVED_EVENT(x)	(mmask_t) NCURSES_MOUSE_MASK(x, 040)
 
 #if NCURSES_MOUSE_VERSION == 1
+
 #define BUTTON_CLICKED        (BUTTON1_CLICKED        | BUTTON2_CLICKED        | BUTTON3_CLICKED        | BUTTON4_CLICKED)
 #define BUTTON_PRESSED        (BUTTON1_PRESSED        | BUTTON2_PRESSED        | BUTTON3_PRESSED        | BUTTON4_PRESSED)
 #define BUTTON_RELEASED       (BUTTON1_RELEASED       | BUTTON2_RELEASED       | BUTTON3_RELEASED       | BUTTON4_RELEASED)
 #define BUTTON_DOUBLE_CLICKED (BUTTON1_DOUBLE_CLICKED | BUTTON2_DOUBLE_CLICKED | BUTTON3_DOUBLE_CLICKED | BUTTON4_DOUBLE_CLICKED)
 #define BUTTON_TRIPLE_CLICKED (BUTTON1_TRIPLE_CLICKED | BUTTON2_TRIPLE_CLICKED | BUTTON3_TRIPLE_CLICKED | BUTTON4_TRIPLE_CLICKED)
+
 #define MAX_BUTTONS  4
+
 #else
+
 #define BUTTON_CLICKED        (BUTTON1_CLICKED        | BUTTON2_CLICKED        | BUTTON3_CLICKED        | BUTTON4_CLICKED        | BUTTON5_CLICKED)
 #define BUTTON_PRESSED        (BUTTON1_PRESSED        | BUTTON2_PRESSED        | BUTTON3_PRESSED        | BUTTON4_PRESSED        | BUTTON5_PRESSED)
 #define BUTTON_RELEASED       (BUTTON1_RELEASED       | BUTTON2_RELEASED       | BUTTON3_RELEASED       | BUTTON4_RELEASED       | BUTTON5_RELEASED)
 #define BUTTON_DOUBLE_CLICKED (BUTTON1_DOUBLE_CLICKED | BUTTON2_DOUBLE_CLICKED | BUTTON3_DOUBLE_CLICKED | BUTTON4_DOUBLE_CLICKED | BUTTON5_DOUBLE_CLICKED)
 #define BUTTON_TRIPLE_CLICKED (BUTTON1_TRIPLE_CLICKED | BUTTON2_TRIPLE_CLICKED | BUTTON3_TRIPLE_CLICKED | BUTTON4_TRIPLE_CLICKED | BUTTON5_TRIPLE_CLICKED)
+
+#if NCURSES_MOUSE_VERSION == 2
 #define MAX_BUTTONS  5
+#else
+#define MAX_BUTTONS  11
+#endif
+
 #endif
 
 #define INVALID_EVENT	-1
@@ -928,7 +938,7 @@ handle_wheel(SCREEN *sp, MEVENT * eventp, int button, int wheel)
 	break;
     case 1:
 	if (wheel) {
-#if NCURSES_MOUSE_VERSION == 2
+#if NCURSES_MOUSE_VERSION >= 2
 	    eventp->bstate = MASK_PRESS(5);
 	    /* See comment above for button 4 */
 #else
@@ -953,10 +963,24 @@ static bool
 decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 {
     bool result;
+    int button;
+    int wheel = (intro & 96) == 96;
 
     eventp->bstate = 0;
 
-    if (!handle_wheel(sp, eventp, (int) intro, (intro & 96) == 96)) {
+    if (intro >= 96) {
+	if (intro >= 160) {
+	    button = (intro - 152);	/* buttons 8-11 */
+	} else if (intro >= 96) {
+	    button = (intro - 92);	/* buttons 4-7 */
+	}
+    } else {
+	button = (intro & 3);
+    }
+
+    if (button > MAX_BUTTONS) {
+	eventp->bstate = REPORT_MOUSE_POSITION;
+    } else if (!handle_wheel(sp, eventp, (int) intro, wheel)) {
 
 	/*
 	 * Release events aren't reported for individual buttons, just for
@@ -1261,10 +1285,21 @@ decode_xterm_SGR1006(SCREEN *sp, MEVENT * eventp)
     if (read_SGR(sp, &data)) {
 	int b = data.params[0];
 	int b3 = 1 + (b & 3);
+	int wheel = ((b & 64) == 64);
+
+	if (b >= 132) {
+	    b3 = MAX_BUTTONS + 1;
+	} else if (b >= 128) {
+	    b3 = (b - 120);	/* buttons 8-11 */
+	} else if (b >= 64) {
+	    b3 = (b - 60);	/* buttons 6-7 */
+	}
 
 	eventp->id = NORMAL_EVENT;
 	if (data.final == 'M') {
-	    (void) handle_wheel(sp, eventp, b, (b & 64) == 64);
+	    (void) handle_wheel(sp, eventp, b, wheel);
+	} else if (b3 > MAX_BUTTONS) {
+	    eventp->bstate = REPORT_MOUSE_POSITION;
 	} else {
 	    mmask_t pressed = (mmask_t) NCURSES_MOUSE_MASK(b3, NCURSES_BUTTON_PRESSED);
 	    mmask_t release = (mmask_t) NCURSES_MOUSE_MASK(b3, NCURSES_BUTTON_RELEASED);

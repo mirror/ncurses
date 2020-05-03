@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.790 $
-#	$Date: 2020/04/26 00:38:36 $
+#	$Revision: 1.795 $
+#	$Date: 2020/05/02 23:39:49 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1131,7 +1131,17 @@ fbterm|FbTerm for Linux with framebuffer,
 # (but nonstandard) SGR 21, which was supported in the Linux console since 1992
 # as an equivalent for SGR 22.  Long after (early 2018), someone modified the
 # console driver to make it ignore SGR 21 because the ECMA-48 standard
-# suggested a different use for that particular code.
+# suggested a different use for that particular code:
+#
+# https://github.com/torvalds/linux/commit/65d9982d7e523a1a8e7c9af012da0d166f72fc56#diff-7da3c215d12c9f6b88e1a37d38b116f0
+#
+# Two years later, someone (unfamiliar with ECMA-48 this time) documented it:
+#
+# https://git.kernel.org/pub/scm/docs/man-pages/man-pages.git/commit/man4/console_codes.4?id=a133a6bc03d751a424fe0a4adea2198757599615
+#
+# For background, refer to the report on bug-ncurses:
+#
+# https://lists.gnu.org/archive/html/bug-ncurses/2019-10/msg00059.html
 linux-16color|linux console with 16 colors,
 	colors#16, ncv#42, pairs#0x100,
 	setab=\E[4%p1%{8}%m%d%?%p1%{7}%>%t;5%e;25%;m,
@@ -4873,7 +4883,7 @@ xterm-88color|xterm with 88 colors,
 # for numeric capabilities provided in ncurses 6.1:
 xterm+direct2|xterm with direct-color indexing,
 	RGB,
-	colors#0x1000000, pairs#0x10000,
+	colors#0x1000000, pairs#0x10000, CO#8,
 	initc@, op=\E[39;49m,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e48\:2\:%p1%{65536}%/%d\:%p1
 	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
@@ -4888,7 +4898,7 @@ xterm-direct2|xterm with direct-color indexing (old),
 # identifier" parameter.  This version provides for that parameter:
 xterm+direct|xterm with direct-color indexing,
 	RGB,
-	colors#0x1000000, pairs#0x10000,
+	colors#0x1000000, pairs#0x10000, CO#8,
 	initc@, op=\E[39;49m,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e48\:2\:\:%p1%{65536}%/%d\:%p1
 	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
@@ -4927,7 +4937,7 @@ vte-direct|vte with direct-color indexing,
 nsterm-direct|nsterm with direct-color indexing,
 	use=xterm+indirect, use=nsterm,
 
-# As for others:
+# As for others (commenting at the time of release for ncurses 6.1):
 # + Apple's Terminal.app does not recognize either form of the direct-color
 #   sequences.
 # + Cygwin's mintty recognizes xterm's original implementation, does okay with
@@ -4938,6 +4948,36 @@ nsterm-direct|nsterm with direct-color indexing,
 # + Teraterm 4.97, like PuTTY (no good).
 # + terminology 0.91 recognizes xterm's original implementation, but does
 #   nothing useful with it.
+
+# Other variants are possible, e.g., by using more of xterm's indexed color
+# palette, though the intrusion of indexed colors on the direct-color space
+# would be more noticeable.
+
+xterm+direct16|xterm with direct-color indexing,
+	CO#16,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e%?%p1%{16}%<%t%p1%{92}%+%e48\:
+	      2\:\:%p1%{65536}%/%d\:%p1%{256}%/%{255}%&%d\:%p1%{255}
+	      %&%d%;%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%?%p1%{16}%<%t%p1%'R'%+%e38\:2
+	      \:\:%p1%{65536}%/%d\:%p1%{256}%/%{255}%&%d\:%p1%{255}
+	      %&%d%;%;m,
+	setb@, setf@, use=xterm+direct,
+
+xterm-direct16|xterm with direct-colors and 16 indexed colors,
+	use=xterm, use=xterm+direct16,
+
+xterm+direct256|xterm with direct-color indexing,
+	CO#0x100,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e%?
+	      %p1%{256}%<%t48;5;%p1%d%e48\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e%?
+	      %p1%{256}%<%t38;5;%p1%d%e38\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;%;m,
+	setb@, setf@, use=xterm+direct,
+
+xterm-direct256|xterm with direct-colors and 256 indexed colors,
+	use=xterm, use=xterm+direct256,
 
 #### XTERM Features
 
@@ -24545,6 +24585,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #    This was implemented for the Hurd.
 # rmxx/smxx describes the ECMA-48 strikeout/crossed-out attributes, as an
 #    experimental feature of tmux.
+# CO gives the number of indexed ("ANSI") colors which overlay an RGB color
+#    space.
 # E3 clears the terminal's scrollback buffer.  This was implemented in the
 #    Linux 3.0 kernel as a security feature.  It matches a feature which was
 #    added in xterm patch #107.
@@ -26487,5 +26529,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-04-25
 #	+ use vt100+fnkeys in putty -TD
+#
+# 2020-05-02
+#	+ add details on the change to Linux SGR 21 in 2018 -TD
+#	+ add xterm-direct16 and xterm-direct256 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

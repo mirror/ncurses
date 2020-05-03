@@ -28,7 +28,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: Caps-ncurses,v 1.8 2020/02/02 23:34:34 tom Exp $
+# $Id: Caps-ncurses,v 1.9 2020/05/02 23:35:12 tom Exp $
 #
 #############################################################################
 #
@@ -342,6 +342,7 @@ infoalias	ksel	kslt	IBM	key_select
 # are not listed here.
 #
 used_by ncurses
+userdef	CO 	num	n	number of indexed colors overlaying RGB space
 userdef	E3	str	-	clears the terminal's scrollback buffer.
 userdef	RGB	bool	-	use direct colors with 1/3 of color-pair bits per color.
 userdef	RGB	num	n	use direct colors with given number of bits per color.
