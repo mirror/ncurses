@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.185 2020/02/02 23:34:34 tom Exp $ */
+/* $Id: test.priv.h,v 1.186 2020/05/10 00:36:06 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -1020,6 +1020,12 @@ extern char *_nc_strstr(const char *, const char *);
 #define InitAndCatch(init,handler) do { CATCHALL(handler); init; } while (0)
 #else
 #define InitAndCatch(init,handler) do { init; CATCHALL(handler); } while (0)
+#endif
+
+#if defined(_WIN32) || defined(USE_WIN32CON_DRIVER)
+#define SetupAlarm(opt)	(void)opt
+#else
+#define SetupAlarm(opt)	if (opt) alarm((unsigned)opt)
 #endif
 
 /*

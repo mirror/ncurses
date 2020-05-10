@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: move_field.c,v 1.6 2020/03/28 17:43:03 tom Exp $
+ * $Id: move_field.c,v 1.7 2020/05/09 12:52:00 tom Exp $
  *
  * Demonstrate move_field().
  */
@@ -37,6 +37,14 @@
 
 #include <edit_field.h>
 #include <popup_msg.h>
+
+#ifdef HAVE_NETBSD_FORM_H
+#define form_field_row(field) (field)->form_row
+#define form_field_col(field) (field)->form_col
+#else	/* e.g., SVr4, ncurses */
+#define form_field_row(field) (field)->frow
+#define form_field_col(field) (field)->fcol
+#endif
 
 #define DO_DEMO	CTRL('F')	/* actual key for toggling demo-mode */
 #define MY_DEMO	EDIT_FIELD('f')	/* internal request-code */
@@ -286,8 +294,8 @@ show_status(FORM *form, FIELD *field)
     getyx(stdscr, currow, curcol);
     mvprintw(LINES - 1, 0,
 	     "Field at [%d,%d].  Press %s to quit moving.",
-	     getbegy(sub) + field->frow,
-	     getbegx(sub) + field->fcol,
+	     getbegy(sub) + form_field_row(field),
+	     getbegx(sub) + form_field_col(field),
 	     keyname(DO_DEMO));
     clrtobot();
     move(currow, curcol);
@@ -332,8 +340,8 @@ do_demo(FORM *form)
 		show_status(form, my_field);
 		ch = '?';
 		while ((ch = wgetch(form_win(form))) != DO_DEMO) {
-		    int field_y = my_field->frow;
-		    int field_x = my_field->fcol;
+		    int field_y = form_field_row(my_field);
+		    int field_x = form_field_col(my_field);
 
 		    switch (ch) {
 		    case 'h':

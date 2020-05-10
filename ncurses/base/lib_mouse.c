@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.186 2020/05/02 21:13:04 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.187 2020/05/09 23:24:03 tom Exp $")
 
 #include <tic.h>
 
@@ -970,9 +970,9 @@ decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
 
     if (intro >= 96) {
 	if (intro >= 160) {
-	    button = (intro - 152);	/* buttons 8-11 */
+	    button = (int) (intro - 152);	/* buttons 8-11 */
 	} else if (intro >= 96) {
-	    button = (intro - 92);	/* buttons 4-7 */
+	    button = (int) (intro - 92);	/* buttons 4-7 */
 	}
     } else {
 	button = (intro & 3);
