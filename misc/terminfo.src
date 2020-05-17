@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.795 $
-#	$Date: 2020/05/02 23:39:49 $
+#	$Revision: 1.800 $
+#	$Date: 2020/05/16 16:59:20 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1220,7 +1220,7 @@ mach-gnu-color|Mach Console with ANSI color,
 	setaf=\E[3%p1%dm, use=mach-gnu,
 
 # From: Marcus Brinkmann
-# http://savannah.gnu.org/cgi-bin/viewcvs/*checkout*/hurd/hurd/console/
+# http://git.savannah.gnu.org/cgit/hurd/hurd.git/log/console/
 #
 # Comments in the original are summarized here:
 #
@@ -4299,6 +4299,22 @@ ms-terminal|Windows10 terminal,
 	use=xterm-basic,
 
 #### Visual Studio
+# Visual Studio Code 1.45.0 uses xterm.js 12.8.1 (see https://xtermjs.org/).
+#
+# vttest:
+# - fixes menu 1 problem with wrapping
+# - supports DECALN
+# - fixes menu 8 problem with delete-character
+# - REP, SL/SL work
+# - keypad application mode still does not work; PF1-PF4 are not assigned.
+# - DECRQM/DECRPM do not work
+# - xterm mouse features:
+#   - SGR coordinates work; the other modes do not (see vscode #96058)
+#   - focus-events are not sent
+#   - mouse highlight tracking does not send button event
+# tack/other:
+# - little or no change since previous review
+#
 # Visual Studio Code 1.35.1 uses xterm.js (see https://xtermjs.org/).
 # https://code.visualstudio.com/docs/editor/integrated-terminal
 #
@@ -5663,7 +5679,7 @@ xfce|Xfce Terminal,
 #	https://github.com/thestinger/vte-ng
 # which (based on the default branch setting) seems to be a fork of vte
 # 0.48.2, and is noted as such in Arch:
-#	https://www.archlinux.org/packages/community/x86_64/vte3-ng/
+#	https://aur.archlinux.org/packages/vte3-ng/
 # It won't be merged:
 #	https://bugzilla.gnome.org/show_bug.cgi?id=679658#c10
 #	https://bugzilla.gnome.org/show_bug.cgi?id=78291
@@ -8649,7 +8665,7 @@ uwin|U/Win 3.2 console,
 # variables may be permanently set in the Control Panel\System applet.
 #
 # You can find out more about the restrictions of this facility at
-# <http://www.nentug.org/unix-to-nt/ntposix.htm>.
+# <https://jeffpar.github.io/kbarchive/kb/108/Q108581/>
 #
 # From: Federico Bianchi <bianchi@magna.cisid.unipi.it>, 15 Jan 1997
 ansi-nt|psx_ansi|Microsoft Windows NT console POSIX ANSI mode,
@@ -10226,6 +10242,7 @@ tvi912cc|tvi912 at cowell college,
 #
 # Someone has put a scanned copy of the manual online at:
 #     http://vt100.net/televideo/912b-om/
+#     (https://vt100.net/manx/details/6,5484)
 #
 # These terminals were produced ca. 1979, and had a 12" monochrome
 # screen, supported 75-9600 baud (no handshaking), monochrome, 7-bit
@@ -26533,5 +26550,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-05-02
 #	+ add details on the change to Linux SGR 21 in 2018 -TD
 #	+ add xterm-direct16 and xterm-direct256 -TD
+#
+# 2020-05-03
+#	+ fix some dead URLs -TD
+#
+# 2020-05-16
+#	+ update notes on vscode / xterm.js -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

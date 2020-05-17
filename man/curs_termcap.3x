@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.43 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.44 2020/05/17 01:20:13 tom Exp $
 .TH curs_termcap 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -228,6 +228,7 @@ One consequence of this is that termcap applications assume \fRme\fR
 This implementation checks for, and modifies the data shown to the
 termcap interface to accommodate termcap's limitation in this respect.
 .SH PORTABILITY
+.SS Standards
 These functions are provided for supporting legacy applications,
 and should not be used in new programs:
 .bP
@@ -246,6 +247,7 @@ misinterpreted to mean that \fBtgetent\fR returns \fBOK\fR or \fBERR\fR.
 Because the purpose of these functions is to provide compatibility with
 the \fItermcap\fR library, that is a defect in XCurses, Issue 4, Version 2
 rather than in ncurses.
+.SS Compatibility with BSD Termcap
 .PP
 External variables are provided for support of certain termcap applications.
 However, termcap applications' use of those variables is poorly documented,
@@ -270,6 +272,63 @@ This implementation disallows matches against single-character capability names.
 .bP
 This implementation disallows matches by the termcap interface against
 extended capability names which are longer than two characters.
+.PP
+The BSD termcap function \fBtgetent\fP returns the text of a termcap
+entry in the buffer passed as an argument.
+This library (like other terminfo implementations) does not store
+terminal descriptions as text.
+It sets the buffer contents to a null-terminated string.
+.SS Other Compatibility
+This library includes a termcap.h header,
+for compatibility with other implementations.
+But the header is rarely used because the other implementations
+are not strictly compatible.
+.PP
+The original BSD termcap (through 4.3BSD) had no header file which
+gave function prototypes, because that was a feature of ANSI C.
+BSD termcap was written several years before C was standardized.
+However, there were two different termcap.h header files in the BSD
+sources:
+.bP
+One was used internally by the \fIjove\fP editor in 2BSD through 4.4BSD.
+It defined global symbols for the termcap variables which it used.
+.bP
+The other appeared in 4.4BSD Lite Release 2 (mid-1993)
+as part of \fIlibedit\fP (also known as the \fIeditline\fP library).
+The CSRG source history shows that this was added in mid-1992.
+The \fIlibedit\fP header file was used internally,
+as a convenience for compiling the \fIeditline\fP library.
+It declared function prototypes, but no global variables.
+.PP
+The header file from \fIlibedit\fP was added to NetBSD's termcap
+library in mid-1994.
+.PP
+Meanwhile, GNU termcap was under development, starting in 1990.
+The first release (termcap 1.0) in 1991 included a termcap.h header.
+The second release (termcap 1.1) in September 1992 modified the
+header to use \fBconst\fP for the function prototypes in the header
+where one would expect the parameters to be read-only.
+This was a difference versus the original BSD termcap.
+The prototype for \fBtputs\fP also differed,
+but in that instance, it was \fIlibedit\fP which differed from BSD termcap.
+.PP
+A copy of GNU termcap 1.3 was bundled with \fIbash\fP in mid-1993,
+to support the \fIreadline\fP library.
+.PP
+A termcap.h file was provided in ncurses 1.8.1 (November 1993).
+That reflected influence by \fIemacs\fP (rather than \fIjove\fP)
+and GNU termcap:
+.bP
+it provided declarations for a few global symbols used by \fIemacs\fP
+.bP
+it provided function prototypes (using \fBconst\fP).
+.bP
+a prototype for \fBtparam\fP (a GNU termcap feature) was provided.
+.PP
+Later (in mid-1996) the \fBtparam\fP function was removed from ncurses.
+As a result, there are differences between any of the four implementations,
+which must be taken into account by programs which can work with all
+termcap library interfaces.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBterminfo\fR(\*n),
