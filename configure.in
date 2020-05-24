@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.705 2020/04/04 23:33:09 tom Exp $
+dnl $Id: configure.in,v 1.707 2020/05/23 18:16:07 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.705 $)
+AC_REVISION($Revision: 1.707 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -542,6 +542,23 @@ AC_MSG_RESULT($disable_lib_suffixes)
 if test "$DFT_LWR_MODEL" = "shared" && test "x$cf_cv_enable_rpath" != xno; then
 	CF_DISABLE_RPATH_HACK
 fi
+
+### Depending on the system, someone may use rpath to build ncurses but not
+# want users of the package to rely upon that feature.  Give those people an
+# option to suppress that detail from EXTRA_LDFLAGS.
+EXTRA_PKG_LDFLAGS="$EXTRA_LDFLAGS"
+if test -n "$EXTRA_PKG_LDFLAGS"
+then
+	AC_MSG_CHECKING(if you want to disable extra LDFLAGS for package-scripts)
+	CF_ARG_DISABLE(pkg-ldflags,
+		[  --disable-pkg-ldflags   disable extra LDFLAGS for package-scripts],
+		[disable_pkg_ldflags=yes],
+		[disable_pkg_ldflags=no],
+		no)
+	AC_MSG_RESULT($disable_pkg_ldflags)
+	test "$disable_pkg_ldflags" = yes && EXTRA_PKG_LDFLAGS=
+fi
+AC_SUBST(EXTRA_PKG_LDFLAGS)
 
 ###############################################################################
 CF_HELP_MESSAGE(Fine-Tuning Your Configuration:)

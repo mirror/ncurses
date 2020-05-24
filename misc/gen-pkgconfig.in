@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.45 2020/03/08 01:57:33 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.46 2020/05/23 17:56:46 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
@@ -83,7 +83,7 @@ if [ "$includedir" != "/usr/include" ]; then
 fi
 
 lib_flags=
-for opt in -L$libdir @LDFLAGS@ @EXTRA_LDFLAGS@ @LIBS@
+for opt in -L$libdir @LDFLAGS@ @EXTRA_PKG_LDFLAGS@ @LIBS@
 do
 	case $opt in
 	-l*) # LIBS is handled specially below

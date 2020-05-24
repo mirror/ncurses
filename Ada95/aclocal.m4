@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.155 2020/03/20 00:23:48 tom Exp $
+dnl $Id: aclocal.m4,v 1.156 2020/05/23 23:39:36 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -100,10 +100,11 @@ AC_DEFUN([CF_ADD_ADAFLAGS],[
 	AC_SUBST(ADAFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_CFLAGS version: 13 updated: 2017/02/25 18:57:40
+dnl CF_ADD_CFLAGS version: 14 updated: 2020/04/04 16:16:13
 dnl -------------
 dnl Copy non-preprocessor flags to $CFLAGS, preprocessor flags to $CPPFLAGS
-dnl The second parameter if given makes this macro verbose.
+dnl $1 = flags to add
+dnl $2 = if given makes this macro verbose.
 dnl
 dnl Put any preprocessor definitions that use quoted strings in $EXTRA_CPPFLAGS,
 dnl to simplify use of $CPPFLAGS in compiler checks, etc., that are easily
@@ -378,7 +379,7 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_AR_FLAGS version: 6 updated: 2015/10/10 15:25:05
+dnl CF_AR_FLAGS version: 7 updated: 2020/04/04 11:37:29
 dnl -----------
 dnl Check for suitable "ar" (archiver) options for updating an archive.
 dnl
@@ -389,39 +390,55 @@ AC_DEFUN([CF_AR_FLAGS],[
 AC_REQUIRE([CF_PROG_AR])
 
 AC_CACHE_CHECK(for options to update archives, cf_cv_ar_flags,[
-	cf_cv_ar_flags=unknown
-	for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
-	do
+	case $cf_cv_system_name in
+	(*-msvc*)
+		cf_cv_ar_flags=''
+		cat >mk_static_lib.sh <<-EOF
+		#!$SHELL
+		MSVC_BIN="[$]AR"
+		out="\[$]1"
+		shift
+		exec \[$]MSVC_BIN -out:"\[$]out" \[$]@
+		EOF
+		chmod +x mk_static_lib.sh
+		AR=`pwd`/mk_static_lib.sh
+		;;
+	(*)
+		cf_cv_ar_flags=unknown
+		for cf_ar_flags in -curvU -curv curv -crv crv -cqv cqv -rv rv
+		do
 
-		# check if $ARFLAGS already contains this choice
-		if test "x$ARFLAGS" != "x" ; then
-			cf_check_ar_flags=`echo "x$ARFLAGS" | sed -e "s/$cf_ar_flags\$//" -e "s/$cf_ar_flags / /"`
-			if test "x$ARFLAGS" != "$cf_check_ar_flags" ; then
-				cf_cv_ar_flags=
-				break
+			# check if $ARFLAGS already contains this choice
+			if test "x$ARFLAGS" != "x" ; then
+				cf_check_ar_flags=`echo "x$ARFLAGS" | sed -e "s/$cf_ar_flags\$//" -e "s/$cf_ar_flags / /"`
+				if test "x$ARFLAGS" != "$cf_check_ar_flags" ; then
+					cf_cv_ar_flags=
+					break
+				fi
 			fi
-		fi
 
-		rm -f conftest.$ac_cv_objext
-		rm -f conftest.a
+			rm -f conftest.$ac_cv_objext
+			rm -f conftest.a
 
-		cat >conftest.$ac_ext <<EOF
+			cat >conftest.$ac_ext <<EOF
 #line __oline__ "configure"
 int	testdata[[3]] = { 123, 456, 789 };
 EOF
-		if AC_TRY_EVAL(ac_compile) ; then
-			echo "$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext" >&AC_FD_CC
-			$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext 2>&AC_FD_CC 1>/dev/null
-			if test -f conftest.a ; then
-				cf_cv_ar_flags=$cf_ar_flags
+			if AC_TRY_EVAL(ac_compile) ; then
+				echo "$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext" >&AC_FD_CC
+				$AR $ARFLAGS $cf_ar_flags conftest.a conftest.$ac_cv_objext 2>&AC_FD_CC 1>/dev/null
+				if test -f conftest.a ; then
+					cf_cv_ar_flags=$cf_ar_flags
+					break
+				fi
+			else
+				CF_VERBOSE(cannot compile test-program)
 				break
 			fi
-		else
-			CF_VERBOSE(cannot compile test-program)
-			break
-		fi
-	done
-	rm -f conftest.a conftest.$ac_ext conftest.$ac_cv_objext
+		done
+		rm -f conftest.a conftest.$ac_ext conftest.$ac_cv_objext
+		;;
+	esac
 ])
 
 if test -n "$ARFLAGS" ; then
@@ -680,13 +697,13 @@ if test ".$system_name" != ".$cf_cv_system_name" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_GNAT_VERSION version: 2 updated: 2019/12/31 08:53:54
+dnl CF_CHECK_GNAT_VERSION version: 3 updated: 2020/05/23 19:39:36
 dnl ---------------------
 AC_DEFUN([CF_CHECK_GNAT_VERSION],
 [
 AC_REQUIRE([CF_GNAT_VERSION])
 case $cf_cv_gnat_version in
-(3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|20[[0-9]][[0-9]])
+(3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|[[1-9]][[0-9]].[[0-9]]*|20[[0-9]][[0-9]])
 	cf_cv_prog_gnat_correct=yes
 	;;
 (*)
@@ -2110,7 +2127,7 @@ CF_SUBDIR_PATH($1,$2,lib)
 $1="$cf_library_path_list [$]$1"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_PREFIX version: 12 updated: 2015/10/17 19:03:33
+dnl CF_LIB_PREFIX version: 13 updated: 2020/04/04 10:11:47
 dnl -------------
 dnl Compute the library-prefix for the given host system
 dnl $1 = variable to set
@@ -2124,6 +2141,9 @@ define([CF_LIB_PREFIX],
 			LIB_PREFIX=''
 		fi
 		;;
+	(*-msvc*)
+		LIB_PREFIX=''
+		;;
 	(*)	LIB_PREFIX='lib'
 		;;
 	esac
@@ -2131,7 +2151,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_SUFFIX version: 25 updated: 2015/04/17 21:13:04
+dnl CF_LIB_SUFFIX version: 26 updated: 2020/04/04 10:11:47
 dnl -------------
 dnl Compute the library file-suffix from the given model name
 dnl $1 = model name
@@ -2146,11 +2166,25 @@ AC_DEFUN([CF_LIB_SUFFIX],
 		$3=[$]$2
 		;;
 	(Xdebug)
-		$2='_g.a'
+		case $cf_cv_system_name in
+		(*-msvc*)
+			$2='_g.lib'
+			;;
+		(*)
+			$2='_g.a'
+			;;
+		esac
 		$3=[$]$2
 		;;
 	(Xprofile)
-		$2='_p.a'
+		case $cf_cv_system_name in
+		(*-msvc*)
+			$2='_p.lib'
+			;;
+		(*)
+			$2='_p.a'
+			;;
+		esac
 		$3=[$]$2
 		;;
 	(Xshared)
@@ -2158,6 +2192,10 @@ AC_DEFUN([CF_LIB_SUFFIX],
 		(aix[[5-7]]*)
 			$2='.so'
 			$3=[$]$2
+			;;
+		(*-msvc*)
+			$2='.dll'
+			$3='.dll.lib'
 			;;
 		(cygwin*|msys*|mingw*)
 			$2='.dll'
@@ -2186,7 +2224,14 @@ AC_DEFUN([CF_LIB_SUFFIX],
 		esac
 		;;
 	(*)
-		$2='.a'
+		case $target in
+		(*-msvc*)
+			$2='.lib'
+			;;
+		(*)
+			$2='.a'
+			;;
+		esac
 		$3=[$]$2
 		;;
 	esac
@@ -3494,7 +3539,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 94 updated: 2020/02/29 16:09:19
+dnl CF_SHARED_OPTS version: 96 updated: 2020/05/23 19:39:36
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -3721,8 +3766,8 @@ CF_EOF
 		MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
 	(mingw*msvc*)
-		cf_cv_shlib_version=mingw
-		cf_cv_shlib_version_infix=mingw
+		cf_cv_shlib_version=msvcdll
+		cf_cv_shlib_version_infix=msvcdll
 		shlibdir=$bindir
 		MAKE_DLLS=
 		if test "$DFT_LWR_MODEL" = "shared" ; then
@@ -3731,25 +3776,96 @@ CF_EOF
 			EXTRA_LDFLAGS="-link -dll $EXTRA_LDFLAGS"
 		fi
 		CC_SHARED_OPTS=
-		MK_SHARED_LIB=$SHELL' '$rel_builddir'/mk_shared_lib.sh $@ ${LD} ${CFLAGS}'
-		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.a"
+		MK_SHARED_LIB=$SHELL' '$rel_builddir'/mk_shared_lib.sh [$]@ ${LD} [$]{CFLAGS}'
+		RM_SHARED_OPTS="$RM_SHARED_OPTS $rel_builddir/mk_shared_lib.sh *.dll.lib"
 		cat >mk_shared_lib.sh <<-CF_EOF
 		#!$SHELL
-		SHARED_LIB=\$1
-		IMPORT_LIB=\`echo "\$1" | sed -e 's/[0-9]*\.dll$\.dll.a/'\`
+		SHARED_LIB=\[$]1
+		IMPORT_LIB=\`echo "\[$]1" | sed -e 's/[[0-9]]*\.dll[$]/.dll.lib/'\`
 		shift
-		my_ld=\$1
+		my_ld=\[$]1
 		shift
 		cat <<-EOF
 		Linking shared library
 		** SHARED LIB \$SHARED_LIB
 		** IMPORT_LIB \$IMPORT_LIB
 EOF
-		args=\$(echo \$* | sed -E "s#-l(\w*)#lib\1.a#g" | sed -E "s#-L(\w*)#-LIBPATH:\1#g")
+		args=\$(echo \[$]* | sed -E "s#-l(\w*)#\1.dll.lib#g" | sed -E "s#-L(\w*)#-LIBPATH:\1#g")
 		exec \$my_ld -DLL -IMPLIB:"\${IMPORT_LIB}" -OUT:"\${SHARED_LIB}" ${LDFLAGS} \$args
 		mv "\${IMPORT_LIB}" "\${IMPORT_LIB}"
 CF_EOF
 		chmod +x mk_shared_lib.sh
+		cat >mk_prog.sh <<-CF_EOF
+		#!$SHELL
+		shift
+		# Ignore first argument (compiler) and use LD (link.exe) unconditionally
+		LD="[$]LD"
+		clopts=()
+		ldopts=()
+		libs=()
+		isdll=0
+		while test \[$]# -gt 0; do
+			case "\[$]1" in
+				-link)
+					# ignore -link argument
+					;;
+				-dll)
+					isdll=1
+					;;
+				-W* | -w*)
+					# ignore warnings
+					;;
+				-D*)
+					clopts+=("\[$]1")
+					;;
+				-I*)
+					clopts+=("\[$]1")
+					;;
+				-l*)
+					libs+=("\`echo \"\[$]1\" | sed \"s/^-l//\"\`")
+					;;
+				-L*)
+					ldopts+=("\`echo \"\[$]1\" | sed \"s/^-L/-LIBPATH:/\"\`")
+					;;
+				*.obj | *.o)
+					ldopts+=("\[$]1")
+					;;
+				-Wl,*)
+					for linkarg in \`echo '\[$]1' | sed -e 's/-Wl,//' -e 's/,/ /'\`; do
+						ldopts+=("\[$]{linkarg}")
+					done
+					;;
+				*.lib)
+					ldopts+=("\[$]1")
+					;;
+				-o)
+					shift
+					ldopts+=("-out:\[$]1")
+					;;
+				*)
+					clopts+=("\[$]1")
+					ldopts+=("\[$]1")
+					;;
+			esac
+			shift
+		done
+		if [[ "\$isdll" -ne 0 ]]; then
+			for lib in \[$]{libs[[*]]}; do
+				ldopts+=("\[$]lib.dll.lib")
+			done
+		else
+			for lib in \[$]{libs[[*]]}; do
+				ldopts+=("\[$]lib.lib")
+			done
+		fi
+		cat <<-EOF
+		Creating program
+		** ld options:   "\[$]{ldopts[[@]]}"
+EOF
+		exec \[$]LD \[$]{ldopts[[@]]}
+CF_EOF
+		chmod +x mk_prog.sh
+		LINK_PROGS="$SHELL ${rel_builddir}/mk_prog.sh"
 		;;
 	(mingw*)
 		cf_cv_shlib_version=mingw

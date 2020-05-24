@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.912 2020/04/04 20:16:13 tom Exp $
+dnl $Id: aclocal.m4,v 1.913 2020/05/23 23:46:10 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1196,13 +1196,13 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_GNAT_VERSION version: 2 updated: 2019/12/31 08:53:54
+dnl CF_CHECK_GNAT_VERSION version: 3 updated: 2020/05/23 19:39:36
 dnl ---------------------
 AC_DEFUN([CF_CHECK_GNAT_VERSION],
 [
 AC_REQUIRE([CF_GNAT_VERSION])
 case $cf_cv_gnat_version in
-(3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|20[[0-9]][[0-9]])
+(3.1[[1-9]]*|3.[[2-9]]*|[[4-9]].*|[[1-9]][[0-9]].[[0-9]]*|20[[0-9]][[0-9]])
 	cf_cv_prog_gnat_correct=yes
 	;;
 (*)
@@ -6644,7 +6644,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 95 updated: 2020/04/04 10:11:47
+dnl CF_SHARED_OPTS version: 96 updated: 2020/05/23 19:39:36
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -6900,6 +6900,77 @@ EOF
 		mv "\${IMPORT_LIB}" "\${IMPORT_LIB}"
 CF_EOF
 		chmod +x mk_shared_lib.sh
+		cat >mk_prog.sh <<-CF_EOF
+		#!$SHELL
+		shift
+		# Ignore first argument (compiler) and use LD (link.exe) unconditionally
+		LD="[$]LD"
+		clopts=()
+		ldopts=()
+		libs=()
+		isdll=0
+		while test \[$]# -gt 0; do
+			case "\[$]1" in
+				-link)
+					# ignore -link argument
+					;;
+				-dll)
+					isdll=1
+					;;
+				-W* | -w*)
+					# ignore warnings
+					;;
+				-D*)
+					clopts+=("\[$]1")
+					;;
+				-I*)
+					clopts+=("\[$]1")
+					;;
+				-l*)
+					libs+=("\`echo \"\[$]1\" | sed \"s/^-l//\"\`")
+					;;
+				-L*)
+					ldopts+=("\`echo \"\[$]1\" | sed \"s/^-L/-LIBPATH:/\"\`")
+					;;
+				*.obj | *.o)
+					ldopts+=("\[$]1")
+					;;
+				-Wl,*)
+					for linkarg in \`echo '\[$]1' | sed -e 's/-Wl,//' -e 's/,/ /'\`; do
+						ldopts+=("\[$]{linkarg}")
+					done
+					;;
+				*.lib)
+					ldopts+=("\[$]1")
+					;;
+				-o)
+					shift
+					ldopts+=("-out:\[$]1")
+					;;
+				*)
+					clopts+=("\[$]1")
+					ldopts+=("\[$]1")
+					;;
+			esac
+			shift
+		done
+		if [[ "\$isdll" -ne 0 ]]; then
+			for lib in \[$]{libs[[*]]}; do
+				ldopts+=("\[$]lib.dll.lib")
+			done
+		else
+			for lib in \[$]{libs[[*]]}; do
+				ldopts+=("\[$]lib.lib")
+			done
+		fi
+		cat <<-EOF
+		Creating program
+		** ld options:   "\[$]{ldopts[[@]]}"
+EOF
+		exec \[$]LD \[$]{ldopts[[@]]}
+CF_EOF
+		chmod +x mk_prog.sh
+		LINK_PROGS="$SHELL ${rel_builddir}/mk_prog.sh"
 		;;
 	(mingw*)
 		cf_cv_shlib_version=mingw

@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.305 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.307 2020/05/23 19:10:35 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -117,14 +117,14 @@ static int ClrBottom(SCREEN *, int total);
 static void ClearScreen(SCREEN *, NCURSES_CH_T blank);
 static void ClrUpdate(SCREEN *);
 static void DelChar(SCREEN *, int count);
-static void InsStr(SCREEN *, NCURSES_CH_T * line, int count);
+static void InsStr(SCREEN *, NCURSES_CH_T *line, int count);
 static void TransformLine(SCREEN *, int const lineno);
 #else
 static int ClrBottom(int total);
 static void ClearScreen(NCURSES_CH_T blank);
 static void ClrUpdate(void);
 static void DelChar(int count);
-static void InsStr(NCURSES_CH_T * line, int count);
+static void InsStr(NCURSES_CH_T *line, int count);
 static void TransformLine(int const lineno);
 #endif
 
@@ -567,7 +567,7 @@ can_clear_with(NCURSES_SP_DCLx ARG_CH_T ch)
  * This code is optimized using ech and rep.
  */
 static int
-EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
+EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T *ntext, int num)
 {
     int i;
 
@@ -620,6 +620,9 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
 		    return 1;	/* cursor stays in the middle */
 		}
 	    } else if (repeat_char != 0 &&
+#if BSD_TPUTS
+		       !isdigit(UChar(CharOf(ntext0))) &&
+#endif
 #if USE_WIDEC_SUPPORT
 		       (!SP_PARM->_screen_unicode &&
 			(CharOf(ntext0) < ((AttrOf(ntext0) & A_ALTCHARSET)
@@ -679,8 +682,8 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T * ntext, int num)
  */
 static int
 PutRange(NCURSES_SP_DCLx
-	 const NCURSES_CH_T * otext,
-	 const NCURSES_CH_T * ntext,
+	 const NCURSES_CH_T *otext,
+	 const NCURSES_CH_T *ntext,
 	 int row,
 	 int first, int last)
 {
@@ -1701,7 +1704,7 @@ ClearScreen(NCURSES_SP_DCLx NCURSES_CH_T blank)
 */
 
 static void
-InsStr(NCURSES_SP_DCLx NCURSES_CH_T * line, int count)
+InsStr(NCURSES_SP_DCLx NCURSES_CH_T *line, int count)
 {
     TR(TRACE_UPDATE, ("InsStr(%p, %p,%d) called",
 		      (void *) SP_PARM,

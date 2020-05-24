@@ -42,7 +42,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.98 2020/04/06 00:33:50 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.99 2020/05/23 19:12:01 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -441,7 +441,7 @@ read_win(WINDOW *win, FILE *fp)
 }
 
 static int
-read_row(char *source, NCURSES_CH_T * prior, NCURSES_CH_T * target, int length)
+read_row(char *source, NCURSES_CH_T *prior, NCURSES_CH_T *target, int length)
 {
     while (*source != '\0' && length > 0) {
 #if NCURSES_WIDECHAR

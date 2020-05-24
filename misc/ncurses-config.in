@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.43 2020/02/02 23:34:34 tom Exp $
+# $Id: ncurses-config.in,v 1.44 2020/05/23 17:56:52 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 2006-2015,2017 Free Software Foundation, Inc.                    #
@@ -101,7 +101,7 @@ fi
 # There is no portable way to find the list of standard library directories. 
 # Require a POSIX shell anyway, to keep this simple.
 lib_flags=
-for opt in -L$libdir @LDFLAGS@ @EXTRA_LDFLAGS@ $LIBS
+for opt in -L$libdir @LDFLAGS@ @EXTRA_PKG_LDFLAGS@ $LIBS
 do
 	case $opt in
 	-specs*) # ignore linker specs-files which were used to build library

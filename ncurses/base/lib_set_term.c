@@ -47,7 +47,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.169 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.171 2020/05/23 19:13:12 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -340,8 +340,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     sp->_next_screen = _nc_screen_chain;
     _nc_screen_chain = sp;
 
-    if ((sp->_current_attr = typeCalloc(NCURSES_CH_T, 1)) == 0)
+    if ((sp->_current_attr = typeCalloc(NCURSES_CH_T, 1)) == 0) {
 	returnCode(ERR);
+    }
 #endif
 
     /*

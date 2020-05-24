@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3486 2020/05/17 00:40:58 tom Exp $
+-- $Id: NEWS,v 1.3491 2020/05/24 00:07:37 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200523
+	+ update version-check for gnat to allow for gnat 10.x to 99.x
+	+ fix an uninitialized variable in lib_mouse.c changes (cf: 20200502)
+	+ add a check in EmitRange to guard against repeat_char emitting digits
+	  which could be interpreted as BSD-style padding when --enable-bsdpad 
+	  is configured (report/patch by Hiltjo Posthuma).
+	+ add --disable-pkg-ldflags to suppress EXTRA_LDFLAGS from the
+	  generated pkg-config and ncurses*-config files, to simplify
+	  configuring in the case where rpath is used but the packager wants
+	  to hide the feature (report by Michael Stapelberg).
+	> fixes for building with Visual Studio C++ and msys2 (patches by
+	  "Maarten Anonymous"):
+	+ modify CF_SHARED_OPTS to generate a script which translates linker
+	  options into Visual Studio's dialect.
+	+ omit parentheses around function-names in generated lib_gen.c to
+	  work around a Visual Studio C++ limitation.
 
 20200516
 	+ add notes on termcap.h header in curs_termcap.3x
