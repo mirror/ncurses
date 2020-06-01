@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.707 2020/05/23 18:16:07 tom Exp $
+dnl $Id: configure.in,v 1.709 2020/05/31 20:04:09 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.707 $)
+AC_REVISION($Revision: 1.709 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -145,9 +145,9 @@ fi
 
 CF_GXX_VERSION
 case $GXX_VERSION in
-(1*|2.[[0-6]]*)
-	# GXX=""; CXX=""; ac_cv_prog_gxx=no
-	# cf_cxx_library=no
+([[1-9]][[0-9]].*)
+	;;
+(1.*|2.[[0-6]]*)
 	AC_MSG_WARN(templates do not work)
 	;;
 esac
@@ -1761,6 +1761,7 @@ setenv \
 setvbuf \
 sigaction \
 sigvec \
+snprintf \
 strdup \
 strstr \
 sysconf \
@@ -1848,7 +1849,7 @@ if test -n "$CXX" ; then
 	CF_PROG_CC_C_O(CXX,[$CXXFLAGS $CPPFLAGS])
 
 	case $GXX_VERSION in
-	(1*|2.[0-6]*)
+	(1.*|2.[[0-6]]*|[[1-9]][[0-9]].*)
 		cf_cxx_library=yes
 		;;
 	(*-2.7*|2.7*)

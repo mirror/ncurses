@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.282 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.286 2020/05/31 21:05:44 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1179,6 +1179,14 @@ check_acs(TERMTYPE2 *tp)
     }
 }
 
+static char *
+safe_strdup(const char *value)
+{
+    if (value == NULL)
+	value = "";
+    return strdup(value);
+}
+
 static bool
 same_color(NCURSES_CONST char *oldcap, NCURSES_CONST char *newcap, int limit)
 {
@@ -1189,8 +1197,8 @@ same_color(NCURSES_CONST char *oldcap, NCURSES_CONST char *newcap, int limit)
 	int n;
 	int same;
 	for (n = same = 0; n < limit; ++n) {
-	    char *oldvalue = strdup(TPARM_1(oldcap, n));
-	    char *newvalue = strdup(TPARM_1(newcap, n));
+	    char *oldvalue = safe_strdup(TIPARM_1(oldcap, n));
+	    char *newvalue = safe_strdup(TIPARM_1(newcap, n));
 	    same += !strcmp(oldvalue, newvalue);
 	    free(oldvalue);
 	    free(newvalue);
@@ -1835,7 +1843,6 @@ expected_params(const char *name)
 	DATA( "wingo",		1 ),
     };
     /* *INDENT-ON* */
-
 #undef DATA
 
     unsigned n;
@@ -1910,7 +1917,7 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
     int expected = expected_params(name);
     int actual = 0;
     int n;
-    bool params[NUM_PARM];
+    bool params[1 + NUM_PARM];
     char *s = value;
 
 #ifdef set_top_margin_parm
@@ -1919,7 +1926,7 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 	expected = 2;
 #endif
 
-    for (n = 0; n < NUM_PARM; n++)
+    for (n = 0; n <= NUM_PARM; n++)
 	params[n] = FALSE;
 
     while (*s != 0) {
@@ -2192,6 +2199,19 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 	result = TPARM_3(value, numbers[1], strings[2], strings[3]);
 	break;
     case Numbers:
+#define myParam(n) numbers[n]
+	result = TIPARM_9(value,
+			  myParam(1),
+			  myParam(2),
+			  myParam(3),
+			  myParam(4),
+			  myParam(5),
+			  myParam(6),
+			  myParam(7),
+			  myParam(8),
+			  myParam(9));
+#undef myParam
+	break;
     default:
 	(void) _nc_tparm_analyze(value, p_is_s, &ignored);
 #define myParam(n) (p_is_s[n - 1] != 0 ? ((TPARM_ARG) strings[n]) : numbers[n])
@@ -2205,6 +2225,7 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 			 myParam(7),
 			 myParam(8),
 			 myParam(9));
+#undef myParam
 	break;
     }
     return strdup(result);
@@ -2515,16 +2536,16 @@ check_sgr(TERMTYPE2 *tp, char *zero, int num, char *cap, const char *name)
     char *test;
 
     _nc_tparm_err = 0;
-    test = TPARM_9(set_attributes,
-		   num == 1,
-		   num == 2,
-		   num == 3,
-		   num == 4,
-		   num == 5,
-		   num == 6,
-		   num == 7,
-		   num == 8,
-		   num == 9);
+    test = TIPARM_9(set_attributes,
+		    num == 1,
+		    num == 2,
+		    num == 3,
+		    num == 4,
+		    num == 5,
+		    num == 6,
+		    num == 7,
+		    num == 8,
+		    num == 9);
     if (test != 0) {
 	if (PRESENT(cap)) {
 	    if (!similar_sgr(num, test, cap)) {
@@ -2695,7 +2716,6 @@ check_conflict(TERMTYPE2 *tp)
 		{ NULL,   NULL },
 	    };
 	    /* *INDENT-ON* */
-
 	    /*
 	     * SVr4 curses defines the "xcurses" names listed above except for
 	     * the special cases in the "shifted" column.  When using these
@@ -2973,7 +2993,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	if (PRESENT(exit_attribute_mode)) {
 	    zero = strdup(CHECK_SGR(0, exit_attribute_mode));
 	} else {
-	    zero = strdup(TPARM_9(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+	    zero = strdup(TIPARM_9(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 	}
 	if (_nc_tparm_err)
 	    _nc_warning("stack error in sgr(0) string");

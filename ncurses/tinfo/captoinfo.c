@@ -98,7 +98,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.98 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.99 2020/05/25 21:28:29 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -216,12 +216,15 @@ cvtchar(register const char *sp)
 	}
 	break;
     case '^':
-	c = UChar(*++sp);
-	if (c == '?')
-	    c = 127;
-	else
-	    c &= 0x1f;
 	len = 2;
+	c = UChar(*++sp);
+	if (c == '?') {
+	    c = 127;
+	} else if (c == '\0') {
+	    len = 1;
+	} else {
+	    c &= 0x1f;
+	}
 	break;
     default:
 	c = UChar(*sp);

@@ -235,7 +235,6 @@
 ./config.sub
 ./configure
 ./configure.in
-./convert_configure.pl
 ./dist.mk
 ./doc/hackguide.doc
 ./doc/html/Ada95.html
@@ -1214,6 +1213,7 @@
 ./test/test_setupterm.c
 ./test/test_sgr.c
 ./test/test_termattrs.c
+./test/test_tparm.c
 ./test/test_vid_puts.c
 ./test/test_vidputs.c
 ./test/testaddch.c

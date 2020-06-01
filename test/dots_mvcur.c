@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.25 2020/05/10 00:32:11 tom Exp $
+ * $Id: dots_mvcur.c,v 1.26 2020/05/29 23:04:02 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -228,7 +228,8 @@ main(int argc GCC_UNUSED,
 		tputs(tparm2(set_a_foreground, z), 1, outc);
 	    } else {
 		tputs(tparm2(set_a_background, z), 1, outc);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	} else if (VALID_STRING(exit_attribute_mode)
 		   && VALID_STRING(enter_reverse_mode)) {
@@ -236,7 +237,8 @@ main(int argc GCC_UNUSED,
 		outs((ranf() > 0.6)
 		     ? enter_reverse_mode
 		     : exit_attribute_mode);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	}
 	outc(p);

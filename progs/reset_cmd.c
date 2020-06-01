@@ -53,7 +53,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.19 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.21 2020/05/27 23:46:20 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -501,16 +501,15 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 	} else
 #if defined(set_lr_margin)
 	if (VALID_STRING(set_lr_margin)) {
-	    need_flush |= sent_string(TPARM_2(set_lr_margin, 0,
-					      columns - 1));
+	    need_flush |= sent_string(TIPARM_2(set_lr_margin, 0, columns - 1));
 	} else
 #endif
 #if defined(set_left_margin_parm) && defined(set_right_margin_parm)
 	    if (VALID_STRING(set_left_margin_parm)
 		&& VALID_STRING(set_right_margin_parm)) {
-	    need_flush |= sent_string(TPARM_1(set_left_margin_parm, 0));
-	    need_flush |= sent_string(TPARM_1(set_right_margin_parm,
-					      columns - 1));
+	    need_flush |= sent_string(TIPARM_1(set_left_margin_parm, 0));
+	    need_flush |= sent_string(TIPARM_1(set_right_margin_parm,
+					       columns - 1));
 	} else
 #endif
 	    if (VALID_STRING(set_left_margin)
@@ -518,8 +517,8 @@ send_init_strings(int fd GCC_UNUSED, TTY * old_settings)
 	    need_flush |= to_left_margin();
 	    need_flush |= sent_string(set_left_margin);
 	    if (VALID_STRING(parm_right_cursor)) {
-		need_flush |= sent_string(TPARM_1(parm_right_cursor,
-						  columns - 1));
+		need_flush |= sent_string(TIPARM_1(parm_right_cursor,
+						   columns - 1));
 	    } else {
 		for (i = 0; i < columns - 1; i++) {
 		    out_char(' ');

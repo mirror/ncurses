@@ -1,4 +1,4 @@
-# $Id: modules,v 1.72 2020/03/21 16:09:48 tom Exp $
+# $Id: modules,v 1.73 2020/05/29 23:27:44 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -107,6 +107,7 @@ test_opaque	progs		$(srcdir)	$(HEADER_DEPS)
 test_setupterm	progs		$(srcdir)	$(HEADER_DEPS)
 test_sgr	progs		$(srcdir)	$(HEADER_DEPS)
 test_termattrs	progs		$(srcdir)	$(HEADER_DEPS)
+test_tparm	progs		$(srcdir)	$(HEADER_DEPS)
 test_vid_puts	progs		$(srcdir)	$(HEADER_DEPS)
 test_vidputs	progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)

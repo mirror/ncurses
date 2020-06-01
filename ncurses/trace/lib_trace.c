@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.95 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.96 2020/05/25 22:48:18 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -349,7 +349,7 @@ _nc_fmt_funcptr(char *target, const char *source, size_t size)
 	if (ch != 0 || (n + 1) >= size)
 	    leading = FALSE;
 	if (!leading) {
-	    _nc_SPRINTF(dst, _nc_SLIMIT(TR_FUNC_LEN - (dst - target))
+	    _nc_SPRINTF(dst, _nc_SLIMIT(TR_FUNC_LEN - (size_t) (dst - target))
 			"%02x", ch & 0xff);
 	    dst += 2;
 	}

@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.22 2020/05/10 00:32:33 tom Exp $
+ * $Id: dots_xcurses.c,v 1.23 2020/05/29 23:04:02 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -244,7 +244,8 @@ main(int argc, char *argv[])
 		set_colors(fg = z, bg);
 	    } else {
 		set_colors(fg, bg = z);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	} else {
 	    if (ranf() <= 0.01) {
@@ -253,7 +254,8 @@ main(int argc, char *argv[])
 		} else {
 		    attr_off(WA_REVERSE, NULL);
 		}
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	}
 	wch[0] = (wchar_t) p;

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.800 $
-#	$Date: 2020/05/16 16:59:20 $
+#	$Revision: 1.802 $
+#	$Date: 2020/05/30 21:37:01 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4447,7 +4447,7 @@ xterm-old|antique xterm version,
 # initially part of the xterm sources (in XFree86).  But "xterm" continued to
 # grow, while "xterm-mono" had none of the newer features.  Additionally,
 # inheriting from "xtermm" runs into several problems, including different
-# function keys as well as the fact that the mouse support is not compatible. 
+# function keys as well as the fact that the mouse support is not compatible.
 # This entry restores the original intent, intentionally not an alias to
 # simplify maintenance -TD
 xterm-mono|monochrome xterm,
@@ -5781,10 +5781,13 @@ kvt|KDE terminal,
 #    (also overline, which is too rarely used to provide as an extension)
 #
 # Updated for konsole 17.12.0 (late 2017):
+#
+# Re-enable "bel", since it is latent in the source-code even though KDE config
+# often hides the feature (2020/5/30)
 konsole-base|KDE console window,
 	bce, km@, npc, XT,
 	ncv@,
-	bel@, blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h, dim=\E[2m,
+	blink=\E[5m, civis=\E[?25l, cnorm=\E[?25h, dim=\E[2m,
 	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l,
 	hpa=\E[%i%p1%dG, invis=\E[8m, kbs=^?, kdch1=\E[3~,
 	kend=\E[4~, kf1@, kf10@, kf11@, kf12@, kf13@, kf14@, kf15@, kf16@,
@@ -20911,6 +20914,17 @@ linux-m2|Linux Minitel 2 "like" Couleurs (Vert/Blanc/Noir+Bleu),
 	       \E]PFFFFFFF\E[;37m,
 	use=linux-m1,
 
+# From: Alexandre Montaron, 27 May 2020
+linux-s|Linux Console with added status line at bottom,
+	hs,
+	clear=\E[255;255H\E[A\E[1J\E[H, csr@,
+	dsl=\E7\E[255H\E[K\E8, ed@, fsl=\E8,
+	iprog=\sbash\s-c\s'echo\s-ne\s"\E[?6l\E[255H\E[A\E[6n"\s;
+	      \sread\s-d\sR\sTMP\s;\sLINES=`echo\s$TMP\s|\scut\s-f1
+	      \s-d\s";"\s|\scut\s-f2\s-d\s"["`\s;\sstty\srows\s$LINE
+	      S\s;\secho\s-ne\s"\E[;"$LINES"r\E[J"',
+	rs1=\E]R, tsl=\E7\E[255;%p1%dH, .rc@, .sc@, use=linux,
+
 # Screen entries counterpart :
 
 screen.linux-m1|Linux m1 specific for screen,
@@ -26556,5 +26570,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-05-16
 #	+ update notes on vscode / xterm.js -TD
+#
+# 2020-05-30
+#	+ re-enable "bel" in konsole-base (report by Nia Huang)
+#	+ add linux-s entry (patch by Alexandre Montaron).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

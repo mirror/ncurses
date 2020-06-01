@@ -40,7 +40,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_print.c,v 1.25 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_print.c,v 1.27 2020/05/27 23:55:56 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
@@ -60,7 +60,7 @@ NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
     }
 
     if (prtr_non) {
-	switchon = TPARM_1(prtr_non, len);
+	switchon = TIPARM_1(prtr_non, len);
 	onsize = strlen(switchon);
 	offsize = 0;
     } else {

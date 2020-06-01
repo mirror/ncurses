@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.307 2020/05/23 19:10:35 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.309 2020/05/27 23:56:32 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -170,9 +170,9 @@ position_check(NCURSES_SP_DCLx int expected_y, int expected_x, char *legend)
 	if (y - 1 != expected_y || x - 1 != expected_x) {
 	    NCURSES_SP_NAME(beep) (NCURSES_SP_ARG);
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    tparm("\033[%d;%dH",
-					  expected_y + 1,
-					  expected_x + 1),
+				    TIPARM_2("\033[%d;%dH",
+					     expected_y + 1,
+					     expected_x + 1),
 				    1, NCURSES_SP_NAME(_nc_outch));
 	    _tracef("position seen (%d, %d) doesn't match expected one (%d, %d) in %s",
 		    y - 1, x - 1, expected_y, expected_x, legend);
@@ -605,7 +605,7 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T *ntext, int num)
 		&& runcount > SP_PARM->_ech_cost + SP_PARM->_cup_ch_cost
 		&& can_clear_with(NCURSES_SP_ARGx CHREF(ntext0))) {
 		UpdateAttrs(SP_PARM, ntext0);
-		NCURSES_PUTP2("erase_chars", TPARM_1(erase_chars, runcount));
+		NCURSES_PUTP2("erase_chars", TIPARM_1(erase_chars, runcount));
 
 		/*
 		 * If this is the last part of the given interval,
@@ -648,9 +648,9 @@ EmitRange(NCURSES_SP_DCLx const NCURSES_CH_T *ntext, int num)
 			    AttrOf(ntext0) | A_ALTCHARSET);
 		}
 		NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-					TPARM_2(repeat_char,
-						CharOf(temp),
-						rep_count),
+					TIPARM_2(repeat_char,
+						 CharOf(temp),
+						 rep_count),
 					1,
 					NCURSES_SP_NAME(_nc_outch));
 		SP_PARM->_curscol += rep_count;
@@ -1716,7 +1716,7 @@ InsStr(NCURSES_SP_DCLx NCURSES_CH_T *line, int count)
     if (parm_ich) {
 	TPUTS_TRACE("parm_ich");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_1(parm_ich, count),
+				TIPARM_1(parm_ich, count),
 				1,
 				NCURSES_SP_NAME(_nc_outch));
 	while (count > 0) {
@@ -1769,7 +1769,7 @@ DelChar(NCURSES_SP_DCLx int count)
     if (parm_dch) {
 	TPUTS_TRACE("parm_dch");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_1(parm_dch, count),
+				TIPARM_1(parm_dch, count),
 				1,
 				NCURSES_SP_NAME(_nc_outch));
     } else {
@@ -1838,7 +1838,7 @@ scroll_csr_forward(NCURSES_SP_DCLx
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("parm_index");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_index, n, 0),
+				TIPARM_1(parm_index, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else if (parm_delete_line && bot == maxy) {
@@ -1846,7 +1846,7 @@ scroll_csr_forward(NCURSES_SP_DCLx
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("parm_delete_line");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_delete_line, n, 0),
+				TIPARM_1(parm_delete_line, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else if (scroll_forward && top == miny && bot == maxy) {
@@ -1903,7 +1903,7 @@ scroll_csr_backward(NCURSES_SP_DCLx
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("parm_rindex");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_rindex, n, 0),
+				TIPARM_1(parm_rindex, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else if (parm_insert_line && bot == maxy) {
@@ -1911,7 +1911,7 @@ scroll_csr_backward(NCURSES_SP_DCLx
 	UpdateAttrs(SP_PARM, blank);
 	TPUTS_TRACE("parm_insert_line");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_insert_line, n, 0),
+				TIPARM_1(parm_insert_line, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else if (scroll_reverse && top == miny && bot == maxy) {
@@ -1959,7 +1959,7 @@ scroll_idl(NCURSES_SP_DCLx int n, int del, int ins, NCURSES_CH_T blank)
     } else if (parm_delete_line) {
 	TPUTS_TRACE("parm_delete_line");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_delete_line, n, 0),
+				TIPARM_1(parm_delete_line, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else {			/* if (delete_line) */
@@ -1975,7 +1975,7 @@ scroll_idl(NCURSES_SP_DCLx int n, int del, int ins, NCURSES_CH_T blank)
     } else if (parm_insert_line) {
 	TPUTS_TRACE("parm_insert_line");
 	NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				TPARM_2(parm_insert_line, n, 0),
+				TIPARM_1(parm_insert_line, n),
 				n,
 				NCURSES_SP_NAME(_nc_outch));
     } else {			/* if (insert_line) */
@@ -2040,7 +2040,7 @@ NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
 		NCURSES_PUTP2("save_cursor", save_cursor);
 	    }
 	    NCURSES_PUTP2("change_scroll_region",
-			  TPARM_2(change_scroll_region, top, bot));
+			  TIPARM_2(change_scroll_region, top, bot));
 	    if (cursor_saved) {
 		NCURSES_PUTP2("restore_cursor", restore_cursor);
 	    } else {
@@ -2050,7 +2050,7 @@ NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
 	    res = scroll_csr_forward(NCURSES_SP_ARGx n, top, bot, top, bot, blank);
 
 	    NCURSES_PUTP2("change_scroll_region",
-			  TPARM_2(change_scroll_region, 0, maxy));
+			  TIPARM_2(change_scroll_region, 0, maxy));
 	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	}
 
@@ -2086,7 +2086,7 @@ NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
 		NCURSES_PUTP2("save_cursor", save_cursor);
 	    }
 	    NCURSES_PUTP2("change_scroll_region",
-			  TPARM_2(change_scroll_region, top, bot));
+			  TIPARM_2(change_scroll_region, top, bot));
 	    if (cursor_saved) {
 		NCURSES_PUTP2("restore_cursor", restore_cursor);
 	    } else {
@@ -2097,7 +2097,7 @@ NCURSES_SP_NAME(_nc_scrolln) (NCURSES_SP_DCLx
 				      -n, top, bot, top, bot, blank);
 
 	    NCURSES_PUTP2("change_scroll_region",
-			  TPARM_2(change_scroll_region, 0, maxy));
+			  TIPARM_2(change_scroll_region, 0, maxy));
 	    SP_PARM->_cursrow = SP_PARM->_curscol = -1;
 	}
 

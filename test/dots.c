@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.39 2020/05/10 00:31:03 tom Exp $
+ * $Id: dots.c,v 1.40 2020/05/29 23:04:02 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -214,7 +214,8 @@ main(int argc,
 		tputs(tparm2(set_a_foreground, z), 1, outc);
 	    } else {
 		tputs(tparm2(set_a_background, z), 1, outc);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	} else if (VALID_STRING(exit_attribute_mode)
 		   && VALID_STRING(enter_reverse_mode)) {
@@ -222,7 +223,8 @@ main(int argc,
 		outs((ranf() > 0.6)
 		     ? enter_reverse_mode
 		     : exit_attribute_mode);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	}
 	outc(p);

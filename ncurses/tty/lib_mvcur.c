@@ -160,7 +160,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.151 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.153 2020/05/27 23:56:32 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -279,8 +279,8 @@ reset_scroll_region(NCURSES_SP_DCL0)
 {
     if (change_scroll_region) {
 	NCURSES_PUTP2("change_scroll_region",
-		      TPARM_2(change_scroll_region,
-			      0, screen_lines(SP_PARM) - 1));
+		      TIPARM_2(change_scroll_region,
+			       0, screen_lines(SP_PARM) - 1));
     }
 }
 
@@ -399,13 +399,13 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
      * All these averages depend on the assumption that all parameter values
      * are equally probable.
      */
-    SP_PARM->_cup_cost = CostOf(TPARM_2(SP_PARM->_address_cursor, 23, 23), 1);
-    SP_PARM->_cub_cost = CostOf(TPARM_1(parm_left_cursor, 23), 1);
-    SP_PARM->_cuf_cost = CostOf(TPARM_1(parm_right_cursor, 23), 1);
-    SP_PARM->_cud_cost = CostOf(TPARM_1(parm_down_cursor, 23), 1);
-    SP_PARM->_cuu_cost = CostOf(TPARM_1(parm_up_cursor, 23), 1);
-    SP_PARM->_hpa_cost = CostOf(TPARM_1(column_address, 23), 1);
-    SP_PARM->_vpa_cost = CostOf(TPARM_1(row_address, 23), 1);
+    SP_PARM->_cup_cost = CostOf(TIPARM_2(SP_PARM->_address_cursor, 23, 23), 1);
+    SP_PARM->_cub_cost = CostOf(TIPARM_1(parm_left_cursor, 23), 1);
+    SP_PARM->_cuf_cost = CostOf(TIPARM_1(parm_right_cursor, 23), 1);
+    SP_PARM->_cud_cost = CostOf(TIPARM_1(parm_down_cursor, 23), 1);
+    SP_PARM->_cuu_cost = CostOf(TIPARM_1(parm_up_cursor, 23), 1);
+    SP_PARM->_hpa_cost = CostOf(TIPARM_1(column_address, 23), 1);
+    SP_PARM->_vpa_cost = CostOf(TIPARM_1(row_address, 23), 1);
 
     /* non-parameterized screen-update strings */
     SP_PARM->_ed_cost = NormalizedCost(clr_eos, 1);
@@ -422,17 +422,16 @@ NCURSES_SP_NAME(_nc_mvcur_init) (NCURSES_SP_DCL0)
 	SP_PARM->_el_cost = 0;
 
     /* parameterized screen-update strings */
-    SP_PARM->_dch_cost = NormalizedCost(TPARM_1(parm_dch, 23), 1);
-    SP_PARM->_ich_cost = NormalizedCost(TPARM_1(parm_ich, 23), 1);
-    SP_PARM->_ech_cost = NormalizedCost(TPARM_1(erase_chars, 23), 1);
-    SP_PARM->_rep_cost = NormalizedCost(TPARM_2(repeat_char, ' ', 23), 1);
+    SP_PARM->_dch_cost = NormalizedCost(TIPARM_1(parm_dch, 23), 1);
+    SP_PARM->_ich_cost = NormalizedCost(TIPARM_1(parm_ich, 23), 1);
+    SP_PARM->_ech_cost = NormalizedCost(TIPARM_1(erase_chars, 23), 1);
+    SP_PARM->_rep_cost = NormalizedCost(TIPARM_2(repeat_char, ' ', 23), 1);
 
-    SP_PARM->_cup_ch_cost = NormalizedCost(
-					      TPARM_2(SP_PARM->_address_cursor,
-						      23, 23),
-					      1);
-    SP_PARM->_hpa_ch_cost = NormalizedCost(TPARM_1(column_address, 23), 1);
-    SP_PARM->_cuf_ch_cost = NormalizedCost(TPARM_1(parm_right_cursor, 23), 1);
+    SP_PARM->_cup_ch_cost = NormalizedCost(TIPARM_2(SP_PARM->_address_cursor,
+						    23, 23),
+					   1);
+    SP_PARM->_hpa_ch_cost = NormalizedCost(TIPARM_1(column_address, 23), 1);
+    SP_PARM->_cuf_ch_cost = NormalizedCost(TIPARM_1(parm_right_cursor, 23), 1);
     SP_PARM->_inline_cost = min(SP_PARM->_cup_ch_cost,
 				min(SP_PARM->_hpa_ch_cost,
 				    SP_PARM->_cuf_ch_cost));
@@ -563,7 +562,7 @@ relative_move(NCURSES_SP_DCLx
 	vcost = INFINITY;
 
 	if (row_address != 0
-	    && _nc_safe_strcat(target, TPARM_1(row_address, to_y))) {
+	    && _nc_safe_strcat(target, TIPARM_1(row_address, to_y))) {
 	    vcost = SP_PARM->_vpa_cost;
 	}
 
@@ -573,7 +572,7 @@ relative_move(NCURSES_SP_DCLx
 	    if (parm_down_cursor
 		&& SP_PARM->_cud_cost < vcost
 		&& _nc_safe_strcat(_nc_str_copy(target, &save),
-				   TPARM_1(parm_down_cursor, n))) {
+				   TIPARM_1(parm_down_cursor, n))) {
 		vcost = SP_PARM->_cud_cost;
 	    }
 
@@ -589,7 +588,7 @@ relative_move(NCURSES_SP_DCLx
 	    if (parm_up_cursor
 		&& SP_PARM->_cuu_cost < vcost
 		&& _nc_safe_strcat(_nc_str_copy(target, &save),
-				   TPARM_1(parm_up_cursor, n))) {
+				   TIPARM_1(parm_up_cursor, n))) {
 		vcost = SP_PARM->_cuu_cost;
 	    }
 
@@ -613,7 +612,7 @@ relative_move(NCURSES_SP_DCLx
 
 	if (column_address
 	    && _nc_safe_strcat(_nc_str_copy(target, &save),
-			       TPARM_1(column_address, to_x))) {
+			       TIPARM_1(column_address, to_x))) {
 	    hcost = SP_PARM->_hpa_cost;
 	}
 
@@ -623,7 +622,7 @@ relative_move(NCURSES_SP_DCLx
 	    if (parm_right_cursor
 		&& SP_PARM->_cuf_cost < hcost
 		&& _nc_safe_strcat(_nc_str_copy(target, &save),
-				   TPARM_1(parm_right_cursor, n))) {
+				   TIPARM_1(parm_right_cursor, n))) {
 		hcost = SP_PARM->_cuf_cost;
 	    }
 
@@ -716,7 +715,7 @@ relative_move(NCURSES_SP_DCLx
 	    if (parm_left_cursor
 		&& SP_PARM->_cub_cost < hcost
 		&& _nc_safe_strcat(_nc_str_copy(target, &save),
-				   TPARM_1(parm_left_cursor, n))) {
+				   TIPARM_1(parm_left_cursor, n))) {
 		hcost = SP_PARM->_cub_cost;
 	    }
 
@@ -793,7 +792,8 @@ onscreen_mvcur(NCURSES_SP_DCLx
 #define InitResult _nc_str_init(&result, buffer, sizeof(buffer))
 
     /* tactic #0: use direct cursor addressing */
-    if (_nc_safe_strcpy(InitResult, TPARM_2(SP_PARM->_address_cursor, ynew, xnew))) {
+    if (_nc_safe_strcpy(InitResult, TIPARM_2(SP_PARM->_address_cursor,
+					     ynew, xnew))) {
 	tactic = 0;
 	usecost = SP_PARM->_cup_cost;
 

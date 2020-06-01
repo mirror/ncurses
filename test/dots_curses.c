@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.19 2020/05/10 00:31:59 tom Exp $
+ * $Id: dots_curses.c,v 1.20 2020/05/29 23:04:02 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -206,7 +206,8 @@ main(int argc, char *argv[])
 		attron(COLOR_PAIR(mypair(fg, bg)));
 	    } else {
 		set_colors(fg, bg = z);
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	} else {
 	    if (ranf() <= 0.01) {
@@ -215,7 +216,8 @@ main(int argc, char *argv[])
 		} else {
 		    attroff(A_REVERSE);
 		}
-		napms(s_option);
+		if (s_option)
+		    napms(s_option);
 	    }
 	}
 	AddCh(p);

@@ -42,7 +42,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.99 2020/05/23 19:12:01 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.100 2020/05/25 22:48:41 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -58,7 +58,7 @@ MODULE_ID("$Id: lib_screen.c,v 1.99 2020/05/23 19:12:01 tom Exp $")
 #define ARG_SLIMIT(name)	/* nothing */
 #endif
 
-#define CUR_SLIMIT _nc_SLIMIT(limit - (target - base))
+#define CUR_SLIMIT _nc_SLIMIT(limit - (size_t) (target - base))
 #define TOP_SLIMIT _nc_SLIMIT(sizeof(buffer))
 
 /*

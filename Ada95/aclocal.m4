@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.156 2020/05/23 23:39:36 tom Exp $
+dnl $Id: aclocal.m4,v 1.157 2020/05/31 20:52:36 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1421,7 +1421,7 @@ test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
 AC_SUBST(GNATPREP_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_GENERICS version: 4 updated: 2019/12/31 08:53:54
+dnl CF_GNAT_GENERICS version: 5 updated: 2020/05/31 16:49:35
 dnl ----------------
 AC_DEFUN([CF_GNAT_GENERICS],
 [
@@ -1429,7 +1429,7 @@ AC_REQUIRE([CF_GNAT_VERSION])
 
 AC_MSG_CHECKING(if GNAT supports generics)
 case $cf_cv_gnat_version in
-(3.[[1-9]]*|[[4-9]].*)
+(3.[[1-9]]*|[[4-9]].*|[[1-9]][[0-9]].*)
 	cf_gnat_generics=yes
 	;;
 (*)

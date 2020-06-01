@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.23 2020/05/10 00:32:22 tom Exp $
+ * $Id: dots_termcap.c,v 1.24 2020/05/29 23:04:02 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -297,7 +297,8 @@ main(int argc, char *argv[])
 		tputs(tgoto(t_AF, 0, z), 1, outc);
 	    } else {
 		tputs(tgoto(t_AB, 0, z), 1, outc);
-		my_napms(s_option);
+		if (s_option)
+		    my_napms(s_option);
 	    }
 	} else if (VALID_STRING(t_me)
 		   && VALID_STRING(t_mr)) {
@@ -305,7 +306,8 @@ main(int argc, char *argv[])
 		outs((ranf() > 0.6)
 		     ? t_mr
 		     : t_me);
-		my_napms(s_option);
+		if (s_option)
+		    my_napms(s_option);
 	    }
 	}
 	outc(p);

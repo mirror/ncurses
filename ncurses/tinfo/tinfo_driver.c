@@ -52,7 +52,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.67 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.69 2020/05/27 23:55:56 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -356,23 +356,23 @@ drv_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 	if (set_a_foreground) {
 	    TPUTS_TRACE("set_a_foreground");
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    TPARM_1(set_a_foreground, color), 1, outc);
+				    TIPARM_1(set_a_foreground, color), 1, outc);
 	} else {
 	    TPUTS_TRACE("set_foreground");
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    TPARM_1(set_foreground,
-					    toggled_colors(color)), 1, outc);
+				    TIPARM_1(set_foreground,
+					     toggled_colors(color)), 1, outc);
 	}
     } else {
 	if (set_a_background) {
 	    TPUTS_TRACE("set_a_background");
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    TPARM_1(set_a_background, color), 1, outc);
+				    TIPARM_1(set_a_background, color), 1, outc);
 	} else {
 	    TPUTS_TRACE("set_background");
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    TPARM_1(set_background,
-					    toggled_colors(color)), 1, outc);
+				    TIPARM_1(set_background,
+					     toggled_colors(color)), 1, outc);
 	}
     }
 }
@@ -764,10 +764,10 @@ drv_initpair(TERMINAL_CONTROL_BLOCK * TCB, int pair, int f, int b)
 	    tp[b].red, tp[b].green, tp[b].blue));
 
 	NCURSES_PUTP2("initialize_pair",
-		      TPARM_7(initialize_pair,
-			      pair,
-			      tp[f].red, tp[f].green, tp[f].blue,
-			      tp[b].red, tp[b].green, tp[b].blue));
+		      TIPARM_7(initialize_pair,
+			       pair,
+			       tp[f].red, tp[f].green, tp[f].blue,
+			       tp[b].red, tp[b].green, tp[b].blue));
     }
 }
 
@@ -800,7 +800,7 @@ drv_initcolor(TERMINAL_CONTROL_BLOCK * TCB,
     AssertTCB();
     if (initialize_color != NULL) {
 	NCURSES_PUTP2("initialize_color",
-		      TPARM_4(initialize_color, color, r, g, b));
+		      TIPARM_4(initialize_color, color, r, g, b));
     }
 }
 
@@ -826,7 +826,7 @@ drv_do_color(TERMINAL_CONTROL_BLOCK * TCB,
 	if (set_color_pair) {
 	    TPUTS_TRACE("set_color_pair");
 	    NCURSES_SP_NAME(tputs) (NCURSES_SP_ARGx
-				    TPARM_1(set_color_pair, pair), 1, outc);
+				    TIPARM_1(set_color_pair, pair), 1, outc);
 	    return;
 	} else if (sp != 0) {
 	    _nc_pair_content(SP_PARM, pair, &fg, &bg);
