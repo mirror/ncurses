@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.802 $
-#	$Date: 2020/05/30 21:37:01 $
+#	$Revision: 1.807 $
+#	$Date: 2020/06/07 00:16:21 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -966,9 +966,7 @@ linux-basic|linux console,
 	il=\E[%p1%dL, il1=\E[L, ind=\n, kb2=\E[G, kbs=^?, kcbt=\E[Z,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	kdch1=\E[3~, kend=\E[4~, kf1=\E[[A, kf10=\E[21~,
-	kf11=\E[23~, kf12=\E[24~, kf13=\E[25~, kf14=\E[26~,
-	kf15=\E[28~, kf16=\E[29~, kf17=\E[31~, kf18=\E[32~,
-	kf19=\E[33~, kf2=\E[[B, kf20=\E[34~, kf3=\E[[C, kf4=\E[[D,
+	kf11=\E[23~, kf12=\E[24~, kf2=\E[[B, kf3=\E[[C, kf4=\E[[D,
 	kf5=\E[[E, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
 	khome=\E[1~, kich1=\E[2~, kmous=\E[M, knp=\E[6~, kpp=\E[5~,
 	kspd=^Z, nel=\r\n, rc=\E8, rev=\E[7m, ri=\EM, rmam=\E[?7l,
@@ -977,7 +975,14 @@ linux-basic|linux console,
 	    %t;2%;%?%p6%t;1%;%?%p9%t;11%;m,
 	smam=\E[?7h, smir=\E[4h, smul=\E[4m, tbc=\E[3g,
 	vpa=\E[%i%p1%dd, use=vt102+enq, use=klone+sgr,
-	use=ecma+color,
+	use=ecma+color, use=linux+sfkeys,
+
+linux+decid|ncurses extension for Linux console DECID,
+	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\EZ,
+
+linux+sfkeys|shifted function-keys for Linux console,
+	kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, kf16=\E[29~,
+	kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, kf20=\E[34~,
 
 linux-m|Linux console no color,
 	colors@, pairs@,
@@ -4834,7 +4839,7 @@ xterm-16color|xterm with 16 colors like aixterm,
 
 # 256-colors is a compile-time feature of XFree86 xterm beginning with
 # xterm patch #111 (1999/7/10) -TD
-xterm+256color|xterm 256-color feature,
+xterm+256color|original xterm 256-color feature,
 	ccc,
 	colors#0x100, pairs#0x10000,
 	initc=\E]4;%p1%d;rgb\:%p2%{255}%*%{1000}%/%2.2X/%p3%{255}%*
@@ -4845,6 +4850,19 @@ xterm+256color|xterm 256-color feature,
 	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38;5
 	      ;%p1%d%;m,
 	setb@, setf@,
+
+# The semicolon separator used in xterm+256color does not follow the ECMA-48
+# standard.  Since patch #282 (in 2012), xterm has supported both the legacy
+# subparameter separator (semicolon) and the standard (colon).
+#
+# The xterm FAQ gives some of the history:
+#	https://invisible-island.net/xterm/xterm.faq.html#color_by_number
+xterm+256color2|xterm 256-color feature,
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e48
+	      \:5\:%p1%d%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%p1%{16}%<%t9%p1%{8}%-%d%e38\:
+	      5\:%p1%d%;m,
+	use=xterm+256color,
 
 # xterm OSC 104 resets the color palette.  Using it as part of xterm+256color
 # has the drawback that some of the xterm-alikes which use that building block
@@ -4879,8 +4897,11 @@ xterm+256setaf|xterm 256-color (set-only),
 # The default color palette for the 256- and 88-colors are different.  A
 # given executable will have one palette (perhaps compiled-in).  If the program
 # supports xterm's control sequence, it can be programmed using initc.
-xterm+88color|xterm 88-color feature,
+xterm+88color|original xterm 88-color feature,
 	colors#88, pairs#7744, use=xterm+256color,
+
+xterm+88color2|xterm 88-color feature,
+	colors#88, pairs#7744, use=xterm+256color2,
 
 # These variants of XFree86 3.9.16 xterm are built as a configure option.
 xterm-256color|xterm with 256 colors,
@@ -4964,6 +4985,15 @@ nsterm-direct|nsterm with direct-color indexing,
 # + Teraterm 4.97, like PuTTY (no good).
 # + terminology 0.91 recognizes xterm's original implementation, but does
 #   nothing useful with it.
+
+# Reviewing after ncurses 6.2:
+# + Apple's Terminal.app is unchanged, has no support for direct color:
+#	Catalina 10.15.5 Terminal.app 2.10 (433)
+#	Mohave 10.14.6 - Terminal.app 2.9.5 (421.2)
+# + Cygwin's mintty 3.1.7 works with colon/semicolon
+# + PuTTY 0.73 works with semicolon
+# + Teraterm 4.105 works with semicolon
+# + terminology 1.7.0 works with colon/semicolon.
 
 # Other variants are possible, e.g., by using more of xterm's indexed color
 # palette, though the intrusion of indexed colors on the direct-color space
@@ -7385,6 +7415,7 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	sgr0=\E[m\017, smacs=^N, smir=\E[4h, smkx=\E[?1h\E=,
 	smso=\E[3m, smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd,
 	E0=\E(B, S0=\E(%p1%c, use=xterm+alt1049, use=ecma+color,
+	use=vt100+enq,
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
 screen-bce|VT 100/ANSI X3.64 virtual terminal with bce,
@@ -7525,10 +7556,10 @@ screen.konsole|screen in KDE console window,
 	use=xterm+x11mouse, use=screen+italics,
 	use=screen+fkeys, use=konsole,
 # fix the backspace key
-screen.linux|screen in linux console,
+screen.linux|screen.linux-s|screen in linux console,
 	bw,
-	kbs=^?, kcbt@, use=xterm+x11mouse, use=screen+fkeys,
-	use=screen4,
+	kbs=^?, kcbt@, use=linux+sfkeys, use=xterm+x11mouse,
+	use=screen+fkeys, use=screen4,
 screen.mlterm|screen in mlterm,
 	use=xterm+x11mouse, use=screen+fkeys, use=mlterm,
 screen.putty|screen in putty,
@@ -20859,7 +20890,6 @@ linux-m1|Linux Minitel 1 "like" Couleurs,
 	rs1=\Ec, rs3=\E[37;40m\E[8], sc=\E7, setab=\E[4%p1%dm,
 	setaf=\E[3%p1%dm, sgr0=\E[m, smacs=^N, smam=\E[?7h,
 	smir=\E[4h, smpch=\E[11m, smso=\E[7m, tbc=\E[3g,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\EZ,
 	vpa=\E[%i%p1%dd, .VN=\E[?5l, .VR=\E[?5h, .am@,
 	.ich=\E[%p1%d@, .ich1=\E[@, .ll=\E[99H, .rmcup=,
 	.rmul=\E[24m, .smcup=\E]R\E]P3FFFF80\E[?8c,
@@ -20872,6 +20902,7 @@ linux-m1|Linux Minitel 1 "like" Couleurs,
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n,
+	use=linux+decid,
 
 # 1. Using double-shapes for vt100 graphical chars (eg: mc).
 # 2. Native brown color corrected to good yellow color.
@@ -26574,5 +26605,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-05-30
 #	+ re-enable "bel" in konsole-base (report by Nia Huang)
 #	+ add linux-s entry (patch by Alexandre Montaron).
+#
+# 2020-06-06
+#	+ add xterm+256color2, xterm+88color2, to deprecate nonstandard usage
+#	  in xterm+256color, xterm+88color -TD
+#	+ add shifted Linux console keys in linux+sfkeys entry for
+#	  screen.linux (report by Alexandre Montaron).
+#	+ use vt100+enq in screen (report by Alexandre Montaron).
+#	+ add screen.linux-s alias (suggested by Alexandre Montaron).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
