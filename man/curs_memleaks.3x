@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_memleaks.3x,v 1.8 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_memleaks.3x,v 1.9 2020/06/13 23:35:34 tom Exp $
 .TH curs_memleaks 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -60,7 +60,7 @@ These functions are used to simplify analysis of memory leaks in the ncurses
 library.
 .PP
 Any implementation of curses must not free the memory associated with
-a screen, since (even after calling \fBendwin\fP), it must be available
+a screen, since (even after calling \fBendwin\fP(3X)), it must be available
 for use in the next call to \fBrefresh\fP(3X).
 There are also chunks of memory held for performance reasons.
 That makes it hard to analyze curses applications for memory leaks.

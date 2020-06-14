@@ -44,10 +44,17 @@
 #include <curses.priv.h>
 #include <tic.h>
 
+#if USE_GPM_SUPPORT
+#ifdef HAVE_LIBDL
+/* use dynamic loader to avoid linkage dependency */
+#include <dlfcn.h>
+#endif
+#endif
+
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.171 2020/05/23 19:13:12 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.173 2020/06/13 21:38:43 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -197,6 +204,14 @@ delscreen(SCREEN *sp)
 	if (_nc_find_prescr() == sp) {
 	    _nc_forget_prescr();
 	}
+#if USE_GPM_SUPPORT
+#ifdef HAVE_LIBDL
+	if (sp->_dlopen_gpm != 0) {
+	    dlclose(sp->_dlopen_gpm);
+	    sp->_dlopen_gpm = 0;
+	}
+#endif
+#endif /* USE_GPM_SUPPORT */
 	free(sp);
 
 	/*

@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.628 2020/02/02 23:34:34 tom Exp $
+ * $Id: curses.priv.h,v 1.629 2020/06/13 21:58:00 tom Exp $
  *
  *	curses.priv.h
  *
@@ -952,6 +952,11 @@ typedef struct {
 	int		dbd_size;	/* length of dbd_list[] */
 	time_t		dbd_time;	/* cache last updated */
 	ITERATOR_VARS	dbd_vars[dbdLAST];
+
+#if HAVE_TSEARCH
+	void		*cached_tparm;
+	int		count_tparm;
+#endif /* HAVE_TSEARCH */
 
 #ifdef USE_TERM_DRIVER
 	int		(*term_driver)(struct DriverTCB*, const char*, int*);

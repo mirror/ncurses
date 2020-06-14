@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.190 2020/05/27 23:55:32 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.191 2020/06/13 21:05:02 tom Exp $")
 
 #include <tic.h>
 
@@ -487,8 +487,6 @@ unload_gpm_library(SCREEN *sp)
 	T(("unload GPM library"));
 	sp->_mouse_gpm_loaded = FALSE;
 	sp->_mouse_fd = -1;
-	dlclose(sp->_dlopen_gpm);
-	sp->_dlopen_gpm = 0;
     }
 }
 
@@ -496,7 +494,14 @@ static void
 load_gpm_library(SCREEN *sp)
 {
     sp->_mouse_gpm_found = FALSE;
-    if ((sp->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
+
+    /*
+     * If we already had a successful dlopen, reuse it.
+     */
+    if (sp->_dlopen_gpm != 0) {
+	sp->_mouse_gpm_found = TRUE;
+	sp->_mouse_gpm_loaded = TRUE;
+    } else if ((sp->_dlopen_gpm = dlopen(LIBGPM_SONAME, my_RTLD)) != 0) {
 #if (defined(__GNUC__) && (__GNUC__ >= 5)) || defined(__clang__)
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wpedantic"
@@ -510,13 +515,15 @@ load_gpm_library(SCREEN *sp)
 #endif
 	    T(("GPM initialization failed: %s", dlerror()));
 	    unload_gpm_library(sp);
+	    dlclose(sp->_dlopen_gpm);
+	    sp->_dlopen_gpm = 0;
 	} else {
 	    sp->_mouse_gpm_found = TRUE;
 	    sp->_mouse_gpm_loaded = TRUE;
 	}
     }
 }
-#endif
+#endif /* HAVE_LIBDL */
 
 static bool
 enable_gpm_mouse(SCREEN *sp, bool enable)

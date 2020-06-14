@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.147 2020/03/21 23:38:25 tom Exp $
+.\" $Id: ncurses.3x,v 1.148 2020/06/13 23:25:50 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -319,8 +319,9 @@ For example, \fBwaddch\fP becomes \fBwadd_wch\fP.
 .PP
 .\"
 .SS Routine Name Index
-The following table lists each \fBcurses\fR routine and the name of
-the manual page on which it is described.
+The following table lists the \fBcurses\fR routines provided in
+the \*(``normal\*('' and \*(``wide\*('' libraries and the names of
+the manual pages on which they are described.
 Routines flagged with \*(``*\*(''
 are ncurses-specific, not described by XPG4 or present in SVr4.
 .PP
@@ -332,17 +333,6 @@ l l .
 =
 COLOR_PAIR/\fBcurs_color\fR(3X)
 PAIR_NUMBER/\fBcurs_attr\fR(3X)
-_nc_free_and_exit/\fBcurs_memleaks\fR(3X)*
-_nc_freeall/\fBcurs_memleaks\fR(3X)*
-_nc_tracebits/\fBcurs_trace\fR(3X)*
-_traceattr/\fBcurs_trace\fR(3X)*
-_traceattr2/\fBcurs_trace\fR(3X)*
-_tracechar/\fBcurs_trace\fR(3X)*
-_tracechtype/\fBcurs_trace\fR(3X)*
-_tracechtype2/\fBcurs_trace\fR(3X)*
-_tracedump/\fBcurs_trace\fR(3X)*
-_tracef/\fBcurs_trace\fR(3X)*
-_tracemouse/\fBcurs_trace\fR(3X)*
 add_wch/\fBcurs_add_wch\fR(3X)
 add_wchnstr/\fBcurs_add_wchstr\fR(3X)
 add_wchstr/\fBcurs_add_wchstr\fR(3X)
@@ -383,6 +373,7 @@ color_content/\fBcurs_color\fR(3X)
 color_set/\fBcurs_attr\fR(3X)
 copywin/\fBcurs_overlay\fR(3X)
 curs_set/\fBcurs_kernel\fR(3X)
+curses_trace/\fBcurs_trace\fR(3X)*
 curses_version/\fBcurs_extend\fR(3X)*
 def_prog_mode/\fBcurs_kernel\fR(3X)
 def_shell_mode/\fBcurs_kernel\fR(3X)
@@ -403,6 +394,8 @@ endwin/\fBcurs_initscr\fR(3X)
 erase/\fBcurs_clear\fR(3X)
 erasechar/\fBcurs_termattrs\fR(3X)
 erasewchar/\fBcurs_termattrs\fR(3X)
+exit_curses/\fBcurs_memleaks\fR(3X)*
+exit_terminfo/\fBcurs_memleaks\fR(3X)*
 extended_color_content/\fBcurs_color\fR(3X)*
 extended_pair_content/\fBcurs_color\fR(3X)*
 extended_slk_color/\fBcurs_slk\fR(3X)*
@@ -441,6 +434,7 @@ has_colors/\fBcurs_color\fR(3X)
 has_ic/\fBcurs_termattrs\fR(3X)
 has_il/\fBcurs_termattrs\fR(3X)
 has_key/\fBcurs_getch\fR(3X)*
+has_mouse/\fBcurs_mouse\fR(3X)*
 hline/\fBcurs_border\fR(3X)
 hline_set/\fBcurs_border_set\fR(3X)
 idcok/\fBcurs_outopts\fR(3X)
@@ -601,6 +595,7 @@ notimeout/\fBcurs_inopts\fR(3X)
 overlay/\fBcurs_overlay\fR(3X)
 overwrite/\fBcurs_overlay\fR(3X)
 pair_content/\fBcurs_color\fR(3X)
+pecho_wchar/\fBcurs_pad\fR(3X)*
 pechochar/\fBcurs_pad\fR(3X)
 pnoutrefresh/\fBcurs_pad\fR(3X)
 prefresh/\fBcurs_pad\fR(3X)
@@ -611,6 +606,7 @@ qiflush/\fBcurs_inopts\fR(3X)
 raw/\fBcurs_inopts\fR(3X)
 redrawwin/\fBcurs_refresh\fR(3X)
 refresh/\fBcurs_refresh\fR(3X)
+reset_color_pairs/\fBcurs_color\fR(3X)*
 reset_prog_mode/\fBcurs_kernel\fR(3X)
 reset_shell_mode/\fBcurs_kernel\fR(3X)
 resetty/\fBcurs_kernel\fR(3X)
@@ -650,6 +646,7 @@ slk_refresh/\fBcurs_slk\fR(3X)
 slk_restore/\fBcurs_slk\fR(3X)
 slk_set/\fBcurs_slk\fR(3X)
 slk_touch/\fBcurs_slk\fR(3X)
+slk_wset/\fBcurs_slk\fR(3X)*
 standend/\fBcurs_attr\fR(3X)
 standout/\fBcurs_attr\fR(3X)
 start_color/\fBcurs_color\fR(3X)
@@ -781,6 +778,19 @@ wunctrl/\fBcurs_util\fR(3X)
 wvline/\fBcurs_border\fR(3X)
 wvline_set/\fBcurs_border_set\fR(3X)
 .TE
+.PP
+Depending on the configuration,
+additional sets of functions may be available:
+.RS 3
+.TP 5
+\fBcurs_memleaks\fP(3X) - curses memory-leak checking
+.TP 5
+\fBcurs_sp_funcs\fP(3X) - curses screen-pointer extension
+.TP 5
+\fBcurs_threads\fP(3X) - curses thread support
+.TP 5
+\fBcurs_trace\fP(3X) - curses debugging routines
+.RE
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fR upon failure and an
 integer value other than \fBERR\fR upon successful completion, unless

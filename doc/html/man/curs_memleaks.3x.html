@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_memleaks.3x,v 1.8 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_memleaks.3x,v 1.9 2020/06/13 23:35:34 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -68,13 +68,13 @@
        ncurses library.
 
        Any implementation of curses must not free the memory associated with a
-       screen, since (even after calling <STRONG>endwin</STRONG>), it must be available for use
-       in  the next call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  There are also chunks of memory held
-       for performance reasons.  That makes it hard to analyze curses applica-
-       tions  for memory leaks.  When using the specially configured debugging
-       version of the ncurses library, applications can call  functions  which
-       free  those  chunks  of  memory, simplifying the process of memory-leak
-       checking.
+       screen, since (even after calling <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG>), it must be available for
+       use  in  the next call to <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.  There are also chunks of memory
+       held for performance reasons.  That makes it hard to analyze curses ap-
+       plications  for  memory leaks.  When using the specially configured de-
+       bugging version of the ncurses library, applications can call functions
+       which  free  those chunks of memory, simplifying the process of memory-
+       leak checking.
 
        Some of the functions are named with a "_nc_" prefix because  they  are
        not intended for use in the non-debugging library:

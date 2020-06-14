@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.126 2020/05/31 00:02:03 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.127 2020/06/13 21:59:52 tom Exp $")
 
 /*
  *	char *
@@ -135,8 +135,8 @@ typedef struct {
 } TPARM_DATA;
 
 #if HAVE_TSEARCH
-static void *cached_tparm;
-static int count_tparm;
+#define MyCache _nc_globals.cached_tparm
+#define MyCount _nc_globals.count_tparm
 #if NO_LEAKS
 static int which_tparm;
 static TPARM_DATA **delete_tparm;
@@ -172,20 +172,20 @@ NCURSES_EXPORT(void)
 _nc_free_tparm(void)
 {
 #if HAVE_TSEARCH
-    if (count_tparm != 0) {
-	delete_tparm = typeMalloc(TPARM_DATA *, count_tparm);
+    if (MyCount != 0) {
+	delete_tparm = typeMalloc(TPARM_DATA *, MyCount);
 	which_tparm = 0;
-	twalk(cached_tparm, visit_nodes);
-	for (which_tparm = 0; which_tparm < count_tparm; ++which_tparm) {
+	twalk(MyCache, visit_nodes);
+	for (which_tparm = 0; which_tparm < MyCount; ++which_tparm) {
 	    TPARM_DATA *ptr = delete_tparm[which_tparm];
-	    tdelete(ptr, &cached_tparm, cmp_format);
+	    tdelete(ptr, &MyCache, cmp_format);
 	    free((char *) ptr->format);
 	    free(ptr);
 	}
 	which_tparm = 0;
-	twalk(cached_tparm, visit_nodes);
+	twalk(MyCache, visit_nodes);
 	FreeAndNull(delete_tparm);
-	count_tparm = 0;
+	MyCount = 0;
 	which_tparm = 0;
     }
 #endif
@@ -555,7 +555,7 @@ tparm_setup(const char *string, TPARM_DATA * result)
 	void *ft;
 
 	result->format = string;
-	if ((ft = tfind(result, &cached_tparm, cmp_format)) != 0) {
+	if ((ft = tfind(result, &MyCache, cmp_format)) != 0) {
 	    fs = *(TPARM_DATA **) ft;
 	    *result = *fs;
 	} else
@@ -589,8 +589,8 @@ tparm_setup(const char *string, TPARM_DATA * result)
 		if ((fs = typeCalloc(TPARM_DATA, 1)) != 0) {
 		    *fs = *result;
 		    if ((fs->format = strdup(string)) != 0) {
-			if ((ft = tsearch(fs, &cached_tparm, cmp_format)) != 0) {
-			    ++count_tparm;
+			if ((ft = tsearch(fs, &MyCache, cmp_format)) != 0) {
+			    ++MyCount;
 			} else {
 			    rc = ERR;
 			}

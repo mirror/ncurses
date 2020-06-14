@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3504 2020/06/07 00:22:03 tom Exp $
+-- $Id: NEWS,v 1.3507 2020/06/13 23:29:57 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200613
+	+ update list of functions in ncurses.3x
+	+ move dlclose() call from lib_mouse.c to delscreen() to avoid a case
+	  in the former which could be called from SIGTSTP handler (Debian
+	  #961097).
 
 20200606
 	+ add xterm+256color2, xterm+88color2, to deprecate nonstandard usage
