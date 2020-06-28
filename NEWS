@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3507 2020/06/13 23:29:57 tom Exp $
+-- $Id: NEWS,v 1.3511 2020/06/27 21:48:14 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200627
+	+ build-fixes for gnat 10.1.1, whose gnatmake drops integration with
+	  gprbuild.
+	+ correct buffer-length in test/color_name.h
 
 20200613
 	+ update list of functions in ncurses.3x

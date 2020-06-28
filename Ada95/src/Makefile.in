@@ -29,7 +29,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.90 2020/03/28 18:05:56 Adam.Van.Ymeren Exp $
+#  $Id: Makefile.in,v 1.91 2020/06/27 21:17:54 tom Exp $
 #
 .SUFFIXES:
 
@@ -195,6 +195,7 @@ install.libs :: \
 		$(BUILD_DIR_LIB)/$(STATIC_LIBNAME)
 	@echo made $(STATIC_LIBNAME)
 
+#OLD:BEGIN
 install \
 install.libs :: \
 		$(BUILD_DIR_LIB)/$(STATIC_LIBNAME) \
@@ -206,6 +207,7 @@ install.libs :: \
 uninstall \
 uninstall.libs ::
 	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
+#OLD:END
 
 mostlyclean ::
 	rm -f *.o *.ali b_t*.* *.s $(PROGS) a.out core b_*_test.c *.xr[bs] *.a
@@ -276,20 +278,66 @@ STATIC_DIRS = \
 @USE_GNAT_PROJECTS@	$(SHELL) $(srcdir)/library-cfg.sh static library.gpr $(CFLAGS_NORMAL) >$(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@	@echo "Using GNAT Project:"
 @USE_GNAT_PROJECTS@	@-$(SHELL) -c "diff -c library.gpr $(GNAT_PROJECT); exit 0"
-@USE_GNAT_PROJECTS@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
-@USE_GNAT_PROJECTS@	$(AR) $(ARFLAGS) $@ $(STATIC_C_OBJS)
-@USE_GNAT_PROJECTS@	-rm -f $(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@
+@USE_GNAT_PROJECTS@	gprbuild -p $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_PROJECTS@
+@USE_GNAT_PROJECTS@	-rm -f $(GNAT_PROJECT)
+
+#OLD:BEGIN
 @USE_GNAT_LIBRARIES@install \
 @USE_GNAT_LIBRARIES@install.libs :: \
 @USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
 @USE_GNAT_LIBRARIES@	$(INSTALL_LIB) \
 @USE_GNAT_LIBRARIES@		$(BUILD_DIR)/static-ali/*.ali \
 @USE_GNAT_LIBRARIES@		$(ADA_OBJECTS)
+#OLD:END
+# While gprinstall is the "recommended" tool, it is rather brittle, with
+# hardcoded assumptions about the use of the install-name which prevent using
+# that tool to make the directory layout of older versions of the AdaCurses
+# package.
+#
+# In principle, one might just do
+#	--install-name=""
+# and in dry-run mode, gprinstall pretends to handle it properly (trimming the
+# empty directory level), but without the dry-run option, it fails (tested
+# with gnat 10.1.1).
+#NEW:BEGIN
+#@USE_GNAT_LIBRARIES@install \
+#@USE_GNAT_LIBRARIES@install.libs ::
+#@USE_GNAT_LIBRARIES@	@cf_ada_config@gprconfig --batch --config=Ada --config=C,,,,@cf_ada_config_C@
+#@USE_GNAT_LIBRARIES@	-rm -f $(GNAT_PROJECT)
+#@USE_GNAT_LIBRARIES@	$(SHELL) $(srcdir)/library-cfg.sh static library.gpr $(CFLAGS_NORMAL) >$(GNAT_PROJECT)
+#@USE_GNAT_LIBRARIES@	@echo "Using GNAT Project:"
+#@USE_GNAT_LIBRARIES@	@-$(SHELL) -c "diff -c library.gpr $(GNAT_PROJECT); exit 0"
+#@USE_GNAT_LIBRARIES@
+#@USE_GNAT_LIBRARIES@	gprinstall -m -v -f -p \
+#@USE_GNAT_LIBRARIES@		--prefix="$(DESTDIR)$(prefix)" \
+#@USE_GNAT_LIBRARIES@		$(ADAMAKEFLAGS) -XLIB_KIND=static \
+#@USE_GNAT_LIBRARIES@		--lib-subdir="$(DESTDIR)$(prefix)"/lib \
+#@USE_GNAT_LIBRARIES@		--ali-subdir="$(DESTDIR)$(prefix)"/lib/ada/adalib \
+#@USE_GNAT_LIBRARIES@		--sources-subdir="$(DESTDIR)$(prefix)"/share/ada/adainclude
+#@USE_GNAT_LIBRARIES@
+#@USE_GNAT_LIBRARIES@	-rm -f $(GNAT_PROJECT)
+#NEW:END
 
+#OLD:BEGIN
 uninstall \
 uninstall.libs ::
 	@rm -f $(ADA_OBJECTS)/$(STATIC_LIBNAME)
+#OLD:END
+#NEW:BEGIN
+#@USE_GNAT_LIBRARIES@uninstall \
+#@USE_GNAT_LIBRARIES@uninstall.libs ::
+#@USE_GNAT_LIBRARIES@	@cf_ada_config@gprconfig --batch --config=Ada --config=C,,,,@cf_ada_config_C@
+#@USE_GNAT_LIBRARIES@	-rm -f $(GNAT_PROJECT)
+#@USE_GNAT_LIBRARIES@	$(SHELL) $(srcdir)/library-cfg.sh static library.gpr $(CFLAGS_NORMAL) >$(GNAT_PROJECT)
+#@USE_GNAT_LIBRARIES@	@echo "Using GNAT Project:"
+#@USE_GNAT_LIBRARIES@	@-$(SHELL) -c "diff -c library.gpr $(GNAT_PROJECT); exit 0"
+#@USE_GNAT_LIBRARIES@
+#@USE_GNAT_LIBRARIES@	gprinstall -v -f --prefix="$(DESTDIR)$(prefix)" --uninstall $(ADAMAKEFLAGS) -XLIB_KIND=static
+#@USE_GNAT_LIBRARIES@
+#@USE_GNAT_LIBRARIES@	-rm -f $(GNAT_PROJECT)
+#NEW:END
 
 @USE_GNAT_LIBRARIES@uninstall \
 @USE_GNAT_LIBRARIES@uninstall.libs ::
@@ -352,8 +400,13 @@ uninstall.libs ::
 @MAKE_ADA_SHAREDLIB@	rm -f $(LIBDIR)/$(SHARED_SYMLINK)
 @MAKE_ADA_SHAREDLIB@	rm -f $(LIBDIR)/$(SHARED_LIBNAME)
 
+#rm-docs :
+#	gnatdoc --enable-build $(ADAMAKEFLAGS) -XLIB_KIND=static
+
 clean ::
 	-rm -f default.cgpr
 	-rm -rf $(BUILD_DIR)/*-ali
 	-rm -rf $(BUILD_DIR)/*-obj
 	-rm -rf $(BUILD_DIR_LIB)
+#@USE_GNAT_PROJECTS@	gprclean $(ADAMAKEFLAGS) -XLIB_KIND=static
+#@MAKE_ADA_SHAREDLIB@	gprclean $(ADAMAKEFLAGS) -XLIB_KIND=dynamic
