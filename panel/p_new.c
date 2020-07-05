@@ -39,7 +39,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.17 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
@@ -89,7 +89,7 @@ root_panel(NCURSES_SP_DCL0)
   return _nc_stdscr_pseudo_panel;
 }
 
-NCURSES_EXPORT(PANEL *)
+PANEL_EXPORT(PANEL *)
 new_panel(WINDOW *win)
 {
   PANEL *pan = (PANEL *) 0;

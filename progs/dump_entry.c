@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.176 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.178 2020/07/04 20:00:29 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf

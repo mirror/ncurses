@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.169 2020/02/22 15:45:23 tom Exp $
+# $Id: Makefile.in,v 1.170 2020/05/24 01:40:20 anonymous.maarten Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -102,11 +102,11 @@ CPP		= @CPP@
 CFLAGS		= @CFLAGS@
 
 INCDIR		= $(srcdir)/../include
-CPPFLAGS	= -DHAVE_CONFIG_H -I../ncurses @CPPFLAGS@
+CPPFLAGS	= -DHAVE_CONFIG_H -DBUILDING_NCURSES -I../ncurses @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
-BUILD_CPPFLAGS	= -DHAVE_CONFIG_H -DUSE_BUILD_CC -I../ncurses -I$(srcdir) -I../include -I$(INCDIR) @BUILD_CPPFLAGS@ 
+BUILD_CPPFLAGS	= -DHAVE_CONFIG_H -DUSE_BUILD_CC -I../ncurses -I$(srcdir) -I../include -I$(INCDIR) @BUILD_CPPFLAGS@
 BUILD_CC	= @BUILD_CC@
 BUILD_CCFLAGS	= @BUILD_CFLAGS@
 BUILD_LDFLAGS	= @BUILD_LDFLAGS@
@@ -118,8 +118,8 @@ BUILD_LIBS	= @BUILD_LIBS@
 BUILD_EXEEXT	= @BUILD_EXEEXT@
 x		= @EXEEXT@
 
-CFLAGS_LIBTOOL	= $(CCFLAGS)
-CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_LIBTOOL	= $(CCFLAGS) -DNCURSES_STATIC
+CFLAGS_NORMAL	= $(CCFLAGS) -DNCURSES_STATIC
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
 CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@

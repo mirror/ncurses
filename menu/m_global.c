@@ -38,11 +38,11 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_global.c,v 1.30 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_global.c,v 1.31 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 static char mark[] = "-";
 /* *INDENT-OFF* */
-NCURSES_EXPORT_VAR(MENU) _nc_Default_Menu = {
+MENU_EXPORT_VAR(MENU) _nc_Default_Menu = {
   16,				  /* Nr. of chars high */
   1,				  /* Nr. of chars wide */
   16,				  /* Nr. of items high */
@@ -81,7 +81,7 @@ NCURSES_EXPORT_VAR(MENU) _nc_Default_Menu = {
   0			          /* status */
 };
 
-NCURSES_EXPORT_VAR(ITEM) _nc_Default_Item = {
+MENU_EXPORT_VAR(ITEM) _nc_Default_Item = {
   { (char *)0, 0 },		  /* name */
   { (char *)0, 0 },		  /* description */
   (MENU *)0,		          /* Pointer to parent menu */
@@ -171,7 +171,7 @@ ResetConnectionInfo(MENU * menu, ITEM ** items)
 |   Return Values :  TRUE       - successful connection
 |                    FALSE      - connection failed
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(bool)
+MENU_EXPORT(bool)
 _nc_Connect_Items(MENU * menu, ITEM ** items)
 {
   ITEM **item;
@@ -233,7 +233,7 @@ _nc_Connect_Items(MENU * menu, ITEM ** items)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Disconnect_Items(MENU * menu)
 {
   if (menu && menu->items)
@@ -248,7 +248,7 @@ _nc_Disconnect_Items(MENU * menu)
 |
 |   Return Values :  the width
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 _nc_Calculate_Text_Width(const TEXT * item /*FIXME: limit length */ )
 {
 #if USE_WIDEC_SUPPORT
@@ -337,7 +337,7 @@ calculate_actual_width(MENU * menu, bool name)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Calculate_Item_Length_and_Width(MENU * menu)
 {
   int l;
@@ -376,7 +376,7 @@ _nc_Calculate_Item_Length_and_Width(MENU * menu)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Link_Items(MENU * menu)
 {
   if (menu && menu->items && *(menu->items))
@@ -503,7 +503,7 @@ _nc_Link_Items(MENU * menu)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Show_Menu(const MENU * menu)
 {
   WINDOW *win;
@@ -543,7 +543,7 @@ _nc_Show_Menu(const MENU * menu)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_New_TopRow_and_CurrentItem(
 				MENU * menu,
 				int new_toprow,

@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_items.c,v 1.18 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_items.c,v 1.19 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -53,7 +53,7 @@ MODULE_ID("$Id: m_items.c,v 1.18 2020/02/02 23:34:34 tom Exp $")
 |                    E_BAD_ARGUMENT - An incorrect menu or item array was
 |                                     passed to the function
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 set_menu_items(MENU * menu, ITEM ** items)
 {
   T((T_CALLED("set_menu_items(%p,%p)"), (void *)menu, (void *)items));
@@ -85,7 +85,7 @@ set_menu_items(MENU * menu, ITEM ** items)
 |
 |   Return Values :  NULL on error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(ITEM **)
+MENU_EXPORT(ITEM **)
 menu_items(const MENU * menu)
 {
   T((T_CALLED("menu_items(%p)"), (const void *)menu));
@@ -101,7 +101,7 @@ menu_items(const MENU * menu)
 |
 |   Return Values :  Number of items or -1 to indicate error.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 item_count(const MENU * menu)
 {
   T((T_CALLED("item_count(%p)"), (const void *)menu));

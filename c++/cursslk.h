@@ -32,17 +32,17 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursslk.h,v 1.16 2020/02/29 15:46:00 anonymous.maarten Exp $
+// $Id: cursslk.h,v 1.17 2020/05/24 01:40:20 anonymous.maarten Exp $
 
 #ifndef NCURSES_CURSSLK_H_incl
 #define NCURSES_CURSSLK_H_incl
 
 #include <cursesw.h>
 
-class NCURSES_IMPEXP Soft_Label_Key_Set {
+class NCURSES_CXX_IMPEXP Soft_Label_Key_Set {
 public:
   // This inner class represents the attributes of a Soft Label Key (SLK)
-  class NCURSES_IMPEXP Soft_Label_Key {
+  class NCURSES_CXX_IMPEXP Soft_Label_Key {
     friend class Soft_Label_Key_Set;
   public:
     typedef enum { Left=0, Center=1, Right=2 } Justification;

@@ -33,14 +33,14 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_attr.c,v 1.13 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_attr.c,v 1.14 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*----------------------------------------------------------------------------
   Field-Attribute manipulation routines
   --------------------------------------------------------------------------*/
 /* "Template" macro to generate a function to set a fields attribute */
 #define GEN_FIELD_ATTR_SET_FCT( name ) \
-NCURSES_IMPEXP int NCURSES_API set_field_ ## name (FIELD * field, chtype attr)\
+FORM_IMPEXP int NCURSES_API set_field_ ## name (FIELD * field, chtype attr)\
 {\
    int res = E_BAD_ARGUMENT;\
    T((T_CALLED("set_field_" #name "(%p,%s)"), (void *)field, _traceattr(attr)));\
@@ -65,7 +65,7 @@ NCURSES_IMPEXP int NCURSES_API set_field_ ## name (FIELD * field, chtype attr)\
 
 /* "Template" macro to generate a function to get a fields attribute */
 #define GEN_FIELD_ATTR_GET_FCT( name ) \
-NCURSES_IMPEXP chtype NCURSES_API field_ ## name (const FIELD * field)\
+FORM_IMPEXP chtype NCURSES_API field_ ## name (const FIELD * field)\
 {\
    T((T_CALLED("field_" #name "(%p)"), (const void *) field));\
    returnAttr( A_ATTRIBUTES & (Normalize_Field( field ) -> name) );\

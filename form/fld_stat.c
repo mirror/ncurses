@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_stat.c,v 1.15 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_stat.c,v 1.16 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -44,7 +44,7 @@ MODULE_ID("$Id: fld_stat.c,v 1.15 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  E_OK            - success
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_field_status(FIELD *field, bool status)
 {
   T((T_CALLED("set_field_status(%p,%d)"), (void *)field, status));
@@ -69,7 +69,7 @@ set_field_status(FIELD *field, bool status)
 |   Return Values :  TRUE  - buffer has been changed
 |                    FALSE - buffer has not been changed
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(bool)
+FORM_EXPORT(bool)
 field_status(const FIELD *field)
 {
   T((T_CALLED("field_status(%p)"), (const void *)field));

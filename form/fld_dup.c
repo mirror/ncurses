@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_dup.c,v 1.17 2020/03/29 00:39:41 tom Exp $")
+MODULE_ID("$Id: fld_dup.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
@@ -48,7 +48,7 @@ MODULE_ID("$Id: fld_dup.c,v 1.17 2020/03/29 00:39:41 tom Exp $")
 |
 |   Return Values :  Pointer to the new field or NULL if failure
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(FIELD *)
+FORM_EXPORT(FIELD *)
 dup_field(FIELD *field, int frow, int fcol)
 {
   FIELD *New_Field = (FIELD *)0;

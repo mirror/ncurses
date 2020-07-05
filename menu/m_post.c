@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.32 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.33 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -49,7 +49,7 @@ MODULE_ID("$Id: m_post.c,v 1.32 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Post_Item(const MENU * menu, const ITEM * item)
 {
   int i;
@@ -197,7 +197,7 @@ _nc_Post_Item(const MENU * menu, const ITEM * item)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 _nc_Draw_Menu(const MENU * menu)
 {
   ITEM *item = menu->items[0];
@@ -267,7 +267,7 @@ _nc_Draw_Menu(const MENU * menu)
 |                    E_BAD_STATE         - Menu in userexit routine
 |                    E_POSTED            - Menu already posted
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 post_menu(MENU * menu)
 {
   T((T_CALLED("post_menu(%p)"), (void *)menu));
@@ -339,7 +339,7 @@ post_menu(MENU * menu)
 |                    E_BAD_STATE       - menu in userexit routine
 |                    E_NOT_POSTED      - menu is not posted
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 unpost_menu(MENU * menu)
 {
   WINDOW *win;

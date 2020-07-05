@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_spacing.c,v 1.20 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_spacing.c,v 1.21 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 #define MAX_SPC_DESC ((TABSIZE) ? (TABSIZE) : 8)
 #define MAX_SPC_COLS ((TABSIZE) ? (TABSIZE) : 8)
@@ -52,7 +52,7 @@ MODULE_ID("$Id: m_spacing.c,v 1.20 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  E_OK                 - on success
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 set_menu_spacing(MENU * menu, int s_desc, int s_row, int s_col)
 {
   MENU *m;			/* split for ATAC workaround */
@@ -87,7 +87,7 @@ set_menu_spacing(MENU * menu, int s_desc, int s_row, int s_col)
 |
 |   Return Values :  E_OK             - on success
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 menu_spacing(const MENU * menu, int *s_desc, int *s_row, int *s_col)
 {
   const MENU *m;		/* split for ATAC workaround */

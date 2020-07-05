@@ -32,14 +32,14 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesapp.h,v 1.14 2020/02/02 23:34:34 tom Exp $
+// $Id: cursesapp.h,v 1.15 2020/05/24 01:40:20 anonymous.maarten Exp $
 
 #ifndef NCURSES_CURSESAPP_H_incl
 #define NCURSES_CURSESAPP_H_incl
 
 #include <cursslk.h>
 
-class NCURSES_IMPEXP NCursesApplication {
+class NCURSES_CXX_IMPEXP NCursesApplication {
 public:
   typedef struct _slk_link {          // This structure is used to maintain
     struct _slk_link* prev;           // a stack of SLKs

@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.27 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.28 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 typedef struct
   {
@@ -425,7 +425,7 @@ static FIELDTYPE typeENUM =
 #endif
 };
 
-NCURSES_EXPORT_VAR(FIELDTYPE *)
+FORM_EXPORT_VAR(FIELDTYPE *)
 TYPE_ENUM = &typeENUM;
 
 #if NCURSES_INTEROP_FUNCS
@@ -433,7 +433,7 @@ TYPE_ENUM = &typeENUM;
    programming languages with restictions on interop with C level
    constructs (e.g. variable access or va_list + ellipsis constructs)
 */
-NCURSES_EXPORT(FIELDTYPE *)
+FORM_EXPORT(FIELDTYPE *)
 _nc_TYPE_ENUM(void)
 {
   return TYPE_ENUM;

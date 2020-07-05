@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_link.c,v 1.14 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_link.c,v 1.15 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -49,7 +49,7 @@ MODULE_ID("$Id: fld_link.c,v 1.14 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  Pointer to the new field or NULL if failure
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(FIELD *)
+FORM_EXPORT(FIELD *)
 link_field(FIELD *field, int frow, int fcol)
 {
   FIELD *New_Field = (FIELD *)0;

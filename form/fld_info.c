@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_info.c,v 1.12 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_info.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -47,7 +47,7 @@ MODULE_ID("$Id: fld_info.c,v 1.12 2020/02/02 23:34:34 tom Exp $")
 |   Return Values :  E_OK           - success
 |                    E_BAD_ARGUMENT - invalid field pointer
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 field_info(const FIELD *field,
 	   int *rows, int *cols,
 	   int *frow, int *fcol,
@@ -89,7 +89,7 @@ field_info(const FIELD *field,
 |   Return Values :  E_OK           - success
 |                    E_BAD_ARGUMENT - invalid argument
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 dynamic_field_info(const FIELD *field, int *drows, int *dcols, int *maxgrow)
 {
   T((T_CALLED("dynamic_field_info(%p,%p,%p,%p)"),

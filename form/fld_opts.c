@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_opts.c,v 1.13 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_opts.c,v 1.14 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*----------------------------------------------------------------------------
   Field-Options manipulation routines
@@ -51,7 +51,7 @@ MODULE_ID("$Id: fld_opts.c,v 1.13 2020/02/02 23:34:34 tom Exp $")
 |                    E_BAD_ARGUMENT  - invalid options
 |                    E_SYSTEM_ERROR  - system error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_field_opts(FIELD *field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;
@@ -72,7 +72,7 @@ set_field_opts(FIELD *field, Field_Options opts)
 |
 |   Return Values :  The options.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(Field_Options)
+FORM_EXPORT(Field_Options)
 field_opts(const FIELD *field)
 {
   T((T_CALLED("field_opts(%p)"), (const void *)field));
@@ -92,7 +92,7 @@ field_opts(const FIELD *field)
 |                    E_BAD_ARGUMENT  - invalid options
 |                    E_SYSTEM_ERROR  - system error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 field_opts_on(FIELD *field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;
@@ -120,7 +120,7 @@ field_opts_on(FIELD *field, Field_Options opts)
 |                    E_BAD_ARGUMENT  - invalid options
 |                    E_SYSTEM_ERROR  - system error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 field_opts_off(FIELD *field, Field_Options opts)
 {
   int res = E_BAD_ARGUMENT;

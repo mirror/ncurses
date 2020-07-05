@@ -24971,7 +24971,7 @@ test "$cf_cv_gnatprep_opt_t" = yes && GNATPREP_OPTS="-T $GNATPREP_OPTS"
 echo "$as_me:24971: checking if GNAT supports generics" >&5
 echo $ECHO_N "checking if GNAT supports generics... $ECHO_C" >&6
 case $cf_cv_gnat_version in
-(3.[1-9]*|[4-9].*|[1-9][0-9].*)
+(3.1[1-9]*|3.[2-9]*|[4-9].*|[1-9][0-9].[0-9]*|20[0-9][0-9])
 	cf_gnat_generics=yes
 	;;
 (*)

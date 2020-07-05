@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_user.c,v 1.16 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: frm_user.c,v 1.17 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -44,7 +44,7 @@ MODULE_ID("$Id: frm_user.c,v 1.16 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  E_OK         - on success
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_form_userptr(FORM *form, void *usrptr)
 {
   T((T_CALLED("set_form_userptr(%p,%p)"), (void *)form, (void *)usrptr));
@@ -63,7 +63,7 @@ set_form_userptr(FORM *form, void *usrptr)
 |   Return Values :  Value of pointer. If no such pointer has been set,
 |                    NULL is returned
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void *)
+FORM_EXPORT(void *)
 form_userptr(const FORM *form)
 {
   T((T_CALLED("form_userptr(%p)"), (const void *)form));

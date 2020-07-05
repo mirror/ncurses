@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.67 2020/02/22 16:32:11 tom Exp $
+# $Id: Makefile.in,v 1.68 2020/05/24 01:40:20 anonymous.maarten Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 1998-2015,2018 Free Software Foundation, Inc.                    #
@@ -94,12 +94,12 @@ CFLAGS		= @CFLAGS@
 
 INCDIR		= $(top_srcdir)/include
 BASE_DIR 	= $(top_srcdir)/ncurses
-CPPFLAGS	= -I$(BASE_DIR) -DHAVE_CONFIG_H @CPPFLAGS@
+CPPFLAGS	= -I$(BASE_DIR) -DHAVE_CONFIG_H -DBUILDING_FORM @CPPFLAGS@
 
 CCFLAGS		= $(CPPFLAGS) $(CFLAGS)
 
-CFLAGS_LIBTOOL	= $(CCFLAGS)
-CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_LIBTOOL	= $(CCFLAGS) -DNCURSES_STATIC
+CFLAGS_NORMAL	= $(CCFLAGS) -DNCURSES_STATIC
 CFLAGS_DEBUG	= $(CCFLAGS) @CC_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
 CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@

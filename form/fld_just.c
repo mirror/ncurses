@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_just.c,v 1.14 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_just.c,v 1.15 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -45,7 +45,7 @@ MODULE_ID("$Id: fld_just.c,v 1.14 2020/02/02 23:34:34 tom Exp $")
 |                    E_BAD_ARGUMENT  - one of the arguments was incorrect
 |                    E_SYSTEM_ERROR  - system error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_field_just(FIELD *field, int just)
 {
   int res = E_BAD_ARGUMENT;
@@ -77,7 +77,7 @@ set_field_just(FIELD *field, int just)
 |
 |   Return Values :  The justification type.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 field_just(const FIELD *field)
 {
   T((T_CALLED("field_just(%p)"), (const void *)field));

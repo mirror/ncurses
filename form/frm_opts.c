@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_opts.c,v 1.18 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: frm_opts.c,v 1.19 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -45,7 +45,7 @@ MODULE_ID("$Id: frm_opts.c,v 1.18 2020/02/02 23:34:34 tom Exp $")
 |   Return Values :  E_OK              - success
 |                    E_BAD_ARGUMENT    - invalid options
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_form_opts(FORM *form, Form_Options opts)
 {
   T((T_CALLED("set_form_opts(%p,%d)"), (void *)form, opts));
@@ -68,7 +68,7 @@ set_form_opts(FORM *form, Form_Options opts)
 |
 |   Return Values :  The option flags.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(Form_Options)
+FORM_EXPORT(Form_Options)
 form_opts(const FORM *form)
 {
   T((T_CALLED("form_opts(%p)"), (const void *)form));
@@ -85,7 +85,7 @@ form_opts(const FORM *form)
 |   Return Values :  E_OK            - success 
 |                    E_BAD_ARGUMENT  - invalid options
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 form_opts_on(FORM *form, Form_Options opts)
 {
   T((T_CALLED("form_opts_on(%p,%d)"), (void *)form, opts));
@@ -110,7 +110,7 @@ form_opts_on(FORM *form, Form_Options opts)
 |   Return Values :  E_OK            - success 
 |                    E_BAD_ARGUMENT  - invalid options
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 form_opts_off(FORM *form, Form_Options opts)
 {
   T((T_CALLED("form_opts_off(%p,%d)"), (void *)form, opts));

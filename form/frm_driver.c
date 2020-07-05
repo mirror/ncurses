@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.129 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.130 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -548,7 +548,7 @@ Buffer_To_Window(const FIELD *field, WINDOW *win)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+FORM_EXPORT(void)
 _nc_get_fieldbuffer(FORM *form, FIELD *field, FIELD_CELL *buf)
 {
   int pad;
@@ -826,7 +826,7 @@ Field_encloses(FIELD *field, int ry, int rx)
 |                    E_SYSTEM_ERROR    - form has no current field or
 |                                        field-window
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Position_Form_Cursor(FORM *form)
 {
   FIELD *field;
@@ -868,7 +868,7 @@ _nc_Position_Form_Cursor(FORM *form)
 |                    E_SYSTEM_ERROR    - general error
 +--------------------------------------------------------------------------*/
 static bool move_after_insert = TRUE;
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Refresh_Current_Field(FORM *form)
 {
   WINDOW *formwin;
@@ -1271,7 +1271,7 @@ Synchronize_Linked_Fields(FIELD *field)
 |                    E_BAD_ARGUMENT   - invalid field pointer
 |                    E_SYSTEM_ERROR   - some severe basic error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Synchronize_Attributes(FIELD *field)
 {
   FORM *form;
@@ -1338,7 +1338,7 @@ _nc_Synchronize_Attributes(FIELD *field)
 |                    E_CURRENT           - field is the current one
 |                    E_SYSTEM_ERROR      - some severe basic error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Synchronize_Options(FIELD *field, Field_Options newopts)
 {
   Field_Options oldopts;
@@ -1491,7 +1491,7 @@ _nc_Unset_Current_Field(FORM *form)
 |                    E_SYSTEM_ERROR    - some severe basic error
 |                    E_NOT_CONNECTED   - no fields are connected to the form
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Set_Current_Field(FORM *form, FIELD *newfield)
 {
   FIELD *field;
@@ -3225,7 +3225,7 @@ Check_Field(FORM *form, FIELDTYPE *typ, FIELD *field, TypeArgument *argp)
 |   Return Values :  TRUE  - field is valid
 |                    FALSE - field is invalid
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(bool)
+FORM_EXPORT(bool)
 _nc_Internal_Validation(FORM *form)
 {
   FIELD *field;
@@ -3319,7 +3319,7 @@ Next_Field_On_Page(FIELD *field)
 |
 |   Return Values :  Pointer to calculated field.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(FIELD *)
+FORM_EXPORT(FIELD *)
 _nc_First_Active_Field(FORM *form)
 {
   FIELD **last_on_page = &form->field[form->page[form->curpage].pmax];
@@ -3873,7 +3873,7 @@ FN_Down_Field(FORM *form)
 |                    E_BAD_ARGUMENT      - invalid field pointer
 |                    E_SYSTEM_ERROR      - some severe basic error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 _nc_Set_Form_Page(FORM *form, int page, FIELD *field)
 {
   int res = E_OK;
@@ -4354,7 +4354,7 @@ static const Binding_Info bindings[MAX_FORM_COMMAND - MIN_FORM_COMMAND + 1] =
 |                    E_NOT_CONNECTED   - no fields are connected to the form
 |                    E_UNKNOWN_COMMAND - command not known
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 form_driver(FORM *form, int c)
 {
   const Binding_Info *BI = (Binding_Info *) 0;
@@ -4561,7 +4561,7 @@ form_driver(FORM *form, int c)
 |                    E_NOT_CONNECTED   - no fields are connected to the form
 |                    E_UNKNOWN_COMMAND - command not known
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 form_driver_w(FORM *form, int type, wchar_t c)
 {
   const Binding_Info *BI = (Binding_Info *) 0;
@@ -4743,7 +4743,7 @@ form_driver_w(FORM *form, int type, wchar_t c)
 |                    E_BAD_ARGUMENT  - invalid argument
 |                    E_SYSTEM_ERROR  - system error
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 set_field_buffer(FIELD *field, int buffer, const char *value)
 {
   FIELD_CELL *p;
@@ -4860,7 +4860,7 @@ set_field_buffer(FIELD *field, int buffer, const char *value)
 |
 |   Return Values :  Pointer to buffer or NULL if arguments were invalid.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(char *)
+FORM_EXPORT(char *)
 field_buffer(const FIELD *field, int buffer)
 {
   char *result = 0;
@@ -4928,7 +4928,7 @@ field_buffer(const FIELD *field, int buffer)
 | Convert a multibyte string to a wide-character string.  The result must be
 | freed by the caller.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(wchar_t *)
+FORM_EXPORT(wchar_t *)
 _nc_Widen_String(char *source, int *lengthp)
 {
   wchar_t *result = 0;

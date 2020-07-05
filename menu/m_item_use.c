@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_use.c,v 1.19 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_item_use.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -49,7 +49,7 @@ MODULE_ID("$Id: m_item_use.c,v 1.19 2020/02/02 23:34:34 tom Exp $")
 |
 |   Return Values :  E_OK               - success
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 set_item_userptr(ITEM * item, void *userptr)
 {
   T((T_CALLED("set_item_userptr(%p,%p)"), (void *)item, (void *)userptr));
@@ -67,7 +67,7 @@ set_item_userptr(ITEM * item, void *userptr)
 |   Return Values :  Value of the pointer. If no such pointer has been set,
 |                    NULL is returned.
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void *)
+MENU_EXPORT(void *)
 item_userptr(const ITEM * item)
 {
   T((T_CALLED("item_userptr(%p)"), (const void *)item));

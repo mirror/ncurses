@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_format.c,v 1.19 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: m_format.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 #define minimum(a,b) ((a)<(b) ? (a): (b))
 
@@ -56,7 +56,7 @@ MODULE_ID("$Id: m_format.c,v 1.19 2020/02/02 23:34:34 tom Exp $")
 |                    E_NOT_CONNECTED        - there are no items connected
 |                    E_POSTED               - the menu is already posted
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+MENU_EXPORT(int)
 set_menu_format(MENU * menu, int rows, int cols)
 {
   int total_rows, total_cols;
@@ -120,7 +120,7 @@ set_menu_format(MENU * menu, int rows, int cols)
 |
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(void)
+MENU_EXPORT(void)
 menu_format(const MENU * menu, int *rows, int *cols)
 {
   if (rows)

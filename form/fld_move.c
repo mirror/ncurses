@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_move.c,v 1.12 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: fld_move.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -46,7 +46,7 @@ MODULE_ID("$Id: fld_move.c,v 1.12 2020/02/02 23:34:34 tom Exp $")
 |                    E_BAD_ARGUMENT  - invalid argument passed
 |                    E_CONNECTED     - field is connected
 +--------------------------------------------------------------------------*/
-NCURSES_EXPORT(int)
+FORM_EXPORT(int)
 move_field(FIELD *field, int frow, int fcol)
 {
   T((T_CALLED("move_field(%p,%d,%d)"), (void *)field, frow, fcol));

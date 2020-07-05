@@ -38,9 +38,9 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_delete.c,v 1.11 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: p_delete.c,v 1.12 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
-NCURSES_EXPORT(int)
+PANEL_EXPORT(int)
 del_panel(PANEL * pan)
 {
   int err = OK;

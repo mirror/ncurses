@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.122 2020/03/08 16:13:11 tom Exp $
+# $Id: Makefile.in,v 1.123 2020/05/24 01:40:20 anonymous.maarten Exp $
 ##############################################################################
 # Copyright 2018,2020 Thomas E. Dickey                                       #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -89,7 +89,7 @@ CXXFLAGS	= @CXXFLAGS@ @EXTRA_CXXFLAGS@
 CXXLIBS		= @CXXLIBS@
 
 INCDIR		= ../include
-CPPFLAGS	= -DHAVE_CONFIG_H -I../c++ @CPPFLAGS@
+CPPFLAGS	= -DHAVE_CONFIG_H -DBUILDING_NCURSES_CXX -I../c++ @CPPFLAGS@
 
 CTAGS		= @CTAGS@
 ETAGS		= @ETAGS@
@@ -97,8 +97,8 @@ ETAGS		= @ETAGS@
 CC		= ${CXX}
 CCFLAGS		= $(CPPFLAGS) $(CXXFLAGS)
 
-CFLAGS_LIBTOOL	= $(CCFLAGS)
-CFLAGS_NORMAL	= $(CCFLAGS)
+CFLAGS_LIBTOOL	= $(CCFLAGS) -DNCURSES_STATIC
+CFLAGS_NORMAL	= $(CCFLAGS) -DNCURSES_STATIC
 CFLAGS_DEBUG	= $(CCFLAGS) @CXX_G_OPT@ -DTRACE
 CFLAGS_PROFILE	= $(CCFLAGS) -pg
 CFLAGS_SHARED	= $(CCFLAGS) @CC_SHARED_OPTS@

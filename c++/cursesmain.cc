@@ -44,7 +44,7 @@
 #define CPP_HAS_TRY_CATCH 0
 #endif
 
-MODULE_ID("$Id: cursesmain.cc,v 1.18 2020/04/04 23:25:34 tom Exp $")
+MODULE_ID("$Id: cursesmain.cc,v 1.19 2020/05/24 01:40:20 anonymous.maarten Exp $")
 
 #if HAVE_LOCALE_H
 #include <locale.h>
@@ -60,7 +60,7 @@ MODULE_ID("$Id: cursesmain.cc,v 1.18 2020/04/04 23:25:34 tom Exp $")
  * You only have to instantiate a static NCursesApplication object in your
  * main application source file and link this module with your application.
  */
-NCURSES_EXPORT(int) main(int argc, char* argv[])
+NCURSES_CXX_IMPEXP int main(int argc, char* argv[])
 {
   setlocale(LC_ALL, "");
 
