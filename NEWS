@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3514 2020/07/04 23:28:53 tom Exp $
+-- $Id: NEWS,v 1.3519 2020/07/11 23:21:07 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200711
+	+ fix pound-sign mapping in acsc of linux2.6 entry (report by Ingo
+	  Bruckl).
+	+ additional changes for building with Visual Studio C++ and msys2
+	  (reports/patches by "Maarten Anonymous")
+	+ build-improvements for Windows 10 and MinGW (patch by Juergen
+	  Pfeifer).
+	+ fix a typo in curs_printw.3x (patch by William Pursell).
+	+ fix two errors in infotocap which allowed indexing outside the
+	  buffer (report/testcases by Zhang Gan).
+	+ update length of strings in infocmp's usage function to restore a
+	  trailing null on the longest string (report/testcase by Zhang Gen).
 
 20200704
 	+ modify version-check with Ada generics to use the same pattern as in

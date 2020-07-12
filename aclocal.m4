@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.916 2020/07/04 23:31:15 tom Exp $
+dnl $Id: aclocal.m4,v 1.920 2020/07/11 23:10:46 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -6377,7 +6377,7 @@ AC_MSG_RESULT($cf_prog_ln_sf)
 test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REGEX version: 13 updated: 2020/03/10 18:53:47
+dnl CF_REGEX version: 14 updated: 2020/07/11 19:09:29
 dnl --------
 dnl Attempt to determine if we've got one of the flavors of regular-expression
 dnl code that we can support.
@@ -6389,7 +6389,7 @@ cf_regex_func=no
 cf_regex_libs="regex re"
 case $host_os in
 (mingw*)
-	cf_regex_libs="gnurx $cf_regex_libs"
+	cf_regex_libs="systre gnurx $cf_regex_libs"
 	;;
 esac
 
@@ -6644,7 +6644,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 96 updated: 2020/05/23 19:39:36
+dnl CF_SHARED_OPTS version: 97 updated: 2020/07/11 19:09:29
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -6906,7 +6906,7 @@ CF_EOF
 		# Ignore first argument (compiler) and use LD (link.exe) unconditionally
 		LD="[$]LD"
 		clopts=()
-		ldopts=()
+		ldopts=("/subsystem:console")
 		libs=()
 		isdll=0
 		while test \[$]# -gt 0; do

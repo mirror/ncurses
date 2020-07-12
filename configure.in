@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.709 2020/05/31 20:04:09 tom Exp $
+dnl $Id: configure.in,v 1.711 2020/07/11 20:18:40 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.709 $)
+AC_REVISION($Revision: 1.711 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2230,6 +2230,17 @@ if test "$NCURSES_LIBUTF8" = 1 ; then
 fi
 fi
 WITH_OVERWRITE=$with_overwrite
+
+### At least on MinGW a shared library build without libtool
+### requires adding the additional libs to the link list.
+case $cf_cv_system_name in
+(*mingw32*|*mingw64*)
+	if test "$DFT_LWR_MODEL" != "libtool"; then
+   	   SHLIB_LIST="$SHLIB_LIST ${LIBS}"
+	fi
+	;;
+*)	;;
+esac
 
 AC_SUBST(WITH_OVERWRITE)
 AC_SUBST(TICS_LIST)

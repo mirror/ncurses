@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README.MinGW,v 1.10 2020/02/02 23:34:34 tom Exp $
+-- $Id: README.MinGW,v 1.11 2020/07/11 13:31:30 juergen Exp $
 -- Author: Juergen Pfeifer
 -------------------------------------------------------------------------------
 
@@ -113,12 +113,6 @@ export PATH_SEPARATOR=";"
 in order to parse the terminfo paths correctly. Terminfo paths should
 always be separated by a seeeemicolon,even when running under MSYS.
 
-To support regular expressions properly, ncurses under MinGW should be
-linked against the gnurx regex library, which must be built separately
-under MinGW.  See
-
-    ftp.gnome.org/pub/GNOME/binaries/win32/dependencies/libgnurx-src-2.5.zip
-
 All the options above are - like the whole Windows support -
 experimental.
 
@@ -135,5 +129,9 @@ A lot is still TODO, e.g.:
   - Workarounds for MinGW's filesystem access are necessary to make infocmp
     work (though tic works).
 
-To support terminfo, we would need to have an ioctl() simulation for the
-serial and networked terminals.
+Recent Windows 10 releases have a new Console implementation that supports
+ANSI-style terminal emulation. Also, there is a new "Windows Terminal" App
+from Microsoft that hosts the new Console in a tabbed user interface. With
+this, it is possble to try using terminfo, the TERM environment varianle
+should be set to ms-terminal.
+

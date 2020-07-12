@@ -11344,7 +11344,7 @@ CF_EOF
 		# Ignore first argument (compiler) and use LD (link.exe) unconditionally
 		LD="$LD"
 		clopts=()
-		ldopts=()
+		ldopts=("/subsystem:console")
 		libs=()
 		isdll=0
 		while test \$# -gt 0; do

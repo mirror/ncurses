@@ -35,8 +35,9 @@
 */
 
 #include <curses.priv.h>
+#include <wchar.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.33 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.34 2020/07/11 22:55:08 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch

@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.132 2020/02/02 23:34:34 tom Exp $
+ * $Id: picsmap.c,v 1.134 2020/07/11 23:01:49 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -955,6 +955,20 @@ parse_rgb(char **data)
     return result;
 }
 
+#define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
+
+static int
+CaselessCmp(const char *a, const char *b)
+{				/* strcasecmp isn't portable */
+    while (*a && *b) {
+	int cmp = LOWERCASE(*a) - LOWERCASE(*b);
+	if (cmp != 0)
+	    break;
+	a++, b++;
+    }
+    return LOWERCASE(*a) - LOWERCASE(*b);
+}
+
 static RGB_NAME *
 lookup_rgb(const char *name)
 {
@@ -962,7 +976,7 @@ lookup_rgb(const char *name)
     if (rgb_table != 0) {
 	int n;
 	for (n = 0; rgb_table[n].name != 0; ++n) {
-	    if (!strcasecmp(name, rgb_table[n].name)) {
+	    if (!CaselessCmp(name, rgb_table[n].name)) {
 		result = &rgb_table[n];
 		break;
 	    }

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.807 $
-#	$Date: 2020/06/07 00:16:21 $
+#	$Revision: 1.808 $
+#	$Date: 2020/07/11 20:05:06 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1029,8 +1029,8 @@ linux2.2|linux 2.2.x console,
 #	'r' scan line 7
 #	'_' scan line 9
 linux2.6|linux 2.6.x console,
-	acsc=++\,\,--..00__``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwx
-	     xyyzz{{||}c~~,
+	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
+	     yzz{{||}}~~,
 	enacs=\E)0, rmacs=^O,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5
 	    %t;2%;%?%p6%t;1%;m%?%p9%t\016%e\017%;,
@@ -26613,5 +26613,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  screen.linux (report by Alexandre Montaron).
 #	+ use vt100+enq in screen (report by Alexandre Montaron).
 #	+ add screen.linux-s alias (suggested by Alexandre Montaron).
+#
+# 2020-07-11
+#	+ fix pound-sign mapping in acsc of linux2.6 entry (report by Ingo
+#	  Bruckl).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

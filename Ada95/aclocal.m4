@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.158 2020/07/04 23:32:09 tom Exp $
+dnl $Id: aclocal.m4,v 1.159 2020/07/11 23:11:37 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3539,7 +3539,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 96 updated: 2020/05/23 19:39:36
+dnl CF_SHARED_OPTS version: 97 updated: 2020/07/11 19:09:29
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -3801,7 +3801,7 @@ CF_EOF
 		# Ignore first argument (compiler) and use LD (link.exe) unconditionally
 		LD="[$]LD"
 		clopts=()
-		ldopts=()
+		ldopts=("/subsystem:console")
 		libs=()
 		isdll=0
 		while test \[$]# -gt 0; do

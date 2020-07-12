@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.26 2020/03/14 23:48:47 tom Exp $
+.\" $Id: curs_printw.3x,v 1.27 2020/07/10 23:06:23 William.Pursell Exp $
 .TH curs_printw 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -70,7 +70,7 @@ In
 effect, the string that would be output by \fBprintf\fR is output
 instead as though \fBwaddstr\fR were used on the given window.
 .PP
-The \fBvwprintw\fR and \fBwv_printw\fR routines are analogous
+The \fBvwprintw\fR and \fBvw_printw\fR routines are analogous
 to \fBvprintf\fR [see \fBprintf\fR(3)]
 and perform a \fBwprintw\fR using a variable argument list.
 The third argument is a \fBva_list\fR, a pointer to a

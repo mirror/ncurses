@@ -98,7 +98,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.99 2020/05/25 21:28:29 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.100 2020/07/08 21:39:54 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -639,7 +639,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
     /* we may have to move some trailing mandatory padding up front */
     padding = str + strlen(str) - 1;
     if (padding > str && *padding == '>') {
-	if (*--padding == '/')
+	if (padding > (str + 1) && *--padding == '/')
 	    --padding;
 	while (isdigit(UChar(*padding)) || *padding == '.' || *padding == '*')
 	    padding--;

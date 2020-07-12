@@ -31,9 +31,9 @@
 
 #if USE_WIDEC_SUPPORT
 
-MODULE_ID("$Id: widechars.c,v 1.7 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: widechars.c,v 1.8 2020/07/11 20:48:42 anonymous.maarten Exp $")
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(_MSC_VER)
 /*
  * MinGW has wide-character functions, but they do not work correctly.
  */
