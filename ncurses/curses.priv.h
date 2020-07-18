@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.630 2020/07/11 20:48:42 anonymous.maarten Exp $
+ * $Id: curses.priv.h,v 1.631 2020/07/18 20:03:25 tom Exp $
  *
  *	curses.priv.h
  *
@@ -336,6 +336,10 @@ typedef TRIES {
 #define NCURSES_OPAQUE 0
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
+
+#ifndef NEED_KEY_EVENT
+#undef KEY_EVENT		/* reduce compiler-warnings with Visual C++ */
+#endif
 
 typedef struct
 {

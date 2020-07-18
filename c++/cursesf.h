@@ -32,7 +32,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesf.h,v 1.36 2020/05/24 01:40:20 anonymous.maarten Exp $
+// $Id: cursesf.h,v 1.37 2020/07/18 19:57:11 anonymous.maarten Exp $
 
 #ifndef NCURSES_CURSESF_H_incl
 #define NCURSES_CURSESF_H_incl 1
@@ -925,8 +925,7 @@ protected:
   virtual bool char_check (int c) = 0;
 
 public:
-  UserDefinedFieldType() : NCursesFieldType(generic_fieldtype) {
-  }
+  UserDefinedFieldType();
 };
 
 extern "C" {
@@ -962,9 +961,7 @@ protected:
   virtual bool previous(NCursesFormField& f) = 0;
 
 public:
-  UserDefinedFieldType_With_Choice() {
-    fieldtype = generic_fieldtype_with_choice;
-  }
+  UserDefinedFieldType_With_Choice();
 };
 
 #endif /* NCURSES_CURSESF_H_incl */

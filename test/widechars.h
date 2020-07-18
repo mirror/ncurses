@@ -34,7 +34,7 @@
 
 #if USE_WIDEC_SUPPORT
 
-#if defined(_WIN32)
+#if defined(_WIN32) && !defined(_MSC_VER)
 /*
  * MinGW has wide-character functions, but they do not work correctly.
  */

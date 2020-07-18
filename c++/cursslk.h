@@ -32,7 +32,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursslk.h,v 1.17 2020/05/24 01:40:20 anonymous.maarten Exp $
+// $Id: cursslk.h,v 1.18 2020/07/18 19:57:11 anonymous.maarten Exp $
 
 #ifndef NCURSES_CURSSLK_H_incl
 #define NCURSES_CURSSLK_H_incl
@@ -168,7 +168,7 @@ public:
   Soft_Label_Key& operator[](int i);
 
   // Retrieve number of Labels
-  inline int labels() const { return num_labels; }
+  int labels() const;
 
   // Refresh the SLK portion of the screen
   inline void refresh() {

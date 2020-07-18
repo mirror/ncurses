@@ -41,9 +41,10 @@
 **
 */
 
+#define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.139 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.140 2020/07/18 20:02:24 tom Exp $")
 
 #include <fifo_defs.h>
 

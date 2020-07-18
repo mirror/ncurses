@@ -36,7 +36,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.46 2020/05/24 01:40:20 anonymous.maarten Exp $
+ * $Id: demo.cc,v 1.47 2020/07/18 19:57:11 anonymous.maarten Exp $
  */
 
 #include "internal.h"
@@ -552,9 +552,9 @@ void TestApplication::title()
   const char * const titleText = "Simple C++ Binding Demo";
   const int len = ::strlen(titleText);
 
-  titleWindow->bkgd(screen_titles());
-  titleWindow->addstr(0, (titleWindow->cols() - len)/2, titleText);
-  titleWindow->noutrefresh();
+  getTitleWindow()->bkgd(screen_titles());
+  getTitleWindow()->addstr(0, (getTitleWindow()->cols() - len)/2, titleText);
+  getTitleWindow()->noutrefresh();
 }
 
 
@@ -569,3 +569,8 @@ int TestApplication::run()
 // -------------------------------------------------------------------------
 //
 static TestApplication *Demo = new TestApplication();
+
+#ifdef _WIN32
+// This is actually only needed when ncurses is a dll
+NCURSES_CXX_MAIN
+#endif
