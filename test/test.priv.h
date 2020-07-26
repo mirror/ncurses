@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.187 2020/07/11 23:01:49 tom Exp $ */
+/* $Id: test.priv.h,v 1.188 2020/07/25 22:56:33 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -389,6 +389,10 @@
 #include <ncurses/curses.h>
 #else
 #include <curses.h>
+#endif
+
+#if !(defined(NCURSES_WGETCH_EVENTS) && defined(NEED_KEY_EVENT))
+#undef KEY_EVENT		/* reduce compiler-warnings with Visual C++ */
 #endif
 
 #if defined(HAVE_XCURSES) || defined(PDCURSES)

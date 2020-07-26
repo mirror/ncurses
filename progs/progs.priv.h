@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.49 2020/02/29 20:57:36 tom Exp $
+ * $Id: progs.priv.h,v 1.50 2020/07/25 22:56:33 tom Exp $
  *
  *	progs.priv.h
  *
@@ -123,6 +123,11 @@ extern int optind;
 #define NCURSES_OPAQUE    0
 
 #include <curses.h>
+
+#if !(defined(NCURSES_WGETCH_EVENTS) && defined(NEED_KEY_EVENT))
+#undef KEY_EVENT		/* reduce compiler-warnings with Visual C++ */
+#endif
+
 #include <term_entry.h>
 #include <nc_termios.h>
 #include <tic.h>

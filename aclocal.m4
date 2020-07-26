@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.920 2020/07/11 23:10:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.921 2020/07/25 23:04:09 anonymous.maarten Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -6644,7 +6644,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 97 updated: 2020/07/11 19:09:29
+dnl CF_SHARED_OPTS version: 98 updated: 2020/07/25 19:03:05
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -6971,6 +6971,7 @@ EOF
 CF_EOF
 		chmod +x mk_prog.sh
 		LINK_PROGS="$SHELL ${rel_builddir}/mk_prog.sh"
+		LINK_TESTS="$SHELL ${rel_builddir}/mk_prog.sh"
 		;;
 	(mingw*)
 		cf_cv_shlib_version=mingw

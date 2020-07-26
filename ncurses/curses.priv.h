@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.631 2020/07/18 20:03:25 tom Exp $
+ * $Id: curses.priv.h,v 1.632 2020/07/25 22:55:59 tom Exp $
  *
  *	curses.priv.h
  *
@@ -337,7 +337,7 @@ typedef TRIES {
 
 #include <curses.h>	/* we'll use -Ipath directive to get the right one! */
 
-#ifndef NEED_KEY_EVENT
+#if !(defined(NCURSES_WGETCH_EVENTS) && defined(NEED_KEY_EVENT))
 #undef KEY_EVENT		/* reduce compiler-warnings with Visual C++ */
 #endif
 
