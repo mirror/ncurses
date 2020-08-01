@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.711 2020/07/11 20:18:40 tom Exp $
+dnl $Id: configure.in,v 1.713 2020/08/01 21:07:44 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.711 $)
+AC_REVISION($Revision: 1.713 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -311,6 +311,14 @@ CF_HELP_MESSAGE(Build-Tools Needed to Compile Temporary Applications for Cross-c
 # If we're cross-compiling, allow the user to override the tools and their
 # options.  The configure script is oriented toward identifying the host
 # compiler, etc., but we need a build compiler to generate parts of the source.
+
+case $cf_cv_system_name in
+(*-msvc*)
+	LDFLAGS="$LDFLAGS user32.lib"
+	export LDFLAGS
+	;;
+esac
+
 CF_BUILD_CC
 
 ###############################################################################
@@ -1679,7 +1687,6 @@ limits.h \
 locale.h \
 math.h \
 poll.h \
-sys/bsdtypes.h \
 sys/ioctl.h \
 sys/param.h \
 sys/poll.h \
@@ -1699,13 +1706,6 @@ if test "x$cf_cv_consistent_getenv" = xno && \
 	test "x$cf_with_trace" = xyes
 then
 	AC_MSG_WARN(The NCURSES_TRACE environment variable is not supported with this configuration)
-fi
-
-# check for ISC (this may also define _POSIX_SOURCE)
-# Note: even non-Posix ISC needs <sys/bsdtypes.h> to declare fd_set
-if test "x$ISC" = xyes ; then
-	AC_CHECK_LIB(cposix,main)
-	AC_CHECK_LIB(inet,bzero,CF_ADD_LIB(inet))dnl also 'select()'
 fi
 
 CF_SYS_TIME_SELECT

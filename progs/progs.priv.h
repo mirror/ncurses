@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.50 2020/07/25 22:56:33 tom Exp $
+ * $Id: progs.priv.h,v 1.51 2020/08/01 21:07:50 tom Exp $
  *
  *	progs.priv.h
  *
@@ -56,10 +56,6 @@
 
 #if HAVE_UNISTD_H
 #include <unistd.h>
-#endif
-
-#if HAVE_SYS_BSDTYPES_H
-#include <sys/bsdtypes.h>	/* needed for ISC */
 #endif
 
 #if HAVE_LIMITS_H

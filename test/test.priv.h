@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.188 2020/07/25 22:56:33 tom Exp $ */
+/* $Id: test.priv.h,v 1.189 2020/08/01 16:55:28 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -914,7 +914,7 @@ extern int TABSIZE;
 
 #if defined(NCURSES_VERSION) && HAVE_NC_ALLOC_H
 #include <nc_alloc.h>
-#if HAVE_NC_FREEALL && defined(USE_TINFO)
+#if HAVE_EXIT_TERMINFO && defined(USE_TINFO)
 #undef ExitProgram
 #define ExitProgram(code) exit_terminfo(code)
 #endif
