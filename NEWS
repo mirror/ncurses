@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3530 2020/08/01 21:09:01 tom Exp $
+-- $Id: NEWS,v 1.3532 2020/08/08 23:43:32 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200808
+	+ improve discussion of the system's tic utility when used as part
+	  of cross-compiling (discussion with Keith Marshall).
+	+ modify configuration checks for build-time tic/infocmp to use
+	  AC_CHECK_TOOL. That can still be overridden by --with-tic-path and
+	  --with-infocmp-path when fallbacks are used, but even if not using
+	  fallbacks, the improved check may help with cross-compiling
+	  (discussion with Keith Marshall).
+	+ other build-fixes for Ada95 with MinGW.
+	+ modify Ada95 source-generation utility to write to a file given as
+	  parameter rather than to the standard output, allowing builds with
+	  MinGW.
 
 20200801
 	+ remove remaining parts of checks for ISC Unix (cf: 20121006).

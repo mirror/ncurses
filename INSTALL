@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.223 2020/05/23 18:30:33 tom Exp $
+-- $Id: INSTALL,v 1.225 2020/08/08 23:38:33 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -41,7 +41,7 @@ including `c++', `form', `man', `menu', 'misc', `ncurses', `panel', `progs',
 and `test'.  See the README file for a roadmap to the package.
 
 If you are a distribution integrator or packager, please read and act on the
-section titled IF YOU ARE A SYSTEM INTEGRATOR below.
+section titled FOR SYSTEM INTEGRATORS below.
 
 If you are converting from BSD curses and do not have root access, be sure
 to read the BSD CONVERSION NOTES section below.
@@ -49,11 +49,7 @@ to read the BSD CONVERSION NOTES section below.
 If you are trying to build applications using gpm with ncurses,
 read the USING NCURSES WITH GPM section below.
 
-If you are running over the Andrew File System see the note below on
-USING NCURSES WITH AFS.
-
-If you are cross-compiling, see the note below on BUILDING NCURSES WITH A
-CROSS-COMPILER.
+If you are cross-compiling, see the note below on BUILDING WITH A CROSS-COMPILER.
 
 If you want to build the Ada95 binding, go to the Ada95 directory and
 follow the instructions there.  The Ada95 binding is not covered below.
@@ -270,8 +266,8 @@ INSTALLATION PROCEDURE:
     YOU MAY NOT BE ABLE TO COMPILE (OR RUN) NCURSES APPLICATIONS WITH C++.
 
 
-SUMMARY OF CONFIGURE OPTIONS:
-----------------------------
+CONFIGURE OPTIONS:
+-----------------
 
     The configure script provides a short list of its options when you type
 
@@ -1371,8 +1367,8 @@ SUMMARY OF CONFIGURE OPTIONS:
 	X11R5 and X11R6 xterm.
 
 
-COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
---------------------------------------------
+COMPATIBILITY WITH OLDER RELEASES:
+---------------------------------
 
     Because ncurses implements X/Open Curses, its interface is fairly stable.
     That does not mean the interface does not change.  Changes are made to the
@@ -2096,8 +2092,8 @@ COMPATIBILITY WITH OLDER VERSIONS OF NCURSES:
 	incorrect color scheme.
 
 
-IF YOU ARE A SYSTEM INTEGRATOR:
-------------------------------
+FOR SYSTEM INTEGRATORS:
+----------------------
 
     Configuration and Installation:
 
@@ -2173,7 +2169,7 @@ IF YOU ARE A SYSTEM INTEGRATOR:
 	that will make users' lives easier rather than harder.
 
 
-RECENT XTERM VERSIONS:
+MODERN XTERM VERSIONS:
 ---------------------
 
 	The terminfo database file included with this distribution assumes you
@@ -2189,9 +2185,13 @@ CONFIGURING FALLBACK ENTRIES:
 	In order to support operation of ncurses programs before the terminfo
 	tree is accessible (that is, in single-user mode or at OS installation
 	time) the ncurses library can be compiled to include an array of
-	pre-fetched fallback entries.  This must be done on a machine which
-	has ncurses' infocmp and terminfo database installed (as well as
-	ncurses' tic and infocmp programs).
+	pre-fetched fallback entries.
+	
+	NOTE: This must be done on a machine which has ncurses' infocmp and
+	terminfo database installed (as well as ncurses' tic and infocmp
+	programs).  That is because the fallback sources are generated and
+	compiled into the library before the build-tree's copy of infocmp is
+	available.
 
 	These entries are checked by setupterm() only when the conventional
 	fetches from the terminfo tree and the termcap fallback (if configured)
@@ -2310,12 +2310,8 @@ terminfo directory directly.
 
 ------------------------------- CUT HERE --------------------------------
 
-USING NCURSES WITH AFS:
-	AFS treats each directory as a separate logical filesystem, you
-	can't hard-link across them.  The --enable-symlinks option copes
-	with this by making tic use symbolic links.
-
-USING NCURSES WITH GPM:
+USING GPM:
+---------
 	Ncurses 4.1 and up can be configured to use GPM (General Purpose Mouse)
 	which is used with Linux console.  Be aware that GPM is commonly
 	installed as a shared library which contains a wrapper for the curses
@@ -2334,7 +2330,9 @@ USING NCURSES WITH GPM:
 
 	https://invisible-island.net/ncurses/ncurses.faq.html#using_gpm_lib
 
-BUILDING NCURSES WITH A CROSS-COMPILER
+
+BUILDING WITH A CROSS-COMPILER:
+------------------------------
 	Ncurses can be built with a cross-compiler.  Some parts must be built
 	with the host's compiler since they are used for building programs
 	(e.g., ncurses/make_hash and ncurses/make_keys) that generate tables
@@ -2359,14 +2357,26 @@ BUILDING NCURSES WITH A CROSS-COMPILER
 	When ncurses has been successfully cross-compiled, you may want to use
 	"make install" (with a suitable target directory) to construct an
 	install tree.  Note that in this case (as with the --with-fallbacks
-	option), ncurses uses the development platform's tic to do the
-	"make install.data" portion.
+	option), ncurses uses the development platform's tic to do the "make
+	install.data" portion.
 
 	The system's tic program is used to install the terminal database,
-	even for cross-compiles.  For best results, the tic program should
-	be from the most current version of ncurses.
+	even for cross-compiles.  For best results, the tic program should be
+	from the most current version of ncurses.
 
-BUGS:
+	NOTE:  the system's tic program may use a different terminfo database
+	format than the target system.  For instance, as described in term(5),
+	the conventional terminfo layout uses a directory hierarchy with one
+	letter names, while some platforms use two-letter names to work with
+	case-insensitive filesystems.  The configure script searches for a tic
+	program using the AC_CHECK_TOOL macro, which will prefer programs
+	using the canonical host prefix in their name.  You can use this fact
+	to provide a cross-compiler support utility tic, otherwise you can
+	override the configure script's choice using --with-tic-path
+
+
+BUG REPORTS:
+-----------
 	Send any feedback to the ncurses mailing list at
 	bug-ncurses@gnu.org. To subscribe send mail to
 	bug-ncurses-request@gnu.org with body that reads:
