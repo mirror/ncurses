@@ -6914,6 +6914,9 @@ CF_EOF
 				-link)
 					# ignore -link argument
 					;;
+				-MT | -MD | -MTd | -MDd)
+					# ignore runtime library flag
+					;;
 				-dll)
 					isdll=1
 					;;
