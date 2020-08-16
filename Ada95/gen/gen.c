@@ -35,7 +35,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.76 2020/08/09 00:57:30 tom Exp $
+    $Id: gen.c,v 1.77 2020/08/16 18:05:05 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program prints on its standard output the source for the
@@ -517,7 +517,7 @@ main(int argc, const char *argv[])
 #ifdef BUTTON1_RESERVED_EVENT
     PRINT_MOUSE_EVENT(BUTTON1_RESERVED_EVENT);
 #endif
-    print_constant(fp, "all_events_button_1", all_events);
+    print_constant(fp, "all_events_button_1", (UINT) all_events);
 
     all_events = 0;
     PRINT_MOUSE_EVENT(BUTTON2_RELEASED);
@@ -528,7 +528,7 @@ main(int argc, const char *argv[])
 #ifdef BUTTON2_RESERVED_EVENT
     PRINT_MOUSE_EVENT(BUTTON2_RESERVED_EVENT);
 #endif
-    print_constant(fp, "all_events_button_2", all_events);
+    print_constant(fp, "all_events_button_2", (UINT) all_events);
 
     all_events = 0;
     PRINT_MOUSE_EVENT(BUTTON3_RELEASED);
@@ -539,7 +539,7 @@ main(int argc, const char *argv[])
 #ifdef BUTTON3_RESERVED_EVENT
     PRINT_MOUSE_EVENT(BUTTON3_RESERVED_EVENT);
 #endif
-    print_constant(fp, "all_events_button_3", all_events);
+    print_constant(fp, "all_events_button_3", (UINT) all_events);
 
     all_events = 0;
     PRINT_MOUSE_EVENT(BUTTON4_RELEASED);
@@ -550,7 +550,7 @@ main(int argc, const char *argv[])
 #ifdef BUTTON4_RESERVED_EVENT
     PRINT_MOUSE_EVENT(BUTTON4_RESERVED_EVENT);
 #endif
-    print_constant(fp, "all_events_button_4", all_events);
+    print_constant(fp, "all_events_button_4", (UINT) all_events);
   }
   PRINT_NAMED_CONSTANT(BUTTON_CTRL);
   PRINT_NAMED_CONSTANT(BUTTON_SHIFT);

@@ -1,7 +1,7 @@
 Summary: Curses library with POSIX thread support.
 Name: ncursest6
 Version: 6.2
-Release: 20200808
+Release: 20200816
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz

@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.715 2020/08/08 22:14:09 tom Exp $
+dnl $Id: configure.in,v 1.716 2020/08/16 16:21:37 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.715 $)
+AC_REVISION($Revision: 1.716 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -654,11 +654,6 @@ case ".$with_fallback" in
 	;;
 esac
 
-USE_FALLBACKS=
-test -z "$FALLBACK_LIST" && USE_FALLBACKS="#"
-AC_SUBST(FALLBACK_LIST)
-AC_SUBST(USE_FALLBACKS)
-
 # The fallback feature in ncurses relies upon tic/infocmp outside the build
 # tree for generating the terminal descriptions that will be compiled into the
 # library.  If your toolchain is old, it may not handle current terminal
@@ -670,9 +665,20 @@ if test -n "$FALLBACK_LIST"
 then
 	CF_WITH_PATH_PROG(TIC,     tic,     [for fallbacks], $PATH:/usr/local/ncurses/bin)
 	CF_WITH_PATH_PROG(INFOCMP, infocmp, [for fallbacks], $PATH:/usr/local/ncurses/bin)
+	test -z "$TIC" && FALLBACK_LIST=
+	test -z "$INFOCMP" && FALLBACK_LIST=
+	if test -z "$FALLBACK_LIST"
+	then
+		AC_MSG_WARN(ignoring fallback option because tic/infocmp are not available)
+	fi
 fi
 AC_SUBST(TIC)
 AC_SUBST(INFOCMP)
+
+USE_FALLBACKS=
+test -z "$FALLBACK_LIST" && USE_FALLBACKS="#"
+AC_SUBST(FALLBACK_LIST)
+AC_SUBST(USE_FALLBACKS)
 
 AC_MSG_CHECKING(if you want modern xterm or antique)
 AC_ARG_WITH(xterm-new,
