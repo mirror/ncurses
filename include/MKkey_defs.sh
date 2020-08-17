@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: MKkey_defs.sh,v 1.20 2020/08/01 18:20:15 tom Exp $
+# $Id: MKkey_defs.sh,v 1.21 2020/08/17 10:45:33 tom Exp $
 ##############################################################################
 # Copyright 2019,2020 Thomas E. Dickey                                       #
 # Copyright 2001-2013,2017 Free Software Foundation, Inc.                    #
@@ -64,7 +64,6 @@ fi
 # add keys that we generate automatically:
 cat >>$data <<EOF
 key_resize	kr1	str	R1	KEY_RESIZE	+	NCURSES_EXT_FUNCS 	Terminal resize event
-key_event	kv1	str	V1	KEY_EVENT	+	NCURSES_WGETCH_EVENTS 	We were interrupted by an event
 EOF
 
 THIS=./`basename $0`

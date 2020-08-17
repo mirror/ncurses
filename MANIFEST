@@ -546,6 +546,7 @@
 ./include/MKterm.h.awk.in
 ./include/Makefile.in
 ./include/capdefaults.c
+./include/curses.events
 ./include/curses.h.in
 ./include/curses.tail
 ./include/curses.wide

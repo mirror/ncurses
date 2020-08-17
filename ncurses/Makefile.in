@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.172 2020/08/16 15:35:00 tom Exp $
+# $Id: Makefile.in,v 1.173 2020/08/17 13:38:30 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -100,6 +100,7 @@ ETAGS		= @ETAGS@
 CC		= @CC@
 CPP		= @CPP@
 CFLAGS		= @CFLAGS@
+LIBS		= @LIBS@
 
 INCDIR		= $(srcdir)/../include
 CPPFLAGS	= -DHAVE_CONFIG_H -DBUILDING_NCURSES -I../ncurses @CPPFLAGS@
