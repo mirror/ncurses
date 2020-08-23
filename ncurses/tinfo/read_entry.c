@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.157 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.158 2020/08/22 20:49:46 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -160,11 +160,11 @@ convert_strings(char *buf, char **Strings, int count, int size, char *table)
 
 	/* make sure all strings are NUL terminated */
 	if (VALID_STRING(Strings[i])) {
-	    for (p = Strings[i]; p <= table + size; p++)
+	    for (p = Strings[i]; p < table + size; p++)
 		if (*p == '\0')
 		    break;
 	    /* if there is no NUL, ignore the string */
-	    if (p > table + size)
+	    if (p >= table + size)
 		Strings[i] = ABSENT_STRING;
 	}
     }
