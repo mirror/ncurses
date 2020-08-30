@@ -30,13 +30,13 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.23 2020/05/29 23:04:02 tom Exp $
+ * $Id: dots_xcurses.c,v 1.24 2020/08/29 16:22:03 juergen Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
 #include <test.priv.h>
 
-#if !defined(_WIN32)
+#if !defined(_NC_WINDOWS)
 #include <sys/time.h>
 #endif
 

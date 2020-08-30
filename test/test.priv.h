@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.189 2020/08/01 16:55:28 tom Exp $ */
+/* $Id: test.priv.h,v 1.190 2020/08/29 21:08:12 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -935,8 +935,12 @@ extern int TABSIZE;
 #define EXIT_FAILURE 1
 #endif
 
-#if defined(_WIN32) || defined(USE_WIN32CON_DRIVER)
+#undef _NC_WINDOWS
+#if (defined(_WIN32) || defined(_WIN64))
+#define _NC_WINDOWS 1
+#endif
 
+#if defined(_NC_WINDOWS) || defined(USE_WIN32CON_DRIVER)
 #if defined(PDCURSES)
 #ifdef WINVER
 #  if WINVER < 0x0501
@@ -952,6 +956,9 @@ extern int TABSIZE;
 #define SIGHUP  1
 #define SIGKILL 9
 #define getlogin() "username"
+
+#elif defined(EXP_WIN32_DRIVER)
+/* ignore the mingw headers */
 
 #elif defined(HAVE_NCURSESW_NCURSES_H)
 #include <ncursesw/nc_mingw.h>
@@ -1033,7 +1040,7 @@ extern char *_nc_strstr(const char *, const char *);
 #define InitAndCatch(init,handler) do { init; CATCHALL(handler); } while (0)
 #endif
 
-#if defined(_WIN32) || defined(USE_WIN32CON_DRIVER)
+#if defined(_NC_WINDOWS) || defined(USE_WIN32CON_DRIVER)
 #define SetupAlarm(opt)	(void)opt
 #else
 #define SetupAlarm(opt)	if (opt) alarm((unsigned)opt)

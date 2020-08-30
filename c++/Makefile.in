@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.125 2020/07/18 20:33:27 tom Exp $
+# $Id: Makefile.in,v 1.126 2020/08/29 18:35:49 tom Exp $
 ##############################################################################
 # Copyright 2018,2020 Thomas E. Dickey                                       #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -203,6 +203,7 @@ HEADER_DEPS	= \
 	../include/unctrl.h \
 	$(INCDIR)/nc_mingw.h \
 	$(INCDIR)/nc_string.h \
+	$(INCDIR)/nc_win32.h \
 	$(srcdir)/cursesp.h \
 	$(srcdir)/cursesw.h \
 	$(srcdir)/cursslk.h \

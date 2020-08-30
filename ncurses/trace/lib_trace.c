@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.96 2020/05/25 22:48:18 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.97 2020/08/29 16:22:03 juergen Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -213,7 +213,7 @@ _nc_va_tracef(const char *fmt, va_list ap)
 # if USE_WEAK_SYMBOLS
 	if ((pthread_self))
 # endif
-#ifdef _WIN32
+#ifdef _NC_WINDOWS
 	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self().p);
 #else
 	    fprintf(fp, "%#lx:", (long) (intptr_t) pthread_self());

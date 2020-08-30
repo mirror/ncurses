@@ -31,9 +31,9 @@
 
 #if USE_WIDEC_SUPPORT
 
-MODULE_ID("$Id: widechars.c,v 1.8 2020/07/11 20:48:42 anonymous.maarten Exp $")
+MODULE_ID("$Id: widechars.c,v 1.9 2020/08/29 16:22:03 juergen Exp $")
 
-#if defined(_WIN32) && !defined(_MSC_VER)
+#if (defined(_NC_WINDOWS)) && !defined(_NC_MSC)
 /*
  * MinGW has wide-character functions, but they do not work correctly.
  */
@@ -148,6 +148,6 @@ _nc_wctomb(char *s, wchar_t wc)
     return result;
 }
 
-#endif /* _WIN32 */
+#endif /* _NC_WINDOWS */
 
 #endif /* USE_WIDEC_SUPPORT */

@@ -32,14 +32,14 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: cursesapp.h,v 1.16 2020/07/18 19:57:11 anonymous.maarten Exp $
+// $Id: cursesapp.h,v 1.17 2020/08/29 16:22:03 juergen Exp $
 
 #ifndef NCURSES_CURSESAPP_H_incl
 #define NCURSES_CURSESAPP_H_incl
 
 #include <cursslk.h>
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64))
 # define NCURSES_CXX_MAIN_NAME cursespp_main
 # define NCURSES_CXX_MAIN \
   int main(int argc, char *argv[]) { \

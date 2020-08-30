@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.161 2020/08/01 17:20:19 tom Exp $
+dnl $Id: configure.in,v 1.162 2020/08/29 13:23:50 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -489,6 +489,7 @@ ttytype)
 
 dnl ---------------------------------------------------------------------------
 CF_HELP_MESSAGE(Testing/development Options:)
+CF_WITH_SCREEN_PDCURSES
 CF_ENABLE_WARNINGS(Wno-unknown-pragmas)
 CF_DISABLE_LEAKS
 CF_DISABLE_RPATH_HACK

@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.716 2020/08/16 16:21:37 tom Exp $
+dnl $Id: configure.in,v 1.721 2020/08/29 22:40:49 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.716 $)
+AC_REVISION($Revision: 1.721 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1549,6 +1549,18 @@ AC_ARG_ENABLE(wgetch-events,
 AC_MSG_RESULT($with_wgetch_events)
 test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with wgetch-events code])
 
+case $cf_cv_system_name in
+(*mingw32*|*mingw64*|*-msvc*)
+	AC_MSG_CHECKING(if you want experimental-Windows driver)
+	AC_ARG_ENABLE(exp-win32,
+		[  --enable-exp-win32      compile with experimental-Windows],
+		[with_exp_win32=$enableval],
+		[with_exp_win32=no])
+	AC_MSG_RESULT($with_exp_win32)
+	test "x$with_exp_win32" = xyes && AC_DEFINE(EXP_WIN32_DRIVER,1,[Define to 1 to compile with experimental win32 driver])
+	;;
+esac
+
 ###############################################################################
 CF_HELP_MESSAGE(Testing/development Options:)
 
@@ -1582,20 +1594,14 @@ fi
 AC_SUBST(INSTALL_OPT_P)
 
 ###	use option --enable-warnings to turn on all gcc warnings
-AC_MSG_CHECKING(if you want to see compiler warnings)
-AC_ARG_ENABLE(warnings,
-	[  --enable-warnings       build: turn on GCC compiler warnings],
-	[with_warnings=$enableval])
-AC_MSG_RESULT($with_warnings)
+CF_ENABLE_WARNINGS(Wno-unknown-pragmas Wswitch-enum,yes)
 
 if test "x$with_warnings" = "xyes"; then
  	CF_ADD_ADAFLAGS(-gnatg)
-	CF_GCC_WARNINGS(Wno-unknown-pragmas Wswitch-enum)
 	if test "x$cf_with_cxx" = xyes ; then
 		CF_GXX_WARNINGS(Wno-unused)
 	fi
 fi
-CF_GCC_ATTRIBUTES
 CF_ENABLE_STRING_HACKS
 
 ###	use option --enable-assertions to turn on generation of assertion code
@@ -1662,7 +1668,11 @@ CF_DISABLE_GNAT_PROJECTS
 ###	Checks for libraries.
 case $cf_cv_system_name in
 (*mingw32*|*mingw64*)
+	if test "x$with_exp_win32" = xyes ; then
+	CPPFLAGS="$CPPFLAGS -DWINVER=0x0600 -DWIN32_LEAN_AND_MEAN"
+	else
 	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501 -DWIN32_LEAN_AND_MEAN"
+	fi
 	# Note: WINVER may be a problem with Windows 10
 	;;
 (*)
@@ -2025,11 +2035,23 @@ if test "$with_term_driver" != no ; then
 	LIB_SUBSETS="${LIB_SUBSETS}+port_drivers"
 	case $cf_cv_system_name in
 	(*mingw32*|*mingw64*)
-		LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo+port_win32con"
+		if test "x$with_exp_win32" = xyes ; then
+			LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo+port_win32"
+		else
+			LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo+port_win32con"
+		fi
 		CPPFLAGS="$CPPFLAGS -DUSE_WIN32CON_DRIVER"
 		;;
 	(*)
 		LIB_SUBSETS="${LIB_SUBSETS}+port_tinfo"
+		;;
+	esac
+elif test "x$with_exp_win32" = xyes ; then
+	case $cf_cv_system_name in
+	(*mingw32*|*mingw64*)
+		LIB_SUBSETS="${LIB_SUBSETS}+port_win32"
+		;;
+	(*)
 		;;
 	esac
 fi
@@ -2286,9 +2308,6 @@ AC_SUBST(NCURSES_SHLIB2)
 AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATH_SEPARATOR',[Define to override ':' as library path-separator])
 
 AC_DEFINE_UNQUOTED(NCURSES_VERSION_STRING, "${NCURSES_MAJOR}.${NCURSES_MINOR}.${NCURSES_PATCH}",[Define to 1 if machine has ample memory for tic])
-
-### Now that we're done running tests, add the compiler-warnings, if any
-CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ### Define substitutions for header files to avoid name-pollution
 CF_SUBST_IF(["x$cf_cv_have_tcgetattr" = xyes], HAVE_TCGETATTR, 1, 0)

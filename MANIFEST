@@ -559,6 +559,7 @@
 ./include/nc_string.h
 ./include/nc_termios.h
 ./include/nc_tparm.h
+./include/nc_win32.h
 ./include/ncurses_cfg.hin
 ./include/ncurses_defs
 ./include/ncurses_dll.h.in
@@ -567,6 +568,7 @@
 ./include/termcap.h.in
 ./include/tic.h
 ./include/unctrl.h.in
+./include/win32_curses.h
 ./install-sh
 ./man/MKada_config.in
 ./man/MKncu_config.in
@@ -942,6 +944,8 @@
 ./ncurses/tinfo/lib_tparm.c
 ./ncurses/tinfo/lib_tputs.c
 ./ncurses/tinfo/lib_ttyflags.c
+./ncurses/tinfo/lib_win32con.c
+./ncurses/tinfo/lib_win32util.c
 ./ncurses/tinfo/make_hash.c
 ./ncurses/tinfo/make_keys.c
 ./ncurses/tinfo/name_match.c
@@ -998,6 +1002,7 @@
 ./ncurses/widechar/widechars.c
 ./ncurses/win32con/gettimeofday.c
 ./ncurses/win32con/wcwidth.c
+./ncurses/win32con/win32_driver.c
 ./ncurses/win32con/win_driver.c
 ./package/debian-mingw/changelog
 ./package/debian-mingw/compat

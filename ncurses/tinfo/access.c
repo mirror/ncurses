@@ -37,11 +37,11 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.26 2020/07/11 20:55:23 anonymous.maarten Exp $")
+MODULE_ID("$Id: access.c,v 1.27 2020/08/29 16:22:03 juergen Exp $")
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
-#ifdef _MSC_VER
+#ifdef _NC_MSC
 # define ACCESS(FN, MODE) access((FN), (MODE)&(R_OK|W_OK))
 #else
 # define ACCESS access

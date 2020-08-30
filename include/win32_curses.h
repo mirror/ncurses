@@ -1,6 +1,6 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
- * Copyright 1998-2002,2012 Free Software Foundation, Inc.                  *
+ * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2008-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -28,32 +28,48 @@
  ****************************************************************************/
 
 /****************************************************************************
- *  Author: Thomas E. Dickey <dickey@clark.net> 1998                        *
+ * Author: Juergen Pfeifer, 2008-on                                         * 
  ****************************************************************************/
 
+/* $Id: win32_curses.h,v 1.1 2020/08/14 21:57:01 juergen Exp $ */
+
 /*
- * Wrapper for malloc/realloc.  Standard implementations allow realloc with
- * a null pointer, but older libraries may not (e.g., SunOS).
- *
- * Also if realloc fails, we discard the old memory to avoid leaks.
+ * This is the interface we use on Windows to mimic the control of the settings
+ * of what acts like the classic TTY - the Windows Console.
  */
 
-#include <curses.priv.h>
+#if (defined(_WIN32) || defined(_WIN64))
+#ifndef _NC_WIN32_CURSES_H
+#define _NC_WIN32_CURSES_H 1
 
-MODULE_ID("$Id: doalloc.c,v 1.13 2020/08/30 00:27:15 tom Exp $")
-
-void *
-_nc_doalloc(void *oldp, size_t amount)
+struct winconmode
 {
-    void *newp;
+  unsigned int  dwFlagIn;
+  unsigned int  dwFlagOut;
+};
 
-    if (oldp != 0) {
-	if ((newp = realloc(oldp, amount)) == 0) {
-	    free(oldp);
-	    errno = ENOMEM;	/* just in case 'free' reset */
-	}
-    } else {
-	newp = malloc(amount);
-    }
-    return newp;
-}
+extern NCURSES_EXPORT(void*) _nc_console_fd2handle(int fd);
+extern NCURSES_EXPORT(int)   _nc_console_setmode(void* handle, const struct winconmode* arg);
+extern NCURSES_EXPORT(int)   _nc_console_getmode(void* handle, struct winconmode* arg);
+extern NCURSES_EXPORT(int)   _nc_console_flush(void* handle);
+
+/*
+  A few definitions of Unix functions we need to emulate
+*/
+#define SIGHUP  1
+#define SIGKILL 9
+
+#undef  getlogin
+#define getlogin() getenv("USERNAME")
+
+#undef  ttyname
+#define ttyname(fd) NULL
+
+#undef sleep
+#define sleep(n) Sleep((n) * 1000)
+
+#undef gettimeofday
+#define gettimeofday(tv,tz) _nc_gettimeofday(tv,tz)
+
+#endif /* _NC_WIN32_CURSES_H */
+#endif /* _WIN32||_WIN64 */

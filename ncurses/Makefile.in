@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.173 2020/08/17 13:38:30 tom Exp $
+# $Id: Makefile.in,v 1.175 2020/08/29 18:43:21 juergen Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -99,7 +99,7 @@ ETAGS		= @ETAGS@
 
 CC		= @CC@
 CPP		= @CPP@
-CFLAGS		= @CFLAGS@
+CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
 LIBS		= @LIBS@
 
 INCDIR		= $(srcdir)/../include
@@ -191,6 +191,7 @@ HEADER_DEPS	= \
 	$(INCDIR)/nc_string.h \
 	$(INCDIR)/nc_termios.h \
 	$(INCDIR)/nc_tparm.h \
+	$(INCDIR)/nc_win32.h \
 	$(INCDIR)/term_entry.h \
 	$(srcdir)/curses.priv.h \
 	$(srcdir)/new_pair.h

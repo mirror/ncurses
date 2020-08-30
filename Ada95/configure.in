@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.76 2020/02/08 21:03:20 tom Exp $
+dnl $Id: configure.in,v 1.78 2020/08/29 14:56:44 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.76 $)
+AC_REVISION($Revision: 1.78 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -360,11 +360,10 @@ AC_ARG_ENABLE(warnings,
 	[with_warnings=$enableval])
 AC_MSG_RESULT($with_warnings)
 
+CF_ENABLE_WARNINGS(Wno-unknown-pragmas Wswitch-enum,yes)
 if test "x$with_warnings" = "xyes"; then
  	CF_ADD_ADAFLAGS(-gnatg)
-	CF_GCC_WARNINGS(Wno-unknown-pragmas Wswitch-enum)
 fi
-CF_GCC_ATTRIBUTES
 
 ###	use option --enable-assertions to turn on generation of assertion code
 AC_MSG_CHECKING(if you want to enable runtime assertions)
@@ -548,9 +547,6 @@ AC_SUBST(USE_CFG_SUFFIX)
 SUB_MAKEFILES="gen/adacurses${USE_ARG_SUFFIX}-config:gen/adacurses-config.in"
 
 AC_DEFINE_UNQUOTED(NCURSES_PATHSEP,'$PATH_SEPARATOR',[Define to override ':' as the library path-separator])
-
-### Now that we're done running tests, add the compiler-warnings, if any
-CF_ADD_CFLAGS($EXTRA_CFLAGS)
 
 ################################################################################
 

@@ -36,7 +36,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.47 2020/07/18 19:57:11 anonymous.maarten Exp $
+ * $Id: demo.cc,v 1.48 2020/08/29 16:22:03 juergen Exp $
  */
 
 #include "internal.h"
@@ -44,11 +44,11 @@
 #include "cursesm.h"
 #include "cursesf.h"
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64))
 #undef KEY_EVENT
 #endif
 
-#ifndef _WIN32
+#if !(defined(_WIN32) || defined(_WIN64))
 extern "C" unsigned int sleep(unsigned int);
 #endif
 
@@ -570,7 +570,7 @@ int TestApplication::run()
 //
 static TestApplication *Demo = new TestApplication();
 
-#ifdef _WIN32
+#if (defined(_WIN32) || defined(_WIN64))
 // This is actually only needed when ncurses is a dll
 NCURSES_CXX_MAIN
 #endif

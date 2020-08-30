@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.29 2020/04/18 23:52:24 tom Exp $
+# $Id: tracemunch,v 1.30 2020/08/29 18:59:58 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -74,6 +74,7 @@ our $tracelevel = 0;
 # 4 = TERMINAL*
 our %known_p1 = qw(
   TransformLine           1
+  _nc_console_read        1
   _nc_freewin             2
   _nc_initscr             1
   _nc_makenew             1

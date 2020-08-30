@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.808 $
-#	$Date: 2020/07/11 20:05:06 $
+#	$Revision: 1.811 $
+#	$Date: 2020/08/24 22:30:17 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -17781,8 +17781,8 @@ icl6404|kds7372|icl6402|kds6402|ICL 6404 aka Kokusai Display Systems 7372,
 	OTbs, am, hs,
 	cols#80, lines#24,
 	bel=^G, blink=\E[2ZZ, cbt=\EI, civis=\E.0, clear=\E*,
-	cnorm=\E.3, cr=\r, csr=\E!%+%p1%{32}%+%p2%{32}, cub1=^H,
-	cud1=^V, cuf1=^L,
+	cnorm=\E.3, cr=\r, csr=\E!%p1%{32}%+%c%p2%{32}%+%c,
+	cub1=^H, cud1=^V, cuf1=^L,
 	cup=\E=%p1%{32}%+%c%p2%{80}%m%{32}%+%c%p2%{80}%>%{32}%+%c,
 	cuu1=^K, cvvis=\E.1, dch1=\EW, dl1=\ER, home=^^, ht=^I,
 	hts=\E1, il1=\EE, invis=\E[1ZZ,
@@ -19085,8 +19085,8 @@ ndr9500|nd9500|Newbury Data 9500,
 	kf21=^Ai\r, kf22=^Aj\r, kf3=^AB\r, kf4=^AC\r, kf5=^AD\r,
 	kf6=^AE\r, kf7=^AF\r, kf8=^AG\r, kf9=^AH\r, khome=^^,
 	kich1=\EQ, kil1=\EE, kprt=\EP, mc4=\Ea, mc5=\E`, nel=^_,
-	pfloc=\E|%{48}%p1%+%c2%p2\031,
-	pfx=\E|%{48}%p1%+%c1%p2\031, prot=\E), ri=\Ej,
+	pfloc=\E|%{48}%p1%+%c2%p2%s\031,
+	pfx=\E|%{48}%p1%+%c1%p2%s\031, prot=\E), ri=\Ej,
 	rmacs=\E%%, rmir=\Er, rmso=\E(, rmxon=^N,
 	sgr=\EG0\E%%%%\E(%?%p1%p5%p8%|%|%t\E)%;%?%p9%t\E$%;,
 	sgr0=\EG0\E%%\E(, smacs=\E$, smir=\Eq, smso=\E), smxon=^O,
@@ -22832,7 +22832,7 @@ ti916|ti916-220-7|Texas Instruments 916 VDT 8859/1 vt220 mode 7 bit CTRL,
 	da, db, in, msgr,
 	cbt=\E[Z, civis=\E[?25l, clear=\E[H\E[2J$<6>,
 	cnorm=\E[?25h, cub=\E[%p1%dD, cud=\E[%p1%dB,
-	cuf=\E[%p1%dC, cup=\E[%p1%i%p1%d;%p2%dH, cuu=\E[%p1%dA,
+	cuf=\E[%p1%dC, cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA,
 	dch=\E[%p1%dP$<250>, dch1=\E[P, dl=\E[%p1%dM,
 	ech=\E[%p1%dX$<20>, ed=\E[J$<6>, el=\E[0K, el1=\E[1K,
 	enacs=\E(B\E)0, ff=^L, flash=\E[?5h\E[?5l$<6>,
@@ -26617,5 +26617,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-07-11
 #	+ fix pound-sign mapping in acsc of linux2.6 entry (report by Ingo
 #	  Bruckl).
+#
+# 2020-08-28
+#	+ correct icl6404 csr (report by Florian Weimer).
+#	+ correct ti916 cup (report by Florian Weimer).
+#	+ improve ndr9500 (report by Florian Weimer).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

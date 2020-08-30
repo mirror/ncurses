@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.74 2020/07/18 19:17:45 tom Exp $
+# $Id: Makefile.in,v 1.75 2020/08/29 14:50:45 tom Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 1998-2015,2018 Free Software Foundation, Inc.                    #
@@ -92,7 +92,7 @@ ETAGS		= @ETAGS@
 
 CC		= @CC@
 CPP		= @CPP@
-CFLAGS		= @CFLAGS@
+CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
 
 INCDIR		= $(top_srcdir)/include
 BASE_DIR 	= $(top_srcdir)/ncurses

@@ -29,7 +29,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.60 2020/08/08 19:52:58 tom Exp $
+#  $Id: Makefile.in,v 1.61 2020/08/29 17:01:19 tom Exp $
 #
 .SUFFIXES:
 
@@ -55,7 +55,7 @@ AWK		= @AWK@
 LN_S		= @LN_S@
 
 CC		= @CC@
-CFLAGS		= @CFLAGS@
+CFLAGS		= @CFLAGS@ @EXTRA_CFLAGS@
 
 CPPFLAGS	= @ACPPFLAGS@ \
 		  -DHAVE_CONFIG_H -I$(srcdir)
