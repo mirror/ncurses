@@ -1,4 +1,4 @@
-# $Id: mk-hdr.awk,v 1.6 2020/08/29 22:07:18 tom Exp $
+# $Id: mk-hdr.awk,v 1.7 2020/08/31 23:48:44 tom Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 2007-2010,2013 Free Software Foundation, Inc.                    #
@@ -42,7 +42,6 @@ function basename(path) {
 function in_subset(value) {
 	value = " " value " ";
 	check = subset;
-	sub(" .*$", "", check);
 	gsub("[+]", " ", check);
 	check = " " check " ";
 	return index(check,value);

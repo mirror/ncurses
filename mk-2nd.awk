@@ -1,4 +1,4 @@
-# $Id: mk-2nd.awk,v 1.21 2020/08/29 22:05:45 tom Exp $
+# $Id: mk-2nd.awk,v 1.22 2020/08/31 23:49:17 tom Exp $
 ##############################################################################
 # Copyright 2020 Thomas E. Dickey                                            #
 # Copyright 1998-2004,2005 Free Software Foundation, Inc.                    #
@@ -56,7 +56,6 @@
 function in_subset(value) {
 		value = " " value " ";
 		check = subset;
-		sub(" .*$", "", check);
 		gsub("[+]", " ", check);
 		check = " " check " ";
 		return index(check,value);

@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.108 2020/08/29 22:02:56 tom Exp $
+# $Id: mk-1st.awk,v 1.109 2020/08/31 23:49:24 tom Exp $
 ##############################################################################
 # Copyright 2018,2020 Thomas E. Dickey                                       #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -262,7 +262,6 @@ function install_dll(directory,filename) {
 function in_subset(value) {
 		value = " " value " ";
 		check = subset;
-		sub(" .*$", "", check);
 		gsub("[+]", " ", check);
 		check = " " check " ";
 		return index(check,value);
