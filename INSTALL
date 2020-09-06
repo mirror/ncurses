@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.225 2020/08/08 23:38:33 tom Exp $
+-- $Id: INSTALL,v 1.226 2020/09/06 23:41:16 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -581,6 +581,9 @@ CONFIGURE OPTIONS:
     --enable-expanded
 	For testing, generate functions for certain macros to make them visible
 	as such to the debugger.  See also the --disable-macros option.
+
+    --enable-exp-win32
+	When configuring for MinGW, use the experimental Windows 10 driver.
 
     --enable-ext-colors
 	Extend the cchar_t structure to allow more than 16 colors to be

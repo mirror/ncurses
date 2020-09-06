@@ -26,7 +26,7 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-/* $Id: ncurses_dll.h.in,v 1.16 2020/07/04 23:07:54 tom Exp $ */
+/* $Id: ncurses_dll.h.in,v 1.17 2020/09/05 17:58:47 juergen Exp $ */
 
 #ifndef NCURSES_DLL_H_incl
 #define NCURSES_DLL_H_incl 1
@@ -81,7 +81,7 @@
 /*
  * These symbols hide dllimport/dllexport, for compilers which care about it.
  */
-#if defined(__CYGWIN__) || defined(_WIN32)
+#if defined(__CYGWIN__) || (defined(_WIN32) || defined(_WIN64))
 # if defined(NCURSES_STATIC)	/* "static" here only implies "not-a-DLL" */
 #   define NCURSES_EXPORT_GENERAL_IMPORT
 #   define NCURSES_EXPORT_GENERAL_EXPORT

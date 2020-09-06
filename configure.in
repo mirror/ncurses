@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.721 2020/08/29 22:40:49 tom Exp $
+dnl $Id: configure.in,v 1.724 2020/09/06 22:23:32 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.721 $)
+AC_REVISION($Revision: 1.724 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1553,13 +1553,27 @@ case $cf_cv_system_name in
 (*mingw32*|*mingw64*|*-msvc*)
 	AC_MSG_CHECKING(if you want experimental-Windows driver)
 	AC_ARG_ENABLE(exp-win32,
-		[  --enable-exp-win32      compile with experimental-Windows],
+		[  --enable-exp-win32      compile with experimental-Windows driver],
 		[with_exp_win32=$enableval],
 		[with_exp_win32=no])
 	AC_MSG_RESULT($with_exp_win32)
-	test "x$with_exp_win32" = xyes && AC_DEFINE(EXP_WIN32_DRIVER,1,[Define to 1 to compile with experimental win32 driver])
+	if test "x$with_exp_win32" = xyes
+	then
+		AC_DEFINE(EXP_WIN32_DRIVER,1,[Define to 1 to compile with experimental win32 driver])
+		EXP_WIN32_DRIVER=1
+		INTERNALS_HDR='[$](INCDIR)/nc_win32.h'
+	else
+		INTERNALS_HDR='[$](INCDIR)/nc_mingw.h'
+		EXP_WIN32_DRIVER=0
+	fi
+	;;
+(*)
+	EXP_WIN32_DRIVER=0
+	INTERNALS_HDR=
 	;;
 esac
+AC_SUBST(EXP_WIN32_DRIVER)
+AC_SUBST(INTERNALS_HDR)
 
 ###############################################################################
 CF_HELP_MESSAGE(Testing/development Options:)

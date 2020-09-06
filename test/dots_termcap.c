@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.25 2020/08/29 16:22:03 juergen Exp $
+ * $Id: dots_termcap.c,v 1.26 2020/09/05 17:58:47 juergen Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -155,7 +155,7 @@ my_napms(int ms)
 {
     if (ms > 0) {
 #if defined(_NC_WINDOWS) || !HAVE_GETTIMEOFDAY
-	Sleep((DWORD) ms);
+	Sleep((unsigned int) ms);
 #else
 	struct timeval data;
 	data.tv_sec = 0;

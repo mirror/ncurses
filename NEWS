@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3552 2020/09/01 00:21:01 tom Exp $
+-- $Id: NEWS,v 1.3556 2020/09/06 20:05:44 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200906
+	+ merge/adapt in-progress work by Juergen Pfeifer for new version of
+	  win32-driver.
+	+ correct description of vt330/vt340 (Ross Combs).
 
 20200831
 	+ build-fix for awk-scripts modified for win32-driver (report by Werner

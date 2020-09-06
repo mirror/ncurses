@@ -31,7 +31,7 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_win32.h,v 1.3 2020/08/29 20:56:43 tom Exp $ */
+/* $Id: nc_win32.h,v 1.7 2020/09/06 20:53:55 tom Exp $ */
 
 #ifndef NC_WIN32_H
 #define NC_WIN32_H 1
@@ -82,7 +82,7 @@ extern "C" {
 #undef HAVE_GETTIMEOFDAY
 #define HAVE_GETTIMEOFDAY 1
 extern NCURSES_EXPORT(int) _nc_gettimeofday(struct timeval *, void *);
-  
+
 #undef wcwidth
 #define wcwidth(ucs)  _nc_wcwidth((wchar_t)(ucs))
 extern NCURSES_EXPORT(int)    _nc_wcwidth(wchar_t);
@@ -102,16 +102,20 @@ extern NCURSES_EXPORT(int)    _nc_console_keyok(int keycode,int flag);
 extern NCURSES_EXPORT(bool)   _nc_console_keyExist(int keycode);
 extern NCURSES_EXPORT(bool)   _nc_console_checkinit(bool initFlag, bool assumeTermInfo);
 extern NCURSES_EXPORT(int)    _nc_console_vt_supported(void);
+
 #ifdef _NC_CHECK_MINTTY
 extern NCURSES_EXPORT(int)    _nc_console_checkmintty(int fd, LPHANDLE pMinTTY);
 #endif
 
 #undef CHECK_TERM_ENV
 #define MS_TERMINAL "ms-terminal"
-#define CHECK_TERM_ENV(env,isNull,NOTERM) (isNull = ((env==0)||(*env==0)), \
-					   (env = (isNull ?		\
-						   _nc_console_vt_supported() ? MS_TERMINAL: NOTERM : env) , \
-					    (isNull = ((env==0)||(*env==0)))))
+#define CHECK_TERM_ENV(term_env, no_terminal) \
+	(term_env = (NonEmpty(term_env) \
+		      ? term_env \
+		      : (_nc_console_vt_supported() \
+		         ? MS_TERMINAL \
+		         : no_terminal)), \
+	 !NonEmpty(term_env))
 
   /*
    * Various Console mode definitions
@@ -129,7 +133,7 @@ extern NCURSES_EXPORT(int)    _nc_console_checkmintty(int fd, LPHANDLE pMinTTY);
 #define CONMODE_NORAW    (ENABLE_PROCESSED_INPUT|ENABLE_LINE_INPUT)
 #define CONMODE_NOCBREAK (ENABLE_LINE_INPUT)
 
-  
+
 #if defined(USE_TERM_DRIVER) && defined(USE_WIN32CON_DRIVER)
 extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_WIN_DRIVER;
 #endif
@@ -161,7 +165,7 @@ typedef struct {
     TTY originalMode;
 } ConsoleInfo;
 
-extern NCURSES_EXPORT_VAR(ConsoleInfo) _nc_CONSOLE;  
+extern NCURSES_EXPORT_VAR(ConsoleInfo) _nc_CONSOLE;
 #define WINCONSOLE _nc_CONSOLE
 
 #define TypeAlloca(type,count)(type*) _alloca(sizeof(type)*(size_t)(count))

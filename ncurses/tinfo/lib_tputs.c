@@ -52,7 +52,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.103 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.104 2020/09/05 18:08:11 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -129,7 +129,6 @@ NCURSES_SP_NAME(_nc_flush) (NCURSES_SP_DCL0)
 	    TR(TRACE_CHARPUT, ("flushing %ld bytes", (unsigned long) amount));
 	    while (amount) {
 		ssize_t res = write(SP_PARM->_ofd, buf, amount);
-
 		if (res > 0) {
 		    /* if the write was incomplete, try again */
 		    amount -= (size_t) res;

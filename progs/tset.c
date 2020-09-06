@@ -98,7 +98,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.123 2020/08/29 23:32:18 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.125 2020/09/05 22:54:47 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -231,8 +231,11 @@ typedef struct speeds {
     int speed;
 } SPEEDS;
 
-#if (defined(_WIN32) || defined(_WIN64))
-static const SPEEDS speeds[] = { { "0", 0 } };
+#if defined(EXP_WIN32_DRIVER)
+static const SPEEDS speeds[] =
+{
+    {"0", 0}
+};
 #else
 static const SPEEDS speeds[] =
 {
@@ -843,7 +846,7 @@ main(int argc, char **argv)
     oldmode = mode;
 #ifdef TERMIOS
     ospeed = (NCURSES_OSPEED) cfgetospeed(&mode);
-#elif (defined(_WIN32) || defined(_WIN64))
+#elif defined(EXP_WIN32_DRIVER)
     ospeed = 0;
 #else
     ospeed = (NCURSES_OSPEED) mode.sg_ospeed;

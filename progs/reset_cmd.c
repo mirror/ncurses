@@ -53,7 +53,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.21 2020/05/27 23:46:20 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.23 2020/09/05 22:54:47 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -363,6 +363,9 @@ default_erase(void)
 void
 set_control_chars(TTY * tty_settings, int my_erase, int my_intr, int my_kill)
 {
+#if defined(EXP_WIN32_DRIVER)
+    /* noop */
+#else
     if (DISABLED(tty_settings->c_cc[VERASE]) || my_erase >= 0) {
 	tty_settings->c_cc[VERASE] = UChar((my_erase >= 0)
 					   ? my_erase
@@ -380,6 +383,7 @@ set_control_chars(TTY * tty_settings, int my_erase, int my_intr, int my_kill)
 					  ? my_kill
 					  : CKILL);
     }
+#endif
 }
 
 /*
@@ -389,6 +393,9 @@ set_control_chars(TTY * tty_settings, int my_erase, int my_intr, int my_kill)
 void
 set_conversions(TTY * tty_settings)
 {
+#if defined(EXP_WIN32_DRIVER)
+    /* FIXME */
+#else
 #ifdef ONLCR
     tty_settings->c_oflag |= ONLCR;
 #endif
@@ -412,6 +419,7 @@ set_conversions(TTY * tty_settings)
 	tty_settings->c_oflag &= ~OXTABS;
 #endif /* OXTABS */
     tty_settings->c_lflag |= (ECHOE | ECHOK);
+#endif
 }
 
 static bool
@@ -551,15 +559,18 @@ show_tty_change(TTY * old_settings,
 		int which,
 		unsigned def)
 {
-    unsigned older, newer;
+    unsigned older = 0, newer = 0;
     char *p;
 
+#if defined(EXP_WIN32_DRIVER)
+    /* noop */
+#else
     newer = new_settings->c_cc[which];
     older = old_settings->c_cc[which];
 
     if (older == newer && older == def)
 	return;
-
+#endif
     (void) fprintf(stderr, "%s %s ", name, older == newer ? "is" : "set to");
 
     if (DISABLED(newer)) {
@@ -603,9 +614,13 @@ reset_flush(void)
 void
 print_tty_chars(TTY * old_settings, TTY * new_settings)
 {
+#if defined(EXP_WIN32_DRIVER)
+    /* noop */
+#else
     show_tty_change(old_settings, new_settings, "Erase", VERASE, CERASE);
     show_tty_change(old_settings, new_settings, "Kill", VKILL, CKILL);
     show_tty_change(old_settings, new_settings, "Interrupt", VINTR, CINTR);
+#endif
 }
 
 #if HAVE_SIZECHANGE

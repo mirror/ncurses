@@ -49,7 +49,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.32 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.33 2020/09/05 21:37:57 tom Exp $")
 
 static int
 _nc_vdisable(void)
@@ -92,6 +92,8 @@ NCURSES_SP_NAME(erasechar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.c_cc[VERASE];
 	if (result == _nc_vdisable())
 	    result = ERR;
+#elif defined(EXP_WIN32_DRIVER)
+	result = ERR;
 #else
 	result = termp->Ottyb.sg_erase;
 #endif
@@ -127,6 +129,8 @@ NCURSES_SP_NAME(killchar) (NCURSES_SP_DCL0)
 	result = termp->Ottyb.c_cc[VKILL];
 	if (result == _nc_vdisable())
 	    result = ERR;
+#elif defined(EXP_WIN32_DRIVER)
+	result = ERR;
 #else
 	result = termp->Ottyb.sg_kill;
 #endif
@@ -162,7 +166,11 @@ NCURSES_SP_NAME(flushinp) (NCURSES_SP_DCL0)
 #else
 	errno = 0;
 	do {
+#if defined(EXP_WIN32_DRIVER)
+	    _nc_console_flush(_nc_console_fd2handle(termp->Filedes));
+#else
 	    ioctl(termp->Filedes, TIOCFLUSH, 0);
+#endif
 	} while
 	    (errno == EINTR);
 #endif

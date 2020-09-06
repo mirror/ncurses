@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.51 2020/08/01 21:07:50 tom Exp $
+ * $Id: progs.priv.h,v 1.52 2020/09/05 19:35:06 tom Exp $
  *
  *	progs.priv.h
  *
@@ -114,6 +114,11 @@ extern int errno;
 extern char *optarg;
 extern int optind;
 #endif /* HAVE_GETOPT_H */
+
+#undef _NC_WINDOWS
+#if (defined(_WIN32) || defined(_WIN64))
+#define _NC_WINDOWS 1
+#endif
 
 #define NCURSES_INTERNALS 1
 #define NCURSES_OPAQUE    0

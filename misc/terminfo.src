@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.811 $
-#	$Date: 2020/08/24 22:30:17 $
+#	$Revision: 1.812 $
+#	$Date: 2020/09/05 17:45:56 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2732,8 +2732,8 @@ vt320-w-nam|vt300-w-nam|dec vt320 wide 7 bit terminal with no am,
 #   host writable status line, yet another different DRCS matrix size,
 #   and such, but they add the DEC Technical character set, Multiple text
 #   pages, selectable length pages, and the like.  The difference between
-#   the vt330 and vt340 is that the latter has only 2 planes and a monochrome
-#   monitor, the former has 4 planes and a color monitor.  These terminals
+#   the vt330 and vt340 is that the former has only 2 planes and a monochrome
+#   monitor, the latter has 4 planes and a color monitor.  These terminals
 #   support VT131 and ANSI block mode, but as with much of these things,
 #   termcap/terminfo doesn't deal with these features.
 #
@@ -2790,7 +2790,7 @@ vt420+lrmm|VT420 left/right margins,
 #    macros, and other features too numerous to remember right now.  TERMCAP
 #    can only take advantage of a few of these added features.
 #
-# Note that this entry is are set up in what was the standard way for GNU
+# Note that this entry is set up in what was the standard way for GNU
 # Emacs v18 terminal modes to deal with the cursor keys in that the arrow
 # keys were switched into application mode at the same time the numeric pad
 # is switched into application mode.  This changes the definitions of the
@@ -2967,7 +2967,7 @@ dec-vt220|DOS tnvt200 terminal emulator,
 # Zstem340 is an (IMHO) excellent VT emulator for PC's.  I recommend it to
 # anyone who needs PC VT340 emulation. (or anything below that level, for
 # that matter -- DEC's ALL-in-1 seems happy with it, as does INFOPLUS's
-# RDBM systems, it includes ReGIS and SiXel support!  I'm impressed...
+# RDBM systems, it includes ReGIS and Sixel support!  I'm impressed...
 # I can send the address if requested.
 # (z340: changed garbled \E[5?l to \E[?5l, DEC smooth scroll off -- esr)
 # From: Adam Thompson <athompso@pangea.ca> Sept 10 1995
@@ -26622,5 +26622,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ correct icl6404 csr (report by Florian Weimer).
 #	+ correct ti916 cup (report by Florian Weimer).
 #	+ improve ndr9500 (report by Florian Weimer).
+#
+# 2020-09-05
+#	+ correct description of vt330/vt340 (Ross Combs).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

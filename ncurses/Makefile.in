@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.175 2020/08/29 18:43:21 juergen Exp $
+# $Id: Makefile.in,v 1.176 2020/09/05 18:58:52 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -178,7 +178,7 @@ AUTO_SRC = \
 	init_keytry.h \
 	keys.list
 
-HEADER_DEPS	= \
+HEADER_DEPS	= @INTERNALS_HDR@ \
 	../include/ncurses_cfg.h \
 	../include/ncurses_def.h \
 	../include/ncurses_dll.h \
@@ -186,7 +186,6 @@ HEADER_DEPS	= \
 	../include/term.h \
 	../include/unctrl.h \
 	$(INCDIR)/nc_alloc.h \
-	$(INCDIR)/nc_mingw.h \
 	$(INCDIR)/nc_panel.h \
 	$(INCDIR)/nc_string.h \
 	$(INCDIR)/nc_termios.h \

@@ -46,7 +46,7 @@
 #include <sys/termio.h>		/* needed for ISC */
 #endif
 
-MODULE_ID("$Id: lib_initscr.c,v 1.45 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_initscr.c,v 1.47 2020/09/06 20:48:55 tom Exp $")
 
 NCURSES_EXPORT(WINDOW *)
 initscr(void)
@@ -66,10 +66,9 @@ initscr(void)
 
 	_nc_globals.init_screen = TRUE;
 
-	if ((env = getenv("TERM")) == 0
-	    || *env == '\0') {
-	    env = "unknown";
-	}
+	env = getenv("TERM");
+	(void) CHECK_TERM_ENV(env, "unknown");
+
 	if ((name = strdup(env)) == NULL) {
 	    fprintf(stderr, "Error opening allocating $TERM.\n");
 	    ExitProgram(EXIT_FAILURE);
