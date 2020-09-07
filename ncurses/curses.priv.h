@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.636 2020/09/06 20:53:41 tom Exp $
+ * $Id: curses.priv.h,v 1.637 2020/09/07 14:27:13 tom Exp $
  *
  *	curses.priv.h
  *
@@ -297,11 +297,11 @@ extern NCURSES_EXPORT(void *) _nc_memmove (void *, const void *, size_t);
 #define NO_TERMINAL 0
 #endif
 
-#define CHECK_TERM_ENV(term_env, no_terminal) \
+#define VALID_TERM_ENV(term_env, no_terminal) \
 	(term_env = (NonEmpty(term_env) \
 		     ? term_env \
 		     : no_terminal), \
-	 !NonEmpty(term_env))
+	 NonEmpty(term_env))
 
 /*
  * Note:  ht/cbt expansion flakes out randomly under Linux 1.1.47, but only

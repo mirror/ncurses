@@ -31,7 +31,7 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_win32.h,v 1.7 2020/09/06 20:53:55 tom Exp $ */
+/* $Id: nc_win32.h,v 1.8 2020/09/07 14:27:05 tom Exp $ */
 
 #ifndef NC_WIN32_H
 #define NC_WIN32_H 1
@@ -107,15 +107,15 @@ extern NCURSES_EXPORT(int)    _nc_console_vt_supported(void);
 extern NCURSES_EXPORT(int)    _nc_console_checkmintty(int fd, LPHANDLE pMinTTY);
 #endif
 
-#undef CHECK_TERM_ENV
+#undef VALID_TERM_ENV
 #define MS_TERMINAL "ms-terminal"
-#define CHECK_TERM_ENV(term_env, no_terminal) \
+#define VALID_TERM_ENV(term_env, no_terminal) \
 	(term_env = (NonEmpty(term_env) \
 		      ? term_env \
 		      : (_nc_console_vt_supported() \
 		         ? MS_TERMINAL \
 		         : no_terminal)), \
-	 !NonEmpty(term_env))
+	 NonEmpty(term_env))
 
   /*
    * Various Console mode definitions
