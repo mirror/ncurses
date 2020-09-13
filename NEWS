@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3558 2020/09/07 16:47:17 tom Exp $
+-- $Id: NEWS,v 1.3561 2020/09/12 22:47:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20200912
+	+ add configure-check for systre/tre with mingw configuration, to get
+	  the library-dependencies as seen in msys2 configuration for mingw64.
+	+ build-fixes for the win32-driver configuration.
+	+ use more defensive binary mode setting for Win32 (Juergen Pfeifer).
 
 20200907
 	+ fix regression in setupterm validating non-empty $TERM (report by

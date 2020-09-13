@@ -36,7 +36,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.48 2020/08/29 16:22:03 juergen Exp $
+ * $Id: demo.cc,v 1.49 2020/09/13 00:47:00 tom Exp $
  */
 
 #include "internal.h"
@@ -46,9 +46,8 @@
 
 #if (defined(_WIN32) || defined(_WIN64))
 #undef KEY_EVENT
-#endif
-
-#if !(defined(_WIN32) || defined(_WIN64))
+#define sleep(n) Sleep(n)
+#else
 extern "C" unsigned int sleep(unsigned int);
 #endif
 

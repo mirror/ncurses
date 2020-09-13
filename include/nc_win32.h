@@ -31,7 +31,7 @@
  * Author: Thomas Dickey, 2008-on                                           *
  ****************************************************************************/
 
-/* $Id: nc_win32.h,v 1.8 2020/09/07 14:27:05 tom Exp $ */
+/* $Id: nc_win32.h,v 1.9 2020/09/13 00:17:30 tom Exp $ */
 
 #ifndef NC_WIN32_H
 #define NC_WIN32_H 1
@@ -86,6 +86,8 @@ extern NCURSES_EXPORT(int) _nc_gettimeofday(struct timeval *, void *);
 #undef wcwidth
 #define wcwidth(ucs)  _nc_wcwidth((wchar_t)(ucs))
 extern NCURSES_EXPORT(int)    _nc_wcwidth(wchar_t);
+
+#ifdef EVENTLIST_2nd /* test.priv.h just needs the preceding */
 
 extern NCURSES_EXPORT(void)   _nc_console_size(int* Lines, int* Cols);
 extern NCURSES_EXPORT(HANDLE) _nc_console_handle(int fd);
@@ -169,6 +171,8 @@ extern NCURSES_EXPORT_VAR(ConsoleInfo) _nc_CONSOLE;
 #define WINCONSOLE _nc_CONSOLE
 
 #define TypeAlloca(type,count)(type*) _alloca(sizeof(type)*(size_t)(count))
+
+#endif /* EVENTLIST_2nd */
 
 #ifdef __cplusplus
 }

@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.637 2020/09/07 14:27:13 tom Exp $
+ * $Id: curses.priv.h,v 1.638 2020/09/12 17:58:55 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2375,7 +2375,7 @@ extern NCURSES_EXPORT(int) _nc_eventlist_timeout(_nc_eventlist *);
  */
 #if USE_WIDEC_SUPPORT
 
-#if defined(_NC_WINDOWS) && !defined(_NC_MSC)
+#if defined(_NC_WINDOWS) && !defined(_NC_MSC) && !defined(EXP_WIN32_DRIVER)
 /*
  * MinGW has wide-character functions, but they do not work correctly.
  */

@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.211 2020/09/07 16:37:19 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.212 2020/09/09 19:43:00 juergen Exp $")
 
 /****************************************************************************
  *
@@ -695,6 +695,10 @@ TINFO_SETUP_TERM(TERMINAL **tp,
      */
     if (Filedes == STDOUT_FILENO && !NC_ISATTY(Filedes))
 	Filedes = STDERR_FILENO;
+#if defined(EXP_WIN32_DRIVER)
+    if (Filedes != STDERR_FILENO && NC_ISATTY(Filedes))
+	_setmode(Filedes, _O_BINARY);
+#endif
 
     /*
      * Check if we have already initialized to use this terminal.  If so, we

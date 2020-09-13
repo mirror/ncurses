@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.190 2020/08/29 21:08:12 tom Exp $ */
+/* $Id: test.priv.h,v 1.191 2020/09/12 23:54:42 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -941,6 +941,7 @@ extern int TABSIZE;
 #endif
 
 #if defined(_NC_WINDOWS) || defined(USE_WIN32CON_DRIVER)
+
 #if defined(PDCURSES)
 #ifdef WINVER
 #  if WINVER < 0x0501
@@ -958,14 +959,25 @@ extern int TABSIZE;
 #define getlogin() "username"
 
 #elif defined(EXP_WIN32_DRIVER)
-/* ignore the mingw headers */
 
-#elif defined(HAVE_NCURSESW_NCURSES_H)
+#if defined(HAVE_NCURSESW_NCURSES_H)
+#include <ncursesw/nc_win32.h>
+#elif defined(HAVE_NCURSES_NCURSES_H)
+#include <ncurses/nc_win32.h>
+#else
+#include <nc_win32.h>
+#endif
+
+#else
+
+#if defined(HAVE_NCURSESW_NCURSES_H)
 #include <ncursesw/nc_mingw.h>
 #elif defined(HAVE_NCURSES_NCURSES_H)
 #include <ncurses/nc_mingw.h>
 #else
 #include <nc_mingw.h>
+#endif
+
 #endif
 
 /* conflicts in test/firstlast.c */
