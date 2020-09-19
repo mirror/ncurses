@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.724 2020/09/06 22:23:32 tom Exp $
+dnl $Id: configure.in,v 1.725 2020/09/18 22:54:36 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.724 $)
+AC_REVISION($Revision: 1.725 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1547,7 +1547,13 @@ AC_ARG_ENABLE(wgetch-events,
 	[with_wgetch_events=$enableval],
 	[with_wgetch_events=no])
 AC_MSG_RESULT($with_wgetch_events)
-test "x$with_wgetch_events" = xyes && AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with wgetch-events code])
+if test "x$with_wgetch_events" = xyes ; then
+	AC_DEFINE(NCURSES_WGETCH_EVENTS,1,[Define to 1 to compile with wgetch-events code])
+	NCURSES_WGETCH_EVENTS=1
+else
+	NCURSES_WGETCH_EVENTS=0
+fi
+AC_SUBST(NCURSES_WGETCH_EVENTS)
 
 case $cf_cv_system_name in
 (*mingw32*|*mingw64*|*-msvc*)
