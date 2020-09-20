@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.812 $
-#	$Date: 2020/09/05 17:45:56 $
+#	$Revision: 1.817 $
+#	$Date: 2020/09/19 22:10:06 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4788,7 +4788,7 @@ xterm+r6f2|xterm with oldFunctionKeys and modifyFunctionKeys:2,
 #
 # This chunk is used for building the VT220/Sun/PC keyboard variants.
 xterm-basic|modern xterm terminal emulator - common,
-	OTbs, am, bce, km, mir, msgr, xenl, AX, XT,
+	OTbs, am, bce, mir, msgr, xenl, AX, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
@@ -4804,7 +4804,7 @@ xterm-basic|modern xterm terminal emulator - common,
 	is2=\E[!p\E[?3;4l\E[4l\E>, kmous=\E[M, meml=\El,
 	memu=\Em, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
 	rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l\E>,
-	rmm=\E[?1034l, rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
+	rmso=\E[27m, rmul=\E[24m, rs1=\Ec,
 	rs2=\E[!p\E[?3;4l\E[4l\E>, sc=\E7, setab=\E[4%p1%dm,
 	setaf=\E[3%p1%dm,
 	setb=\E[4%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
@@ -4814,10 +4814,14 @@ xterm-basic|modern xterm terminal emulator - common,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
 	    %?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
 	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
-	smkx=\E[?1h\E=, smm=\E[?1034h, smso=\E[7m, smul=\E[4m,
-	tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J, use=ecma+italics,
-	use=ansi+pp, use=xterm+kbs, use=xterm+alt+title,
-	use=ansi+enq,
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
+	vpa=\E[%i%p1%dd, E3=\E[3J, use=ecma+italics, use=ansi+pp,
+	use=xterm+kbs, use=xterm+alt+title, use=ansi+enq,
+	use=xterm+meta,
+
+xterm+meta|meta mode for xterm,
+	km,
+	rmm=\E[?1034l, smm=\E[?1034h,
 
 # From: David J. MacKenzie <djm@va.pubnix.com>, 14 Nov 1997
 # In retrospect, something like xterm-r6 was intended here -TD
@@ -5943,15 +5947,50 @@ konsole-256color|KDE console window with xterm 256-colors,
 mlterm|multi lingual terminal emulator,
 	use=mlterm3,
 
-# Tested mlterm 3.2.2:
-# mlterm 3.x has made changes, but they are not reflected in the included
-# mlterm.ti; this entry is based on testing with ncurses, tack and vttest -TD
-# 2018/01/21: found xterm+sm+1006 did not work with version 3.3.8
+# Tested mlterm 3.9.0 (2020/09/19):
+# ncurses:
+# - has blinking text
+# - has italics
+# - has invisible-text
+# tack:
+# - has crossed-out text
+# - does not support palette reset with OSC 104
+# - testing the function-keys is difficult because the terminal is
+#   preconfigured to set many of the modified keys to special functions, e.g.,
+#   - shift-F1 and shift-F2 are bound to a split-screen feature
+#   - control-F1 and control-F2 is bound to a new-terminal feature
+# vttest:
+# - primary response says it is a VT340 (ReGIS and Sixel).
+# - has partial support for double-size characters.
+# - character-set tests do not work.
+# - DEC locator works.
+# - 1006-mouse works.
+# - focus-events do not work reliably.
+# - numeric keypad escapes do not work.
+# - back-color erase works
+# other:
+# - title-stack works.
+# - doesn't respond to 8-bit controls.
+# - 256-color palette initializing works.
+# - DECSTR soft-reset is documented.
+#
+# Tested mlterm 3.3.8 (2018/01/21):
+# found xterm+sm+1006 did not work with version 3.3.8
+#
+# Tested mlterm 3.2.2 (2014/03/22):
+# mlterm 3.x made further changes, but they were not reflected in the included
+# mlterm.ti (which was dropped in 2015).  This entry has been based on testing
+# with ncurses, tack and vttest -TD
 mlterm3|multi lingual terminal emulator,
-	kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
-	use=ecma+italics, use=xterm+app, use=xterm+pcf0,
-	use=xterm+pcc2, use=xterm+pce2, use=xterm+x11mouse,
-	use=mlterm2,
+	bce, AX,
+	blink=\E[5m, invis=\E[8m, kf1=\E[11~, kf2=\E[12~,
+	kf3=\E[13~, kf4=\E[14~,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;%?
+	    %p7%t;8%;m%?%p9%t\E(0%e\E(B%;,
+	use=ansi+enq, use=ansi+rep, use=ecma+italics,
+	use=ecma+strikeout, use=xterm+app, use=xterm+pcf2,
+	use=xterm+pcc2, use=xterm+pce2, use=xterm+meta,
+	use=xterm+alt+title, use=xterm+sm+1006, use=mlterm2,
 
 # This is mlterm 2.9.3's mlterm.ti, with some additions/corrections -TD
 #
@@ -26625,5 +26664,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-09-05
 #	+ correct description of vt330/vt340 (Ross Combs).
+#
+# 2020-09-19
+#	+ update mlterm3 for 3.9.0 (report by Premysl Eric Janouch).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
