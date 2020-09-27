@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/* $Id: panel.priv.h,v 1.29 2020/05/24 01:40:20 anonymous.maarten Exp $ */
+/* $Id: panel.priv.h,v 1.30 2020/09/26 18:05:32 tom Exp $ */
 
 #ifndef NCURSES_PANEL_PRIV_H
 #define NCURSES_PANEL_PRIV_H 1
@@ -50,11 +50,11 @@ struct screen;              /* forward declaration */
 #include "panel.h"
 
 #ifdef TRACE
-   extern PANEL_EXPORT(const char *) _nc_my_visbuf (const void *);
+   extern PANEL_EXPORT(const char *) _nc_my_visbuf (const void *, int);
 #  ifdef TRACE_TXT
-#    define USER_PTR(ptr) _nc_visbuf((const char *)ptr)
+#    define USER_PTR(ptr,n) _nc_visbuf2(n, (const char *)ptr)
 #  else
-#    define USER_PTR(ptr) _nc_my_visbuf((const char *)ptr)
+#    define USER_PTR(ptr,n) _nc_my_visbuf((const char *)ptr, n)
 #  endif
 
 #  define returnPanel(code)	TRACE_RETURN1(code,panel)

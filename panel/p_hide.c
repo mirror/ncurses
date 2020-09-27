@@ -37,7 +37,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_hide.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: p_hide.c,v 1.14 2020/09/26 18:02:35 tom Exp $")
 
 PANEL_EXPORT(int)
 hide_panel(register PANEL * pan)
@@ -50,7 +50,7 @@ hide_panel(register PANEL * pan)
     {
       GetHook(pan);
 
-      dBug(("--> hide_panel %s", USER_PTR(pan->user)));
+      dBug(("--> hide_panel %s", USER_PTR(pan->user, 1)));
       dStack("<u%d>", 1, pan);
 
       HIDE_PANEL(pan, err, ERR);

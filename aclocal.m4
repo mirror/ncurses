@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.931 2020/09/12 22:30:53 tom Exp $
+dnl $Id: aclocal.m4,v 1.933 2020/09/26 23:57:07 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -6444,7 +6444,7 @@ AC_MSG_RESULT($cf_prog_ln_sf)
 test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REGEX version: 15 updated: 2020/09/12 18:30:01
+dnl CF_REGEX version: 16 updated: 2020/09/26 19:56:36
 dnl --------
 dnl Attempt to determine if we've got one of the flavors of regular-expression
 dnl code that we can support.
@@ -6463,7 +6463,9 @@ case $host_os in
 		CF_ADD_LIB(systre)
 		cf_regex_func=regcomp
 	],[
-		AC_CHECK_LIB(gnurx,regcomp,cf_regex_func=regcomp)
+		AC_CHECK_LIB(gnurx,regcomp,[
+			CF_ADD_LIB(gnurx)
+			cf_regex_func=regcomp])
 	])
 	;;
 (*)

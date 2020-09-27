@@ -38,7 +38,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_bottom.c,v 1.15 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: p_bottom.c,v 1.16 2020/09/26 18:02:35 tom Exp $")
 
 PANEL_EXPORT(int)
 bottom_panel(PANEL * pan)
@@ -52,7 +52,7 @@ bottom_panel(PANEL * pan)
       if (!Is_Bottom(pan))
 	{
 
-	  dBug(("--> bottom_panel %s", USER_PTR(pan->user)));
+	  dBug(("--> bottom_panel %s", USER_PTR(pan->user, 1)));
 
 	  HIDE_PANEL(pan, err, OK);
 	  assert(_nc_bottom_panel == _nc_stdscr_pseudo_panel);

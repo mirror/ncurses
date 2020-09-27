@@ -37,7 +37,7 @@
 /* panel.c -- implementation of panels library, some core routines */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: panel.c,v 1.28 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: panel.c,v 1.30 2020/09/26 18:05:17 tom Exp $")
 
 /*+-------------------------------------------------------------------------
 	_nc_retrace_panel (pan)
@@ -57,15 +57,15 @@ _nc_retrace_panel(PANEL * pan)
 #ifdef TRACE
 #ifndef TRACE_TXT
 PANEL_EXPORT(const char *)
-_nc_my_visbuf(const void *ptr)
+_nc_my_visbuf(const void *ptr, int n)
 {
   char temp[32];
 
   if (ptr != 0)
-    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "ptr:%p", ptr);
+    _nc_SPRINTF(temp, _nc_SLIMIT(sizeof(temp)) "%p", ptr);
   else
     _nc_STRCPY(temp, "<null>", sizeof(temp));
-  return _nc_visbuf(temp);
+  return _nc_visbuf2(n, temp);
 }
 #endif
 #endif
@@ -78,9 +78,9 @@ PANEL_EXPORT(void)
 _nc_dPanel(const char *text, const PANEL * pan)
 {
   _tracef("%s id=%s b=%s a=%s y=%d x=%d",
-	  text, USER_PTR(pan->user),
-	  (pan->below) ? USER_PTR(pan->below->user) : "--",
-	  (pan->above) ? USER_PTR(pan->above->user) : "--",
+	  text, USER_PTR(pan->user, 1),
+	  (pan->below) ? USER_PTR(pan->below->user, 2) : "--",
+	  (pan->above) ? USER_PTR(pan->above->user, 3) : "--",
 	  PSTARTY(pan), PSTARTX(pan));
 }
 #endif
@@ -98,10 +98,10 @@ _nc_dStack(const char *fmt, int num, const PANEL * pan)
 
   _nc_SPRINTF(s80, _nc_SLIMIT(sizeof(s80)) fmt, num, pan);
   _tracef("%s b=%s t=%s", s80,
-	  (_nc_bottom_panel) ? USER_PTR(_nc_bottom_panel->user) : "--",
-	  (_nc_top_panel) ? USER_PTR(_nc_top_panel->user) : "--");
+	  (_nc_bottom_panel) ? USER_PTR(_nc_bottom_panel->user, 1) : "--",
+	  (_nc_top_panel) ? USER_PTR(_nc_top_panel->user, 2) : "--");
   if (pan)
-    _tracef("pan id=%s", USER_PTR(pan->user));
+    _tracef("pan id=%s", USER_PTR(pan->user, 1));
   pan = _nc_bottom_panel;
   while (pan)
     {

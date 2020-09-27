@@ -39,11 +39,29 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: p_new.c,v 1.21 2020/09/26 19:35:49 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
 static char *new_id;
+
+static PANEL *
+AllocPanel(const char *name)
+{
+  PANEL *result = typeMalloc(PANEL, 1);
+
+  _tracef("create :%s %p", name, result);
+  return result;
+}
+#define InitUser(name) \
+	if (!name ## _id) \
+	    name ## _id = strdup(#name); \
+	pan->user = name ## _id; \
+	_tracef("create :user_ptr %p", pan->user)
+#else
+#define AllocPanel(name) typeMalloc(PANEL, 1)
+#define InitUser(name) \
+	  pan->user = (void *)0
 #endif
 
 /*+-------------------------------------------------------------------------
@@ -67,7 +85,7 @@ root_panel(NCURSES_SP_DCL0)
 #if NO_LEAKS
       ph->destroy = del_panel;
 #endif
-      _nc_stdscr_pseudo_panel = typeMalloc(PANEL, 1);
+      _nc_stdscr_pseudo_panel = AllocPanel("root_panel");
       if (_nc_stdscr_pseudo_panel != 0)
 	{
 	  PANEL *pan = _nc_stdscr_pseudo_panel;
@@ -76,13 +94,7 @@ root_panel(NCURSES_SP_DCL0)
 	  pan->win = win;
 	  pan->below = (PANEL *) 0;
 	  pan->above = (PANEL *) 0;
-#ifdef TRACE
-	  if (!stdscr_id)
-	    stdscr_id = strdup("stdscr");
-	  pan->user = stdscr_id;
-#else
-	  pan->user = (void *)0;
-#endif
+	  InitUser(stdscr);
 	  _nc_bottom_panel = _nc_top_panel = pan;
 	}
     }
@@ -105,18 +117,12 @@ new_panel(WINDOW *win)
     (void)root_panel(NCURSES_SP_ARG);
   assert(_nc_stdscr_pseudo_panel);
 
-  if (!(win->_flags & _ISPAD) && (pan = typeMalloc(PANEL, 1)))
+  if (!(win->_flags & _ISPAD) && (pan = AllocPanel("new_panel")))
     {
       pan->win = win;
       pan->above = (PANEL *) 0;
       pan->below = (PANEL *) 0;
-#ifdef TRACE
-      if (!new_id)
-	new_id = strdup("new");
-      pan->user = new_id;
-#else
-      pan->user = (char *)0;
-#endif
+      InitUser(new);
       (void)show_panel(pan);
     }
   returnPanel(pan);

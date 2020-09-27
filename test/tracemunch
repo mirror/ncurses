@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.30 2020/08/29 18:59:58 tom Exp $
+# $Id: tracemunch,v 1.32 2020/09/26 19:40:55 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -72,6 +72,7 @@ our $tracelevel = 0;
 # 1 = SCREEN*
 # 2 = WINDOW*
 # 4 = TERMINAL*
+# 8 = PANEL*
 our %known_p1 = qw(
   TransformLine           1
   _nc_console_read        1
@@ -90,6 +91,7 @@ our %known_p1 = qw(
   baudrate                1
   beep                    1
   border_set              2
+  bottom_panel            8
   box                     2
   box_set                 2
   can_change_color        1
@@ -103,6 +105,7 @@ our %known_p1 = qw(
   def_shell_mode          1
   define_key              1
   del_curterm             1
+  del_panel               8
   delay_output            1
   delscreen               1
   delwin                  2
@@ -130,6 +133,7 @@ our %known_p1 = qw(
   has_ic                  1
   has_il                  1
   has_key                 1
+  hide_panel              8
   idcok                   2
   idlok                   2
   immedok                 2
@@ -162,6 +166,7 @@ our %known_p1 = qw(
   meta                    2
   mouseinterval           1
   mousemask               1
+  move_panel              8
   mvcur                   1
   mvderwin                2
   mvwadd_wch              2
@@ -201,6 +206,7 @@ our %known_p1 = qw(
   mvwinwstr               2
   mvwvline                2
   mvwvline_set            2
+  new_panel               2
   newpad                  1
   newterm                 1
   newwin                  1
@@ -217,6 +223,11 @@ our %known_p1 = qw(
   overlay                 2
   overwrite               2
   pair_content            1
+  panel_above             8
+  panel_below             8
+  panel_hidden            8
+  panel_userptr           8
+  panel_window            8
   pecho_wchar             2
   pechochar               2
   pnoutrefresh            2
@@ -224,6 +235,7 @@ our %known_p1 = qw(
   qiflush                 1
   raw                     1
   redrawwin               2
+  replace_panel           8
   reset_prog_mode         1
   reset_shell_mode        1
   resetty                 1
@@ -238,7 +250,9 @@ our %known_p1 = qw(
   scroll                  2
   scrollok                2
   set_curterm             4
+  set_panel_userptr       8
   set_term                1
+  show_panel              8
   slk_attr                1
   slk_attr_set            1
   slk_attroff             1
@@ -264,6 +278,7 @@ our %known_p1 = qw(
   tigetnum                1
   tigetstr                1
   tinfo                   1
+  top_panel               8
   touchline               2
   touchwin                2
   typeahead               1
@@ -362,18 +377,24 @@ our %known_p1 = qw(
   wvline                  2
 );
 
+our $pan_nums = 0;
 our $scr_nums = 0;
 our $thr_nums = 0;
 our $trm_nums = 0;
 our $try_nums = 0;
+our $usr_nums = 0;
 our $win_nums = 0;
-our $curscr   = "";
-our $newscr   = "";
-our $stdscr   = "";
+
+our $curscr = "";
+our $newscr = "";
+our $stdscr = "";
+
+our %pan_addr;
 our %scr_addr;
 our %thr_addr;
 our %trm_addr;
 our %try_addr;
+our %usr_addr;
 our %win_addr;
 
 sub has_addr($) {
@@ -390,6 +411,12 @@ sub transaddr($) {
     $arg =~ s/\b$curscr\b/curscr/g if ($curscr);
     $arg =~ s/\b$newscr\b/newscr/g if ($newscr);
     $arg =~ s/\b$stdscr\b/stdscr/g if ($stdscr);
+    if ( &has_addr($arg) ) {
+        foreach my $addr ( keys %pan_addr ) {
+            $n = $pan_addr{$addr};
+            $arg =~ s/\b$addr\b/panel$n/g if ( defined $n );
+        }
+    }
     if ( &has_addr($arg) ) {
         foreach my $addr ( keys %scr_addr ) {
             $n = $scr_addr{$addr};
@@ -412,6 +439,12 @@ sub transaddr($) {
         foreach my $addr ( keys %try_addr ) {
             $n = $try_addr{$addr};
             $arg =~ s/\b$addr\b/tries_$n/g if ( defined $n );
+        }
+    }
+    if ( &has_addr($arg) ) {
+        foreach my $addr ( keys %usr_addr ) {
+            $n = $usr_addr{$addr};
+            $arg =~ s/\b$addr\b/user_ptr$n/g if ( defined $n );
         }
     }
     if ( &has_addr($arg) ) {
@@ -456,6 +489,10 @@ sub transaddr($) {
             }
             elsif ( $type == 4 ) {
                 $trm_addr{$addr} = ++$trm_nums;
+                $arg = &transaddr($arg);
+            }
+            elsif ( $type == 8 ) {
+                $pan_addr{$addr} = ++$pan_nums;
                 $arg = &transaddr($arg);
             }
         }
@@ -514,6 +551,16 @@ sub muncher($) {
                 }
                 $awaiting = "";
             }
+            elsif ( $_ =~ /^create :(root|new)_panel 0x([[:xdigit:]]+)/ ) {
+                $addr            = "0x$2";
+                $pan_addr{$addr} = $pan_nums++;
+                $_               = &transaddr($_);
+            }
+            elsif ( $_ =~ /^create :user_ptr 0x([[:xdigit:]]+)/ ) {
+                $addr            = "0x$1";
+                $usr_addr{$addr} = $usr_nums++;
+                $_               = &transaddr($_);
+            }
             elsif ( $_ =~ /^(\+ )*called \{set_curterm\((0x[[:xdigit:]]+)\)/ ) {
                 $trm_addr{$2} = ++$trm_nums unless defined $trm_addr{$2};
             }
@@ -547,6 +594,11 @@ sub muncher($) {
                 else {
                     undef $win_addr{$addr};
                 }
+            }
+            elsif ( $_ =~ /^\.\.\.deleted pan=\"0x([[:xdigit:]]+)\"/ ) {
+                $addr = "0x$1";
+                $_    = &transaddr($_);
+                undef $pan_addr{$addr};
             }
 
             # Compactify runs of PutAttrChar
