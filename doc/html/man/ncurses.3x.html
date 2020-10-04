@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.148 2020/06/13 23:25:50 tom Exp @
+  * @Id: ncurses.3x,v 1.149 2020/10/03 20:15:52 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20200725).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201003).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -113,7 +113,6 @@
 
        Most programs would additionally use the sequence:
 
-           <STRONG>nonl();</STRONG>
            <STRONG>intrflush(stdscr,</STRONG> <STRONG>FALSE);</STRONG>
            <STRONG>keypad(stdscr,</STRONG> <STRONG>TRUE);</STRONG>
 
@@ -313,8 +312,8 @@
                     bkgrnd                   <STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>
                     bkgrndset                <STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>
                     border                   <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
-
                     border_set               <STRONG><A HREF="curs_border_set.3x.html">curs_border_set(3x)</A></STRONG>
+
                     box                      <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
                     box_set                  <STRONG><A HREF="curs_border_set.3x.html">curs_border_set(3x)</A></STRONG>
                     can_change_color         <STRONG><A HREF="curs_color.3x.html">curs_color(3x)</A></STRONG>
@@ -379,8 +378,8 @@
                     getnstr                  <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
                     getparx                  <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>*
                     getpary                  <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>*
-
                     getparyx                 <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>
+
                     getstr                   <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
                     getsyx                   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
                     getwin                   <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>
@@ -445,8 +444,8 @@
                     killchar                 <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
                     killwchar                <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
                     leaveok                  <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
-
                     longname                 <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
+
                     mcprint                  <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG>*
                     meta                     <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     mouse_trafo              <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>*
@@ -511,8 +510,8 @@
                     mvwget_wstr              <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
                     mvwgetch                 <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>
                     mvwgetn_wstr             <STRONG><A HREF="curs_get_wstr.3x.html">curs_get_wstr(3x)</A></STRONG>
-
                     mvwgetnstr               <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
+
                     mvwgetstr                <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>
                     mvwhline                 <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
                     mvwhline_set             <STRONG><A HREF="curs_border_set.3x.html">curs_border_set(3x)</A></STRONG>
@@ -546,7 +545,7 @@
                     nodelay                  <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     noecho                   <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     nofilter                 <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>*
-                    nonl                     <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+                    nonl                     <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     noqiflush                <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     noraw                    <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     notimeout                <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
@@ -577,8 +576,8 @@
                     scr_dump                 <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
                     scr_init                 <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
                     scr_restore              <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
-
                     scr_set                  <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
+
                     scrl                     <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3x)</A></STRONG>
                     scroll                   <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3x)</A></STRONG>
                     scrollok                 <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
@@ -643,8 +642,8 @@
                     use_legacy_coding        <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>*
                     use_tioctl               <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>*
                     vid_attr                 <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
-
                     vid_puts                 <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
+
                     vidattr                  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     vidputs                  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     vline                    <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
@@ -709,8 +708,8 @@
                     winnstr                  <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>
                     winnwstr                 <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
                     wins_nwstr               <STRONG><A HREF="curs_ins_wstr.3x.html">curs_ins_wstr(3x)</A></STRONG>
-
                     wins_wch                 <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>
+
                     wins_wstr                <STRONG><A HREF="curs_ins_wstr.3x.html">curs_ins_wstr(3x)</A></STRONG>
                     winsch                   <STRONG><A HREF="curs_insch.3x.html">curs_insch(3x)</A></STRONG>
                     winsdelln                <STRONG><A HREF="curs_deleteln.3x.html">curs_deleteln(3x)</A></STRONG>

@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.148 2020/06/13 23:25:50 tom Exp $
+.\" $Id: ncurses.3x,v 1.149 2020/10/03 20:15:52 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -127,7 +127,6 @@ sequence should be used:
 .PP
 Most programs would additionally use the sequence:
 .NS
-\fBnonl();\fR
 \fBintrflush(stdscr, FALSE);\fR
 \fBkeypad(stdscr, TRUE);\fR
 .NE
@@ -588,7 +587,7 @@ nocbreak/\fBcurs_inopts\fR(3X)
 nodelay/\fBcurs_inopts\fR(3X)
 noecho/\fBcurs_inopts\fR(3X)
 nofilter/\fBcurs_util\fR(3X)*
-nonl/\fBcurs_outopts\fR(3X)
+nonl/\fBcurs_inopts\fR(3X)
 noqiflush/\fBcurs_inopts\fR(3X)
 noraw/\fBcurs_inopts\fR(3X)
 notimeout/\fBcurs_inopts\fR(3X)

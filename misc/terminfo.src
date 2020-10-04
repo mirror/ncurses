@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.817 $
-#	$Date: 2020/09/19 22:10:06 $
+#	$Revision: 1.821 $
+#	$Date: 2020/09/30 00:00:44 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5942,7 +5942,7 @@ konsole-256color|KDE console window with xterm 256-colors,
 	use=xterm+256setaf, use=konsole,
 
 #### MLTERM
-# http://mlterm.sourceforge.net/
+# https://github.com/arakiken/mlterm
 
 mlterm|multi lingual terminal emulator,
 	use=mlterm3,
@@ -5976,6 +5976,7 @@ mlterm|multi lingual terminal emulator,
 #
 # Tested mlterm 3.3.8 (2018/01/21):
 # found xterm+sm+1006 did not work with version 3.3.8
+# soft-reset DECSTR is in sources since 2017/09/19.
 #
 # Tested mlterm 3.2.2 (2014/03/22):
 # mlterm 3.x made further changes, but they were not reflected in the included
@@ -5983,8 +5984,9 @@ mlterm|multi lingual terminal emulator,
 # with ncurses, tack and vttest -TD
 mlterm3|multi lingual terminal emulator,
 	bce, AX,
-	blink=\E[5m, invis=\E[8m, kf1=\E[11~, kf2=\E[12~,
-	kf3=\E[13~, kf4=\E[14~,
+	blink=\E[5m, invis=\E[8m, is2=\E[!p\E[?3;4l\E>,
+	kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
+	rs2=\E[!p\E[?3;4l\E>,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;%?
 	    %p7%t;8%;m%?%p9%t\E(0%e\E(B%;,
 	use=ansi+enq, use=ansi+rep, use=ecma+italics,
@@ -7707,7 +7709,7 @@ screen5|VT 100/ANSI X3.64 virtual terminal (someday),
 # various entries such as screen.xterm-new provide a way to more closely
 # match the terminal.
 tmux|tmux terminal multiplexer,
-	invis=\E[8m, rmso=\E[27m,
+	invis=\E[8m, kbs=^?, rmso=\E[27m,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
 	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	smso=\E[7m, E3=\E[3J, Smulx=\E[4\:%p1%dm,
@@ -7717,6 +7719,11 @@ tmux|tmux terminal multiplexer,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
+
+tmux-direct|tmux with direct-color indexing,
+	setal=\E[%?%p1%{8}%<%t5%p1%d%e58\:2\:\:%p1%{65536}%/%d\:%p1
+	      %{256}%/%{255}%&%d\:%p1%{255}%&%d%;m,
+	use=xterm+direct, use=tmux,
 
 #### Dvtm
 
@@ -26667,5 +26674,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-09-19
 #	+ update mlterm3 for 3.9.0 (report by Premysl Eric Janouch).
+#
+# 2020-09-29
+#	+ add tmux-direct (tmux #2370)
+#	+ simplify mlterm initialization with DECSTR -TD
+#	+ change tmux's kbs to ^? (report by Premysl Eric Janouch)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -160,7 +160,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.153 2020/05/27 23:56:32 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.154 2020/10/03 20:25:48 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -577,7 +577,7 @@ relative_move(NCURSES_SP_DCLx
 	    }
 
 	    if (cursor_down
-		&& (*cursor_down != '\n' || SP_PARM->_nl)
+		&& (*cursor_down != '\n')
 		&& (n * SP_PARM->_cud1_cost < vcost)) {
 		vcost = repeated_append(_nc_str_copy(target, &save), 0,
 					SP_PARM->_cud1_cost, n, cursor_down);
@@ -997,37 +997,28 @@ _nc_real_mvcur(NCURSES_SP_DCLx
 
 	if (xold >= screen_columns(SP_PARM)) {
 
-	    if (SP_PARM->_nl) {
-		int l = (xold + 1) / screen_columns(SP_PARM);
+	    int l = (xold + 1) / screen_columns(SP_PARM);
 
-		yold += l;
-		if (yold >= screen_lines(SP_PARM))
-		    l -= (yold - screen_lines(SP_PARM) - 1);
+	    yold += l;
+	    if (yold >= screen_lines(SP_PARM))
+		l -= (yold - screen_lines(SP_PARM) - 1);
 
-		if (l > 0) {
-		    if (carriage_return) {
-			NCURSES_PUTP2("carriage_return", carriage_return);
-		    } else {
-			myOutCh(NCURSES_SP_ARGx '\r');
-		    }
-		    xold = 0;
-
-		    while (l > 0) {
-			if (newline) {
-			    NCURSES_PUTP2("newline", newline);
-			} else {
-			    myOutCh(NCURSES_SP_ARGx '\n');
-			}
-			l--;
-		    }
+	    if (l > 0) {
+		if (carriage_return) {
+		    NCURSES_PUTP2("carriage_return", carriage_return);
+		} else {
+		    myOutCh(NCURSES_SP_ARGx '\r');
 		}
-	    } else {
-		/*
-		 * If caller set nonl(), we cannot really use newlines to
-		 * position to the next row.
-		 */
-		xold = -1;
-		yold = -1;
+		xold = 0;
+
+		while (l > 0) {
+		    if (newline) {
+			NCURSES_PUTP2("newline", newline);
+		    } else {
+			myOutCh(NCURSES_SP_ARGx '\n');
+		    }
+		    l--;
+		}
 	    }
 	}
 
