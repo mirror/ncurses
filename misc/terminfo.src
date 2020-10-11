@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.821 $
-#	$Date: 2020/09/30 00:00:44 $
+#	$Revision: 1.825 $
+#	$Date: 2020/10/11 00:01:33 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -14533,8 +14533,8 @@ aaa+rv|ann arbor ambassador in reverse video,
 	blink=\E[5;7m, bold=\E[1;7m, invis=\E[7;8m,
 	is1=\E[7m\E7\E[H\E9\E8, rev=\E[m, rmso=\E[7m, rmul=\E[7m,
 	rs1=\E[H\E[7m\E[J$<156>,
-	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p2%|%p3%!%t7;
-	    %;%?%p7%t8;%;m\016,
+	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p2%|%p3%!%|%t7
+	    ;%;%?%p7%t8;%;m\016,
 	sgr0=\E[7m\016, smso=\E[m, smul=\E[4;7m,
 # Ambassador with the DEC option, for partial vt100 compatibility.
 aaa+dec|ann arbor ambassador in dec vt100 mode,
@@ -16132,9 +16132,9 @@ d220-dg|Data General DASHER D220 color terminal in DG mode,
 d230c|d230|Data General DASHER D230C,
 	blink=\E[5;50m, bold=\E[4;7;50m, dim=\E[2;50m, nel=\r\n,
 	rev=\E[7;50m, rmkx=\E[2;1v, rmso=\E[50m, rmul=\E[50m,
-	sgr=\E[50%?%p1%p3%|%p6%|%t;7%{1}%e%{0}%;%PR%?%p4%t;5%{1}%e
-	    %{0}%;%PB%?%p2%p6%|%t;4%{1}%e%{0}%;%PU%?%p1%p5%|%t;2%{1}
-	    %e%{0}%;%PDm\E)%?%p9%t6\016%e4\017%;,
+	sgr=\E[%?%p1%p3%|%p6%|%t7;%{1}%e%{0}%;%PR%?%p4%t5;%{1}%e%{0}
+	    %;%PB%?%p2%p6%|%t4;%{1}%e%{0}%;%PU%?%p1%p5%|%t2;%{1}%e
+	    %{0}%;%PD50m\E)%?%p9%t6\016%e4\017%;,
 	sgr0=\E[50m\E)4\017, smkx=\E[2;0v, smso=\E[2;7;50m,
 	smul=\E[4;50m, use=dgkeys+7b, use=d220,
 
@@ -17374,12 +17374,12 @@ ibmapa8c-c|ibm6154-c|IBM 6154 Advanced Color Graphics Display,
 	use=ibmega-c,
 ibm6154|IBM 6154 Color displays,
 	blink@, bold=\E[12m, s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m,
-	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1
+	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p7%t;8%;%?%p6%t;1
 	    2%;m,
 	sgr0=\E[0;10m, use=ibm5154,
 ibm6153|IBM 6153 Black & White display,
 	blink@, bold=\E[12m, s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m,
-	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6%t;1
+	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p7%t;8%;%?%p6%t;1
 	    2%;m,
 	sgr0=\E[0;10m, use=ibm5151,
 ibm6153-90|IBM 6153 Black & White display,
@@ -18985,7 +18985,7 @@ ncrvt100an|ncrvt100pp|NCR vt100 for the 2900 terminal,
 	    B\E)0\E%/0n\E[P\031$<200>,
 	sc=\E7,
 	sgr=%?%p9%t\016%e\017%;\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1
-	    %p3%|%t;7%;%?%p4%t;5%;m$<100>,
+	    %p3%|%t;7%;%?%p4%t;5%;m$<120>,
 	sgr0=\017\E[0m$<120>, smacs=\016$<90>, smir=\E[4h$<80>,
 	smso=\E[7m$<30>, smul=\E[4m$<30>, tbc=\E[3g$<40>,
 	tsl=\E[>+1$<70>,
@@ -26679,5 +26679,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add tmux-direct (tmux #2370)
 #	+ simplify mlterm initialization with DECSTR -TD
 #	+ change tmux's kbs to ^? (report by Premysl Eric Janouch)
+#
+# 2020-10-10
+#	+ correct sgr in aaa+rv (report by Florian Weimer) -TD
+#	+ fix some sgr inconsistencies in d230c, ibm6153, ibm6154,
+#	  ncrvt100an -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

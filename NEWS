@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3572 2020/10/03 22:12:49 tom Exp $
+-- $Id: NEWS,v 1.3575 2020/10/11 00:04:33 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -46,12 +46,21 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20201010
+	+ correct sgr in aaa+rv (report by Florian Weimer) -TD
+	+ fix some sgr inconsistencies in d230c, ibm6153, ibm6154,
+	  ncrvt100an -TD
+	+ improve tic's check for errors detected in tparm (prompted by
+	  discussion with Florian Weimer).
+	+ set output-mode to binary in experimental Windows-10 driver (Juergen
+	  Pfeifer).
+
 20201003
 	+ remove output-related checks for nl/nonl (report by Leon Winter).
 	+ change tmux's kbs to ^? (report by Premysl Eric Janouch)
 	+ simplify mlterm initialization with DECSTR -TD
 	+ fix a typo in man/curs_terminfo.3 (Reuben Thomas).
-	+ add tmux-direct (tmux #2370)
+	+ add tmux-direct (tmux #2370, Debian #895754)
 	+ add user-defined capabilities from mintty to Caps-ncurses, for
 	  checking consistency with tic.
 

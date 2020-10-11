@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.127 2020/06/13 21:59:52 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.128 2020/10/10 21:18:09 tom Exp $")
 
 /*
  *	char *
@@ -965,6 +965,13 @@ tparam_internal(const char *string, TPARM_DATA * data)
 
     get_space((size_t) 1);
     TPS(out_buff)[TPS(out_used)] = '\0';
+
+    if (TPS(stack_ptr) && !_nc_tparm_err) {
+	DEBUG(2, ("tparm: stack has %d item%s on return",
+		  TPS(stack_ptr),
+		  TPS(stack_ptr) == 1 ? "" : "s"));
+	_nc_tparm_err++;
+    }
 
     T((T_RETURN("%s"), _nc_visbuf(TPS(out_buff))));
     return (TPS(out_buff));

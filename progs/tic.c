@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.286 2020/05/31 21:05:44 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.287 2020/10/10 21:25:24 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2530,6 +2530,13 @@ similar_sgr(int num, char *a, char *b)
     return ((num != 0) || (*a == 0));
 }
 
+static void
+check_tparm_err(int num)
+{
+    if (_nc_tparm_err)
+	_nc_warning("tparam error in sgr(%d): %s", num, sgr_names[num]);
+}
+
 static char *
 check_sgr(TERMTYPE2 *tp, char *zero, int num, char *cap, const char *name)
 {
@@ -2560,8 +2567,7 @@ check_sgr(TERMTYPE2 *tp, char *zero, int num, char *cap, const char *name)
     } else if (PRESENT(cap)) {
 	_nc_warning("sgr(%d) missing, but %s present", num, name);
     }
-    if (_nc_tparm_err)
-	_nc_warning("stack error in sgr(%d) string", num);
+    check_tparm_err(num);
     return test;
 }
 
@@ -2995,8 +3001,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
 	} else {
 	    zero = strdup(TIPARM_9(set_attributes, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 	}
-	if (_nc_tparm_err)
-	    _nc_warning("stack error in sgr(0) string");
+	check_tparm_err(0);
 
 	if (zero != 0) {
 	    CHECK_SGR(1, enter_standout_mode);

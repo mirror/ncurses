@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.174 2020/09/09 19:43:00 juergen Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.175 2020/10/10 19:09:03 juergen Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -406,6 +406,11 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     T(("setting output mode to binary"));
     fflush(output);
     setmode(output, O_BINARY);
+#endif
+#if defined(EXP_WIN32_DRIVER)
+    T(("setting output mode to binary"));
+    fflush(output);
+    _setmode(fileno(output), _O_BINARY);
 #endif
     NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_ARGx output, TRUE);
     sp->_lines = (NCURSES_SIZE_T) slines;
