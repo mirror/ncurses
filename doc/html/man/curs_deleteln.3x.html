@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_deleteln.3x,v 1.15 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_deleteln.3x,v 1.17 2020/10/18 00:28:51 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,11 +55,13 @@
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>deleteln(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wdeleteln(WINDOW</STRONG> <STRONG>*win);</STRONG>
-       <STRONG>int</STRONG> <STRONG>insdelln(int</STRONG> <STRONG>n);</STRONG>
-       <STRONG>int</STRONG> <STRONG>winsdelln(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>n);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wdeleteln(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+
+       <STRONG>int</STRONG> <STRONG>insdelln(int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>winsdelln(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+
        <STRONG>int</STRONG> <STRONG>insertln(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>winsertln(WINDOW</STRONG> <STRONG>*win);</STRONG>
+       <STRONG>int</STRONG> <STRONG>winsertln(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

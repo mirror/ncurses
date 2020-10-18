@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_validation.3x,v 1.25 2020/02/02 23:34:34 tom Exp $
+.\" $Id: form_field_validation.3x,v 1.27 2020/10/18 00:07:45 tom Exp $
 .TH form_field_validation 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -41,26 +41,26 @@
 \fBform_field_validation\fR \- data type validation for fields
 .SH SYNOPSIS
 \fB#include <form.h>\fR
-.br
-int set_field_type(FIELD *field, FIELDTYPE *type, ...);
-.br
-FIELDTYPE *field_type(const FIELD *field);
-.br
-void *field_arg(const FIELD *field);
 .sp
-FIELDTYPE *TYPE_ALNUM;
+\fBint set_field_type(FIELD *\fP\fIfield\fP\fB, FIELDTYPE *\fP\fItype\fP\fB, ...);\fP
 .br
-FIELDTYPE *TYPE_ALPHA;
+\fBFIELDTYPE *field_type(const FIELD *\fP\fIfield\fP\fB);\fP
 .br
-FIELDTYPE *TYPE_ENUM;
+\fBvoid *field_arg(const FIELD *\fP\fIfield\fP\fB);\fP
+.sp
+\fBFIELDTYPE *TYPE_ALNUM;\fP
 .br
-FIELDTYPE *TYPE_INTEGER;
+\fBFIELDTYPE *TYPE_ALPHA;\fP
 .br
-FIELDTYPE *TYPE_NUMERIC;
+\fBFIELDTYPE *TYPE_ENUM;\fP
 .br
-FIELDTYPE *TYPE_REGEXP;
+\fBFIELDTYPE *TYPE_INTEGER;\fP
 .br
-FIELDTYPE *TYPE_IPV4;
+\fBFIELDTYPE *TYPE_NUMERIC;\fP
+.br
+\fBFIELDTYPE *TYPE_REGEXP;\fP
+.br
+\fBFIELDTYPE *TYPE_IPV4;\fP
 .br
 .SH DESCRIPTION
 The function \fBset_field_type\fR declares a data type for a given form field.

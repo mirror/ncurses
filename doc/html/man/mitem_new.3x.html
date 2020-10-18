@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: mitem_new.3x,v 1.17 2020/03/28 19:06:28 tom Exp @
+  * @Id: mitem_new.3x,v 1.19 2020/10/18 00:37:03 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -53,8 +53,9 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
-       ITEM *new_item(const char *name, const char *description);
-       int free_item(ITEM *item);
+
+       <STRONG>ITEM</STRONG> <STRONG>*new_item(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>name</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>description</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>free_item(ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

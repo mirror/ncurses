@@ -28,22 +28,22 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_current.3x,v 1.18 2020/03/28 19:06:28 tom Exp $
+.\" $Id: mitem_current.3x,v 1.20 2020/10/18 00:39:06 tom Exp $
 .TH mitem_current 3X ""
 .SH NAME
 \fBmitem_current\fR \- set and get current_menu_item
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
+.sp
+\fBint set_current_item(MENU *\fP\fImenu\fP\fB, ITEM *\fP\fIitem\fP\fB);\fP
 .br
-int set_current_item(MENU *menu, ITEM *item);
+\fBITEM *current_item(const MENU *\fP\fImenu\fP\fB);\fP
+.sp
+\fBint set_top_row(MENU *\fP\fImenu\fP\fB, int \fP\fIrow\fP\fB);\fP
 .br
-ITEM *current_item(const MENU *menu);
-.br
-int set_top_row(MENU *menu, int row);
-.br
-int top_row(const MENU *menu);
-.br
-int item_index(const ITEM *item);
+\fBint top_row(const MENU *\fP\fImenu\fP\fB);\fP
+.sp
+\fBint item_index(const ITEM *\fP\fIitem\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBset_current_item\fR sets the current item (the item on which

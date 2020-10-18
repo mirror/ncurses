@@ -28,17 +28,17 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_requestname.3x,v 1.13 2020/03/28 19:06:28 tom Exp $
+.\" $Id: menu_requestname.3x,v 1.15 2020/10/18 00:40:34 tom Exp $
 .TH menu_requestname 3X ""
 .SH NAME
 \fBmenu_request_by_name\fP,
 \fBmenu_request_name\fR \- handle printable menu request names
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
+.sp
+\fBconst char *menu_request_name(int \fP\fIrequest\fP\fB);\fP
 .br
-const char *menu_request_name(int request);
-.br
-int menu_request_by_name(const char *name);
+\fBint menu_request_by_name(const char *\fP\fIname\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBmenu_request_name\fR returns the printable name of a menu

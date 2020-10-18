@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.52 2020/03/21 23:47:23 tom Exp @
+  * @Id: curs_addch.3x,v 1.54 2020/10/17 23:02:40 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,6 +59,7 @@
        <STRONG>int</STRONG> <STRONG>waddch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvaddch(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwaddch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
+
        <STRONG>int</STRONG> <STRONG>echochar(const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
        <STRONG>int</STRONG> <STRONG>wechochar(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
 
@@ -95,10 +96,10 @@
        <STRONG>o</STRONG>   Tabs are considered to be at every eighth column.  The tab interval
            may be altered by setting the <STRONG>TABSIZE</STRONG> variable.
 
-       If  <EM>ch</EM>  is  any  other  control  character, it is drawn in <STRONG>^</STRONG><EM>X</EM> notation.
-       Calling <STRONG>winch</STRONG> after adding a control  character  does  not  return  the
-       character  itself, but instead returns the ^-representation of the con-
-       trol character.
+       If  <EM>ch</EM>  is  any  other nonprintable character, it is drawn in printable
+       form, i.e., the <STRONG>^</STRONG><EM>X</EM> notation used by <STRONG><A HREF="unctrl.3x.html">unctrl(3x)</A></STRONG>.   Calling  <STRONG>winch</STRONG>  after
+       adding  a  nonprintable character does not return the character itself,
+       but instead returns the printable representation of the character.
 
        Video attributes can be combined with a character  argument  passed  to
        <STRONG>addch</STRONG>  or  related  functions by logical-ORing them into the character.

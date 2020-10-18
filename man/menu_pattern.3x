@@ -27,17 +27,17 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_pattern.3x,v 1.19 2020/03/28 19:06:28 tom Exp $
+.\" $Id: menu_pattern.3x,v 1.21 2020/10/18 00:41:14 tom Exp $
 .TH menu_pattern 3X ""
 .SH NAME
 \fBset_menu_pattern\fP,
 \fBmenu_pattern\fR \- set and get a menu's pattern buffer
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
+.sp
+\fBint set_menu_pattern(MENU *\fP\fImenu\fP\fB, const char *\fP\fIpattern\fP\fB);\fP
 .br
-int set_menu_pattern(MENU *menu, const char *pattern);
-.br
-char *menu_pattern(const MENU *menu);
+\fBchar *menu_pattern(const MENU *\fP\fImenu\fP\fB);\fP
 .br
 .SH DESCRIPTION
 Every menu has an associated pattern match buffer.

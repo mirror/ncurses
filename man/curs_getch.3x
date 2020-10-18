@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.55 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_getch.3x,v 1.56 2020/10/17 23:18:32 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -55,12 +55,14 @@
 \fBint getch(void);\fR
 .br
 \fBint wgetch(WINDOW *\fP\fIwin);\fR
-.br
+.sp
 \fBint mvgetch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
 .br
 \fBint mvwgetch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
-.br
+.sp
 \fBint ungetch(int \fP\fIch\fP\fB);\fR
+.sp
+/* extension */
 .br
 \fBint has_key(int \fP\fIch\fP\fB);\fR
 .br

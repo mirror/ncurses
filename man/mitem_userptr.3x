@@ -28,17 +28,17 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_userptr.3x,v 1.15 2020/03/28 19:06:28 tom Exp $
+.\" $Id: mitem_userptr.3x,v 1.17 2020/10/18 00:36:16 tom Exp $
 .TH mitem_userptr 3X ""
 .SH NAME
 \fBset_item_userptr\fP,
 \fBitem_userptr\fR \- associate application data with a menu item
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
+.sp
+\fBint set_item_userptr(ITEM *\fP\fIitem\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
 .br
-int set_item_userptr(ITEM *item, void *userptr);
-.br
-void *item_userptr(const ITEM *item);
+\fBvoid *item_userptr(const ITEM *\fP\fIitem\fP\fB);\fP
 .br
 .SH DESCRIPTION
 Every menu item has a field that can be used to hold application-specific data

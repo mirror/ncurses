@@ -28,19 +28,19 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_fieldtype.3x,v 1.21 2020/03/28 19:06:28 tom Exp $
+.\" $Id: form_fieldtype.3x,v 1.22 2020/10/17 23:07:47 tom Exp $
 .TH form_fieldtype 3X ""
 .SH NAME
 \fBform_fieldtype\fR \- define validation-field types
 .SH SYNOPSIS
 \fB#include <form.h>\fR
-.br
+.sp
 FIELDTYPE *new_fieldtype(
     bool (* const field_check)(FIELD *, const void *),
     bool (* const char_check)(int, const void *));
 .br
 int free_fieldtype(FIELDTYPE *fieldtype);
-.br
+.sp
 int set_fieldtype_arg(
     FIELDTYPE *fieldtype,
     void *(* const make_arg)(va_list *),
@@ -51,10 +51,9 @@ int set_fieldtype_choice(
     FIELDTYPE *fieldtype,
     bool (* const next_choice)(FIELD *, const void *),
     bool (* const prev_choice)(FIELD *, const void *));
-.br
+.sp
 FIELDTYPE *link_fieldtype(FIELDTYPE *type1,
                           FIELDTYPE *type2);
-.br
 .SH DESCRIPTION
 The function \fBnew_fieldtype\fR creates a new field type usable for data
 validation.

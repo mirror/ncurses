@@ -28,17 +28,17 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_userptr.3x,v 1.14 2020/03/28 19:06:28 tom Exp $
+.\" $Id: menu_userptr.3x,v 1.16 2020/10/18 00:39:49 tom Exp $
 .TH menu_userptr 3X ""
 .SH NAME
 \fBset_menu_userptr\fP,
 \fBmenu_userptr\fR \- associate application data with a menu item
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
+.sp
+\fBint set_menu_userptr(MENU *\fP\fImenu\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
 .br
-int set_menu_userptr(MENU *menu, void *userptr);
-.br
-void *menu_userptr(const MENU *menu);
+\fBvoid *menu_userptr(const MENU *\fP\fImenu\fP\fB);\fP
 .br
 .SH DESCRIPTION
 Every menu and every menu item has a field that can be used to hold

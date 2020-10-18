@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inch.3x,v 1.23 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_inch.3x,v 1.25 2020/10/18 00:25:23 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -56,9 +56,10 @@
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>chtype</STRONG> <STRONG>inch(void);</STRONG>
-       <STRONG>chtype</STRONG> <STRONG>winch(WINDOW</STRONG> <STRONG>*win);</STRONG>
-       <STRONG>chtype</STRONG> <STRONG>mvinch(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
-       <STRONG>chtype</STRONG> <STRONG>mvwinch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>winch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+
+       <STRONG>chtype</STRONG> <STRONG>mvinch(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>mvwinch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

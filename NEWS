@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3575 2020/10/11 00:04:33 tom Exp $
+-- $Id: NEWS,v 1.3578 2020/10/18 00:46:11 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20201017
+	+ improve manpage typography.
+	+ improve discussion in curs_addch.3x of the use of unctrl to display
+	  nonprintable characters.
+	+ add a note in terminfo.5 explaining that no-parameter strings such
+	  as sgr0 or cnorm should not be used with tparm.
 
 20201010
 	+ correct sgr in aaa+rv (report by Florian Weimer) -TD

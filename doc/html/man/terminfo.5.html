@@ -105,7 +105,7 @@
        have, by specifying how to perform screen operations, and by specifying
        padding requirements and initialization sequences.
 
-       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201003).
+       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201017).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -264,7 +264,11 @@
        (P)    indicates that padding may be specified
 
        #[1-9] in the description field indicates that  the  string  is  passed
-              through tparm with parms as given (#<EM>i</EM>).
+              through <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG> with parameters as given (#<EM>i</EM>).
+
+              If  no  parameters  are  listed  in the description, passing the
+              string through <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG> may give unexpected results,  e.g.,  if
+              it contains percent (%%) signs.
 
        (P*)   indicates  that  padding may vary in proportion to the number of
               lines affected
@@ -281,11 +285,9 @@
                                                        umn 0 to last column
           auto_right_margin           am        am     terminal has auto-
                                                        matic margins
+
           back_color_erase            bce       ut     screen erased with
                                                        background color
-
-
-
           can_change                  ccc       cc     terminal can re-
                                                        define existing col-
                                                        ors
@@ -349,9 +351,9 @@
                                                        strike
           prtr_silent                 mc5i      5i     printer will not
                                                        echo on screen
+
           row_addr_glitch             xvpa      YD     only positive motion
                                                        for vpa/mvpa caps
-
           semi_auto_right_margin      sam       YE     printing in last
                                                        column causes cr
           status_line_esc_ok          eslok     es     escape can be used
@@ -415,8 +417,6 @@
                                                        each bit-image row
           bit_image_type              bitype    Yp     type of bit-image
                                                        device
-
-
 
           buffer_capacity             bufsz     Ya     numbers of bytes
                                                        buffered before

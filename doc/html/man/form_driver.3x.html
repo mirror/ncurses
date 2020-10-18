@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_driver.3x,v 1.33 2020/02/02 23:34:34 tom Exp @
+  * @Id: form_driver.3x,v 1.34 2020/10/17 23:28:04 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -52,6 +52,7 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+
        <STRONG>int</STRONG> <STRONG>form_driver(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>form_driver_w(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>,</STRONG> <STRONG>wchar_t</STRONG> <EM>wch</EM><STRONG>);</STRONG>
 
@@ -111,8 +112,8 @@
        REQ_LEFT_FIELD     Move left to a field.
        REQ_NEW_LINE       Insert or overlay a new line.
        REQ_NEXT_CHAR      Move to the next char.
-       REQ_NEXT_CHOICE    Display next field choice.
 
+       REQ_NEXT_CHOICE    Display next field choice.
        REQ_NEXT_FIELD     Move to the next field.
        REQ_NEXT_LINE      Move to the next line.
        REQ_NEXT_PAGE      Move to the next page.

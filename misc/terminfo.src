@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.825 $
-#	$Date: 2020/10/11 00:01:33 $
+#	$Revision: 1.826 $
+#	$Date: 2020/10/17 22:41:29 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -19599,6 +19599,13 @@ tek4106brl|tek4107brl|tek4109brl|Tektronix 4106 4107 or 4109,
 	smkx=\E[?1h\E=, smso=\E[7;42m, smul=\E[4m, tbc=\E[3g,
 	use=ecma+index,
 
+# Refer to:
+# TEK Programmer's Reference
+# Part No. 070-4893-00
+# Product Group 18
+# 4107/4109 Computer Display Terminal
+# November 1983
+#
 # Tektronix 4107/4109 interpret 4 modes using "\E%!" followed by a code:
 # 0 selects Tek mode, i.e., \E%!0
 # 1 selects ANSI mode
@@ -19607,7 +19614,9 @@ tek4106brl|tek4107brl|tek4109brl|Tektronix 4106 4107 or 4109,
 #
 # One odd thing about the description (which has been unchanged since the 90s)
 # is that the cursor addressing is using VT52 mode, and a few others use the
-# VT52's non-CSI versions of ANSI, e.g., \EJ.
+# VT52's non-CSI versions of ANSI, e.g., \EJ.  A possible explanation is that
+# the developer used Emacs, which misuses cvvis (this description sets VT52
+# mode in that capability).
 tek4107|tek4109|tektronix terminals 4107 4109,
 	OTbs, am, mir, msgr, ul, xenl, xt,
 	cols#79, it#8, lines#29,
@@ -26684,5 +26693,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ correct sgr in aaa+rv (report by Florian Weimer) -TD
 #	+ fix some sgr inconsistencies in d230c, ibm6153, ibm6154,
 #	  ncrvt100an -TD
+#
+# 2020-10-17
+#	+ expanded notes about tek4107 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

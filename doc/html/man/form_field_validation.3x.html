@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_field_validation.3x,v 1.25 2020/02/02 23:34:34 tom Exp @
+  * @Id: form_field_validation.3x,v 1.27 2020/10/18 00:07:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -52,17 +52,18 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
-       int set_field_type(FIELD *field, FIELDTYPE *type, ...);
-       FIELDTYPE *field_type(const FIELD *field);
-       void *field_arg(const FIELD *field);
 
-       FIELDTYPE *TYPE_ALNUM;
-       FIELDTYPE *TYPE_ALPHA;
-       FIELDTYPE *TYPE_ENUM;
-       FIELDTYPE *TYPE_INTEGER;
-       FIELDTYPE *TYPE_NUMERIC;
-       FIELDTYPE *TYPE_REGEXP;
-       FIELDTYPE *TYPE_IPV4;
+       <STRONG>int</STRONG> <STRONG>set_field_type(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG><EM>type</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*field_type(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>*field_arg(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
+
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ALNUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ALPHA;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ENUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_INTEGER;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_NUMERIC;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_REGEXP;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_IPV4;</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

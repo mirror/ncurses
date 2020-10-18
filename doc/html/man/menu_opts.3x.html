@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: menu_opts.3x,v 1.17 2020/02/02 23:34:34 tom Exp @
+  * @Id: menu_opts.3x,v 1.18 2020/10/17 23:46:35 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -54,10 +54,12 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
-       int set_menu_opts(MENU *menu, Menu_Options opts);
-       int menu_opts_on(MENU *menu, Menu_Options opts);
-       int menu_opts_off(MENU *menu, Menu_Options opts);
-       Menu_Options menu_opts(const MENU *menu);
+
+       <STRONG>int</STRONG> <STRONG>set_menu_opts(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>Menu_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <STRONG>Menu_Options</STRONG> <STRONG>menu_opts(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+
+       <STRONG>int</STRONG> <STRONG>menu_opts_on(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>Menu_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>menu_opts_off(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>Menu_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
