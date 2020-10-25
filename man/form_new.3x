@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_new.3x,v 1.14 2020/10/17 23:08:09 tom Exp $
+.\" $Id: form_new.3x,v 1.15 2020/10/24 09:02:26 tom Exp $
 .TH form_new 3X ""
 .SH NAME
 \fBnew_form\fR,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .sp
-FORM *new_form(FIELD **fields);
+\fBFORM *new_form(FIELD **\fP\fIfields\fP\fB);\fP
 .br
-int free_form(FORM *form);
+\fBint free_form(FORM *\fP\fIform\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBnew_form\fR creates a new form connected to a specified field

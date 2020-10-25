@@ -28,20 +28,20 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field.3x,v 1.16 2020/10/17 23:06:12 tom Exp $
+.\" $Id: form_field.3x,v 1.17 2020/10/24 09:10:45 tom Exp $
 .TH form_field 3X ""
 .SH NAME
 \fBform_field\fR \- make and break connections between fields and forms
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .sp
-int set_form_fields(FORM *form, FIELD **fields);
+\fBint set_form_fields(FORM *\fP\fIform\fP\fB, FIELD **\fP\fIfields\fP\fB);\fP
 .br
-FIELD **form_fields(const FORM *form);
+\fBFIELD **form_fields(const FORM *\fP\fIform\fP\fB);\fP
 .br
-int field_count(const FORM *form);
+\fBint field_count(const FORM *\fP\fIform\fP\fB);\fP
 .br
-int move_field(FIELD *field, int frow, int fcol);
+\fBint move_field(FIELD *\fP\fIfield\fP\fB, int \fP\fIfrow\fP\fB, int \fP\fIfcol\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBset_form_fields\fR changes the field pointer array of

@@ -27,14 +27,14 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.15 2020/03/28 19:06:28 tom Exp $
+.\" $Id: curs_print.3x,v 1.16 2020/10/24 09:25:14 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
 \fBmcprint\fR \- ship binary data to printer
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBint mcprint(char *data, int len);\fR
+\fBint mcprint(char *\fP\fIdata\fP\fB, int \fP\fIlen\fP\fB);\fR
 .SH DESCRIPTION
 This function uses the \fBmc5p\fR or \fBmc4\fR and \fBmc5\fR capabilities,
 if they are present, to ship given data to a printer attached to the terminal.

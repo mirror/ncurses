@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_requestname.3x,v 1.14 2020/10/17 23:08:23 tom Exp $
+.\" $Id: form_requestname.3x,v 1.15 2020/10/24 09:01:37 tom Exp $
 .TH form_requestname 3X ""
 .SH NAME
 \fBform_request_by_name\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .sp
-const char *form_request_name(int request);
+\fBconst char *form_request_name(int \fP\fIrequest\fP\fB);\fP
 .br
-int form_request_by_name(const char *name);
+\fBint form_request_by_name(const char *\fP\fIname\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBform_request_name\fR returns the printable name of a form

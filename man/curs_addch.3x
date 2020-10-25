@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.54 2020/10/17 23:02:40 tom Exp $
+.\" $Id: curs_addch.3x,v 1.55 2020/10/24 09:12:31 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -48,17 +48,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .PP
-\fBint addch(const chtype ch);\fR
+\fBint addch(const chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint waddch(WINDOW *win, const chtype ch);\fR
+\fBint waddch(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint mvaddch(int y, int x, const chtype ch);\fR
+\fBint mvaddch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint mvwaddch(WINDOW *win, int y, int x, const chtype ch);\fR
+\fBint mvwaddch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fR
 .sp
-\fBint echochar(const chtype ch);\fR
+\fBint echochar(const chtype \fP\fIch\fP\fB);\fR
 .br
-\fBint wechochar(WINDOW *win, const chtype ch);\fR
+\fBint wechochar(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fR
 .br
 .SH DESCRIPTION
 .SS Adding characters

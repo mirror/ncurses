@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termcap.3x,v 1.44 2020/05/17 01:20:13 tom Exp @
+  * @Id: curs_termcap.3x,v 1.45 2020/10/24 09:24:31 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,12 +60,12 @@
        <STRONG>extern</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>BC;</STRONG>
        <STRONG>extern</STRONG> <STRONG>short</STRONG> <STRONG>ospeed;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>tgetent(char</STRONG> <STRONG>*bp,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*name);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetflag(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetnum(const</STRONG> <STRONG>char</STRONG> <STRONG>*id);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*tgetstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*id,</STRONG> <STRONG>char</STRONG> <STRONG>**area);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*tgoto(const</STRONG> <STRONG>char</STRONG> <STRONG>*cap,</STRONG> <STRONG>int</STRONG> <STRONG>col,</STRONG> <STRONG>int</STRONG> <STRONG>row);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tputs(const</STRONG> <STRONG>char</STRONG> <STRONG>*str,</STRONG> <STRONG>int</STRONG> <STRONG>affcnt,</STRONG> <STRONG>int</STRONG> <STRONG>(*putc)(int));</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetent(char</STRONG> <STRONG>*</STRONG><EM>bp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>name</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetflag(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>id</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetnum(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>id</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tgetstr(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>id</EM><STRONG>,</STRONG> <STRONG>char</STRONG> <STRONG>**</STRONG><EM>area</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*tgoto(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>cap</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>col</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>row</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tputs(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>affcnt</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>(*</STRONG><EM>putc</EM><STRONG>)(int));</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

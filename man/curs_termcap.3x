@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.44 2020/05/17 01:20:13 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.45 2020/10/24 09:24:31 tom Exp $
 .TH curs_termcap 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -66,17 +66,17 @@
 .br
 \fBextern @NCURSES_OSPEED@ ospeed;\fR
 .sp
-\fBint tgetent(char *bp, const char *name);\fR
+\fBint tgetent(char *\fP\fIbp\fP\fB, const char *\fP\fIname\fP\fB);\fR
 .br
-\fBint tgetflag(const char *id);\fR
+\fBint tgetflag(const char *\fP\fIid\fP\fB);\fR
 .br
-\fBint tgetnum(const char *id);\fR
+\fBint tgetnum(const char *\fP\fIid\fP\fB);\fR
 .br
-\fBchar *tgetstr(const char *id, char **area);\fR
+\fBchar *tgetstr(const char *\fP\fIid\fP\fB, char **\fP\fIarea\fP\fB);\fR
 .br
-\fBchar *tgoto(const char *cap, int col, int row);\fR
+\fBchar *tgoto(const char *\fP\fIcap\fP\fB, int \fP\fIcol\fP\fB, int \fP\fIrow\fP\fB);\fR
 .br
-\fBint tputs(const char *str, int affcnt, int (*putc)(int));\fR
+\fBint tputs(const char *\fP\fIstr\fP\fB, int \fP\fIaffcnt\fP\fB, int (*\fP\fIputc\fP\fB)(int));\fR
 .br
 .SH DESCRIPTION
 These routines are included as a conversion aid for programs that use

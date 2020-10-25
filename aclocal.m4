@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.933 2020/09/26 23:57:07 tom Exp $
+dnl $Id: aclocal.m4,v 1.935 2020/10/24 23:49:51 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -604,7 +604,7 @@ else	AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_BOOL_SIZE version: 15 updated: 2017/01/21 11:06:25
+dnl CF_BOOL_SIZE version: 17 updated: 2020/10/24 19:48:55
 dnl ------------
 dnl Test for the size of 'bool' in the configured C++ compiler (e.g., a type).
 dnl Don't bother looking for bool.h, since it's been deprecated.
@@ -613,8 +613,30 @@ dnl If the current compiler is C rather than C++, we get the bool definition
 dnl from <stdbool.h>.
 AC_DEFUN([CF_BOOL_SIZE],
 [
-AC_MSG_CHECKING([for size of bool])
-AC_CACHE_VAL(cf_cv_type_of_bool,[
+AC_CHECK_SIZEOF(bool,,[
+#include <stdlib.h>
+#include <stdio.h>
+
+#if defined(__cplusplus)
+
+#ifdef HAVE_GXX_BUILTIN_H
+#include <g++/builtin.h>
+#elif HAVE_GPP_BUILTIN_H
+#include <gpp/builtin.h>
+#elif HAVE_BUILTIN_H
+#include <builtin.h>
+#endif
+
+#else
+
+#if $cf_cv_header_stdbool_h
+#include <stdbool.h>
+#endif
+
+#endif
+])
+
+AC_CACHE_CHECK(for type of bool, cf_cv_type_of_bool,[
 	rm -f cf_test.out
 	AC_TRY_RUN([
 #include <stdlib.h>
@@ -659,10 +681,18 @@ int main(void)
 		   cf_cv_type_of_bool=unknown
 		 fi],
 		[cf_cv_type_of_bool=unknown],
-		[cf_cv_type_of_bool=unknown])
-	])
+		[
+		case x$ac_cv_sizeof_bool in
+		(x1) cf_cv_type_of_bool="unsigned char";;
+		(x2) cf_cv_type_of_bool="unsigned short";;
+		(x4) cf_cv_type_of_bool="unsigned int";;
+		(x8) cf_cv_type_of_bool="unsigned long";;
+		(*)  cf_cv_type_of_bool=unknown;;
+		esac
+		])
 	rm -f cf_test.out
-AC_MSG_RESULT($cf_cv_type_of_bool)
+])
+
 if test "$cf_cv_type_of_bool" = unknown ; then
 	case .$NCURSES_BOOL in
 	(.auto|.) NCURSES_BOOL=unsigned;;

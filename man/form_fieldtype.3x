@@ -28,32 +28,32 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_fieldtype.3x,v 1.22 2020/10/17 23:07:47 tom Exp $
+.\" $Id: form_fieldtype.3x,v 1.23 2020/10/24 09:05:17 tom Exp $
 .TH form_fieldtype 3X ""
 .SH NAME
 \fBform_fieldtype\fR \- define validation-field types
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .sp
-FIELDTYPE *new_fieldtype(
-    bool (* const field_check)(FIELD *, const void *),
-    bool (* const char_check)(int, const void *));
+\fBFIELDTYPE *new_fieldtype(\fP
+    \fBbool (* const \fP\fIfield_check\fP\fB)(FIELD *, const void *),\fP
+    \fBbool (* const \fP\fIchar_check\fP\fB)(int, const void *));\fP
 .br
-int free_fieldtype(FIELDTYPE *fieldtype);
+\fBint free_fieldtype(FIELDTYPE *\fP\fIfieldtype\fP\fB);\fP
 .sp
-int set_fieldtype_arg(
-    FIELDTYPE *fieldtype,
-    void *(* const make_arg)(va_list *),
-    void *(* const copy_arg)(const void *),
-    void  (* const free_arg)(void *));
+\fBint set_fieldtype_arg(\fP
+    \fBFIELDTYPE *\fP\fIfieldtype\fP\fB,\fP
+    \fBvoid *(* const \fP\fImake_arg\fP\fB)(va_list *),\fP
+    \fBvoid *(* const \fP\fIcopy_arg\fP\fB)(const void *),\fP
+    \fBvoid  (* const \fP\fIfree_arg\fP\fB)(void *));\fP
 .br
-int set_fieldtype_choice(
-    FIELDTYPE *fieldtype,
-    bool (* const next_choice)(FIELD *, const void *),
-    bool (* const prev_choice)(FIELD *, const void *));
+\fBint set_fieldtype_choice(\fP
+    \fBFIELDTYPE *\fP\fIfieldtype\fP\fB,\fP
+    \fBbool (* const \fP\fInext_choice\fP\fB)(FIELD *, const void *),\fP
+    \fBbool (* const \fP\fIprev_choice\fP\fB)(FIELD *, const void *));\fP
 .sp
-FIELDTYPE *link_fieldtype(FIELDTYPE *type1,
-                          FIELDTYPE *type2);
+\fBFIELDTYPE *link_fieldtype(FIELDTYPE *\fP\fItype1\fP\fB,\fP
+                          \fBFIELDTYPE *\fP\fItype2\fP\fB);\fP
 .SH DESCRIPTION
 The function \fBnew_fieldtype\fR creates a new field type usable for data
 validation.

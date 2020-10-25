@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.54 2020/10/17 23:02:40 tom Exp @
+  * @Id: curs_addch.3x,v 1.55 2020/10/24 09:12:31 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -55,13 +55,13 @@
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>addch(const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
-       <STRONG>int</STRONG> <STRONG>waddch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvaddch(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvwaddch(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
+       <STRONG>int</STRONG> <STRONG>addch(const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddch(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>echochar(const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wechochar(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <STRONG>ch);</STRONG>
+       <STRONG>int</STRONG> <STRONG>echochar(const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wechochar(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

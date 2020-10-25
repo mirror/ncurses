@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.287 2020/10/10 21:25:24 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.288 2020/10/24 17:04:11 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2180,6 +2180,9 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
     char *result;
     char blob[NUM_PARM * 10];
     char *next = blob;
+    TParams expect;
+    TParams actual;
+    int nparam;
 
     *next++ = '\0';
     for (k = 1; k <= NUM_PARM; k++) {
@@ -2191,7 +2194,16 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 	next += strlen(next) + 1;
     }
 
-    switch (tparm_type(name)) {
+    expect = tparm_type(name);
+    nparam = _nc_tparm_analyze(value, p_is_s, &ignored);
+    actual = guess_tparm_type(nparam, p_is_s);
+
+    if (expect != actual) {
+	_nc_warning("%s has mismatched parameters", name);
+	actual = Other;
+    }
+
+    switch (actual) {
     case Num_Str:
 	result = TPARM_2(value, numbers[1], strings[2]);
 	break;
@@ -2212,8 +2224,8 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 			  myParam(9));
 #undef myParam
 	break;
+    case Other:
     default:
-	(void) _nc_tparm_analyze(value, p_is_s, &ignored);
 #define myParam(n) (p_is_s[n - 1] != 0 ? ((TPARM_ARG) strings[n]) : numbers[n])
 	result = TPARM_9(value,
 			 myParam(1),

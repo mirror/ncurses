@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.31 2020/10/03 21:54:26 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.32 2020/10/24 09:18:33 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -68,15 +68,15 @@
 .br
 \fBint noecho(void);\fR
 .sp
-\fBint intrflush(WINDOW *win, bool bf);\fR
+\fBint intrflush(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fR
 .br
-\fBint keypad(WINDOW *win, bool bf);\fR
+\fBint keypad(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fR
 .br
-\fBint meta(WINDOW *win, bool bf);\fR
+\fBint meta(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fR
 .br
-\fBint nodelay(WINDOW *win, bool bf);\fR
+\fBint nodelay(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fR
 .br
-\fBint notimeout(WINDOW *win, bool bf);\fR
+\fBint notimeout(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fR
 .sp
 \fBint nl(void);\fR
 .br
@@ -90,13 +90,13 @@
 .br
 \fBvoid noqiflush(void);\fR
 .sp
-\fBint halfdelay(int tenths);\fR
+\fBint halfdelay(int \fP\fItenths\fP\fB);\fR
 .br
-\fBvoid timeout(int delay);\fR
+\fBvoid timeout(int \fP\fIdelay\fP\fB);\fR
 .br
-\fBvoid wtimeout(WINDOW *win, int delay);\fR
+\fBvoid wtimeout(WINDOW *\fP\fIwin\fP\fB, int \fP\fIdelay\fP\fB);\fR
 .sp
-\fBint typeahead(int fd);\fR
+\fBint typeahead(int \fP\fIfd\fP\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBncurses\fP library provides several functions which let an application

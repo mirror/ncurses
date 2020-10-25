@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_userptr.3x,v 1.18 2020/10/17 23:08:37 tom Exp $
+.\" $Id: form_userptr.3x,v 1.19 2020/10/24 09:00:52 tom Exp $
 .TH form_userptr 3X ""
 .SH NAME
 \fBset_form_userptr\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fR
 .sp
-int set_form_userptr(FORM *form, void *userptr);
+\fBint set_form_userptr(FORM *\fP\fIform\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
 .br
-void* form_userptr(const FORM *form);
+\fBvoid* form_userptr(const FORM *\fP\fIform\fP\fB);\fP
 .br
 .SH DESCRIPTION
 Every form and every form item has a field that can be used to hold

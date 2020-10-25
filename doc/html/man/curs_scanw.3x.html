@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scanw.3x,v 1.27 2020/03/15 00:14:30 tom Exp @
+  * @Id: curs_scanw.3x,v 1.28 2020/10/24 09:29:26 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -54,14 +54,15 @@
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>scanw(const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvscanw(int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvwscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>y,</STRONG> <STRONG>int</STRONG> <STRONG>x,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vw_scanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scanw(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvscanw(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+
+       <STRONG>int</STRONG> <STRONG>vw_scanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>va_list</STRONG> <EM>varglist</EM><STRONG>);</STRONG>
 
        /* obsolete */
-       <STRONG>int</STRONG> <STRONG>vwscanw(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*fmt,</STRONG> <STRONG>va_list</STRONG> <STRONG>varglist);</STRONG>
+       <STRONG>int</STRONG> <STRONG>vwscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>va_list</STRONG> <EM>varglist</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>

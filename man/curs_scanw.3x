@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.27 2020/03/15 00:14:30 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.28 2020/10/24 09:29:26 tom Exp $
 .TH curs_scanw 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -46,19 +46,19 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBint scanw(const char *fmt, ...);\fR
+\fBint scanw(const char *\fP\fIfmt\fP\fB, ...);\fR
 .br
-\fBint wscanw(WINDOW *win, const char *fmt, ...);\fR
+\fBint wscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
 .br
-\fBint mvscanw(int y, int x, const char *fmt, ...);\fR
+\fBint mvscanw(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
 .br
-\fBint mvwscanw(WINDOW *win, int y, int x, const char *fmt, ...);\fR
-.br
-\fBint vw_scanw(WINDOW *win, const char *fmt, va_list varglist);\fR
+\fBint mvwscanw(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
+.sp
+\fBint vw_scanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fR
 .sp
 /* obsolete */
 .br
-\fBint vwscanw(WINDOW *win, const char *fmt, va_list varglist);\fR
+\fBint vwscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fR
 .SH DESCRIPTION
 The \fBscanw\fR, \fBwscanw\fR and \fBmvscanw\fR routines are analogous to
 \fBscanf\fR [see \fBscanf\fR(3)].

@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_mark.3x,v 1.17 2020/10/17 23:09:02 tom Exp $
+.\" $Id: menu_mark.3x,v 1.18 2020/10/24 08:59:04 tom Exp $
 .TH menu_mark 3X ""
 .SH NAME
 \fBset_menu_mark\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .sp
-int set_menu_mark(MENU *menu, const char *mark);
+\fBint set_menu_mark(MENU *\fP\fImenu\fP\fB, const char *\fP\fImark\fP\fB);\fP
 .br
-const char *menu_mark(const MENU *menu);
+\fBconst char *menu_mark(const MENU *\fP\fImenu\fP\fB);\fP
 .br
 .SH DESCRIPTION
 In order to make menu selections visible on older terminals without

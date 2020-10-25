@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.58 2020/10/17 22:54:59 tom Exp $
+.\" $Id: curs_util.3x,v 1.59 2020/10/24 09:15:57 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -58,27 +58,27 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
 .sp
-\fBconst char *unctrl(chtype c);\fR
+\fBconst char *unctrl(chtype \fP\fIc\fP\fB);\fR
 .br
-\fBwchar_t *wunctrl(cchar_t *c);\fR
+\fBwchar_t *wunctrl(cchar_t *\fP\fIc\fP\fB);\fR
 .sp
-\fBconst char *keyname(int c);\fR
+\fBconst char *keyname(int \fP\fIc\fP\fB);\fR
 .br
-\fBconst char *key_name(wchar_t w);\fR
+\fBconst char *key_name(wchar_t \fP\fIw\fP\fB);\fR
 .sp
 \fBvoid filter(void);\fR
 .br
 \fBvoid nofilter(void);\fR
 .sp
-\fBvoid use_env(bool f);\fR
+\fBvoid use_env(bool \fP\fIf\fP\fB);\fR
 .br
-\fBvoid use_tioctl(bool f);\fR
+\fBvoid use_tioctl(bool \fP\fIf\fP\fB);\fR
 .sp
-\fBint putwin(WINDOW *win, FILE *filep);\fR
+\fBint putwin(WINDOW *\fP\fIwin\fP\fB, FILE *\fP\fIfilep\fP\fB);\fR
 .br
-\fBWINDOW *getwin(FILE *filep);\fR
+\fBWINDOW *getwin(FILE *\fP\fIfilep\fP\fB);\fR
 .sp
-\fBint delay_output(int ms);\fR
+\fBint delay_output(int \fP\fIms\fP\fB);\fR
 .br
 \fBint flushinp(void);\fR
 .br

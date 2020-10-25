@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_clear.3x,v 1.19 2020/10/03 21:43:37 tom Exp $
+.\" $Id: curs_clear.3x,v 1.20 2020/10/24 09:19:37 tom Exp $
 .TH curs_clear 3X ""
 .na
 .hy 0
@@ -51,19 +51,19 @@
 .sp
 \fBint erase(void);\fR
 .br
-\fBint werase(WINDOW *win);\fR
+\fBint werase(WINDOW *\fP\fIwin\fP\fB);\fR
 .sp
 \fBint clear(void);\fR
 .br
-\fBint wclear(WINDOW *win);\fR
+\fBint wclear(WINDOW *\fP\fIwin\fP\fB);\fR
 .sp
 \fBint clrtobot(void);\fR
 .br
-\fBint wclrtobot(WINDOW *win);\fR
+\fBint wclrtobot(WINDOW *\fP\fIwin\fP\fB);\fR
 .sp
 \fBint clrtoeol(void);\fR
 .br
-\fBint wclrtoeol(WINDOW *win);\fR
+\fBint wclrtoeol(WINDOW *\fP\fIwin\fP\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBerase\fR and \fBwerase\fR routines copy blanks to every

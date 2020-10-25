@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_new.3x,v 1.17 2020/10/17 23:09:13 tom Exp $
+.\" $Id: menu_new.3x,v 1.18 2020/10/24 08:57:51 tom Exp $
 .TH menu_new 3X ""
 .SH NAME
 \fBnew_menu\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fR
 .sp
-MENU *new_menu(ITEM **items);
+\fBMENU *new_menu(ITEM **\fP\fIitems\fP\fB);\fP
 .br
-int free_menu(MENU *menu);
+\fBint free_menu(MENU *\fP\fImenu\fP\fB);\fP
 .br
 .SH DESCRIPTION
 The function \fBnew_menu\fR creates a new menu connected to a specified item

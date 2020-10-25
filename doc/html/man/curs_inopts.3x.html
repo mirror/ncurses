@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.31 2020/10/03 21:54:26 tom Exp @
+  * @Id: curs_inopts.3x,v 1.32 2020/10/24 09:18:33 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -61,11 +61,11 @@
        <STRONG>int</STRONG> <STRONG>echo(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>noecho(void);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>intrflush(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>keypad(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>meta(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>nodelay(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
-       <STRONG>int</STRONG> <STRONG>notimeout(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>bool</STRONG> <STRONG>bf);</STRONG>
+       <STRONG>int</STRONG> <STRONG>intrflush(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>keypad(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>meta(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>nodelay(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>notimeout(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
 
        <STRONG>int</STRONG> <STRONG>nl(void);</STRONG>
        <STRONG>int</STRONG> <STRONG>nonl(void);</STRONG>
@@ -76,11 +76,11 @@
        <STRONG>void</STRONG> <STRONG>qiflush(void);</STRONG>
        <STRONG>void</STRONG> <STRONG>noqiflush(void);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>halfdelay(int</STRONG> <STRONG>tenths);</STRONG>
-       <STRONG>void</STRONG> <STRONG>timeout(int</STRONG> <STRONG>delay);</STRONG>
-       <STRONG>void</STRONG> <STRONG>wtimeout(WINDOW</STRONG> <STRONG>*win,</STRONG> <STRONG>int</STRONG> <STRONG>delay);</STRONG>
+       <STRONG>int</STRONG> <STRONG>halfdelay(int</STRONG> <EM>tenths</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>timeout(int</STRONG> <EM>delay</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>wtimeout(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>delay</EM><STRONG>);</STRONG>
 
-       <STRONG>int</STRONG> <STRONG>typeahead(int</STRONG> <STRONG>fd);</STRONG>
+       <STRONG>int</STRONG> <STRONG>typeahead(int</STRONG> <EM>fd</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
