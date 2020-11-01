@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.288 2020/10/24 17:04:11 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.289 2020/10/31 22:15:55 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2373,13 +2373,12 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 		  : ((*value == 'k')
 		     ? 0
 		     : has_params(value)));
-    int to_char = 0;
     char *ti_value;
     char *tc_value;
     bool embedded;
 
     assert(SIZEOF(parametrized) == STRCOUNT);
-    if ((ti_value = _nc_tic_expand(value, TRUE, to_char)) == ABSENT_STRING) {
+    if (!VALID_STRING(value) || (ti_value = strdup(value)) == NULL) {
 	_nc_warning("tic-expansion of %s failed", name);
     } else if ((tc_value = _nc_infotocap(name, ti_value, params)) == ABSENT_STRING) {
 	_nc_warning("tic-conversion of %s failed", name);
@@ -2402,12 +2401,14 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 	    if (strcmp(ti_check, tc_check)) {
 		if (first) {
 		    fprintf(stderr, "check_infotocap(%s)\n", name);
-		    fprintf(stderr, "...ti '%s'\n", ti_value);
-		    fprintf(stderr, "...tc '%s'\n", tc_value);
+		    fprintf(stderr, "...ti '%s'\n", _nc_visbuf2(0, ti_value));
+		    fprintf(stderr, "...tc '%s'\n", _nc_visbuf2(0, tc_value));
 		    first = FALSE;
 		}
 		_nc_warning("tparm-conversion of %s(%d) differs between\n\tterminfo %s\n\ttermcap  %s",
-			    name, count, ti_check, tc_check);
+			    name, count,
+			    _nc_visbuf2(0, ti_check),
+			    _nc_visbuf2(1, tc_check));
 	    }
 	    free(ti_check);
 	    free(tc_check);

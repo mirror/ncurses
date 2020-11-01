@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.19 2020/10/19 21:42:48 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.21 2020/10/31 22:58:24 tom Exp $
 .TH curs_sp_funcs 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -41,8 +41,6 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .hy
 .SH SYNOPSIS
 \fB#include <curses.h>\fR
-.br
-\fB#include <term.h>\fR
 .nf
 .sp
 \fBint alloc_pair_sp(SCREEN*, int, int);\fR
@@ -61,11 +59,11 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint curs_set_sp(SCREEN*, int);\fR
 .br
-\fBint define_key_sp(SCREEN*, const char *, int);\fR
-.br
 \fBint def_prog_mode_sp(SCREEN*);\fR
 .br
 \fBint def_shell_mode_sp(SCREEN*);\fR
+.br
+\fBint define_key_sp(SCREEN*, const char *, int);\fR
 .br
 \fBint delay_output_sp(SCREEN*, int);\fR
 .br
@@ -87,11 +85,11 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint find_pair_sp(SCREEN*, int, int);\fR
 .br
-\fBint free_pair_sp(SCREEN*, int);\fR
-.br
 \fBint flash_sp(SCREEN*);\fR
 .br
 \fBint flushinp_sp(SCREEN*);\fR
+.br
+\fBint free_pair_sp(SCREEN*, int);\fR
 .br
 \fBint get_escdelay_sp(SCREEN*);\fR
 .br
@@ -121,13 +119,13 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint intrflush_sp(SCREEN*, WINDOW*, bool);\fR
 .br
-\fBbool isendwin_sp(SCREEN*);\fR
-.br
 \fBbool is_term_resized_sp(SCREEN*, int, int);\fR
 .br
-\fBchar* keybound_sp(SCREEN*, int, int);\fR
+\fBbool isendwin_sp(SCREEN*);\fR
 .br
 \fBint key_defined_sp(SCREEN*, const char *);\fR
+.br
+\fBchar* keybound_sp(SCREEN*, int, int);\fR
 .br
 \fBNCURSES_CONST char * keyname_sp(SCREEN*, int);\fR
 .br
@@ -177,6 +175,8 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint reset_prog_mode_sp(SCREEN*);\fR
 .br
+\fBvoid reset_color_pairs_sp(SCREEN*);\fR
+.br
 \fBint reset_shell_mode_sp(SCREEN*);\fR
 .br
 \fBint resetty_sp(SCREEN*);\fR
@@ -184,8 +184,6 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 \fBint resize_term_sp(SCREEN*, int, int);\fR
 .br
 \fBint resizeterm_sp(SCREEN*, int, int);\fR
-.br
-\fBint restartterm_sp(SCREEN*, NCURSES_CONST char*, int, int *);\fR
 .br
 \fBint ripoffline_sp(SCREEN*, int, int (*)(WINDOW*, int));\fR
 .br
@@ -197,19 +195,17 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint scr_set_sp(SCREEN*, const char *);\fR
 .br
-\fBTERMINAL* set_curterm_sp(SCREEN*, TERMINAL*);\fR
-.br
 \fBint set_escdelay_sp(SCREEN*, int);\fR
 .br
 \fBint set_tabsize_sp(SCREEN*, int);\fR
 .br
-\fBint slk_attroff_sp(SCREEN*, const chtype);\fR
-.br
-\fBint slk_attron_sp(SCREEN*, const chtype);\fR
-.br
 \fBint slk_attr_set_sp(SCREEN*, const attr_t, short, void*);\fR
 .br
 \fBint slk_attrset_sp(SCREEN*, const chtype);\fR
+.br
+\fBint slk_attroff_sp(SCREEN*, const chtype);\fR
+.br
+\fBint slk_attron_sp(SCREEN*, const chtype);\fR
 .br
 \fBattr_t slk_attr_sp(SCREEN*);\fR
 .br
@@ -241,27 +237,25 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint typeahead_sp(SCREEN*, int);\fR
 .br
-\fBNCURSES_CONST char* unctrl_sp(SCREEN*, chtype);\fR
+\fBint unget_wch_sp(SCREEN*, const wchar_t);\fR
 .br
 \fBint ungetch_sp(SCREEN*, int);\fR
 .br
 \fBint ungetmouse_sp(SCREEN*,MEVENT *);\fR
 .br
-\fBint unget_wch_sp(SCREEN*, const wchar_t);\fR
-.br
 \fBint use_default_colors_sp(SCREEN*);\fR
 .br
 \fBvoid use_env_sp(SCREEN*, bool);\fR
 .br
-\fBvoid use_tioctl_sp(SCREEN *, bool);\fR
-.br
 \fBint use_legacy_coding_sp(SCREEN*, int);\fR
+.br
+\fBvoid use_tioctl_sp(SCREEN *, bool);\fR
 .br
 \fBint vid_attr_sp(SCREEN*, attr_t, short, void *);\fR
 .br
-\fBint vidattr_sp(SCREEN*, chtype);\fR
-.br
 \fBint vid_puts_sp(SCREEN*, attr_t, short, void *, NCURSES_SP_OUTC);\fR
+.br
+\fBint vidattr_sp(SCREEN*, chtype);\fR
 .br
 \fBint vidputs_sp(SCREEN*, chtype, NCURSES_SP_OUTC);\fR
 .br
@@ -289,13 +283,19 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBint putp_sp(SCREEN*, const char *);\fR
 .br
-\fBint tgetflag_sp(SCREEN*, const char *);\fR
+\fBint restartterm_sp(SCREEN*, NCURSES_CONST char*, int, int *);\fR
+.br
+\fBTERMINAL* set_curterm_sp(SCREEN*, TERMINAL*);\fR
 .br
 \fBint tgetent_sp(SCREEN*, char *, const char *);\fR
+.br
+\fBint tgetflag_sp(SCREEN*, const char *);\fR
 .br
 \fBint tgetnum_sp(SCREEN*, const char *);\fR
 .br
 \fBchar* tgetstr_sp(SCREEN*, const char *, char **);\fR
+.br
+\fBchar* tgoto_sp(SCREEN*, const char *, int, int);\fR
 .br
 \fBint tigetflag_sp(SCREEN*, const char *);\fR
 .br
@@ -303,7 +303,17 @@ curs_sp_funcs \- \fBcurses\fR screen-pointer extension
 .br
 \fBchar* tigetstr_sp(SCREEN*, const char *);\fR
 .br
+\fBchar* tiparm_sp(SCREEN*, const char *, ...);\fR
+.br
+/* may instead use 9 long parameters */
+.br
+\fBchar* tparm_sp(SCREEN*, const char *, ...);\fR
+.br
 \fBint tputs_sp(SCREEN*, const char *, int, NCURSES_SP_OUTC);\fR
+.sp
+\fB#include <unctrl.h>\fR
+.sp
+\fBNCURSES_CONST char* unctrl_sp(SCREEN*, chtype);\fR
 .ad
 .br
 .SH DESCRIPTION

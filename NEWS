@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3583 2020/10/24 22:43:10 tom Exp $
+-- $Id: NEWS,v 1.3587 2020/10/31 23:19:16 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -46,12 +46,23 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20201031
+	+ modify MKterm.h.in so that it is not necessary to include <curses.h>
+	  before <term.h> (prompted by discussion with Reuben Thomas).
+	+ review/improve synopsis for curs_sp_funcs.3x (prompted by discussion
+	  with Reuben Thomas).
+	+ improve format of output in tic's check_infotocap() function, to
+	  ensure that the messages contain only printable text.
+	+ modify configure-check for clang to verify that -Qunused-arguments
+	  is supported.  IBM's xlclang does not support it (report by Steven
+	  Pitman).
+
 20201024
 	+ provide workaround configure-check for bool when cross-compiling.
 	+ fix a potential indexing error in _nc_parse_entry(), seen with
 	  Herlim's test data using address-sanitizer.
 	+ change a null-pointer check in set_curterm to a valid-string check,
-	  needed in to tic's use-resolution work pad_char is cancelled
+	  needed in to tic's use-resolution when pad_char is cancelled
 	  (report/testcase by Robert Sebastian Herlim)
 	+ improve tic's -c option to validate the number and type of parameters
 	  and compare against expected number/type before deciding which set of

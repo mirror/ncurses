@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_sp_funcs.3x,v 1.19 2020/10/19 21:42:48 tom Exp @
+  * @Id: curs_sp_funcs.3x,v 1.21 2020/10/31 22:58:24 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -55,7 +55,6 @@
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
-       <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>alloc_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>assume_default_colors_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
@@ -65,9 +64,9 @@
        <STRONG>int</STRONG> <STRONG>cbreak_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>color_content_sp(SCREEN*,</STRONG> <STRONG>short,</STRONG> <STRONG>short*,</STRONG> <STRONG>short*,</STRONG> <STRONG>short*);</STRONG>
        <STRONG>int</STRONG> <STRONG>curs_set_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>int</STRONG> <STRONG>define_key_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>def_prog_mode_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>def_shell_mode_sp(SCREEN*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>define_key_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>delay_output_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>doupdate_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>echo_sp(SCREEN*);</STRONG>
@@ -78,9 +77,9 @@
        <STRONG>int</STRONG> <STRONG>extended_slk_color_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>void</STRONG> <STRONG>filter_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>find_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>int</STRONG> <STRONG>free_pair_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>flash_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>flushinp_sp(SCREEN*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>free_pair_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>get_escdelay_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>getmouse_sp(SCREEN*,</STRONG> <STRONG>MEVENT*);</STRONG>
        <STRONG>WINDOW*</STRONG> <STRONG>getwin_sp(SCREEN*,</STRONG> <STRONG>FILE*);</STRONG>
@@ -95,10 +94,10 @@
        <STRONG>int</STRONG> <STRONG>init_extended_pair_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>init_pair_sp(SCREEN*,</STRONG> <STRONG>short,</STRONG> <STRONG>short,</STRONG> <STRONG>short);</STRONG>
        <STRONG>int</STRONG> <STRONG>intrflush_sp(SCREEN*,</STRONG> <STRONG>WINDOW*,</STRONG> <STRONG>bool);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>isendwin_sp(SCREEN*);</STRONG>
        <STRONG>bool</STRONG> <STRONG>is_term_resized_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>keybound_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>isendwin_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>key_defined_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
+       <STRONG>char*</STRONG> <STRONG>keybound_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>keyname_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>keyok_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>bool);</STRONG>
        <STRONG>char</STRONG> <STRONG>killchar_sp(SCREEN*);</STRONG>
@@ -123,23 +122,22 @@
        <STRONG>void</STRONG> <STRONG>qiflush_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>raw_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>reset_prog_mode_sp(SCREEN*);</STRONG>
+       <STRONG>void</STRONG> <STRONG>reset_color_pairs_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>reset_shell_mode_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>resetty_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>resize_term_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>resizeterm_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>int</STRONG> <STRONG>restartterm_sp(SCREEN*,</STRONG> <STRONG>NCURSES_CONST</STRONG> <STRONG>char*,</STRONG> <STRONG>int,</STRONG> <STRONG>int</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>ripoffline_sp(SCREEN*,</STRONG> <STRONG>int,</STRONG> <STRONG>int</STRONG> <STRONG>(*)(WINDOW*,</STRONG> <STRONG>int));</STRONG>
        <STRONG>int</STRONG> <STRONG>savetty_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>scr_init_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>scr_restore_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>scr_set_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
-       <STRONG>TERMINAL*</STRONG> <STRONG>set_curterm_sp(SCREEN*,</STRONG> <STRONG>TERMINAL*);</STRONG>
        <STRONG>int</STRONG> <STRONG>set_escdelay_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>set_tabsize_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attroff_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>chtype);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attron_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>chtype);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_attr_set_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>attr_t,</STRONG> <STRONG>short,</STRONG> <STRONG>void*);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_attrset_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>chtype);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attroff_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>chtype);</STRONG>
+       <STRONG>int</STRONG> <STRONG>slk_attron_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>chtype);</STRONG>
        <STRONG>attr_t</STRONG> <STRONG>slk_attr_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_clear_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_color_sp(SCREEN*,</STRONG> <STRONG>short);</STRONG>
@@ -155,17 +153,16 @@
        <STRONG>chtype</STRONG> <STRONG>termattrs_sp(SCREEN*);</STRONG>
        <STRONG>char*</STRONG> <STRONG>termname_sp(SCREEN*);</STRONG>
        <STRONG>int</STRONG> <STRONG>typeahead_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
-       <STRONG>NCURSES_CONST</STRONG> <STRONG>char*</STRONG> <STRONG>unctrl_sp(SCREEN*,</STRONG> <STRONG>chtype);</STRONG>
+       <STRONG>int</STRONG> <STRONG>unget_wch_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t);</STRONG>
        <STRONG>int</STRONG> <STRONG>ungetch_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>ungetmouse_sp(SCREEN*,MEVENT</STRONG> <STRONG>*);</STRONG>
-       <STRONG>int</STRONG> <STRONG>unget_wch_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t);</STRONG>
        <STRONG>int</STRONG> <STRONG>use_default_colors_sp(SCREEN*);</STRONG>
        <STRONG>void</STRONG> <STRONG>use_env_sp(SCREEN*,</STRONG> <STRONG>bool);</STRONG>
-       <STRONG>void</STRONG> <STRONG>use_tioctl_sp(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>bool);</STRONG>
        <STRONG>int</STRONG> <STRONG>use_legacy_coding_sp(SCREEN*,</STRONG> <STRONG>int);</STRONG>
+       <STRONG>void</STRONG> <STRONG>use_tioctl_sp(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>bool);</STRONG>
        <STRONG>int</STRONG> <STRONG>vid_attr_sp(SCREEN*,</STRONG> <STRONG>attr_t,</STRONG> <STRONG>short,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vidattr_sp(SCREEN*,</STRONG> <STRONG>chtype);</STRONG>
        <STRONG>int</STRONG> <STRONG>vid_puts_sp(SCREEN*,</STRONG> <STRONG>attr_t,</STRONG> <STRONG>short,</STRONG> <STRONG>void</STRONG> <STRONG>*,</STRONG> <STRONG>NCURSES_SP_OUTC);</STRONG>
+       <STRONG>int</STRONG> <STRONG>vidattr_sp(SCREEN*,</STRONG> <STRONG>chtype);</STRONG>
        <STRONG>int</STRONG> <STRONG>vidputs_sp(SCREEN*,</STRONG> <STRONG>chtype,</STRONG> <STRONG>NCURSES_SP_OUTC);</STRONG>
        <STRONG>wchar_t*</STRONG> <STRONG>wunctrl_sp(SCREEN*,</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*);</STRONG>
 
@@ -187,14 +184,24 @@
 
        <STRONG>int</STRONG> <STRONG>del_curterm_sp(SCREEN*,</STRONG> <STRONG>TERMINAL</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>putp_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetflag_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>restartterm_sp(SCREEN*,</STRONG> <STRONG>NCURSES_CONST</STRONG> <STRONG>char*,</STRONG> <STRONG>int,</STRONG> <STRONG>int</STRONG> <STRONG>*);</STRONG>
+       <STRONG>TERMINAL*</STRONG> <STRONG>set_curterm_sp(SCREEN*,</STRONG> <STRONG>TERMINAL*);</STRONG>
        <STRONG>int</STRONG> <STRONG>tgetent_sp(SCREEN*,</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
+       <STRONG>int</STRONG> <STRONG>tgetflag_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>tgetnum_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>char*</STRONG> <STRONG>tgetstr_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>char</STRONG> <STRONG>**);</STRONG>
+       <STRONG>char*</STRONG> <STRONG>tgoto_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int,</STRONG> <STRONG>int);</STRONG>
        <STRONG>int</STRONG> <STRONG>tigetflag_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>int</STRONG> <STRONG>tigetnum_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
        <STRONG>char*</STRONG> <STRONG>tigetstr_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*);</STRONG>
+       <STRONG>char*</STRONG> <STRONG>tiparm_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>...);</STRONG>
+       /* may instead use 9 long parameters */
+       <STRONG>char*</STRONG> <STRONG>tparm_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>...);</STRONG>
        <STRONG>int</STRONG> <STRONG>tputs_sp(SCREEN*,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*,</STRONG> <STRONG>int,</STRONG> <STRONG>NCURSES_SP_OUTC);</STRONG>
+
+       <STRONG>#include</STRONG> <STRONG>&lt;unctrl.h&gt;</STRONG>
+
+       <STRONG>NCURSES_CONST</STRONG> <STRONG>char*</STRONG> <STRONG>unctrl_sp(SCREEN*,</STRONG> <STRONG>chtype);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
