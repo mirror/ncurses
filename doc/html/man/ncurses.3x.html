@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.149 2020/10/03 20:15:52 tom Exp @
+  * @Id: ncurses.3x,v 1.150 2020/11/07 23:48:27 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201031).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201107).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -1226,101 +1226,125 @@
             filing  libraries  add a "_g" and a "_p" to the root names respec-
             tively, e.g., <STRONG>libncurses_g.a</STRONG> and <STRONG>libncurses_p.a</STRONG>.
 
+       --with-termlib
+            Low-level functions which do not depend upon whether  the  library
+            supports wide-characters, are provided in the tinfo library.
+
+            By  doing  this, it is possible to share the tinfo library between
+            wide/normal configurations as well  as  reduce  the  size  of  the
+            library when only low-level functions are needed.
+
+            Those functions are described in these pages:
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_extend.3x.html">curs_extend(3x)</A></STRONG> - miscellaneous curses extensions
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG> - <STRONG>curses</STRONG> input options
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG> - low-level <STRONG>curses</STRONG> routines
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG> - <STRONG>curses</STRONG> environment query routines
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG> - <STRONG>curses</STRONG> emulation of termcap
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG> - <STRONG>curses</STRONG> interfaces to terminfo database
+
+            <STRONG>o</STRONG>   <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG> - miscellaneous <STRONG>curses</STRONG> utility routines
+
        --with-trace
-            The <STRONG>trace</STRONG> function normally resides in the debug library,  but  it
+            The  <STRONG>trace</STRONG>  function normally resides in the debug library, but it
             is sometimes useful to configure this in the shared library.  Con-
-            figure scripts should check for the  function's  existence  rather
+            figure  scripts  should  check for the function's existence rather
             than assuming it is always in the debug library.
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        /usr/share/tabset
-            directory  containing  initialization files for the terminal capa-
+            directory containing initialization files for the  terminal  capa-
             bility database /usr/share/terminfo terminal capability database
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> and related pages whose names begin  "curs_"  for  detailed
+       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>  and  related  pages whose names begin "curs_" for detailed
        routine descriptions.
        <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>
        <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG> for user-defined capabilities
 
 
 </PRE><H2><a name="h2-EXTENSIONS">EXTENSIONS</a></H2><PRE>
-       The  <STRONG>ncurses</STRONG> library can be compiled with an option (<STRONG>-DUSE_GETCAP</STRONG>) that
-       falls back to the old-style /etc/termcap file  if  the  terminal  setup
-       code  cannot  find a terminfo entry corresponding to <STRONG>TERM</STRONG>.  Use of this
-       feature is not recommended, as it essentially includes an entire  term-
-       cap  compiler  in the <STRONG>ncurses</STRONG> startup code, at significant cost in core
+       The <STRONG>ncurses</STRONG> library can be compiled with an option (<STRONG>-DUSE_GETCAP</STRONG>)  that
+       falls  back  to  the  old-style /etc/termcap file if the terminal setup
+       code cannot find a terminfo entry corresponding to <STRONG>TERM</STRONG>.  Use  of  this
+       feature  is not recommended, as it essentially includes an entire term-
+       cap compiler in the <STRONG>ncurses</STRONG> startup code, at significant cost  in  core
        and startup cycles.
 
-       The <STRONG>ncurses</STRONG> library includes facilities for capturing mouse  events  on
-       certain  terminals  (including  xterm).   See the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual
+       The  <STRONG>ncurses</STRONG>  library includes facilities for capturing mouse events on
+       certain terminals (including xterm).   See  the  <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>  manual
        page for details.
 
        The <STRONG>ncurses</STRONG> library includes facilities for responding to window resiz-
        ing events, e.g., when running in an xterm.  See the <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG> and
-       <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG> manual pages for details.  In addition, the library may  be
+       <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>  manual pages for details.  In addition, the library may be
        configured with a <STRONG>SIGWINCH</STRONG> handler.
 
-       The  <STRONG>ncurses</STRONG> library extends the fixed set of function key capabilities
-       of terminals by allowing the application designer to define  additional
-       key  sequences at runtime.  See the <STRONG><A HREF="define_key.3x.html">define_key(3x)</A></STRONG> <STRONG><A HREF="key_defined.3x.html">key_defined(3x)</A></STRONG>, and
+       The <STRONG>ncurses</STRONG> library extends the fixed set of function key  capabilities
+       of  terminals by allowing the application designer to define additional
+       key sequences at runtime.  See the <STRONG><A HREF="define_key.3x.html">define_key(3x)</A></STRONG> <STRONG><A HREF="key_defined.3x.html">key_defined(3x)</A></STRONG>,  and
        <STRONG><A HREF="keyok.3x.html">keyok(3x)</A></STRONG> manual pages for details.
 
-       The <STRONG>ncurses</STRONG> library can exploit the  capabilities  of  terminals  which
-       implement  the  ISO-6429  SGR  39  and  SGR 49 controls, which allow an
-       application to reset the terminal to its original foreground and  back-
+       The  <STRONG>ncurses</STRONG>  library  can  exploit the capabilities of terminals which
+       implement the ISO-6429 SGR 39 and  SGR  49  controls,  which  allow  an
+       application  to reset the terminal to its original foreground and back-
        ground colors.  From the users' perspective, the application is able to
-       draw colored text on a background whose  color  is  set  independently,
-       providing  better  control  over color contrasts.  See the <STRONG>default_col-</STRONG>
+       draw  colored  text  on  a background whose color is set independently,
+       providing better control over color contrasts.   See  the  <STRONG>default_col-</STRONG>
        <STRONG><A HREF="default_colors.3x.html">ors(3x)</A></STRONG> manual page for details.
 
-       The <STRONG>ncurses</STRONG> library includes a function for directing application  out-
-       put   to   a   printer  attached  to  the  terminal  device.   See  the
+       The  <STRONG>ncurses</STRONG> library includes a function for directing application out-
+       put  to  a  printer  attached  to  the  terminal   device.    See   the
        <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG> manual page for details.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The <STRONG>ncurses</STRONG> library is intended to be BASE-level  conformant  with  XSI
-       Curses.   The  EXTENDED  XSI Curses functionality (including color sup-
+       The  <STRONG>ncurses</STRONG>  library  is intended to be BASE-level conformant with XSI
+       Curses.  The EXTENDED XSI Curses functionality  (including  color  sup-
        port) is supported.
 
-       A small number of local differences (that  is,  individual  differences
-       between  the XSI Curses and <STRONG>ncurses</STRONG> calls) are described in <STRONG>PORTABILITY</STRONG>
+       A  small  number  of local differences (that is, individual differences
+       between the XSI Curses and <STRONG>ncurses</STRONG> calls) are described in  <STRONG>PORTABILITY</STRONG>
        sections of the library man pages.
 
 
 </PRE><H3><a name="h3-Error-checking">Error checking</a></H3><PRE>
-       In many cases, X/Open Curses is vague about error conditions,  omitting
+       In  many cases, X/Open Curses is vague about error conditions, omitting
        some of the SVr4 documentation.
 
        Unlike other implementations, this one checks parameters such as point-
-       ers to WINDOW structures to ensure they are not null.  The main  reason
-       for  providing this behavior is to guard against programmer error.  The
-       standard interface does not provide a way for the library  to  tell  an
+       ers  to WINDOW structures to ensure they are not null.  The main reason
+       for providing this behavior is to guard against programmer error.   The
+       standard  interface  does  not provide a way for the library to tell an
        application which of several possible errors were detected.  Relying on
        this (or some other) extension will adversely affect the portability of
        curses applications.
 
 
 </PRE><H3><a name="h3-Extensions-versus-portability">Extensions versus portability</a></H3><PRE>
-       Most  of the extensions provided by ncurses have not been standardized.
+       Most of the extensions provided by ncurses have not been  standardized.
        Some  have  been  incorporated  into  other  implementations,  such  as
        PDCurses or NetBSD curses.  Here are a few to consider:
 
        <STRONG>o</STRONG>   The routine <STRONG>has_key</STRONG> is not part of XPG4, nor is it present in SVr4.
            See the <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG> manual page for details.
 
-       <STRONG>o</STRONG>   The routine <STRONG>slk_attr</STRONG> is not part of XPG4,  nor  is  it  present  in
+       <STRONG>o</STRONG>   The  routine  <STRONG>slk_attr</STRONG>  is  not  part of XPG4, nor is it present in
            SVr4.  See the <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG> manual page for details.
 
-       <STRONG>o</STRONG>   The  routines  <STRONG>getmouse</STRONG>,  <STRONG>mousemask</STRONG>, <STRONG>ungetmouse</STRONG>, <STRONG>mouseinterval</STRONG>, and
-           <STRONG>wenclose</STRONG> relating to mouse interfacing are not part  of  XPG4,  nor
-           are  they  present in SVr4.  See the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual page for
+       <STRONG>o</STRONG>   The routines <STRONG>getmouse</STRONG>, <STRONG>mousemask</STRONG>,  <STRONG>ungetmouse</STRONG>,  <STRONG>mouseinterval</STRONG>,  and
+           <STRONG>wenclose</STRONG>  relating  to  mouse interfacing are not part of XPG4, nor
+           are they present in SVr4.  See the <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG> manual  page  for
            details.
 
-       <STRONG>o</STRONG>   The routine <STRONG>mcprint</STRONG> was not present in any previous  curses  imple-
+       <STRONG>o</STRONG>   The  routine  <STRONG>mcprint</STRONG> was not present in any previous curses imple-
            mentation.  See the <STRONG><A HREF="curs_print.3x.html">curs_print(3x)</A></STRONG> manual page for details.
 
        <STRONG>o</STRONG>   The routine <STRONG>wresize</STRONG> is not part of XPG4, nor is it present in SVr4.
@@ -1330,61 +1354,61 @@
            tion programs.  See <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG> for the discussion of <STRONG>is_scrol-</STRONG>
            <STRONG>lok</STRONG>, etc.
 
-       <STRONG>o</STRONG>   This implementation can be configured to provide  rudimentary  sup-
-           port  for  multi-threaded  applications.   See <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG> for
+       <STRONG>o</STRONG>   This  implementation  can be configured to provide rudimentary sup-
+           port for multi-threaded  applications.   See  <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>  for
            details.
 
-       <STRONG>o</STRONG>   This implementation can also be configured  to  provide  a  set  of
-           functions  which  improve  the  ability to manage multiple screens.
+       <STRONG>o</STRONG>   This  implementation  can  also  be  configured to provide a set of
+           functions which improve the ability  to  manage  multiple  screens.
            See <STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG> for details.
 
 
 </PRE><H3><a name="h3-Padding-differences">Padding differences</a></H3><PRE>
-       In historic curses versions, delays embedded in  the  capabilities  <STRONG>cr</STRONG>,
-       <STRONG>ind</STRONG>,  <STRONG>cub1</STRONG>,  <STRONG>ff</STRONG>  and <STRONG>tab</STRONG> activated corresponding delay bits in the UNIX
+       In  historic  curses  versions, delays embedded in the capabilities <STRONG>cr</STRONG>,
+       <STRONG>ind</STRONG>, <STRONG>cub1</STRONG>, <STRONG>ff</STRONG> and <STRONG>tab</STRONG> activated corresponding delay bits  in  the  UNIX
        tty driver.  In this implementation, all padding is done by sending NUL
-       bytes.   This method is slightly more expensive, but narrows the inter-
-       face to the UNIX  kernel  significantly  and  increases  the  package's
+       bytes.  This method is slightly more expensive, but narrows the  inter-
+       face  to  the  UNIX  kernel  significantly  and increases the package's
        portability correspondingly.
 
 
 </PRE><H3><a name="h3-Header-files">Header files</a></H3><PRE>
-       The  header  file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes the header files
+       The header file <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes  the  header  files
        <STRONG>&lt;stdio.h&gt;</STRONG> and <STRONG>&lt;unctrl.h&gt;</STRONG>.
 
        X/Open Curses has more to say, but does not finish the story:
 
-           The inclusion of &lt;curses.h&gt; may make visible all symbols  from  the
+           The  inclusion  of &lt;curses.h&gt; may make visible all symbols from the
            headers &lt;stdio.h&gt;, &lt;term.h&gt;, &lt;termios.h&gt;, and &lt;wchar.h&gt;.
 
        Here is a more complete story:
 
-       <STRONG>o</STRONG>   Starting   with  BSD  curses,  all  implementations  have  included
+       <STRONG>o</STRONG>   Starting  with  BSD  curses,  all  implementations  have   included
            &lt;stdio.h&gt;.
 
-           BSD curses included &lt;curses.h&gt;  and  &lt;unctrl.h&gt;  from  an  internal
+           BSD  curses  included  &lt;curses.h&gt;  and  &lt;unctrl.h&gt; from an internal
            header "curses.ext" ("ext" was a short name for <EM>externs</EM>).
 
-           BSD  curses  used  &lt;stdio.h&gt; internally (for <STRONG>printw</STRONG> and <STRONG>scanw</STRONG>), but
+           BSD curses used &lt;stdio.h&gt; internally (for <STRONG>printw</STRONG>  and  <STRONG>scanw</STRONG>),  but
            nothing in &lt;curses.h&gt; itself relied upon &lt;stdio.h&gt;.
 
-       <STRONG>o</STRONG>   SVr2 curses added <STRONG><A HREF="curs_initscr.3x.html">newterm(3x)</A></STRONG>, which relies upon  &lt;stdio.h&gt;.   That
+       <STRONG>o</STRONG>   SVr2  curses  added <STRONG><A HREF="curs_initscr.3x.html">newterm(3x)</A></STRONG>, which relies upon &lt;stdio.h&gt;.  That
            is, the function prototype uses <STRONG>FILE</STRONG>.
 
            SVr4 curses added <STRONG>putwin</STRONG> and <STRONG>getwin</STRONG>, which also use &lt;stdio.h&gt;.
 
            X/Open Curses documents all three of these functions.
 
-           SVr4  curses  and  X/Open  Curses  do  not require the developer to
+           SVr4 curses and X/Open Curses  do  not  require  the  developer  to
            include  &lt;stdio.h&gt;  before  including  &lt;curses.h&gt;.   Both  document
            curses showing &lt;curses.h&gt; as the only required header.
 
            As a result, standard &lt;curses.h&gt; will always include &lt;stdio.h&gt;.
 
-       <STRONG>o</STRONG>   X/Open  Curses is inconsistent with respect to SVr4 regarding &lt;unc-
+       <STRONG>o</STRONG>   X/Open Curses is inconsistent with respect to SVr4 regarding  &lt;unc-
            trl.h&gt;.
 
-           As  noted  in  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>,  ncurses  includes  &lt;unctrl.h&gt;   from
+           As   noted  in  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>,  ncurses  includes  &lt;unctrl.h&gt;  from
            &lt;curses.h&gt; (like SVr4).
 
        <STRONG>o</STRONG>   X/Open's comments about &lt;term.h&gt; and &lt;termios.h&gt; may refer to HP-UX
@@ -1393,55 +1417,55 @@
            HP-UX curses includes &lt;term.h&gt; from &lt;curses.h&gt; to declare <STRONG>setupterm</STRONG>
            in curses.h, but ncurses (and Solaris curses) do not.
 
-           AIX  curses includes &lt;term.h&gt; and &lt;termios.h&gt;.  Again, ncurses (and
+           AIX curses includes &lt;term.h&gt; and &lt;termios.h&gt;.  Again, ncurses  (and
            Solaris curses) do not.
 
-       <STRONG>o</STRONG>   X/Open says that &lt;curses.h&gt; <EM>may</EM> include &lt;term.h&gt;, but there  is  no
+       <STRONG>o</STRONG>   X/Open  says  that &lt;curses.h&gt; <EM>may</EM> include &lt;term.h&gt;, but there is no
            requirement that it do that.
 
            Some  programs  use  functions  declared  in  both  &lt;curses.h&gt;  and
-           &lt;term.h&gt;, and must include both headers in the same  module.   Very
-           old  versions  of  AIX  curses required including &lt;curses.h&gt; before
+           &lt;term.h&gt;,  and  must include both headers in the same module.  Very
+           old versions of AIX curses  required  including  &lt;curses.h&gt;  before
            including &lt;term.h&gt;.
 
-           Because ncurses header files include the headers needed  to  define
+           Because  ncurses  header files include the headers needed to define
            datatypes used in the headers, ncurses header files can be included
-           in any order.  But for portability, you should  include  &lt;curses.h&gt;
+           in  any  order.  But for portability, you should include &lt;curses.h&gt;
            before &lt;term.h&gt;.
 
-       <STRONG>o</STRONG>   X/Open  Curses  says  <EM>"may</EM> <EM>make</EM> <EM>visible"</EM> because including a header
+       <STRONG>o</STRONG>   X/Open Curses says <EM>"may</EM> <EM>make</EM> <EM>visible"</EM> because  including  a  header
            file does not necessarily make all symbols in it visible (there are
            ifdef's to consider).
 
-           For  instance,  in  ncurses &lt;wchar.h&gt; <EM>may</EM> be included if the proper
-           symbol is defined, and if ncurses is configured for  wide-character
-           support.   If the header is included, its symbols may be made visi-
+           For instance, in ncurses &lt;wchar.h&gt; <EM>may</EM> be included  if  the  proper
+           symbol  is defined, and if ncurses is configured for wide-character
+           support.  If the header is included, its symbols may be made  visi-
            ble.  That depends on the value used for <STRONG>_XOPEN_SOURCE</STRONG> feature test
            macro.
 
-       <STRONG>o</STRONG>   X/Open  Curses  documents  one  required header, in a special case:
-           &lt;stdarg.h&gt;  before  &lt;curses.h&gt;  to  prototype  the  <STRONG>vw_printw</STRONG>   and
-           <STRONG>vw_scanw</STRONG>  functions  (as well as the obsolete the <STRONG>vwprintw</STRONG> and <STRONG>vws-</STRONG>
+       <STRONG>o</STRONG>   X/Open Curses documents one required header,  in  a  special  case:
+           &lt;stdarg.h&gt;   before  &lt;curses.h&gt;  to  prototype  the  <STRONG>vw_printw</STRONG>  and
+           <STRONG>vw_scanw</STRONG> functions (as well as the obsolete the <STRONG>vwprintw</STRONG>  and  <STRONG>vws-</STRONG>
            <STRONG>canw</STRONG> functions).  Each of those uses a <STRONG>va_list</STRONG> parameter.
 
-           The two obsolete functions were  introduced  in  SVr3.   The  other
-           functions  were  introduced  in  X/Open  Curses.   In between, SVr4
-           curses provided for  the  possibility  that  an  application  might
+           The  two  obsolete  functions  were  introduced in SVr3.  The other
+           functions were introduced  in  X/Open  Curses.   In  between,  SVr4
+           curses  provided  for  the  possibility  that  an application might
            include either &lt;varargs.h&gt; or &lt;stdarg.h&gt;.  Initially, that was done
-           by using <STRONG>void*</STRONG> for the <STRONG>va_list</STRONG> parameter.  Later,  a  special  type
-           (defined  in &lt;stdio.h&gt;) was introduced, to allow for compiler type-
+           by  using  <STRONG>void*</STRONG>  for the <STRONG>va_list</STRONG> parameter.  Later, a special type
+           (defined in &lt;stdio.h&gt;) was introduced, to allow for compiler  type-
            checking.  That special type is always available, because &lt;stdio.h&gt;
            is always included by &lt;curses.h&gt;.
 
            None of the X/Open Curses implementations require an application to
-           include &lt;stdarg.h&gt;  before  &lt;curses.h&gt;  because  they  either  have
-           allowed  for  a  special type, or (like ncurses) include &lt;stdarg.h&gt;
+           include  &lt;stdarg.h&gt;  before  &lt;curses.h&gt;  because  they  either have
+           allowed for a special type, or (like  ncurses)  include  &lt;stdarg.h&gt;
            directly to provide a portable interface.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       If standard output from a <STRONG>ncurses</STRONG> program is re-directed  to  something
-       which  is not a tty, screen updates will be directed to standard error.
+       If  standard  output from a <STRONG>ncurses</STRONG> program is re-directed to something
+       which is not a tty, screen updates will be directed to standard  error.
        This was an undocumented feature of AT&amp;T System V Release 3 curses.
 
 

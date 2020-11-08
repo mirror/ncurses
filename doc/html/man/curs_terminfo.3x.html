@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.66 2020/10/31 23:15:44 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.67 2020/11/07 23:49:07 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -101,6 +101,14 @@
        directly with the <STRONG>terminfo</STRONG> database to handle certain terminal capabil-
        ities, such as programming function keys.  For all other functionality,
        <STRONG>curses</STRONG> routines are more suitable and their use is recommended.
+
+       None of these functions use  (or  are  aware  of)  multibyte  character
+       strings such as UTF-8:
+
+       <STRONG>o</STRONG>   capability names use the POSIX portable character set
+
+       <STRONG>o</STRONG>   capability  string  values  have  no  associated encoding; they are
+           strings of 8-bit characters.
 
 
 </PRE><H3><a name="h3-Initialization">Initialization</a></H3><PRE>
@@ -380,6 +388,7 @@
        saveterm    save current modes as "in curses" state
        savetty     store current tty flags
        setterm     establish terminal with given type
+
        setupterm   establish terminal with given type
        tparm       instantiate a string expression with parameters
        tputs       apply padding information to a string

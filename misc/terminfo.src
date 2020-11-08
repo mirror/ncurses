@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.826 $
-#	$Date: 2020/10/17 22:41:29 $
+#	$Revision: 1.829 $
+#	$Date: 2020/11/08 00:03:03 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -7100,7 +7100,6 @@ alacritty+common|base fragment for alacritty,
 
 #### Kitty
 # https://github.com/kovidgoyal/kitty
-# Version 0.13.3
 # Project started in 2016/10 (see alacritty), but is a Python script rather
 # than Rust, using OpenGL.  The same caveats regarding remote connections
 # apply.  This is not an X terminal, though (like alacritty), it copies
@@ -7115,6 +7114,23 @@ alacritty+common|base fragment for alacritty,
 #	http://lists.gnu.org/archive/html/bug-ncurses/2018-09/msg00005.html
 #	https://github.com/kovidgoyal/kitty/issues/879
 #
+# Version 0.19.1
+# changes since 0.13.3:
+# vttest
+#	ISO-6429
+#		REP works, though using unspecified behavior
+#	xterm
+#		xterm's SGR-mouse mode is recognized.
+#		does recognize original alternate-screen
+#		bug: mouse focus in/out does not work.
+#		bug: X10 mouse mode responds like any-event
+#		bug: highlight-tracking does not work; terminal hangs.
+#
+# tack
+#	rs1 adds an empty string for resetting title- and other OSC-strings.
+#	italics work
+#
+# Version 0.13.3
 # Notes:
 #	initial screensize 71x22
 #	does not respond to "resize -s"
@@ -7204,17 +7220,18 @@ kitty+common|KovId's TTY common properties,
 	kf31=\E[18;5~, kf32=\E[19;5~, kf33=\E[20;5~,
 	kf34=\E[21;5~, kf35=\E[23;5~, kf36=\E[24;5~, kf4=\EOS,
 	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
-	khome=\EOH, kich1=\E[2~, kind=\E[1;2B, kmous=\E[M,
-	knp=\E[6~, kpp=\E[5~, kri=\E[1;2A, op=\E[39;49m, rc=\E8,
-	rev=\E[7m, ri=\EM, rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l,
-	rmkx=\E[?1l, rmso=\E[27m, rmul=\E[24m, rs1=\Ec, sc=\E7,
+	khome=\EOH, kich1=\E[2~, kind=\E[1;2B, knp=\E[6~,
+	kpp=\E[5~, kri=\E[1;2A, op=\E[39;49m, rc=\E8, rev=\E[7m,
+	ri=\EM, rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l,
+	rmso=\E[27m, rmul=\E[24m, rs1=\E]\E\\\Ec, sc=\E7,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
 	    %?%p1%p3%|%t;7%;m,
 	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	vpa=\E[%i%p1%dd, use=ecma+index, use=xterm+sl-twm,
-	use=ecma+strikeout, use=xterm+pce2, use=xterm+pcc2,
-	use=ecma+italics, use=xterm+alt1049,
+	vpa=\E[%i%p1%dd, use=ansi+rep, use=xterm+sm+1006,
+	use=ecma+index, use=xterm+sl-twm, use=ecma+strikeout,
+	use=xterm+pce2, use=xterm+pcc2, use=ecma+italics,
+	use=xterm+alt1049,
 
 ######## WEB CLIENTS
 
@@ -21045,16 +21062,16 @@ putty-m1|Putty Minitel 1 "like" Couleurs,
 	dim@, kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
 	kf5=\E[15~, rmcup=\E[2J\E[?47l\E8, rmul=\E[24m,
 	smcup=\E7\E[?47h, smul=\E[4m, .E3=\E[300S,
-	.WS=\E[8;%d;%dt, Z0=\E[?3h, Z1=\E[?3l, use=xterm+sl-twm,
-	use=ecma+index, use=linux-m1,
+	use=putty+screen, use=xterm+sl-twm, use=ecma+index,
+	use=linux-m1,
 
 putty-m1b|Putty Minitel 1B "like" Monochrome (Gris/Blanc/Noir),
 	hs,
 	dim@, kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
 	kf5=\E[15~, rmcup=\E[2J\E[?47l\E8, rmul=\E[24m,
 	smcup=\E7\E[?47h, smul=\E[4m, .E3=\E[300S,
-	.WS=\E[8;%d;%dt, Z0=\E[?3h, Z1=\E[?3l, use=xterm+sl-twm,
-	use=ecma+index, use=linux-m1b,
+	use=putty+screen, use=xterm+sl-twm, use=ecma+index,
+	use=linux-m1b,
 
 putty-m2|Putty Minitel 2 "like" Couleurs (Vert/Blanc/Noir),
 	hs,
@@ -21063,8 +21080,14 @@ putty-m2|Putty Minitel 2 "like" Couleurs (Vert/Blanc/Noir),
 	dim@, kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
 	kf5=\E[15~, rmcup=\E[2J\E[?47l\E8, rmul=\E[24m,
 	smcup=\E7\E[?47h, smul=\E[4m, .E3=\E[300S,
-	.WS=\E[8;%d;%dt, Z0=\E[?3h, Z1=\E[?3l, use=xterm+sl-twm,
-	use=ecma+index, use=linux-m2,
+	use=putty+screen, use=xterm+sl-twm, use=ecma+index,
+	use=linux-m2,
+
+putty+screen|PuTTY with screen resizing extensions,
+	.WS=\E[8;%p1%d;%p2%dt, Z0=\E[?3h, Z1=\E[?3l,
+
+putty-screen|PuTTY with screen resizing extensions,
+	WS=\E[8;%p1%d;%p2%dt, Z0=\E[?3h, Z1=\E[?3l, use=putty,
 
 screen.putty-m1|Putty m1 specific for screen,
 	dim@, rmul=\E[24m, smul=\E[4m, E3@, use=screen.linux-m1,
@@ -26696,5 +26719,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-10-17
 #	+ expanded notes about tek4107 -TD
+#
+# 2020-11-07
+#	+ update kitty+common -TD
+#	+ add putty+screen and putty-screen (suggested by Alexandre Montaron).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

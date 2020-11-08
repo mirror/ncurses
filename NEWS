@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3587 2020/10/31 23:19:16 tom Exp $
+-- $Id: NEWS,v 1.3589 2020/11/07 23:52:28 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20201107
+	+ update kitty+common -TD
+	+ add putty+screen and putty-screen (suggested by Alexandre Montaron).
+	+ explain in ncurses.3x that functions in the tinfo library do not rely
+	  upon wide-characters (prompted by discussion with Reuben Thomas).
 
 20201031
 	+ modify MKterm.h.in so that it is not necessary to include <curses.h>

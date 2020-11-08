@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: ncurses.3x,v 1.149 2020/10/03 20:15:52 tom Exp $
+.\" $Id: ncurses.3x,v 1.150 2020/11/07 23:48:27 tom Exp $
 .hy 0
 .TH ncurses 3X ""
 .ie \n(.g .ds `` \(lq
@@ -1305,6 +1305,32 @@ e.g., \fBlibncurses.so\fP and \fBlibncurses.a\fP.
 The debug and profiling libraries add a \*(``_g\*(''
 and a \*(``_p\*('' to the root names respectively,
 e.g., \fBlibncurses_g.a\fP and \fBlibncurses_p.a\fP.
+.TP 5
+\-\-with\-termlib
+Low-level functions which do not depend upon whether the library
+supports wide-characters, are provided in the tinfo library.
+.IP
+By doing this, it is possible to share the tinfo library between
+wide/normal configurations as well as reduce the size of the library
+when only low-level functions are needed.
+.IP
+Those functions are described in these pages:
+.RS
+.bP
+\fBcurs_extend\fP(3X) \- miscellaneous curses extensions
+.bP
+\fBcurs_inopts\fR(3X) \- \fBcurses\fR input options
+.bP
+\fBcurs_kernel\fR(3X) \- low-level \fBcurses\fR routines
+.bP
+\fBcurs_termattrs\fR(3X) \- \fBcurses\fR environment query routines
+.bP
+\fBcurs_termcap\fR(3X) \- \fBcurses\fR emulation of termcap
+.bP
+\fBcurs_terminfo\fR(3X) \- \fBcurses\fR interfaces to terminfo database
+.bP
+\fBcurs_util\fR(3X) \- miscellaneous \fBcurses\fR utility routines
+.RE
 .TP 5
 \-\-with\-trace
 The \fBtrace\fP function normally resides in the debug library,
