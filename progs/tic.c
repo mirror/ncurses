@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.289 2020/10/31 22:15:55 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.290 2020/11/14 18:16:33 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2372,7 +2372,7 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 		  ? parametrized[i]
 		  : ((*value == 'k')
 		     ? 0
-		     : has_params(value)));
+		     : has_params(value, FALSE)));
     char *ti_value;
     char *tc_value;
     bool embedded;

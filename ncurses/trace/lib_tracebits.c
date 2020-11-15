@@ -35,7 +35,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_tracebits.c,v 1.30 2020/09/05 22:54:47 tom Exp $")
+MODULE_ID("$Id: lib_tracebits.c,v 1.31 2020/11/14 23:38:11 tom Exp $")
 
 #if HAVE_SYS_TERMIO_H
 #include <sys/termio.h>		/* needed for ISC */
@@ -104,7 +104,7 @@ lookup_bits(char *buf, const BITNAMES * table, const char *label, unsigned int v
 }
 
 NCURSES_EXPORT(char *)
-_nc_trace_ttymode(TTY * tty)
+_nc_trace_ttymode(const TTY * tty)
 /* describe the state of the terminal control bits exactly */
 {
     char *buf;

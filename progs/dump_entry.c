@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.179 2020/07/08 21:21:11 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.180 2020/11/14 18:18:13 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -747,7 +747,7 @@ leading_DYN(DYNBUF * buffer, const char *leading)
 }
 
 bool
-has_params(const char *src)
+has_params(const char *src, bool formatting)
 {
     bool result = FALSE;
     int len = (int) strlen(src);
@@ -765,7 +765,11 @@ has_params(const char *src)
 	}
     }
     if (!ifthen) {
-	result = ((len > 50) && params);
+	if (formatting) {
+	    result = ((len > 50) && params);
+	} else {
+	    result = params;
+	}
     }
     return result;
 }
@@ -774,7 +778,7 @@ static char *
 fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
 {
     bool percent = FALSE;
-    bool params = has_params(src);
+    bool params = has_params(src, TRUE);
 
     while (*src != '\0') {
 	switch (*src) {
@@ -801,7 +805,7 @@ fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
 		    strncpy_DYN(&tmpbuf, "%", (size_t) 1);
 		    strncpy_DYN(&tmpbuf, src, (size_t) 1);
 		    src++;
-		    params = has_params(src);
+		    params = has_params(src, TRUE);
 		    if (!params && *src != '\0' && *src != '%') {
 			strncpy_DYN(&tmpbuf, "\n", (size_t) 1);
 			indent_DYN(&tmpbuf, level + 1);
@@ -1110,7 +1114,7 @@ fmt_entry(TERMTYPE2 *tterm,
 			      ? parametrized[i]
 			      : ((*srccap == 'k')
 				 ? 0
-				 : has_params(srccap)));
+				 : has_params(srccap, FALSE)));
 		char *cv = _nc_infotocap(name, srccap, params);
 
 		if (cv == 0) {

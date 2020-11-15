@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32con.c,v 1.3 2020/10/10 19:07:10 tom Exp $")
+MODULE_ID("$Id: lib_win32con.c,v 1.4 2020/11/14 23:37:16 tom Exp $")
 
 #ifdef _NC_WINDOWS
 
@@ -890,7 +890,7 @@ _nc_console_twait(
                     T(("twait:err GetNumberOfConsoleInputEvents"));
                 }
                 if (isNoDelay && b) {
-                    T(("twait: Events Available: %d",nRead));
+                    T(("twait: Events Available: %ld", nRead));
                     if (nRead==0) {
                         code=0;
                         goto end;
@@ -899,7 +899,7 @@ _nc_console_twait(
                         INPUT_RECORD* pInpRec =
                             TypeAlloca(INPUT_RECORD,nRead);
                         if (pInpRec != NULL) {
-                            int i;
+                            DWORD i;
                             BOOL f;
                             memset(pInpRec,0,sizeof(INPUT_RECORD)*nRead);
                             f = PeekConsoleInput(hdl, pInpRec, nRead, &n);
@@ -936,11 +936,11 @@ _nc_console_twait(
                         switch (inp_rec.EventType) {
                         case KEY_EVENT:
                             if (mode & TW_INPUT) {
-                                T(("twait:event KEY_EVENT"));
                                 WORD vk =
                                     inp_rec.Event.KeyEvent.wVirtualKeyCode;
                                 char ch =
                                     inp_rec.Event.KeyEvent.uChar.AsciiChar;
+                                T(("twait:event KEY_EVENT"));
                                 T(("twait vk=%d, ch=%d, keydown=%d",
                                    vk,ch,inp_rec.Event.KeyEvent.bKeyDown));
                                 if (inp_rec.Event.KeyEvent.bKeyDown) {

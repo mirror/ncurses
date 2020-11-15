@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.638 2020/09/12 17:58:55 tom Exp $
+ * $Id: curses.priv.h,v 1.639 2020/11/14 23:37:54 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1860,7 +1860,7 @@ extern NCURSES_EXPORT(SCREEN *)         _nc_retrace_sp (SCREEN *);
 extern NCURSES_EXPORT(WINDOW *)         _nc_retrace_win (WINDOW *);
 extern NCURSES_EXPORT(attr_t)           _nc_retrace_attr_t (attr_t);
 extern NCURSES_EXPORT(char *)           _nc_retrace_ptr (char *);
-extern NCURSES_EXPORT(char *)           _nc_trace_ttymode(TTY *tty);
+extern NCURSES_EXPORT(char *)           _nc_trace_ttymode(const TTY *tty);
 extern NCURSES_EXPORT(char *)           _nc_varargs (const char *, va_list);
 extern NCURSES_EXPORT(chtype)           _nc_retrace_chtype (chtype);
 extern NCURSES_EXPORT(const char *)     _nc_altcharset_name(attr_t, chtype);

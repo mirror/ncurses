@@ -31,7 +31,7 @@
  * Author: Juergen Pfeifer, 2008-on                                         * 
  ****************************************************************************/
 
-/* $Id: win32_curses.h,v 1.1 2020/08/14 21:57:01 juergen Exp $ */
+/* $Id: win32_curses.h,v 1.2 2020/11/14 23:52:46 tom Exp $ */
 
 /*
  * This is the interface we use on Windows to mimic the control of the settings
@@ -44,8 +44,8 @@
 
 struct winconmode
 {
-  unsigned int  dwFlagIn;
-  unsigned int  dwFlagOut;
+  unsigned long dwFlagIn;
+  unsigned long dwFlagOut;
 };
 
 extern NCURSES_EXPORT(void*) _nc_console_fd2handle(int fd);
