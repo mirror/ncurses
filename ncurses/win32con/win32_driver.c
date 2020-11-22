@@ -48,7 +48,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win32_driver.c,v 1.1 2020/08/29 19:26:24 tom Exp $")
+MODULE_ID("$Id: win32_driver.c,v 1.2 2020/11/21 23:35:56 tom Exp $")
 
 #define WINMAGIC NCDRV_MAGIC(NCDRV_WINCONSOLE)
 #define EXP_OPTIMIZE 0
@@ -671,6 +671,7 @@ wcon_setcolor(TERMINAL_CONTROL_BLOCK * TCB,
 	      int color,
 	      int (*outc) (SCREEN *, int) GCC_UNUSED)
 {
+    (void) TCB;
     if (validateConsoleHandle()) {
 	WORD a = _nc_console_MapColor(fore, color);
 	a |= (WORD) ((WINCONSOLE.SBI.wAttributes) & (fore ? 0xfff8 : 0xff8f));
@@ -684,6 +685,7 @@ wcon_rescol(TERMINAL_CONTROL_BLOCK * TCB)
 {
     bool res = FALSE;
 
+    (void) TCB;
     if (validateConsoleHandle()) {
 	WORD a = FOREGROUND_BLUE | FOREGROUND_RED | FOREGROUND_GREEN;
 	SetConsoleTextAttribute(WINCONSOLE.hdl, a);
@@ -732,7 +734,6 @@ wcon_setsize(TERMINAL_CONTROL_BLOCK * TCB GCC_UNUSED,
 static int
 wcon_sgmode(TERMINAL_CONTROL_BLOCK * TCB, int setFlag, TTY * buf)
 {
-    TERMINAL *_term = (TERMINAL *) TCB;
     int result = ERR;
 
     T((T_CALLED("win32con::wcon_sgmode(TCB=(%p),setFlag=%d,TTY=(%p)"),
@@ -961,6 +962,8 @@ wcon_mvcur(TERMINAL_CONTROL_BLOCK * TCB,
 	   int y, int x)
 {
     int ret = ERR;
+
+    (void) TCB;
     if (validateConsoleHandle()) {
 	COORD loc;
 	loc.X = (short) x;

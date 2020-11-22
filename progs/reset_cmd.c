@@ -53,7 +53,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.23 2020/09/05 22:54:47 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.24 2020/11/21 22:11:10 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -365,6 +365,10 @@ set_control_chars(TTY * tty_settings, int my_erase, int my_intr, int my_kill)
 {
 #if defined(EXP_WIN32_DRIVER)
     /* noop */
+    (void) tty_settings;
+    (void) my_erase;
+    (void) my_intr;
+    (void) my_kill;
 #else
     if (DISABLED(tty_settings->c_cc[VERASE]) || my_erase >= 0) {
 	tty_settings->c_cc[VERASE] = UChar((my_erase >= 0)
@@ -564,6 +568,11 @@ show_tty_change(TTY * old_settings,
 
 #if defined(EXP_WIN32_DRIVER)
     /* noop */
+    (void) old_settings;
+    (void) new_settings;
+    (void) name;
+    (void) which;
+    (void) def;
 #else
     newer = new_settings->c_cc[which];
     older = old_settings->c_cc[which];

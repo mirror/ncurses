@@ -49,8 +49,9 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.33 2020/09/05 21:37:57 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.34 2020/11/21 22:05:58 tom Exp $")
 
+#ifdef TERMIOS
 static int
 _nc_vdisable(void)
 {
@@ -71,6 +72,7 @@ _nc_vdisable(void)
 #endif
     return value;
 }
+#endif /* TERMIOS */
 
 /*
  *	erasechar()

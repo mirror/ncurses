@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32con.c,v 1.4 2020/11/14 23:37:16 tom Exp $")
+MODULE_ID("$Id: lib_win32con.c,v 1.6 2020/11/21 23:44:58 tom Exp $")
 
 #ifdef _NC_WINDOWS
 
@@ -111,7 +111,7 @@ static const LONG ansi_keys[] =
 NCURSES_EXPORT_VAR(ConsoleInfo) _nc_CONSOLE;
 static bool console_initialized = FALSE;
 
-#define EnsureInit() (void)(console_initialized ? TRUE : _nc_console_checkinit(TRUE,TRUE))
+#define EnsureInit() (void)(console_initialized ? TRUE : _nc_console_checkinit(TRUE, TRUE))
 
 #define REQUIRED_MAX_V (DWORD)10
 #define REQUIRED_MIN_V (DWORD)0
@@ -121,7 +121,8 @@ static bool console_initialized = FALSE;
   the modern Console interface, otherwise it returns 1
  */
 NCURSES_EXPORT(int)
-_nc_console_vt_supported(void) {
+_nc_console_vt_supported(void)
+{
     OSVERSIONINFO osvi;
     int res = 0;
 
@@ -130,7 +131,11 @@ _nc_console_vt_supported(void) {
     osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFO);
 
     GetVersionEx(&osvi);
-    T(("GetVersionEx returnedMajor=%ld, Minor=%ld, Build=%ld", osvi.dwMajorVersion,osvi.dwMinorVersion,osvi.dwBuildNumber));    if (osvi.dwMajorVersion >= REQUIRED_MAX_V) {
+    T(("GetVersionEx returnedMajor=%ld, Minor=%ld, Build=%ld",
+       osvi.dwMajorVersion,
+       osvi.dwMinorVersion,
+       osvi.dwBuildNumber));
+    if (osvi.dwMajorVersion >= REQUIRED_MAX_V) {
       if (osvi.dwMajorVersion == REQUIRED_MAX_V) {
           if (((osvi.dwMinorVersion == REQUIRED_MIN_V) &&
                (osvi.dwBuildNumber >= REQUIRED_BUILD)) ||
@@ -143,7 +148,8 @@ _nc_console_vt_supported(void) {
 }
 
 NCURSES_EXPORT(void)
-_nc_console_size(int* Lines, int* Cols) {
+_nc_console_size(int* Lines, int* Cols)
+{
   EnsureInit();
   if (Lines != NULL && Cols != NULL) {
       if (WINCONSOLE.buffered) {
@@ -177,7 +183,7 @@ IsConsoleHandle(HANDLE hdl)
     DWORD dwFlag = 0;
     BOOL result = FALSE;
 
-    T((T_CALLED("lib_win32con::IsConsoleHandle(HANDLE=%p"),hdl));
+    T((T_CALLED("lib_win32con::IsConsoleHandle(HANDLE=%p"), hdl));
 
     EnsureInit();
 
@@ -219,7 +225,8 @@ _nc_console_selectActiveHandle(void)
 }
 
 NCURSES_EXPORT(HANDLE)
-_nc_console_fd2handle(int fd) {
+_nc_console_fd2handle(int fd)
+{
     HANDLE hdl = _nc_console_handle(fd);
     if (hdl==WINCONSOLE.inp) {
         T(("lib_win32con:validateHandle %d -> WINCONSOLE.inp", fd));
@@ -229,16 +236,16 @@ _nc_console_fd2handle(int fd) {
         T(("lib_win32con:validateHandle %d -> WINCONSOLE.out", fd));
     } else {
         T(("lib_win32con:validateHandle %d maps to unknown HANDLE", fd));
-        hdl=INVALID_HANDLE_VALUE;
+        hdl = INVALID_HANDLE_VALUE;
     }
 #if 1
-    assert(hdl!=INVALID_HANDLE_VALUE);
+    assert(hdl != INVALID_HANDLE_VALUE);
 #endif
     if (hdl != INVALID_HANDLE_VALUE) {
-        if (hdl!=WINCONSOLE.inp && (!WINCONSOLE.isTermInfoConsole && WINCONSOLE.progMode)) {
+        if (hdl != WINCONSOLE.inp && (!WINCONSOLE.isTermInfoConsole && WINCONSOLE.progMode)) {
             if (hdl==WINCONSOLE.out && hdl!=WINCONSOLE.hdl) {
                 T(("lib_win32con:validateHandle forcing WINCONSOLE.out -> WINCONSOLE.hdl"));
-                hdl=WINCONSOLE.hdl;
+                hdl = WINCONSOLE.hdl;
             }
         }
     }
@@ -255,8 +262,8 @@ _nc_console_setmode(HANDLE hdl, const TTY *arg)
     if (arg) {
 #ifdef TRACE
         TTY TRCTTY;
-#define TRCTTYOUT(flag) TRCTTY.dwFlagOut=flag
-#define TRCTTYIN(flag)  TRCTTY.dwFlagIn=flag
+#define TRCTTYOUT(flag) TRCTTY.dwFlagOut = flag
+#define TRCTTYIN(flag)  TRCTTY.dwFlagIn = flag
 #else
 #define TRCTTYOUT(flag)
 #define TRCTTYIN(flag)
@@ -267,7 +274,7 @@ _nc_console_setmode(HANDLE hdl, const TTY *arg)
             if (WINCONSOLE.isTermInfoConsole)
                 dwFlag |= (VT_FLAG_IN);
             else
-                dwFlag &= ~(VT_FLAG_IN);
+                dwFlag &= (DWORD) ~(VT_FLAG_IN);
             TRCTTYIN(dwFlag);
             SetConsoleMode(hdl, dwFlag);
 
@@ -288,15 +295,15 @@ _nc_console_setmode(HANDLE hdl, const TTY *arg)
             TRCTTYOUT(dwFlag);
             SetConsoleMode(hdl, dwFlag);
 
-            alt=WINCONSOLE.inp;
+            alt = WINCONSOLE.inp;
             dwFlag = arg->dwFlagIn | ENABLE_MOUSE_INPUT;
             if (WINCONSOLE.isTermInfoConsole)
                 dwFlag |= (VT_FLAG_IN);
             else
-                dwFlag &= ~(VT_FLAG_IN);
+                dwFlag &= (DWORD) ~(VT_FLAG_IN);
             TRCTTYIN(dwFlag);
             SetConsoleMode(alt, dwFlag);
-            T(("effective mode set %s",_nc_trace_ttymode(&TRCTTY)));
+            T(("effective mode set %s", _nc_trace_ttymode(&TRCTTY)));
         }
         code = OK;
     }
@@ -313,19 +320,19 @@ _nc_console_getmode(HANDLE hdl, TTY *arg)
         HANDLE alt;
 
         if (hdl==WINCONSOLE.inp) {
-            if(GetConsoleMode(hdl,&dwFlag)) {
+            if(GetConsoleMode(hdl, &dwFlag)) {
                 arg->dwFlagIn = dwFlag;
                 alt = OutHandle();
-                if (GetConsoleMode(alt,&dwFlag)) {
+                if (GetConsoleMode(alt, &dwFlag)) {
                     arg->dwFlagOut = dwFlag;
                     code = OK;
                 }
             }
         } else {
-            if (GetConsoleMode(hdl,&dwFlag)) {
+            if (GetConsoleMode(hdl, &dwFlag)) {
                 arg->dwFlagOut = dwFlag;
-                alt=WINCONSOLE.inp;
-                if (GetConsoleMode(alt,&dwFlag)) {
+                alt = WINCONSOLE.inp;
+                if (GetConsoleMode(alt, &dwFlag)) {
                     arg->dwFlagIn = dwFlag;
                     code = OK;
                 }
@@ -339,18 +346,18 @@ _nc_console_getmode(HANDLE hdl, TTY *arg)
 NCURSES_EXPORT(int)
 _nc_console_flush(HANDLE hdl)
 {
-    int code=OK;
+    int code = OK;
 
-    T((T_CALLED("lib_win32con::_nc_console_flush(hdl=%p"),hdl));
+    T((T_CALLED("lib_win32con::_nc_console_flush(hdl=%p"), hdl));
 
     if (hdl != INVALID_HANDLE_VALUE) {
         if (hdl == WINCONSOLE.hdl ||
             hdl == WINCONSOLE.inp ||
             hdl == WINCONSOLE.out) {
             if (!FlushConsoleInputBuffer(WINCONSOLE.inp))
-                code=ERR;
+                code = ERR;
         } else {
-            code=ERR;
+            code = ERR;
             T(("_nc_console_flush not requesting a handle owned by console."));
         }
     }
@@ -786,7 +793,7 @@ AnsiKey(WORD vKey)
 }
 
 NCURSES_EXPORT(int)
-_nc_console_keyok(int keycode,int flag)
+_nc_console_keyok(int keycode, int flag)
 {
     int code = ERR;
     WORD nKey;
@@ -859,7 +866,7 @@ _nc_console_twait(
 
 #define IGNORE_CTRL_KEYS (SHIFT_PRESSED|LEFT_ALT_PRESSED|RIGHT_ALT_PRESSED| \
                           LEFT_CTRL_PRESSED|RIGHT_CTRL_PRESSED)
-#define CONSUME() ReadConsoleInput(hdl,&inp_rec,1,&nRead)
+#define CONSUME() ReadConsoleInput(hdl, &inp_rec, 1, &nRead)
 
     assert(sp);
 
@@ -892,23 +899,23 @@ _nc_console_twait(
                 if (isNoDelay && b) {
                     T(("twait: Events Available: %ld", nRead));
                     if (nRead==0) {
-                        code=0;
+                        code = 0;
                         goto end;
                     } else {
                         DWORD n = 0;
                         INPUT_RECORD* pInpRec =
-                            TypeAlloca(INPUT_RECORD,nRead);
+                            TypeAlloca(INPUT_RECORD, nRead);
                         if (pInpRec != NULL) {
                             DWORD i;
                             BOOL f;
-                            memset(pInpRec,0,sizeof(INPUT_RECORD)*nRead);
+                            memset(pInpRec, 0, sizeof(INPUT_RECORD)*nRead);
                             f = PeekConsoleInput(hdl, pInpRec, nRead, &n);
                             if (f) {
-                                for(i=0;i < n;i++) {
+                                for(i = 0; i < n; i++) {
                                     if (pInpRec[i].EventType==KEY_EVENT) {
                                         if(pInpRec[i].Event.KeyEvent.bKeyDown) {
                                           DWORD ctrlMask =
-                                              (pInpRec[i].Event.KeyEvent.dwControlKeyState & \
+                                              (pInpRec[i].Event.KeyEvent.dwControlKeyState &
                                                IGNORE_CTRL_KEYS);
                                           if (!ctrlMask) {
                                               code = TW_INPUT;
@@ -942,7 +949,7 @@ _nc_console_twait(
                                     inp_rec.Event.KeyEvent.uChar.AsciiChar;
                                 T(("twait:event KEY_EVENT"));
                                 T(("twait vk=%d, ch=%d, keydown=%d",
-                                   vk,ch,inp_rec.Event.KeyEvent.bKeyDown));
+                                   vk, ch, inp_rec.Event.KeyEvent.bKeyDown));
                                 if (inp_rec.Event.KeyEvent.bKeyDown) {
                                     T(("twait:event KeyDown"));
                                     if (!WINCONSOLE.isTermInfoConsole &&
@@ -973,7 +980,7 @@ _nc_console_twait(
                             continue;
                             /* e.g., FOCUS_EVENT */
                         default:
-                            T(("twait:event Tyoe %d",inp_rec.EventType));
+                            T(("twait:event Tyoe %d", inp_rec.EventType));
                             CONSUME();
                             _nc_console_selectActiveHandle();
                             continue;
@@ -994,7 +1001,7 @@ _nc_console_twait(
     }
 end:
 
-    TR(TRACE_IEVENT, ("end twait: returned %d (%d), remaining time %d msec",
+    TR(TRACE_IEVENT, ("end twait: returned %d (%lu), remaining time %d msec",
                       code, GetLastError(), milliseconds));
 
     if (timeleft)
@@ -1105,17 +1112,17 @@ NCURSES_EXPORT(int)
 _nc_console_isatty(int fd)
 {
     int result = 0;
-    T((T_CALLED("lib_win32con::_nc_console_isatty(%d"),fd));
+    T((T_CALLED("lib_win32con::_nc_console_isatty(%d"), fd));
 
     if (_isatty(fd))
         result = 1;
 #ifdef _NC_CHECK_MINTTY
     else {
         if (_nc_console_checkmintty(fd, NULL)) {
-            result=2;
-            fprintf(stderr,"ncurses on Windows must run in a Windows console.\n");
-            fprintf(stderr,"On newer versions of Windows, the calling program should create a PTY-like.\n");
-            fprintf(stderr,"device using the CreatePseudoConsole Windows API call.\n");
+            result = 2;
+            fprintf(stderr, "ncurses on Windows must run in a Windows console.\n");
+            fprintf(stderr, "On newer versions of Windows, the calling program should create a PTY-like.\n");
+            fprintf(stderr, "device using the CreatePseudoConsole Windows API call.\n");
             exit(EXIT_FAILURE);
         }
     }
@@ -1129,7 +1136,7 @@ _nc_console_checkinit(bool initFlag, bool assumeTermInfo)
     bool res = FALSE;
 
     T((T_CALLED("lib_win32con::_nc_console_checkinit(initFlag=%d, assumeTermInfo=%d)"),
-       initFlag,assumeTermInfo));
+       initFlag, assumeTermInfo));
 
     if (!initFlag) {
         res = console_initialized;
@@ -1191,8 +1198,8 @@ _nc_console_checkinit(bool initFlag, bool assumeTermInfo)
             WINCONSOLE.out = GetStdHandle(STD_OUTPUT_HANDLE);
             WINCONSOLE.hdl = WINCONSOLE.out;
 
-            GetConsoleMode(WINCONSOLE.inp,&WINCONSOLE.originalMode.dwFlagIn);
-            GetConsoleMode(WINCONSOLE.out,&WINCONSOLE.originalMode.dwFlagOut);
+            GetConsoleMode(WINCONSOLE.inp, &WINCONSOLE.originalMode.dwFlagIn);
+            GetConsoleMode(WINCONSOLE.out, &WINCONSOLE.originalMode.dwFlagOut);
 
             if (!WINCONSOLE.isTermInfoConsole) {
                 b = AllocConsole();
@@ -1221,8 +1228,8 @@ _nc_console_checkinit(bool initFlag, bool assumeTermInfo)
                So if terminfo functions are used in this setup,
                they actually may work.
             */
-            _setmode(fileno(stdin) ,_O_BINARY);
-            _setmode(fileno(stdout),_O_BINARY);
+            _setmode(fileno(stdin), _O_BINARY);
+            _setmode(fileno(stdout), _O_BINARY);
 
             if (WINCONSOLE.hdl != INVALID_HANDLE_VALUE) {
                 WINCONSOLE.buffered = buffered;

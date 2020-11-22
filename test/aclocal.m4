@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.185 2020/11/14 15:26:19 tom Exp $
+dnl $Id: aclocal.m4,v 1.186 2020/11/20 23:52:27 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -568,7 +568,7 @@ if test "$cf_have_curses_lib" = no; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CLANG_COMPILER version: 4 updated: 2020/10/31 15:46:50
+dnl CF_CLANG_COMPILER version: 5 updated: 2020/11/20 18:52:27
 dnl -----------------
 dnl Check if the given compiler is really clang.  clang's C driver defines
 dnl __GNUC__ (fooling the configure script into setting $GCC to yes) but does
@@ -604,12 +604,15 @@ if test "x$ifelse([$2],,CLANG_COMPILER,[$2])" = "xyes" ; then
 		-Wno-error=implicit-function-declaration
 	do
 		AC_MSG_CHECKING(if option $cf_clang_opt works)
+		cf_save_CFLAGS="$CFLAGS"
+		CFLAGS="$CFLAGS $cf_clang_opt"
 		AC_TRY_LINK([
 			#include <stdio.h>],[
 			printf("hello!\n");],[
 			cf_clang_optok=yes],[
 			cf_clang_optok=no])
 		AC_MSG_RESULT($cf_clang_optok)
+		CFLAGS="$cf_save_CFLAGS"
 		if test $cf_clang_optok = yes; then
 			CF_VERBOSE(adding option $cf_clang_opt)
 			CF_APPEND_TEXT(CFLAGS,$cf_clang_opt)
