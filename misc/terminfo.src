@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.829 $
-#	$Date: 2020/11/08 00:03:03 $
+#	$Revision: 1.833 $
+#	$Date: 2020/11/28 23:10:42 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3861,13 +3861,31 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 	hts=\EH, use=vt100+enq, use=vt220, use=ecma+color,
 
 #### PuTTY
-# PuTTY 0.55 (released 3 August 2004)
+# PuTTY 0.74 (27 June 2020)
 # http://www.chiark.greenend.org.uk/~sgtatham/putty/
+#
+# PuTTY 0.73 (September 2019)
+# Testing with tack:
+#	does not implement italics
+#	does not implement cross-out text
+#	its settings dialog allows some of the VT100 line-drawing tests to pass
+#	(not the padding test, though)
+# Testing with vttest:
+#	xterm mouse modes are incomplete: X10, highlight, any-event, and focus in/out modes are not implemented.
+#	does not implement protected areas
+#	does not implement SL/SR
+#
+# PuTTY 0.71 (March 2019) provided a workable "rep" capability.  It also
+# changed longstanding keypad assignments, so that these no longer apply:
+#	kLFT=\E[D, kRIT=\E[C, kb2=\E[G,
+#
+# PuTTY recognized xterm's 1006 mouse mode in late 2015; subsequent release was
+# in 2017 (0.70) -TD
 #
 # Comparing with 0.51, vttest is much better (only a few problems with the
 # cursor position reports and wrapping).
 #
-# PuTTY 0.51 (released 14 December 2000)
+# PuTTY 0.51 (14 December 2000)
 #
 # This emulates vt100 + vt52 (plus a few vt220 features:  ech, SRM, DECTCEM, as
 # well as SCO and Atari, color palettes from Linux console).  Reading the code,
@@ -3888,18 +3906,11 @@ crt|crt-vt220|CRT 2.3 emulating VT220,
 # PuTTY recognizes xterm's 1049 mode for switching to/from alternate screen,
 # but implements it incorrectly as mentioned here:
 #	http://stackoverflow.com/questions/24613237/terminal-retains-bg-color-after-closing-vim-using-color-scheme-and-putty-256co/37869114#37869114
-#
-# PuTTY recognized xterm's 1006 mouse mode in late 2015; subsequent release was
-# in 2017 (0.70) -TD
-#
-# PuTTY 0.71 (March 2019) provided a workable "rep" capability.  It also
-# changed longstanding keypad assignments, so that these no longer apply:
-#	kLFT=\E[D, kRIT=\E[C, kb2=\E[G,
 putty|PuTTY terminal emulator,
 	am, bce, bw, ccc, mir, msgr, xenl, xon, XT,
 	colors#8, it#8, ncv#22, pairs#64, U8#1,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
-	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, civis=\E[?25l,
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
 	clear=\E[H\E[J, cnorm=\E[?25h, cr=\r,
 	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=\ED, cuf=\E[%p1%dC, cuf1=\E[C,
@@ -3913,8 +3924,7 @@ putty|PuTTY terminal emulator,
 	      %%G\340\202\242\E%%@%e%p1%c%;,
 	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
 	el1=\E[1K, enacs=\E(B\E)0, flash=\E[?5h$<100/>\E[?5l,
-	home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH, il=\E[%p1%dL,
-	il1=\E[L, ind=\n,
+	home=\E[H, hpa=\E[%i%p1%dG, il=\E[%p1%dL, il1=\E[L, ind=\n,
 	initc=\E]P%p1%x%p2%{255}%*%{1000}%/%02x%p3%{255}%*%{1000}%/
 	      %02x%p4%{255}%*%{1000}%/%02x,
 	is2=\E7\E[r\E[m\E[?7h\E[?1;4;6l\E[4l\E8\E>\E]R,
@@ -3932,9 +3942,15 @@ putty|PuTTY terminal emulator,
 	    %;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
 	smir=\E[4h, smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd, E3=\E[3J,
-	use=ecma+index, use=xterm+sm+1006, use=putty+fnkeys,
-	use=vt102+enq, use=xterm+sl, use=vt100+fnkeys,
+	smul=\E[4m, vpa=\E[%i%p1%dd, E3=\E[3J, use=ansi+tabs,
+	use=ansi+rep, use=ecma+index, use=xterm+sm+1006,
+	use=putty+fnkeys, use=vt102+enq, use=xterm+sl,
+	use=vt100+fnkeys, use=putty+keypad,
+putty+keypad|PuTTY numeric keypad,
+	kp1=\EOq, kp2=\EOr, kp3=\EOs, kp4=\EOt, kp5=\EOu, kp6=\EOv,
+	kp7=\EOw, kp8=\EOx, kp9=\EOy, kpADD=\EOl, kpDIV=\EOQ,
+	kpDOT=\EOn, kpMUL=\EOR, kpNUM=\EOP, kpSUB=\EOS, kpZRO=\EOp,
+
 vt100-putty|Reset PuTTY to pure vt100,
 	rs2=\E<\E["p\Ec\E[?3l\E]R\E[40"p\E[61"p\E[50;1;2"p,
 	use=vt100,
@@ -7034,6 +7050,7 @@ terminology|EFL-based terminal emulator,
 
 #### Alacritty
 # https://github.com/jwilm/alacritty
+# Version 0.6.0 (2020/11/25)
 # Version 0.4.0 (2019/11/25)
 # Version 0.3.3 (2019/08/03)
 # Version 0.2.1 (2018/10/03)
@@ -7093,10 +7110,11 @@ alacritty-direct|alacritty with direct color indexing,
 alacritty+common|base fragment for alacritty,
 	km@, npc,
 	kb2=\EOE, kbs=^?, kcbt=\E[Z, kent=\EOM, Se=\E[0 q,
-	use=ecma+index, use=xterm+sm+1006, use=xterm-basic,
-	use=xterm+app, use=ansi+rep, use=xterm+tmux,
-	use=ecma+strikeout, use=xterm+sl-twm, use=ecma+italics,
-	use=xterm+pce2, use=xterm+pcc2, use=xterm+pcf2,
+	Smulx=\E[4\:%p1%dm, use=ecma+index, use=xterm+sm+1006,
+	use=xterm-basic, use=xterm+app, use=ansi+rep,
+	use=xterm+tmux, use=ecma+strikeout, use=xterm+sl-twm,
+	use=ecma+italics, use=xterm+pce2, use=xterm+pcc2,
+	use=xterm+pcf2,
 
 #### Kitty
 # https://github.com/kovidgoyal/kitty
@@ -26654,7 +26672,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-01-12
 #	+ update alacritty entries for 0.4.0 (prompted by patch by
-#	  Christian Durr) -TD
+#	  Christian Duerr) -TD
 #
 # 2020-01-18
 #	+ spelling fixes per codespell -TD
@@ -26723,5 +26741,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-11-07
 #	+ update kitty+common -TD
 #	+ add putty+screen and putty-screen (suggested by Alexandre Montaron).
+#
+# 2020-11-28
+#	+ add Smulx to alacritty (Christian Duerr).
+#	+ add rep to PuTTY -TD
+#	+ add putty+keypad -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

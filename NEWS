@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3596 2020/11/22 00:04:42 tom Exp $
+-- $Id: NEWS,v 1.3600 2020/11/28 23:32:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20201128
+	+ add Smulx to alacritty (Christian Duerr).
+	+ add rep to PuTTY -TD
+	+ add putty+keypad -TD
+	+ add another fflush(stdout) in _nc_flush() to handle time-delays in
+	  the middle of strings such as flash when the application uses
+	  low-level calls rather than curses (cf: 20161217).
+	+ modify configure check for c89/c99 aliases of clang to use its
+	  -std option instead, because some platforms, in particular macOS,
+	  do not provide workable c89/c99 aliases.
 
 20201121
 	+ fix some compiler-warnings in experimental Windows-10 driver.
