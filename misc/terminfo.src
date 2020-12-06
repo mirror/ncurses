@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.833 $
-#	$Date: 2020/11/28 23:10:42 $
+#	$Revision: 1.835 $
+#	$Date: 2020/12/05 16:54:21 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -6000,15 +6000,15 @@ mlterm|multi lingual terminal emulator,
 # with ncurses, tack and vttest -TD
 mlterm3|multi lingual terminal emulator,
 	bce, AX,
-	blink=\E[5m, invis=\E[8m, is2=\E[!p\E[?3;4l\E>,
-	kf1=\E[11~, kf2=\E[12~, kf3=\E[13~, kf4=\E[14~,
-	rs2=\E[!p\E[?3;4l\E>,
+	blink=\E[5m, flash=\E[?5h$<100/>\E[?5l, invis=\E[8m,
+	is2=\E[!p\E[?3;4l\E>, rs2=\E[!p\E[?3;4l\E>,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p1%p3%|%t;7%;%?
 	    %p7%t;8%;m%?%p9%t\E(0%e\E(B%;,
 	use=ansi+enq, use=ansi+rep, use=ecma+italics,
 	use=ecma+strikeout, use=xterm+app, use=xterm+pcf2,
 	use=xterm+pcc2, use=xterm+pce2, use=xterm+meta,
-	use=xterm+alt+title, use=xterm+sm+1006, use=mlterm2,
+	use=xterm+alt+title, use=xterm+sm+1006,
+	use=vt100+pfkeys, use=mlterm2,
 
 # This is mlterm 2.9.3's mlterm.ti, with some additions/corrections -TD
 #
@@ -26746,5 +26746,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add Smulx to alacritty (Christian Duerr).
 #	+ add rep to PuTTY -TD
 #	+ add putty+keypad -TD
+#
+# 2020-12-05
+#	+ correct mlterm3 kf1-kf4 (Debian #975322) -TD
+#	+ add flash to mlterm3 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

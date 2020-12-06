@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.78 2020/08/29 14:56:44 tom Exp $
+dnl $Id: configure.in,v 1.79 2020/12/05 21:40:57 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.78 $)
+AC_REVISION($Revision: 1.79 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -611,6 +611,8 @@ NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
 NCURSES_PATCH="$NCURSES_PATCH"
 USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
+cf_cv_VERSION_GNATMAKE=$cf_cv_VERSION_GNATMAKE
+cf_cv_VERSION_GPRBUILD=$cf_cv_VERSION_GPRBUILD
 cf_cv_abi_version="$cf_cv_abi_version"
 cf_cv_rel_version="$cf_cv_rel_version"
 cf_cv_rm_so_locs="$cf_cv_rm_so_locs"

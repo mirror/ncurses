@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.941 2020/11/26 22:37:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.942 2020/12/05 21:43:15 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2969,7 +2969,7 @@ AC_SUBST(cf_compile_generics)
 AC_SUBST(cf_generic_objects)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_GNAT_PROJECTS version: 10 updated: 2019/12/31 08:53:54
+dnl CF_GNAT_PROJECTS version: 11 updated: 2020/12/05 16:42:18
 dnl ----------------
 dnl GNAT projects are configured with ".gpr" project files.
 dnl GNAT libraries are a further development, using the project feature.
@@ -3053,13 +3053,24 @@ then
 	AC_MSG_RESULT($cf_gnat_libraries)
 fi
 
+USE_OLD_MAKERULES=""
+USE_GNAT_PROJECTS="#"
+USE_GNAT_MAKE_GPR="#"
+USE_GNAT_GPRBUILD="#"
+
 if test "$cf_gnat_projects" = yes
 then
 	USE_OLD_MAKERULES="#"
 	USE_GNAT_PROJECTS=""
-else
-	USE_OLD_MAKERULES=""
-	USE_GNAT_PROJECTS="#"
+	if test "$cf_cv_VERSION_GPRBUILD" != no
+	then
+		USE_GNAT_GPRBUILD=""
+	elif test "$cf_cv_VERSION_GNATMAKE" != no
+	then
+		USE_GNAT_MAKE_GPR=""
+	else
+		AC_MSG_WARN(use old makefile rules since tools are missing)
+	fi
 fi
 
 if test "$cf_gnat_libraries" = yes
@@ -3072,6 +3083,8 @@ fi
 AC_SUBST(USE_OLD_MAKERULES)
 AC_SUBST(USE_GNAT_PROJECTS)
 AC_SUBST(USE_GNAT_LIBRARIES)
+AC_SUBST(USE_GNAT_MAKE_GPR)
+AC_SUBST(USE_GNAT_GPRBUILD)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_GNAT_SIGINT version: 1 updated: 2011/03/27 20:07:59

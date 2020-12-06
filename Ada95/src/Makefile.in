@@ -29,7 +29,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.93 2020/08/29 17:01:01 tom Exp $
+#  $Id: Makefile.in,v 1.94 2020/12/05 21:19:40 tom Exp $
 #
 .SUFFIXES:
 
@@ -277,11 +277,13 @@ STATIC_DIRS = \
 @USE_GNAT_PROJECTS@	-rm -f $(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@	$(SHELL) $(srcdir)/library-cfg.sh static library.gpr $(CFLAGS_NORMAL) >$(GNAT_PROJECT)
 @USE_GNAT_PROJECTS@	@echo "Using GNAT Project:"
-@USE_GNAT_PROJECTS@	@-$(SHELL) -c "diff -c library.gpr $(GNAT_PROJECT); exit 0"
-@USE_GNAT_PROJECTS@
-@USE_GNAT_PROJECTS@	gprbuild -p $(ADAMAKEFLAGS) -XLIB_KIND=static
-@USE_GNAT_PROJECTS@
-@USE_GNAT_PROJECTS@	-rm -f $(GNAT_PROJECT)
+@USE_GNAT_MAKE_GPR@	@-$(SHELL) -c "diff -c $(srcdir)/library.gpr $(GNAT_PROJECT); exit 0"
+@USE_GNAT_MAKE_GPR@	$(ADAMAKE) $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_MAKE_GPR@	$(AR) $(ARFLAGS) $@ $(STATIC_C_OBJS)
+@USE_GNAT_MAKE_GPR@	-rm -f $(GNAT_PROJECT)
+@USE_GNAT_GPRBUILD@	@-$(SHELL) -c "diff -c library.gpr $(GNAT_PROJECT); exit 0"
+@USE_GNAT_GPRBUILD@	gprbuild -p $(ADAMAKEFLAGS) -XLIB_KIND=static
+@USE_GNAT_GPRBUILD@	-rm -f $(GNAT_PROJECT)
 
 #OLD:BEGIN
 @USE_GNAT_LIBRARIES@install \

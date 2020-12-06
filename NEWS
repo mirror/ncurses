@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3600 2020/11/28 23:32:30 tom Exp $
+-- $Id: NEWS,v 1.3603 2020/12/05 21:40:07 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20201205
+	+ amend build-fixes for gnat 10 to work with certain systems lacking
+	  gprbuild (cf: 20200627).
+	+ eliminate an additional strlen and wsclen.
+	+ eliminate an unnecessary strlen in waddnstr() (suggested by Benjamin
+	  Abendroth).
+	+ modify inopts manpage, separating the items for nodelay and notimeout
+	  (patch by Benno Schulenberg).
+	+ correct mlterm3 kf1-kf4 (Debian #975322) -TD
+	+ add flash to mlterm3 -TD
 
 20201128
 	+ add Smulx to alacritty (Christian Duerr).
@@ -282,7 +293,7 @@ it is not possible to add this information.
 	+ correct configure version-check/warnng for g++ to allow for 10.x
 	+ re-enable "bel" in konsole-base (report by Nia Huang)
 	+ add linux-s entry (patch by Alexandre Montaron).
-	+ drop long-obsolete convert_configure.pl 
+	+ drop long-obsolete convert_configure.pl
 	+ add test/test_parm.c, for checking tparm changes.
 	+ improve parameter-checking for tparm, adding function _nc_tiparm() to
 	  handle the most-used case, which accepts only numeric parameters
@@ -298,7 +309,7 @@ it is not possible to add this information.
 	+ update version-check for gnat to allow for gnat 10.x to 99.x
 	+ fix an uninitialized variable in lib_mouse.c changes (cf: 20200502)
 	+ add a check in EmitRange to guard against repeat_char emitting digits
-	  which could be interpreted as BSD-style padding when --enable-bsdpad 
+	  which could be interpreted as BSD-style padding when --enable-bsdpad
 	  is configured (report/patch by Hiltjo Posthuma).
 	+ add --disable-pkg-ldflags to suppress EXTRA_LDFLAGS from the
 	  generated pkg-config and ncurses*-config files, to simplify
@@ -586,7 +597,7 @@ it is not possible to add this information.
 	+ build-fixes for Ada95 configure-script and corresponding test package
 
 20190907
-	+ add --with-ada-libname option and modify Ada95 configuration to 
+	+ add --with-ada-libname option and modify Ada95 configuration to
 	  allow renaming the "AdaCurses" library (prompted by proposed changes
 	  by Pascal Pignard).
 	+ modify configure script to distinguish gcc from icc and clang when

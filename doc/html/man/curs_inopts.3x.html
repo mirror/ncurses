@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_inopts.3x,v 1.32 2020/10/24 09:18:33 tom Exp @
+  * @Id: curs_inopts.3x,v 1.33 2020/12/05 19:38:18 Benno.Schulenberg Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -167,16 +167,18 @@
        translates the return key into newline on input.
 
 
-</PRE><H3><a name="h3-nodelay_notimeout">nodelay/notimeout</a></H3><PRE>
+</PRE><H3><a name="h3-nodelay">nodelay</a></H3><PRE>
        The <STRONG>nodelay</STRONG> option causes <STRONG>getch</STRONG> to be a non-blocking call.  If no input
        is ready, <STRONG>getch</STRONG> returns <STRONG>ERR</STRONG>.  If disabled (<EM>bf</EM> is  <STRONG>FALSE</STRONG>),  <STRONG>getch</STRONG>  waits
        until a key is pressed.
 
-       While  interpreting  an  input escape sequence, <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> sets a timer
-       while waiting for the  next  character.   If  <STRONG>notimeout(</STRONG><EM>win</EM>,  <STRONG>TRUE</STRONG>)  is
-       called,  then  <STRONG>wgetch</STRONG> does not set a timer.  The purpose of the timeout
-       is to differentiate between sequences received from a function key  and
-       those typed by a user.
+
+</PRE><H3><a name="h3-notimeout">notimeout</a></H3><PRE>
+       When  interpreting  an  escape  sequence, <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> sets a timer while
+       waiting for the next character.  If  <STRONG>notimeout(</STRONG><EM>win</EM>,  <STRONG>TRUE</STRONG>)  is  called,
+       then  <STRONG>wgetch</STRONG>  does  not  set a timer.  The purpose of the timeout is to
+       differentiate between sequences received from a function key and  those
+       typed by a user.
 
 
 </PRE><H3><a name="h3-raw_noraw">raw/noraw</a></H3><PRE>
@@ -315,7 +317,8 @@
 <li><a href="#h3-keypad">keypad</a></li>
 <li><a href="#h3-meta">meta</a></li>
 <li><a href="#h3-nl_nonl">nl/nonl</a></li>
-<li><a href="#h3-nodelay_notimeout">nodelay/notimeout</a></li>
+<li><a href="#h3-nodelay">nodelay</a></li>
+<li><a href="#h3-notimeout">notimeout</a></li>
 <li><a href="#h3-raw_noraw">raw/noraw</a></li>
 <li><a href="#h3-qiflush_noqiflush">qiflush/noqiflush</a></li>
 <li><a href="#h3-timeout_wtimeout">timeout/wtimeout</a></li>

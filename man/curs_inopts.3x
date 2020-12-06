@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.32 2020/10/24 09:18:33 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.33 2020/12/05 19:38:18 Benno.Schulenberg Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -205,14 +205,15 @@ If the terminfo capabilities \fBsmm\fR
 The \fBnl\fR and \fBnonl\fR routines control whether the underlying display
 device translates the return key into newline on input.
 .\"
-.SS nodelay/notimeout
+.SS nodelay
 .PP
 The \fBnodelay\fR option causes \fBgetch\fR to be a non-blocking call.
 If no input is ready, \fBgetch\fR returns \fBERR\fR.
 If disabled
 (\fIbf\fR is \fBFALSE\fR), \fBgetch\fR waits until a key is pressed.
+.SS notimeout
 .PP
-While interpreting an input escape sequence, \fBwgetch\fR(3X) sets a timer
+When interpreting an escape sequence, \fBwgetch\fR(3X) sets a timer
 while waiting for the next character.
 If \fBnotimeout(\fR\fIwin\fR,
 \fBTRUE\fR) is called, then \fBwgetch\fR does not set a timer.
