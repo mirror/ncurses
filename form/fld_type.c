@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_type.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_type.c,v 1.19 2020/12/11 23:20:37 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -47,7 +47,7 @@ MODULE_ID("$Id: fld_type.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
 |                    E_SYSTEM_ERROR - system error
 +--------------------------------------------------------------------------*/
 FORM_EXPORT(int)
-set_field_type(FIELD *field, FIELDTYPE *type,...)
+set_field_type(FIELD *field, FIELDTYPE *type, ...)
 {
   va_list ap;
   int res = E_SYSTEM_ERROR;

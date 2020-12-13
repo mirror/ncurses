@@ -65,7 +65,7 @@
        the  filename  or entry.  If <STRONG>TERMCAP</STRONG> is a full pathname to a file, only
        the terminal whose name is specified in the environment  variable  <STRONG>TERM</STRONG>
        is  extracted  from  that file.  If the environment variable <STRONG>TERMCAP</STRONG> is
-       not set, then the file <STRONG>/usr/share/terminfo</STRONG> is read.
+       not set, then the file <STRONG>/usr/local/ncurses/lib/terminfo</STRONG> is read.
 
        <STRONG>-v</STRONG>   print out tracing information on standard  error  as  the  program
             runs.
@@ -81,7 +81,8 @@
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
-       /usr/share/terminfo Compiled terminal description database.
+       /usr/local/ncurses/lib/terminfo
+                           Compiled terminal description database.
 
 
 </PRE><H2><a name="h2-TRANSLATIONS-FROM-NONSTANDARD-CAPABILITIES">TRANSLATIONS FROM NONSTANDARD CAPABILITIES</a></H2><PRE>
@@ -111,8 +112,8 @@
        PD       kN     XENIX   key_npage
        PN       po     XENIX   prtr_off
        PS       pf     XENIX   prtr_on
-       PU       kP     XENIX   key_ppage
 
+       PU       kP     XENIX   key_ppage
        RT       @8     XENIX   kent
        UP       ku     XENIX   kcuu1
        KA       k;     Tek     key_f10
@@ -199,7 +200,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201205).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201212).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

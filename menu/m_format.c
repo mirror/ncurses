@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_format.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_format.c,v 1.21 2020/12/12 00:38:02 tom Exp $")
 
 #define minimum(a,b) ((a)<(b) ? (a): (b))
 
@@ -57,7 +57,7 @@ MODULE_ID("$Id: m_format.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $")
 |                    E_POSTED               - the menu is already posted
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-set_menu_format(MENU * menu, int rows, int cols)
+set_menu_format(MENU *menu, int rows, int cols)
 {
   int total_rows, total_cols;
 
@@ -121,7 +121,7 @@ set_menu_format(MENU * menu, int rows, int cols)
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(void)
-menu_format(const MENU * menu, int *rows, int *cols)
+menu_format(const MENU *menu, int *rows, int *cols)
 {
   if (rows)
     *rows = Normalize_Menu(menu)->frows;

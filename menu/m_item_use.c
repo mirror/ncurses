@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_use.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_item_use.c,v 1.21 2020/12/12 00:38:08 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -50,7 +50,7 @@ MODULE_ID("$Id: m_item_use.c,v 1.20 2020/05/24 01:40:20 anonymous.maarten Exp $"
 |   Return Values :  E_OK               - success
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-set_item_userptr(ITEM * item, void *userptr)
+set_item_userptr(ITEM *item, void *userptr)
 {
   T((T_CALLED("set_item_userptr(%p,%p)"), (void *)item, (void *)userptr));
   Normalize_Item(item)->userptr = userptr;
@@ -68,7 +68,7 @@ set_item_userptr(ITEM * item, void *userptr)
 |                    NULL is returned.
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(void *)
-item_userptr(const ITEM * item)
+item_userptr(const ITEM *item)
 {
   T((T_CALLED("item_userptr(%p)"), (const void *)item));
   returnVoidPtr(Normalize_Item(item)->userptr);

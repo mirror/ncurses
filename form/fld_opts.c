@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_opts.c,v 1.14 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_opts.c,v 1.15 2020/12/11 22:05:24 tom Exp $")
 
 /*----------------------------------------------------------------------------
   Field-Options manipulation routines
@@ -68,7 +68,7 @@ set_field_opts(FIELD *field, Field_Options opts)
 |   Facility      :  libnform  
 |   Function      :  Field_Options field_opts(const FIELD *field)
 |   
-|   Description   :  Retrieve the fields options.
+|   Description   :  Retrieve the field's options.
 |
 |   Return Values :  The options.
 +--------------------------------------------------------------------------*/

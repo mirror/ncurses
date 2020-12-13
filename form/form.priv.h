@@ -31,7 +31,7 @@
  *   Author:  Juergen Pfeifer, 1995,1997                                    *
  ****************************************************************************/
 
-/* $Id: form.priv.h,v 0.46 2020/05/24 01:40:20 anonymous.maarten Exp $ */
+/* $Id: form.priv.h,v 0.47 2020/12/11 23:20:11 tom Exp $ */
 
 #ifndef FORM_PRIV_H
 #define FORM_PRIV_H 1
@@ -110,7 +110,7 @@ extern FORM_EXPORT_VAR(FIELDTYPE *) _nc_Default_FieldType;
 #define Get_Form_Screen(form) CURRENT_SCREEN
 #endif
 
-/* Retrieve forms window */
+/* Retrieve form's window */
 #define Get_Form_Window(form) \
   ((form)->sub \
    ? (form)->sub \

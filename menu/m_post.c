@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.33 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_post.c,v 1.34 2020/12/12 00:38:14 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -50,7 +50,7 @@ MODULE_ID("$Id: m_post.c,v 1.33 2020/05/24 01:40:20 anonymous.maarten Exp $")
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(void)
-_nc_Post_Item(const MENU * menu, const ITEM * item)
+_nc_Post_Item(const MENU *menu, const ITEM *item)
 {
   int i;
   chtype ch;
@@ -198,7 +198,7 @@ _nc_Post_Item(const MENU * menu, const ITEM * item)
 |   Return Values :  -
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(void)
-_nc_Draw_Menu(const MENU * menu)
+_nc_Draw_Menu(const MENU *menu)
 {
   ITEM *item = menu->items[0];
   ITEM *lasthor, *lastvert;
@@ -213,14 +213,14 @@ _nc_Draw_Menu(const MENU * menu)
   werase(menu->win);
   wbkgdset(menu->win, s_bkgd);
 
-  lastvert = (menu->opt & O_NONCYCLIC) ? (ITEM *) 0 : item;
+  lastvert = (menu->opt & O_NONCYCLIC) ? (ITEM *)0 : item;
 
   do
     {
       wmove(menu->win, y, 0);
 
       hitem = item;
-      lasthor = (menu->opt & O_NONCYCLIC) ? (ITEM *) 0 : hitem;
+      lasthor = (menu->opt & O_NONCYCLIC) ? (ITEM *)0 : hitem;
 
       do
 	{
@@ -268,7 +268,7 @@ _nc_Draw_Menu(const MENU * menu)
 |                    E_POSTED            - Menu already posted
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-post_menu(MENU * menu)
+post_menu(MENU *menu)
 {
   T((T_CALLED("post_menu(%p)"), (void *)menu));
 
@@ -340,7 +340,7 @@ post_menu(MENU * menu)
 |                    E_NOT_POSTED      - menu is not posted
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-unpost_menu(MENU * menu)
+unpost_menu(MENU *menu)
 {
   WINDOW *win;
 

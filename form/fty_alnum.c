@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_alnum.c,v 1.26 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fty_alnum.c,v 1.29 2020/12/12 01:15:37 tom Exp $")
 
 #define thisARG alnumARG
 
@@ -56,7 +56,7 @@ thisARG;
 static void *
 Generic_This_Type(void *arg)
 {
-  thisARG *argp = (thisARG *) 0;
+  thisARG *argp = (thisARG *)0;
 
   if (arg)
     {
@@ -140,7 +140,7 @@ static bool
 Check_This_Character(int c, const void *argp GCC_UNUSED)
 {
 #if USE_WIDEC_SUPPORT
-  if (iswalnum((wint_t) c))
+  if (iswalnum((wint_t)c))
     return TRUE;
 #endif
   return (isalnum(UChar(c)) ? TRUE : FALSE);
@@ -186,11 +186,11 @@ static FIELDTYPE typeTHIS =
 #endif
 };
 
-FORM_EXPORT_VAR(FIELDTYPE*) TYPE_ALNUM = &typeTHIS;
+FORM_EXPORT_VAR(FIELDTYPE *) TYPE_ALNUM = &typeTHIS;
 
 #if NCURSES_INTEROP_FUNCS
 /* The next routines are to simplify the use of ncurses from
-   programming languages with restictions on interop with C level
+   programming languages with restrictions on interop with C level
    constructs (e.g. variable access or va_list + ellipsis constructs)
 */
 FORM_EXPORT(FIELDTYPE *)

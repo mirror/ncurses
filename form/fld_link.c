@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_link.c,v 1.15 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_link.c,v 1.16 2020/12/11 23:20:32 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -62,8 +62,8 @@ link_field(FIELD *field, int frow, int fcol)
     {
       T((T_CREATE("field %p"), (void *)New_Field));
       *New_Field = *_nc_Default_Field;
-      New_Field->frow = (short) frow;
-      New_Field->fcol = (short) fcol;
+      New_Field->frow = (short)frow;
+      New_Field->fcol = (short)fcol;
 
       New_Field->link = field->link;
       field->link = New_Field;

@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_arg.c,v 1.17 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_arg.c,v 1.18 2020/12/11 22:05:24 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform
@@ -90,7 +90,7 @@ set_fieldtype_arg(FIELDTYPE *typ,
 |   Facility      :  libnform
 |   Function      :  void *field_arg(const FIELD *field)
 |
-|   Description   :  Retrieve pointer to the fields argument structure.
+|   Description   :  Retrieve pointer to the field's argument structure.
 |
 |   Return Values :  Pointer to structure or NULL if none is defined.
 +--------------------------------------------------------------------------*/

@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.28 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.31 2020/12/12 01:15:37 tom Exp $")
 
 typedef struct
   {
@@ -66,7 +66,7 @@ static void *
 Generic_Enum_Type(void *arg)
 {
   enumARG *argp = (enumARG *)0;
-  enumParams *params = (enumParams *) arg;
+  enumParams *params = (enumParams *)arg;
 
   if (params)
     {
@@ -425,12 +425,11 @@ static FIELDTYPE typeENUM =
 #endif
 };
 
-FORM_EXPORT_VAR(FIELDTYPE *)
-TYPE_ENUM = &typeENUM;
+FORM_EXPORT_VAR(FIELDTYPE *) TYPE_ENUM = &typeENUM;
 
 #if NCURSES_INTEROP_FUNCS
 /* The next routines are to simplify the use of ncurses from
-   programming languages with restictions on interop with C level
+   programming languages with restrictions on interop with C level
    constructs (e.g. variable access or va_list + ellipsis constructs)
 */
 FORM_EXPORT(FIELDTYPE *)

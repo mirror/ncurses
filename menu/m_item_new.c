@@ -45,7 +45,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.35 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.36 2020/12/12 00:38:08 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -75,7 +75,7 @@ Is_Printable_String(const char *s)
 
       mbstowcs(temp, s, (unsigned)count);
       for (n = 0; n < count; ++n)
-	if (!iswprint((wint_t) temp[n]))
+	if (!iswprint((wint_t)temp[n]))
 	  {
 	    result = FALSE;
 	    break;
@@ -118,12 +118,13 @@ new_item(const char *name, const char *description)
 
   if (!name || (*name == '\0') || !Is_Printable_String(name))
     {
-      item = (ITEM *) 0;
+      item = (ITEM *)0;
       SET_ERROR(E_BAD_ARGUMENT);
     }
   else
     {
       item = typeCalloc(ITEM, 1);
+
       if (item)
 	{
 	  *item = _nc_Default_Item;	/* hope we have struct assignment */
@@ -161,7 +162,7 @@ new_item(const char *name, const char *description)
 |                    E_CONNECTED       - item is still connected to a menu    
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-free_item(ITEM * item)
+free_item(ITEM *item)
 {
   T((T_CALLED("free_item(%p)"), (void *)item));
 
@@ -194,7 +195,7 @@ free_item(ITEM * item)
 |                    E_SYSTEM_ERROR     - no memory to store mark
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-set_menu_mark(MENU * menu, const char *mark)
+set_menu_mark(MENU *menu, const char *mark)
 {
   short l;
 
@@ -266,7 +267,7 @@ set_menu_mark(MENU * menu, const char *mark)
 |   Return Values :  The marker string pointer or NULL if no marker defined
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(const char *)
-menu_mark(const MENU * menu)
+menu_mark(const MENU *menu)
 {
   T((T_CALLED("menu_mark(%p)"), (const void *)menu));
   returnPtr(Normalize_Menu(menu)->mark);

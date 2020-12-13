@@ -33,14 +33,14 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_user.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_user.c,v 1.19 2020/12/12 01:05:34 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
 |   Function      :  int set_field_userptr(FIELD *field, void *usrptr)
 |   
 |   Description   :  Set the pointer that is reserved in any field to store
-|                    application relevant informations
+|                    application relevant information.
 |
 |   Return Values :  E_OK         - on success
 +--------------------------------------------------------------------------*/
@@ -58,7 +58,7 @@ set_field_userptr(FIELD *field, void *usrptr)
 |   Function      :  void *field_userptr(const FIELD *field)
 |   
 |   Description   :  Return the pointer that is reserved in any field to
-|                    store application relevant informations.
+|                    store application relevant information.
 |
 |   Return Values :  Value of pointer. If no such pointer has been set,
 |                    NULL is returned

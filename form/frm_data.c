@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_data.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: frm_data.c,v 1.19 2020/12/11 23:20:37 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -104,7 +104,7 @@ Only_Padding(WINDOW *w, int len, int pad)
 		}
 	    }
 #else
-	  cell = (FIELD_CELL) winch(w);
+	  cell = (FIELD_CELL)winch(w);
 	  if (ChCharOf(cell) != ChCharOf(pad))
 	    {
 	      result = FALSE;

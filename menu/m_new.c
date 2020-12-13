@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.23 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_new.c,v 1.24 2020/12/12 00:38:08 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -52,7 +52,7 @@ MODULE_ID("$Id: m_new.c,v 1.23 2020/05/24 01:40:20 anonymous.maarten Exp $")
 |   Return Values :  NULL on error
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(MENU *)
-NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
+NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM **items)
 {
   int err = E_SYSTEM_ERROR;
   MENU *menu = typeCalloc(MENU, 1);
@@ -77,7 +77,7 @@ NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
 	    {
 	      err = E_NOT_CONNECTED;
 	      free(menu);
-	      menu = (MENU *) 0;
+	      menu = (MENU *)0;
 	    }
 	  else
 	    err = E_OK;
@@ -103,7 +103,7 @@ NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM ** items)
 +--------------------------------------------------------------------------*/
 #if NCURSES_SP_FUNCS
 MENU_EXPORT(MENU *)
-new_menu(ITEM ** items)
+new_menu(ITEM **items)
 {
   return NCURSES_SP_NAME(new_menu) (CURRENT_SCREEN, items);
 }
@@ -121,7 +121,7 @@ new_menu(ITEM ** items)
 |                    E_POSTED           - Menu is already posted
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-free_menu(MENU * menu)
+free_menu(MENU *menu)
 {
   T((T_CALLED("free_menu(%p)"), (void *)menu));
   if (!menu)

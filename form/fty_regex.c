@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_regex.c,v 1.30 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fty_regex.c,v 1.32 2020/12/12 01:15:37 tom Exp $")
 
 #if HAVE_REGEX_H_FUNCS || HAVE_LIB_PCRE2	/* We prefer POSIX regex */
 
@@ -340,11 +340,11 @@ static FIELDTYPE typeREGEXP =
 #endif
 };
 
-FORM_EXPORT_VAR(FIELDTYPE*) TYPE_REGEXP = &typeREGEXP;
+FORM_EXPORT_VAR(FIELDTYPE *) TYPE_REGEXP = &typeREGEXP;
 
 #if NCURSES_INTEROP_FUNCS
 /* The next routines are to simplify the use of ncurses from
-   programming languages with restictions on interop with C level
+   programming languages with restrictions on interop with C level
    constructs (e.g. variable access or va_list + ellipsis constructs)
 */
 FORM_EXPORT(FIELDTYPE *)

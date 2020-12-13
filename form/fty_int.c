@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_int.c,v 1.28 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fty_int.c,v 1.31 2020/12/12 01:15:37 tom Exp $")
 
 #if USE_WIDEC_SUPPORT
 #define isDigit(c) (iswdigit((wint_t)(c)) || isdigit(UChar(c)))
@@ -72,8 +72,8 @@ integerPARM;
 static void *
 Generic_This_Type(void *arg)
 {
-  thisARG *argp = (thisARG *) 0;
-  thisARG *param = (thisARG *) arg;
+  thisARG *argp = (thisARG *)0;
+  thisARG *param = (thisARG *)arg;
 
   if (param)
     {
@@ -120,11 +120,12 @@ static void *
 Copy_This_Type(const void *argp)
 {
   const thisARG *ap = (const thisARG *)argp;
-  thisARG *result = (thisARG *) 0;
+  thisARG *result = (thisARG *)0;
 
   if (argp)
     {
       result = typeMalloc(thisARG, 1);
+
       if (result)
 	{
 	  T((T_CREATE("thisARG %p"), (void *)result));
@@ -278,11 +279,11 @@ static FIELDTYPE typeTHIS =
 #endif
 };
 
-FORM_EXPORT_VAR(FIELDTYPE*) TYPE_INTEGER = &typeTHIS;
+FORM_EXPORT_VAR(FIELDTYPE *) TYPE_INTEGER = &typeTHIS;
 
 #if NCURSES_INTEROP_FUNCS
 /* The next routines are to simplify the use of ncurses from
-   programming languages with restictions on interop with C level
+   programming languages with restrictions on interop with C level
    constructs (e.g. variable access or va_list + ellipsis constructs)
 */
 FORM_EXPORT(FIELDTYPE *)

@@ -33,17 +33,17 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_trace.c,v 1.8 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_trace.c,v 1.9 2020/12/12 00:38:14 tom Exp $")
 
 MENU_EXPORT(ITEM *)
-_nc_retrace_item(ITEM * code)
+_nc_retrace_item(ITEM *code)
 {
   T((T_RETURN("%p"), (void *)code));
   return code;
 }
 
 MENU_EXPORT(ITEM **)
-_nc_retrace_item_ptr(ITEM ** code)
+_nc_retrace_item_ptr(ITEM **code)
 {
   T((T_RETURN("%p"), (void *)code));
   return code;
@@ -57,7 +57,7 @@ _nc_retrace_item_opts(Item_Options code)
 }
 
 MENU_EXPORT(MENU *)
-_nc_retrace_menu(MENU * code)
+_nc_retrace_menu(MENU *code)
 {
   T((T_RETURN("%p"), (void *)code));
   return code;

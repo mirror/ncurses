@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201205).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201212).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -176,7 +176,7 @@
        standard  place.  For example, if <STRONG>TERM</STRONG> is set to <STRONG>att4424</STRONG>, then the com-
        piled terminal definition is found in
 
-           <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
+           <STRONG>/usr/local/ncurses/lib/terminfo/a/att4424</STRONG>.
 
        (The <STRONG>a</STRONG> is copied from the first letter of <STRONG>att4424</STRONG> to avoid creation  of
        huge  directories.)   However,  if  <STRONG>TERMINFO</STRONG>  is  set to <STRONG>$HOME/myterms</STRONG>,
@@ -186,10 +186,10 @@
 
        and if that fails, it then checks
 
-           <STRONG>/usr/share/terminfo/a/att4424</STRONG>.
+           <STRONG>/usr/local/ncurses/lib/terminfo/a/att4424</STRONG>.
 
        This is useful for developing experimental definitions  or  when  write
-       permission in <STRONG>/usr/share/terminfo</STRONG> is not available.
+       permission in <STRONG>/usr/local/ncurses/lib/terminfo</STRONG> is not available.
 
        The integer variables <STRONG>LINES</STRONG> and <STRONG>COLS</STRONG> are defined in <STRONG>&lt;curses.h&gt;</STRONG> and will
        be filled in by <STRONG>initscr</STRONG> with the size of  the  screen.   The  constants
@@ -1108,13 +1108,14 @@
              <STRONG>o</STRONG>   /usr/local/ncurses/share/terminfo:/usr/share/terminfo (corre-
                  sponding to the TERMINFO_DIRS variable)
 
-             <STRONG>o</STRONG>   /usr/share/terminfo (corresponding to the TERMINFO variable)
+             <STRONG>o</STRONG>   /usr/local/ncurses/lib/terminfo (corresponding  to  the  TER-
+                 MINFO variable)
 
 
 </PRE><H3><a name="h3-TERMINFO_DIRS">TERMINFO_DIRS</a></H3><PRE>
-       Specifies a list of locations  to  search  for  terminal  descriptions.
-       Each  location  in  the list is a terminal database as described in the
-       section on the <STRONG>TERMINFO</STRONG> variable.  The  list  is  separated  by  colons
+       Specifies  a  list  of  locations  to search for terminal descriptions.
+       Each location in the list is a terminal database as  described  in  the
+       section  on  the  <STRONG>TERMINFO</STRONG>  variable.   The list is separated by colons
        (i.e., ":") on Unix, semicolons on OS/2 EMX.
 
        There is no corresponding feature in System V terminfo; it is an exten-
@@ -1122,11 +1123,11 @@
 
 
 </PRE><H3><a name="h3-TERMPATH">TERMPATH</a></H3><PRE>
-       If <STRONG>TERMCAP</STRONG> does not hold a file name then <STRONG>ncurses</STRONG> checks  the  <STRONG>TERMPATH</STRONG>
-       environment  variable.  This is a list of filenames separated by spaces
+       If  <STRONG>TERMCAP</STRONG>  does not hold a file name then <STRONG>ncurses</STRONG> checks the <STRONG>TERMPATH</STRONG>
+       environment variable.  This is a list of filenames separated by  spaces
        or colons (i.e., ":") on Unix, semicolons on OS/2 EMX.
 
-       If the <STRONG>TERMPATH</STRONG> environment variable is not set, <STRONG>ncurses</STRONG> looks  in  the
+       If  the  <STRONG>TERMPATH</STRONG> environment variable is not set, <STRONG>ncurses</STRONG> looks in the
        files
 
            /etc/termcap, /usr/share/misc/termcap and $HOME/.termcap,
@@ -1134,7 +1135,7 @@
        in that order.
 
        The library may be configured to disregard the following variables when
-       the current user is the superuser (root), or if  the  application  uses
+       the  current  user  is the superuser (root), or if the application uses
        setuid or setgid permissions:
 
            $TERMINFO, $TERMINFO_DIRS, $TERMPATH, as well as $HOME.
@@ -1142,8 +1143,8 @@
 
 </PRE><H2><a name="h2-ALTERNATE-CONFIGURATIONS">ALTERNATE CONFIGURATIONS</a></H2><PRE>
        Several different configurations are possible, depending on the config-
-       ure script options used when building <STRONG>ncurses</STRONG>.  There are  a  few  main
-       options  whose  effects are visible to the applications developer using
+       ure  script  options  used when building <STRONG>ncurses</STRONG>.  There are a few main
+       options whose effects are visible to the applications  developer  using
        <STRONG>ncurses</STRONG>:
 
        --disable-overwrite
@@ -1151,19 +1152,19 @@
 
                 <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-            This option is used to avoid filename conflicts  when  <STRONG>ncurses</STRONG>  is
+            This  option  is  used to avoid filename conflicts when <STRONG>ncurses</STRONG> is
             not the main implementation of curses of the computer.  If <STRONG>ncurses</STRONG>
-            is installed disabling overwrite, it puts its headers in a  subdi-
+            is  installed disabling overwrite, it puts its headers in a subdi-
             rectory, e.g.,
 
                 <STRONG>#include</STRONG> <STRONG>&lt;ncurses/curses.h&gt;</STRONG>
 
-            It  also  omits  a  symbolic  link  which  would  allow you to use
+            It also omits a  symbolic  link  which  would  allow  you  to  use
             <STRONG>-lcurses</STRONG> to build executables.
 
        --enable-widec
-            The configure script  renames  the  library  and  (if  the  <STRONG>--dis-</STRONG>
-            <STRONG>able-overwrite</STRONG>  option is used) puts the header files in a differ-
+            The  configure  script  renames  the  library  and  (if the <STRONG>--dis-</STRONG>
+            <STRONG>able-overwrite</STRONG> option is used) puts the header files in a  differ-
             ent subdirectory.  All of the library names have a "w" appended to
             them, i.e., instead of
 
@@ -1173,45 +1174,45 @@
 
                 <STRONG>-lncursesw</STRONG>
 
-            You  must  also  enable  the wide-character features in the header
-            file when compiling for the  wide-character  library  to  use  the
-            extended  (wide-character)  functions.   The  symbol which enables
+            You must also enable the wide-character  features  in  the  header
+            file  when  compiling  for  the  wide-character library to use the
+            extended (wide-character) functions.   The  symbol  which  enables
             these features has changed since XSI Curses, Issue 4:
 
-            <STRONG>o</STRONG>   Originally, the wide-character  feature  required  the  symbol
+            <STRONG>o</STRONG>   Originally,  the  wide-character  feature  required the symbol
                 <STRONG>_XOPEN_SOURCE_EXTENDED</STRONG>  but  that  was  only  valid  for  XPG4
                 (1996).
 
-            <STRONG>o</STRONG>   Later, that was deemed conflicting with <STRONG>_XOPEN_SOURCE</STRONG>  defined
+            <STRONG>o</STRONG>   Later,  that was deemed conflicting with <STRONG>_XOPEN_SOURCE</STRONG> defined
                 to 500.
 
-            <STRONG>o</STRONG>   As  of  mid-2018,  none of the features in this implementation
-                require a <STRONG>_XOPEN_SOURCE</STRONG> feature greater  than  600.   However,
+            <STRONG>o</STRONG>   As of mid-2018, none of the features  in  this  implementation
+                require  a  <STRONG>_XOPEN_SOURCE</STRONG>  feature greater than 600.  However,
                 X/Open Curses, Issue 7 (2009) recommends defining it to 700.
 
-            <STRONG>o</STRONG>   Alternatively,   you   can  enable  the  feature  by  defining
-                <STRONG>NCURSES_WIDECHAR</STRONG> with the caveat that some other  header  file
-                than  <STRONG>curses.h</STRONG>  may require a specific value for <STRONG>_XOPEN_SOURCE</STRONG>
+            <STRONG>o</STRONG>   Alternatively,  you  can  enable  the  feature   by   defining
+                <STRONG>NCURSES_WIDECHAR</STRONG>  with  the caveat that some other header file
+                than <STRONG>curses.h</STRONG> may require a specific value  for  <STRONG>_XOPEN_SOURCE</STRONG>
                 (or a system-specific symbol).
 
-            The <STRONG>curses.h</STRONG>  file  which  is  installed  for  the  wide-character
-            library  is  designed  to  be compatible with the normal library's
-            header.  Only the size of the <STRONG>WINDOW</STRONG> structure differs,  and  very
+            The  <STRONG>curses.h</STRONG>  file  which  is  installed  for  the wide-character
+            library is designed to be compatible  with  the  normal  library's
+            header.   Only  the size of the <STRONG>WINDOW</STRONG> structure differs, and very
             few applications require more than a pointer to <STRONG>WINDOW</STRONG>s.
 
-            If  the headers are installed allowing overwrite, the wide-charac-
-            ter library's headers should be installed last, to allow  applica-
-            tions  to be built using either library from the same set of head-
+            If the headers are installed allowing overwrite, the  wide-charac-
+            ter  library's headers should be installed last, to allow applica-
+            tions to be built using either library from the same set of  head-
             ers.
 
        --with-pthread
-            The configure script renames the  library.   All  of  the  library
-            names  have  a  "t"  appended  to  them  (before  any "w" added by
+            The  configure  script  renames  the  library.  All of the library
+            names have a "t"  appended  to  them  (before  any  "w"  added  by
             <STRONG>--enable-widec</STRONG>).
 
             The global variables such as <STRONG>LINES</STRONG> are replaced by macros to allow
             read-only access.  At the same time, setter-functions are provided
-            to set these values.  Some applications  (very  few)  may  require
+            to  set  these  values.   Some applications (very few) may require
             changes to work with this convention.
 
        --with-shared
@@ -1221,17 +1222,17 @@
        --with-debug
 
        --with-profile
-            The  shared and normal (static) library names differ by their suf-
-            fixes, e.g., <STRONG>libncurses.so</STRONG> and <STRONG>libncurses.a</STRONG>.  The debug  and  pro-
-            filing  libraries  add a "_g" and a "_p" to the root names respec-
+            The shared and normal (static) library names differ by their  suf-
+            fixes,  e.g.,  <STRONG>libncurses.so</STRONG> and <STRONG>libncurses.a</STRONG>.  The debug and pro-
+            filing libraries add a "_g" and a "_p" to the root  names  respec-
             tively, e.g., <STRONG>libncurses_g.a</STRONG> and <STRONG>libncurses_p.a</STRONG>.
 
        --with-termlib
-            Low-level functions which do not depend upon whether  the  library
+            Low-level  functions  which do not depend upon whether the library
             supports wide-characters, are provided in the tinfo library.
 
-            By  doing  this, it is possible to share the tinfo library between
-            wide/normal configurations as well  as  reduce  the  size  of  the
+            By doing this, it is possible to share the tinfo  library  between
+            wide/normal  configurations  as  well  as  reduce  the size of the
             library when only low-level functions are needed.
 
             Those functions are described in these pages:
@@ -1251,16 +1252,17 @@
             <STRONG>o</STRONG>   <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG> - miscellaneous <STRONG>curses</STRONG> utility routines
 
        --with-trace
-            The  <STRONG>trace</STRONG>  function normally resides in the debug library, but it
+            The <STRONG>trace</STRONG> function normally resides in the debug library,  but  it
             is sometimes useful to configure this in the shared library.  Con-
-            figure  scripts  should  check for the function's existence rather
+            figure scripts should check for the  function's  existence  rather
             than assuming it is always in the debug library.
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
        /usr/share/tabset
-            directory containing initialization files for the  terminal  capa-
-            bility database /usr/share/terminfo terminal capability database
+            directory  containing  initialization files for the terminal capa-
+            bility database /usr/local/ncurses/lib/terminfo terminal  capabil-
+            ity database
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_top.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_item_top.c,v 1.14 2020/12/12 00:38:08 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -51,7 +51,7 @@ MODULE_ID("$Id: m_item_top.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $"
 |                    E_NOT_CONNECTED  - there are no items for the menu
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-set_top_row(MENU * menu, int row)
+set_top_row(MENU *menu, int row)
 {
   ITEM *item;
 
@@ -61,7 +61,7 @@ set_top_row(MENU * menu, int row)
     {
       if (menu->status & _IN_DRIVER)
 	RETURN(E_BAD_STATE);
-      if (menu->items == (ITEM **) 0)
+      if (menu->items == (ITEM **)0)
 	RETURN(E_NOT_CONNECTED);
 
       if ((row < 0) || (row > (menu->rows - menu->arows)))
@@ -93,7 +93,7 @@ set_top_row(MENU * menu, int row)
 |   Return Values :  The row number or ERR if there is no row
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-top_row(const MENU * menu)
+top_row(const MENU *menu)
 {
   T((T_CALLED("top_row(%p)"), (const void *)menu));
   if (menu && menu->items && *(menu->items))

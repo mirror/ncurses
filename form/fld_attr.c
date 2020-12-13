@@ -33,12 +33,12 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_attr.c,v 1.14 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_attr.c,v 1.15 2020/12/11 22:05:24 tom Exp $")
 
 /*----------------------------------------------------------------------------
   Field-Attribute manipulation routines
   --------------------------------------------------------------------------*/
-/* "Template" macro to generate a function to set a fields attribute */
+/* "Template" macro to generate a function to set a field's attribute */
 #define GEN_FIELD_ATTR_SET_FCT( name ) \
 FORM_IMPEXP int NCURSES_API set_field_ ## name (FIELD * field, chtype attr)\
 {\
@@ -63,7 +63,7 @@ FORM_IMPEXP int NCURSES_API set_field_ ## name (FIELD * field, chtype attr)\
    RETURN(res);\
 }
 
-/* "Template" macro to generate a function to get a fields attribute */
+/* "Template" macro to generate a function to get a field's attribute */
 #define GEN_FIELD_ATTR_GET_FCT( name ) \
 FORM_IMPEXP chtype NCURSES_API field_ ## name (const FIELD * field)\
 {\
@@ -88,7 +88,7 @@ GEN_FIELD_ATTR_SET_FCT(fore)
 |   Facility      :  libnform
 |   Function      :  chtype field_fore(const FIELD *)
 |
-|   Description   :  Retrieve fields foreground attribute
+|   Description   :  Retrieve field's foreground attribute
 |
 |   Return Values :  The foreground attribute
 +--------------------------------------------------------------------------*/
@@ -99,7 +99,7 @@ GEN_FIELD_ATTR_GET_FCT(fore)
 |   Function      :  int set_field_back(FIELD *field, chtype attr)
 |
 |   Description   :  Sets the background of the field used to display the
-|                    fields extend.
+|                    field's extend.
 |
 |   Return Values :  E_OK             - success
 |                    E_BAD_ARGUMENT   - invalid attributes
@@ -111,7 +111,7 @@ GEN_FIELD_ATTR_SET_FCT(back)
 |   Facility      :  libnform
 |   Function      :  chtype field_back(const
 |
-|   Description   :  Retrieve fields background attribute
+|   Description   :  Retrieve field's background attribute
 |
 |   Return Values :  The background attribute
 +--------------------------------------------------------------------------*/

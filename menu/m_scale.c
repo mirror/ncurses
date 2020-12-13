@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_scale.c,v 1.12 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_scale.c,v 1.13 2020/12/12 00:38:14 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -52,7 +52,7 @@ MODULE_ID("$Id: m_scale.c,v 1.12 2020/05/24 01:40:20 anonymous.maarten Exp $")
 |                    E_NOT_CONNECTED       - no items are connected to menu
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-scale_menu(const MENU * menu, int *rows, int *cols)
+scale_menu(const MENU *menu, int *rows, int *cols)
 {
   T((T_CALLED("scale_menu(%p,%p,%p)"),
      (const void *)menu,

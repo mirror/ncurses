@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_vis.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_item_vis.c,v 1.19 2020/12/12 00:38:08 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -51,7 +51,7 @@ MODULE_ID("$Id: m_item_vis.c,v 1.18 2020/05/24 01:40:20 anonymous.maarten Exp $"
 |                    FALSE if invisible
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(bool)
-item_visible(const ITEM * item)
+item_visible(const ITEM *item)
 {
   MENU *menu;
 

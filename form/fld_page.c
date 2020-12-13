@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_page.c,v 1.14 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_page.c,v 1.15 2020/12/11 23:15:26 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
@@ -66,8 +66,8 @@ set_new_page(FIELD *field, bool new_page_flag)
 |   Facility      :  libnform  
 |   Function      :  bool new_page(const FIELD *field)
 |   
-|   Description   :  Retrieve the info whether or not the field starts a
-|                    new page on the form.
+|   Description   :  Retrieve the information whether or not the field starts
+|                    a new page on the form.
 |
 |   Return Values :  TRUE  - field starts a new page
 |                    FALSE - field doesn't start a new page

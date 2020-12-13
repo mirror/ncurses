@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.130 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.133 2020/12/12 00:36:42 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -131,34 +131,34 @@ static int FE_Delete_Previous(FORM *);
 /* Calculate the position of a single row in a field buffer */
 #define Position_Of_Row_In_Buffer(field,row) ((row)*(field)->dcols)
 
-/* Calculate start address for the fields buffer# N */
+/* Calculate start address for the field's buffer# N */
 #define Address_Of_Nth_Buffer(field,N) \
   ((field)->buf + (N)*(1+Buffer_Length(field)))
 
-/* Calculate the start address of the row in the fields specified buffer# N */
+/* Calculate the start address of the row in the field's specified buffer# N */
 #define Address_Of_Row_In_Nth_Buffer(field,N,row) \
   (Address_Of_Nth_Buffer(field,N) + Position_Of_Row_In_Buffer(field,row))
 
-/* Calculate the start address of the row in the fields primary buffer */
+/* Calculate the start address of the row in the field's primary buffer */
 #define Address_Of_Row_In_Buffer(field,row) \
   Address_Of_Row_In_Nth_Buffer(field,0,row)
 
-/* Calculate the start address of the row in the forms current field
+/* Calculate the start address of the row in the form's current field
    buffer# N */
 #define Address_Of_Current_Row_In_Nth_Buffer(form,N) \
    Address_Of_Row_In_Nth_Buffer((form)->current,N,(form)->currow)
 
-/* Calculate the start address of the row in the forms current field
+/* Calculate the start address of the row in the form's current field
    primary buffer */
 #define Address_Of_Current_Row_In_Buffer(form) \
    Address_Of_Current_Row_In_Nth_Buffer(form,0)
 
-/* Calculate the address of the cursor in the forms current field
+/* Calculate the address of the cursor in the form's current field
    primary buffer */
 #define Address_Of_Current_Position_In_Nth_Buffer(form,N) \
    (Address_Of_Current_Row_In_Nth_Buffer(form,N) + (form)->curcol)
 
-/* Calculate the address of the cursor in the forms current field
+/* Calculate the address of the cursor in the form's current field
    buffer# N */
 #define Address_Of_Current_Position_In_Buffer(form) \
   Address_Of_Current_Position_In_Nth_Buffer(form,0)
@@ -187,7 +187,7 @@ static int FE_Delete_Previous(FORM *);
 /* Logic to determine whether or not a dynamic field may still grow */
 #define Growable(field) ((field)->status & _MAY_GROW)
 
-/* Macro to set the attributes for a fields window */
+/* Macro to set the attributes for a field's window */
 #define Set_Field_Window_Attributes(field,win) \
 (  wbkgdset((win),(chtype)((chtype)((field)->pad) | (field)->back)), \
    (void) wattrset((win), (int)(field)->fore) )
@@ -860,7 +860,7 @@ _nc_Position_Form_Cursor(FORM *form)
 |   Facility      :  libnform
 |   Function      :  int _nc_Refresh_Current_Field(FORM * form)
 |
-|   Description   :  Propagate the changes in the fields window to the
+|   Description   :  Propagate the changes in the field's window to the
 |                    window of the form.
 |
 |   Return Values :  E_OK              - on success
@@ -1263,7 +1263,7 @@ Synchronize_Linked_Fields(FIELD *field)
 |   Facility      :  libnform
 |   Function      :  int _nc_Synchronize_Attributes(FIELD * field)
 |
-|   Description   :  If a fields visual attributes have changed, this
+|   Description   :  If a field's visual attributes have changed, this
 |                    routine is called to propagate those changes to the
 |                    screen.
 |
@@ -1329,7 +1329,7 @@ _nc_Synchronize_Attributes(FIELD *field)
 |   Function      :  int _nc_Synchronize_Options(FIELD * field,
 |                                                Field_Options newopts)
 |
-|   Description   :  If a fields options have changed, this routine is
+|   Description   :  If a field's options have changed, this routine is
 |                    called to propagate these changes to the screen and
 |                    to really change the behavior of the field.
 |
@@ -3284,7 +3284,7 @@ FV_Validation(FORM *form)
 |
 |   Description   :  Get the next field after the given field on the current
 |                    page. The order of fields is the one defined by the
-|                    fields array. Only visible and active fields are
+|                    field's array. Only visible and active fields are
 |                    counted.
 |
 |   Return Values :  Pointer to the next field.
@@ -3367,7 +3367,7 @@ _nc_First_Active_Field(FORM *form)
 |
 |   Description   :  Get the previous field before the given field on the
 |                    current page. The order of fields is the one defined by
-|                    the fields array. Only visible and active fields are
+|                    the field's array. Only visible and active fields are
 |                    counted.
 |
 |   Return Values :  Pointer to the previous field.
@@ -3501,10 +3501,10 @@ Right_Neighbor_Field(FIELD *field)
 |   Function      :  static FIELD *Upper_Neighbor_Field(FIELD * field)
 |
 |   Description   :  Because of the row-major nature of sorting the fields,
-|                    it is more difficult to define whats the upper neighbor
+|                    it is more difficult to define what the upper neighbor
 |                    field really means. We define that it must be on a
 |                    'previous' line (cyclic order!) and is the rightmost
-|                    field laying on the left side of the given field. If
+|                    field lying on the left side of the given field. If
 |                    this set is empty, we take the first field on the line.
 |
 |   Return Values :  Pointer to the upper neighbor field.
@@ -3551,7 +3551,7 @@ Upper_Neighbor_Field(FIELD *field)
 |   Function      :  static FIELD *Down_Neighbor_Field(FIELD * field)
 |
 |   Description   :  Because of the row-major nature of sorting the fields,
-|                    its more difficult to define whats the down neighbor
+|                    it's more difficult to define what the down neighbor
 |                    field really means. We define that it must be on a
 |                    'next' line (cyclic order!) and is the leftmost
 |                    field laying on the right side of the given field. If
@@ -3952,7 +3952,7 @@ Previous_Page_Number(const FORM *form)
 |                    that the field is left and a new field is entered.
 |                    So the field must be validated and the field init/term
 |                    hooks must be called. Because also the page is changed,
-|                    the forms init/term hooks must be called also.
+|                    the form's init/term hooks must be called also.
 |
 |   Return Values :  E_OK                - success
 |                    E_INVALID_FIELD     - field is invalid
@@ -4357,7 +4357,7 @@ static const Binding_Info bindings[MAX_FORM_COMMAND - MIN_FORM_COMMAND + 1] =
 FORM_EXPORT(int)
 form_driver(FORM *form, int c)
 {
-  const Binding_Info *BI = (Binding_Info *) 0;
+  const Binding_Info *BI = (Binding_Info *)0;
   int res = E_UNKNOWN_COMMAND;
 
   move_after_insert = TRUE;
@@ -4412,7 +4412,7 @@ form_driver(FORM *form, int c)
 	NULL			/* Choice Request is generic           */
       };
       size_t nMethods = (sizeof(Generic_Methods) / sizeof(Generic_Methods[0]));
-      size_t method = (size_t) ((BI->keycode >> ID_Shft) & 0xffff);	/* see ID_Mask */
+      size_t method = (size_t)((BI->keycode >> ID_Shft) & 0xffff);	/* see ID_Mask */
 
       if ((method >= nMethods) || !(BI->cmd))
 	res = E_SYSTEM_ERROR;
@@ -4564,7 +4564,7 @@ form_driver(FORM *form, int c)
 FORM_EXPORT(int)
 form_driver_w(FORM *form, int type, wchar_t c)
 {
-  const Binding_Info *BI = (Binding_Info *) 0;
+  const Binding_Info *BI = (Binding_Info *)0;
   int res = E_UNKNOWN_COMMAND;
 
   T((T_CALLED("form_driver(%p,%d)"), (void *)form, (int)c));
@@ -4618,7 +4618,7 @@ form_driver_w(FORM *form, int type, wchar_t c)
 	NULL			/* Choice Request is generic           */
       };
       size_t nMethods = (sizeof(Generic_Methods) / sizeof(Generic_Methods[0]));
-      size_t method = (size_t) (BI->keycode >> ID_Shft) & 0xffff;	/* see ID_Mask */
+      size_t method = (size_t)(BI->keycode >> ID_Shft) & 0xffff;	/* see ID_Mask */
 
       if ((method >= nMethods) || !(BI->cmd))
 	res = E_SYSTEM_ERROR;
@@ -4736,8 +4736,8 @@ form_driver_w(FORM *form, int type, wchar_t c)
 |                    For dynamic fields this may grow the fieldbuffers if
 |                    the length of the value exceeds the current buffer
 |                    length. For buffer 0 only printable values are allowed.
-|                    For static fields, the value needs not to be zero ter-
-|                    minated. It is copied up to the length of the buffer.
+|                    For static fields, the value must not be zero terminated.
+|                    It is copied up to the length of the buffer.
 |
 |   Return Values :  E_OK            - success
 |                    E_BAD_ARGUMENT  - invalid argument
@@ -4972,7 +4972,7 @@ _nc_Widen_String(char *source, int *lengthp)
 		{
 		  result[need] = wch;
 		}
-	      passed += (size_t) status;
+	      passed += (size_t)status;
 	      ++need;
 	    }
 	  else

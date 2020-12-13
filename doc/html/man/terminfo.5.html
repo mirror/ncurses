@@ -91,7 +91,7 @@
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       /usr/share/terminfo/*/*
+       /usr/local/ncurses/lib/terminfo/*/*
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -105,7 +105,7 @@
        have, by specifying how to perform screen operations, and by specifying
        padding requirements and initialization sequences.
 
-       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201205).
+       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20201212).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -1317,15 +1317,15 @@
 
            An empty directory name (i.e., if the variable begins or ends  with
            a  colon, or contains adjacent colons) is interpreted as the system
-           location <EM>/usr/share/terminfo</EM>.
+           location <EM>/usr/local/ncurses/lib/terminfo</EM>.
 
        <STRONG>o</STRONG>   Finally, <STRONG>ncurses</STRONG> searches these compiled-in locations:
 
            <STRONG>o</STRONG>   a   list    of    directories    (/usr/local/ncurses/share/ter-
                minfo:/usr/share/terminfo), and
 
-           <STRONG>o</STRONG>   the  system  terminfo  directory, <EM>/usr/share/terminfo</EM> (the com-
-               piled-in default).
+           <STRONG>o</STRONG>   the  system terminfo directory, <EM>/usr/local/ncurses/lib/terminfo</EM>
+               (the compiled-in default).
 
 
 </PRE><H3><a name="h3-Preparing-Descriptions">Preparing Descriptions</a></H3><PRE>
@@ -2487,7 +2487,8 @@
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
-       /usr/share/terminfo/?/*  files containing terminal descriptions
+       /usr/local/ncurses/lib/terminfo/?/*
+                                files containing terminal descriptions
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

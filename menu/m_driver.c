@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_driver.c,v 1.35 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_driver.c,v 1.36 2020/12/12 00:38:02 tom Exp $")
 
 /* Macros */
 
@@ -117,7 +117,7 @@ Is_Sub_String(
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
 _nc_Match_Next_Character_In_Item_Name
-(MENU * menu, int ch, ITEM ** item)
+(MENU *menu, int ch, ITEM **item)
 {
   bool found = FALSE, passed = FALSE;
   int idx, last;
@@ -210,7 +210,7 @@ _nc_Match_Next_Character_In_Item_Name
 |                    E_NOT_POSTED    - menu is not posted
 +--------------------------------------------------------------------------*/
 MENU_EXPORT(int)
-menu_driver(MENU * menu, int c)
+menu_driver(MENU *menu, int c)
 {
 #define NAVIGATE(dir) \
   if (!item->dir)\

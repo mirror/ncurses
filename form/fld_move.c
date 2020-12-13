@@ -33,14 +33,14 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fld_move.c,v 1.13 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: fld_move.c,v 1.15 2020/12/11 23:48:05 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnform  
 |   Function      :  int move_field(FIELD *field,int frow, int fcol)
 |   
 |   Description   :  Moves the disconnected field to the new location in
-|                    the forms subwindow.
+|                    the form's subwindow.
 |
 |   Return Values :  E_OK            - success
 |                    E_BAD_ARGUMENT  - invalid argument passed
@@ -57,8 +57,8 @@ move_field(FIELD *field, int frow, int fcol)
   if (field->form)
     RETURN(E_CONNECTED);
 
-  field->frow = (short) frow;
-  field->fcol = (short) fcol;
+  field->frow = (short)frow;
+  field->fcol = (short)fcol;
   RETURN(E_OK);
 }
 
