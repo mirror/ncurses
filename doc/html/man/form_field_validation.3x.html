@@ -128,26 +128,26 @@
             lives in automatic variables on the stack.
 
        TYPE_INTEGER
-            Integer data, parsable to an integer by <STRONG>atoi(3)</STRONG>.  Required parame-
-            ters:
+            Integer  data,  parsable  to  an  integer  by  <STRONG>atoi(3)</STRONG>.   Required
+            parameters:
 
             <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
 
             <STRONG>o</STRONG>   a fourth <STRONG>long</STRONG> argument constraining minimum value,
 
             <STRONG>o</STRONG>   a fifth <STRONG>long</STRONG> constraining maximum value.  If the maximum value
-                is  less than or equal to the minimum value, the range is sim-
-                ply ignored.
+                is  less  than  or  equal  to  the minimum value, the range is
+                simply ignored.
 
             On return, the field buffer is formatted according to  the  <STRONG>printf</STRONG>
-            format specification ".*ld", where the "*" is replaced by the pre-
-            cision argument.
+            format  specification  ".*ld",  where  the  "*" is replaced by the
+            precision argument.
 
             For details of the precision handling see <STRONG>printf(3)</STRONG>.
 
        TYPE_NUMERIC
-            Numeric data (may have a decimal-point  part).   Required  parame-
-            ters:
+            Numeric  data  (may  have   a   decimal-point   part).    Required
+            parameters:
 
             <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
 
@@ -159,8 +159,8 @@
                 or equal to the minimum value, the range is simply ignored.
 
             On return, the field buffer is formatted according to  the  <STRONG>printf</STRONG>
-            format  specification ".*f", where the "*" is replaced by the pre-
-            cision argument.
+            format  specification  ".*f",  where  the  "*"  is replaced by the
+            precision argument.
 
             For details of the precision handling see <STRONG>printf(3)</STRONG>.
 
@@ -195,8 +195,8 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The functions <STRONG>field_type</STRONG> and <STRONG>field_arg</STRONG> return <STRONG>NULL</STRONG> on error.  The func-
-       tion <STRONG>set_field_type</STRONG> returns one of the following:
+       The  functions  <STRONG>field_type</STRONG>  and  <STRONG>field_arg</STRONG>  return  <STRONG>NULL</STRONG> on error.  The
+       function <STRONG>set_field_type</STRONG> returns one of the following:
 
        <STRONG>E_OK</STRONG> The routine succeeded.
 
@@ -214,8 +214,8 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  routines emulate the System V forms library.  They were not sup-
-       ported on Version 7 or BSD versions.
+       These  routines  emulate  the  System  V  forms library.  They were not
+       supported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>

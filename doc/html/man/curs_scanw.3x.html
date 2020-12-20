@@ -93,12 +93,12 @@
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
        While  <STRONG>scanw</STRONG>  was implemented in 4BSD, none of the BSD releases used it
        until 4.4BSD (in a game).  That early version of curses was before  the
-       ANSI  C  standard.   It did not use &lt;varargs.h&gt;, though that was avail-
-       able.  In 1991 (a couple of years after SVr4 was  generally  available,
-       and  after  the C standard was published), other developers updated the
-       library, using &lt;stdarg.h&gt; internally in 4.4BSD curses.  Even with  this
-       improvement,  BSD  curses  did  not  use  function  prototypes (or even
-       declare functions) in the &lt;curses.h&gt; header until 1992.
+       ANSI  C  standard.   It  did  not  use  &lt;varargs.h&gt;,  though  that  was
+       available.  In 1991  (a  couple  of  years  after  SVr4  was  generally
+       available,  and  after  the C standard was published), other developers
+       updated the library, using  &lt;stdarg.h&gt;  internally  in  4.4BSD  curses.
+       Even  with this improvement, BSD curses did not use function prototypes
+       (or even declare functions) in the &lt;curses.h&gt; header until 1992.
 
        SVr2 documented <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG> tersely as  "scanf  through  <EM>stdscr</EM>"  and
        tersely as "scanf through <EM>win</EM>", respectively.
@@ -144,16 +144,16 @@
            is  probably  an  editing error which was introduced in XSI, rather
            than being done intentionally.
 
-       <STRONG>o</STRONG>   This implementation returns the number of items scanned,  for  com-
-           patibility  with  SVr4  curses.   As  of  2018,  NetBSD curses also
+       <STRONG>o</STRONG>   This implementation  returns  the  number  of  items  scanned,  for
+           compatibility  with  SVr4  curses.   As of 2018, NetBSD curses also
            returns the number of  items  scanned.   Both  ncurses  and  NetBSD
            curses call <STRONG>vsscanf</STRONG> to scan the string, which returns <STRONG>EOF</STRONG> on error.
 
        <STRONG>o</STRONG>   Portable  applications should only test if the return value is <STRONG>ERR</STRONG>,
            since the <STRONG>OK</STRONG> value (zero) is likely to be misleading.
 
-           One possible way to get useful results would be to use a "%n"  con-
-           version  at  the  end of the format string to ensure that something
+           One possible way to get useful results  would  be  to  use  a  "%n"
+           conversion at the end of the format string to ensure that something
            was processed.
 
 

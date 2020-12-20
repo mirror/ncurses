@@ -76,14 +76,14 @@
        the cursor), and move the remaining lines up.  The bottom <EM>n</EM>  lines  are
        cleared.  The current cursor position remains the same.
 
-       The  <STRONG>insertln</STRONG> and <STRONG>winsertln</STRONG> routines insert a blank line above the cur-
-       rent line and the bottom line is lost.
+       The  <STRONG>insertln</STRONG>  and  <STRONG>winsertln</STRONG>  routines  insert  a blank line above the
+       current line and the bottom line is lost.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines return the integer <STRONG>ERR</STRONG> upon failure and an <STRONG>OK</STRONG> (SVr4 speci-
-       fies  only  "an  integer value other than <STRONG>ERR</STRONG>") upon successful comple-
-       tion.
+       All routines return the integer  <STRONG>ERR</STRONG>  upon  failure  and  an  <STRONG>OK</STRONG>  (SVr4
+       specifies  only  "an  integer  value  other  than <STRONG>ERR</STRONG>") upon successful
+       completion.
 
        X/Open defines no error conditions.  In  this  implementation,  if  the
        window parameter is null, an error is returned.
@@ -100,8 +100,8 @@
 
        These  routines do not require a hardware line delete or insert feature
        in  the  terminal.   In  fact,  they  will  not   use   hardware   line
-       delete/insert  unless <STRONG>idlok(...,</STRONG> <STRONG>TRUE)</STRONG> has been set on the current win-
-       dow.
+       delete/insert  unless  <STRONG>idlok(...,</STRONG>  <STRONG>TRUE)</STRONG>  has  been  set on the current
+       window.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

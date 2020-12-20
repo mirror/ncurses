@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.70 2020/03/21 22:25:28 tom Exp $
+-- $Id: README,v 1.71 2020/12/19 16:56:00 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -292,7 +292,7 @@ color_content			test: color_content ncurses picsmap
 color_content_sp		-
 color_set			test: color_set dots_xcurses extended_color ncurses
 copywin				test: ncurses testcurs
-cur_term			test: demo_termcap demo_terminfo dots dots_mvcur filter list_keys lrtest sp_tinfo test_sgr test_vid_puts test_vidputs progs: clear_cmd reset_cmd tabs tput tset
+cur_term			test: demo_termcap demo_terminfo dots dots_mvcur filter list_keys lrtest sp_tinfo test_sgr test_tparm test_vid_puts test_vidputs progs: clear_cmd reset_cmd tabs tput tset
 curs_set			test: demo_new_pair echochar firework gdc hanoi lrtest ncurses newdemo picsmap rain savescreen tclock testcurs worm xmas
 curs_set_sp			test: sp_tinfo
 curscr				test: demo_panels knight lrtest ncurses popup_msg savescreen tclock
@@ -304,7 +304,7 @@ def_shell_mode			-
 def_shell_mode_sp		test: sp_tinfo
 define_key			test: demo_altkeys demo_defkey foldkeys
 define_key_sp			test: sp_tinfo
-del_curterm			test: demo_terminfo sp_tinfo test_sgr
+del_curterm			test: demo_terminfo sp_tinfo test_sgr test_tparm
 del_curterm_sp			lib: ncurses
 delay_output			test: newdemo
 delay_output_sp			test: sp_tinfo
@@ -327,7 +327,7 @@ erasechar			test: ncurses
 erasechar_sp			test: sp_tinfo
 erasewchar			test: ncurses
 exit_curses			-
-exit_terminfo			lib: ncurses
+exit_terminfo			test: demo_tabs demo_termcap demo_terminfo dots dots_mvcur dots_termcap list_keys railroad sp_tinfo test_arrays test_sgr test_termattrs test_tparm test_vid_puts test_vidputs
 extended_color_content		test: color_content extended_color
 extended_color_content_sp	test: extended_color
 extended_pair_content		test: extended_color pair_content
@@ -627,7 +627,7 @@ set_tabsize_sp			test: sp_tinfo
 set_term			lib: ncurses
 setcchar			test: demo_new_pair demo_panels ins_wide ncurses picsmap savescreen test_add_wchstr test_addwstr
 setscrreg			test: view
-setupterm			test: demo_terminfo dots list_keys sp_tinfo test_setupterm test_sgr test_termattrs test_vid_puts test_vidputs progs: clear tabs tput tset
+setupterm			test: demo_terminfo dots list_keys sp_tinfo test_setupterm test_sgr test_termattrs test_tparm test_vid_puts test_vidputs progs: clear tabs tput tset
 slk_attr			-
 slk_attr_off			-
 slk_attr_on			-
@@ -666,7 +666,7 @@ start_color_sp			-
 stdscr				test: background bs chgat clip_printw color_content demo_altkeys demo_forms demo_menus demo_new_pair demo_panels ditto dup_field edit_field extended_color filter firework foldkeys form_driver_w gdc hanoi hashtest inch_wide inchs ins_wide insdelln inserts key_names keynames knight lrtest move_field movewindow ncurses padview pair_content picsmap rain redraw savescreen tclock test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque testcurs testscanw view worm xmas
 strcodes			test: demo_termcap test_arrays progs: dump_entry
 strfnames			test: demo_terminfo list_keys test_arrays progs: dump_entry
-strnames			test: demo_terminfo foldkeys list_keys test_arrays progs: dump_entry infocmp tic
+strnames			test: demo_terminfo foldkeys list_keys test_arrays test_tparm progs: dump_entry infocmp tic
 subpad				test: testcurs
 subwin				test: movewindow ncurses newdemo testcurs
 syncok				test: test_opaque
@@ -689,13 +689,13 @@ tigetflag			test: demo_terminfo savescreen progs: tic tput
 tigetflag_sp			test: sp_tinfo
 tigetnum			test: demo_tabs demo_terminfo dots dots_mvcur ncurses savescreen progs: tput
 tigetnum_sp			test: sp_tinfo
-tigetstr			test: blue demo_defkey demo_new_pair demo_terminfo foldkeys list_keys savescreen test_sgr testcurs progs: clear_cmd tic tput
+tigetstr			test: blue demo_defkey demo_new_pair demo_terminfo foldkeys list_keys savescreen test_sgr test_tparm testcurs progs: clear_cmd tic tput
 tigetstr_sp			test: sp_tinfo
 timeout				test: filter rain savescreen
 tiparm				-
 touchline			test: chgat clip_printw insdelln
 touchwin			test: chgat clip_printw demo_menus filter firstlast inch_wide inchs ins_wide insdelln inserts movewindow ncurses popup_msg redraw test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque xmas
-tparm				test: dots dots_mvcur test_sgr progs: reset_cmd tabs tic tput
+tparm				test: dots dots_mvcur test_sgr test_tparm progs: tic tput
 tputs				test: dots dots_mvcur dots_termcap railroad test_vid_puts test_vidputs progs: clear_cmd reset_cmd tabs
 tputs_sp			test: sp_tinfo
 trace				-

@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: form_driver.3x,v 1.34 2020/10/17 23:28:04 tom Exp @
+  * @Id: form_driver.3x,v 1.35 2020/12/19 21:34:15 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -68,19 +68,19 @@
            and character codes returned by <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG>.
 
        <STRONG>o</STRONG>   The input is a printable character.   Printable  characters  (which
-           must  be positive, less than 256) are checked according to the pro-
-           gram's locale settings.
+           must  be  positive,  less  than  256)  are checked according to the
+           program's locale settings.
 
        <STRONG>o</STRONG>   The input is the KEY_MOUSE special key  associated  with  an  mouse
            event.
 
 
 </PRE><H3><a name="h3-form_driver_w">form_driver_w</a></H3><PRE>
-       This extension simplifies the use of the forms library using wide char-
-       acters.  The input is either a key code (a request) or a wide character
-       returned  by  <STRONG><A HREF="curs_get_wch.3x.html">get_wch(3x)</A></STRONG>.   The type must be passed as well, to enable
-       the library to determine whether the parameter is a wide character or a
-       request.
+       This  extension  simplifies  the  use  of  the forms library using wide
+       characters.  The input is either a key  code  (a  request)  or  a  wide
+       character returned by <STRONG><A HREF="curs_get_wch.3x.html">get_wch(3x)</A></STRONG>.  The type must be passed as well, to
+       enable the library  to  determine  whether  the  parameter  is  a  wide
+       character or a request.
 
 
 </PRE><H3><a name="h3-Form-driver-requests">Form-driver requests</a></H3><PRE>
@@ -210,8 +210,8 @@
               that field and <STRONG>E_UNKNOWN_COMMAND</STRONG> is returned.  This return value
               makes sense, because a double click usually means that an field-
               specific action should be returned.  It is exactly  the  purpose
-              of this return value to signal that an application specific com-
-              mand should be executed.
+              of  this  return  value  to  signal that an application specific
+              command should be executed.
 
           <STRONG>o</STRONG>   If a translation into a request was  done,  <STRONG>form_driver</STRONG>  returns
               the result of this request.
@@ -259,8 +259,8 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>, <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>, <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>,
-       <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>, <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>, <STRONG><A HREF="curs_getch.3x.html">getch(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>,   <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>,    <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>,
+       <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>, <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>, <STRONG><A HREF="curs_getch.3x.html">getch(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -269,8 +269,8 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These routines emulate the System V forms library.  They were not  sup-
-       ported on Version 7 or BSD versions.
+       These routines emulate the System  V  forms  library.   They  were  not
+       supported on Version 7 or BSD versions.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>

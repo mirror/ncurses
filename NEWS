@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3605 2020/12/12 20:00:21 tom Exp $
+-- $Id: NEWS,v 1.3608 2020/12/19 23:57:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20201219
+	+ suppress hyphenation in generated html for manpages, to address
+	  regression in upgrade of groff 1.22.2 to 1.22.3.
+	+ fix inconsistent sort-order in see-also sections of manpages (report
+	  by Chris Bennett).
 
 20201212
 	+ improve manual pages for form field-types.
