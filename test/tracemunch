@@ -1,5 +1,5 @@
 #!/usr/bin/env perl
-# $Id: tracemunch,v 1.32 2020/09/26 19:40:55 tom Exp $
+# $Id: tracemunch,v 1.33 2020/12/26 23:56:50 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -510,6 +510,8 @@ sub muncher($) {
         my $awaiting = "";
 
       CLASSIFY: {
+
+            next unless $_;
 
             # just in case someone tries a file with cr/lf line-endings:
             $_ =~ s/\r\n/\n/g;

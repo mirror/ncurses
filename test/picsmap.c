@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.134 2020/07/11 23:01:49 tom Exp $
+ * $Id: picsmap.c,v 1.135 2020/12/26 18:04:03 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1612,7 +1612,7 @@ report_colors(PICS_HEAD * pics)
 	    for (k = 0; k < wide; ++k) {
 		int n = j + (k * high);
 		size_t want = (sizeof(buffer) - (size_t) (s - buffer));
-		if (want < 100)
+		if (want < 100 || want >= sizeof(buffer))
 		    break;
 		if (n >= pics->colors)
 		    break;

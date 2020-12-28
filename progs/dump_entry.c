@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.180 2020/11/14 18:18:13 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.181 2020/12/26 18:25:18 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1347,7 +1347,7 @@ kill_labels(TERMTYPE2 *tterm, int target)
     int n;
     int result = 0;
     char *cap;
-    char name[10];
+    char name[20];
 
     for (n = 0; n <= 10; ++n) {
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "lf%d", n);
@@ -1373,7 +1373,7 @@ kill_fkeys(TERMTYPE2 *tterm, int target)
     int n;
     int result = 0;
     char *cap;
-    char name[10];
+    char name[20];
 
     for (n = 60; n >= 0; --n) {
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "kf%d", n);

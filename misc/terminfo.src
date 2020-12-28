@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.835 $
-#	$Date: 2020/12/05 16:54:21 $
+#	$Revision: 1.840 $
+#	$Date: 2020/12/28 00:40:10 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -6957,6 +6957,7 @@ terminator|Terminator no line wrap,
 #### TERMINOLOGY
 # https://www.enlightenment.org/about-terminology
 #
+# 2014/10/14:
 # Tested terminology-0.3.0, 0.6.1, using tack and vttest.  This is not a vt100
 # emulator, nor is it compatible with xterm, but it uses a few features from
 # both -TD
@@ -7020,6 +7021,7 @@ terminology-0.6.1|EFL-based terminal emulator,
 	kRIT7=\E[1;7C, kUP=\E[1;2A, use=xterm+pcf0, use=vt100,
 	use=xterm+256setaf,
 
+# 2017-11-11
 # Tested terminology 1.0.0
 #
 # tack -
@@ -7043,8 +7045,30 @@ terminology-1.0.0|EFL-based terminal emulator,
 	use=xterm+x11mouse, use=xterm+pce2, use=xterm+pcf2,
 	use=xterm+pcc2, use=terminology-0.6.1,
 
+# 2020/12/26:
+# Tested terminology 1.8.1 using tack and vttest.
+# tack -
+#	flash does not work
+#	italics and crossed-out text work
+#	no meta mode
+# vttest -
+#	DA1 says this is a VT420 with with 132 columns, NRCS, horizontal scrolling
+#	DA2 says this is a VT510, version 33.7
+#	NRCS does not work, program hangs in the locking shift test.
+#	some of the VT420 rectangle operations work
+#	left/right margins do not work
+#	most of DECSCUSR works
+#	most problems with bce are fixed.
+terminology-1.8.1|EFL-based terminal emulator,
+	km@,
+	cvvis@, flash@, initc@, kcbt=\E[Z, rmm@, smm@, Ms@,
+	use=ecma+index, use=xterm+256setaf, use=ansi+rep,
+	use=ecma+strikeout, use=xterm+sm+1006,
+	use=xterm+pcfkeys, use=xterm+tmux, use=xterm-basic,
+	use=ecma+italics, use=xterm-basic,
+
 terminology|EFL-based terminal emulator,
-	use=terminology-1.0.0,
+	use=terminology-1.8.1,
 
 ######## OPENGL CLIENTS
 
@@ -26750,5 +26774,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2020-12-05
 #	+ correct mlterm3 kf1-kf4 (Debian #975322) -TD
 #	+ add flash to mlterm3 -TD
+#
+# 2020-12-27
+#	+ update terminology to 1.8.1 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -39,7 +39,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.21 2020/09/26 19:35:49 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.22 2020/12/26 18:25:48 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
@@ -50,7 +50,7 @@ AllocPanel(const char *name)
 {
   PANEL *result = typeMalloc(PANEL, 1);
 
-  _tracef("create :%s %p", name, result);
+  _tracef("create :%s %p", name, (void *)result);
   return result;
 }
 #define InitUser(name) \
@@ -78,7 +78,7 @@ root_panel(NCURSES_SP_DCL0)
   struct panelhook *ph = _nc_panelhook();
 #endif
 
-  if (_nc_stdscr_pseudo_panel == (PANEL *) 0)
+  if (_nc_stdscr_pseudo_panel == (PANEL *)0)
     {
 
       assert(SP_PARM && SP_PARM->_stdscr && !_nc_bottom_panel && !_nc_top_panel);
@@ -92,8 +92,8 @@ root_panel(NCURSES_SP_DCL0)
 	  WINDOW *win = SP_PARM->_stdscr;
 
 	  pan->win = win;
-	  pan->below = (PANEL *) 0;
-	  pan->above = (PANEL *) 0;
+	  pan->below = (PANEL *)0;
+	  pan->above = (PANEL *)0;
 	  InitUser(stdscr);
 	  _nc_bottom_panel = _nc_top_panel = pan;
 	}
@@ -104,7 +104,7 @@ root_panel(NCURSES_SP_DCL0)
 PANEL_EXPORT(PANEL *)
 new_panel(WINDOW *win)
 {
-  PANEL *pan = (PANEL *) 0;
+  PANEL *pan = (PANEL *)0;
 
   GetWindowHook(win);
 
@@ -120,8 +120,8 @@ new_panel(WINDOW *win)
   if (!(win->_flags & _ISPAD) && (pan = AllocPanel("new_panel")))
     {
       pan->win = win;
-      pan->above = (PANEL *) 0;
-      pan->below = (PANEL *) 0;
+      pan->above = (PANEL *)0;
+      pan->below = (PANEL *)0;
       InitUser(new);
       (void)show_panel(pan);
     }
