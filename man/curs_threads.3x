@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.26 2020/10/24 09:47:37 tom Exp $
+.\" $Id: curs_threads.3x,v 1.27 2020/12/30 18:28:51 tom Exp $
 .TH curs_threads 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -48,9 +48,9 @@
 .sp
 \fBint get_escdelay(void);\fR
 .br
-\fBint set_escdelay(int \fP\fIsize\fP\fB);\fR
+\fBint set_escdelay(int \fP\fIms\fP\fB);\fR
 .br
-\fBint set_tabsize(int \fP\fIsize\fP\fB);\fR
+\fBint set_tabsize(int \fP\fIcols\fP\fB);\fR
 .sp
 \fBint use_screen(SCREEN *\fP\fIscr\fP\fB, NCURSES_SCREEN_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fR
 .br
