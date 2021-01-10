@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2019,2020 Thomas E. Dickey                                *
+dnl Copyright 2018-2020,2021 Thomas E. Dickey                                *
 dnl Copyright 2010-2016,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.79 2020/12/05 21:40:57 tom Exp $
+dnl $Id: configure.in,v 1.82 2021/01/09 11:20:33 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20200111)
-AC_REVISION($Revision: 1.79 $)
+AC_REVISION($Revision: 1.82 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -353,15 +353,8 @@ CF_HELP_MESSAGE(Testing/development Options:)
 ###	use option --disable-echo to suppress full display compiling commands
 CF_DISABLE_ECHO
 
-###	use option --enable-warnings to turn on all gcc warnings
-AC_MSG_CHECKING(if you want to see compiler warnings)
-AC_ARG_ENABLE(warnings,
-	[  --enable-warnings       build: turn on GCC compiler warnings],
-	[with_warnings=$enableval])
-AC_MSG_RESULT($with_warnings)
-
 CF_ENABLE_WARNINGS(Wno-unknown-pragmas Wswitch-enum,yes)
-if test "x$with_warnings" = "xyes"; then
+if test "x$enable_warnings" = "xyes"; then
  	CF_ADD_ADAFLAGS(-gnatg)
 fi
 

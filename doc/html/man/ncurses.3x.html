@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.150 2020/11/07 23:48:27 tom Exp @
+  * @Id: ncurses.3x,v 1.152 2021/01/09 11:07:55 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -60,7 +60,7 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210102).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210109).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
@@ -541,7 +541,7 @@
                     newpad                   <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>
                     newterm                  <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
                     newwin                   <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
-                    nl                       <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+                    nl                       <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     nocbreak                 <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     nodelay                  <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
                     noecho                   <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>
@@ -587,7 +587,6 @@
                     setcchar                 <STRONG><A HREF="curs_getcchar.3x.html">curs_getcchar(3x)</A></STRONG>
                     setscrreg                <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
                     setsyx                   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>
-                    setterm                  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     setupterm                <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     slk_attr                 <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>*
                     slk_attr_off             <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>
@@ -643,8 +642,8 @@
                     use_legacy_coding        <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>*
                     use_tioctl               <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>*
                     vid_attr                 <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
-
                     vid_puts                 <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
+
                     vidattr                  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     vidputs                  <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>
                     vline                    <STRONG><A HREF="curs_border.3x.html">curs_border(3x)</A></STRONG>
@@ -709,8 +708,8 @@
                     winnstr                  <STRONG><A HREF="curs_instr.3x.html">curs_instr(3x)</A></STRONG>
                     winnwstr                 <STRONG><A HREF="curs_inwstr.3x.html">curs_inwstr(3x)</A></STRONG>
                     wins_nwstr               <STRONG><A HREF="curs_ins_wstr.3x.html">curs_ins_wstr(3x)</A></STRONG>
-
                     wins_wch                 <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>
+
                     wins_wstr                <STRONG><A HREF="curs_ins_wstr.3x.html">curs_ins_wstr(3x)</A></STRONG>
                     winsch                   <STRONG><A HREF="curs_insch.3x.html">curs_insch(3x)</A></STRONG>
                     winsdelln                <STRONG><A HREF="curs_deleteln.3x.html">curs_deleteln(3x)</A></STRONG>
