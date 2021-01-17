@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3616 2021/01/09 11:03:34 tom Exp $
+-- $Id: NEWS,v 1.3619 2021/01/17 00:50:16 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210116
+	+ add comment for linux2.6 regarding CONFIG_CONSOLE_TRANSLATIONS
+	  (report by Patrick McDermott) -TD
+	+ make opts extension for getcchar work as documented for ncurses 6.1,
+	  adding "-g" flag to test/demo_new_pair to illustrate.
 
 20210109
 	+ fix errata in man/ncurses.3x from recent updates.

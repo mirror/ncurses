@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.840 $
-#	$Date: 2020/12/28 00:40:10 $
+#	$Revision: 1.841 $
+#	$Date: 2021/01/17 00:39:21 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1028,6 +1028,24 @@ linux2.2|linux 2.2.x console,
 #	'p' scan line 3
 #	'r' scan line 7
 #	'_' scan line 9
+#
+# The fix for SI/SO is part of a configurable (i.e., "optional") kernel feature
+# misleadingly called CONFIG_CONSOLE_TRANSLATIONS.  Disabling that not only
+# omits the line-drawing using SI/SO, but also part/all of the Unicode feature:
+#
+#    https://cateee.net/lkddb/web-lkddb/CONSOLE_TRANSLATIONS.html
+#	"This enables support for font mapping and Unicode translation on virtual consoles."
+#
+# This mailing list thread in July 2008 illustrates:
+#
+#    https://marc.info/?t=121734656700005&r=1&w=4
+#	"commit a29ccf6f823a84d89e1c7aaaf221cf7282022024 break console on slackware 12.1"
+#
+# The change which made it configurable was to reduce the size for use in
+# embedded systems.  Some background is found in
+#
+#    https://lwn.net/Articles/284767/
+#	"An interview with the new embedded maintainers"
 linux2.6|linux 2.6.x console,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
 	     yzz{{||}}~~,
@@ -26777,5 +26795,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2020-12-27
 #	+ update terminology to 1.8.1 -TD
+#
+# 2021-01-16
+#	+ add comment for linux2.6 regarding CONFIG_CONSOLE_TRANSLATIONS
+#	  (report by Patrick McDermott) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
