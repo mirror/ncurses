@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.127 2020/09/05 19:01:14 tom Exp $
+# $Id: Makefile.in,v 1.128 2021/01/23 20:42:08 tom Exp $
 ##############################################################################
-# Copyright 2018,2020 Thomas E. Dickey                                       #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -226,13 +226,13 @@ cursesapp_h	= $(srcdir)/cursesapp.h \
 		  $(cursslk_h)
 
 $(INCDIR)/form.h :
-	cd ../form && $(MAKE) $@
+	( cd ../form && $(MAKE) $@ )
 
 $(INCDIR)/menu.h :
-	cd ../menu && $(MAKE) $@
+	( cd ../menu && $(MAKE) $@ )
 
 $(INCDIR)/panel.h :
-	cd ../panel && $(MAKE) $@
+	( cd ../panel && $(MAKE) $@ )
 
 ###############################################################################
 
@@ -244,7 +244,7 @@ $(MODEL)/demo$o : $(srcdir)/demo.cc \
 		$(cursesm_h) \
 		$(cursesapp_h)
 	@echo 'compiling demo (obj_s)'
-	@cd $(MODEL) && $(LIBTOOL_COMPILE) $(CXX) $(CFLAGS_DEFAULT) -c $(top_srcdir)/c++/demo.cc -o $@
+	@( cd $(MODEL) && $(LIBTOOL_COMPILE) $(CXX) $(CFLAGS_DEFAULT) -c $(top_srcdir)/c++/demo.cc -o $@ )
 
 demo$x:	$(OBJS_DEMO) \
 	$(LIBRARIES)  \

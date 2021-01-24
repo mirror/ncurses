@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.947 2021/01/09 10:23:08 tom Exp $
+dnl $Id: aclocal.m4,v 1.949 2021/01/23 20:39:11 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4225,7 +4225,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 93 updated: 2021/01/04 18:48:01
+dnl CF_LIB_RULES version: 94 updated: 2021/01/23 15:37:41
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -4606,7 +4606,7 @@ CF_EOF
 		done
 	fi
 
-	echo '	cd '$cf_dir' && ${MAKE} ${TOP_MFLAGS} [$]@' >>Makefile
+	echo '	( cd '$cf_dir' && ${MAKE} ${TOP_MFLAGS} [$]@ )' >>Makefile
 done
 
 for cf_dir in $SRC_SUBDIRS
@@ -4621,7 +4621,7 @@ do
 			echo 'libs \' >> Makefile
 			echo 'install.libs \' >> Makefile
 			echo 'uninstall.libs ::' >> Makefile
-			echo '	cd '$cf_dir' && ${MAKE} ${TOP_MFLAGS} [$]@' >> Makefile
+			echo '	( cd '$cf_dir' && ${MAKE} ${TOP_MFLAGS} [$]@ )' >> Makefile
 			;;
 		esac
 	fi
@@ -4644,7 +4644,7 @@ install.libs \\
 uninstall.libs \\
 install.$cf_dir \\
 uninstall.$cf_dir ::
-	cd "$cf_dir" && \${MAKE} \${TOP_MFLAGS} \[$]@
+	( cd "$cf_dir" && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 	elif test -f "$srcdir/$cf_dir/headers" ; then
 cat >> Makefile <<CF_EOF
@@ -4654,7 +4654,7 @@ install.libs \\
 uninstall.libs \\
 install.includes \\
 uninstall.includes ::
-	cd "$cf_dir" && \${MAKE} \${TOP_MFLAGS} \[$]@
+	( cd "$cf_dir" && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 fi
 done
@@ -4664,13 +4664,13 @@ cat >> Makefile <<CF_EOF
 
 install.libs uninstall.libs \\
 install.data uninstall.data ::
-$MAKE_TERMINFO	cd misc && \${MAKE} \${TOP_MFLAGS} \[$]@
+$MAKE_TERMINFO	( cd misc && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 else
 cat >> Makefile <<CF_EOF
 
 install.libs uninstall.libs ::
-	cd misc && \${MAKE} \${TOP_MFLAGS} \[$]@
+	( cd misc && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 fi
 
@@ -4679,7 +4679,7 @@ cat >> Makefile <<CF_EOF
 
 install.man \\
 uninstall.man ::
-	cd man && \${MAKE} \${TOP_MFLAGS} \[$]@
+	( cd man && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 fi
 
@@ -4699,7 +4699,7 @@ cat >> Makefile <<CF_EOF
 
 install.man \\
 uninstall.man ::
-	cd tack && \${MAKE} \${TOP_MFLAGS} \[$]@
+	( cd tack && \${MAKE} \${TOP_MFLAGS} \[$]@ )
 CF_EOF
 fi
 fi

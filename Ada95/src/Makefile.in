@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2018-2019,2020 Thomas E. Dickey                                  #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1999-2016,2018 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -29,7 +29,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.94 2020/12/05 21:19:40 tom Exp $
+#  $Id: Makefile.in,v 1.95 2021/01/23 20:42:08 tom Exp $
 #
 .SUFFIXES:
 
@@ -184,7 +184,7 @@ $(BUILD_DIR_LIB) :
 	mkdir -p $@
 
 $(GENERATED_SOURCES) :
-	cd ../gen; $(MAKE) $(ADA_MFLAGS)
+	( cd ../gen; $(MAKE) $(ADA_MFLAGS) )
 
 sources : $(GENERATED_SOURCES)
 	@echo made $@
@@ -391,7 +391,7 @@ uninstall.libs ::
 @MAKE_ADA_SHAREDLIB@	$(INSTALL_LIB) \
 @MAKE_ADA_SHAREDLIB@		$(BUILD_DIR_LIB)/$(SHARED_LIBNAME) \
 @MAKE_ADA_SHAREDLIB@		$(LIBDIR)
-@MAKE_ADA_SHAREDLIB@	cd $(LIBDIR) && $(LN_S) $(SHARED_LIBNAME) $(SHARED_SYMLINK)
+@MAKE_ADA_SHAREDLIB@	( cd $(LIBDIR) && $(LN_S) $(SHARED_LIBNAME) $(SHARED_SYMLINK) )
 @MAKE_ADA_SHAREDLIB@
 @MAKE_ADA_SHAREDLIB@uninstall \
 @MAKE_ADA_SHAREDLIB@uninstall.libs ::

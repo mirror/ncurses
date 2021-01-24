@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.176 2020/09/05 18:58:52 tom Exp $
+# $Id: Makefile.in,v 1.178 2021/01/23 20:34:00 tom Exp $
 ##############################################################################
-# Copyright 2018-2019,2020 Thomas E. Dickey                                  #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -50,7 +50,7 @@ SHELL		= @SHELL@
 VPATH		= @srcdir@
 THIS		= Makefile
 
-CF_MFLAGS 	= @cf_cv_makeflags@
+TOP_MFLAGS	= @cf_cv_makeflags@ DESTDIR="$(DESTDIR)" RPATH_LIST="$(RPATH_LIST)"
 @SET_MAKE@
 
 x		= @EXEEXT@
@@ -244,7 +244,7 @@ keys.list :	$(tinfo)/MKkeys_list.sh
 make_keys$(BUILD_EXEEXT) : \
 		build.priv.h \
 		$(tinfo)/make_keys.c \
-		names.c
+		./names.c
 	$(BUILD_CC) -o $@ $(BUILD_CPPFLAGS) $(BUILD_CCFLAGS) $(tinfo)/make_keys.c $(BUILD_LDFLAGS) $(BUILD_LIBS)
 
 make_hash$(BUILD_EXEEXT) : \
@@ -314,7 +314,7 @@ realclean :: distclean
 ../include/hashsize.h \
 ../include/parametrized.h \
 ../include/term.h :
-	cd ../include; $(MAKE) $(CF_MFLAGS)
+	( cd ../include && $(MAKE) $(TOP_MFLAGS) )
 
 # These rules build test-programs for the modules that have test-drivers
 test_progs : $(TEST_PROGS)
@@ -340,7 +340,7 @@ link_test$x : ./link_test.c $(TEST_DEPS) \
 	@ECHO_LD@ $(CC) -o $@ $(CFLAGS_DEFAULT) ../@DFT_OBJ_SUBDIR@/link_test$o $(TEST_LDFLAGS)
 
 ../@DFT_OBJ_SUBDIR@/dump_entry$o:
-	cd ../progs && $(MAKE) ../@DFT_OBJ_SUBDIR@/dump_entry$o
+	( cd ../progs && $(MAKE) ../@DFT_OBJ_SUBDIR@/dump_entry$o )
 
 report_hashing$x : \
 		$(srcdir)/curses.priv.h \

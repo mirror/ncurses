@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.46 2020/05/23 17:56:46 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.49 2021/01/24 00:35:28 tom Exp $
 ##############################################################################
-# Copyright 2018-2019,2020 Thomas E. Dickey                                  #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -96,10 +96,43 @@ do
 		continue
 		;;
 	-L*)
-		[ -d ${opt##-L} ] || continue
-		case ${opt##-L} in
+		lib_check=${opt##-L} 
+		[ -d "$lib_check" ] || continue
+		case "$lib_check" in
 		@LD_SEARCHPATH@) # skip standard libdir
-			continue
+			if [ "$lib_check" = "$libdir" ]
+			then
+				lib_first=yes
+				IFS_save="$IFS"
+				IFS='|'
+				LIBDIRS="@LD_SEARCHPATH@"
+				for lib_check in $LIBDIRS
+				do
+					if [ -d "$lib_check" ]
+					then
+						if [ "$lib_check" != "$libdir" ]
+						then
+							lib_first=no
+						fi
+						break
+					fi
+				done
+				IFS="$IFS_save"
+				[ $lib_first = yes ] && continue
+				found=no
+				for check in $lib_flags
+				do
+					if [ "x$check" = "x$opt" ]
+					then
+						found=yes
+						break
+					fi
+				done
+				[ $found = yes ] && continue
+				:
+			else
+				continue
+			fi
 			;;
 		*)
 			found=no
