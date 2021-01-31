@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3622 2021/01/23 23:31:40 tom Exp $
+-- $Id: NEWS,v 1.3625 2021/01/31 00:59:04 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210130
+	+ correct an off-by-one in comparison in waddch_literal() which caused
+	  scrolling when a double-cell character would not fit at the lower
+	  right corner of the screen (report by Benno Schulenberg).
+	+ split-out att610+cvis, vt220+cvis, vt220+cvis8 -TD
+	+ add vt220-base, for terminal emulators which generally have not
+	  supported att610's blinking cursor control -TD
+	+ use vt220+cvis in vt220, etc -TD
+	+ use att610+cvis, xterm+tmux and ansi+enq in kitty -TD
+	+ use vt220+cvis in st, terminology, termite since they ignore
+	  blinking-cursor detail in att610+cvis -TD
 
 20210123
 	+ modify package/config scripts to provide an explicit -L option for

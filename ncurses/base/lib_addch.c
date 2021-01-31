@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.134 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.135 2021/01/31 00:42:53 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -336,7 +336,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 	    if (len > win->_maxx + 1) {
 		TR(TRACE_VIRTPUT, ("character will not fit"));
 		return ERR;
-	    } else if (x + len > win->_maxx + 1) {
+	    } else if (x + len > win->_maxx) {
 		int count = win->_maxx + 1 - x;
 		TR(TRACE_VIRTPUT, ("fill %d remaining cells", count));
 		fill_cells(win, count);
