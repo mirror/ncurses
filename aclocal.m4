@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.949 2021/01/23 20:39:11 tom Exp $
+dnl $Id: aclocal.m4,v 1.950 2021/01/26 23:45:12 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -8879,7 +8879,7 @@ AC_ARG_WITH($2-path,
 	])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PCRE2 version: 4 updated: 2021/01/01 16:53:59
+dnl CF_WITH_PCRE2 version: 5 updated: 2021/01/26 18:45:12
 dnl -------------
 dnl Add PCRE2 (Perl-compatible regular expressions v2) to the build if it is
 dnl available and the user requests it.  Assume the application will otherwise
@@ -8897,9 +8897,12 @@ test -z "$with_pcre2" && with_pcre2=no
 AC_MSG_RESULT($with_pcre2)
 
 if test "x$with_pcre2" != xno ; then
-	CF_TRY_PKG_CONFIG(libpcre2,,[
-	CF_TRY_PKG_CONFIG(libpcre,,[
-			AC_MSG_ERROR(Cannot find PCRE2 library)])])
+	cf_with_pcre2_ok=no
+	for cf_with_pcre2 in libpcre2 libpcre2-posix libpcre
+	do
+		CF_TRY_PKG_CONFIG($cf_with_pcre2,[cf_with_pcre2_ok=yes; break])
+	done
+	cf_with_pcre2_ok=yes || AC_MSG_ERROR(Cannot find PCRE2 library)
 
 	AC_DEFINE(HAVE_LIB_PCRE2,1,[Define to 1 if we can/should compile with the PCRE2 library])
 

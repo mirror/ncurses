@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2014,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -37,7 +37,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.55 2020/03/02 01:34:48 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.61 2021/02/06 21:18:08 tom Exp $")
 
 static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
 
@@ -112,19 +112,27 @@ wbkgdset(WINDOW *win, chtype ch)
 /*
  * Set the window's background information and apply it to each cell.
  */
-#if USE_WIDEC_SUPPORT
-NCURSES_EXPORT(int)
-#else
 static NCURSES_INLINE int
-#undef wbkgrnd
-#endif
-wbkgrnd(WINDOW *win, const ARG_CH_T ch)
+_nc_background(WINDOW *win, const ARG_CH_T ch, bool narrow)
 {
 #undef  SP_PARM
 #define SP_PARM SP		/* to use Charable() */
     int code = ERR;
 
-    T((T_CALLED("wbkgd(%p,%s)"), (void *) win, _tracech_t(ch)));
+#if USE_WIDEC_SUPPORT
+    T((T_CALLED("%s(%p,%s)"),
+       narrow ? "wbkgd" : "wbkgrnd",
+       (void *) win,
+       _tracecchar_t(ch)));
+#define TraceChar(c) _tracecchar_t2(1, &(c))
+#else
+    T((T_CALLED("%s(%p,%s)"),
+       "wbkgd",
+       (void *) win,
+       _tracech_t(ch)));
+    (void) narrow;
+#define TraceChar(c) _tracechar(CharOf(c))
+#endif
 
     if (SP == 0) {
 	;
@@ -170,7 +178,7 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	    old_pair = 0;
 	}
 	T(("... old background char %s, attr %s, pair %d",
-	   _tracechar(CharOf(old_char)), _traceattr(old_attr), old_pair));
+	   TraceChar(old_char), _traceattr(old_attr), old_pair));
 
 	new_char = new_bkgd;
 	RemAttr(new_char, ~A_CHARTEXT);
@@ -178,14 +186,18 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 	new_pair = GetPair(new_bkgd);
 
 	/* SVr4 limits background character to printable 7-bits */
-	if (!Charable(new_bkgd)) {
+	if (
+#if USE_WIDEC_SUPPORT
+	       narrow &&
+#endif
+	       !Charable(new_bkgd)) {
 	    new_char = old_char;
 	}
 	if (!(new_attr & A_COLOR)) {
 	    new_pair = 0;
 	}
 	T(("... new background char %s, attr %s, pair %d",
-	   _tracechar(CharOf(new_char)), _traceattr(new_attr), new_pair));
+	   TraceChar(new_char), _traceattr(new_attr), new_pair));
 
 	(void) wbkgrndset(win, CHREF(new_bkgd));
 
@@ -206,7 +218,19 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
 		attr_t tmp_attr = AttrOf(*cp);
 
 		if (CharEq(*cp, old_bkgd)) {
-		    SetChar2(*cp, CharOf(new_char));
+#if USE_WIDEC_SUPPORT
+		    if (!narrow) {
+			if (Charable(new_bkgd)) {
+			    SetChar2(*cp, CharOf(new_char));
+			} else {
+			    SetChar(*cp, L' ', AttrOf(new_char));
+			}
+			memcpy(cp->chars,
+			       new_char.chars,
+			       CCHARW_MAX * sizeof(cp->chars[0]));
+		    } else
+#endif
+			SetChar2(*cp, CharOf(new_char));
 		}
 		if (tmp_pair != 0) {
 		    if (tmp_pair == old_pair) {
@@ -230,10 +254,18 @@ wbkgrnd(WINDOW *win, const ARG_CH_T ch)
     returnCode(code);
 }
 
+#if USE_WIDEC_SUPPORT
+NCURSES_EXPORT(int)
+wbkgrnd(WINDOW *win, const ARG_CH_T ch)
+{
+    return _nc_background(win, ch, FALSE);
+}
+#endif
+
 NCURSES_EXPORT(int)
 wbkgd(WINDOW *win, chtype ch)
 {
     NCURSES_CH_T wch;
     SetChar2(wch, ch);
-    return wbkgrnd(win, CHREF(wch));
+    return _nc_background(win, CHREF(wch), TRUE);
 }

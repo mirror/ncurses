@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.309 2020/05/27 23:56:32 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.310 2021/02/06 14:24:38 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -136,7 +136,7 @@ static void TransformLine(int const lineno);
  ****************************************************************************/
 
 static void
-position_check(NCURSES_SP_DCLx int expected_y, int expected_x, char *legend)
+position_check(NCURSES_SP_DCLx int expected_y, int expected_x, const char *legend)
 /* check to see if the real cursor position matches the virtual */
 {
     char buf[20];
@@ -429,11 +429,12 @@ PutCharLR(NCURSES_SP_DCLx const ARG_CH_T ch)
 	/* we can put the char directly */
 	PutAttrChar(NCURSES_SP_ARGx ch);
     } else if (enter_am_mode && exit_am_mode) {
+	int oldcol = SP_PARM->_curscol;
 	/* we can suppress automargin */
 	NCURSES_PUTP2("exit_am_mode", exit_am_mode);
 
 	PutAttrChar(NCURSES_SP_ARGx ch);
-	SP_PARM->_curscol--;
+	SP_PARM->_curscol = oldcol;
 	position_check(NCURSES_SP_ARGx
 		       SP_PARM->_cursrow,
 		       SP_PARM->_curscol,
