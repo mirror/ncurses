@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3629 2021/02/06 22:15:36 tom Exp $
+-- $Id: NEWS,v 1.3631 2021/02/13 22:39:42 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210213
+	+ add test/back_ground.c, to exercise the wide-character background
+	  functions.
+	+ add a check in _nc_build_wch() in case the background character is a
+	  wide-character, rather than a new part of a multibyte character.
+	+ improve tracemunch's coverage of form/menu/panel libraries.
+	+ improve tracemunch's checking/reporting the type for the first
+	  parameter, e.g., "WINDOW*" rather than "#1".
 
 20210206
 	+ provide for wide-characters as background character in wbkgrnd

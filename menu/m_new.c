@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_new.c,v 1.24 2020/12/12 00:38:08 tom Exp $")
+MODULE_ID("$Id: m_new.c,v 1.26 2021/02/13 19:43:10 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -60,6 +60,7 @@ NCURSES_SP_NAME(new_menu) (NCURSES_SP_DCLx ITEM **items)
   T((T_CALLED("new_menu(%p,%p)"), (void *)SP_PARM, (void *)items));
   if (menu)
     {
+      T((T_CREATE("menu %p"), (void *)menu));
       *menu = _nc_Default_Menu;
       menu->status = 0;
       menu->rows = menu->frows;

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -61,7 +61,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.20 2020/04/11 16:06:56 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.21 2021/02/14 00:17:09 tom Exp $")
 
 #if NCURSES_EXT_COLORS
 
@@ -145,11 +145,11 @@ _nc_find_color_pair(SCREEN *sp, int fg, int bg)
 {
     colorpair_t find;
     int result = -1;
-    void *pp;
 
     find.fg = fg;
     find.bg = bg;
     if (sp != 0) {
+	void *pp;
 	if ((pp = tfind(&find, &sp->_ordered_pairs, compare_data)) != 0) {
 	    colorpair_t *temp = *(colorpair_t **) pp;
 	    result = (int) (temp - sp->_color_pairs);

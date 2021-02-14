@@ -1,6 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
- * Copyright 2003-2014,2017 Free Software Foundation, Inc.                  *
+ * Copyright 2021 Thomas E. Dickey                                          *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.20 2021/02/13 20:54:08 tom Exp $
+ * $Id: back_ground.c,v 1.3 2021/02/13 21:07:58 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -35,8 +34,30 @@
 #include <color_name.h>
 #include <dump_window.h>
 
+#if USE_WIDEC_SUPPORT
+
 static int default_bg = COLOR_BLACK;
 static int default_fg = COLOR_WHITE;
+static wchar_t wide_fill = L' ';
+
+static wchar_t
+decode_wchar(const char *value)
+{
+    wchar_t result;
+    char *next = NULL;
+    int radix = 0;
+
+    if (!strncmp(value, "U+", 2)) {
+	value += 2;
+	radix = 16;
+    }
+    result = strtol(value, &next, radix);
+    if (next == value || (next == NULL || *next != '\0')) {
+	fprintf(stderr, "decoding wchar_t: %s\n", value);
+	exit(EXIT_FAILURE);
+    }
+    return result;
+}
 
 static void
 test_background(void)
@@ -44,6 +65,9 @@ test_background(void)
     NCURSES_COLOR_T f, b;
     int row;
     int chr;
+    wchar_t blank[2];
+    wchar_t graphics[2];
+    cchar_t data;
 
     if (pair_content(0, &f, &b) == ERR) {
 	printw("pair 0 contains no data\n");
@@ -52,22 +76,30 @@ test_background(void)
     }
     dump_window(stdscr);
 
+    blank[0] = wide_fill;
+    blank[1] = L'\0';
+
     printw("Initializing pair 1 to red/%s\n", color_name(default_bg));
     init_pair(1, COLOR_RED, (NCURSES_COLOR_T) default_bg);
-    bkgdset((chtype) (' ' | COLOR_PAIR(1)));
+    setcchar(&data, blank, A_NORMAL, 1, NULL);
+    bkgrndset(&data);
     printw("RED/BLACK\n");
     dump_window(stdscr);
 
     printw("Initializing pair 2 to %s/blue\n", color_name(default_fg));
     init_pair(2, (NCURSES_COLOR_T) default_fg, COLOR_BLUE);
-    bkgdset((chtype) (' ' | COLOR_PAIR(2)));
+    setcchar(&data, blank, A_NORMAL, 2, NULL);
+    bkgrndset(&data);
     printw("This line should be %s/blue\n", color_name(default_fg));
     dump_window(stdscr);
 
     printw("Initializing pair 3 to %s/cyan (ACS_HLINE)\n", color_name(default_fg));
     init_pair(3, (NCURSES_COLOR_T) default_fg, COLOR_CYAN);
     printw("...and drawing a box which should be followed by lines\n");
-    bkgdset(ACS_HLINE | (chtype) COLOR_PAIR(3));
+    graphics[0] = ACS_HLINE & A_CHARTEXT;
+    graphics[1] = L'\0';
+    setcchar(&data, graphics, A_ALTCHARSET, 3, NULL);
+    bkgrndset(&data);
     /*
      * Characters from vt100 line-drawing should be mapped to line-drawing,
      * since A_ALTCHARSET is set in the background, and the character part
@@ -98,33 +130,40 @@ test_background(void)
     printw("j\n");
     dump_window(stdscr);
 
-    bkgdset((chtype) (' ' | COLOR_PAIR(0)));
+    setcchar(&data, blank, A_NORMAL, 0, NULL);
+    bkgrndset(&data);
     printw("Default Colors\n");
     dump_window(stdscr);
 
     printw("Resetting colors to pair 1\n");
-    bkgdset((chtype) (' ' | COLOR_PAIR(1)));
+    setcchar(&data, blank, A_NORMAL, 1, NULL);
+    bkgrndset(&data);
     printw("This line should be red/%s\n", color_name(default_bg));
     dump_window(stdscr);
 
     printw("Setting screen to pair 0\n");
-    bkgd((chtype) (' ' | COLOR_PAIR(0)));
+    setcchar(&data, blank, A_NORMAL, 0, NULL);
+    bkgrndset(&data);
     dump_window(stdscr);
 
     printw("Setting screen to pair 1\n");
-    bkgd((chtype) (' ' | COLOR_PAIR(1)));
+    setcchar(&data, blank, A_NORMAL, 1, NULL);
+    bkgrndset(&data);
     dump_window(stdscr);
 
     printw("Setting screen to pair 2\n");
-    bkgd((chtype) (' ' | COLOR_PAIR(2)));
+    setcchar(&data, blank, A_NORMAL, 2, NULL);
+    bkgrndset(&data);
     dump_window(stdscr);
 
     printw("Setting screen to pair 3\n");
-    bkgd((chtype) (' ' | COLOR_PAIR(3)));
+    setcchar(&data, blank, A_NORMAL, 3, NULL);
+    bkgrndset(&data);
     dump_window(stdscr);
 
     printw("Setting screen to pair 0\n");
-    bkgd((chtype) (' ' | COLOR_PAIR(0)));
+    setcchar(&data, blank, A_NORMAL, 0, NULL);
+    bkgrndset(&data);
     dump_window(stdscr);
 }
 
@@ -145,6 +184,8 @@ usage(void)
 #endif
 	," -f XXX   specify foreground color"
 	," -l FILE  log window-dumps to this file"
+	," -w       fill background with stipple pattern"
+	," -W CODE  fill background with this Unicode value"
     };
     size_t n;
 
@@ -167,7 +208,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((n = getopt(argc, argv, "ab:df:l:")) != -1) {
+    while ((n = getopt(argc, argv, "ab:df:l:wW:")) != -1) {
 	switch (n) {
 #if HAVE_ASSUME_DEFAULT_COLORS
 	case 'a':
@@ -188,6 +229,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'l':
 	    if (!open_dump(optarg))
 		usage();
+	    break;
+	case 'w':
+	    wide_fill = L'\u2591';
+	    break;
+	case 'W':
+	    wide_fill = decode_wchar(optarg);
 	    break;
 	default:
 	    usage();
@@ -240,3 +287,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     close_dump();
     ExitProgram(EXIT_SUCCESS);
 }
+
+#else
+int
+main(void)
+{
+    printf("This program requires the wide-curses library\n");
+    ExitProgram(EXIT_FAILURE);
+}
+#endif /* USE_WIDEC_SUPPORT */

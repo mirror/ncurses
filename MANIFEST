@@ -1094,6 +1094,7 @@
 ./test/Makefile.in
 ./test/README
 ./test/aclocal.m4
+./test/back_ground.c
 ./test/background.c
 ./test/blue.c
 ./test/bs.6

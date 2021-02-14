@@ -37,7 +37,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_bkgd.c,v 1.61 2021/02/06 21:18:08 tom Exp $")
+MODULE_ID("$Id: lib_bkgd.c,v 1.62 2021/02/13 20:06:54 tom Exp $")
 
 static const NCURSES_CH_T blank = NewChar(BLANK_TEXT);
 
@@ -51,7 +51,7 @@ static NCURSES_INLINE void
 #endif
 wbkgrndset(WINDOW *win, const ARG_CH_T ch)
 {
-    T((T_CALLED("wbkgdset(%p,%s)"), (void *) win, _tracech_t(ch)));
+    T((T_CALLED("wbkgrndset(%p,%s)"), (void *) win, _tracech_t(ch)));
 
     if (win) {
 	attr_t off = AttrOf(win->_nc_bkgd);
@@ -105,8 +105,10 @@ NCURSES_EXPORT(void)
 wbkgdset(WINDOW *win, chtype ch)
 {
     NCURSES_CH_T wch;
+    T((T_CALLED("wbkgdset(%p,%s)"), (void *) win, _tracechtype(ch)));
     SetChar2(wch, ch);
     wbkgrndset(win, CHREF(wch));
+    returnVoid;
 }
 
 /*

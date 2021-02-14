@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.191 2020/06/13 21:05:02 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.192 2021/02/14 00:17:09 tom Exp $")
 
 #include <tic.h>
 
@@ -978,7 +978,7 @@ decode_X10_bstate(SCREEN *sp, MEVENT * eventp, unsigned intro)
     if (intro >= 96) {
 	if (intro >= 160) {
 	    button = (int) (intro - 152);	/* buttons 8-11 */
-	} else if (intro >= 96) {
+	} else {
 	    button = (int) (intro - 92);	/* buttons 4-7 */
 	}
     } else {

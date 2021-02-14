@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2010,2012 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -45,7 +45,7 @@
 #endif
 #endif
 
-MODULE_ID("$Id: m_item_new.c,v 1.36 2020/12/12 00:38:08 tom Exp $")
+MODULE_ID("$Id: m_item_new.c,v 1.37 2021/02/13 19:40:51 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -127,6 +127,7 @@ new_item(const char *name, const char *description)
 
       if (item)
 	{
+	  T((T_CREATE("item %p"), (void *)item));
 	  *item = _nc_Default_Item;	/* hope we have struct assignment */
 
 	  item->name.length = (unsigned short)strlen(name);

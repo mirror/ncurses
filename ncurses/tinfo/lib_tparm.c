@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.128 2020/10/10 21:18:09 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.129 2021/02/14 00:09:49 tom Exp $")
 
 /*
  *	char *
@@ -405,7 +405,7 @@ parse_format(const char *s, char *format, int *len)
  * may be cases that we cannot see the explicit parameter numbers.
  */
 NCURSES_EXPORT(int)
-_nc_tparm_analyze(const char *string, char *p_is_s[NUM_PARM], int *popcount)
+_nc_tparm_analyze(const char *string, char **p_is_s, int *popcount)
 {
     size_t len2;
     int i;
@@ -589,7 +589,7 @@ tparm_setup(const char *string, TPARM_DATA * result)
 		if ((fs = typeCalloc(TPARM_DATA, 1)) != 0) {
 		    *fs = *result;
 		    if ((fs->format = strdup(string)) != 0) {
-			if ((ft = tsearch(fs, &MyCache, cmp_format)) != 0) {
+			if (tsearch(fs, &MyCache, cmp_format) != 0) {
 			    ++MyCount;
 			} else {
 			    rc = ERR;

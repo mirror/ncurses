@@ -1,6 +1,6 @@
-# $Id: programs,v 1.47 2020/05/29 23:27:58 tom Exp $
+# $Id: programs,v 1.48 2021/02/13 16:33:51 tom Exp $
 ##############################################################################
-# Copyright 2018-2019,2020 Thomas E. Dickey                                  #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2016,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -31,6 +31,7 @@
 # Author: Thomas E. Dickey
 #
 # programs used for ncurses tests
+back_ground	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	back_ground dump_window
 background	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	background dump_window
 blue		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	blue
 bs		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	bs

@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.135 2021/01/31 00:42:53 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.136 2021/02/13 22:33:05 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -207,6 +207,20 @@ _nc_build_wch(WINDOW *win, ARG_CH_T ch)
     }
     WINDOW_EXT(win, addch_x) = x;
     WINDOW_EXT(win, addch_y) = y;
+
+    /*
+     * If the background character is a wide-character, that may interfere with
+     * processing multibyte characters in this function.
+     */
+    if (!is8bits(CharOf(CHDEREF(ch)))) {
+	if (WINDOW_EXT(win, addch_used) != 0) {
+	    /* discard the incomplete multibyte character */
+	    WINDOW_EXT(win, addch_used) = 0;
+	    TR(TRACE_VIRTPUT,
+	       ("Alert discarded incomplete multibyte"));
+	}
+	return 1;
+    }
 
     init_mb(state);
     buffer[WINDOW_EXT(win, addch_used)] = (char) CharOf(CHDEREF(ch));

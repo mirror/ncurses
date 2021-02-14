@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.145 2020/05/27 23:55:32 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.146 2021/02/14 00:17:09 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -252,14 +252,15 @@ init_direct_colors(NCURSES_SP_DCL0)
 {
     static NCURSES_CONST char name[] = "RGB";
 
-    int n;
-    const char *s;
-    int width;
     rgb_bits_t *result = &(SP_PARM->_direct_color);
 
     result->value = 0;
 
     if (COLORS >= 8) {
+	int n;
+	const char *s;
+	int width;
+
 	/* find the number of bits needed for the maximum color value */
 	for (width = 0; (1 << width) - 1 < (COLORS - 1); ++width) {
 	    ;
@@ -360,7 +361,6 @@ NCURSES_EXPORT(int)
 NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
 {
     int result = ERR;
-    int maxpairs = 0, maxcolors = 0;
 
     T((T_CALLED("start_color(%p)"), (void *) SP_PARM));
 
@@ -369,8 +369,8 @@ NCURSES_SP_NAME(start_color) (NCURSES_SP_DCL0)
     } else if (SP_PARM->_coloron) {
 	result = OK;
     } else {
-	maxpairs = MaxPairs;
-	maxcolors = MaxColors;
+	int maxpairs = MaxPairs;
+	int maxcolors = MaxColors;
 	if (reset_color_pair(NCURSES_SP_ARG) != TRUE) {
 	    set_foreground_color(NCURSES_SP_ARGx
 				 default_fg(NCURSES_SP_ARG),
