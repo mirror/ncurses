@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3631 2021/02/13 22:39:42 tom Exp $
+-- $Id: NEWS,v 1.3634 2021/02/21 00:18:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,19 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210220
+	+ improve tic warning when oc/op do not mention SGR 39/49 for xterm
+	  compatible XT flag.
+	+ revert change to lib_addch.c in waddch_literal() from 20210130, since
+	  the followup fix in PutCharLR() actually corrects the problem while
+	  this change causes too-early filling/wrapping (report by Johannes
+	  Altmanninger).
+	+ add/use vt220+pcedit and vt220+vtedit  -TD
+	+ add scrt/securecrt and absolute -TD
+	+ add nel to xterm-new, though supported since X11R5 -TD
+	+ add/use xterm+nofkeys -TD
+	+ move use of ecma+italics from xterm-basic to xterm+nofkeys -TD
 
 20210213
 	+ add test/back_ground.c, to exercise the wide-character background

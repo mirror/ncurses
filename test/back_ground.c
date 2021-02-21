@@ -26,15 +26,17 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: back_ground.c,v 1.3 2021/02/13 21:07:58 tom Exp $
+ * $Id: back_ground.c,v 1.5 2021/02/20 12:23:21 tom Exp $
  */
+
+#include <test.priv.h>
+
+#if USE_WIDEC_SUPPORT
 
 #define NEED_COLOR_CODE 1
 #define NEED_COLOR_NAME 1
 #include <color_name.h>
 #include <dump_window.h>
-
-#if USE_WIDEC_SUPPORT
 
 static int default_bg = COLOR_BLACK;
 static int default_fg = COLOR_WHITE;
@@ -43,7 +45,7 @@ static wchar_t wide_fill = L' ';
 static wchar_t
 decode_wchar(const char *value)
 {
-    wchar_t result;
+    long result;
     char *next = NULL;
     int radix = 0;
 
@@ -56,7 +58,7 @@ decode_wchar(const char *value)
 	fprintf(stderr, "decoding wchar_t: %s\n", value);
 	exit(EXIT_FAILURE);
     }
-    return result;
+    return (wchar_t) result;
 }
 
 static void

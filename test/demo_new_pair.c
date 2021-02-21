@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_new_pair.c,v 1.23 2021/01/17 00:11:09 tom Exp $
+ * $Id: demo_new_pair.c,v 1.24 2021/02/21 01:24:06 tom Exp $
  *
  * Demonstrate the alloc_pair() function.
  */
@@ -322,7 +322,7 @@ main(int argc, char *argv[])
 			   : make_color(current));
 	    }
 	} else {
-	    my_attrs = next_attr(current); 
+	    my_attrs = next_attr(current);
 	    my_pair = 0;
 	}
 	if (my_pair < 0)
@@ -346,7 +346,7 @@ main(int argc, char *argv[])
 			 (use_init ? NULL : (void *) &chk_pair2)) != 2) {
 		problem = 1;
 	    } else if (getcchar(&temp, chk_wch, &chk_attrs, &chk_pair,
-			 (use_init ? NULL : (void *) &chk_pair2)) != OK) {
+				(use_init ? NULL : (void *) &chk_pair2)) != OK) {
 		problem = 2;
 	    } else if (chk_wch[0] != wch[0]) {
 		problem = 3;
@@ -358,7 +358,7 @@ main(int argc, char *argv[])
 		problem = 5;
 	    }
 	    if (problem) {
-		wch[0] = problem + '0';
+		wch[0] = (wchar_t) (problem + '0');
 		setcchar(&temp, wch, my_attrs,
 			 (short) my_pair,
 			 (use_init ? NULL : (void *) &my_pair));

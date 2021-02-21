@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.136 2021/02/13 22:33:05 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.137 2021/02/20 22:24:34 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -350,7 +350,7 @@ waddch_literal(WINDOW *win, NCURSES_CH_T ch)
 	    if (len > win->_maxx + 1) {
 		TR(TRACE_VIRTPUT, ("character will not fit"));
 		return ERR;
-	    } else if (x + len > win->_maxx) {
+	    } else if (x + len > win->_maxx + 1) {
 		int count = win->_maxx + 1 - x;
 		TR(TRACE_VIRTPUT, ("fill %d remaining cells", count));
 		fill_cells(win, count);

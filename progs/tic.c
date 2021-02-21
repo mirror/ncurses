@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.290 2020/11/14 18:16:33 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.291 2021/02/20 23:57:24 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1711,6 +1711,7 @@ check_screen(TERMTYPE2 *tp)
 	int have_bce = back_color_erase;
 	bool have_kmouse = FALSE;
 	bool use_sgr_39_49 = FALSE;
+	const char *name_39_49 = "orig_pair or orig_colors";
 	char *name = _nc_first_name(tp->term_names);
 	bool is_screen = !strncmp(name, "screen", 6);
 	bool screen_base = (is_screen
@@ -1728,10 +1729,15 @@ check_screen(TERMTYPE2 *tp)
 	if (VALID_STRING(key_mouse)) {
 	    have_kmouse = !strcmp("\033[M", key_mouse);
 	}
-	if (VALID_STRING(orig_colors)) {
-	    use_sgr_39_49 = uses_SGR_39_49(orig_colors);
-	} else if (VALID_STRING(orig_pair)) {
-	    use_sgr_39_49 = uses_SGR_39_49(orig_pair);
+	if (have_bce) {
+	    if (VALID_STRING(orig_pair)) {
+		name_39_49 = "orig_pair";
+		use_sgr_39_49 = uses_SGR_39_49(orig_pair);
+	    }
+	    if (!use_sgr_39_49 && VALID_STRING(orig_colors)) {
+		name_39_49 = "orig_colors";
+		use_sgr_39_49 = uses_SGR_39_49(orig_colors);
+	    }
 	}
 
 	if (have_XM && have_XT) {
@@ -1746,10 +1752,14 @@ check_screen(TERMTYPE2 *tp)
 		    _nc_warning("expected kmous capability with XT");
 		}
 	    }
-	    if (!have_bce && max_colors > 0)
-		_nc_warning("expected bce capability with XT");
-	    if (!use_sgr_39_49 && have_bce && max_colors > 0)
-		_nc_warning("expected orig_colors capability with XT to have 39/49 parameters");
+	    if (max_colors > 0) {
+		if (!have_bce) {
+		    _nc_warning("expected bce capability with XT");
+		} else if (!use_sgr_39_49) {
+		    _nc_warning("expected %s capability with XT "
+				"to have 39/49 parameters", name_39_49);
+		}
+	    }
 	    if (VALID_STRING(to_status_line))
 		_nc_warning("\"tsl\" capability is redundant, given XT");
 	} else {
