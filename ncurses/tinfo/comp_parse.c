@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.110 2020/02/29 15:46:00 anonymous.maarten Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.112 2021/02/27 21:01:21 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -392,7 +392,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 {
     ENTRY *qp, *rp, *lastread = 0;
     bool keepgoing;
-    unsigned i;
+    unsigned i, j;
     int unresolved, total_unresolved, multiples;
 
     DEBUG(2, ("RESOLUTION BEGINNING"));
@@ -454,6 +454,15 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 
 		    qp->uses[i].link = rp;
 		    foundit = TRUE;
+
+		    /* verify that there are no earlier uses */
+		    for (j = 0; j < i; ++j) {
+			if (!strcmp(qp->uses[j].link->tterm.term_names,
+				    rp->tterm.term_names)) {
+			    _nc_warning("duplicate use=%s", lookfor);
+			    break;
+			}
+		    }
 		}
 	    }
 
@@ -475,6 +484,15 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 
 		    qp->uses[i].link = rp;
 		    foundit = TRUE;
+
+		    /* verify that there are no earlier uses */
+		    for (j = 0; j < i; ++j) {
+			if (!strcmp(qp->uses[j].link->tterm.term_names,
+				    rp->tterm.term_names)) {
+			    _nc_warning("duplicate use=%s", lookfor);
+			    break;
+			}
+		    }
 		}
 	    }
 

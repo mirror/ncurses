@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 2001-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 #include <tic.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: visbuf.c,v 1.52 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: visbuf.c,v 1.53 2021/02/27 20:07:57 tom Exp $")
 
 #define NUM_VISBUFS 4
 
@@ -283,7 +283,7 @@ _nc_viswibuf(const wint_t *buf)
 
 /* use these functions for displaying parts of a line within a window */
 NCURSES_EXPORT(const char *)
-_nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
+_nc_viscbuf2(int bufnum, const NCURSES_CH_T *buf, int len)
 {
     char *result = _nc_trace_buf(bufnum, (size_t) BUFSIZ);
 
@@ -371,7 +371,7 @@ _nc_viscbuf2(int bufnum, const NCURSES_CH_T * buf, int len)
 }
 
 NCURSES_EXPORT(const char *)
-_nc_viscbuf(const NCURSES_CH_T * buf, int len)
+_nc_viscbuf(const NCURSES_CH_T *buf, int len)
 {
     return _nc_viscbuf2(0, buf, len);
 }
