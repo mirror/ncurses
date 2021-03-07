@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.191 2020/09/12 23:54:42 tom Exp $ */
+/* $Id: test.priv.h,v 1.193 2021/03/07 00:38:34 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -914,11 +914,14 @@ extern int TABSIZE;
 
 #if defined(NCURSES_VERSION) && HAVE_NC_ALLOC_H
 #include <nc_alloc.h>
-#if HAVE_EXIT_TERMINFO && defined(USE_TINFO)
+#if HAVE_EXIT_TERMINFO && (defined(USE_TERMINFO) || defined(USE_TINFO))
 #undef ExitProgram
 #define ExitProgram(code) exit_terminfo(code)
+#elif HAVE_EXIT_CURSES
+#undef ExitProgram
+#define ExitProgram(code) exit_curses(code)
 #endif
-#else
+#else /* not ncurses-tree */
 #define typeMalloc(type,n) (type *) malloc((size_t)(n) * sizeof(type))
 #define typeCalloc(type,elts) (type *) calloc((size_t)(elts), sizeof(type))
 #define typeRealloc(type,n,p) (type *) realloc(p, (size_t)(n) * sizeof(type))

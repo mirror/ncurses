@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.72 2021/01/02 23:50:04 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.74 2021/03/06 16:05:19 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -280,6 +280,12 @@ the prototype expects \fBlong\fP (integer) values.
 .bP
 Aside from the \fBset_attributes\fP (\fBsgr\fP) capability,
 most terminal capabilities require no more than one or two parameters.
+.bP
+Padding information is ignored by \fBtparm\fP;
+it is interpreted by \fBtputs\fP.
+.bP
+The capability string is null-terminated.
+Use \*(``\\200\*('' where an ASCII NUL is needed in the output.
 .PP
 \fBtiparm\fP is a newer form of \fBtparm\fP which uses \fI<stdarg.h>\fP
 rather than a fixed-parameter list.
@@ -287,7 +293,10 @@ Its numeric parameters are integers (int) rather than longs.
 .\" ***************************************************************************
 .SS Output Functions
 .PP
-The \fBtputs\fR routine applies padding information to the string
+The \fBtputs\fR routine applies padding information
+(i.e., by interpreting marker embedded in the terminfo capability
+such as \*(``$<5>\*('' as 5 milliseconds)
+to the string
 \fIstr\fR and outputs it:
 .bP
 The \fIstr\fR parameter must be a terminfo string

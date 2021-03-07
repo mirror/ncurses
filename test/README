@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: README,v 1.72 2021/02/13 22:53:41 tom Exp $
+-- $Id: README,v 1.73 2021/03/07 00:08:58 tom Exp $
 -------------------------------------------------------------------------------
 
 The programs in this directory are used to test and demonstrate ncurses.
@@ -326,8 +326,8 @@ erase				test: cardfile demo_menus filter firework firstlast hanoi lrtest ncurse
 erasechar			test: ncurses
 erasechar_sp			test: sp_tinfo
 erasewchar			test: ncurses
-exit_curses			-
-exit_terminfo			test: demo_tabs demo_termcap demo_terminfo dots dots_mvcur dots_termcap list_keys railroad sp_tinfo test_arrays test_sgr test_termattrs test_tparm test_vid_puts test_vidputs
+exit_curses			test: back_ground background blue bs cardfile chgat clip_printw color_content color_set demo_altkeys demo_defkey demo_forms demo_keyok demo_menus demo_new_pair demo_panels demo_tabs demo_termcap demo_terminfo ditto dots dots_curses dots_mvcur dots_termcap dots_xcurses dup_field echochar extended_color filter firework firstlast foldkeys form_driver_w gdc hanoi hashtest inch_wide inchs ins_wide insdelln inserts key_names keynames knight list_keys lrtest move_field movewindow ncurses newdemo padview pair_content picsmap railroad rain redraw savescreen sp_tinfo tclock test_add_wchstr test_addchstr test_addstr test_addwstr test_arrays test_get_wstr test_getstr test_instr test_inwstr test_opaque test_setupterm test_sgr test_termattrs test_tparm test_vid_puts test_vidputs testaddch testcurs testscanw view worm xmas
+exit_terminfo			lib: ncurses
 extended_color_content		test: color_content extended_color
 extended_color_content_sp	test: extended_color
 extended_pair_content		test: extended_color pair_content
@@ -423,9 +423,9 @@ is_leaveok			test: test_opaque
 is_linetouched			lib: form
 is_nodelay			test: test_opaque
 is_notimeout			test: test_opaque
-is_pad				-
+is_pad				test: test_opaque
 is_scrollok			test: ncurses test_opaque
-is_subwin			-
+is_subwin			test: test_opaque
 is_syncok			test: test_opaque
 is_term_resized			-
 is_term_resized_sp		-
@@ -696,7 +696,7 @@ tiparm				-
 touchline			test: chgat clip_printw insdelln
 touchwin			test: chgat clip_printw demo_menus filter firstlast inch_wide inchs ins_wide insdelln inserts movewindow ncurses popup_msg redraw test_add_wchstr test_addchstr test_addstr test_addwstr test_get_wstr test_getstr test_instr test_inwstr test_opaque xmas
 tparm				test: dots dots_mvcur test_sgr test_tparm progs: tic tput
-tputs				test: dots dots_mvcur dots_termcap railroad test_vid_puts test_vidputs progs: clear_cmd reset_cmd tabs
+tputs				test: dots dots_mvcur dots_termcap railroad test_tparm test_vid_puts test_vidputs progs: clear_cmd reset_cmd tabs
 tputs_sp			test: sp_tinfo
 trace				-
 ttytype				test: demo_terminfo test_sgr
@@ -775,7 +775,7 @@ wget_wch			test: ins_wide ncurses test_add_wchstr test_addwstr
 wget_wstr			test: test_get_wstr
 wgetbkgrnd			lib: ncurses
 wgetch				test: cardfile chgat clip_printw demo_defkey demo_keyok demo_menus demo_panels ditto dump_window dup_field edit_field gdc insdelln inserts knight move_field movewindow ncurses newdemo popup_msg rain redraw test_addchstr test_addstr test_opaque testcurs worm
-wgetdelay			-
+wgetdelay			test: test_opaque
 wgetn_wstr			test: ncurses test_get_wstr
 wgetnstr			test: ncurses test_getstr
 wgetparent			test: test_opaque
