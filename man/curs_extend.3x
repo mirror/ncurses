@@ -29,8 +29,12 @@
 .\"
 .\" Author: Thomas E. Dickey 1999-on
 .\"
-.\" $Id: curs_extend.3x,v 1.24 2020/10/24 09:37:07 tom Exp $
+.\" $Id: curs_extend.3x,v 1.25 2021/03/13 13:43:05 tom Exp $
 .TH curs_extend 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .SH NAME
 \fBcurses_version\fP,
 \fBuse_extended_names\fP \- miscellaneous curses extensions
@@ -47,8 +51,12 @@ which do not fit easily into other categories.
 .SS curses_version
 .PP
 Use \fBcurses_version\fP
-to get the version number, including patch level of the library, e.g.,
-.B 5.0.19991023
+to get the version number, including patch level of the library,
+prefixed by \*(``ncurses\*('', e.g.,
+.RS
+.sp
+.B ncurses 5.0.19991023
+.RE
 .SS use_extended_names
 .PP
 The \fBuse_extended_names\fP

@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_tparm.c,v 1.17 2021/03/06 23:39:14 tom Exp $
+ * $Id: test_tparm.c,v 1.19 2021/03/13 17:18:28 tom Exp $
  *
  * Exercise tparm, either for all possible capabilities with fixed parameters,
  * or one capability with all possible parameters.
@@ -393,7 +393,7 @@ main(int argc, char *argv[])
 	r_opt = 1;
 
     if (a_opt) {
-	for (n = 0; n < use_parms; ++n)
+	for (n = 0; n < max_parms; ++n)
 	    if (num_parms[n])
 		use_parms *= (num_parms[n] + 1);
     }
@@ -429,9 +429,9 @@ main(int argc, char *argv[])
 		       all_terms[t_run]);
 	    }
 
+	    memset(all_parms, 0, sizeof(all_parms));
 	    if (a_opt) {
 		/* for each combination of values */
-		memset(all_parms, 0, sizeof(all_parms));
 		do {
 		    for (n_run = 0; n_run < use_caps; ++n_run) {
 			test_tparm(cap_name[n_run], cap_data[n_run], all_parms);
