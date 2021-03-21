@@ -1,4 +1,4 @@
-/* $Id: curses.tail,v 1.25 2019/12/14 22:28:39 tom Exp $ */
+/* $Id: curses.tail,v 1.26 2021/03/20 15:49:25 tom Exp $ */
 /*
  * vile:cmode:
  * This file is part of ncurses, designed to be appended after curses.h.in
@@ -174,7 +174,7 @@ extern NCURSES_EXPORT(const char *) _nc_visbuf (const char *);
 #define OPTIMIZE_ALL		0xff	/* enable all optimizations (dflt) */
 #endif
 
-extern NCURSES_EXPORT(void) exit_curses (int) GCC_NORETURN;
+extern GCC_NORETURN NCURSES_EXPORT(void) exit_curses (int);
 
 #include <unctrl.h>
 

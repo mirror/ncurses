@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.84 2020/10/24 18:29:38 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.86 2021/03/20 23:46:57 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -62,7 +62,7 @@ static bool is_init = FALSE;
 static bool is_reset = FALSE;
 static bool is_clear = FALSE;
 
-static void
+static GCC_NORETURN void
 quit(int status, const char *fmt, ...)
 {
     va_list argp;
@@ -75,7 +75,7 @@ quit(int status, const char *fmt, ...)
     ExitProgram(status);
 }
 
-static void
+static GCC_NORETURN void
 usage(void)
 {
 #define KEEP(s) s "\n"
@@ -225,6 +225,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 	    long numbers[1 + NUM_PARM];
 	    char *strings[1 + NUM_PARM];
 	    char *p_is_s[NUM_PARM];
+	    TParams paramType;
 
 	    /* Nasty hack time. The tparm function needs to see numeric
 	     * parameters as numbers, not as pointers to their string
@@ -243,7 +244,21 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 		strings[k] = 0;
 	    }
 
-	    switch (tparm_type(name)) {
+	    paramType = tparm_type(name);
+#if NCURSES_XNAMES
+	    /*
+	     * If the capability is an extended one, analyze the string.
+	     */
+	    if (paramType == Numbers) {
+		struct name_table_entry const *entry_ptr;
+		entry_ptr = _nc_find_type_entry(name, STRING, FALSE);
+		if (entry_ptr == NULL) {
+		    paramType = Other;
+		}
+	    }
+#endif
+
+	    switch (paramType) {
 	    case Num_Str:
 		s = TPARM_2(s, numbers[1], strings[2]);
 		break;

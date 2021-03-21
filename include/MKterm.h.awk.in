@@ -26,7 +26,7 @@ BEGIN {
 	lcurl = "{";
 	rcurl = "}";
 	print  "/****************************************************************************"
-	print  " * Copyright 2018-2019,2020 Thomas E. Dickey                                *"
+	print  " * Copyright 2018-2020,2021 Thomas E. Dickey                                *"
 	print  " * Copyright 1998-2013,2017 Free Software Foundation, Inc.                  *"
 	print  " *                                                                          *"
 	print  " * Permission is hereby granted, free of charge, to any person obtaining a  *"
@@ -60,7 +60,7 @@ BEGIN {
 	print  "/*    and: Thomas E. Dickey                        1995-on                  */"
 	print  "/****************************************************************************/"
 	print  ""
-	print  "/* $Id: MKterm.h.awk.in,v 1.78 2020/10/31 23:14:24 tom Exp $ */"
+	print  "/* $Id: MKterm.h.awk.in,v 1.79 2021/03/20 16:08:03 tom Exp $ */"
 	print  ""
 	print  "/*"
 	print  "**	term.h -- Definition of struct term"
@@ -406,7 +406,7 @@ END {
 	print  "/*"
 	print  " * Debugging features."
 	print  " */"
-	print  "extern NCURSES_EXPORT(void)    exit_terminfo(int) GCC_NORETURN;"
+	print  "extern GCC_NORETURN NCURSES_EXPORT(void)    exit_terminfo(int);"
 	print  ""
 	print  "#ifdef __cplusplus"
 	printf "%s\n", rcurl;

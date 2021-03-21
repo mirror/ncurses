@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.129 2021/02/14 00:09:49 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.130 2021/03/20 12:36:34 tom Exp $")
 
 /*
  *	char *
@@ -173,14 +173,16 @@ _nc_free_tparm(void)
 {
 #if HAVE_TSEARCH
     if (MyCount != 0) {
-	delete_tparm = typeMalloc(TPARM_DATA *, MyCount);
+	delete_tparm = typeCalloc(TPARM_DATA *, MyCount);
 	which_tparm = 0;
 	twalk(MyCache, visit_nodes);
 	for (which_tparm = 0; which_tparm < MyCount; ++which_tparm) {
 	    TPARM_DATA *ptr = delete_tparm[which_tparm];
-	    tdelete(ptr, &MyCache, cmp_format);
-	    free((char *) ptr->format);
-	    free(ptr);
+	    if (ptr != NULL) {
+		tdelete(ptr, &MyCache, cmp_format);
+		free((char *) ptr->format);
+		free(ptr);
+	    }
 	}
 	which_tparm = 0;
 	twalk(MyCache, visit_nodes);
@@ -592,9 +594,11 @@ tparm_setup(const char *string, TPARM_DATA * result)
 			if (tsearch(fs, &MyCache, cmp_format) != 0) {
 			    ++MyCount;
 			} else {
+			    free(fs);
 			    rc = ERR;
 			}
 		    } else {
+			free(fs);
 			rc = ERR;
 		    }
 		} else {

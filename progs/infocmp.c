@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.145 2020/07/07 20:28:47 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.147 2021/03/20 18:07:41 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -94,7 +94,7 @@ typedef struct {
 static ENTERED *entered;
 
 #undef ExitProgram
-static void ExitProgram(int code) GCC_NORETURN;
+static GCC_NORETURN void ExitProgram(int code);
 /* prototype is to get gcc to accept the noreturn attribute */
 static void
 ExitProgram(int code)
@@ -835,6 +835,8 @@ analyze_string(const char *name, const char *cap, TERMTYPE2 *tp)
 	    char *cp = tp->Strings[i];
 
 	    /* don't use function-key capabilities */
+	    if (strnames[i] == NULL)
+		continue;
 	    if (strnames[i][0] == 'k' && strnames[i][1] == 'f')
 		continue;
 

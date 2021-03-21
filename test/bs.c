@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.75 2020/02/02 23:34:34 tom Exp $
+ * $Id: bs.c,v 1.76 2021/03/20 16:05:49 tom Exp $
  */
 
 #include <test.priv.h>
@@ -181,7 +181,7 @@ static int salvo, blitz, closepack;
 
 #define	PR	(void)addstr
 
-static void uninitgame(int sig) GCC_NORETURN;
+static GCC_NORETURN void uninitgame(int sig);
 
 static void
 uninitgame(int sig GCC_UNUSED)

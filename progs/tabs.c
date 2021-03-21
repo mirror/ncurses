@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -39,9 +39,9 @@
 #include <progs.priv.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tabs.c,v 1.45 2020/05/27 23:47:22 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.46 2021/03/20 16:07:29 tom Exp $")
 
-static void usage(void) GCC_NORETURN;
+static GCC_NORETURN void usage(void);
 
 const char *_nc_progname;
 static int max_cols;

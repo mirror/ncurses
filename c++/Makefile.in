@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.128 2021/01/23 20:42:08 tom Exp $
+# $Id: Makefile.in,v 1.129 2021/03/20 10:14:27 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -127,6 +127,10 @@ LIBNAME_NORMAL	= @LIB_PREFIX@$(LIBROOT)@USE_LIB_SUFFIX@.a
 LIBNAME		= @LIB_PREFIX@$(LIBROOT)@CXX_LIB_SUFFIX@
 
 LIBRARIES	= @Libs_To_Make@
+
+LINT		= @LINT@
+LINT_OPTS	= @LINT_OPTS@
+LINT_LIBS	= -lncurses @LIBS@
 
 LINK_FLAGS	= @EXTRA_LDFLAGS@ -L../lib -l$(LIBROOT)@USE_LIB_SUFFIX@
 RPATH_LIST	= @RPATH_LIST@

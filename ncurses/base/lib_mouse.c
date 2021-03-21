@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.192 2021/02/14 00:17:09 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.193 2021/03/20 12:56:32 tom Exp $")
 
 #include <tic.h>
 
@@ -419,13 +419,22 @@ init_xterm_mouse(SCREEN *sp)
     } else {
 	int code = tigetnum("XM");
 	switch (code) {
+#ifdef EXP_XTERM_1005
+	case 1005:
+	    /* see "xterm+sm+1005" */
+	    sp->_mouse_xtermcap = "\033[?1005;1000%?%p1%{1}%=%th%el%;";
+	    sp->_mouse_format = MF_XTERM_1005;
+	    break;
+#endif
 	case 1006:
+	    /* see "xterm+sm+1006" */
+	    sp->_mouse_xtermcap = "\033[?1006;1000%?%p1%{1}%=%th%el%;";
+	    sp->_mouse_format = MF_SGR1006;
 	    break;
 	default:
-	    code = 1000;
+	    sp->_mouse_xtermcap = "\033[?1000%?%p1%{1}%=%th%el%;";
 	    break;
 	}
-	sp->_mouse_xtermcap = "\033[?1000%?%p1%{1}%=%th%el%;";
     }
 }
 #endif

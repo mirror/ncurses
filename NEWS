@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3641 2021/03/13 20:51:42 tom Exp $
+-- $Id: NEWS,v 1.3644 2021/03/20 23:51:23 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210320
+	+ improve parameter-checking in tput by forcing it to analyze any
+	  extended string capability, e.g., as used in the Cs and Ms
+	  capabilities of the tmux description (report by Brad Town,
+	  cf: 20200531).
+	+ remove an incorrect free in the fallback (non-checking) version of
+	  _nc_free_and_exit (report by Miroslav Lichvar).
+	+ correct use-ordering in some xterm-direct flavors -TD
+	+ add hterm, hterm-256color (Mike Frysinger)
+	+ if the build-time compiler accepts c11's _Noreturn keyword, use that
+	  rather than gcc's attribute.
+	+ change configure-check for gcc's noreturn attribute to assume it is
+	  a prefix rather than suffix, matching c11's _Noreturn convention.
+	+ add "lint" rule to c++/Makefile, e.g., with cppcheck.
 
 20210313
 	+ improve configure CF_LD_SEARCHPATH macro used for ncurses*-config and

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.49 2020/02/02 23:34:34 tom Exp $
+ * $Id: ditto.c,v 1.50 2021/03/20 16:05:49 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -102,8 +102,8 @@ typedef struct {
     DITTO *ditto;		/* data for all screens */
 } DDATA;
 
-static void failed(const char *) GCC_NORETURN;
-static void usage(void) GCC_NORETURN;
+static GCC_NORETURN void failed(const char *);
+static GCC_NORETURN void usage(void);
 
 static void
 failed(const char *s)

@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.193 2021/03/07 00:38:34 tom Exp $ */
+/* $Id: test.priv.h,v 1.196 2021/03/20 19:02:18 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -243,6 +243,10 @@
 #define HAVE_STDINT_H 0
 #endif
 
+#ifndef HAVE_STDNORETURN_H
+#define HAVE_STDNORETURN_H 0
+#endif
+
 #ifndef HAVE_STRSTR
 #define HAVE_STRSTR 0
 #endif
@@ -389,6 +393,12 @@
 #include <ncurses/curses.h>
 #else
 #include <curses.h>
+#endif
+
+#if HAVE_STDNORETURN_H && !defined(NCURSES_VERSION)
+#include <stdnoreturn.h>
+#undef GCC_NORETURN
+#define GCC_NORETURN _Noreturn
 #endif
 
 #if !(defined(NCURSES_WGETCH_EVENTS) && defined(NEED_KEY_EVENT))

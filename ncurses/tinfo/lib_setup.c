@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.212 2020/09/09 19:43:00 juergen Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.213 2021/03/20 14:43:35 tom Exp $")
 
 /****************************************************************************
  *
@@ -802,6 +802,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 		ret_error1(status, "unknown terminal type.\n",
 			   myname, free(myname));
 	    } else {
+		free(myname);
 		ret_error0(status, "unexpected return-code\n");
 	    }
 	}

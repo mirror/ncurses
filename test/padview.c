@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@
 /*
  * clone of view.c, using pads
  *
- * $Id: padview.c,v 1.16 2020/02/02 23:34:34 tom Exp $
+ * $Id: padview.c,v 1.17 2021/03/20 16:04:45 tom Exp $
  */
 
 #include <test.priv.h>
@@ -41,7 +41,7 @@
 
 #if HAVE_NEWPAD
 
-static void finish(int sig) GCC_NORETURN;
+static GCC_NORETURN void finish(int sig);
 
 #define my_pair 1
 
@@ -55,7 +55,7 @@ static int num_lines;
 static bool n_option = FALSE;
 #endif
 
-static void usage(void) GCC_NORETURN;
+static GCC_NORETURN void usage(void);
 
 static void
 failed(const char *msg)

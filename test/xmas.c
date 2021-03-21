@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.34 2019/12/14 23:25:29 tom Exp $
+ * $Id: xmas.c,v 1.35 2021/03/20 16:15:31 tom Exp $
  */
 #include <test.priv.h>
 
@@ -133,7 +133,7 @@ static WINDOW *w_holiday;
 static WINDOW *w_del_msg;
 static bool *my_pairs;
 
-static void done(int sig) GCC_NORETURN;
+static GCC_NORETURN void done(int sig);
 
 static void
 set_color(WINDOW *win, chtype color)

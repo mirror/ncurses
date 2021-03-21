@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -52,7 +52,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.138 2020/02/02 23:34:34 tom Exp $
+ * $Id: view.c,v 1.139 2021/03/20 16:04:20 tom Exp $
  */
 
 #include <test.priv.h>
@@ -62,7 +62,7 @@
 #include <sys/stat.h>
 #include <time.h>
 
-static void finish(int sig) GCC_NORETURN;
+static GCC_NORETURN void finish(int sig);
 
 #define my_pair 1
 
@@ -78,7 +78,7 @@ static int num_lines;
 static bool n_option = FALSE;
 #endif
 
-static void usage(void) GCC_NORETURN;
+static GCC_NORETURN void usage(void);
 
 static void
 failed(const char *msg)

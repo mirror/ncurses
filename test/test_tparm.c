@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_tparm.c,v 1.19 2021/03/13 17:18:28 tom Exp $
+ * $Id: test_tparm.c,v 1.20 2021/03/20 15:58:32 tom Exp $
  *
  * Exercise tparm, either for all possible capabilities with fixed parameters,
  * or one capability with all possible parameters.
@@ -41,7 +41,7 @@
 #define USE_TINFO
 #include <test.priv.h>
 
-static void failed(const char *) GCC_NORETURN;
+static GCC_NORETURN void failed(const char *);
 
 static void
 failed(const char *msg)

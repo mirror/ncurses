@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.523 2020/08/29 16:22:03 juergen Exp $
+$Id: ncurses.c,v 1.524 2021/03/20 16:11:50 tom Exp $
 
 ***************************************************************************/
 
@@ -166,7 +166,7 @@ static RGB_DATA *all_colors;
 #endif
 
 static void main_menu(bool);
-static void failed(const char *s) GCC_NORETURN;
+static GCC_NORETURN void failed(const char *s);
 
 static void
 failed(const char *s)
@@ -7618,8 +7618,10 @@ settings_test(bool recur GCC_UNUSED)
 #if HAVE_COLOR_CONTENT
     show_boolean_setting("can_change_color", can_change_color());
 #endif
-    show_setting_name("LINES"); printw("%d\n", LINES);
-    show_setting_name("COLS");  printw("%d\n", COLS);
+    show_setting_name("LINES");
+    printw("%d\n", LINES);
+    show_setting_name("COLS");
+    printw("%d\n", COLS);
     Pause();
     erase();
     stop_curses();
@@ -7787,7 +7789,7 @@ main_menu(bool top)
 
     int (*doit) (bool);
     char command;
-    unsigned n;    
+    unsigned n;
     do {
 	printf("This is the ncurses main menu (uppercase for wide-characters)\n");
 	for (n = 0; n < SIZEOF(cmds); ++n) {

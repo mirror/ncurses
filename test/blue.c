@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -37,7 +37,7 @@
  *****************************************************************************/
 
 /*
- * $Id: blue.c,v 1.53 2020/02/02 23:34:34 tom Exp $
+ * $Id: blue.c,v 1.54 2021/03/20 16:06:15 tom Exp $
  */
 
 #include <test.priv.h>
@@ -71,7 +71,7 @@
 #define BLACK_ON_WHITE  2
 #define BLUE_ON_WHITE   3
 
-static void die(int onsig) GCC_NORETURN;
+static GCC_NORETURN void die(int onsig);
 
 static int deck_size = PACK_SIZE;	/* initial deck */
 static int deck[PACK_SIZE];

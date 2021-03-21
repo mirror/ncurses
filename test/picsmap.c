@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2017,2018 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.135 2020/12/26 18:04:03 tom Exp $
+ * $Id: picsmap.c,v 1.136 2021/03/20 16:08:22 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -109,7 +109,7 @@ typedef struct {
 #define debugmsg if (debugging) logmsg
 #define debugmsg2 if (debugging) logmsg2
 
-static void cleanup(int) GCC_NORETURN;
+static GCC_NORETURN void cleanup(int);
 static void giveup(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
 static void logmsg(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
 static void logmsg2(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);

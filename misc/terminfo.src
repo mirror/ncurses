@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.868 $
-#	$Date: 2021/02/28 01:08:54 $
+#	$Revision: 1.872 $
+#	$Date: 2021/03/20 21:45:39 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5193,7 +5193,7 @@ xterm+direct16|xterm with direct-color indexing,
 	setb@, setf@, use=xterm+direct,
 
 xterm-direct16|xterm with direct-colors and 16 indexed colors,
-	use=xterm, use=xterm+direct16,
+	use=xterm+direct16, use=xterm,
 
 xterm+direct256|xterm with direct-color indexing,
 	CO#0x100,
@@ -5206,7 +5206,7 @@ xterm+direct256|xterm with direct-color indexing,
 	setb@, setf@, use=xterm+direct,
 
 xterm-direct256|xterm with direct-colors and 256 indexed colors,
-	use=xterm, use=xterm+direct256,
+	use=xterm+direct256, use=xterm,
 
 #### XTERM Features
 
@@ -5887,6 +5887,27 @@ vte-256color|VTE with xterm 256-colors,
 # the terminfo is the same as gnome-terminal.
 xfce|Xfce Terminal,
 	use=vte-2008,
+
+# HTERM
+#
+# https://hterm.org
+#
+# A terminal written in JavaScript, which can provide xterm-like terminal
+# emulation in a browser such as Google Chrome, or in Chome OS.
+#
+# https://chromium.googlesource.com/apps/libapps/+/master/nassh/doc/FAQ.md
+#
+# Tested with Secure Shell App version 0.39 in Chrome 89.0.4389.90, found that
+# the numeric keypad escapes are missing -TD
+hterm|Chromium hterm,
+	npc,
+	U8#1,
+	kcbt=\E[Z, kent=\EOM, nel=\EE, use=xterm+osc104,
+	use=ecma+index, use=ansi+rep, use=ecma+strikeout,
+	use=vt420+lrmm, use=xterm+sm+1006, use=xterm+tmux,
+	use=ecma+italics, use=xterm+pcfkeys, use=xterm-basic,
+hterm-256color|Chromium hterm with xterm 256-colors,
+	use=xterm+256color2, use=hterm,
 
 # TERMITE
 #
@@ -26920,5 +26941,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2021-02-27
 #	+ remove a duplicate "use" in xterm-vt220 -TD
+#
+# 2021-03-14
+#	+ correct use-ordering in some xterm-direct flavors -TD
+#
+# 2021-03-20
+#	+ add hterm, hterm-256color (Mike Frysinger)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

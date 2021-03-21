@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1999-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: cardfile.c,v 1.47 2020/02/02 23:34:34 tom Exp $
+ * $Id: cardfile.c,v 1.48 2021/03/20 18:23:14 tom Exp $
  *
  * File format: text beginning in column 1 is a title; other text is content.
  */
@@ -296,7 +296,7 @@ prev_card(CARD * now)
 static CARD *
 first_card(CARD * now)
 {
-    if (!isVisible(now))
+    if (now != NULL && !isVisible(now))
 	now = next_card(now);
     return now;
 }

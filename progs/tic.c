@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.291 2021/02/20 23:57:24 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.293 2021/03/20 20:51:01 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -2097,7 +2097,6 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 	if (p[0] == '$' && p[1] == '<') {
 	    const char *base = p + 2;
 	    const char *mark = 0;
-	    bool maybe = TRUE;
 	    bool mixed = FALSE;
 	    int proportional = 0;
 	    int mandatory = 0;
@@ -2117,20 +2116,17 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 		    if (mark == 0)
 			mark = q;
 		} else if (!(isalnum(UChar(*q)) || strchr("+-.", *q) != 0)) {
-		    maybe = FALSE;
 		    break;
 		} else if (proportional || mandatory) {
 		    mixed = TRUE;
 		}
 	    }
 	    last = *q ? (q + 1) : q;
-	    if (*q == '\0') {
-		maybe = FALSE;	/* just an isolated "$<" */
-	    } else if (maybe) {
+	    if (*q != '\0') {
 		float check_f;
 		char check_c;
 		int rc = sscanf(base, "%f%c", &check_f, &check_c);
-		if ((rc != 2) || (check_c != *mark) || mixed) {
+		if ((rc != 2) || (mark != NULL && (check_c != *mark)) || mixed) {
 		    _nc_warning("syntax error in %s delay '%.*s'", name,
 				(int) (q - base), base);
 		} else if (*name == 'k') {
@@ -2383,7 +2379,7 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 		  : ((*value == 'k')
 		     ? 0
 		     : has_params(value, FALSE)));
-    char *ti_value;
+    char *ti_value = NULL;
     char *tc_value;
     bool embedded;
 
@@ -2431,6 +2427,7 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 			name, ti_value, tc_value);
 	}
     }
+    free(ti_value);
 }
 
 static char *

@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.72 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.73 2021/03/20 22:57:53 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -171,8 +171,6 @@ NCURSES_SP_NAME(_nc_free_and_exit) (NCURSES_SP_DCLx int code)
 {
     if (SP_PARM) {
 	delscreen(SP_PARM);
-	if (SP_PARM->_term)
-	    NCURSES_SP_NAME(del_curterm) (NCURSES_SP_ARGx SP_PARM->_term);
     }
     exit(code);
 }
