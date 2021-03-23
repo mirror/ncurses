@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.73 2021/03/20 22:57:53 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.74 2021/03/20 22:57:53 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical

@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.2
-Release: 20210320
+Release: 20210323
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -78,6 +78,7 @@ This package is used for testing ABI %{MY_ABI}.
 	--enable-opaque-panel \\\
 	--enable-pc-files \\\
 	--enable-rpath \\\
+	--enable-stdnoreturn \\\
 	--enable-warnings \\\
 	--enable-wgetch-events \\\
 	--enable-widec \\\

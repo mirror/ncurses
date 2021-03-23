@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.954 2021/03/20 16:02:03 tom Exp $
+dnl $Id: aclocal.m4,v 1.955 2021/03/23 00:39:18 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -794,10 +794,18 @@ AC_SUBST(BUILD_EXEEXT)
 AC_SUBST(BUILD_OBJEXT)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_C11_NORETURN version: 1 updated: 2021/03/20 12:00:25
+dnl CF_C11_NORETURN version: 2 updated: 2021/03/22 20:37:21
 dnl ---------------
 AC_DEFUN([CF_C11_NORETURN],
 [
+AC_MSG_CHECKING(if you want to use C11 _Noreturn feature)
+CF_ARG_ENABLE(stdnoreturn,
+	[  --enable-stdnoreturn    enable C11 _Noreturn feature for diagnostics],
+	[enable_stdnoreturn=yes],
+	[enable_stdnoreturn=no])
+AC_MSG_RESULT($enable_stdnoreturn)
+
+if test $enable_stdnoreturn = yes; then
 AC_CACHE_CHECK([for C11 _Noreturn feature], cf_cv_c11_noreturn,
 	[AC_TRY_COMPILE([
 #include <stdio.h>
@@ -809,6 +817,9 @@ static void giveup(void) { exit(0); }
 	cf_cv_c11_noreturn=yes,
 	cf_cv_c11_noreturn=no)
 	])
+else
+	cf_cv_c11_noreturn=no,
+fi
 
 if test "$cf_cv_c11_noreturn" = yes; then
 	AC_DEFINE(HAVE_STDNORETURN_H, 1)

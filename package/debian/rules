@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# $Id: rules,v 1.39 2020/08/22 22:03:06 tom Exp $
+# $Id: rules,v 1.40 2021/03/23 00:17:05 tom Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -67,6 +67,7 @@ configure = \
 		--enable-opaque-menu \
 		--enable-opaque-panel \
 		--enable-pc-files \
+		--enable-stdnoreturn \
 		--enable-warnings \
 		--enable-wgetch-events \
 		--enable-widec \

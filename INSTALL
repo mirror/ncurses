@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2019,2020 Thomas E. Dickey                                 --
+-- Copyright 2018-2020,2021 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.226 2020/09/06 23:41:16 tom Exp $
+-- $Id: INSTALL,v 1.228 2021/03/23 00:42:13 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -727,6 +727,14 @@ CONFIGURE OPTIONS:
 	Compile-in support for extended functions which accept a SCREEN pointer,
 	reducing the need for juggling the global SP value with set_term() and
 	delscreen().
+
+    --enable-stdnoreturn
+	When enabled, check if the <stdnoreturn.h> header exists, and if found
+	define GCC_NORETURN to _Noreturn rather than either the gcc-specific
+	__attribute__((noreturn)) or an empty token.  Doing this may require
+	calling programs which use GCC_NORETURN in their own function
+	definitions to be modified, because _Noreturn is only accepted as
+	the first token in a declaration.
 
     --enable-string-hacks
 	Controls whether strlcat and strlcpy may be used.  The same issue
