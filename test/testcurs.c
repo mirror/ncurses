@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.55 2019/12/14 23:25:29 tom Exp $
+ * $Id: testcurs.c,v 1.56 2021/03/27 22:39:50 tom Exp $
  */
 
 #include <test.priv.h>
@@ -160,7 +160,7 @@ inputTest(WINDOW *win)
 {
     int answered;
     int repeat;
-    int w, h, bx, by, sw, sh, i, c, num;
+    int w, h, bx, by, sw, sh, i, num;
     char buffer[80];
     WINDOW *subWin;
     wclear(win);
@@ -238,6 +238,8 @@ inputTest(WINDOW *win)
 #endif
 
     for (;;) {
+	int c;
+
 	wmove(win, 3, 5);
 	c = wgetch(win);
 	wclrtobot(win);
@@ -355,7 +357,6 @@ inputTest(WINDOW *win)
 static void
 outputTest(WINDOW *win)
 {
-    WINDOW *win1;
     char Buffer[80];
     chtype ch;
     int by, bx;
@@ -395,7 +396,7 @@ outputTest(WINDOW *win)
 	MvWAddStr(win, 6, 1, "display of at least 24 LINES by 75 COLUMNS");
 	Continue(win);
     } else {
-	win1 = newwin(10, 50, 14, 25);
+	WINDOW *win1 = newwin(10, 50, 14, 25);
 	if (win1 == NULL) {
 	    endwin();
 	    return;
@@ -589,9 +590,11 @@ resizeTest(WINDOW *dummy GCC_UNUSED)
 static void
 padTest(WINDOW *dummy GCC_UNUSED)
 {
-    WINDOW *pad, *spad;
+    WINDOW *pad;
 
     if ((pad = newpad(50, 100)) != 0) {
+	WINDOW *spad;
+
 	wattron(pad, A_REVERSE);
 	MvWAddStr(pad, 5, 2, "This is a new pad");
 	(void) wattrset(pad, A_NORMAL);
@@ -679,7 +682,6 @@ main(
 	char *argv[]GCC_UNUSED)
 {
     WINDOW *win;
-    int key;
     int old_option = (-1);
     int new_option = 0;
     bool quit = FALSE;
@@ -695,7 +697,10 @@ main(
 
     erase();
     display_menu(old_option, new_option);
+
     for (;;) {
+	int key;
+
 #ifdef A_COLOR
 	if (has_colors()) {
 	    init_pair(1, COLOR_WHITE, COLOR_BLUE);

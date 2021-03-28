@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.31 2020/12/12 01:15:37 tom Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.32 2021/03/27 23:49:53 tom Exp $")
 
 typedef struct
   {
@@ -77,7 +77,6 @@ Generic_Enum_Type(void *arg)
 	  int cnt = 0;
 	  char **kp = (char **)0;
 	  char **kwds = (char **)0;
-	  char **kptarget;
 	  int ccase, cunique;
 
 	  T((T_CREATE("enumARG %p"), (void *)argp));
@@ -96,6 +95,8 @@ Generic_Enum_Type(void *arg)
 
 	  if (cnt > 0)
 	    {
+	      char **kptarget;
+
 	      /* We copy the keywords, because we can't rely on the fact
 	         that the caller doesn't relocate or free the memory used
 	         for the keywords (maybe he has GC)
@@ -292,10 +293,11 @@ Check_Enum_Field(FIELD *field, const void *argp)
   bool unique = ((const enumARG *)argp)->checkunique;
   unsigned char *bp = (unsigned char *)field_buffer(field, 0);
   char *s, *t, *p;
-  int res;
 
   while (kwds && (s = (*kwds++)))
     {
+      int res;
+
       if ((res = Compare((unsigned char *)s, bp, ccase)) != NOMATCH)
 	{
 	  p = t = s;		/* t is at least a partial match */

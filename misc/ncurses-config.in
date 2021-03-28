@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.46 2021/01/23 23:47:46 tom Exp $
+# $Id: ncurses-config.in,v 1.47 2021/03/27 20:26:04 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2015,2017 Free Software Foundation, Inc.                    #
@@ -111,7 +111,7 @@ do
 		continue
 		;;
 	-L*)
-		lib_check=${opt##-L} 
+		lib_check=`echo "x$opt" | sed -e 's/^.-L//'`
 		[ -d "$lib_check" ] || continue
 		case "$lib_check" in
 		@LD_SEARCHPATH@) # skip standard libdir

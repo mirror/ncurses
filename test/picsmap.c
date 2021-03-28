@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.136 2021/03/20 16:08:22 tom Exp $
+ * $Id: picsmap.c,v 1.137 2021/03/27 22:52:16 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1015,7 +1015,7 @@ parse_xbm(char **data)
 	case 0:
 	case 1:
 	case 2:
-	    if (sscanf(s, "#define %s %d%c", buf, &num, &ch) >= 2) {
+	    if (sscanf(s, "#define %1024s %d%c", buf, &num, &ch) >= 2) {
 		if ((t = strstr(buf, "_width")) != 0) {
 		    state |= 1;
 		    result->wide = (short) bytes_of(num);
@@ -1036,7 +1036,7 @@ parse_xbm(char **data)
 	    }
 	    break;
 	case 3:
-	    if (sscanf(s, "static char %[^_ ]_bits[]%c", buf, &ch) >= 1) {
+	    if (sscanf(s, "static char %1024[^_ ]_bits[]%c", buf, &ch) >= 1) {
 		if (strcmp(result->name, buf)) {
 		    goto finish;
 		}

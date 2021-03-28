@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2004,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_val.c,v 1.18 2020/12/12 00:38:08 tom Exp $")
+MODULE_ID("$Id: m_item_val.c,v 1.19 2021/03/27 23:46:29 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -56,12 +56,10 @@ MODULE_ID("$Id: m_item_val.c,v 1.18 2020/12/12 00:38:08 tom Exp $")
 MENU_EXPORT(int)
 set_item_value(ITEM *item, bool value)
 {
-  MENU *menu;
-
   T((T_CALLED("set_item_value(%p,%d)"), (void *)item, value));
   if (item)
     {
-      menu = item->imenu;
+      MENU *menu = item->imenu;
 
       if ((!(item->opt & O_SELECTABLE)) ||
 	  (menu && (menu->opt & O_ONEVALUE)))

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2004,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_item_top.c,v 1.14 2020/12/12 00:38:08 tom Exp $")
+MODULE_ID("$Id: m_item_top.c,v 1.15 2021/03/27 23:46:29 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu  
@@ -53,8 +53,6 @@ MODULE_ID("$Id: m_item_top.c,v 1.14 2020/12/12 00:38:08 tom Exp $")
 MENU_EXPORT(int)
 set_top_row(MENU *menu, int row)
 {
-  ITEM *item;
-
   T((T_CALLED("set_top_row(%p,%d)"), (void *)menu, row));
 
   if (menu)
@@ -72,6 +70,8 @@ set_top_row(MENU *menu, int row)
 
   if (row != menu->toprow)
     {
+      ITEM *item;
+
       if (menu->status & _LINK_NEEDED)
 	_nc_Link_Items(menu);
 

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2006-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.57 2020/02/02 23:34:34 tom Exp $
+ * $Id: savescreen.c,v 1.58 2021/03/27 23:41:21 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -86,9 +86,9 @@ setup_next(void)
 static void
 cleanup(char *files[])
 {
-    int n;
-
     if (!keep_dumps) {
+	int n;
+
 	for (n = 0; files[n] != 0; ++n) {
 	    unlink(files[n]);
 	}
@@ -169,7 +169,6 @@ dump_screen(char **files, int color, int which, int last, bool use_colors)
 {
 #if USE_WIDEC_SUPPORT
     cchar_t mycc;
-    int myxx;
 #endif
     char *filename = files[which];
     bool dumped = FALSE;
@@ -198,7 +197,7 @@ dump_screen(char **files, int color, int which, int last, bool use_colors)
 		    wmove(stdscr, cy, cx);
 #if USE_WIDEC_SUPPORT
 		    if (win_wch(curscr, &mycc) != ERR) {
-			myxx = wcwidth(BaseChar(mycc));
+			int myxx = wcwidth(BaseChar(mycc));
 			if (myxx > 0) {
 			    wadd_wchnstr(stdscr, &mycc, 1);
 			    cx += (myxx - 1);
@@ -285,14 +284,9 @@ main(int argc, char *argv[])
     char **files;
     char *fill_by = 0;
 #if USE_WIDEC_SUPPORT
-    int r, g, b;
-    int cube = 0;
-    int cube0 = 16;
-    int cube1;
     cchar_t mycc;
     static const wchar_t mywc[2] =
     {L'#', 0};
-    bool using_rgb = FALSE;
 #endif
 
     setlocale(LC_ALL, "");
@@ -332,6 +326,9 @@ main(int argc, char *argv[])
     curs_set(0);
 
     if (has_colors() && (start_color() == OK) && COLORS >= MAX_ANSI) {
+#if USE_WIDEC_SUPPORT
+	bool using_rgb = FALSE;
+#endif
 	static const struct {
 	    int fg, bg;
 	} table[MAX_ANSI] = {
@@ -378,13 +375,13 @@ main(int argc, char *argv[])
 		    int r_delta = (r_max / cols);
 		    int g_delta = (g_max / cols);
 		    int row = 0;
+		    int b = 0;
 
-		    b = 0;
 		    using_rgb = TRUE;
 		    while (row++ < rows) {
 			int col = 0;
-			r = 0;
-			g = g_max;
+			int r = 0;
+			int g = g_max;
 			while (col++ < cols) {
 			    int color = (((r * (g_max + 1)) + g) * (b_max + 1)
 					 + b + MAX_ANSI);
@@ -404,6 +401,9 @@ main(int argc, char *argv[])
 #endif
 	}
 	if ((fill_by == 0) && !replaying) {
+#if USE_WIDEC_SUPPORT
+	    int cube = 0;
+#endif
 	    /*
 	     * Originally (before wide-characters) ncurses supported 16 colors.
 	     */
@@ -428,8 +428,9 @@ main(int argc, char *argv[])
 		cube = 6;
 	    }
 	    if (cube != 0) {
-		cube0 = 16;
-		cube1 = cube0 + (cube * cube * cube);
+		int r, g, b;
+		int cube0 = 16;
+		int cube1 = cube0 + (cube * cube * cube);
 
 		addch('\n');
 		printw("Color cube, %dx%dx%d:\n", cube, cube, cube);
@@ -460,7 +461,6 @@ main(int argc, char *argv[])
 		int cols = COLS - 1;
 		int row = 0;
 
-		b = 0;
 		pair = MAX_ANSI;
 		while (row++ < rows) {
 		    int col = 0;

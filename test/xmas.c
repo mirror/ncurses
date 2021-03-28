@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.35 2021/03/20 16:15:31 tom Exp $
+ * $Id: xmas.c,v 1.36 2021/03/27 22:40:53 tom Exp $
  */
 #include <test.priv.h>
 
@@ -500,9 +500,6 @@ reindeer(void)
     y_pos = 0;
 
     for (x_pos = 70; x_pos > 62; x_pos--) {
-	if (x_pos < 62) {
-	    y_pos = 1;
-	}
 	for (looper = 0; looper < 4; looper++) {
 	    MvWAddCh(dotdeer0, y_pos, x_pos, (chtype) '.');
 	    wrefresh(dotdeer0);

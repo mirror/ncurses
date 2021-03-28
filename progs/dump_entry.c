@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.182 2021/03/20 16:08:32 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.183 2021/03/28 00:09:49 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -526,13 +526,13 @@ fill_spaces(const char *src)
     size_t size = strlen(fill);
     char *result = 0;
     int pass;
-    int s, d;
+    size_t s, d;
     for (pass = 0; pass < 2; ++pass) {
 	for (s = d = 0; src[s] != '\0'; ++s) {
 	    if (src[s] == ' ') {
 		if (pass) {
 		    _nc_STRCPY(&result[d], fill, need + 1 - d);
-		    d += (int) size;
+		    d += size;
 		} else {
 		    need += size;
 		}

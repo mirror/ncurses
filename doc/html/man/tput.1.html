@@ -1,7 +1,7 @@
 <!-- 
   * t
   ****************************************************************************
-  * Copyright 2018,2020 Thomas E. Dickey                                     *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.65 2020/12/19 22:17:47 tom Exp @
+  * @Id: tput.1,v 1.66 2021/03/06 15:56:23 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -483,37 +483,40 @@
            2010,  NetBSD's  <STRONG>tput</STRONG>  uses  terminfo names.  Before that, it (like
            FreeBSD) recognized termcap names.
 
+           Beginning in 2021, FreeBSD uses the ncurses  <STRONG>tput</STRONG>,  configured  for
+           both terminfo (tested first) and termcap (as a fallback).
+
        Because (apparently) <EM>all</EM> of the certified Unix systems support the full
-       set  of  capability names, the reasoning for documenting only a few may
+       set of capability names, the reasoning for documenting only a  few  may
        not be apparent.
 
-       <STRONG>o</STRONG>   X/Open Curses Issue 7 documents <STRONG>tput</STRONG> differently, with <EM>capname</EM>  and
+       <STRONG>o</STRONG>   X/Open  Curses Issue 7 documents <STRONG>tput</STRONG> differently, with <EM>capname</EM> and
            the other features used in this implementation.
 
-       <STRONG>o</STRONG>   That  is,  there  are  two standards for <STRONG>tput</STRONG>: POSIX (a subset) and
-           X/Open Curses (the full implementation).  POSIX documents a  subset
-           to  avoid  the  complication  of  including  X/Open  Curses and the
+       <STRONG>o</STRONG>   That is, there are two standards for <STRONG>tput</STRONG>:  POSIX  (a  subset)  and
+           X/Open  Curses (the full implementation).  POSIX documents a subset
+           to avoid the  complication  of  including  X/Open  Curses  and  the
            terminal capabilities database.
 
-       <STRONG>o</STRONG>   While it is certainly possible to  write  a  <STRONG>tput</STRONG>  program  without
-           using   curses,   none   of   the   systems  which  have  a  curses
-           implementation provide a <STRONG>tput</STRONG> utility which does  not  provide  the
+       <STRONG>o</STRONG>   While  it  is  certainly  possible  to write a <STRONG>tput</STRONG> program without
+           using  curses,  none  of  the   systems   which   have   a   curses
+           implementation  provide  a  <STRONG>tput</STRONG> utility which does not provide the
            <EM>capname</EM> feature.
 
        X/Open  Curses  Issue  7  (2009)  is  the  first  version  to  document
        utilities.  However that part of X/Open Curses does not follow existing
        practice (i.e., Unix features documented in SVID 3):
 
-       <STRONG>o</STRONG>   It  assigns exit code 4 to "invalid operand", which may be the same
-           as <EM>unknown</EM> <EM>capability</EM>.  For instance, the source code for  Solaris'
+       <STRONG>o</STRONG>   It assigns exit code 4 to "invalid operand", which may be the  same
+           as  <EM>unknown</EM> <EM>capability</EM>.  For instance, the source code for Solaris'
            xcurses uses the term "invalid" in this case.
 
-       <STRONG>o</STRONG>   It  assigns  exit  code  255  to  a  numeric  variable  that is not
+       <STRONG>o</STRONG>   It assigns exit  code  255  to  a  numeric  variable  that  is  not
            specified in the terminfo database.  That likely is a documentation
-           error,  confusing  the  <STRONG>-1</STRONG>  written  to  the standard output for an
+           error, confusing the <STRONG>-1</STRONG> written  to  the  standard  output  for  an
            absent or cancelled numeric value versus an (unsigned) exit code.
 
-       The various Unix systems (AIX, HPUX, Solaris) use the  same  exit-codes
+       The  various  Unix systems (AIX, HPUX, Solaris) use the same exit-codes
        as ncurses.
 
        NetBSD curses documents different exit codes which do not correspond to
@@ -523,7 +526,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>stty(1)</STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210109).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210327).
 
 
 

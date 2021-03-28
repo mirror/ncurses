@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2012,2015 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_req_name.c,v 1.25 2020/05/24 01:40:20 anonymous.maarten Exp $")
+MODULE_ID("$Id: m_req_name.c,v 1.26 2021/03/27 23:46:29 tom Exp $")
 
 #define DATA(s) { s }
 
@@ -103,12 +103,13 @@ menu_request_by_name(const char *str)
      to run sequentially through it.
    */
   size_t i = 0;
-  char buf[16];
 
   T((T_CALLED("menu_request_by_name(%s)"), _nc_visbuf(str)));
 
   if (str != 0 && (i = strlen(str)) != 0)
     {
+      char buf[16];
+
       if (i > sizeof(buf) - 2)
 	i = sizeof(buf) - 2;
       memcpy(buf, str, i);

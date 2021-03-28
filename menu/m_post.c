@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2010,2012 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.34 2020/12/12 00:38:14 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.35 2021/03/27 23:46:29 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -58,7 +58,6 @@ _nc_Post_Item(const MENU *menu, const ITEM *item)
   int count = 0;
   bool isfore = FALSE, isback = FALSE, isgrey = FALSE;
   int name_len;
-  int desc_len;
 
   assert(menu->win);
 
@@ -132,6 +131,7 @@ _nc_Post_Item(const MENU *menu, const ITEM *item)
     {
       int m = menu->spc_desc / 2;
       int cy = -1, cx = -1;
+      int desc_len;
 
       for (ch = ' ', i = 0; i < menu->spc_desc; i++)
 	{
@@ -201,7 +201,7 @@ MENU_EXPORT(void)
 _nc_Draw_Menu(const MENU *menu)
 {
   ITEM *item = menu->items[0];
-  ITEM *lasthor, *lastvert;
+  ITEM *lastvert;
   ITEM *hitem;
   int y = 0;
   chtype s_bkgd;
@@ -217,6 +217,8 @@ _nc_Draw_Menu(const MENU *menu)
 
   do
     {
+      ITEM *lasthor;
+
       wmove(menu->win, y, 0);
 
       hitem = item;
@@ -283,7 +285,6 @@ post_menu(MENU *menu)
 
   if (menu->items && *(menu->items))
     {
-      int y;
       int h = 1 + menu->spc_rows * (menu->rows - 1);
 
       WINDOW *win = Get_Menu_Window(menu);
@@ -291,7 +292,8 @@ post_menu(MENU *menu)
 
       if ((menu->win = newpad(h, menu->width)))
 	{
-	  y = (maxy >= h) ? h : maxy;
+	  int y = (maxy >= h) ? h : maxy;
+
 	  if (y >= menu->height)
 	    y = menu->height;
 	  if (!(menu->sub = subpad(menu->win, y, menu->width, 0, 0)))

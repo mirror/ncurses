@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.16 2021/03/20 16:04:31 tom Exp $
+ * $Id: test_sgr.c,v 1.17 2021/03/27 22:43:36 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -116,7 +116,7 @@ next_dbitem(void)
 	    db_item++;
 	}
     }
-    printf("** %s\n", result);
+    printf("** %s\n", result ? result : "<null>");
     return result;
 }
 

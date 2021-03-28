@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2016,2017 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.26 2020/02/02 23:34:34 tom Exp $
+ * $Id: list_keys.c,v 1.27 2021/03/27 23:41:21 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -240,7 +240,7 @@ modified_key(const char *name)
 	map |= (bit1 << 1) | (bit2 >> 1);
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
 		    "%sF%d", modifiers[map][(unsigned) f_opt], 1 + key);
-    } else if (sscanf(name, "k%[A-Z]%d%c", buffer, &value, &chr) == 2 &&
+    } else if (sscanf(name, "k%80[A-Z]%d%c", buffer, &value, &chr) == 2 &&
 	       (value > 1 &&
 		value <= 8) &&
 	       (!strcmp(buffer, "UP") ||
@@ -255,7 +255,7 @@ modified_key(const char *name)
 		!strcmp(buffer, "PRV"))) {
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))
 		    "%sk%s", modifiers[value - 1][(unsigned) f_opt], buffer);
-    } else if (sscanf(name, "k%[A-Z]%c", buffer, &chr) == 1 &&
+    } else if (sscanf(name, "k%80[A-Z]%c", buffer, &chr) == 1 &&
 	       (!strcmp(buffer, "UP") ||
 		!strcmp(buffer, "DN"))) {
 	_nc_SPRINTF(result, _nc_SLIMIT(sizeof(result))

@@ -1,6 +1,6 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                               *
- * Copyright 2009-2016,2017 Free Software Foundation, Inc.                       *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2009-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.27 2020/02/02 23:34:34 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.28 2021/03/27 23:41:34 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -132,9 +132,10 @@ ChWLen(const wchar_t *source)
     if (!pass_ctls) {
 	size_t adjust = 0;
 	size_t n;
-	const char *s;
 
 	for (n = 0; n < result; ++n) {
+	    const char *s;
+
 	    if (source[n] < 256 && (s = unctrl((chtype) source[n])) != 0) {
 		adjust += (strlen(s) - 1);
 	    }

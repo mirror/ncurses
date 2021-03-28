@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: dup_field.c,v 1.1 2020/03/21 19:28:36 tom Exp $
+ * $Id: dup_field.c,v 1.2 2021/03/27 23:41:57 tom Exp $
  *
  * Demonstrate move_field().
  */
@@ -42,7 +42,6 @@
 
 static char empty[] = "";
 static FIELD *all_fields[100];
-
 /* *INDENT-OFF* */
 static struct {
     int code;
@@ -213,7 +212,6 @@ my_edit_field(FORM *form, int *result)
     int status;
     FIELD *before;
     unsigned n;
-    int length;
     int before_row;
     int before_col;
     int before_off = offset_in_field(form);
@@ -239,8 +237,8 @@ my_edit_field(FORM *form, int *result)
 
     if (status == E_OK) {
 	bool modified = TRUE;
+	int length = buffer_length(before);
 
-	length = buffer_length(before);
 	if (length < before_off)
 	    length = before_off;
 	switch (*result) {
