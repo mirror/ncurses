@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.130 2021/03/20 12:36:34 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.131 2021/04/03 22:05:59 tom Exp $")
 
 /*
  *	char *
@@ -987,7 +987,6 @@ NCURSES_EXPORT(char *)
 tparm(const char *string, ...)
 {
     TPARM_DATA myData;
-    va_list ap;
     char *result = NULL;
 
     _nc_tparm_err = 0;
@@ -996,6 +995,7 @@ tparm(const char *string, ...)
 #endif /* TRACE */
 
     if (tparm_setup(string, &myData) == OK) {
+	va_list ap;
 
 	va_start(ap, string);
 	tparm_copy_valist(&myData, TRUE, ap);
@@ -1051,7 +1051,6 @@ NCURSES_EXPORT(char *)
 tiparm(const char *string, ...)
 {
     TPARM_DATA myData;
-    va_list ap;
     char *result = NULL;
 
     _nc_tparm_err = 0;
@@ -1060,6 +1059,7 @@ tiparm(const char *string, ...)
 #endif /* TRACE */
 
     if (tparm_setup(string, &myData) == OK) {
+	va_list ap;
 
 	va_start(ap, string);
 	tparm_copy_valist(&myData, FALSE, ap);
@@ -1077,7 +1077,6 @@ NCURSES_EXPORT(char *)
 _nc_tiparm(int expected, const char *string, ...)
 {
     TPARM_DATA myData;
-    va_list ap;
     char *result = NULL;
 
     _nc_tparm_err = 0;
@@ -1088,6 +1087,7 @@ _nc_tiparm(int expected, const char *string, ...)
     if (tparm_setup(string, &myData) == OK
 	&& myData.num_actual <= expected
 	&& myData.tparm_type == 0) {
+	va_list ap;
 
 	va_start(ap, string);
 	tparm_copy_valist(&myData, FALSE, ap);

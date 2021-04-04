@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.175 2020/10/10 19:09:03 juergen Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.176 2021/04/03 22:23:39 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -329,9 +329,14 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	T(("_nc_alloc_screen_sp %p", (void *) sp));
 	*spp = sp;
     }
-    if (!sp
-	|| ((sp->_acs_map = typeCalloc(chtype, ACS_LEN)) == 0)
-	|| ((sp->_screen_acs_map = typeCalloc(bool, ACS_LEN)) == 0)) {
+    if (sp == NULL) {
+	ReturnScreenError();
+    }
+    if ((sp->_acs_map = typeCalloc(chtype, ACS_LEN)) == NULL) {
+	ReturnScreenError();
+    }
+    if ((sp->_screen_acs_map = typeCalloc(bool, ACS_LEN)) == NULL) {
+	free(sp->_acs_map);
 	ReturnScreenError();
     }
 

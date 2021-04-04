@@ -39,7 +39,7 @@
 #include <progs.priv.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tabs.c,v 1.46 2021/03/20 16:07:29 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.47 2021/04/03 23:00:00 tom Exp $")
 
 static GCC_NORETURN void usage(void);
 
@@ -146,7 +146,6 @@ static void
 print_ruler(int *tab_list)
 {
     int last = 0;
-    int stop;
     int n;
 
     /* first print a readable ruler */
@@ -164,7 +163,8 @@ print_ruler(int *tab_list)
 
     /* now, print '*' for each stop */
     for (n = 0, last = 0; (tab_list[n] > 0) && (last < max_cols); ++n) {
-	stop = tab_list[n];
+	int stop = tab_list[n];
+
 	while (++last < stop) {
 	    if (last <= max_cols) {
 		putchar('-');
@@ -210,11 +210,11 @@ static char *
 trimmed_tab_list(const char *source)
 {
     char *result = strdup(source);
-    int ch, j, k, last;
-
     if (result != 0) {
+	int j, k, last;
+
 	for (j = k = last = 0; result[j] != 0; ++j) {
-	    ch = UChar(result[j]);
+	    int ch = UChar(result[j]);
 	    if (isspace(ch)) {
 		if (last == '\0') {
 		    continue;
@@ -304,9 +304,11 @@ legal_tab_list(const char *tab_list)
 
     if (tab_list != 0 && *tab_list != '\0') {
 	if (comma_is_needed(tab_list)) {
-	    int n, ch;
+	    int n;
+
 	    for (n = 0; tab_list[n] != '\0'; ++n) {
-		ch = UChar(tab_list[n]);
+		int ch = UChar(tab_list[n]);
+
 		if (!(isdigit(ch) || ch == ',' || ch == '+')) {
 		    fprintf(stderr,
 			    "%s: unexpected character found '%c'\n",

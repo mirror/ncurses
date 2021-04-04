@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.183 2021/03/28 00:09:49 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.184 2021/04/03 23:01:08 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -107,9 +107,7 @@ static int indent = 8;
 #define StrIndirect(j)  ((sortmode == S_NOSORT) ? (j) : str_indirect[j])
 #endif
 
-static GCC_NORETURN void failed(const char *);
-
-static void
+static GCC_NORETURN void
 failed(const char *s)
 {
     perror(s);
@@ -433,10 +431,12 @@ static int
 op_length(const char *src, int offset)
 {
     int result = 0;
-    int ch;
+
     if (offset > 0 && src[offset - 1] == '\\') {
 	result = 0;
     } else {
+	int ch;
+
 	result++;		/* for '%' mark */
 	ch = src[offset + result];
 	if (TcOutput()) {
@@ -477,10 +477,12 @@ static int
 find_split(const char *src, int step, int size)
 {
     int result = size;
-    int n;
+
     if (size > 0) {
 	/* check if that would split a backslash-sequence */
 	int mark = size;
+	int n;
+
 	for (n = size - 1; n > 0; --n) {
 	    int ch = UChar(src[step + n]);
 	    if (ch == '\\') {
@@ -585,7 +587,6 @@ wrap_concat(const char *src, int need, unsigned mode)
 	(column + want) > width) {
 	int step = 0;
 	int used = width > WRAPPED ? width : WRAPPED;
-	int size;
 	int base = 0;
 	char *p, align[9];
 	const char *my_t = trailer;
@@ -619,7 +620,7 @@ wrap_concat(const char *src, int need, unsigned mode)
 	    }
 
 	    while ((column + (need + gaps)) > used) {
-		size = used - tag;
+		int size = used - tag;
 		if (step) {
 		    strcpy_DYN(&outbuf, align);
 		    size -= base;
@@ -882,12 +883,15 @@ static const char *
 number_format(int value)
 {
     const char *result = "%d";
+
     if ((outform != F_TERMCAP) && (value > 255)) {
 	unsigned long lv = (unsigned long) value;
-	unsigned long mm;
 	int bits = sizeof(unsigned long) * 8;
 	int nn;
+
 	for (nn = 8; nn < bits; ++nn) {
+	    unsigned long mm;
+
 	    mm = 1UL << nn;
 	    if ((mm - 16) <= lv && (mm + 16) > lv) {
 		result = "%#x";
@@ -1346,10 +1350,11 @@ kill_labels(TERMTYPE2 *tterm, int target)
 {
     int n;
     int result = 0;
-    char *cap;
     char name[20];
 
     for (n = 0; n <= 10; ++n) {
+	char *cap;
+
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "lf%d", n);
 	cap = find_string(tterm, name);
 	if (VALID_STRING(cap)
@@ -1372,10 +1377,11 @@ kill_fkeys(TERMTYPE2 *tterm, int target)
 {
     int n;
     int result = 0;
-    char *cap;
     char name[20];
 
     for (n = 60; n >= 0; --n) {
+	char *cap;
+
 	_nc_SPRINTF(name, _nc_SLIMIT(sizeof(name)) "kf%d", n);
 	cap = find_string(tterm, name);
 	if (VALID_STRING(cap)
@@ -1483,13 +1489,16 @@ dump_entry(TERMTYPE2 *tterm,
 
     if (quickdump) {
 	char bigbuf[65536];
-	unsigned n;
 	unsigned offset = 0;
+
 	separator = "";
 	trailer = "\n";
 	indent = 0;
+
 	if (_nc_write_object(tterm, bigbuf, &offset, sizeof(bigbuf)) == OK) {
 	    char numbuf[80];
+	    unsigned n;
+
 	    if (quickdump & 1) {
 		if (outbuf.used)
 		    wrap_concat1("\n");
@@ -1504,6 +1513,7 @@ dump_entry(TERMTYPE2 *tterm,
 		static char padding[] =
 		{0, 0};
 		int value = 0;
+
 		if (outbuf.used)
 		    wrap_concat1("\n");
 		wrap_concat1("b64:");
@@ -1761,9 +1771,8 @@ void
 repair_acsc(TERMTYPE2 *tp)
 {
     if (VALID_STRING(acs_chars)) {
-	size_t n, m;
+	size_t n;
 	char mapped[256];
-	char extra = 0;
 	unsigned source;
 	unsigned target;
 	bool fix_needed = FALSE;
@@ -1778,7 +1787,11 @@ repair_acsc(TERMTYPE2 *tp)
 	    if (acs_chars[n + 1])
 		n++;
 	}
+
 	if (fix_needed) {
+	    size_t m;
+	    char extra = 0;
+
 	    memset(mapped, 0, sizeof(mapped));
 	    for (n = 0; acs_chars[n] != 0; n++) {
 		source = UChar(acs_chars[n]);

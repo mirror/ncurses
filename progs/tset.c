@@ -98,7 +98,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.127 2021/03/20 18:01:34 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.128 2021/04/03 23:03:48 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -167,7 +167,6 @@ static const char *
 askuser(const char *dflt)
 {
     static char answer[256];
-    char *p;
 
     /* We can get recalled; if so, don't continue uselessly. */
     clearerr(stdin);
@@ -176,7 +175,10 @@ askuser(const char *dflt)
 	exit_error();
 	/* NOTREACHED */
     }
+
     for (;;) {
+	char *p;
+
 	if (dflt)
 	    (void) fprintf(stderr, "Terminal type? [%s] ", dflt);
 	else

@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.293 2021/03/20 20:51:01 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.294 2021/04/03 22:51:09 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -304,10 +304,12 @@ put_translate(int c)
 /* emit a comment char, translating terminfo names to termcap names */
 {
     static bool in_name = FALSE;
-    static size_t have, used;
-    static char *namebuf, *suffix;
+    static size_t used;
 
     if (in_name) {
+	static size_t have;
+	static char *namebuf, *suffix;
+
 	if (used + 1 >= have) {
 	    have += 132;
 	    if ((namebuf = typeRealloc(char, have, namebuf)) == 0)
@@ -371,12 +373,10 @@ stripped(char *src)
 	src++;
 
     if (*src != '\0') {
-	size_t len;
-
 	if ((dst = strdup(src)) == NULL) {
 	    failed("strdup");
 	} else {
-	    len = strlen(dst);
+	    size_t len = strlen(dst);
 	    while (--len != 0 && isspace(UChar(dst[len])))
 		dst[len] = '\0';
 	}
@@ -410,7 +410,7 @@ copy_input(FILE *source, const char *filename, char *alt_file)
 {
     char my_altfile[PATH_MAX];
     FILE *result = 0;
-    FILE *target = 0;
+    FILE *target;
     int ch;
 
     if (alt_file == 0)
@@ -554,9 +554,10 @@ matches(char **needle, const char *haystack)
 /* does entry in needle list match |-separated field in haystack? */
 {
     bool code = FALSE;
-    size_t n;
 
     if (needle != 0) {
+	size_t n;
+
 	for (n = 0; needle[n] != 0; n++) {
 	    if (_nc_name_match(haystack, needle[n], "|")) {
 		code = TRUE;
@@ -1306,13 +1307,12 @@ keypad_final(const char *string)
 static long
 keypad_index(const char *string)
 {
-    char *test;
-    const char *list = "PQRSwxymtuvlqrsPpn";	/* app-keypad except "Enter" */
     int ch;
     long result = -1;
 
     if ((ch = keypad_final(string)) != '\0') {
-	test = (strchr) (list, ch);
+	const char *list = "PQRSwxymtuvlqrsPpn";	/* app-keypad except "Enter" */
+	char *test = (strchr) (list, ch);
 	if (test != 0)
 	    result = (long) (test - list);
     }
@@ -1329,8 +1329,6 @@ static void
 check_ansi_cursor(char *list[4])
 {
     int j, k;
-    int want;
-    size_t suffix;
     bool skip[4];
     bool repeated = FALSE;
 
@@ -1348,6 +1346,7 @@ check_ansi_cursor(char *list[4])
     if (!repeated) {
 	char *up = list[1];
 	size_t prefix = (size_t) csi_length(up);
+	size_t suffix;
 
 	if (prefix) {
 	    suffix = prefix;
@@ -1362,6 +1361,8 @@ check_ansi_cursor(char *list[4])
 		skip[2] = TRUE;
 
 	    for (j = 0; j < 4; ++j) {
+		int want;
+
 		if (skip[j] || strlen(list[j]) == 1)
 		    continue;
 		if (memcmp(list[j], up, prefix)) {
@@ -1533,9 +1534,7 @@ check_keypad(TERMTYPE2 *tp)
 	char final[MAX_KP + 1];
 	long list[MAX_KP];
 	int increase = 0;
-	int j, k, kk;
-	long last;
-	long test;
+	int j;
 
 	final[0] = keypad_final(key_a1);
 	final[1] = keypad_final(key_a3);
@@ -1568,10 +1567,17 @@ check_keypad(TERMTYPE2 *tp)
 		++increase;
 	    }
 	}
+
 	if (increase != (MAX_KP - 1)) {
+	    long last;
+
 	    show[0] = '\0';
 
 	    for (j = 0, last = -1; j < MAX_KP; ++j) {
+		int k;
+		int kk;
+		long test;
+
 		for (k = 0, kk = -1, test = 100; k < 5; ++k) {
 		    if (list[k] > last &&
 			list[k] < test) {
@@ -2167,7 +2173,7 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 	     */
 	    if ((p = skip_DECSCNM(value, &flag)) != 0 &&
 		flag > 0 &&
-		(q = skip_DECSCNM(p, &flag)) != 0 &&
+		skip_DECSCNM(p, &flag) != 0 &&
 		flag == 0) {
 		_nc_warning("expected a delay in %s", name);
 	    }

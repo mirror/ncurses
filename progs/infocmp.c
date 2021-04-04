@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.147 2021/03/20 18:07:41 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.148 2021/04/03 22:57:56 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -322,16 +322,17 @@ static void
 print_uses(ENTRY * ep, FILE *fp)
 /* print an entry's use references */
 {
-    unsigned i;
-
-    if (!ep->nuses)
+    if (!ep->nuses) {
 	fputs("NULL", fp);
-    else
+    } else {
+	unsigned i;
+
 	for (i = 0; i < ep->nuses; i++) {
 	    fputs(ep->uses[i].name, fp);
 	    if (i < ep->nuses - 1)
 		fputs(" ", fp);
 	}
+    }
 }
 
 static const char *
@@ -1307,9 +1308,9 @@ dump_initializers(TERMTYPE2 *term)
 	   name_initializer("alias"), entries->tterm.term_names);
 
     for_each_string(n, term) {
-	char buf[MAX_STRING], *sp, *tp;
-
 	if (VALID_STRING(term->Strings[n])) {
+	    char buf[MAX_STRING], *sp, *tp;
+
 	    tp = buf;
 #define TP_LIMIT	((MAX_STRING - 5) - (size_t)(tp - buf))
 	    *tp++ = '"';

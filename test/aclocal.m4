@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.192 2021/03/23 00:37:21 tom Exp $
+dnl $Id: aclocal.m4,v 1.193 2021/04/03 20:48:45 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -390,7 +390,7 @@ ifelse([$3],,[    :]dnl
 ])dnl
 ])])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_C11_NORETURN version: 2 updated: 2021/03/22 20:37:21
+dnl CF_C11_NORETURN version: 3 updated: 2021/03/28 11:36:23
 dnl ---------------
 AC_DEFUN([CF_C11_NORETURN],
 [
@@ -407,7 +407,7 @@ AC_CACHE_CHECK([for C11 _Noreturn feature], cf_cv_c11_noreturn,
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdnoreturn.h>
-static void giveup(void) { exit(0); }
+static _Noreturn void giveup(void) { exit(0); }
 	],
 	[if (feof(stdin)) giveup()],
 	cf_cv_c11_noreturn=yes,
@@ -418,7 +418,7 @@ else
 fi
 
 if test "$cf_cv_c11_noreturn" = yes; then
-	AC_DEFINE(HAVE_STDNORETURN_H, 1)
+	AC_DEFINE(HAVE_STDNORETURN_H, 1,[Define if <stdnoreturn.h> header is available and working])
 	AC_DEFINE_UNQUOTED(STDC_NORETURN,_Noreturn,[Define if C11 _Noreturn keyword is supported])
 	HAVE_STDNORETURN_H=1
 else
@@ -426,6 +426,7 @@ else
 fi
 
 AC_SUBST(HAVE_STDNORETURN_H)
+AC_SUBST(STDC_NORETURN)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CC_ENV_FLAGS version: 10 updated: 2020/12/31 18:40:20
@@ -1298,7 +1299,7 @@ AC_SUBST(SHOW_CC)
 AC_SUBST(ECHO_CC)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_DISABLE_LEAKS version: 8 updated: 2021/01/05 20:05:09
+dnl CF_DISABLE_LEAKS version: 9 updated: 2021/04/03 16:41:50
 dnl ----------------
 dnl Combine no-leak checks with the libraries or tools that are used for the
 dnl checks.
@@ -1311,9 +1312,9 @@ AC_REQUIRE([CF_WITH_VALGRIND])
 AC_MSG_CHECKING(if you want to perform memory-leak testing)
 AC_ARG_ENABLE(leaks,
 	[  --disable-leaks         test: free permanent memory, analyze leaks],
-	[enable_leaks=no],
+	[enable_leaks=$enableval],
 	[enable_leaks=yes])
-dnl TODO - drop with_no_leaks
+dnl with_no_leaks is more readable...
 if test "x$enable_leaks" = xno; then with_no_leaks=yes; else with_no_leaks=no; fi
 AC_MSG_RESULT($with_no_leaks)
 

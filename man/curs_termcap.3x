@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.48 2021/01/09 11:07:15 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.49 2021/04/03 21:17:09 tom Exp $
 .TH curs_termcap 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -218,12 +218,23 @@ if the string is indeed terminfo-style by looking for "%p" parameters or
 appear to be terminfo).
 .PP
 Because terminfo conventions for representing padding in string capabilities
-differ from termcap's, \fBtputs("50");\fR will put out a literal \*(``50\*('' rather
-than busy-waiting for 50 milliseconds.
-Cope with it.
+differ from termcap's,
+users can be surprised:
+.bP
+\fBtputs("50")\fR in a terminfo system will put out a literal \*(``50\*(''
+rather than busy-waiting for 50 milliseconds.
+.bP
+However, if ncurses is configured to support termcap,
+it may also have been configured to support the BSD-style padding.
+.IP
+In that case, \fBtputs\fP inspects strings passed to it,
+looking for digits at the beginning of the string.
+.IP
+\fBtputs("50")\fR in a termcap system may wait for 50 milliseconds
+rather than put out a literal \*(``50\*(''
 .PP
 Note that termcap has nothing analogous to terminfo's \fBsgr\fR string.
-One consequence of this is that termcap applications assume \fRme\fR
+One consequence of this is that termcap applications assume \fBme\fR
 (terminfo \fBsgr0\fR) does not reset the alternate character set.
 This implementation checks for, and modifies the data shown to the
 termcap interface to accommodate termcap's limitation in this respect.

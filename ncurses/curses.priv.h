@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.640 2021/03/20 16:08:13 tom Exp $
+ * $Id: curses.priv.h,v 1.641 2021/04/03 22:12:56 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1549,7 +1549,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #if USE_WIDEC_SUPPORT /* { */
 #define isEILSEQ(status) (((size_t)status == (size_t)-1) && (errno == EILSEQ))
 
-#define init_mb(state)	memset(&state, 0, sizeof(state))
+#define init_mb(state)	memset(&(state), 0, sizeof(state))
 
 #if NCURSES_EXT_COLORS
 #define NulColor	, 0
@@ -1583,14 +1583,14 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #endif
 
 #define SetChar(ch,c,a) do {							    \
-			    NCURSES_CH_T *_cp = &ch;				    \
+			    NCURSES_CH_T *_cp = &(ch);				    \
 			    memset(_cp, 0, sizeof(ch));				    \
 			    _cp->chars[0] = (wchar_t) (c);			    \
 			    _cp->attr = (a);					    \
 			    if_EXT_COLORS(SetPair(ch, PairNumber(a)));		    \
 			} while (0)
-#define CHREF(wch)	(&wch)
-#define CHDEREF(wch)	(*wch)
+#define CHREF(wch)	(&(wch))
+#define CHDEREF(wch)	(*(wch))
 #define ARG_CH_T	NCURSES_CH_T *
 #define CARG_CH_T	const NCURSES_CH_T *
 #define PUTC_DATA	char PUTC_buf[MB_LEN_MAX]; int PUTC_i, PUTC_n; \
@@ -2395,13 +2395,13 @@ extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
 #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))
 #define count_mbytes(buffer,length,state) mblen(buffer,length)
 #define check_mbytes(wch,buffer,length,state) \
-	(int) mbtowc(&wch, buffer, length)
+	(int) mbtowc(&(wch), buffer, length)
 #define state_unused
 #elif HAVE_MBRTOWC && HAVE_MBRLEN
 #define reset_mbytes(state) init_mb(state)
-#define count_mbytes(buffer,length,state) mbrlen(buffer,length,&state)
+#define count_mbytes(buffer,length,state) mbrlen(buffer,length,&(state))
 #define check_mbytes(wch,buffer,length,state) \
-	(int) mbrtowc(&wch, buffer, length, &state)
+	(int) mbrtowc(&(wch), buffer, length, &(state))
 #else
 make an error
 #endif
@@ -2672,9 +2672,9 @@ extern NCURSES_EXPORT_VAR(TERM_DRIVER) _nc_TINFO_DRIVER;
 #  define IsTermInfo(sp)       ((TCBOf(sp) != 0) && ((TCBOf(sp)->drv->isTerminfo)))
 #  define HasTInfoTerminal(sp) ((0 != TerminalOf(sp)) && IsTermInfo(sp))
 #  if defined(EXP_WIN32_DRIVER)
-#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp)&&_nc_console_test(TerminalOf(sp)->Filedes))
+#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp) && _nc_console_test(TerminalOf(sp)->Filedes))
 #  elif defined(USE_WIN32CON_DRIVER)
-#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp)&&_nc_mingw_isconsole(TerminalOf(sp)->Filedes))
+#    define IsTermInfoOnConsole(sp) (IsTermInfo(sp) && _nc_mingw_isconsole(TerminalOf(sp)->Filedes))
 #  else
 #    define IsTermInfoOnConsole(sp) FALSE
 #  endif

@@ -45,7 +45,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.80 2021/03/20 16:06:15 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.81 2021/04/03 22:54:52 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -127,12 +127,15 @@ compare_termdata(const void *a, const void *b)
 static void
 show_termdata(int eargc, char **eargv)
 {
-    int j, k;
-    size_t n;
-
     if (use_termdata) {
+	size_t n;
+
 	if (eargc > 1) {
+	    int j;
+
 	    for (j = 0; j < eargc; ++j) {
+		int k;
+
 		for (k = 0; k <= j; ++k) {
 		    printf("--");
 		}
@@ -149,7 +152,7 @@ show_termdata(int eargc, char **eargv)
 	     */
 	    if (eargc > 1) {
 		unsigned long check = 0;
-		k = 0;
+		int k = 0;
 		for (;;) {
 		    for (; k < ptr_termdata[n].db_index; ++k) {
 			printf("--");
@@ -570,7 +573,6 @@ main(int argc, char *argv[])
     bool invert_dependencies = FALSE;
     bool header = FALSE;
     char *report_file = 0;
-    unsigned i;
     int code;
     int this_opt, last_opt = '?';
     unsigned v_opt = 0;
@@ -658,11 +660,13 @@ main(int argc, char *argv[])
     /* maybe we want a reverse-dependency listing? */
     if (invert_dependencies) {
 	ENTRY *qp, *rp;
-	int matchcount;
 
 	for_entry_list(qp) {
-	    matchcount = 0;
+	    int matchcount = 0;
+
 	    for_entry_list(rp) {
+		unsigned i;
+
 		if (rp->nuses == 0)
 		    continue;
 
@@ -692,12 +696,12 @@ main(int argc, char *argv[])
 	DBDIRS state;
 	int offset;
 	int pass;
-	const char *path;
 	char **eargv = 0;
 
 	code = EXIT_FAILURE;
 	for (pass = 0; pass < 2; ++pass) {
 	    size_t count = 0;
+	    const char *path;
 
 	    _nc_first_db(&state, &offset);
 	    while ((path = _nc_next_db(&state, &offset)) != 0) {

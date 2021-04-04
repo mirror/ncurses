@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <wchar.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.35 2021/01/17 00:04:08 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.36 2021/04/03 22:06:41 tom Exp $")
 
 /* 
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
@@ -105,7 +105,6 @@ getcchar(const cchar_t *wcval,
 	 void *opts)
 {
     int code = ERR;
-    int color_pair;
 
     TR(TRACE_CCALLS, (T_CALLED("getcchar(%p,%p,%p,%p,%p)"),
 		      (const void *) wcval,
@@ -136,6 +135,8 @@ getcchar(const cchar_t *wcval,
 	} else if (attrs == 0 || pair_arg == 0) {
 	    code = ERR;
 	} else if (len >= 0) {
+	    int color_pair;
+
 	    TR(TRACE_CCALLS, ("copy %d wchars, first is %s", len,
 			      _tracecchar_t(wcval)));
 	    *attrs = AttrOf(*wcval) & A_ATTRIBUTES;
