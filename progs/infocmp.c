@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.148 2021/04/03 22:57:56 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.149 2021/04/17 15:24:04 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -1532,7 +1532,7 @@ main(int argc, char *argv[])
     char **myargv;
 
     char *firstdir, *restdir;
-    int c, i, len;
+    int c;
     bool formatted = FALSE;
     bool filecompare = FALSE;
     int initdump = 0;
@@ -1884,6 +1884,8 @@ main(int argc, char *argv[])
 	    analyze_string("rmkx", keypad_local, &entries[0].tterm);
 #undef CUR
 	} else {
+	    int i;
+	    int len;
 
 	    /*
 	     * Here's where the real work gets done

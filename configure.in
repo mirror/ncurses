@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.729 2021/01/09 11:20:52 tom Exp $
+dnl $Id: configure.in,v 1.730 2021/04/17 22:22:17 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.729 $)
+AC_REVISION($Revision: 1.730 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -553,7 +553,7 @@ fi
 ### Depending on the system, someone may use rpath to build ncurses but not
 # want users of the package to rely upon that feature.  Give those people an
 # option to suppress that detail from EXTRA_LDFLAGS.
-EXTRA_PKG_LDFLAGS="$EXTRA_LDFLAGS"
+EXTRA_PKG_LDFLAGS="$LDFLAGS $EXTRA_LDFLAGS"
 if test -n "$EXTRA_PKG_LDFLAGS"
 then
 	AC_MSG_CHECKING(if you want to disable extra LDFLAGS for package-scripts)

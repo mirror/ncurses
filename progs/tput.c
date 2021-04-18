@@ -45,13 +45,12 @@
 #include <reset_cmd.h>
 
 #if !PURE_TERMINFO
-#include <dump_entry.h>
 #include <termsort.c>
 #endif
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.86 2021/03/20 23:46:57 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.88 2021/04/17 15:34:16 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -232,7 +231,7 @@ tput_cmd(int fd, TTY * saved_settings, bool opt_x, int argc, char *argv[])
 	     * representations
 	     */
 
-	    for (k = 1; (k < argc) && (k < NUM_PARM); k++) {
+	    for (k = 1; (k < argc) && (k <= NUM_PARM); k++) {
 		char *tmp = 0;
 		strings[k] = argv[k];
 		numbers[k] = strtol(argv[k], &tmp, 0);

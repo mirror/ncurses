@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.228 2021/03/23 00:42:13 tom Exp $
+-- $Id: INSTALL,v 1.229 2021/04/17 22:26:34 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -453,8 +453,8 @@ CONFIGURE OPTIONS:
 		--with-panel-libname=npanel
 
     --disable-pkg-ldflags
-	Omit options in $EXTRA_LDFLAGS from the pkg-config ".pc" and
-	corresponding ncurses*-config script which normally are listed via
+	Omit options in $LDFLAGS and $EXTRA_LDFLAGS from the pkg-config ".pc"
+	and corresponding ncurses*-config script which normally are listed via
 	the "--libs" option.  These options are normally used to facilitate
 	linking to ncurses when it was configured to use the rpath feature.
 

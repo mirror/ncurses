@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.50 2021/03/20 16:05:49 tom Exp $
+ * $Id: ditto.c,v 1.51 2021/04/17 17:39:43 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -353,7 +353,6 @@ static void *
 handle_screen(void *arg)
 {
     DDATA ddata;
-    int ch;
 
     memset(&ddata, 0, sizeof(ddata));
     ddata.ditto = (DITTO *) arg;
@@ -361,7 +360,7 @@ handle_screen(void *arg)
     ddata.ditto -= ddata.source;	/* -> base of array */
 
     for (;;) {
-	ch = read_screen(ddata.ditto->screen, &ddata);
+	int ch = read_screen(ddata.ditto->screen, &ddata);
 	if (ch == CTRL('D')) {
 	    int later = (ddata.source ? ddata.source : -1);
 	    int j;

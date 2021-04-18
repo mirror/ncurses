@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.176 2021/04/03 22:23:39 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.177 2021/04/17 15:04:41 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -147,8 +147,8 @@ delscreen(SCREEN *sp)
     _nc_lock_global(curses);
     if (delink_screen(sp)) {
 #ifdef USE_SP_RIPOFF
-	ripoff_t *rop;
 	if (safe_ripoff_sp && safe_ripoff_sp != safe_ripoff_stack) {
+	    ripoff_t *rop;
 	    for (rop = safe_ripoff_stack;
 		 rop != safe_ripoff_sp && (rop - safe_ripoff_stack) < N_RIPS;
 		 rop++) {

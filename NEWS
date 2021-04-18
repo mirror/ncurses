@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3650 2021/04/03 22:44:41 tom Exp $
+-- $Id: NEWS,v 1.3653 2021/04/17 22:26:02 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210417
+	+ extend --disable-pkg-ldflags option to also control whether $LDFLAGS
+	  from the build is provided in -config and .pc files (Debian #986764).
+	+ fix some cppcheck warnings, mostly style, in ncurses and c++
+	  libraries and progs directory.
+	+ fix off-by-one limit for tput's processing command-line arguments
+	  (patch by Hadrien Lacour).
 
 20210403
 	+ fix some cppcheck warnings, mostly style, in ncurses library and

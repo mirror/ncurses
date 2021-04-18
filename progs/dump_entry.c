@@ -40,7 +40,7 @@
 #include "termsort.c"		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.184 2021/04/03 23:01:08 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.185 2021/04/17 15:24:04 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -915,7 +915,6 @@ fmt_entry(TERMTYPE2 *tterm,
 {
     PredIdx i, j;
     char buffer[MAX_TERMINFO_LENGTH + EXTRA_CAP];
-    char *capability;
     NCURSES_CONST char *name;
     int predval, len;
     PredIdx num_bools = 0;
@@ -1035,6 +1034,7 @@ fmt_entry(TERMTYPE2 *tterm,
     }
 
     for_each_string(j, tterm) {
+	char *capability;
 	i = StrIndirect(j);
 	name = ExtStrname(tterm, (int) i, str_names);
 	assert(strlen(name) < sizeof(buffer) - EXTRA_CAP);
@@ -1483,7 +1483,7 @@ dump_entry(TERMTYPE2 *tterm,
 	   PredFunc pred)
 {
     TERMTYPE2 save_tterm;
-    int len, critlen;
+    int critlen;
     const char *legend;
     bool infodump;
 
@@ -1609,6 +1609,7 @@ dump_entry(TERMTYPE2 *tterm,
 	    }
 	    if (!changed || (FMT_ENTRY() > critlen)) {
 		int oldversion = tversion;
+		int len;
 
 		tversion = V_BSD;
 		SHOW_WHY("# (terminfo-only capabilities suppressed to fit entry within %d bytes)\n",

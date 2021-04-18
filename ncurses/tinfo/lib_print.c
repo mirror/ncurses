@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2011,2012 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_print.c,v 1.28 2020/08/29 16:22:03 juergen Exp $")
+MODULE_ID("$Id: lib_print.c,v 1.29 2021/04/17 16:12:54 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
@@ -73,6 +73,7 @@ NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
 
     if (switchon == 0
 	|| (mybuf = typeMalloc(char, need + 1)) == 0) {
+	free(mybuf);
 	errno = ENOMEM;
 	return (ERR);
     }

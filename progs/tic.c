@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.294 2021/04/03 22:51:09 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.295 2021/04/17 15:18:02 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -116,8 +116,6 @@ free_namelist(char **src)
 static void
 cleanup(void)
 {
-    int rc;
-
 #if NO_LEAKS
     free_namelist(namelst);
     _nc_leaks_dump_entry();
@@ -125,6 +123,8 @@ cleanup(void)
     if (tmp_fp != 0)
 	fclose(tmp_fp);
     if (to_remove != 0) {
+	int rc;
+
 #if HAVE_REMOVE
 	rc = remove(to_remove);
 #else
@@ -2683,11 +2683,11 @@ static void
 check_conflict(TERMTYPE2 *tp)
 {
     bool conflict = FALSE;
-    unsigned j, k;
 
     if (!(_nc_syntax == SYN_TERMCAP && capdump)) {
 	char *check = calloc((size_t) (NUM_STRINGS(tp) + 1), sizeof(char));
 	NAME_VALUE *given = get_fkey_list(tp);
+	unsigned j, k;
 
 	if (check == 0)
 	    failed("check_conflict");

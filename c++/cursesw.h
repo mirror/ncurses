@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -32,7 +32,7 @@
 #ifndef NCURSES_CURSESW_H_incl
 #define NCURSES_CURSESW_H_incl 1
 
-// $Id: cursesw.h,v 1.57 2020/07/04 20:38:43 tom Exp $
+// $Id: cursesw.h,v 1.58 2021/04/17 18:11:08 tom Exp $
 
 extern "C" {
 #  include   <curses.h>
@@ -816,7 +816,7 @@ protected:
   NCursesWindow();
 
 public:
-  NCursesWindow(WINDOW* window);   // useful only for stdscr
+  explicit NCursesWindow(WINDOW* window);   // useful only for stdscr
 
   NCursesWindow(int nlines,        // number of lines
 		int ncols,         // number of columns
@@ -1385,7 +1385,7 @@ public:
 class NCURSES_CXX_IMPEXP NCursesColorWindow : public NCursesWindow
 {
 public:
-  NCursesColorWindow(WINDOW* &window)   // useful only for stdscr
+  explicit NCursesColorWindow(WINDOW* &window)   // useful only for stdscr
     : NCursesWindow(window) {
       useColors(); }
 
