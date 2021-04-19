@@ -44,13 +44,10 @@
 #include <clear_cmd.h>
 #include <reset_cmd.h>
 
-#if !PURE_TERMINFO
-#include <termsort.c>
-#endif
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.88 2021/04/17 15:34:16 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.90 2021/04/18 17:18:19 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 

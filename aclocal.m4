@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.957 2021/04/03 20:43:02 tom Exp $
+dnl $Id: aclocal.m4,v 1.958 2021/04/18 18:12:13 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5094,7 +5094,7 @@ AC_SUBST(BROKEN_LINKER)
 
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LINK_FUNCS version: 10 updated: 2021/04/03 15:45:02
+dnl CF_LINK_FUNCS version: 11 updated: 2021/04/18 14:08:47
 dnl -------------
 dnl Most Unix systems have both link and symlink, a few don't have symlink.
 dnl A few non-Unix systems implement symlink, but not link.
@@ -5120,6 +5120,7 @@ else
 		cf_cv_link_funcs=
 		for cf_func in link symlink ; do
 			AC_TRY_RUN([
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
@@ -5128,27 +5129,26 @@ else
 int main(void)
 {
 	int fail = 0;
-	char *src = "config.log";
+	char *src = "conftest.tmp";
 	char *dst = "conftest.chk";
-	struct stat src_sb;
-	struct stat dst_sb;
-
-	stat(src, &src_sb);
-	if ($cf_func("config.log", "conftest.chk") < 0) {
-		fail = 1;
-	} else if (stat(dst, &dst_sb) < 0) {
-		fail = 2;
-	} else {
-		long diff = (dst_sb.st_mtime - src_sb.st_mtime);
-		if (diff < 0)
-			diff = -diff;
-		if (diff > 2)
-			fail = 3;
+	struct stat src_sb, dst_sb;
+	FILE *fp = fopen(src, "w");
+	if (fp == 0) { fail = 3; } else {
+		fclose(fp); stat(src, &src_sb);
+		if ($cf_func(src, dst) < 0) {
+			fail = 1;
+		} else if (stat(dst, &dst_sb) < 0) {
+			fail = 2;
+		} else {
+			long diff = (dst_sb.st_mtime - src_sb.st_mtime);
+			if (diff < 0) diff = -diff;
+			if (diff > 2) fail = 3;
+		}
 	}
 #ifdef HAVE_UNLINK
-	unlink(dst);
+	unlink(dst); unlink(src);
 #else
-	remove(dst);
+	remove(dst); remove(src);
 #endif
 	${cf_cv_main_return:-return} (fail);
 }

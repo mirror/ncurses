@@ -1,4 +1,4 @@
-# $Id: modules,v 1.23 2021/04/17 16:05:34 tom Exp $
+# $Id: modules,v 1.25 2021/04/18 17:21:03 tom Exp $
 # Program modules (some are in ncurses lib!)
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
@@ -37,12 +37,12 @@ clear		progs		$(srcdir)	$(HEADER_DEPS) tty_settings.h
 tic		progs		$(srcdir)	$(HEADER_DEPS) transform.h $(srcdir)/dump_entry.h $(srcdir)/tparm_type.h
 toe		progs		$(srcdir)	$(HEADER_DEPS)             $(INCDIR)/hashed_db.h
 clear_cmd	progs		$(srcdir)	$(HEADER_DEPS) clear_cmd.h
-dump_entry	progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/dump_entry.h ../include/parametrized.h $(INCDIR)/capdefaults.c termsort.c
+dump_entry	progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/dump_entry.h ../include/parametrized.h $(INCDIR)/capdefaults.c termsort.h
 infocmp		progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/dump_entry.h
 reset_cmd	progs		$(srcdir)	$(HEADER_DEPS) reset_cmd.h tty_settings.h
 tabs		progs		$(srcdir)	$(HEADER_DEPS)
 tparm_type	progs		$(srcdir)	$(HEADER_DEPS)             $(srcdir)/tparm_type.h
-tput		progs		$(srcdir)	$(HEADER_DEPS) transform.h $(srcdir)/tparm_type.h termsort.c reset_cmd.h tty_settings.h
+tput		progs		$(srcdir)	$(HEADER_DEPS) transform.h $(srcdir)/tparm_type.h reset_cmd.h tty_settings.h
 tset		progs		$(srcdir)	$(HEADER_DEPS) transform.h ../include/termcap.h reset_cmd.h  tty_settings.h
 transform	progs		$(srcdir)	$(HEADER_DEPS) transform.h
 tty_settings	progs		$(srcdir)	$(HEADER_DEPS) tty_settings.h

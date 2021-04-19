@@ -36,11 +36,11 @@
 #define __INTERNAL_CAPS_VISIBLE
 #include <progs.priv.h>
 
-#include "dump_entry.h"
-#include "termsort.c"		/* this C file is generated */
+#include <dump_entry.h>
+#include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.185 2021/04/17 15:24:04 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.186 2021/04/18 11:33:08 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf

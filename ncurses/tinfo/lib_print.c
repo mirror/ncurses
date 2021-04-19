@@ -40,14 +40,14 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_print.c,v 1.29 2021/04/17 16:12:54 tom Exp $")
+MODULE_ID("$Id: lib_print.c,v 1.30 2021/04/18 14:58:57 tom Exp $")
 
 NCURSES_EXPORT(int)
 NCURSES_SP_NAME(mcprint) (NCURSES_SP_DCLx char *data, int len)
 /* ship binary character data to the printer via mc4/mc5/mc5p */
 {
     int result;
-    char *mybuf, *switchon;
+    char *mybuf = NULL, *switchon;
     size_t onsize, offsize;
     size_t need;
 

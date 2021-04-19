@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -57,7 +57,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.98 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.99 2021/04/18 11:43:38 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -1064,14 +1064,16 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 	    }
 	}
 
-#define PRIVATE_CAP "%s/.termcap"
+#define PRIVATE_CAP "%.*s/.termcap"
 
 	if (use_terminfo_vars() && (h = getenv("HOME")) != NULL && *h != '\0'
 	    && (strlen(h) + sizeof(PRIVATE_CAP)) < PATH_MAX) {
 	    /* user's .termcap, if any, should override it */
 	    _nc_STRCPY(envhome, h, sizeof(envhome));
 	    _nc_SPRINTF(pathbuf, _nc_SLIMIT(sizeof(pathbuf))
-			PRIVATE_CAP, envhome);
+			PRIVATE_CAP,
+			(int) (sizeof(pathbuf) - sizeof(PRIVATE_CAP)),
+			envhome);
 	    ADD_TC(pathbuf, filecount);
 	}
     }

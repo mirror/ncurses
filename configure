@@ -9426,6 +9426,7 @@ else
 #line 9426 "configure"
 #include "confdefs.h"
 
+#include <stdio.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #ifdef HAVE_UNISTD_H
@@ -9434,27 +9435,26 @@ else
 int main(void)
 {
 	int fail = 0;
-	char *src = "config.log";
+	char *src = "conftest.tmp";
 	char *dst = "conftest.chk";
-	struct stat src_sb;
-	struct stat dst_sb;
-
-	stat(src, &src_sb);
-	if ($cf_func("config.log", "conftest.chk") < 0) {
-		fail = 1;
-	} else if (stat(dst, &dst_sb) < 0) {
-		fail = 2;
-	} else {
-		long diff = (dst_sb.st_mtime - src_sb.st_mtime);
-		if (diff < 0)
-			diff = -diff;
-		if (diff > 2)
-			fail = 3;
+	struct stat src_sb, dst_sb;
+	FILE *fp = fopen(src, "w");
+	if (fp == 0) { fail = 3; } else {
+		fclose(fp); stat(src, &src_sb);
+		if ($cf_func(src, dst) < 0) {
+			fail = 1;
+		} else if (stat(dst, &dst_sb) < 0) {
+			fail = 2;
+		} else {
+			long diff = (dst_sb.st_mtime - src_sb.st_mtime);
+			if (diff < 0) diff = -diff;
+			if (diff > 2) fail = 3;
+		}
 	}
 #ifdef HAVE_UNLINK
-	unlink(dst);
+	unlink(dst); unlink(src);
 #else
-	remove(dst);
+	remove(dst); remove(src);
 #endif
 	${cf_cv_main_return:-return} (fail);
 }

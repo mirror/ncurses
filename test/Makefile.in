@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.126 2021/03/13 20:55:43 tom Exp $
+# $Id: Makefile.in,v 1.127 2021/04/18 11:48:06 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -152,5 +152,16 @@ HEADER_DEPS	= \
 	$(incdir)/term.h \
 	$(incdir)/unctrl.h \
 	$(INCDIR)/nc_alloc.h
+
+# Verify that each header-file can be compiled without including another.
+check::
+	@$(SHELL) -c "for header in *.h;\
+		do \
+			echo \"** testing \$${header}\" ; \
+			echo \"#include <\$${header}>\" >headers.c; \
+			echo \"int main(void) { return 0; }\" >>headers.c; \
+			$(CC) -c $(CFLAGS) $(CPPFLAGS) headers.c; \
+		done"
+	-@rm -f headers.*
 
 # The rest is generated from the "programs" and "modules" files...

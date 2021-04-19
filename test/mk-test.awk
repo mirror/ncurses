@@ -1,6 +1,6 @@
-# $Id: mk-test.awk,v 1.23 2020/02/02 23:34:34 tom Exp $
+# $Id: mk-test.awk,v 1.24 2021/04/18 11:49:55 tom Exp $
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2017,2018 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -81,7 +81,7 @@ END	{
 	print	""
 	print	"sources:"
 	print	""
-	print	"check:"
+	print	"check::"
 	print	"	@ echo The test-programs are interactive"
 	print	"tags:"
 	print	"	$(CTAGS) *.[ch]"
