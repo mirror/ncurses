@@ -1,4 +1,4 @@
-# $Id: mk-test.awk,v 1.24 2021/04/18 11:49:55 tom Exp $
+# $Id: mk-test.awk,v 1.25 2021/04/24 23:10:40 tom Exp $
 ##############################################################################
 # Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2017,2018 Free Software Foundation, Inc.                    #
@@ -77,7 +77,7 @@ END	{
 	print	"	$(srcdir)/*.x* \\"
 	print	"	$(srcdir)/*.dat"
 	print	""
-	print	"all: $(TESTS)"
+	print	"all:: $(TESTS)"
 	print	""
 	print	"sources:"
 	print	""

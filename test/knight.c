@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -34,7 +34,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.47 2020/02/02 23:34:34 tom Exp $
+ * $Id: knight.c,v 1.48 2021/04/25 00:10:43 tom Exp $
  */
 
 #include <test.priv.h>
@@ -595,8 +595,8 @@ play(void)
 {
     bool keyhelp;		/* TRUE if keystroke help is up */
     int i, j, count;
-    int lastcol = 0;		/* last location visited */
-    int lastrow = 0;
+    int lastcol;		/* last location visited */
+    int lastrow;
     int ny = 0, nx = 0;
     int review = 0;		/* review history */
     int test_size;
