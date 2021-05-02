@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.137 2021/03/27 22:52:16 tom Exp $
+ * $Id: picsmap.c,v 1.138 2021/05/01 20:38:40 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -990,7 +990,7 @@ parse_xbm(char **data)
 {
     int n;
     int state = 0;
-    char buf[BUFSIZ];
+    char buf[2048];
     int num;
     char ch;
     char *s;
