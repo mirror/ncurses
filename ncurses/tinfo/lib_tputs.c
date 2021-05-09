@@ -52,7 +52,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tputs.c,v 1.107 2021/04/03 18:45:53 tom Exp $")
+MODULE_ID("$Id: lib_tputs.c,v 1.108 2021/05/08 23:27:40 tom Exp $")
 
 NCURSES_EXPORT_VAR(char) PC = 0;              /* used by termcap library */
 NCURSES_EXPORT_VAR(NCURSES_OSPEED) ospeed = 0;        /* used by termcap library */
@@ -276,8 +276,8 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
 			NCURSES_SP_OUTC outc)
 {
     NCURSES_SP_OUTC my_outch = GetOutCh();
-    bool always_delay;
-    bool normal_delay;
+    bool always_delay = FALSE;
+    bool normal_delay = FALSE;
     int number;
 #if BSD_TPUTS
     int trailpad;
@@ -305,32 +305,30 @@ NCURSES_SP_NAME(tputs) (NCURSES_SP_DCLx
     }
 #endif /* TRACE */
 
-    if (SP_PARM != 0 && !HasTInfoTerminal(SP_PARM))
-	return ERR;
-
     if (!VALID_STRING(string))
 	return ERR;
 
-    if (
+    if (SP_PARM != 0 && HasTInfoTerminal(SP_PARM)) {
+	if (
 #if NCURSES_SP_FUNCS
-	   (SP_PARM != 0 && SP_PARM->_term == 0)
+	       (SP_PARM != 0 && SP_PARM->_term == 0)
 #else
-	   cur_term == 0
+	       cur_term == 0
 #endif
-	) {
-	always_delay = FALSE;
-	normal_delay = TRUE;
-    } else {
-	always_delay = (string == bell) || (string == flash_screen);
-	normal_delay =
-	    !xon_xoff
-	    && padding_baud_rate
+	    ) {
+	    always_delay = FALSE;
+	    normal_delay = TRUE;
+	} else {
+	    always_delay = (string == bell) || (string == flash_screen);
+	    normal_delay =
+		!xon_xoff
+		&& padding_baud_rate
 #if NCURSES_NO_PADDING
-	    && !GetNoPadding(SP_PARM)
+		&& !GetNoPadding(SP_PARM)
 #endif
-	    && (_nc_baudrate(ospeed) >= padding_baud_rate);
+		&& (_nc_baudrate(ospeed) >= padding_baud_rate);
+	}
     }
-
 #if BSD_TPUTS
     /*
      * This ugly kluge deals with the fact that some ancient BSD programs

@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.177 2021/04/17 15:04:41 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.179 2021/05/08 21:48:34 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -417,7 +417,6 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     fflush(output);
     _setmode(fileno(output), _O_BINARY);
 #endif
-    NCURSES_SP_NAME(_nc_set_buffer) (NCURSES_SP_ARGx output, TRUE);
     sp->_lines = (NCURSES_SIZE_T) slines;
     sp->_lines_avail = (NCURSES_SIZE_T) slines;
     sp->_columns = (NCURSES_SIZE_T) scolumns;
@@ -500,7 +499,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	p = extract_fgbg(p, &(sp->_default_fg));
 	p = extract_fgbg(p, &(sp->_default_bg));
 	if (*p)			/* assume rxvt was compiled with xpm support */
-	    p = extract_fgbg(p, &(sp->_default_bg));
+	    extract_fgbg(p, &(sp->_default_bg));
 	TR(TRACE_CHARPUT | TRACE_MOVE, ("decoded fg=%d, bg=%d",
 					sp->_default_fg, sp->_default_bg));
 	if (sp->_default_fg >= MaxColors) {
@@ -697,6 +696,9 @@ NCURSES_SP_NAME(_nc_setupscreen) (
 	       formats (4-4 or 3-2-3) for which there may be some hardware
 	       support. */
 	    if (rop->hook == _nc_slk_initialize) {
+		if (!TerminalOf(sp)) {
+		    continue;
+		}
 		if (!(NumLabels <= 0 || !SLK_STDFMT(slk_format))) {
 		    continue;
 		}

@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.72 2021/03/20 16:05:49 tom Exp $
+ * $Id: demo_menus.c,v 1.73 2021/05/08 19:41:08 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -565,7 +565,7 @@ tracetrace(unsigned tlevel)
     }
     _nc_SPRINTF(buf, _nc_SLIMIT(need) "0x%02x = {", tlevel);
     if (tlevel == 0) {
-	_nc_STRCAT(buf, t_tbl[0].name, need);
+	_nc_STRCAT(buf, t_tbl[0].name ? t_tbl[0].name : "", need);
 	_nc_STRCAT(buf, ", ", need);
     } else {
 	for (n = 1; t_tbl[n].name != 0; n++)

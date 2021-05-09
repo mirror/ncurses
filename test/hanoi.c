@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -42,7 +42,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.41 2020/02/02 23:34:34 tom Exp $
+ * $Id: hanoi.c,v 1.42 2021/05/08 20:44:44 tom Exp $
  */
 
 #include <test.priv.h>
@@ -283,7 +283,7 @@ main(int argc, char **argv)
     }
     setlocale(LC_ALL, "");
 
-    switch (ch = (argc - optind)) {
+    switch (argc - optind) {
     case 2:
 	if (strcmp(argv[optind + 1], "a")) {
 	    usage();

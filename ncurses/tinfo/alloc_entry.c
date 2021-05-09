@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.64 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.65 2021/05/04 23:15:34 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -242,7 +242,7 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
     _nc_align_termtype(to, from);
 #endif
     for_each_boolean(i, from) {
-	if (to->Booleans[i] != (char) CANCELLED_BOOLEAN) {
+	if (to->Booleans[i] != (NCURSES_SBOOL) CANCELLED_BOOLEAN) {
 	    int mergebool = from->Booleans[i];
 
 	    if (mergebool == CANCELLED_BOOLEAN)

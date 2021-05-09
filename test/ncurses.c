@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.524 2021/03/20 16:11:50 tom Exp $
+$Id: ncurses.c,v 1.525 2021/05/08 19:44:31 tom Exp $
 
 ***************************************************************************/
 
@@ -5531,7 +5531,7 @@ panner_legend(int line)
 	"Number repeats.  Toggle legend:? filler:a timer:t scrollmark:s."
     };
     int n = ((int) SIZEOF(legend) - (LINES - line));
-    if (n >= 0) {
+    if (n >= 0 && n < (int) SIZEOF(legend)) {
 	if (move(line, 0) != ERR) {
 	    if (show_panner_legend)
 		printw("%s", legend[n]);
@@ -6232,7 +6232,7 @@ tracetrace(unsigned tlevel)
     }
     _nc_SPRINTF(buf, _nc_SLIMIT(need) "0x%02x = {", tlevel);
     if (tlevel == 0) {
-	_nc_STRCAT(buf, t_tbl[0].name, need);
+	_nc_STRCAT(buf, t_tbl[0].name ? t_tbl[0].name : "", need);
 	_nc_STRCAT(buf, ", ", need);
     } else {
 	for (n = 1; t_tbl[n].name != 0; n++)

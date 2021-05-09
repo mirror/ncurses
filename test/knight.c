@@ -34,7 +34,7 @@
  * Eric S. Raymond <esr@snark.thyrsus.com> July 22 1995.  Mouse support
  * added September 20th 1995.
  *
- * $Id: knight.c,v 1.48 2021/04/25 00:10:43 tom Exp $
+ * $Id: knight.c,v 1.49 2021/05/08 19:32:15 tom Exp $
  */
 
 #include <test.priv.h>
@@ -621,10 +621,10 @@ play(void)
 
 	for (i = 0; i < ylimit; i++) {
 	    for (j = 0; j < xlimit; j++) {
-		squares[i][j] = FALSE;
 		unmarkcell(i, j);
 	    }
 	}
+	memset(squares, 0, sizeof(squares));
 	memset(history, 0, sizeof(history));
 	history[0].y = history[0].x = -1;
 	history[1].y = history[1].x = -1;

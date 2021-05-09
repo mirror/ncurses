@@ -52,7 +52,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.140 2021/03/27 22:42:22 tom Exp $
+ * $Id: view.c,v 1.141 2021/05/08 15:57:04 tom Exp $
  */
 
 #include <test.priv.h>
@@ -78,9 +78,7 @@ static int num_lines;
 static bool n_option = FALSE;
 #endif
 
-static GCC_NORETURN void usage(void);
-
-static void
+static GCC_NORETURN void
 failed(const char *msg)
 {
     endwin();
@@ -368,7 +366,7 @@ read_file(const char *filename)
     free(my_blob);
 }
 
-static void
+static GCC_NORETURN void
 usage(void)
 {
     static const char *msg[] =

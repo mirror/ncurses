@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.35 2021/03/27 23:46:29 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.36 2021/05/08 20:20:01 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -215,45 +215,48 @@ _nc_Draw_Menu(const MENU *menu)
 
   lastvert = (menu->opt & O_NONCYCLIC) ? (ITEM *)0 : item;
 
-  do
+  if (item != NULL)
     {
-      ITEM *lasthor;
-
-      wmove(menu->win, y, 0);
-
-      hitem = item;
-      lasthor = (menu->opt & O_NONCYCLIC) ? (ITEM *)0 : hitem;
-
       do
 	{
-	  _nc_Post_Item(menu, hitem);
+	  ITEM *lasthor;
 
-	  wattron(menu->win, (int)menu->back);
-	  if (((hitem = hitem->right) != lasthor) && hitem)
+	  wmove(menu->win, y, 0);
+
+	  hitem = item;
+	  lasthor = (menu->opt & O_NONCYCLIC) ? (ITEM *)0 : hitem;
+
+	  do
 	    {
-	      int i, j, cy, cx;
-	      chtype ch = ' ';
+	      _nc_Post_Item(menu, hitem);
 
-	      getyx(menu->win, cy, cx);
-	      for (j = 0; j < menu->spc_rows; j++)
+	      wattron(menu->win, (int)menu->back);
+	      if (((hitem = hitem->right) != lasthor) && hitem)
 		{
-		  wmove(menu->win, cy + j, cx);
-		  for (i = 0; i < menu->spc_cols; i++)
+		  int i, j, cy, cx;
+		  chtype ch = ' ';
+
+		  getyx(menu->win, cy, cx);
+		  for (j = 0; j < menu->spc_rows; j++)
 		    {
-		      waddch(menu->win, ch);
+		      wmove(menu->win, cy + j, cx);
+		      for (i = 0; i < menu->spc_cols; i++)
+			{
+			  waddch(menu->win, ch);
+			}
 		    }
+		  wmove(menu->win, cy, cx + menu->spc_cols);
 		}
-	      wmove(menu->win, cy, cx + menu->spc_cols);
 	    }
+	  while (hitem && (hitem != lasthor));
+	  wattroff(menu->win, (int)menu->back);
+
+	  item = item->down;
+	  y += menu->spc_rows;
+
 	}
-      while (hitem && (hitem != lasthor));
-      wattroff(menu->win, (int)menu->back);
-
-      item = item->down;
-      y += menu->spc_rows;
-
+      while (item && (item != lastvert));
     }
-  while (item && (item != lastvert));
 }
 
 /*---------------------------------------------------------------------------

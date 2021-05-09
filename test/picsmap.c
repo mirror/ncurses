@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.138 2021/05/01 20:38:40 tom Exp $
+ * $Id: picsmap.c,v 1.139 2021/05/08 15:56:05 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -604,7 +604,6 @@ read_palette(const char *filename)
 		    continue;
 		}
 	    }
-	    s += strlen(s);
 
 	    if (tries & 2) {
 		int len = (int) strlen(filename);
