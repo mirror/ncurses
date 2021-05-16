@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright 2020 Thomas E. Dickey                                          *
+  * Copyright 2020,2021 Thomas E. Dickey                                     *
   * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_window.3x,v 1.21 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_window.3x,v 1.22 2021/05/15 23:57:14 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -87,6 +87,14 @@
               <STRONG>COLS</STRONG> <STRONG>-</STRONG> <EM>begin</EM>_<EM>x</EM>.
 
        A new full-screen window is created by calling <STRONG>newwin(0,0,0,0)</STRONG>.
+
+       Regardless of the function  used  for  creating  a  new  window  (e.g.,
+       <STRONG>newwin</STRONG>, <STRONG>subwin</STRONG>, <STRONG>derwin</STRONG>, <STRONG>newpad</STRONG>), rather than a duplicate (with <STRONG>dupwin</STRONG>),
+       all of the window modes are initialized to the default  values.   These
+       functions set window modes after a window is created:
+
+              idcok, idlok, immedok, keypad, leaveok, nodelay, scrollok,
+              setscrreg, syncok, wbkgdset, wbkgrndset, and wtimeout
 
 
 </PRE><H3><a name="h3-delwin">delwin</a></H3><PRE>

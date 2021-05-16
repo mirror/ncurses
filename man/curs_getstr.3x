@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.31 2020/10/18 00:27:44 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.32 2021/05/15 23:37:18 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -80,19 +80,29 @@ The resulting value is placed in the
 area pointed to by the character pointer \fIstr\fR,
 followed by a NUL.
 .PP
-\fBwgetnstr\fR reads at most \fIn\fR characters, thus preventing a possible
+The \fBgetnstr\fR function reads
+from the \fIstdscr\fR default window.
+The other functions, such as \fBwgetnstr\fP,
+read from the window given as a parameter.
+.PP
+\fBgetnstr\fR reads at most \fIn\fR characters, thus preventing a possible
 overflow of the input buffer.
 Any attempt to enter more characters (other
 than the terminating newline or carriage return) causes a beep.
 Function
 keys also cause a beep and are ignored.
-The \fBgetnstr\fR function reads
-from the \fIstdscr\fR default window.
 .PP
-The user's erase and kill characters are interpreted.
-If keypad
-mode is on for the window, \fBKEY_LEFT\fR and \fBKEY_BACKSPACE\fR
-are both considered equivalent to the user's kill character.
+The user's \fIerase\fP and \fIkill\fP characters are interpreted:
+.bP
+The \fIerase\fP character (e.g., \fB^H\fP) erases the character
+at the end of the buffer, moving the cursor to the left.
+.IP
+If \fIkeypad\fP mode is on for the window,
+\fBKEY_LEFT\fR and \fBKEY_BACKSPACE\fR
+are both considered equivalent to the user's erase character.
+.bP
+The \fIkill\fP character (e.g., \fB^U\fP) erases the entire buffer,
+leaving the cursor at the beginning of the buffer.
 .PP
 Characters input are echoed only if \fBecho\fR is currently on.
 In that case,
@@ -187,7 +197,37 @@ which the \fBsysconf\fP function may provide.
 If neither \fBLINE_MAX\fP or \fBsysconf\fP is available,
 ncurses uses the POSIX value for \fBLINE_MAX\fP (a 2048 byte limit).
 In either case, it reserves a byte for the terminating NUL.
+.PP
+Although \fBgetnstr\fP is equivalent to a series of calls to \fBgetch\fP,
+it also makes changes to the curses modes to allow simple editing of
+the input buffer:
+.bP
+\fBgetnstr\fP saves the current value of the \fBnl\fP, \fBecho\fP,
+\fBraw\fP and \fBcbreak\fP modes, and sets
+\fBnl\fP,
+\fBnoecho\fP,
+\fBnoraw\fP, and
+\fBcbreak\fP.
+.IP
+\fBgetnstr\fP handles the echoing of characters,
+rather than relying on the caller to set an appropriate mode.
+.bP
+It also obtains the \fIerase\fP and \fIkill\fP characters
+from \fBerasechar\fP and \fBkillchar\fP, respectively.
+.bP
+On return, \fBgetnstr\fP restores the modes to their previous values.
+.PP
+Other implementations differ.
+While they may set the \fIecho\fP mode,
+they do not modify the \fIraw\fP mode, and may take the \fIcbreak\fP
+mode set by the caller into account when deciding whether to handle
+echoing within \fBgetnstr\fP or as a side-effect of the \fBgetch\fP calls.
+Because ncurses sets these modes,
+its signal handlers for INTR and QUIT
+(e.g., \fB^C\fP or \fB^\\\fP) may catch a signal and stop the program,
+where other implementations allow one to enter those characters in the buffer.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_getch\fR(3X),
+\fBcurs_termattrs\fR(3X),
 \fBcurs_variables\fR(3X).
