@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wch.3x,v 1.14 2020/10/17 23:17:05 tom Exp $
+.\" $Id: curs_get_wch.3x,v 1.15 2021/05/22 22:33:19 tom Exp $
 .TH curs_get_wch 3X ""
 .na
 .hy 0
@@ -60,6 +60,7 @@
 .sp
 \fBint unget_wch(const wchar_t \fR\fIwch\fR\fB);\fR
 .SH DESCRIPTION
+.SS wget_wch
 The
 \fBget_wch\fR,
 \fBwget_wch\fR,
@@ -111,7 +112,7 @@ Their names begin with \fBKEY_\fR.
 Other (user-defined) function keys
 which may be defined using \fBdefine_key\fP(3X) have no names,
 but also are expected to have values outside the range of 8-bit characters.
-.PP
+.SS unget_wch
 The
 \fBunget_wch\fR
 function pushes the wide character
@@ -126,6 +127,14 @@ If the program calls
 too many times without an intervening call to
 \fBget_wch\fR,
 the operation may fail.
+.PP
+Unlike \fBungetch\fP and \fBwgetch\fP,
+\fBunget_wch\fP cannot distinguish special characters
+returned by \fBwget_wch\fP from ordinary characters.
+An application can push special keys
+which it may read via \fBwget_wch\fP
+by checking for the \fBKEY_CODE_YES\fR result,
+and using \fBungetch\fP for those special keys.
 .SH NOTES
 The header file
 \fB<curses.h>\fR

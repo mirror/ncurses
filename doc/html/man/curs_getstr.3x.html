@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.32 2021/05/15 23:37:18 tom Exp @
+  * @Id: curs_getstr.3x,v 1.33 2021/05/22 21:36:35 tom Exp @
   * X/Open says also until EOf
   * X/Open says then an EOS is added to the result
   * X/Open doesn't mention n&lt;0
@@ -193,13 +193,25 @@
 
        <STRONG>o</STRONG>   On return, <STRONG>getnstr</STRONG> restores the modes to their previous values.
 
-       Other implementations differ.  While they may set the <EM>echo</EM>  mode,  they
-       do  not  modify  the  <EM>raw</EM> mode, and may take the <EM>cbreak</EM> mode set by the
-       caller into account when deciding  whether  to  handle  echoing  within
-       <STRONG>getnstr</STRONG>  or  as a side-effect of the <STRONG>getch</STRONG> calls.  Because ncurses sets
-       these modes, its signal handlers for INTR and QUIT (e.g., <STRONG>^C</STRONG> or <STRONG>^\</STRONG>) may
-       catch  a signal and stop the program, where other implementations allow
-       one to enter those characters in the buffer.
+       Other implementations differ in their treatment of special characters:
+
+       <STRONG>o</STRONG>   While they may set the <EM>echo</EM> mode, other implementations do not mod-
+           ify  the  <EM>raw</EM> mode, They may take the <EM>cbreak</EM> mode set by the caller
+           into account when deciding whether to handle echoing within <STRONG>getnstr</STRONG>
+           or as a side-effect of the <STRONG>getch</STRONG> calls.
+
+       <STRONG>o</STRONG>   The original ncurses (as pcurses in 1986) set <STRONG>noraw</STRONG> and <STRONG>cbreak</STRONG> when
+           accepting input for <STRONG>getnstr</STRONG>.  That may have been done to make func-
+           tion- and cursor-keys work; it is not necessary with ncurses.
+
+           Since  1995, ncurses has provided signal handlers for INTR and QUIT
+           (e.g., <STRONG>^C</STRONG> or <STRONG>^\</STRONG>).  With the <STRONG>noraw</STRONG> and <STRONG>cbreak</STRONG>  settings,  those  may
+           catch  a  signal  and stop the program, where other implementations
+           allow one to enter those characters in the buffer.
+
+       <STRONG>o</STRONG>   Starting in 2021 (ncurses 6.3), <STRONG>getnstr</STRONG> sets <STRONG>raw</STRONG>, rather than <STRONG>noraw</STRONG>
+           and  <STRONG>cbreak</STRONG> for better compatibility with SVr4-curses, e.g., allow-
+           ing one to enter a <STRONG>^C</STRONG> into the buffer.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>

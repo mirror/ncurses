@@ -32,7 +32,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.46 2021/04/17 17:59:57 tom Exp $
+// $Id: etip.h.in,v 1.47 2021/05/22 23:01:46 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1
@@ -137,6 +137,10 @@ extern "C" {
 #define STATIC_CAST(s) static_cast<s>
 #else
 #define STATIC_CAST(s) (s)
+#endif
+
+#ifndef NCURSES_CXX_IMPEXP 
+#define NCURSES_CXX_IMPEXP  /* nothing */
 #endif
 
 // Forward Declarations

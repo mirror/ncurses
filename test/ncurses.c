@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.525 2021/05/08 19:44:31 tom Exp $
+$Id: ncurses.c,v 1.526 2021/05/22 19:45:57 tom Exp $
 
 ***************************************************************************/
 
@@ -855,7 +855,7 @@ wgetch_test(unsigned level, WINDOW *win, int delay)
 	    setup_getch(win, flags);
 	    wgetch_help(win, flags);
 	} else if (c == 'g') {
-	    waddstr(win, "getstr test: ");
+	    waddstr(win, "wgetnstr test: ");
 	    echo();
 	    c = wgetnstr(win, buf, sizeof(buf) - 1);
 	    noecho();
@@ -1113,7 +1113,7 @@ wget_wch_test(unsigned level, WINDOW *win, int delay)
 	    setup_getch(win, flags);
 	    wgetch_help(win, flags);
 	} else if (c == 'g') {
-	    waddstr(win, "getstr test: ");
+	    waddstr(win, "wgetn_str test: ");
 	    echo();
 	    code = wgetn_wstr(win, wint_buf, BUFSIZ - 1);
 	    noecho();

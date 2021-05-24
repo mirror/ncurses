@@ -1,6 +1,6 @@
 <!-- 
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wch.3x,v 1.14 2020/10/17 23:17:05 tom Exp @
+  * @Id: curs_get_wch.3x,v 1.15 2021/05/22 22:33:19 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -63,6 +63,8 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE><H3><a name="h3-wget_wch">wget_wch</a></H3><PRE>
        The <STRONG>get_wch</STRONG>, <STRONG>wget_wch</STRONG>, <STRONG>mvget_wch</STRONG>, and <STRONG>mvwget_wch</STRONG> functions read a char-
        acter  from  the terminal associated with the current or specified win-
        dow.  In no-delay mode, if no input is waiting, the value  <STRONG>ERR</STRONG>  is  re-
@@ -100,23 +102,30 @@
            <STRONG><A HREF="define_key.3x.html">fine_key(3x)</A></STRONG> have no names, but also are expected  to  have  values
            outside the range of 8-bit characters.
 
+
+</PRE><H3><a name="h3-unget_wch">unget_wch</a></H3><PRE>
        The <STRONG>unget_wch</STRONG> function pushes the wide character <EM>wch</EM> back onto the head
        of the input queue, so the wide character is returned by the next  call
        to  <STRONG>get_wch</STRONG>.  The pushback of one character is guaranteed.  If the pro-
        gram calls <STRONG>unget_wch</STRONG> too many times  without  an  intervening  call  to
        <STRONG>get_wch</STRONG>, the operation may fail.
 
+       Unlike <STRONG>ungetch</STRONG> and <STRONG>wgetch</STRONG>, <STRONG>unget_wch</STRONG> cannot distinguish special charac-
+       ters returned by <STRONG>wget_wch</STRONG> from ordinary characters.  An application can
+       push  special  keys  which it may read via <STRONG>wget_wch</STRONG> by checking for the
+       <STRONG>KEY_CODE_YES</STRONG> result, and using <STRONG>ungetch</STRONG> for those special keys.
+
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes  the header file
+       The header file  <STRONG>&lt;curses.h&gt;</STRONG>  automatically  includes  the  header  file
        <STRONG>&lt;stdio.h&gt;</STRONG>.
 
-       Applications should not define the escape key by itself  as  a  single-
+       Applications  should  not  define the escape key by itself as a single-
        character function.
 
-       When  using  <STRONG>get_wch</STRONG>,  <STRONG>wget_wch</STRONG>, <STRONG>mvget_wch</STRONG>, or <STRONG>mvwget_wch</STRONG>, applications
+       When using <STRONG>get_wch</STRONG>, <STRONG>wget_wch</STRONG>, <STRONG>mvget_wch</STRONG>,  or  <STRONG>mvwget_wch</STRONG>,  applications
        should not use <STRONG>nocbreak</STRONG> mode and <STRONG>echo</STRONG> mode at the same time.  Depending
-       on  the  state of the tty driver when each character is typed, the pro-
+       on the state of the tty driver when each character is typed,  the  pro-
        gram may produce undesirable results.
 
        All functions except <STRONG>wget_wch</STRONG> and <STRONG>unget_wch</STRONG> may be macros.
@@ -124,14 +133,14 @@
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        When <STRONG>get_wch</STRONG>, <STRONG>wget_wch</STRONG>, <STRONG>mvget_wch</STRONG>, and <STRONG>mvwget_wch</STRONG> functions successful-
-       ly  report  the  pressing  of a function key, they return <STRONG>KEY_CODE_YES</STRONG>.
+       ly report the pressing of a function  key,  they  return  <STRONG>KEY_CODE_YES</STRONG>.
        When they successfully report a wide character, they return <STRONG>OK</STRONG>.  Other-
        wise, they return <STRONG>ERR</STRONG>.
 
        Upon successful completion, <STRONG>unget_wch</STRONG> returns <STRONG>OK</STRONG>.  Otherwise, the func-
        tion returns <STRONG>ERR</STRONG>.
 
-       Functions with a "mv" prefix first  perform  a  cursor  movement  using
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
        <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
@@ -148,7 +157,12 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-wget_wch">wget_wch</a></li>
+<li><a href="#h3-unget_wch">unget_wch</a></li>
+</ul>
+</li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>

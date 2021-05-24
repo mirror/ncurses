@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2011,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -42,7 +42,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getstr.c,v 1.35 2020/07/18 20:02:24 tom Exp $")
+MODULE_ID("$Id: lib_getstr.c,v 1.36 2021/05/22 19:57:21 tom Exp $")
 
 /*
  * This wipes out the last character, no matter whether it was a tab, control
@@ -100,8 +100,7 @@ wgetnstr_events(WINDOW *win,
     oldcbreak = sp->_cbreak;
     NCURSES_SP_NAME(nl) (NCURSES_SP_ARG);
     NCURSES_SP_NAME(noecho) (NCURSES_SP_ARG);
-    NCURSES_SP_NAME(noraw) (NCURSES_SP_ARG);
-    NCURSES_SP_NAME(cbreak) (NCURSES_SP_ARG);
+    NCURSES_SP_NAME(raw) (NCURSES_SP_ARG);
 
     erasec = NCURSES_SP_NAME(erasechar) (NCURSES_SP_ARG);
     killc = NCURSES_SP_NAME(killchar) (NCURSES_SP_ARG);

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.32 2021/05/15 23:37:18 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.33 2021/05/22 21:36:35 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -217,15 +217,28 @@ from \fBerasechar\fP and \fBkillchar\fP, respectively.
 .bP
 On return, \fBgetnstr\fP restores the modes to their previous values.
 .PP
-Other implementations differ.
+Other implementations differ in their treatment of special characters:
+.bP
 While they may set the \fIecho\fP mode,
-they do not modify the \fIraw\fP mode, and may take the \fIcbreak\fP
+other implementations do not modify the \fIraw\fP mode,
+They may take the \fIcbreak\fP
 mode set by the caller into account when deciding whether to handle
 echoing within \fBgetnstr\fP or as a side-effect of the \fBgetch\fP calls.
-Because ncurses sets these modes,
-its signal handlers for INTR and QUIT
-(e.g., \fB^C\fP or \fB^\\\fP) may catch a signal and stop the program,
+.bP
+The original ncurses (as pcurses in 1986) set \fBnoraw\fP and \fBcbreak\fP
+when accepting input for \fBgetnstr\fP.
+That may have been done to make function- and cursor-keys work;
+it is not necessary with ncurses.
+.IP
+Since 1995, ncurses has provided signal handlers for INTR and QUIT
+(e.g., \fB^C\fP or \fB^\\\fP).
+With the \fBnoraw\fP and \fBcbreak\fP settings,
+those may catch a signal and stop the program,
 where other implementations allow one to enter those characters in the buffer.
+.bP
+Starting in 2021 (ncurses 6.3), \fBgetnstr\fP sets \fBraw\fP,
+rather than \fBnoraw\fP and \fBcbreak\fP for better compatibility with
+SVr4-curses, e.g., allowing one to enter a \fB^C\fP into the buffer.
 .SH SEE ALSO
 \fBcurses\fR(3X),
 \fBcurs_getch\fR(3X),

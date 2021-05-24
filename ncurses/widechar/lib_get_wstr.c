@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2002-2009,2011 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.16 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.18 2021/05/22 23:49:33 tom Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)
@@ -89,8 +89,8 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
     SCREEN *sp = _nc_screen_of(win);
     TTY buf;
     bool oldnl, oldecho, oldraw, oldcbreak;
-    wint_t erasec;
-    wint_t killc;
+    wchar_t erasec = 0;
+    wchar_t killc = 0;
     wint_t *oldstr = str;
     wint_t *tmpstr = str;
     wint_t ch;
@@ -109,13 +109,12 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
     oldecho = sp->_echo;
     oldraw = sp->_raw;
     oldcbreak = sp->_cbreak;
-    nl();
-    noecho();
-    noraw();
-    cbreak();
+    NCURSES_SP_NAME(nl) (NCURSES_SP_ARG);
+    NCURSES_SP_NAME(noecho) (NCURSES_SP_ARG);
+    NCURSES_SP_NAME(raw) (NCURSES_SP_ARG);
 
-    erasec = (wint_t) erasechar();
-    killc = (wint_t) killchar();
+    NCURSES_SP_NAME(erasewchar) (NCURSES_SP_ARGx &erasec);
+    NCURSES_SP_NAME(killwchar) (NCURSES_SP_ARGx &killc);
 
     getyx(win, y, x);
 
@@ -132,12 +131,12 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
 	    code = KEY_CODE_YES;
 	    ch = KEY_ENTER;
 	}
-	if (ch < KEY_MIN) {
-	    if (ch == erasec) {
+	if (ch != 0 && ch < KEY_MIN) {
+	    if (ch == (wint_t) erasec) {
 		ch = KEY_BACKSPACE;
 		code = KEY_CODE_YES;
 	    }
-	    if (ch == killc) {
+	    if (ch == (wint_t) killc) {
 		ch = KEY_EOL;
 		code = KEY_CODE_YES;
 	    }

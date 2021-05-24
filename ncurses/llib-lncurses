@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019,2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -3616,7 +3616,7 @@ int	_nc_tparm_err;
 #undef _nc_tparm_analyze
 int	_nc_tparm_analyze(
 		const char *string, 
-		char	*p_is_s[9], 
+		char	**p_is_s, 
 		int	*_nc_popcount)
 		{ return(*(int *)0); }
 
@@ -3872,7 +3872,7 @@ chtype	_nc_retrace_chtype(
 
 #undef _nc_trace_ttymode
 char	*_nc_trace_ttymode(
-		struct termios *tty)
+		const struct termios *tty)
 		{ return(*(char **)0); }
 
 #undef _nc_tracebits
