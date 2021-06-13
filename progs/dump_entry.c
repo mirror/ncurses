@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.186 2021/04/18 11:33:08 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.187 2021/06/12 22:06:55 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -549,7 +549,7 @@ fill_spaces(const char *src)
 	if (pass) {
 	    result[d] = '\0';
 	} else {
-	    result = malloc(need + 1);
+	    result = calloc(need + 1, sizeof(char));
 	    if (result == 0)
 		failed("fill_spaces");
 	}

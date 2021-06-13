@@ -52,7 +52,7 @@
  * scroll operation worked, and the refresh() code only had to do a
  * partial repaint.
  *
- * $Id: view.c,v 1.141 2021/05/08 15:57:04 tom Exp $
+ * $Id: view.c,v 1.142 2021/06/12 23:16:31 tom Exp $
  */
 
 #include <test.priv.h>
@@ -257,8 +257,11 @@ read_file(const char *filename)
     }
 
     len = fread(my_blob, sizeof(char), (size_t) sb.st_size, fp);
-    my_blob[sb.st_size] = '\0';
     fclose(fp);
+
+    if (len > (size_t) sb.st_size)
+	len = (size_t) sb.st_size;
+    my_blob[len] = '\0';
 
     for (pass = 0; pass < 2; ++pass) {
 	char *base = my_blob;
@@ -273,12 +276,19 @@ read_file(const char *filename)
 		++k;
 	    }
 	}
+	if (base != (my_blob + j)) {
+	    if (pass)
+		my_vec[k] = base;
+	    ++k;
+	}
 	num_lines = k;
-	if (base != (my_blob + j))
-	    ++num_lines;
-	if (!pass &&
-	    ((my_vec = typeCalloc(char *, (size_t) k + 2)) == 0)) {
-	    failed("cannot allocate line-vector #1");
+	if (pass == 0) {
+	    if (((my_vec = typeCalloc(char *, (size_t) k + 2)) == 0)) {
+		failed("cannot allocate line-vector #1");
+	    }
+	} else {
+	    if (my_vec[0] == NULL)
+		my_vec[0] = my_blob;
 	}
     }
 

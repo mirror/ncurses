@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3671 2021/06/05 23:45:46 tom Exp $
+-- $Id: NEWS,v 1.3673 2021/06/13 00:16:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210612
+	+ fixes for scan-build, valgrind build/testing.
+	+ update config.guess
 
 20210605
 	+ add a summary of ncurses-specific preprocessor symbols to curses.h

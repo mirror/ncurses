@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: move_field.c,v 1.8 2021/03/27 23:41:57 tom Exp $
+ * $Id: move_field.c,v 1.9 2021/06/12 21:30:34 tom Exp $
  *
  * Demonstrate move_field().
  */
@@ -395,6 +395,7 @@ do_demo(FORM *form)
 		refresh();
 	    }
 	}
+	free(old_fields);
 	free(new_fields);
     }
 }

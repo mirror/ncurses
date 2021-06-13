@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.149 2021/04/17 15:24:04 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.150 2021/06/12 21:52:06 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -1513,6 +1513,8 @@ show_databases(void)
 
 #if NO_LEAKS
 #define MAIN_LEAKS() \
+    _nc_free_termtype2(&entries[0].tterm); \
+    _nc_free_termtype2(&entries[1].tterm); \
     free(myargv); \
     free(tfile); \
     free(tname)
