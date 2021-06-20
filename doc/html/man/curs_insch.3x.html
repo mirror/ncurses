@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
   * Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
@@ -34,35 +34,35 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_insch 3x</TITLE>
+<TITLE>curs_insch 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_insch 3x</H1>
+<H1 class="no-header">curs_insch 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_insch.3x.html">curs_insch(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_insch.3x.html">curs_insch(3x)</A></STRONG>
+<B><A HREF="curs_insch.3X.html">curs_insch(3X)</A></B>                                                  <B><A HREF="curs_insch.3X.html">curs_insch(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>insch</STRONG>,  <STRONG>winsch</STRONG>, <STRONG>mvinsch</STRONG>, <STRONG>mvwinsch</STRONG> - insert a character before cursor in
-       a <STRONG>curses</STRONG> window
+       <B>insch</B>,  <B>winsch</B>, <B>mvinsch</B>, <B>mvwinsch</B> - insert a character before cursor in
+       a <B>curses</B> window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>insch(chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>winsch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>insch(chtype</B> <I>ch</I><B>);</B>
+       <B>int</B> <B>winsch(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>mvinsch(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvwinsch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>mvinsch(int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
+       <B>int</B> <B>mvwinsch(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These routines insert the character <EM>ch</EM> before the character  under  the
+       These routines insert the character <I>ch</I> before the character  under  the
        cursor.   All characters to the right of the cursor are moved one space
        to the right, with the possibility of the rightmost  character  on  the
        line  being  lost.   The insertion operation does not change the cursor
@@ -70,13 +70,13 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines that return an integer return  <STRONG>ERR</STRONG>  upon  failure  and  <STRONG>OK</STRONG>
-       (SVr4 specifies only "an integer value other than <STRONG>ERR</STRONG>") upon successful
+       All routines that return an integer return  <B>ERR</B>  upon  failure  and  <B>OK</B>
+       (SVr4 specifies only "an integer value other than <B>ERR</B>") upon successful
        completion,  unless  otherwise   noted   in   the   preceding   routine
        descriptions.
 
        Functions  with  a  "mv"  prefix  first perform a cursor movement using
-       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
+       <B>wmove</B>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
 
@@ -84,7 +84,7 @@
        These  routines  do  not  necessarily  imply  use  of a hardware insert
        character feature.
 
-       Note that <STRONG>insch</STRONG>, <STRONG>mvinsch</STRONG>, and <STRONG>mvwinsch</STRONG> may be macros.
+       Note that <B>insch</B>, <B>mvinsch</B>, and <B>mvwinsch</B> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -92,14 +92,14 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>.
 
        Comparable functions  in  the  wide-character  (ncursesw)  library  are
-       described in <STRONG><A HREF="curs_ins_wch.3x.html">curs_ins_wch(3x)</A></STRONG>.
+       described in <B><A HREF="curs_ins_wch.3X.html">curs_ins_wch(3X)</A></B>.
 
 
 
-                                                                <STRONG><A HREF="curs_insch.3x.html">curs_insch(3x)</A></STRONG>
+                                                                <B><A HREF="curs_insch.3X.html">curs_insch(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insstr.3x,v 1.26 2020/10/18 00:20:36 tom Exp $
+.\" $Id: curs_insstr.3x,v 1.27 2021/06/17 21:26:02 tom Exp $
 .TH curs_insstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -94,7 +94,7 @@ Note that all but \fBwinsnstr\fR may be macros.
 These functions are described in the XSI Curses standard, Issue 4, which adds
 const qualifiers to the arguments.
 .LP
-The Single Unix Specification, Version 2 states that 
+The Single Unix Specification, Version 2 states that
 \fBinsnstr\fP and \fBwinsnstr\fP perform wrapping.
 This is probably an error, since it makes this group of functions inconsistent.
 Also, no implementation of curses documents this inconsistency.

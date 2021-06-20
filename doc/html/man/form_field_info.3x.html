@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,66 +35,66 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_field_info 3x</TITLE>
+<TITLE>form_field_info 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_field_info 3x</H1>
+<H1 class="no-header">form_field_info 3X</H1>
 <PRE>
-<STRONG><A HREF="form_field_info.3x.html">form_field_info(3x)</A></STRONG>                                        <STRONG><A HREF="form_field_info.3x.html">form_field_info(3x)</A></STRONG>
+<B><A HREF="form_field_info.3X.html">form_field_info(3X)</A></B>                                        <B><A HREF="form_field_info.3X.html">form_field_info(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>dynamic_field_info</STRONG>, <STRONG>field_info</STRONG> - retrieve field characteristics
+       <B>dynamic_field_info</B>, <B>field_info</B> - retrieve field characteristics
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>field_info(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG>
-                      <STRONG>int</STRONG> <STRONG>*</STRONG><EM>rows</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>cols</EM><STRONG>,</STRONG>
-                      <STRONG>int</STRONG> <STRONG>*</STRONG><EM>frow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>fcol</EM><STRONG>,</STRONG>
-                      <STRONG>int</STRONG> <STRONG>*</STRONG><EM>nrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>nbuf</EM><STRONG>);</STRONG>
+       <B>int</B> <B>field_info(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>,</B>
+                      <B>int</B> <B>*</B><I>rows</I><B>,</B> <B>int</B> <B>*</B><I>cols</I><B>,</B>
+                      <B>int</B> <B>*</B><I>frow</I><B>,</B> <B>int</B> <B>*</B><I>fcol</I><B>,</B>
+                      <B>int</B> <B>*</B><I>nrow</I><B>,</B> <B>int</B> <B>*</B><I>nbuf</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>dynamic_field_info(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG>
-                              <STRONG>int</STRONG> <STRONG>*</STRONG><EM>rows</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>cols</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>max</EM><STRONG>);</STRONG>
+       <B>int</B> <B>dynamic_field_info(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>,</B>
+                              <B>int</B> <B>*</B><I>rows</I><B>,</B> <B>int</B> <B>*</B><I>cols</I><B>,</B> <B>int</B> <B>*</B><I>max</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function  <STRONG>field_info</STRONG> returns the sizes and other attributes passed
+       The  function  <B>field_info</B> returns the sizes and other attributes passed
        in to the field at its creation  time.   The  attributes  are:  height,
        width,  row  of  upper-left corner, column of upper-left corner, number
        off-screen rows, and number of working buffers.
 
-       The function <STRONG>dynamic_field_info</STRONG> returns the actual size of  the  field,
+       The function <B>dynamic_field_info</B> returns the actual size of  the  field,
        and  its  maximum  possible  size.  If the field has no size limit, the
        location addressed by the third argument will be set to 0.  A field can
-       be made dynamic by turning off the <STRONG>O_STATIC</STRONG> option with <STRONG>field_opts_off</STRONG>.
+       be made dynamic by turning off the <B>O_STATIC</B> option with <B>field_opts_off</B>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>  and  related  pages  whose names begin "form_" for detailed
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>  and  related  pages  whose names begin "form_" for detailed
        descriptions of the entry points.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -112,7 +112,7 @@
 
 
 
-                                                           <STRONG><A HREF="form_field_info.3x.html">form_field_info(3x)</A></STRONG>
+                                                           <B><A HREF="form_field_info.3X.html">form_field_info(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

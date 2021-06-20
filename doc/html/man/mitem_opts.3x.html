@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,66 +35,66 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>mitem_opts 3x</TITLE>
+<TITLE>mitem_opts 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">mitem_opts 3x</H1>
+<H1 class="no-header">mitem_opts 3X</H1>
 <PRE>
-<STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>                                                  <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+<B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>                                                  <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_item_opts</STRONG>,  <STRONG>item_opts_on</STRONG>,  <STRONG>item_opts_off</STRONG>,  <STRONG>item_opts</STRONG>  - set and get
+       <B>set_item_opts</B>,  <B>item_opts_on</B>,  <B>item_opts_off</B>,  <B>item_opts</B>  - set and get
        menu item options
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_item_opts(ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>,</STRONG> <STRONG>Item_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>Item_Options</STRONG> <STRONG>item_opts(const</STRONG> <STRONG>ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_item_opts(ITEM</B> <B>*</B><I>item</I><B>,</B> <B>Item_Options</B> <I>opts</I><B>);</B>
+       <B>Item_Options</B> <B>item_opts(const</B> <B>ITEM</B> <B>*</B><I>item</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>item_opts_on(ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>,</STRONG> <STRONG>Item_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>item_opts_off(ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>,</STRONG> <STRONG>Item_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <B>int</B> <B>item_opts_on(ITEM</B> <B>*</B><I>item</I><B>,</B> <B>Item_Options</B> <I>opts</I><B>);</B>
+       <B>int</B> <B>item_opts_off(ITEM</B> <B>*</B><I>item</I><B>,</B> <B>Item_Options</B> <I>opts</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>set_item_opts</STRONG> sets all the given item's option bits  (menu
+       The function <B>set_item_opts</B> sets all the given item's option bits  (menu
        option bits may be logically-OR'ed together).
 
-       The  function  <STRONG>item_opts_on</STRONG>  turns on the given option bits, and leaves
+       The  function  <B>item_opts_on</B>  turns on the given option bits, and leaves
        others alone.
 
-       The function <STRONG>item_opts_off</STRONG> turns off the given option bits, and  leaves
+       The function <B>item_opts_off</B> turns off the given option bits, and  leaves
        others alone.
 
-       The function <STRONG>item_opts</STRONG> returns the item's current option bits.
+       The function <B>item_opts</B> returns the item's current option bits.
 
-       There  is only one defined option bit mask, <STRONG>O_SELECTABLE</STRONG>.  When this is
+       There  is only one defined option bit mask, <B>O_SELECTABLE</B>.  When this is
        on, the item may be  selected  during  menu  processing.   This  option
        defaults to on.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except for <STRONG>item_opts</STRONG>, each routine returns one of the following:
+       Except for <B>item_opts</B>, each routine returns one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -108,7 +108,7 @@
 
 
 
-                                                                <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+                                                                <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,66 +35,66 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_spacing 3x</TITLE>
+<TITLE>menu_spacing 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_spacing 3x</H1>
+<H1 class="no-header">menu_spacing 3X</H1>
 <PRE>
-<STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3x)</A></STRONG>                                              <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3x)</A></STRONG>
+<B><A HREF="menu_spacing.3X.html">menu_spacing(3X)</A></B>                                              <B><A HREF="menu_spacing.3X.html">menu_spacing(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_menu_spacing</STRONG>,  <STRONG>menu_spacing</STRONG>  -  set  and  get  spacing between menu
+       <B>set_menu_spacing</B>,  <B>menu_spacing</B>  -  set  and  get  spacing between menu
        items.
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_menu_spacing(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG>
-                            <STRONG>int</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>description</EM><STRONG>,</STRONG>
-                            <STRONG>int</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>rows</EM><STRONG>,</STRONG>
-                            <STRONG>int</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>columns</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>menu_spacing(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG>
-                        <STRONG>int*</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>description</EM><STRONG>,</STRONG>
-                        <STRONG>int*</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>rows</EM><STRONG>,</STRONG>
-                        <STRONG>int*</STRONG> <EM>spc</EM><STRONG>_</STRONG><EM>columns</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_menu_spacing(MENU</B> <B>*</B><I>menu</I><B>,</B>
+                            <B>int</B> <I>spc</I><B>_</B><I>description</I><B>,</B>
+                            <B>int</B> <I>spc</I><B>_</B><I>rows</I><B>,</B>
+                            <B>int</B> <I>spc</I><B>_</B><I>columns</I><B>);</B>
+       <B>int</B> <B>menu_spacing(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>,</B>
+                        <B>int*</B> <I>spc</I><B>_</B><I>description</I><B>,</B>
+                        <B>int*</B> <I>spc</I><B>_</B><I>rows</I><B>,</B>
+                        <B>int*</B> <I>spc</I><B>_</B><I>columns</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>set_menu_spacing</STRONG> sets  the  spacing  information  for  the
-       menu.   Its  parameter  <STRONG>spc_description</STRONG>  controls  the number of spaces
+       The function <B>set_menu_spacing</B> sets  the  spacing  information  for  the
+       menu.   Its  parameter  <B>spc_description</B>  controls  the number of spaces
        between an item name and an item description.  It must  not  be  larger
-       than  <STRONG>TABSIZE</STRONG>.  The menu system puts in the middle of this spacing area
+       than  <B>TABSIZE</B>.  The menu system puts in the middle of this spacing area
        the pad character.  The remaining parts are filled  with  spaces.   The
-       <STRONG>spc_rows</STRONG>  parameter  controls  the  number of rows that are used for an
+       <B>spc_rows</B>  parameter  controls  the  number of rows that are used for an
        item.  It must not be larger than 3.  The menu system inserts the blank
        lines  between item rows, these lines will contain the pad character in
-       the appropriate positions.   The  <STRONG>spc_columns</STRONG>  parameter  controls  the
+       the appropriate positions.   The  <B>spc_columns</B>  parameter  controls  the
        number  of blanks between columns of items.  It must not be larger than
-       <STRONG>TABSIZE</STRONG>.  A value of 0 for all the spacing values resets  them  to  the
+       <B>TABSIZE</B>.  A value of 0 for all the spacing values resets  them  to  the
        default, which is 1 for all of them.
-       The  function  <STRONG>menu_spacing</STRONG>  passes back the spacing info for the menu.
+       The  function  <B>menu_spacing</B>  passes back the spacing info for the menu.
        If a pointer is NULL, this specific info is simply not returned.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Both routines return <STRONG>E_OK</STRONG>  on  success.   <STRONG>set_menu_spacing</STRONG>  may  return
-       <STRONG>E_POSTED</STRONG> if the menu is posted, or <STRONG>E_BAD_ARGUMENT</STRONG> if one of the spacing
+       Both routines return <B>E_OK</B>  on  success.   <B>set_menu_spacing</B>  may  return
+       <B>E_POSTED</B> if the menu is posted, or <B>E_BAD_ARGUMENT</B> if one of the spacing
        values is out of range.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -109,7 +109,7 @@
 
 
 
-                                                              <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3x)</A></STRONG>
+                                                              <B><A HREF="menu_spacing.3X.html">menu_spacing(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

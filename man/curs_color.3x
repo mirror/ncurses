@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.63 2020/10/24 09:35:23 tom Exp $
+.\" $Id: curs_color.3x,v 1.64 2021/06/17 21:30:22 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -422,7 +422,7 @@ if \fBstart_color\fP was not called.
 SVr4 does much the same, except that
 it returns \fBERR\fP from \fBpair_content\fP if the pair was not initialized
 using \fBinit_pairs\fP
-and 
+and
 it returns \fBERR\fP from \fBcolor_content\fP
 if the terminal does not support changing colors.
 .IP

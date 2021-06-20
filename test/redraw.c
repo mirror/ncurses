@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: redraw.c,v 1.12 2021/03/27 23:41:21 tom Exp $
+ * $Id: redraw.c,v 1.13 2021/06/17 21:26:02 tom Exp $
  *
  * Demonstrate the redrawwin() and wredrawln() functions.
  * Thomas Dickey - 2006/11/4
@@ -135,7 +135,7 @@ test_redraw(WINDOW *win)
 	    /*
 	     * For a shell command, we can work around the problem noted above
 	     * using mvcur().  It is ifdef'd for NCURSES, since X/Open does
-	     * not define the case where the old location is unknown. 
+	     * not define the case where the old location is unknown.
 	     */
 	    IGNORE_RC(system("date"));
 	    mvcur(-1, -1, y, x);

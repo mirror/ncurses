@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,44 +35,44 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_field_opts 3x</TITLE>
+<TITLE>form_field_opts 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_field_opts 3x</H1>
+<H1 class="no-header">form_field_opts 3X</H1>
 <PRE>
-<STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>                                        <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+<B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>                                        <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_field_opts</STRONG>, <STRONG>field_opts_on</STRONG>, <STRONG>field_opts_off</STRONG>, <STRONG>field_opts</STRONG> - set and get
+       <B>set_field_opts</B>, <B>field_opts_on</B>, <B>field_opts_off</B>, <B>field_opts</B> - set and get
        field options
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_field_opts(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>Field_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>Field_Options</STRONG> <STRONG>field_opts(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_field_opts(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>Field_Options</B> <I>opts</I><B>);</B>
+       <B>Field_Options</B> <B>field_opts(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>field_opts_on(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>Field_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>field_opts_off(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>Field_Options</STRONG> <EM>opts</EM><STRONG>);</STRONG>
+       <B>int</B> <B>field_opts_on(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>Field_Options</B> <I>opts</I><B>);</B>
+       <B>int</B> <B>field_opts_off(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>Field_Options</B> <I>opts</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>set_field_opts</STRONG> sets all  the  given  field's  option  bits
+       The function <B>set_field_opts</B> sets all  the  given  field's  option  bits
        (field option bits may be logically-OR'ed together).
 
-       The  function  <STRONG>field_opts_on</STRONG> turns on the given option bits, and leaves
+       The  function  <B>field_opts_on</B> turns on the given option bits, and leaves
        others alone.
 
-       The function <STRONG>field_opts_off</STRONG> turns off the given option bits, and leaves
+       The function <B>field_opts_off</B> turns off the given option bits, and leaves
        others alone.
 
-       The function <STRONG>field_opts</STRONG> returns the field's current option bits.
+       The function <B>field_opts</B> returns the field's current option bits.
 
        The following standard options are defined (all are on by default):
 
@@ -130,33 +130,33 @@
             to maintain consistent state.
 
        O_INPUT_FIELD
-            The <STRONG>set_max_field</STRONG> function checks for this extension, which allows
+            The <B>set_max_field</B> function checks for this extension, which allows
             a dynamic field to shrink if the new limit  is  smaller  than  the
             current field size.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except for <STRONG>field_opts</STRONG>, each routine returns one of the following:
+       Except for <B>field_opts</B>, each routine returns one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_CURRENT</STRONG>
+       <B>E_CURRENT</B>
             The field is the current field.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.  <STRONG><A HREF="form_field_just.3x.html">form_field_just(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="form.3X.html">form(3X)</A></B>.  <B><A HREF="form_field_just.3X.html">form_field_just(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -170,7 +170,7 @@
 
 
 
-                                                           <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+                                                           <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

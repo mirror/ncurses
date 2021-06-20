@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.37 2020/12/30 18:37:43 tom Exp $
+.\" $Id: curs_slk.3x,v 1.38 2021/06/17 21:26:02 tom Exp $
 .TH curs_slk 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -194,7 +194,7 @@ It has an effect only
 if soft labels are simulated on the bottom line of the screen.
 .PP
 Because \fBslk_color\fR accepts only \fBshort\fP (signed 16-bit integer) values,
-this implementation provides 
+this implementation provides
 \fBextended_slk_color\fR which accepts an integer value, e.g., 32-bits.
 .
 .SH RETURN VALUE
@@ -272,7 +272,7 @@ X/Open Curses added these:
 .PP
 X/Open Curses documents the \fIopts\fP argument as reserved for future use,
 saying that it must be null.
-This implementation 
+This implementation
 uses that parameter in ABI 6 for the functions which have a color-pair
 parameter to support extended color pairs.
 .PP

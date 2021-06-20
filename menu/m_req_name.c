@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_req_name.c,v 1.26 2021/03/27 23:46:29 tom Exp $")
+MODULE_ID("$Id: m_req_name.c,v 1.27 2021/06/17 21:11:08 tom Exp $")
 
 #define DATA(s) { s }
 
@@ -66,9 +66,9 @@ static const char request_names[MAX_MENU_COMMAND - MIN_MENU_COMMAND + 1][14] =
 #define A_SIZE (sizeof(request_names)/sizeof(request_names[0]))
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnmenu  
+|   Facility      :  libnmenu
 |   Function      :  const char * menu_request_name (int request);
-|   
+|
 |   Description   :  Get the external name of a menu request.
 |
 |   Return Values :  Pointer to name      - on success
@@ -88,9 +88,9 @@ menu_request_name(int request)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnmenu  
+|   Facility      :  libnmenu
 |   Function      :  int menu_request_by_name (const char *str);
-|   
+|
 |   Description   :  Search for a request with this name.
 |
 |   Return Values :  Request Id       - on success

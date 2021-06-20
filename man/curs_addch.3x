@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.55 2020/10/24 09:12:31 tom Exp $
+.\" $Id: curs_addch.3x,v 1.56 2021/06/17 21:30:22 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -243,7 +243,7 @@ to light.
 The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
 .LP
 The \fIdisplayed\fP values for the \fIACS_\fP and \fIWACS_\fP constants
-depend on 
+depend on
 .bP
 the library configuration, i.e., \fBncurses\fP versus \fBncursesw\fP,
 where the latter is capable of displaying Unicode while the former is not, and

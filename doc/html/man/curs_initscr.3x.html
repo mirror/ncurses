@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018,2020 Thomas E. Dickey                                     *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
@@ -34,130 +34,130 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_initscr 3x</TITLE>
+<TITLE>curs_initscr 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_initscr 3x</H1>
+<H1 class="no-header">curs_initscr 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>                                              <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
+<B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>                                              <B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>initscr</STRONG>, <STRONG>newterm</STRONG>, <STRONG>endwin</STRONG>, <STRONG>isendwin</STRONG>, <STRONG>set_term</STRONG>, <STRONG>delscreen</STRONG> - <STRONG>curses</STRONG> screen
+       <B>initscr</B>, <B>newterm</B>, <B>endwin</B>, <B>isendwin</B>, <B>set_term</B>, <B>delscreen</B> - <B>curses</B> screen
        initialization and manipulation routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>WINDOW</STRONG> <STRONG>*initscr(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>endwin(void);</STRONG>
+       <B>WINDOW</B> <B>*initscr(void);</B>
+       <B>int</B> <B>endwin(void);</B>
 
-       <STRONG>bool</STRONG> <STRONG>isendwin(void);</STRONG>
+       <B>bool</B> <B>isendwin(void);</B>
 
-       <STRONG>SCREEN</STRONG> <STRONG>*newterm(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>type</EM><STRONG>,</STRONG> <STRONG>FILE</STRONG> <STRONG>*</STRONG><EM>outfd</EM><STRONG>,</STRONG> <STRONG>FILE</STRONG> <STRONG>*</STRONG><EM>infd</EM><STRONG>);</STRONG>
-       <STRONG>SCREEN</STRONG> <STRONG>*set_term(SCREEN</STRONG> <STRONG>*</STRONG><EM>new</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>delscreen(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>SCREEN</B> <B>*newterm(const</B> <B>char</B> <B>*</B><I>type</I><B>,</B> <B>FILE</B> <B>*</B><I>outfd</I><B>,</B> <B>FILE</B> <B>*</B><I>infd</I><B>);</B>
+       <B>SCREEN</B> <B>*set_term(SCREEN</B> <B>*</B><I>new</I><B>);</B>
+       <B>void</B> <B>delscreen(SCREEN*</B> <I>sp</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-initscr">initscr</a></H3><PRE>
-       <STRONG>initscr</STRONG> is normally the first <STRONG>curses</STRONG> routine to call when  initializing
+       <B>initscr</B> is normally the first <B>curses</B> routine to call when  initializing
        a  program.   A few special routines sometimes need to be called before
-       it; these are <STRONG><A HREF="curs_slk.3x.html">slk_init(3x)</A></STRONG>, <STRONG>filter</STRONG>, <STRONG>ripoffline</STRONG>, <STRONG>use_env</STRONG>.  For multiple-
-       terminal applications, <STRONG>newterm</STRONG> may be called before <STRONG>initscr</STRONG>.
+       it; these are <B><A HREF="curs_slk.3X.html">slk_init(3X)</A></B>, <B>filter</B>, <B>ripoffline</B>, <B>use_env</B>.  For multiple-
+       terminal applications, <B>newterm</B> may be called before <B>initscr</B>.
 
-       The initscr code determines the terminal type and initializes all <STRONG>curs-</STRONG>
-       <STRONG>es</STRONG> data structures.  <STRONG>initscr</STRONG> also causes the first call to  <STRONG><A HREF="curscurs_refresh.3x.html">refresh(3x)</A></STRONG>
-       to  clear  the  screen.  If errors occur, <STRONG>initscr</STRONG> writes an appropriate
+       The initscr code determines the terminal type and initializes all <B>curs-</B>
+       <B>es</B> data structures.  <B>initscr</B> also causes the first call to  <B><A HREF="curscurs_refresh.3X.html">refresh(3X)</A></B>
+       to  clear  the  screen.  If errors occur, <B>initscr</B> writes an appropriate
        error message to standard error and exits; otherwise, a pointer is  re-
-       turned to <STRONG>stdscr</STRONG>.
+       turned to <B>stdscr</B>.
 
 
 </PRE><H3><a name="h3-newterm">newterm</a></H3><PRE>
-       A program that outputs to more than one terminal should use the <STRONG>newterm</STRONG>
-       routine for each terminal instead of <STRONG>initscr</STRONG>.  A program that needs  to
+       A program that outputs to more than one terminal should use the <B>newterm</B>
+       routine for each terminal instead of <B>initscr</B>.  A program that needs  to
        inspect capabilities, so it can continue to run in a line-oriented mode
        if the terminal cannot support a screen-oriented  program,  would  also
-       use <STRONG>newterm</STRONG>.  The routine <STRONG>newterm</STRONG> should be called once for each termi-
-       nal.  It returns a variable of type <STRONG>SCREEN</STRONG> <STRONG>*</STRONG> which should be saved as a
-       reference to that terminal.  <STRONG>newterm</STRONG>'s arguments are
+       use <B>newterm</B>.  The routine <B>newterm</B> should be called once for each termi-
+       nal.  It returns a variable of type <B>SCREEN</B> <B>*</B> which should be saved as a
+       reference to that terminal.  <B>newterm</B>'s arguments are
 
-       <STRONG>o</STRONG>   the <EM>type</EM> of the terminal to be used in place of <STRONG>$TERM</STRONG>,
+       <B>o</B>   the <I>type</I> of the terminal to be used in place of <B>$TERM</B>,
 
-       <STRONG>o</STRONG>   a file pointer for output to the terminal, and
+       <B>o</B>   a file pointer for output to the terminal, and
 
-       <STRONG>o</STRONG>   another file pointer for input from the terminal
+       <B>o</B>   another file pointer for input from the terminal
 
-       If the <EM>type</EM> parameter is <STRONG>NULL</STRONG>, <STRONG>$TERM</STRONG> will be used.
+       If the <I>type</I> parameter is <B>NULL</B>, <B>$TERM</B> will be used.
 
 
 </PRE><H3><a name="h3-endwin">endwin</a></H3><PRE>
-       The  program  must also call <STRONG>endwin</STRONG> for each terminal being used before
-       exiting from <STRONG>curses</STRONG>.  If <STRONG>newterm</STRONG> is called more than once for the  same
+       The  program  must also call <B>endwin</B> for each terminal being used before
+       exiting from <B>curses</B>.  If <B>newterm</B> is called more than once for the  same
        terminal, the first terminal referred to must be the last one for which
-       <STRONG>endwin</STRONG> is called.
+       <B>endwin</B> is called.
 
-       A program should always call <STRONG>endwin</STRONG> before  exiting  or  escaping  from
-       <STRONG>curses</STRONG> mode temporarily.  This routine
+       A program should always call <B>endwin</B> before  exiting  or  escaping  from
+       <B>curses</B> mode temporarily.  This routine
 
-       <STRONG>o</STRONG>   resets colors to correspond with the default color pair 0,
+       <B>o</B>   resets colors to correspond with the default color pair 0,
 
-       <STRONG>o</STRONG>   moves the cursor to the lower left-hand corner of the screen,
+       <B>o</B>   moves the cursor to the lower left-hand corner of the screen,
 
-       <STRONG>o</STRONG>   clears  the  remainder of the line so that it uses the default col-
+       <B>o</B>   clears  the  remainder of the line so that it uses the default col-
            ors,
 
-       <STRONG>o</STRONG>   sets the cursor to normal visibility (see <STRONG><A HREF="curs_kernel.3x.html">curs_set(3x)</A></STRONG>),
+       <B>o</B>   sets the cursor to normal visibility (see <B><A HREF="curs_kernel.3X.html">curs_set(3X)</A></B>),
 
-       <STRONG>o</STRONG>   stops cursor-addressing mode using the <EM>exit</EM><STRONG>_</STRONG><EM>ca</EM><STRONG>_</STRONG><EM>mode</EM> terminal  capa-
+       <B>o</B>   stops cursor-addressing mode using the <I>exit</I><B>_</B><I>ca</I><B>_</B><I>mode</I> terminal  capa-
            bility,
 
-       <STRONG>o</STRONG>   restores tty modes (see <STRONG><A HREF="curs_kernel.3x.html">reset_shell_mode(3x)</A></STRONG>).
+       <B>o</B>   restores tty modes (see <B><A HREF="curs_kernel.3X.html">reset_shell_mode(3X)</A></B>).
 
-       Calling <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or <STRONG><A HREF="curs_refresh.3x.html">doupdate(3x)</A></STRONG> after a temporary escape causes the
+       Calling <B><A HREF="curs_refresh.3X.html">refresh(3X)</A></B> or <B><A HREF="curs_refresh.3X.html">doupdate(3X)</A></B> after a temporary escape causes the
        program to resume visual mode.
 
 
 </PRE><H3><a name="h3-isendwin">isendwin</a></H3><PRE>
-       The <STRONG>isendwin</STRONG> routine returns <STRONG>TRUE</STRONG> if <STRONG>endwin</STRONG> has been called without any
-       subsequent calls to <STRONG>wrefresh</STRONG>, and <STRONG>FALSE</STRONG> otherwise.
+       The <B>isendwin</B> routine returns <B>TRUE</B> if <B>endwin</B> has been called without any
+       subsequent calls to <B>wrefresh</B>, and <B>FALSE</B> otherwise.
 
 
 </PRE><H3><a name="h3-set_term">set_term</a></H3><PRE>
-       The  <STRONG>set_term</STRONG>  routine  is  used to switch between different terminals.
-       The screen reference <STRONG>new</STRONG> becomes the new current terminal.  The  previ-
+       The  <B>set_term</B>  routine  is  used to switch between different terminals.
+       The screen reference <B>new</B> becomes the new current terminal.  The  previ-
        ous  terminal  is  returned  by  the routine.  This is the only routine
-       which manipulates <STRONG>SCREEN</STRONG> pointers; all other routines affect  only  the
+       which manipulates <B>SCREEN</B> pointers; all other routines affect  only  the
        current terminal.
 
 
 </PRE><H3><a name="h3-delscreen">delscreen</a></H3><PRE>
-       The  <STRONG>delscreen</STRONG>  routine  frees  storage associated with the <STRONG>SCREEN</STRONG> data
-       structure.  The <STRONG>endwin</STRONG> routine does not do this, so <STRONG>delscreen</STRONG> should be
-       called after <STRONG>endwin</STRONG> if a particular <STRONG>SCREEN</STRONG> is no longer needed.
+       The  <B>delscreen</B>  routine  frees  storage associated with the <B>SCREEN</B> data
+       structure.  The <B>endwin</B> routine does not do this, so <B>delscreen</B> should be
+       called after <B>endwin</B> if a particular <B>SCREEN</B> is no longer needed.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>endwin</STRONG> returns the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> upon successful com-
+       <B>endwin</B> returns the integer <B>ERR</B> upon failure and <B>OK</B> upon successful com-
        pletion.
 
-       Routines that return pointers always return <STRONG>NULL</STRONG> on error.
+       Routines that return pointers always return <B>NULL</B> on error.
 
        X/Open defines no error conditions.  In this implementation
 
-       <STRONG>o</STRONG>   <STRONG>endwin</STRONG> returns an error if the terminal was not initialized.
+       <B>o</B>   <B>endwin</B> returns an error if the terminal was not initialized.
 
-       <STRONG>o</STRONG>   <STRONG>newterm</STRONG> returns an error if it cannot allocate the data  structures
+       <B>o</B>   <B>newterm</B> returns an error if it cannot allocate the data  structures
            for  the  screen,  or  for the top-level windows within the screen,
-           i.e., <STRONG>curscr</STRONG>, <STRONG>newscr</STRONG>, or <STRONG>stdscr</STRONG>.
+           i.e., <B>curscr</B>, <B>newscr</B>, or <B>stdscr</B>.
 
-       <STRONG>o</STRONG>   <STRONG>set_term</STRONG> returns no error.
+       <B>o</B>   <B>set_term</B> returns no error.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -166,88 +166,88 @@
 
 
 </PRE><H3><a name="h3-Differences">Differences</a></H3><PRE>
-       X/Open  specifies that portable applications must not call <STRONG>initscr</STRONG> more
+       X/Open  specifies that portable applications must not call <B>initscr</B> more
        than once:
 
-       <STRONG>o</STRONG>   The portable way to use <STRONG>initscr</STRONG> is once only,  using  <STRONG>refresh</STRONG>  (see
-           <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>) to restore the screen after <STRONG>endwin</STRONG>.
+       <B>o</B>   The portable way to use <B>initscr</B> is once only,  using  <B>refresh</B>  (see
+           <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>) to restore the screen after <B>endwin</B>.
 
-       <STRONG>o</STRONG>   This implementation allows using <STRONG>initscr</STRONG> after <STRONG>endwin</STRONG>.
+       <B>o</B>   This implementation allows using <B>initscr</B> after <B>endwin</B>.
 
        Old versions of curses, e.g., BSD 4.4, may have returned a null pointer
-       from <STRONG>initscr</STRONG> when an error is detected, rather  than  exiting.   It  is
-       safe but redundant to check the return value of <STRONG>initscr</STRONG> in XSI Curses.
+       from <B>initscr</B> when an error is detected, rather  than  exiting.   It  is
+       safe but redundant to check the return value of <B>initscr</B> in XSI Curses.
 
 
 </PRE><H3><a name="h3-Unset-TERM-Variable">Unset TERM Variable</a></H3><PRE>
-       If  the  TERM variable is missing or empty, <STRONG>initscr</STRONG> uses the value "un-
-       known", which normally corresponds to a terminal entry with the <EM>generic</EM>
-       (<EM>gn</EM>)  capability.   Generic  entries  are  detected  by  <STRONG>setupterm</STRONG> (see
-       <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>) and cannot be used for full-screen operation.  Other
+       If  the  TERM variable is missing or empty, <B>initscr</B> uses the value "un-
+       known", which normally corresponds to a terminal entry with the <I>generic</I>
+       (<I>gn</I>)  capability.   Generic  entries  are  detected  by  <B>setupterm</B> (see
+       <B><A HREF="curs_terminfo.3X.html">curs_terminfo(3X)</A></B>) and cannot be used for full-screen operation.  Other
        implementations may handle a missing/empty TERM variable differently.
 
 
 </PRE><H3><a name="h3-Signal-Handlers">Signal Handlers</a></H3><PRE>
        Quoting from X/Open Curses, section 3.1.1:
 
-            <EM>Curses</EM>  <EM>implementations</EM>  <EM>may</EM>  <EM>provide</EM>  <EM>for</EM> <EM>special</EM> <EM>handling</EM> <EM>of</EM> <EM>the</EM>
-            <STRONG>SIGINT</STRONG><EM>,</EM> <STRONG>SIGQUIT</STRONG>  <EM>and</EM>  <STRONG>SIGTSTP</STRONG>  <EM>signals</EM>  <EM>if</EM>  <EM>their</EM>  <EM>disposition</EM>  <EM>is</EM>
-            <STRONG>SIG_DFL</STRONG> <EM>at</EM> <EM>the</EM> <EM>time</EM> <STRONG>initscr</STRONG> <EM>is</EM> <EM>called</EM> <STRONG>...</STRONG>
+            <I>Curses</I>  <I>implementations</I>  <I>may</I>  <I>provide</I>  <I>for</I> <I>special</I> <I>handling</I> <I>of</I> <I>the</I>
+            <B>SIGINT</B><I>,</I> <B>SIGQUIT</B>  <I>and</I>  <B>SIGTSTP</B>  <I>signals</I>  <I>if</I>  <I>their</I>  <I>disposition</I>  <I>is</I>
+            <B>SIG_DFL</B> <I>at</I> <I>the</I> <I>time</I> <B>initscr</B> <I>is</I> <I>called</I> <B>...</B>
 
-            <EM>Any</EM>  <EM>special</EM>  <EM>handling</EM>  <EM>for</EM> <EM>these</EM> <EM>signals</EM> <EM>may</EM> <EM>remain</EM> <EM>in</EM> <EM>effect</EM> <EM>for</EM>
-            <EM>the</EM> <EM>life</EM> <EM>of</EM> <EM>the</EM> <EM>process</EM> <EM>or</EM> <EM>until</EM> <EM>the</EM> <EM>process</EM> <EM>changes</EM> <EM>the</EM>  <EM>disposi-</EM>
-            <EM>tion</EM> <EM>of</EM> <EM>the</EM> <EM>signal.</EM>
+            <I>Any</I>  <I>special</I>  <I>handling</I>  <I>for</I> <I>these</I> <I>signals</I> <I>may</I> <I>remain</I> <I>in</I> <I>effect</I> <I>for</I>
+            <I>the</I> <I>life</I> <I>of</I> <I>the</I> <I>process</I> <I>or</I> <I>until</I> <I>the</I> <I>process</I> <I>changes</I> <I>the</I>  <I>disposi-</I>
+            <I>tion</I> <I>of</I> <I>the</I> <I>signal.</I>
 
-            <EM>None</EM>  <EM>of</EM> <EM>the</EM> <EM>Curses</EM> <EM>functions</EM> <EM>are</EM> <EM>required</EM> <EM>to</EM> <EM>be</EM> <EM>safe</EM> <EM>with</EM> <EM>respect</EM>
-            <EM>to</EM> <EM>signals</EM> ...
+            <I>None</I>  <I>of</I> <I>the</I> <I>Curses</I> <I>functions</I> <I>are</I> <I>required</I> <I>to</I> <I>be</I> <I>safe</I> <I>with</I> <I>respect</I>
+            <I>to</I> <I>signals</I> ...
 
        This implementation establishes signal handlers during  initialization,
-       e.g., <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  Applications which must handle these signals
-       should set up the corresponding handlers  <EM>after</EM>  initializing  the  li-
+       e.g., <B>initscr</B> or <B>newterm</B>.  Applications which must handle these signals
+       should set up the corresponding handlers  <I>after</I>  initializing  the  li-
        brary:
 
-       <STRONG>SIGINT</STRONG>
-            The  handler  <EM>attempts</EM> to cleanup the screen on exit.  Although it
-            <EM>usually</EM> works as expected, there are limitations:
+       <B>SIGINT</B>
+            The  handler  <I>attempts</I> to cleanup the screen on exit.  Although it
+            <I>usually</I> works as expected, there are limitations:
 
-            <STRONG>o</STRONG>   Walking the <STRONG>SCREEN</STRONG> list is unsafe, since all  list  management
+            <B>o</B>   Walking the <B>SCREEN</B> list is unsafe, since all  list  management
                 is done without any signal blocking.
 
-            <STRONG>o</STRONG>   On systems which have <STRONG>REENTRANT</STRONG> turned on, <STRONG>set_term</STRONG> uses func-
+            <B>o</B>   On systems which have <B>REENTRANT</B> turned on, <B>set_term</B> uses func-
                 tions which could deadlock or misbehave in other ways.
 
-            <STRONG>o</STRONG>   <STRONG>endwin</STRONG> calls other functions, many of which use stdio or other
+            <B>o</B>   <B>endwin</B> calls other functions, many of which use stdio or other
                 library functions which are clearly unsafe.
 
-       <STRONG>SIGTERM</STRONG>
-            This  uses  the same handler as <STRONG>SIGINT</STRONG>, with the same limitations.
+       <B>SIGTERM</B>
+            This  uses  the same handler as <B>SIGINT</B>, with the same limitations.
             It is not mentioned in X/Open Curses, but  is  more  suitable  for
-            this purpose than <STRONG>SIGQUIT</STRONG> (which is used in debugging).
+            this purpose than <B>SIGQUIT</B> (which is used in debugging).
 
-       <STRONG>SIGTSTP</STRONG>
-            This  handles the <EM>stop</EM> signal, used in job control.  When resuming
+       <B>SIGTSTP</B>
+            This  handles the <I>stop</I> signal, used in job control.  When resuming
             the process,  this  implementation  discards  pending  input  with
-            <STRONG>flushinput</STRONG>  (see  <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>), and repaints the screen assuming
+            <B>flushinput</B>  (see  <B><A HREF="curs_util.3X.html">curs_util(3X)</A></B>), and repaints the screen assuming
             that it has been completely altered.  It also  updates  the  saved
-            terminal modes with <STRONG>def_shell_mode</STRONG> (see <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>).
+            terminal modes with <B>def_shell_mode</B> (see <B><A HREF="curs_kernel.3X.html">curs_kernel(3X)</A></B>).
 
-       <STRONG>SIGWINCH</STRONG>
+       <B>SIGWINCH</B>
             This  handles  the  window-size  changes which were ignored in the
             standardization efforts.  The handler sets a  (signal-safe)  vari-
-            able  which  is  later  tested in <STRONG>wgetch</STRONG> (see <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>).  If
-            <STRONG>keypad</STRONG> has been enabled for the corresponding window,  <STRONG>wgetch</STRONG>  re-
-            turns  the  key symbol <STRONG>KEY_RESIZE</STRONG>.  At the same time, <STRONG>wgetch</STRONG> calls
-            <STRONG>resizeterm</STRONG> to adjust the standard screen <STRONG>stdscr</STRONG>, and update  other
-            data such as <STRONG>LINES</STRONG> and <STRONG>COLS</STRONG>.
+            able  which  is  later  tested in <B>wgetch</B> (see <B><A HREF="curs_getch.3X.html">curs_getch(3X)</A></B>).  If
+            <B>keypad</B> has been enabled for the corresponding window,  <B>wgetch</B>  re-
+            turns  the  key symbol <B>KEY_RESIZE</B>.  At the same time, <B>wgetch</B> calls
+            <B>resizeterm</B> to adjust the standard screen <B>stdscr</B>, and update  other
+            data such as <B>LINES</B> and <B>COLS</B>.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>, <STRONG>curs_ter-</STRONG>
-       <STRONG><A HREF="curs_terminfo.3x.html">minfo(3x)</A></STRONG>, <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>,  <B><A HREF="curs_kernel.3X.html">curs_kernel(3X)</A></B>, <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>, <B><A HREF="curs_slk.3X.html">curs_slk(3X)</A></B>, <B>curs_ter-</B>
+       <B><A HREF="curs_terminfo.3X.html">minfo(3X)</A></B>, <B><A HREF="curs_util.3X.html">curs_util(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>.
 
 
 
-                                                              <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>
+                                                              <B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

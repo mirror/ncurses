@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -52,7 +52,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.71 2020/12/12 01:06:40 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.72 2021/06/17 21:30:22 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1532,7 +1532,7 @@ _nc_get_driver(TERMINAL_CONTROL_BLOCK * TCB, const char *name, int *errret)
 	res = DriverTable[i].driver;
 #ifdef _NC_WINDOWS
 	if ((i + 1) == SIZEOF(DriverTable)) {
-	    /* For Windows >= 10.0.17763 Windows Console interface implements 
+	    /* For Windows >= 10.0.17763 Windows Console interface implements
 	       virtual Terminal functionality.
 	       If on Windows td_CanHandle returned FALSE although the terminal
 	       name is empty, we default to ms-terminal as tinfo TERM type.

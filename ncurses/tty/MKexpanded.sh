@@ -1,6 +1,6 @@
 #! /bin/sh
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -30,7 +30,7 @@
 #
 # Author: Thomas E. Dickey, 1997-on
 #
-# $Id: MKexpanded.sh,v 1.22 2020/02/02 23:34:34 tom Exp $
+# $Id: MKexpanded.sh,v 1.23 2021/06/17 21:26:02 tom Exp $
 #
 # Script to generate 'expanded.c', a dummy source that contains functions
 # corresponding to complex macros used in this library.  By making functions,
@@ -81,7 +81,7 @@ _nc_toggle_attr_on (attr_t *S, attr_t at)
 }
 
 NCURSES_EXPORT(void)
-_nc_toggle_attr_off (attr_t *S, attr_t at) 
+_nc_toggle_attr_off (attr_t *S, attr_t at)
 {
 	toggle_attr_off(*S,at);
 }

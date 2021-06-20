@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.159 2021/02/14 00:17:09 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.160 2021/06/17 21:11:08 tom Exp $")
 
 #define TYPE_CALLOC(type,elts) typeCalloc(type, (unsigned)(elts))
 
@@ -774,7 +774,7 @@ _nc_read_tic_entry(char *filename,
 	 * looking for compiled (binary) terminfo data.
 	 *
 	 * cgetent uses a two-level lookup.  On the first it uses the given
-	 * name to return a record containing only the aliases for an entry. 
+	 * name to return a record containing only the aliases for an entry.
 	 * On the second (using that list of aliases as a key), it returns the
 	 * content of the terminal description.  We expect second lookup to
 	 * return data beginning with the same set of aliases.
@@ -831,7 +831,7 @@ _nc_read_tic_entry(char *filename,
 #endif /* NCURSES_USE_DATABASE */
 
 /*
- * Find and read the compiled entry for a given terminal type, if it exists. 
+ * Find and read the compiled entry for a given terminal type, if it exists.
  * We take pains here to make sure no combination of environment variables and
  * terminal type name can be used to overrun the file buffer.
  */

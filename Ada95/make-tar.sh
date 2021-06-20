@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.18 2020/02/02 23:34:34 tom Exp $
+# $Id: make-tar.sh,v 1.19 2021/06/17 21:26:02 tom Exp $
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2010-2015,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -128,10 +128,10 @@ cp -p $SOURCE/NEWS $BUILD/$ROOTNAME
 
 # cleanup empty directories (an artifact of ncurses source archives)
 
-touch $BUILD/$ROOTNAME/MANIFEST 
+touch $BUILD/$ROOTNAME/MANIFEST
 ( cd $BUILD/$ROOTNAME && find . -type f -print |$SOURCE/misc/csort >MANIFEST )
 
-cd $BUILD || exit 
+cd $BUILD || exit
 
 # Remove build-artifacts.
 find . -name RCS -exec rm -rf {} \;

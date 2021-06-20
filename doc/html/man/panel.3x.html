@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
@@ -51,14 +51,14 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>panel 3x</TITLE>
+<TITLE>panel 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">panel 3x</H1>
+<H1 class="no-header">panel 3X</H1>
 <PRE>
-<STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>                                                            <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>
+<B><A HREF="panel.3X.html">panel(3X)</A></B>                                                            <B><A HREF="panel.3X.html">panel(3X)</A></B>
 
 
 
@@ -68,172 +68,172 @@
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;panel.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;panel.h&gt;</B>
 
-       <STRONG>cc</STRONG> <STRONG>[flags]</STRONG> <STRONG>sourcefiles</STRONG> <STRONG>-lpanel</STRONG> <STRONG>-lncurses</STRONG>
+       <B>cc</B> <B>[flags]</B> <B>sourcefiles</B> <B>-lpanel</B> <B>-lncurses</B>
 
-       <STRONG>PANEL</STRONG> <STRONG>*new_panel(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <B>PANEL</B> <B>*new_panel(WINDOW</B> <B>*</B><I>win</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>bottom_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>top_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>show_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>update_panels(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>hide_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
+       <B>int</B> <B>bottom_panel(PANEL</B> <B>*</B><I>pan</I><B>);</B>
+       <B>int</B> <B>top_panel(PANEL</B> <B>*</B><I>pan</I><B>);</B>
+       <B>int</B> <B>show_panel(PANEL</B> <B>*</B><I>pan</I><B>);</B>
+       <B>void</B> <B>update_panels(void);</B>
+       <B>int</B> <B>hide_panel(PANEL</B> <B>*</B><I>pan</I><B>);</B>
 
-       <STRONG>WINDOW</STRONG> <STRONG>*panel_window(const</STRONG> <STRONG>PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>replace_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>window</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>move_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>starty</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>startx</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>panel_hidden(const</STRONG> <STRONG>PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
+       <B>WINDOW</B> <B>*panel_window(const</B> <B>PANEL</B> <B>*</B><I>pan</I><B>);</B>
+       <B>int</B> <B>replace_panel(PANEL</B> <B>*</B><I>pan</I><B>,</B> <B>WINDOW</B> <B>*</B><I>window</I><B>);</B>
+       <B>int</B> <B>move_panel(PANEL</B> <B>*</B><I>pan</I><B>,</B> <B>int</B> <I>starty</I><B>,</B> <B>int</B> <I>startx</I><B>);</B>
+       <B>int</B> <B>panel_hidden(const</B> <B>PANEL</B> <B>*</B><I>pan</I><B>);</B>
 
-       <STRONG>PANEL</STRONG> <STRONG>*panel_above(const</STRONG> <STRONG>PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
-       <STRONG>PANEL</STRONG> <STRONG>*panel_below(const</STRONG> <STRONG>PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
+       <B>PANEL</B> <B>*panel_above(const</B> <B>PANEL</B> <B>*</B><I>pan</I><B>);</B>
+       <B>PANEL</B> <B>*panel_below(const</B> <B>PANEL</B> <B>*</B><I>pan</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>set_panel_userptr(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG><EM>ptr</EM><STRONG>);</STRONG>
-       <STRONG>const</STRONG> <STRONG>void</STRONG> <STRONG>*panel_userptr(const</STRONG> <STRONG>PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_panel_userptr(PANEL</B> <B>*</B><I>pan</I><B>,</B> <B>const</B> <B>void</B> <B>*</B><I>ptr</I><B>);</B>
+       <B>const</B> <B>void</B> <B>*panel_userptr(const</B> <B>PANEL</B> <B>*</B><I>pan</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>del_panel(PANEL</STRONG> <STRONG>*</STRONG><EM>pan</EM><STRONG>);</STRONG>
+       <B>int</B> <B>del_panel(PANEL</B> <B>*</B><I>pan</I><B>);</B>
 
        /* ncurses-extensions */
-       <STRONG>PANEL</STRONG> <STRONG>*ground_panel(SCREEN</STRONG> <STRONG>*</STRONG><EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>PANEL</STRONG> <STRONG>*ceiling_panel(SCREEN</STRONG> <STRONG>*</STRONG><EM>sp</EM><STRONG>);</STRONG>
+       <B>PANEL</B> <B>*ground_panel(SCREEN</B> <B>*</B><I>sp</I><B>);</B>
+       <B>PANEL</B> <B>*ceiling_panel(SCREEN</B> <B>*</B><I>sp</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       Panels  are  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> windows with the added feature of depth.  Panel
+       Panels  are  <B><A HREF="curses.3X.html">curses(3X)</A></B> windows with the added feature of depth.  Panel
        functions allow the use  of  stacked  windows  and  ensure  the  proper
-       portions  of  each  window  and  the curses <STRONG>stdscr</STRONG> window are hidden or
+       portions  of  each  window  and  the curses <B>stdscr</B> window are hidden or
        displayed when panels are added, moved, modified or removed.   The  set
-       of  currently visible panels is the stack of panels.  The <STRONG>stdscr</STRONG> window
+       of  currently visible panels is the stack of panels.  The <B>stdscr</B> window
        is beneath all panels, and is not considered part of the stack.
 
        A window is associated with every panel.  The panel routines enable you
        to  create, move, hide, and show panels, as well as position a panel at
        any desired location in the stack.
 
-       Panel routines are a functional layer added to  <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,  make  only
+       Panel routines are a functional layer added to  <B><A HREF="curses.3X.html">curses(3X)</A></B>,  make  only
        high-level curses calls, and work anywhere terminfo curses does.
 
 
 </PRE><H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
 
 </PRE><H3><a name="h3-bottom_panel">bottom_panel</a></H3><PRE>
-       <STRONG>bottom_panel(</STRONG><EM>pan</EM><STRONG>)</STRONG> puts panel <EM>pan</EM> at the bottom of all panels.
+       <B>bottom_panel(</B><I>pan</I><B>)</B> puts panel <I>pan</I> at the bottom of all panels.
 
 
 </PRE><H3><a name="h3-ceiling_panel">ceiling_panel</a></H3><PRE>
-       <STRONG>ceiling_panel(</STRONG><EM>sp</EM><STRONG>)</STRONG> acts like <STRONG>panel_below(NULL)</STRONG>, for the given <STRONG>SCREEN</STRONG> <EM>sp</EM>.
+       <B>ceiling_panel(</B><I>sp</I><B>)</B> acts like <B>panel_below(NULL)</B>, for the given <B>SCREEN</B> <I>sp</I>.
 
 
 </PRE><H3><a name="h3-del_panel">del_panel</a></H3><PRE>
-       <STRONG>del_panel(</STRONG><EM>pan</EM><STRONG>)</STRONG>  removes  the  given  panel  <EM>pan</EM>  from  the   stack  and
-       deallocates the <STRONG>PANEL</STRONG> structure (but not its associated window).
+       <B>del_panel(</B><I>pan</I><B>)</B>  removes  the  given  panel  <I>pan</I>  from  the   stack  and
+       deallocates the <B>PANEL</B> structure (but not its associated window).
 
 
 </PRE><H3><a name="h3-ground_panel">ground_panel</a></H3><PRE>
-       <STRONG>ground_panel(</STRONG><EM>sp</EM><STRONG>)</STRONG> acts like <STRONG>panel_above(NULL)</STRONG>, for the given <STRONG>SCREEN</STRONG> <EM>sp</EM>.
+       <B>ground_panel(</B><I>sp</I><B>)</B> acts like <B>panel_above(NULL)</B>, for the given <B>SCREEN</B> <I>sp</I>.
 
 
 </PRE><H3><a name="h3-hide_panel">hide_panel</a></H3><PRE>
-       <STRONG>hide_panel(</STRONG><EM>pan</EM><STRONG>)</STRONG> removes the given panel <EM>pan</EM> from the  panel  stack  and
-       thus  hides  it  from  view.   The  <STRONG>PANEL</STRONG> structure is not lost, merely
+       <B>hide_panel(</B><I>pan</I><B>)</B> removes the given panel <I>pan</I> from the  panel  stack  and
+       thus  hides  it  from  view.   The  <B>PANEL</B> structure is not lost, merely
        removed from the stack.
 
 
 </PRE><H3><a name="h3-move_panel">move_panel</a></H3><PRE>
-       <STRONG>move_panel(</STRONG><EM>pan</EM><STRONG>,</STRONG><EM>starty</EM><STRONG>,</STRONG><EM>startx</EM><STRONG>)</STRONG> moves the given  panel  <EM>pan</EM>'s  window  so
-       that  its  upper-left  corner is at <EM>starty</EM>, <EM>startx</EM>.  It does not change
+       <B>move_panel(</B><I>pan</I><B>,</B><I>starty</I><B>,</B><I>startx</I><B>)</B> moves the given  panel  <I>pan</I>'s  window  so
+       that  its  upper-left  corner is at <I>starty</I>, <I>startx</I>.  It does not change
        the position of the panel in the stack.  Be sure to use this  function,
-       not <STRONG><A HREF="curs_window.3x.html">mvwin(3x)</A></STRONG>, to move a panel window.
+       not <B><A HREF="curs_window.3X.html">mvwin(3X)</A></B>, to move a panel window.
 
 
 </PRE><H3><a name="h3-new_panel">new_panel</a></H3><PRE>
-       <STRONG>new_panel(</STRONG><EM>win</EM><STRONG>)</STRONG>  allocates   a  <STRONG>PANEL</STRONG> structure, associates it with <EM>win</EM>,
+       <B>new_panel(</B><I>win</I><B>)</B>  allocates   a  <B>PANEL</B> structure, associates it with <I>win</I>,
        places the panel on the top of the stack (causes  it to  be   displayed
        above any other panel) and returns a pointer to the new panel.
 
 
 </PRE><H3><a name="h3-panel_above">panel_above</a></H3><PRE>
-       <STRONG>panel_above(</STRONG><EM>pan</EM><STRONG>)</STRONG>  returns  a  pointer  to  the panel above <EM>pan</EM>.  If the
-       panel argument is <STRONG>(PANEL</STRONG> <STRONG>*)0</STRONG>, it returns a pointer to the bottom  panel
+       <B>panel_above(</B><I>pan</I><B>)</B>  returns  a  pointer  to  the panel above <I>pan</I>.  If the
+       panel argument is <B>(PANEL</B> <B>*)0</B>, it returns a pointer to the bottom  panel
        in the stack.
 
 
 </PRE><H3><a name="h3-panel_below">panel_below</a></H3><PRE>
-       <STRONG>panel_below(</STRONG><EM>pan</EM><STRONG>)</STRONG> returns a pointer to the panel just below <EM>pan</EM>.  If the
-       panel argument is <STRONG>(PANEL</STRONG> <STRONG>*)0</STRONG>, it returns a pointer to the top panel  in
+       <B>panel_below(</B><I>pan</I><B>)</B> returns a pointer to the panel just below <I>pan</I>.  If the
+       panel argument is <B>(PANEL</B> <B>*)0</B>, it returns a pointer to the top panel  in
        the stack.
 
 
 </PRE><H3><a name="h3-panel_hidden">panel_hidden</a></H3><PRE>
-       <STRONG>panel_hidden(</STRONG><EM>pan</EM><STRONG>)</STRONG>  returns <STRONG>TRUE</STRONG> if the panel <EM>pan</EM> is in the panel stack,
-       <STRONG>FALSE</STRONG> if it is not.  If the panel is a null pointer, return <STRONG>ERR</STRONG>.
+       <B>panel_hidden(</B><I>pan</I><B>)</B>  returns <B>TRUE</B> if the panel <I>pan</I> is in the panel stack,
+       <B>FALSE</B> if it is not.  If the panel is a null pointer, return <B>ERR</B>.
 
 
 </PRE><H3><a name="h3-panel_userptr">panel_userptr</a></H3><PRE>
-       <STRONG>panel_userptr(</STRONG><EM>pan</EM><STRONG>)</STRONG> returns the user pointer for a given panel <EM>pan</EM>.
+       <B>panel_userptr(</B><I>pan</I><B>)</B> returns the user pointer for a given panel <I>pan</I>.
 
 
 </PRE><H3><a name="h3-panel_window">panel_window</a></H3><PRE>
-       <STRONG>panel_window(</STRONG><EM>pan</EM><STRONG>)</STRONG> returns a pointer to the window of  the  given  panel
-       <EM>pan</EM>.
+       <B>panel_window(</B><I>pan</I><B>)</B> returns a pointer to the window of  the  given  panel
+       <I>pan</I>.
 
 
 </PRE><H3><a name="h3-replace_panel">replace_panel</a></H3><PRE>
-       <STRONG>replace_panel(</STRONG><EM>pan</EM><STRONG>,</STRONG><EM>window</EM><STRONG>)</STRONG> replaces the current window of panel <EM>pan</EM> with
-       <EM>window</EM> This is useful, for example if you want to resize a  panel.   In
-       <STRONG>ncurses</STRONG>,  you  can  call <STRONG>replace_panel</STRONG> to resize a panel using a window
-       resized with <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>.  It does not change the position of the panel
+       <B>replace_panel(</B><I>pan</I><B>,</B><I>window</I><B>)</B> replaces the current window of panel <I>pan</I> with
+       <I>window</I> This is useful, for example if you want to resize a  panel.   In
+       <B>ncurses</B>,  you  can  call <B>replace_panel</B> to resize a panel using a window
+       resized with <B><A HREF="wresize.3X.html">wresize(3X)</A></B>.  It does not change the position of the panel
        in the stack.
 
 
 </PRE><H3><a name="h3-set_panel_userptr">set_panel_userptr</a></H3><PRE>
-       <STRONG>set_panel_userptr(</STRONG><EM>pan</EM><STRONG>,</STRONG><EM>ptr</EM><STRONG>)</STRONG> sets the panel's user pointer.
+       <B>set_panel_userptr(</B><I>pan</I><B>,</B><I>ptr</I><B>)</B> sets the panel's user pointer.
 
 
 </PRE><H3><a name="h3-show_panel">show_panel</a></H3><PRE>
-       <STRONG>show_panel(</STRONG><EM>pan</EM><STRONG>)</STRONG>  makes  a  hidden panel visible by placing it on top of
-       the panels in the panel stack.  See <STRONG>COMPATIBILITY</STRONG> below.
+       <B>show_panel(</B><I>pan</I><B>)</B>  makes  a  hidden panel visible by placing it on top of
+       the panels in the panel stack.  See <B>COMPATIBILITY</B> below.
 
 
 </PRE><H3><a name="h3-top_panel">top_panel</a></H3><PRE>
-       <STRONG>top_panel(</STRONG><EM>pan</EM><STRONG>)</STRONG> puts the given visible panel <EM>pan</EM> on top of all panels in
-       the stack.  See <STRONG>COMPATIBILITY</STRONG> below.
+       <B>top_panel(</B><I>pan</I><B>)</B> puts the given visible panel <I>pan</I> on top of all panels in
+       the stack.  See <B>COMPATIBILITY</B> below.
 
 
 </PRE><H3><a name="h3-update_panels">update_panels</a></H3><PRE>
-       <STRONG>update_panels()</STRONG>  refreshes  the <EM>virtual</EM> <EM>screen</EM> to reflect the relations
-       between the panels in the stack, but  does  not  call  <STRONG><A HREF="curs_refresh.3x.html">doupdate(3x)</A></STRONG>  to
-       refresh the <EM>physical</EM> <EM>screen</EM>.  Use this function and not <STRONG><A HREF="curs_refresh.3x.html">wrefresh(3x)</A></STRONG> or
-       <STRONG><A HREF="curs_refresh.3x.html">wnoutrefresh(3x)</A></STRONG>.
+       <B>update_panels()</B>  refreshes  the <I>virtual</I> <I>screen</I> to reflect the relations
+       between the panels in the stack, but  does  not  call  <B><A HREF="curs_refresh.3X.html">doupdate(3X)</A></B>  to
+       refresh the <I>physical</I> <I>screen</I>.  Use this function and not <B><A HREF="curs_refresh.3X.html">wrefresh(3X)</A></B> or
+       <B><A HREF="curs_refresh.3X.html">wnoutrefresh(3X)</A></B>.
 
-       <STRONG>update_panels</STRONG> may be called more than once before a call  to  <STRONG>doupdate</STRONG>,
-       but  <STRONG>doupdate</STRONG>  is  the  function  responsible for updating the <EM>physical</EM>
-       <EM>screen</EM>.
+       <B>update_panels</B> may be called more than once before a call  to  <B>doupdate</B>,
+       but  <B>doupdate</B>  is  the  function  responsible for updating the <I>physical</I>
+       <I>screen</I>.
 
 
 </PRE><H2><a name="h2-DIAGNOSTICS">DIAGNOSTICS</a></H2><PRE>
-       Each routine that returns a pointer returns <STRONG>NULL</STRONG> if  an  error  occurs.
-       Each  routine  that  returns  an  int  value  returns <STRONG>OK</STRONG> if it executes
-       successfully and <STRONG>ERR</STRONG> if not.
+       Each routine that returns a pointer returns <B>NULL</B> if  an  error  occurs.
+       Each  routine  that  returns  an  int  value  returns <B>OK</B> if it executes
+       successfully and <B>ERR</B> if not.
 
-       Except as noted, the <EM>pan</EM> and <EM>window</EM> parameters must  be  non-null.   If
+       Except as noted, the <I>pan</I> and <I>window</I> parameters must  be  non-null.   If
        those are null, an error is returned.
 
-       The  <STRONG>move_panel</STRONG>  function  uses  <STRONG><A HREF="curs_window.3x.html">mvwin(3x)</A></STRONG>, and will return an error if
-       <STRONG>mvwin</STRONG> returns an error.
+       The  <B>move_panel</B>  function  uses  <B><A HREF="curs_window.3X.html">mvwin(3X)</A></B>, and will return an error if
+       <B>mvwin</B> returns an error.
 
 
 </PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
        Reasonable care has been taken  to   ensure   compatibility  with   the
        native   panel  facility introduced in System V (inspection of the SVr4
        manual pages suggests the programming  interface  is  unchanged).   The
-       <STRONG>PANEL</STRONG>   data  structures  are  merely   similar.   The   programmer  is
-       cautioned not to directly use <STRONG>PANEL</STRONG> fields.
+       <B>PANEL</B>   data  structures  are  merely   similar.   The   programmer  is
+       cautioned not to directly use <B>PANEL</B> fields.
 
-       The  functions  <STRONG>show_panel</STRONG>  and  <STRONG>top_panel</STRONG>  are   identical   in   this
+       The  functions  <B>show_panel</B>  and  <B>top_panel</B>  are   identical   in   this
        implementation,  and work equally well with displayed or hidden panels.
-       In the native System  V  implementation,  <STRONG>show_panel</STRONG>  is  intended  for
-       making  a  hidden panel visible (at the top of the stack) and <STRONG>top_panel</STRONG>
+       In the native System  V  implementation,  <B>show_panel</B>  is  intended  for
+       making  a  hidden panel visible (at the top of the stack) and <B>top_panel</B>
        is intended for making an already-visible panel move to the top of  the
        stack.   You  are  cautioned  to  use  the  correct  function to ensure
        compatibility with native panel libraries.
@@ -246,19 +246,19 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The panel facility was documented in SVr4.2 in <EM>Character</EM> <EM>User</EM> <EM>Interface</EM>
-       <EM>Programming</EM> <EM>(UNIX</EM> <EM>SVR4.2)</EM>.
+       The panel facility was documented in SVr4.2 in <I>Character</I> <I>User</I> <I>Interface</I>
+       <I>Programming</I> <I>(UNIX</I> <I>SVR4.2)</I>.
 
        It is not part of X/Open Curses.
 
        A few implementations exist:
 
-       <STRONG>o</STRONG>   Systems  based  on  SVr4  source  code, e.g., Solaris, provide this
+       <B>o</B>   Systems  based  on  SVr4  source  code, e.g., Solaris, provide this
            library.
 
-       <STRONG>o</STRONG>   <STRONG>ncurses</STRONG> (since version 0.6 in 1993) and <STRONG>PDCurses</STRONG> (since version 2.2
+       <B>o</B>   <B>ncurses</B> (since version 0.6 in 1993) and <B>PDCurses</B> (since version 2.2
            in 1995) provide a panel library whose common ancestor was a public
-           domain implementation by Warren Tucker published  in  <EM>u386mon</EM>  2.20
+           domain implementation by Warren Tucker published  in  <I>u386mon</I>  2.20
            (1990).
 
            According  to  Tucker, the SystemV panel library was first released
@@ -268,7 +268,7 @@
            Several  developers have improved each of these; they are no longer
            the same as Tucker's implementation.
 
-       <STRONG>o</STRONG>   NetBSD 8 (2018) has a panel library  begun  by  Valery  Ushakov  in
+       <B>o</B>   NetBSD 8 (2018) has a panel library  begun  by  Valery  Ushakov  in
            2015.  This is based on the AT&amp;T documentation.
 
 
@@ -279,14 +279,14 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>,
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>,
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210522).
+       This describes <B>ncurses</B> version 6.2 (patch 20210612).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
        Originally   written   by   Warren   Tucker  &lt;wht@n4hgf.mt-park.ga.us&gt;,
-       primarily to assist in porting <EM>u386mon</EM>  to  systems  without  a  native
+       primarily to assist in porting <I>u386mon</I>  to  systems  without  a  native
        panels library.
 
        Repackaged for ncurses by Zeyd ben-Halim.
@@ -295,7 +295,7 @@
 
 
 
-                                                                     <STRONG><A HREF="panel.3x.html">panel(3x)</A></STRONG>
+                                                                     <B><A HREF="panel.3X.html">panel(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

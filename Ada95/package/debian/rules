@@ -71,7 +71,7 @@ install-stamp: build-stamp
 	dh_installdirs
 
 	$(MAKE) install DESTDIR=$(TARGET_DIR)
-	
+
 	# FIXME: it would be nice to make these into separate packages
 	( cd samples && $(MAKE) install.examples DESTDIR=$(TARGET_DIR) BINDIR=$(SAMPLE_DIR) )
 	( cd doc && $(MAKE) install.html DESTDIR=$(TARGET_DIR) )

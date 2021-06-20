@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_int.c,v 1.32 2021/03/27 23:49:58 tom Exp $")
+MODULE_ID("$Id: fty_int.c,v 1.33 2021/06/17 21:11:08 tom Exp $")
 
 #if USE_WIDEC_SUPPORT
 #define isDigit(c) (iswdigit((wint_t)(c)) || isdigit(UChar(c)))
@@ -62,9 +62,9 @@ typedef struct
 integerPARM;
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Generic_This_Type( void * arg )
-|   
+|
 |   Description   :  Allocate structure for integer type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
@@ -89,9 +89,9 @@ Generic_This_Type(void *arg)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Make_This_Type( va_list * ap )
-|   
+|
 |   Description   :  Allocate structure for integer type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
@@ -109,10 +109,10 @@ Make_This_Type(va_list *ap)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Copy_This_Type(const void * argp)
-|   
-|   Description   :  Copy structure for integer type argument.  
+|
+|   Description   :  Copy structure for integer type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error.
 +--------------------------------------------------------------------------*/
@@ -136,9 +136,9 @@ Copy_This_Type(const void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void Free_This_Type(void * argp)
-|   
+|
 |   Description   :  Free structure for integer type argument.
 |
 |   Return Values :  -
@@ -151,11 +151,11 @@ Free_This_Type(void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Check_This_Field(
 |                                                 FIELD * field,
 |                                                 const void * argp)
-|   
+|
 |   Description   :  Validate buffer content to be a valid integer value
 |
 |   Return Values :  TRUE  - field is valid
@@ -247,11 +247,11 @@ Check_This_Field(FIELD *field, const void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Check_This_Character(
 |                                      int c,
 |                                      const void * argp)
-|   
+|
 |   Description   :  Check a character for the integer type.
 |
 |   Return Values :  TRUE  - character is valid

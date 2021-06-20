@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.34 2021/03/20 14:10:23 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.35 2021/06/17 21:11:08 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -450,7 +450,7 @@ _nc_align_termtype(TERMTYPE2 *to, TERMTYPE2 *from)
 		return;
 	}
 	/*
-	 * This is where we pay for having a simple extension representation. 
+	 * This is where we pay for having a simple extension representation.
 	 * Allocate a new ext_Names array and merge the two ext_Names arrays
 	 * into it, updating to's counts for booleans, etc.  Fortunately we do
 	 * this only for the terminfo compiler (tic) and comparer (infocmp).

@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.150 2021/06/12 21:52:06 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.151 2021/06/17 21:11:08 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -419,7 +419,7 @@ show_comparing(char **names)
 
 /*
  * ncurses stores two types of non-standard capabilities:
- * a) capabilities listed past the "STOP-HERE" comment in the Caps file. 
+ * a) capabilities listed past the "STOP-HERE" comment in the Caps file.
  *    These are used in the terminfo source file to provide data for termcaps,
  *    e.g., when there is no equivalent capability in terminfo, as well as for
  *    widely-used non-standard capabilities.

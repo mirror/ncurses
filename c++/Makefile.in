@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.130 2021/04/18 15:13:58 tom Exp $
+# $Id: Makefile.in,v 1.131 2021/06/17 21:11:08 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -68,7 +68,7 @@ LIBTOOL_UNINSTALL = @LIB_UNINSTALL@
 LIBTOOL_VERSION = @LIBTOOL_VERSION@
 LT_UNDEF	= @LT_UNDEF@
 
-INSTALL		= @INSTALL@ 
+INSTALL		= @INSTALL@
 INSTALL_LIB	= $(INSTALL) @INSTALL_LIB@
 INSTALL_DATA	= @INSTALL_DATA@
 INSTALL_OPT_P	= @INSTALL_OPT_P@
@@ -144,7 +144,7 @@ LINK_SHARED	= $(LINK_FLAGS)
 
 # flags for test-programs
 TEST_LIBS	= @TEST_LIBS@
-TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 
+TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@
 TEST_LDFLAGS	= $(TEST_ARGS) @LDFLAGS@ \
 	@LD_MODEL@ $(TEST_LIBS) @LIBS@ @LOCAL_LDFLAGS@ $(CXXLIBS)
 

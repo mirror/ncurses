@@ -1,6 +1,6 @@
-<!-- 
+<!--
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,50 +27,50 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_bkgd.3x,v 1.31 2020/10/17 23:12:52 tom Exp @
+  * @Id: curs_bkgd.3x,v 1.32 2021/06/17 21:30:22 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_bkgd 3x</TITLE>
+<TITLE>curs_bkgd 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_bkgd 3x</H1>
+<H1 class="no-header">curs_bkgd 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>                                                    <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>
+<B><A HREF="curs_bkgd.3X.html">curs_bkgd(3X)</A></B>                                                    <B><A HREF="curs_bkgd.3X.html">curs_bkgd(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>bkgdset</STRONG>,  <STRONG>wbkgdset</STRONG>,  <STRONG>bkgd</STRONG>,  <STRONG>wbkgd</STRONG>,  <STRONG>getbkgd</STRONG>  - <STRONG>curses</STRONG> window background
+       <B>bkgdset</B>,  <B>wbkgdset</B>,  <B>bkgd</B>,  <B>wbkgd</B>,  <B>getbkgd</B>  - <B>curses</B> window background
        manipulation routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>void</STRONG> <STRONG>bkgdset(chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>wbkgdset(WINDOW</STRONG> <STRONG>*</STRONG><EM>win,</EM> <EM>chtype</EM> <EM>ch</EM><STRONG>);</STRONG>
+       <B>void</B> <B>bkgdset(chtype</B> <I>ch</I><B>);</B>
+       <B>void</B> <B>wbkgdset(WINDOW</B> <B>*</B><I>win,</I> <I>chtype</I> <I>ch</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>bkgd(chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wbkgd(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>bkgd(chtype</B> <I>ch</I><B>);</B>
+       <B>int</B> <B>wbkgd(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
 
-       <STRONG>chtype</STRONG> <STRONG>getbkgd(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <B>chtype</B> <B>getbkgd(WINDOW</B> <B>*</B><I>win</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-bkgdset">bkgdset</a></H3><PRE>
-       The <STRONG>bkgdset</STRONG> and <STRONG>wbkgdset</STRONG> routines  manipulate  the  background  of  the
-       named  window.   The  window  background  is a <STRONG>chtype</STRONG> consisting of any
+       The <B>bkgdset</B> and <B>wbkgdset</B> routines  manipulate  the  background  of  the
+       named  window.   The  window  background  is a <B>chtype</B> consisting of any
        combination of attributes  (i.e.,  rendition)  and  a  character.   The
        attribute part of the background is combined (OR'ed) with all non-blank
-       characters that are written into the  window  with  <STRONG>waddch</STRONG>.   Both  the
+       characters that are written into the  window  with  <B>waddch</B>.   Both  the
        character  and  attribute parts of the background are combined with the
        blank characters.  The background becomes a property of  the  character
        and  moves  with  the character through any scrolling and insert/delete
@@ -82,20 +82,20 @@
 
 
 </PRE><H3><a name="h3-bkgd">bkgd</a></H3><PRE>
-       The <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> functions set the background property of the current
+       The <B>bkgd</B> and <B>wbkgd</B> functions set the background property of the current
        or  specified  window  and  then  apply this setting to every character
        position in that window.  According to  X/Open  Curses,  it  should  do
        this:
 
-       <STRONG>o</STRONG>   The  rendition  of  every character on the screen is changed to the
+       <B>o</B>   The  rendition  of  every character on the screen is changed to the
            new background rendition.
 
-       <STRONG>o</STRONG>   Wherever the former background character appears, it is changed  to
+       <B>o</B>   Wherever the former background character appears, it is changed  to
            the new background character.
 
        Neither  X/Open Curses nor the SVr4 manual pages give details about the
-       way the rendition of characters on the screen is updated when  <STRONG>bkgd</STRONG>  or
-       <STRONG>wbkgd</STRONG> is used to change the background character.
+       way the rendition of characters on the screen is updated when  <B>bkgd</B>  or
+       <B>wbkgd</B> is used to change the background character.
 
        This  implementation,  like  SVr4 curses, does not store the background
        and window attribute contributions to each cell separately.  It updates
@@ -103,22 +103,22 @@
        colors contained in the background.   For  each  cell  in  the  window,
        whether or not it is blank:
 
-       <STRONG>o</STRONG>   The  library  first  compares  the <EM>character</EM>, and if it matches the
+       <B>o</B>   The  library  first  compares  the <I>character</I>, and if it matches the
            current character part of the background, it replaces that with the
            new background character.
 
-       <STRONG>o</STRONG>   The  library  then  checks  if the cell uses color, i.e., its color
+       <B>o</B>   The  library  then  checks  if the cell uses color, i.e., its color
            pair value is nonzero.  If not, it simply replaces  the  attributes
            and  color  pair  in  the  cell  with those from the new background
            character.
 
-       <STRONG>o</STRONG>   If the cell uses color, and that matches the color in  the  current
+       <B>o</B>   If the cell uses color, and that matches the color in  the  current
            background, the library removes attributes which may have come from
            the current background and adds attributes from the new background.
            It  finishes  by  setting  the  cell  to use the color from the new
            background.
 
-       <STRONG>o</STRONG>   If the cell uses color, and that does not match the  color  in  the
+       <B>o</B>   If the cell uses color, and that does not match the  color  in  the
            current   background,   the  library  updates  only  the  non-color
            attributes, first removing those  which  may  have  come  from  the
            current  background,  and  then  adding  attributes  from  the  new
@@ -127,32 +127,32 @@
        If the background's character value is zero, a space is assumed.
 
        If the terminal does not support  color,  or  if  color  has  not  been
-       started   with   <STRONG>start_color</STRONG>,  the  new  background  character's  color
+       started   with   <B>start_color</B>,  the  new  background  character's  color
        attribute will be ignored.
 
 
 </PRE><H3><a name="h3-getbkgd">getbkgd</a></H3><PRE>
-       The <STRONG>getbkgd</STRONG> function returns  the  given  window's  current  background
+       The <B>getbkgd</B> function returns  the  given  window's  current  background
        character/attribute pair.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These  functions are described in the XSI Curses standard, Issue 4.  It
-       specifies that <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return  <STRONG>ERR</STRONG>  on  failure,  but  gives  no
+       specifies that <B>bkgd</B> and <B>wbkgd</B> return  <B>ERR</B>  on  failure,  but  gives  no
        failure conditions.
 
-       The  routines  <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> return the integer <STRONG>OK</STRONG>, unless the library
+       The  routines  <B>bkgd</B> and <B>wbkgd</B> return the integer <B>OK</B>, unless the library
        has not been initialized.
 
-       In contrast, the SVr4.0 manual says <STRONG>bkgd</STRONG> and <STRONG>wbkgd</STRONG> may return <STRONG>OK</STRONG> "or  a
-       non-negative  integer  if  <STRONG>immedok</STRONG>  is set", which refers to the return
-       value from <STRONG>wrefresh</STRONG> (used to implement the immediate repainting).   The
-       SVr4  curses  <STRONG>wrefresh</STRONG>  returns the number of characters written to the
+       In contrast, the SVr4.0 manual says <B>bkgd</B> and <B>wbkgd</B> may return <B>OK</B> "or  a
+       non-negative  integer  if  <B>immedok</B>  is set", which refers to the return
+       value from <B>wrefresh</B> (used to implement the immediate repainting).   The
+       SVr4  curses  <B>wrefresh</B>  returns the number of characters written to the
        screen during the refresh.  This implementation does not do that.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <STRONG>bkgdset</STRONG> and <STRONG>bkgd</STRONG> may be macros.
+       Note that <B>bkgdset</B> and <B>bkgd</B> may be macros.
 
        X/Open Curses mentions that the character part of the  background  must
        be  a  single-byte  value.   This  implementation, like SVr4, checks to
@@ -166,11 +166,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>, <STRONG><A HREF="curs_attr.3x.html">curs_attr(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_addch.3X.html">curs_addch(3X)</A></B>, <B><A HREF="curs_attr.3X.html">curs_attr(3X)</A></B>, <B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>
 
 
 
-                                                                 <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>
+                                                                 <B><A HREF="curs_bkgd.3X.html">curs_bkgd(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

@@ -26,7 +26,7 @@
  * sale, use or other dealings in this Software without prior written       *
  * authorization.                                                           *
  ****************************************************************************/
-/* 
+/*
  * bs.c - original author: Bruce Holloway
  *		salvo option by: Chuck A DeGaul
  * with improved user interface, autoconfiguration and code cleanup
@@ -35,7 +35,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.76 2021/03/20 16:05:49 tom Exp $
+ * $Id: bs.c,v 1.77 2021/06/17 21:11:08 tom Exp $
  */
 
 #include <test.priv.h>

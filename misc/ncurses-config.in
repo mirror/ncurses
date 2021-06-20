@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.48 2021/04/17 22:22:52 tom Exp $
+# $Id: ncurses-config.in,v 1.49 2021/06/17 21:11:08 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2015,2017 Free Software Foundation, Inc.                    #
@@ -98,7 +98,7 @@ fi
 # are standard library directories (i.e., the linker is supposed to search
 # those directories).
 #
-# There is no portable way to find the list of standard library directories. 
+# There is no portable way to find the list of standard library directories.
 # Require a POSIX shell anyway, to keep this simple.
 lib_flags=
 for opt in -L$libdir @EXTRA_PKG_LDFLAGS@ $LIBS

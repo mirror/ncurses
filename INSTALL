@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.229 2021/04/17 22:26:34 tom Exp $
+-- $Id: INSTALL,v 1.230 2021/06/17 21:11:08 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -2197,7 +2197,7 @@ CONFIGURING FALLBACK ENTRIES:
 	tree is accessible (that is, in single-user mode or at OS installation
 	time) the ncurses library can be compiled to include an array of
 	pre-fetched fallback entries.
-	
+
 	NOTE: This must be done on a machine which has ncurses' infocmp and
 	terminfo database installed (as well as ncurses' tic and infocmp
 	programs).  That is because the fallback sources are generated and

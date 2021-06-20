@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018,2020 Thomas E. Dickey                                     *
   * Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
@@ -34,122 +34,122 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_termattrs 3x</TITLE>
+<TITLE>curs_termattrs 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_termattrs 3x</H1>
+<H1 class="no-header">curs_termattrs 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>                                          <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
+<B><A HREF="curs_termattrs.3X.html">curs_termattrs(3X)</A></B>                                          <B><A HREF="curs_termattrs.3X.html">curs_termattrs(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>baudrate</STRONG>,  <STRONG>erasechar</STRONG>,  <STRONG>erasewchar</STRONG>, <STRONG>has_ic</STRONG>, <STRONG>has_il</STRONG>, <STRONG>killchar</STRONG>, <STRONG>killwchar</STRONG>,
-       <STRONG>longname</STRONG>, <STRONG>term_attrs</STRONG>, <STRONG>termattrs</STRONG>, <STRONG>termname</STRONG> -  <STRONG>curses</STRONG>  environment  query
+       <B>baudrate</B>,  <B>erasechar</B>,  <B>erasewchar</B>, <B>has_ic</B>, <B>has_il</B>, <B>killchar</B>, <B>killwchar</B>,
+       <B>longname</B>, <B>term_attrs</B>, <B>termattrs</B>, <B>termname</B> -  <B>curses</B>  environment  query
        routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>baudrate(void);</STRONG>
-       <STRONG>char</STRONG> <STRONG>erasechar(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>erasewchar(wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>has_ic(void);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>has_il(void);</STRONG>
-       <STRONG>char</STRONG> <STRONG>killchar(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>killwchar(wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*longname(void);</STRONG>
-       <STRONG>attr_t</STRONG> <STRONG>term_attrs(void);</STRONG>
-       <STRONG>chtype</STRONG> <STRONG>termattrs(void);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*termname(void);</STRONG>
+       <B>int</B> <B>baudrate(void);</B>
+       <B>char</B> <B>erasechar(void);</B>
+       <B>int</B> <B>erasewchar(wchar_t</B> <B>*</B><I>ch</I><B>);</B>
+       <B>bool</B> <B>has_ic(void);</B>
+       <B>bool</B> <B>has_il(void);</B>
+       <B>char</B> <B>killchar(void);</B>
+       <B>int</B> <B>killwchar(wchar_t</B> <B>*</B><I>ch</I><B>);</B>
+       <B>char</B> <B>*longname(void);</B>
+       <B>attr_t</B> <B>term_attrs(void);</B>
+       <B>chtype</B> <B>termattrs(void);</B>
+       <B>char</B> <B>*termname(void);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-baudrate">baudrate</a></H3><PRE>
-       The  <STRONG>baudrate</STRONG>  routine  returns  the output speed of the terminal.  The
-       number returned is in bits per second, for  example  <STRONG>9600</STRONG>,  and  is  an
+       The  <B>baudrate</B>  routine  returns  the output speed of the terminal.  The
+       number returned is in bits per second, for  example  <B>9600</B>,  and  is  an
        integer.
 
 
 </PRE><H3><a name="h3-erasechar_-erasewchar">erasechar, erasewchar</a></H3><PRE>
-       The <STRONG>erasechar</STRONG> routine returns the user's current erase character.
+       The <B>erasechar</B> routine returns the user's current erase character.
 
-       The  <STRONG>erasewchar</STRONG>  routine  stores  the  current  erase  character in the
-       location referenced by <EM>ch</EM>.  If no erase character has been defined, the
-       routine fails and the location referenced by <EM>ch</EM> is not changed.
+       The  <B>erasewchar</B>  routine  stores  the  current  erase  character in the
+       location referenced by <I>ch</I>.  If no erase character has been defined, the
+       routine fails and the location referenced by <I>ch</I> is not changed.
 
 
 </PRE><H3><a name="h3-has_is_-has_il">has_is, has_il</a></H3><PRE>
-       The  <STRONG>has_ic</STRONG>  routine  is  true  if the terminal has insert- and delete-
+       The  <B>has_ic</B>  routine  is  true  if the terminal has insert- and delete-
        character capabilities.
 
-       The <STRONG>has_il</STRONG> routine is true if the terminal has insert- and  delete-line
+       The <B>has_il</B> routine is true if the terminal has insert- and  delete-line
        capabilities, or can simulate them using scrolling regions.  This might
        be used to determine if it would be appropriate  to  turn  on  physical
-       scrolling using <STRONG>scrollok</STRONG>.
+       scrolling using <B>scrollok</B>.
 
 
 </PRE><H3><a name="h3-killchar_-killwchar">killchar, killwchar</a></H3><PRE>
-       The <STRONG>killchar</STRONG> routine returns the user's current line kill character.
+       The <B>killchar</B> routine returns the user's current line kill character.
 
-       The  <STRONG>killwchar</STRONG>  routine  stores  the current line-kill character in the
-       location referenced by <EM>ch</EM>.  If no line-kill character has been defined,
-       the routine fails and the location referenced by <EM>ch</EM> is not changed.
+       The  <B>killwchar</B>  routine  stores  the current line-kill character in the
+       location referenced by <I>ch</I>.  If no line-kill character has been defined,
+       the routine fails and the location referenced by <I>ch</I> is not changed.
 
 
 </PRE><H3><a name="h3-longname">longname</a></H3><PRE>
-       The  <STRONG>longname</STRONG>  routine  returns a pointer to a static area containing a
+       The  <B>longname</B>  routine  returns a pointer to a static area containing a
        verbose description of the current terminal.  The maximum length  of  a
        verbose  description  is  128 characters.  It is defined only after the
-       call to <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  The area is overwritten by  each  call  to
-       <STRONG>newterm</STRONG>  and  is not restored by <STRONG>set_term</STRONG>, so the value should be saved
-       between calls to <STRONG>newterm</STRONG> if <STRONG>longname</STRONG> is going to be used with  multiple
+       call to <B>initscr</B> or <B>newterm</B>.  The area is overwritten by  each  call  to
+       <B>newterm</B>  and  is not restored by <B>set_term</B>, so the value should be saved
+       between calls to <B>newterm</B> if <B>longname</B> is going to be used with  multiple
        terminals.
 
 
 </PRE><H3><a name="h3-termattrs_-term_attrs">termattrs, term_attrs</a></H3><PRE>
        If  a  given  terminal  does  not  support  a  video  attribute that an
-       application program is trying to use, <STRONG>curses</STRONG> may substitute a different
-       video  attribute for it.  The <STRONG>termattrs</STRONG> and <STRONG>term_attrs</STRONG> functions return
-       a logical <STRONG>OR</STRONG> of all video attributes supported by the terminal using <EM>A</EM><STRONG>_</STRONG>
-       and  <EM>WA</EM><STRONG>_</STRONG>  constants  respectively.   This  information is useful when a
-       <STRONG>curses</STRONG> program needs  complete  control  over  the  appearance  of  the
+       application program is trying to use, <B>curses</B> may substitute a different
+       video  attribute for it.  The <B>termattrs</B> and <B>term_attrs</B> functions return
+       a logical <B>OR</B> of all video attributes supported by the terminal using <I>A</I><B>_</B>
+       and  <I>WA</I><B>_</B>  constants  respectively.   This  information is useful when a
+       <B>curses</B> program needs  complete  control  over  the  appearance  of  the
        screen.
 
 
 </PRE><H3><a name="h3-termname">termname</a></H3><PRE>
-       The <STRONG>termname</STRONG> routine returns the terminal name used by <STRONG>setupterm</STRONG>.
+       The <B>termname</B> routine returns the terminal name used by <B>setupterm</B>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>longname</STRONG> and <STRONG>termname</STRONG> return <STRONG>NULL</STRONG> on error.
+       <B>longname</B> and <B>termname</B> return <B>NULL</B> on error.
 
-       Routines  that  return  an integer return <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> (SVr4
-       only specifies "an integer  value  other  than  <STRONG>ERR</STRONG>")  upon  successful
+       Routines  that  return  an integer return <B>ERR</B> upon failure and <B>OK</B> (SVr4
+       only specifies "an integer  value  other  than  <B>ERR</B>")  upon  successful
        completion.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <STRONG>termattrs</STRONG> may be a macro.
+       Note that <B>termattrs</B> may be a macro.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The XSI Curses standard, Issue 4 describes these functions.  It changes
-       the return type of <STRONG>termattrs</STRONG> to the new type <STRONG>attr_t</STRONG>.  Most versions  of
-       curses truncate the result returned by <STRONG>termname</STRONG> to 14 characters.
+       the return type of <B>termattrs</B> to the new type <B>attr_t</B>.  Most versions  of
+       curses truncate the result returned by <B>termname</B> to 14 characters.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>, <B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>
 
 
 
-                                                            <STRONG><A HREF="curs_termattrs.3x.html">curs_termattrs(3x)</A></STRONG>
+                                                            <B><A HREF="curs_termattrs.3X.html">curs_termattrs(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

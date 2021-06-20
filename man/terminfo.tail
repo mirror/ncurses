@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.100 2020/12/19 21:51:22 tom Exp $
+.\" $Id: terminfo.tail,v 1.101 2021/06/17 21:30:22 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -197,7 +197,7 @@ The reason for this quirk is to maintain binary compatibility of the
 compiled terminfo files with other implementations,
 e.g., the SVr4 systems, which document this.
 Compiled terminfo files use null-terminated strings, with no lengths.
-Modifying this would require a new binary format, 
+Modifying this would require a new binary format,
 which would not work with other implementations.
 .PP
 Finally, characters may be given as three octal digits after a \fB\e\fR.
@@ -1238,7 +1238,7 @@ The \fB@RESET@\fP program writes strings including
 .BR iprog ,
 etc., in the same order as the
 .I init
-program, using 
+program, using
 .BR rs1 ,
 etc., instead of
 .BR is1 ,
@@ -1831,7 +1831,7 @@ binary format) collide with System V and XSI Curses extensions.
 .SH EXTENSIONS
 .PP
 Searching for terminal descriptions in
-\fB$HOME/.terminfo\fR and TERMINFO_DIRS 
+\fB$HOME/.terminfo\fR and TERMINFO_DIRS
 is not supported by older implementations.
 .PP
 Some SVr4 \fBcurses\fR implementations, and all previous to SVr4, do not

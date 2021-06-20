@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.74 2021/03/06 16:05:19 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.75 2021/06/17 21:11:08 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -539,13 +539,13 @@ l l
 _ _
 l l.
 \fBFunction\fR	\fBReplaced by\fP
-crmode	cbreak	
-fixterm	reset_prog_mode	
-gettmode	N/A	
-nocrmode	nocbreak	
-resetterm	reset_shell_mode	
-saveterm	def_prog_mode	
-setterm	setupterm	
+crmode	cbreak
+fixterm	reset_prog_mode
+gettmode	N/A
+nocrmode	nocbreak
+resetterm	reset_shell_mode
+saveterm	def_prog_mode
+setterm	setupterm
 .TE
 .PP
 SVr3 kept the \fBmvcur\fP, \fBvidattr\fP and \fBvidputs\fP functions,

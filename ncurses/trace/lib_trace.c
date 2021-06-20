@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -37,7 +37,7 @@
 /*
  *	lib_trace.c - Tracing/Debugging routines
  *
- * The _tracef() function is originally from pcurses (by Pavel Curtis) in 1982. 
+ * The _tracef() function is originally from pcurses (by Pavel Curtis) in 1982.
  * pcurses allowed one to enable/disable tracing using traceon() and traceoff()
  * functions.  ncurses provides a trace() function which allows one to
  * selectively enable or disable several tracing features.
@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.97 2020/08/29 16:22:03 juergen Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.98 2021/06/17 21:30:22 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -127,7 +127,7 @@ curses_trace(unsigned tracelevel)
 	_nc_tracing = tracelevel;
 	/* Try to set line-buffered mode, or (failing that) unbuffered,
 	 * so that the trace-output gets flushed automatically at the
-	 * end of each line.  This is useful in case the program dies. 
+	 * end of each line.  This is useful in case the program dies.
 	 */
 	if (MyFP != 0) {
 #if HAVE_SETVBUF		/* ANSI */

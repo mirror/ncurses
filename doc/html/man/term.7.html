@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
   * Copyright 1998-2011,2017 Free Software Foundation, Inc.                  *
@@ -41,7 +41,7 @@
 <BODY>
 <H1 class="no-header">term 7</H1>
 <PRE>
-<STRONG><A HREF="term.7.html">term(7)</A></STRONG>                Miscellaneous Information Manual                <STRONG><A HREF="term.7.html">term(7)</A></STRONG>
+<B><A HREF="term.7.html">term(7)</A></B>                Miscellaneous Information Manual                <B><A HREF="term.7.html">term(7)</A></B>
 
 
 
@@ -51,13 +51,13 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  environment variable <STRONG>TERM</STRONG> should normally contain the type name of
+       The  environment variable <B>TERM</B> should normally contain the type name of
        the terminal, console or  display-device  type  you  are  using.   This
        information  is  critical  for  all screen-oriented programs, including
        your editor and mailer.
 
-       A default <STRONG>TERM</STRONG> value  will  be  set  on  a  per-line  basis  by  either
-       <STRONG>/etc/inittab</STRONG>  (e.g.,  System-V-like  UNIXes) or <STRONG>/etc/ttys</STRONG> (BSD UNIXes).
+       A default <B>TERM</B> value  will  be  set  on  a  per-line  basis  by  either
+       <B>/etc/inittab</B>  (e.g.,  System-V-like  UNIXes) or <B>/etc/ttys</B> (BSD UNIXes).
        This will nearly  always  suffice  for  workstation  and  microcomputer
        consoles.
 
@@ -67,19 +67,19 @@
        the prevalence of DEC VT100-compatible terminals and  personal-computer
        emulators.
 
-       Modern  telnets pass your <STRONG>TERM</STRONG> environment variable from the local side
+       Modern  telnets pass your <B>TERM</B> environment variable from the local side
        to the remote one.  There can be problems if  the  remote  terminfo  or
        termcap  entry  for  your  type  is not compatible with yours, but this
        situation is rare and  can  almost  always  be  avoided  by  explicitly
        exporting  "vt100"  (assuming  you  are  in fact using a VT100-superset
        console, terminal, or terminal emulator.)
 
-       In any case, you are free to override the system <STRONG>TERM</STRONG> setting  to  your
-       taste in your shell profile.  The <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG> utility may be of assistance;
+       In any case, you are free to override the system <B>TERM</B> setting  to  your
+       taste in your shell profile.  The <B><A HREF="tset.1.html">tset(1)</A></B> utility may be of assistance;
        you can give it a set of rules for deducing or  requesting  a  terminal
        type based on the tty device and baud rate.
 
-       Setting  your  own  <STRONG>TERM</STRONG> value may also be useful if you have created a
+       Setting  your  own  <B>TERM</B> value may also be useful if you have created a
        custom entry incorporating options (such as  visual  bell  or  reverse-
        video)  which  you  wish  to  override the system default type for your
        line.
@@ -91,21 +91,21 @@
             toe | more
 
        from your shell.   These  capability  files  are  in  a  binary  format
-       optimized for retrieval speed (unlike the old text-based <STRONG>termcap</STRONG> format
-       they replace); to examine  an  entry,  you  must  use  the  <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>
+       optimized for retrieval speed (unlike the old text-based <B>termcap</B> format
+       they replace); to examine  an  entry,  you  must  use  the  <B><A HREF="infocmp.1M.html">infocmp(1M)</A></B>
        command.  Invoke it as follows:
 
-            infocmp <EM>entry</EM><STRONG>_</STRONG><EM>name</EM>
+            infocmp <I>entry</I><B>_</B><I>name</I>
 
-       where  <EM>entry</EM><STRONG>_</STRONG><EM>name</EM>  is the name of the type you wish to examine (and the
+       where  <I>entry</I><B>_</B><I>name</I>  is the name of the type you wish to examine (and the
        name of its capability file  the  subdirectory  of  /usr/share/terminfo
        named  for  its first letter).  This command dumps a capability file in
-       the text format described by <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
+       the text format described by <B><A HREF="terminfo.5.html">terminfo(5)</A></B>.
 
-       The first line of a <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> description gives the  names  by  which
+       The first line of a <B><A HREF="terminfo.5.html">terminfo(5)</A></B> description gives the  names  by  which
        terminfo  knows a terminal, separated by "|" (pipe-bar) characters with
        the last name field terminated by a comma.  The first name field is the
-       type's <EM>primary</EM> <EM>name</EM>, and is the one to use when setting <STRONG>TERM</STRONG>.  The last
+       type's <I>primary</I> <I>name</I>, and is the one to use when setting <B>TERM</B>.  The last
        name field (if distinct from the first) is actually  a  description  of
        the  terminal  type  (it  may contain blanks; the others must be single
        words).  Name fields between  the  first  and  last  (if  present)  are
@@ -129,23 +129,23 @@
        name; some historical terminfo names use it.
 
        The root name for a terminal or workstation console type should  almost
-       always  begin  with a vendor prefix (such as <STRONG>hp</STRONG> for Hewlett-Packard, <STRONG>wy</STRONG>
-       for Wyse, or <STRONG>att</STRONG> for AT&amp;T terminals), or a common name of the  terminal
-       line  (<STRONG>vt</STRONG>  for  the  VT  series  of  terminals from DEC, or <STRONG>sun</STRONG> for Sun
-       Microsystems workstation  consoles,  or  <STRONG>regent</STRONG>  for  the  ADDS  Regent
+       always  begin  with a vendor prefix (such as <B>hp</B> for Hewlett-Packard, <B>wy</B>
+       for Wyse, or <B>att</B> for AT&amp;T terminals), or a common name of the  terminal
+       line  (<B>vt</B>  for  the  VT  series  of  terminals from DEC, or <B>sun</B> for Sun
+       Microsystems workstation  consoles,  or  <B>regent</B>  for  the  ADDS  Regent
        series.   You  can  list  the  terminfo  tree  to see what prefixes are
        already in common use.  The root name prefix should  be  followed  when
-       appropriate by a model number; thus <STRONG>vt100</STRONG>, <STRONG>hp2621</STRONG>, <STRONG>wy50</STRONG>.
+       appropriate by a model number; thus <B>vt100</B>, <B>hp2621</B>, <B>wy50</B>.
 
        The  root  name for a PC-Unix console type should be the OS name, i.e.,
-       <STRONG>linux</STRONG>, <STRONG>bsdos</STRONG>, <STRONG>freebsd</STRONG>, <STRONG>netbsd</STRONG>.  It should <EM>not</EM> be <STRONG>console</STRONG> or  any  other
+       <B>linux</B>, <B>bsdos</B>, <B>freebsd</B>, <B>netbsd</B>.  It should <I>not</I> be <B>console</B> or  any  other
        generic that might cause confusion in a multi-platform environment!  If
        a model number follows, it should indicate either the OS release  level
        or the console driver release level.
 
        The  root name for a terminal emulator (assuming it does not fit one of
        the standard ANSI or vt100 types) should  be  the  program  name  or  a
-       readily recognizable abbreviation of it (i.e., <STRONG>versaterm</STRONG>, <STRONG>ctrm</STRONG>).
+       readily recognizable abbreviation of it (i.e., <B>versaterm</B>, <B>ctrm</B>).
 
        Following  the  root name, you may add any reasonable number of hyphen-
        separated feature suffixes.
@@ -183,15 +183,15 @@
        Conventionally, if your terminal type is a variant intended to  specify
        a  line  height,  that  suffix should go first.  So, for a hypothetical
        FuBarCo model 2317 terminal in 30-line mode with  reverse  video,  best
-       form would be <STRONG>fubar-30-rv</STRONG> (rather than, say, "fubar-rv-30").
+       form would be <B>fubar-30-rv</B> (rather than, say, "fubar-rv-30").
 
        Terminal  types  that are written not as standalone entries, but rather
-       as components to be plugged into other entries  via  <STRONG>use</STRONG>  capabilities,
+       as components to be plugged into other entries  via  <B>use</B>  capabilities,
        are distinguished by using embedded plus signs rather than dashes.
 
        Commands which use a terminal type to control display often accept a -T
        option that accepts a terminal name  argument.   Such  programs  should
-       fall  back  on  the  <STRONG>TERM</STRONG>  environment  variable  when  no -T option is
+       fall  back  on  the  <B>TERM</B>  environment  variable  when  no -T option is
        specified.
 
 
@@ -212,11 +212,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>, <B><A HREF="term.5.html">term(5)</A></B>.
 
 
 
-                                                                       <STRONG><A HREF="term.7.html">term(7)</A></STRONG>
+                                                                       <B><A HREF="term.7.html">term(7)</A></B>
 </PRE>
 <div class="nav">
 <ul>

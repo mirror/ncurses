@@ -1,6 +1,6 @@
-<!-- 
+<!--
   ****************************************************************************
-  * Copyright 2018,2020 Thomas E. Dickey                                     *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,87 +27,87 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_touch.3x,v 1.23 2020/10/24 09:51:21 tom Exp @
+  * @Id: curs_touch.3x,v 1.24 2021/06/17 21:26:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_touch 3x</TITLE>
+<TITLE>curs_touch 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_touch 3x</H1>
+<H1 class="no-header">curs_touch 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
+<B><A HREF="curs_touch.3X.html">curs_touch(3X)</A></B>                                                  <B><A HREF="curs_touch.3X.html">curs_touch(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>touchwin</STRONG>, <STRONG>touchline</STRONG>, <STRONG>untouchwin</STRONG>, <STRONG>wtouchln</STRONG>, <STRONG>is_linetouched</STRONG>,
-       <STRONG>is_wintouched</STRONG> - <STRONG>curses</STRONG> refresh control routines
+       <B>touchwin</B>, <B>touchline</B>, <B>untouchwin</B>, <B>wtouchln</B>, <B>is_linetouched</B>,
+       <B>is_wintouched</B> - <B>curses</B> refresh control routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>touchline(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>start</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>count</EM><STRONG>);</STRONG>
+       <B>int</B> <B>touchline(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>start</I><B>,</B> <B>int</B> <I>count</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>touchwin(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wtouchln(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>changed</EM><STRONG>);</STRONG>
+       <B>int</B> <B>touchwin(WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <B>int</B> <B>wtouchln(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>n</I><B>,</B> <B>int</B> <I>changed</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>untouchwin(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <B>int</B> <B>untouchwin(WINDOW</B> <B>*</B><I>win</I><B>);</B>
 
-       <STRONG>bool</STRONG> <STRONG>is_linetouched(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>line</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>is_wintouched(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <B>bool</B> <B>is_linetouched(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>line</I><B>);</B>
+       <B>bool</B> <B>is_wintouched(WINDOW</B> <B>*</B><I>win</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <STRONG>touchwin</STRONG> and <STRONG>touchline</STRONG> routines throw away all optimization  infor-
+       The <B>touchwin</B> and <B>touchline</B> routines throw away all optimization  infor-
        mation about which parts of the window have been touched, by pretending
        that the entire window has been drawn on.  This is sometimes  necessary
        when  using  overlapping  windows, since a change to one window affects
        the other window, but the records of which lines have been  changed  in
-       the other window do not reflect the change.  The routine <STRONG>touchline</STRONG> only
-       pretends that <EM>count</EM> lines have been changed, beginning with line <EM>start</EM>.
+       the other window do not reflect the change.  The routine <B>touchline</B> only
+       pretends that <I>count</I> lines have been changed, beginning with line <I>start</I>.
 
-       The <STRONG>untouchwin</STRONG> routine marks all lines in the window as unchanged since
-       the last call to <STRONG>wrefresh</STRONG>.
+       The <B>untouchwin</B> routine marks all lines in the window as unchanged since
+       the last call to <B>wrefresh</B>.
 
-       The  <STRONG>wtouchln</STRONG>  routine makes <EM>n</EM> lines in the window, starting at line <EM>y</EM>,
-       look as if they have (<EM>changed</EM><STRONG>=1</STRONG>) or have not (<EM>changed</EM><STRONG>=0</STRONG>)  been  changed
-       since the last call to <STRONG>wrefresh</STRONG>.
+       The  <B>wtouchln</B>  routine makes <I>n</I> lines in the window, starting at line <I>y</I>,
+       look as if they have (<I>changed</I><B>=1</B>) or have not (<I>changed</I><B>=0</B>)  been  changed
+       since the last call to <B>wrefresh</B>.
 
-       The <STRONG>is_linetouched</STRONG> and <STRONG>is_wintouched</STRONG> routines return <STRONG>TRUE</STRONG> if the speci-
-       fied line/window was modified since the last call to  <STRONG>wrefresh</STRONG>;  other-
-       wise  they  return  <STRONG>FALSE</STRONG>.   In addition, <STRONG>is_linetouched</STRONG> returns <STRONG>ERR</STRONG> if
-       <EM>line</EM> is not valid for the given window.
+       The <B>is_linetouched</B> and <B>is_wintouched</B> routines return <B>TRUE</B> if the speci-
+       fied line/window was modified since the last call to  <B>wrefresh</B>;  other-
+       wise  they  return  <B>FALSE</B>.   In addition, <B>is_linetouched</B> returns <B>ERR</B> if
+       <I>line</I> is not valid for the given window.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines return the integer <STRONG>ERR</STRONG> upon failure and an  integer  value
-       other  than  <STRONG>ERR</STRONG>  upon successful completion, unless otherwise noted in
+       All routines return the integer <B>ERR</B> upon failure and an  integer  value
+       other  than  <B>ERR</B>  upon successful completion, unless otherwise noted in
        the preceding routine descriptions.
 
        X/Open does not define any error conditions.  In this implementation
 
-          <STRONG>is_linetouched</STRONG>
+          <B>is_linetouched</B>
                returns an error if the window pointer is null, or if the  line
                number is outside the window.
 
-               The constant <STRONG>ERR</STRONG> is distinct from <STRONG>TRUE</STRONG> and <STRONG>FALSE</STRONG>, which are the
+               The constant <B>ERR</B> is distinct from <B>TRUE</B> and <B>FALSE</B>, which are the
                normal return values of this function.   Because  the  function
-               returns a <STRONG>bool</STRONG>, returning <STRONG>ERR</STRONG> (which is neither <STRONG>TRUE</STRONG> nor <STRONG>FALSE</STRONG>)
+               returns a <B>bool</B>, returning <B>ERR</B> (which is neither <B>TRUE</B> nor <B>FALSE</B>)
                may not be supported by the compiler.
 
                To provide error-checking and also match  the  X/Open  function
-               prototype, the <STRONG>ERR</STRONG> is provided by a macro named <STRONG>is_linetouched</STRONG>.
-               The actual function returns <STRONG>FALSE</STRONG> when it detects an error.
+               prototype, the <B>ERR</B> is provided by a macro named <B>is_linetouched</B>.
+               The actual function returns <B>FALSE</B> when it detects an error.
 
-          <STRONG>wtouchln</STRONG>
+          <B>wtouchln</B>
                returns an error if the window pointer is null, or if the  line
                number is outside the window.
 
@@ -116,7 +116,7 @@
        These  functions  were  introduced  by SVr4.  The Solaris curses header
        file, for instance, defines both an actual function and macro for each.
        The  macros  give the same result as the actual functions.  SVr4 curses
-       does not check the window parameter <EM>win</EM> to ensure that it is not  <STRONG>NULL</STRONG>;
+       does not check the window parameter <I>win</I> to ensure that it is not  <B>NULL</B>;
        otherwise this implementation behaves the same as SVr4.
 
        The XSI Curses standard, Issue 4 describes these functions, but defines
@@ -124,15 +124,15 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       All of these routines except <STRONG>wtouchln</STRONG> may be macros.
+       All of these routines except <B>wtouchln</B> may be macros.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>.
 
 
 
-                                                                <STRONG><A HREF="curs_touch.3x.html">curs_touch(3x)</A></STRONG>
+                                                                <B><A HREF="curs_touch.3X.html">curs_touch(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2017 Free Software Foundation, Inc.                            *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@
 .\"
 .\" Author: Thomas E. Dickey
 .\"
-.\" $Id: new_pair.3x,v 1.15 2020/10/17 23:54:50 tom Exp $
+.\" $Id: new_pair.3x,v 1.16 2021/06/17 21:26:02 tom Exp $
 .TH new_pair 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -82,7 +82,7 @@ That is, the foreground and background colors are applied as a pair.
 .bP
 Color pairs are the curses library's way of managing a color palette
 on a terminal.
-If the library does not keep track of the \fIcombinations\fP of 
+If the library does not keep track of the \fIcombinations\fP of
 colors which are displayed, it will be inefficient.
 .bP
 For simple terminal emulators
@@ -94,7 +94,7 @@ as the limit on color pairs:
 .NE
 .bP
 Terminals which support \fIdefault colors\fP distinct
-from \*(``ANSI colors\*('' 
+from \*(``ANSI colors\*(''
 add to the possible combinations, producing this total:
 .NS
 \fI( \fP\fBCOLORS\fP\fI + 1 ) * ( \fP\fBCOLORS\fP\fI + 1 )\fP
@@ -104,7 +104,7 @@ An application might use up to a few dozen color pairs to
 implement a predefined color scheme.
 .IP
 Beyond that lies in the realm of programs using the foreground
-and background colors for \*(``ASCII art\*('' 
+and background colors for \*(``ASCII art\*(''
 (or some other non-textual application).
 .IP
 Also beyond those few dozen pairs, the required size for a table

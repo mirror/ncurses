@@ -37,7 +37,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_addch.c,v 1.137 2021/02/20 22:24:34 tom Exp $")
+MODULE_ID("$Id: lib_addch.c,v 1.138 2021/06/17 21:11:08 tom Exp $")
 
 static const NCURSES_CH_T blankchar = NewChar(BLANK_TEXT);
 
@@ -140,7 +140,7 @@ newline_forces_scroll(WINDOW *win, NCURSES_SIZE_T *ypos)
  * wrapped the cursor.  We don't do anything with this flag except set it when
  * wrapping, and clear it whenever we move the cursor.  If we try to wrap at
  * the lower-right corner of a window, we cannot move the cursor (since that
- * wouldn't be legal).  So we return an error (which is what SVr4 does). 
+ * wouldn't be legal).  So we return an error (which is what SVr4 does).
  * Unlike SVr4, we can successfully add a character to the lower-right corner
  * (Solaris 2.6 does this also, however).
  */

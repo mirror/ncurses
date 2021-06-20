@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
   * Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
@@ -34,73 +34,73 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_pattern 3x</TITLE>
+<TITLE>menu_pattern 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_pattern 3x</H1>
+<H1 class="no-header">menu_pattern 3X</H1>
 <PRE>
-<STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>                                              <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+<B><A HREF="menu_pattern.3X.html">menu_pattern(3X)</A></B>                                              <B><A HREF="menu_pattern.3X.html">menu_pattern(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>set_menu_pattern</STRONG>, <STRONG>menu_pattern</STRONG> - set and get a menu's pattern buffer
+       <B>set_menu_pattern</B>, <B>menu_pattern</B> - set and get a menu's pattern buffer
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_menu_pattern(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>pattern</EM><STRONG>);</STRONG>
-       <STRONG>char</STRONG> <STRONG>*menu_pattern(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_menu_pattern(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>pattern</I><B>);</B>
+       <B>char</B> <B>*menu_pattern(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        Every  menu  has  an  associated pattern match buffer.  As input events
        that are printable characters come in, they are appended to this  match
-       buffer and tested for a match, as described in <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>.
+       buffer and tested for a match, as described in <B><A HREF="menu_driver.3X.html">menu_driver(3X)</A></B>.
 
-       The  function  <STRONG>set_menu_pattern</STRONG>  sets  the pattern buffer for the given
+       The  function  <B>set_menu_pattern</B>  sets  the pattern buffer for the given
        menu and tries to find the first matching item.  If it  succeeds,  that
        item becomes current; if not, the current item does not change.
 
-       The function <STRONG>menu_pattern</STRONG> returns the pattern buffer of the given <EM>menu</EM>.
+       The function <B>menu_pattern</B> returns the pattern buffer of the given <I>menu</I>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  function <STRONG>menu_pattern</STRONG> returns a pointer, which is <STRONG>NULL</STRONG> if the <EM>menu</EM>
-       parameter is <STRONG>NULL</STRONG>.  Otherwise, it is a pointer to  a  string  which  is
-       empty if no pattern has been set.  It does not set <STRONG>errno</STRONG>.
+       The  function <B>menu_pattern</B> returns a pointer, which is <B>NULL</B> if the <I>menu</I>
+       parameter is <B>NULL</B>.  Otherwise, it is a pointer to  a  string  which  is
+       empty if no pattern has been set.  It does not set <B>errno</B>.
 
-       The function <STRONG>set_menu_pattern</STRONG> may return the following error codes:
+       The function <B>set_menu_pattern</B> may return the following error codes:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_BAD_STATE</STRONG>
+       <B>E_BAD_STATE</B>
             Routine was called from an initialization or termination function.
 
-       <STRONG>E_NOT_CONNECTED</STRONG>
+       <B>E_NOT_CONNECTED</B>
             No items are connected to menu.
 
-       <STRONG>E_NO_MATCH</STRONG>
+       <B>E_NO_MATCH</B>
             Character failed to match.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -114,7 +114,7 @@
 
 
 
-                                                              <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+                                                              <B><A HREF="menu_pattern.3X.html">menu_pattern(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

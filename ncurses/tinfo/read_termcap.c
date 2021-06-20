@@ -57,7 +57,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.99 2021/04/18 11:43:38 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.100 2021/06/17 21:11:08 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -803,7 +803,7 @@ _nc_tgetent(char *bp, char **sourcename, int *lineno, const char *name)
     /*
      * TERMCAP can have one of two things in it.  It can be the name of a file
      * to use instead of /etc/termcap.  In this case it better start with a
-     * "/".  Or it can be an entry to use so we don't have to read the file. 
+     * "/".  Or it can be an entry to use so we don't have to read the file.
      * In this case it has to already have the newlines crunched out.  If
      * TERMCAP does not hold a file name then a path of names is searched
      * instead.  The path is found in the TERMPATH variable, or becomes
@@ -1166,7 +1166,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 		_nc_free_entry(_nc_head, &(ep->tterm));
 
 		/*
-		 * OK, now try to write the type to user's terminfo directory. 
+		 * OK, now try to write the type to user's terminfo directory.
 		 * Next time he loads this, it will come through terminfo.
 		 *
 		 * Advantage:  Second and subsequent fetches of this entry will

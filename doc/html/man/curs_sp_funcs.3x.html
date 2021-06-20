@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 2010-2015,2017 Free Software Foundation, Inc.                  *
@@ -37,182 +37,182 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_sp_funcs 3x</TITLE>
+<TITLE>curs_sp_funcs 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_sp_funcs 3x</H1>
+<H1 class="no-header">curs_sp_funcs 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG>                                            <STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG>
+<B><A HREF="curs_sp_funcs.3X.html">curs_sp_funcs(3X)</A></B>                                            <B><A HREF="curs_sp_funcs.3X.html">curs_sp_funcs(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       curs_sp_funcs - <STRONG>curses</STRONG> screen-pointer extension
+       curs_sp_funcs - <B>curses</B> screen-pointer extension
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>alloc_pair_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>assume_default_colors_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>baudrate_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>beep_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>can_change_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>cbreak_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>color_content_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>short*</STRONG> <EM>r</EM><STRONG>,</STRONG> <STRONG>short*</STRONG> <EM>g</EM><STRONG>,</STRONG> <STRONG>short*</STRONG> <EM>b</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>curs_set_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>visibility</EM>);
-       <STRONG>int</STRONG> <STRONG>def_prog_mode_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>def_shell_mode_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>int</B> <B>alloc_pair_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>fg</I><B>,</B> <B>int</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>assume_default_colors_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>fg</I><B>,</B> <B>int</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>baudrate_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>beep_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>bool</B> <B>can_change_color_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>cbreak_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>color_content_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>short</B> <I>color</I><B>,</B> <B>short*</B> <I>r</I><B>,</B> <B>short*</B> <I>g</I><B>,</B> <B>short*</B> <I>b</I><B>);</B>
+       <B>int</B> <B>curs_set_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>visibility</I>);
+       <B>int</B> <B>def_prog_mode_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>def_shell_mode_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>define_key_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <EM>definition</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>keycode</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>delay_output_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ms</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>doupdate_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>echo_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>endwin_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>char</STRONG> <STRONG>erasechar_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>erasewchar_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>extended_color_content_sp(SCREEN</STRONG> <STRONG>*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG> <EM>r</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG> <EM>g</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG> <EM>b</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>extended_pair_content_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>extended_slk_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pair</EM><STRONG>);</STRONG>
+       <B>int</B> <B>define_key_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B> <I>definition</I><B>,</B> <B>int</B> <I>keycode</I><B>);</B>
+       <B>int</B> <B>delay_output_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>ms</I><B>);</B>
+       <B>int</B> <B>doupdate_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>echo_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>endwin_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>char</B> <B>erasechar_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>erasewchar_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>wchar_t</B> <B>*</B><I>ch</I><B>);</B>
+       <B>int</B> <B>extended_color_content_sp(SCREEN</B> <B>*</B> <I>sp</I><B>,</B> <B>int</B> <I>color</I><B>,</B> <B>int</B> <B>*</B> <I>r</I><B>,</B> <B>int</B> <B>*</B> <I>g</I><B>,</B> <B>int</B> <B>*</B> <I>b</I><B>);</B>
+       <B>int</B> <B>extended_pair_content_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>pair</I><B>,</B> <B>int</B> <B>*</B> <I>fg</I><B>,</B> <B>int</B> <B>*</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>extended_slk_color_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>pair</I><B>);</B>
 
-       <STRONG>void</STRONG> <STRONG>filter_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>find_pair_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>flash_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>flushinp_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>free_pair_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pair</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>get_escdelay_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>getmouse_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>MEVENT*</STRONG> <STRONG>event);</STRONG>
-       <STRONG>WINDOW*</STRONG> <STRONG>getwin_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>FILE*</STRONG> <EM>filep</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>halfdelay_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>tenths</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>has_colors_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>void</B> <B>filter_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>find_pair_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>fg</I><B>,</B> <B>int</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>flash_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>flushinp_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>free_pair_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>pair</I><B>);</B>
+       <B>int</B> <B>get_escdelay_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>getmouse_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>MEVENT*</B> <B>event);</B>
+       <B>WINDOW*</B> <B>getwin_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>FILE*</B> <I>filep</I><B>);</B>
+       <B>int</B> <B>halfdelay_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>tenths</I><B>);</B>
+       <B>bool</B> <B>has_colors_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>bool</STRONG> <STRONG>has_ic_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>has_il_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>has_key_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>has_mouse_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>init_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>r</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>g</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>b</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>init_extended_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>color</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>r</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>g</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>b</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>init_extended_pair_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>init_pair_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>intrflush_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>WINDOW*</STRONG> <EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>bool</STRONG> <STRONG>is_term_resized_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
+       <B>bool</B> <B>has_ic_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>bool</B> <B>has_il_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>has_key_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>ch</I><B>);</B>
+       <B>bool</B> <B>has_mouse_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>init_color_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>short</B> <I>color</I><B>,</B> <B>short</B> <I>r</I><B>,</B> <B>short</B> <I>g</I><B>,</B> <B>short</B> <I>b</I><B>);</B>
+       <B>int</B> <B>init_extended_color_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>color</I><B>,</B> <B>int</B> <I>r</I><B>,</B> <B>int</B> <I>g</I><B>,</B> <B>int</B> <I>b</I><B>);</B>
+       <B>int</B> <B>init_extended_pair_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>pair</I><B>,</B> <B>int</B> <I>fg</I><B>,</B> <B>int</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>init_pair_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>short</B> <I>pair</I><B>,</B> <B>short</B> <I>fg</I><B>,</B> <B>short</B> <I>bg</I><B>);</B>
+       <B>int</B> <B>intrflush_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>WINDOW*</B> <I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>bool</B> <B>is_term_resized_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
 
-       <STRONG>bool</STRONG> <STRONG>isendwin_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>key_defined_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>definition</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>keybound_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>keycode</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>count</EM><STRONG>);</STRONG>
-       <STRONG>NCURSES_CONST</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <STRONG>keyname_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>keyok_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>keycode</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>enable</EM><STRONG>);</STRONG>
-       <STRONG>char</STRONG> <STRONG>killchar_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>killwchar_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>longname_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mcprint_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>data</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>len</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mouseinterval_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>erval</EM><STRONG>);</STRONG>
+       <B>bool</B> <B>isendwin_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>key_defined_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>definition</I><B>);</B>
+       <B>char*</B> <B>keybound_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>keycode</I><B>,</B> <B>int</B> <I>count</I><B>);</B>
+       <B>NCURSES_CONST</B> <B>char</B> <B>*</B> <B>keyname_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>c</I><B>);</B>
+       <B>int</B> <B>keyok_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>keycode</I><B>,</B> <B>bool</B> <I>enable</I><B>);</B>
+       <B>char</B> <B>killchar_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>killwchar_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>wchar_t</B> <B>*</B><I>ch</I><B>);</B>
+       <B>char*</B> <B>longname_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>mcprint_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>char</B> <B>*</B><I>data</I><B>,</B> <B>int</B> <I>len</I><B>);</B>
+       <B>int</B> <B>mouseinterval_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>erval</I><B>);</B>
 
-       <STRONG>mmask_t</STRONG> <STRONG>mousemask_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>mmask_t</STRONG> <EM>newmask</EM><STRONG>,</STRONG> <STRONG>mmask_t</STRONG> <STRONG>*</STRONG><EM>oldmask</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>mvcur_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>oldrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>oldcol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>newrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>newcol</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>napms_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ms</EM><STRONG>);</STRONG>
-       <STRONG>WINDOW*</STRONG> <STRONG>newpad_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>nrows</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ncols</EM><STRONG>);</STRONG>
-       <STRONG>SCREEN*</STRONG> <STRONG>new_prescr(void);</STRONG>
-       <STRONG>SCREEN*</STRONG> <STRONG>newterm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>type</EM><STRONG>,</STRONG> <STRONG>FILE</STRONG> <STRONG>*</STRONG><EM>outfd</EM><STRONG>,</STRONG> <STRONG>FILE</STRONG> <STRONG>*</STRONG><EM>infd</EM><STRONG>);</STRONG>
-       <STRONG>WINDOW*</STRONG> <STRONG>newwin_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>nlines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ncols</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>begin</EM><STRONG>_</STRONG><EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>begin</EM><STRONG>_</STRONG><EM>x</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>nl_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>nocbreak_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>noecho_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>mmask_t</B> <B>mousemask_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>mmask_t</B> <I>newmask</I><B>,</B> <B>mmask_t</B> <B>*</B><I>oldmask</I><B>);</B>
+       <B>int</B> <B>mvcur_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>oldrow</I><B>,</B> <B>int</B> <I>oldcol</I><B>,</B> <B>int</B> <I>newrow</I><B>,</B> <B>int</B> <I>newcol</I><B>);</B>
+       <B>int</B> <B>napms_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>ms</I><B>);</B>
+       <B>WINDOW*</B> <B>newpad_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>nrows</I><B>,</B> <B>int</B> <I>ncols</I><B>);</B>
+       <B>SCREEN*</B> <B>new_prescr(void);</B>
+       <B>SCREEN*</B> <B>newterm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>type</I><B>,</B> <B>FILE</B> <B>*</B><I>outfd</I><B>,</B> <B>FILE</B> <B>*</B><I>infd</I><B>);</B>
+       <B>WINDOW*</B> <B>newwin_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>nlines</I><B>,</B> <B>int</B> <I>ncols</I><B>,</B> <B>int</B> <I>begin</I><B>_</B><I>y</I><B>,</B> <B>int</B> <I>begin</I><B>_</B><I>x</I><B>);</B>
+       <B>int</B> <B>nl_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>nocbreak_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>noecho_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>void</STRONG> <STRONG>nofilter_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>nonl_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>noqiflush_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>noraw_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>pair_content_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>short*</STRONG> <EM>fg</EM><STRONG>,</STRONG> <STRONG>short*</STRONG> <EM>bg</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>qiflush_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>raw_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>reset_prog_mode_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>reset_color_pairs_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>reset_shell_mode_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>void</B> <B>nofilter_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>nonl_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>void</B> <B>noqiflush_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>noraw_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>pair_content_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>short</B> <I>pair</I><B>,</B> <B>short*</B> <I>fg</I><B>,</B> <B>short*</B> <I>bg</I><B>);</B>
+       <B>void</B> <B>qiflush_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>raw_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>reset_prog_mode_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>void</B> <B>reset_color_pairs_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>reset_shell_mode_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>resetty_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>resize_term_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>resizeterm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>ripoffline_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>line</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>(*</STRONG><EM>init</EM><STRONG>)(WINDOW*</STRONG> <EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>));</STRONG>
-       <STRONG>int</STRONG> <STRONG>savetty_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>scr_init_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>scr_restore_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>scr_set_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>set_escdelay_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ms</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>set_tabsize_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>cols</EM><STRONG>);</STRONG>
+       <B>int</B> <B>resetty_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>resize_term_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
+       <B>int</B> <B>resizeterm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
+       <B>int</B> <B>ripoffline_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>line</I><B>,</B> <B>int</B> <B>(*</B><I>init</I><B>)(WINDOW*</B> <I>win</I><B>,</B> <B>int</B> <I>fmt</I><B>));</B>
+       <B>int</B> <B>savetty_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>scr_init_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
+       <B>int</B> <B>scr_restore_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
+       <B>int</B> <B>scr_set_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
+       <B>int</B> <B>set_escdelay_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>ms</I><B>);</B>
+       <B>int</B> <B>set_tabsize_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>cols</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>slk_attr_set_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>void*</STRONG><EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attrset_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>a</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attroff_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>a</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_attron_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>chtype</STRONG> <EM>a</EM><STRONG>);</STRONG>
-       <STRONG>attr_t</STRONG> <STRONG>slk_attr_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_clear_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_init_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>slk_label_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>labnum</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_noutrefresh_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>int</B> <B>slk_attr_set_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>attr_t</B> <I>attrs</I><B>,</B> <B>short</B> <I>pair</I><B>,</B> <B>void*</B><I>opts</I><B>);</B>
+       <B>int</B> <B>slk_attrset_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>chtype</B> <I>a</I><B>);</B>
+       <B>int</B> <B>slk_attroff_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>chtype</B> <I>a</I><B>);</B>
+       <B>int</B> <B>slk_attron_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>chtype</B> <I>a</I><B>);</B>
+       <B>attr_t</B> <B>slk_attr_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>slk_clear_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>slk_color_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>short</B> <I>pair</I><B>);</B>
+       <B>int</B> <B>slk_init_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>fmt</I><B>);</B>
+       <B>char*</B> <B>slk_label_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>labnum</I><B>);</B>
+       <B>int</B> <B>slk_noutrefresh_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>slk_refresh_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_restore_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_set_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>labnum</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG> <EM>label</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>slk_touch_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>start_color_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>attr_t</STRONG> <STRONG>term_attrs_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>chtype</STRONG> <STRONG>termattrs_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>termname_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>typeahead_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fd</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>unget_wch_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <EM>wch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>slk_refresh_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>slk_restore_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>slk_set_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>labnum</I><B>,</B> <B>const</B> <B>char</B> <B>*</B> <I>label</I><B>,</B> <B>int</B> <I>fmt</I><B>);</B>
+       <B>int</B> <B>slk_touch_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>start_color_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>attr_t</B> <B>term_attrs_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>chtype</B> <B>termattrs_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>char*</B> <B>termname_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>int</B> <B>typeahead_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>fd</I><B>);</B>
+       <B>int</B> <B>unget_wch_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>wchar_t</B> <I>wch</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>ungetch_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>ch</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>ungetmouse_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,MEVENT</STRONG> <STRONG>*</STRONG> <STRONG>event);</STRONG>
-       <STRONG>int</STRONG> <STRONG>use_default_colors_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>use_env_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>use_legacy_coding_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>level</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>use_tioctl_sp(SCREEN</STRONG> <STRONG>*</STRONG><EM>sp</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vid_attr_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vid_puts_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <EM>opts</EM><STRONG>,</STRONG> <STRONG>NCURSES_SP_OUTC</STRONG> <EM>putc</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vidattr_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attrs</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>vidputs_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>NCURSES_SP_OUTC</STRONG> <EM>putc</EM><STRONG>);</STRONG>
-       <STRONG>wchar_t*</STRONG> <STRONG>wunctrl_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>ch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>ungetch_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>ch</I><B>);</B>
+       <B>int</B> <B>ungetmouse_sp(SCREEN*</B> <I>sp</I><B>,MEVENT</B> <B>*</B> <B>event);</B>
+       <B>int</B> <B>use_default_colors_sp(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>void</B> <B>use_env_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>int</B> <B>use_legacy_coding_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>int</B> <I>level</I><B>);</B>
+       <B>void</B> <B>use_tioctl_sp(SCREEN</B> <B>*</B><I>sp</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>int</B> <B>vid_attr_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>attr_t</B> <I>attrs</I><B>,</B> <B>short</B> <I>pair</I><B>,</B> <B>void</B> <B>*</B> <I>opts</I><B>);</B>
+       <B>int</B> <B>vid_puts_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>attr_t</B> <I>attrs</I><B>,</B> <B>short</B> <I>pair</I><B>,</B> <B>void</B> <B>*</B> <I>opts</I><B>,</B> <B>NCURSES_SP_OUTC</B> <I>putc</I><B>);</B>
+       <B>int</B> <B>vidattr_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>chtype</B> <I>attrs</I><B>);</B>
+       <B>int</B> <B>vidputs_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>chtype</B> <I>attrs</I><B>,</B> <B>NCURSES_SP_OUTC</B> <I>putc</I><B>);</B>
+       <B>wchar_t*</B> <B>wunctrl_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>cchar_t</B> <B>*</B><I>ch</I><B>);</B>
 
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>FORM*</STRONG> <STRONG>new_form_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>FIELD</STRONG> <STRONG>**</STRONG><EM>fields</EM><STRONG>);</STRONG>
+       <B>FORM*</B> <B>new_form_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>FIELD</B> <B>**</B><I>fields</I><B>);</B>
 
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>MENU*</STRONG> <STRONG>new_menu_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>ITEM</STRONG> <STRONG>**</STRONG><EM>items</EM><STRONG>);</STRONG>
+       <B>MENU*</B> <B>new_menu_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>ITEM</B> <B>**</B><I>items</I><B>);</B>
 
-       <STRONG>#include</STRONG> <STRONG>&lt;panel.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;panel.h&gt;</B>
 
-       <STRONG>PANEL*</STRONG> <STRONG>ceiling_panel(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>PANEL*</STRONG> <STRONG>ground_panel(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>update_panels_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>);</STRONG>
+       <B>PANEL*</B> <B>ceiling_panel(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>PANEL*</B> <B>ground_panel(SCREEN*</B> <I>sp</I><B>);</B>
+       <B>void</B> <B>update_panels_sp(SCREEN*</B> <I>sp</I><B>);</B>
 
-       <STRONG>#include</STRONG> <STRONG>&lt;term.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;term.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>del_curterm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>TERMINAL</STRONG> <STRONG>*</STRONG><EM>oterm</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>putp_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>restartterm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>NCURSES_CONST</STRONG> <STRONG>char*</STRONG><EM>term</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>filedes</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>errret</EM><STRONG>);</STRONG>
-       <STRONG>TERMINAL*</STRONG> <STRONG>set_curterm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>TERMINAL*</STRONG><EM>nterm</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetent_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>bp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>name</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetflag_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tgetnum_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>tgetstr_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>,</STRONG> <STRONG>char</STRONG> <STRONG>**</STRONG><EM>area</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>tgoto_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>col</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>row</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tigetflag_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tigetnum_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
-       <STRONG>char*</STRONG> <STRONG>tigetstr_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>capname</EM><STRONG>);</STRONG>
+       <B>int</B> <B>del_curterm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>TERMINAL</B> <B>*</B><I>oterm</I><B>);</B>
+       <B>int</B> <B>putp_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>str</I><B>);</B>
+       <B>int</B> <B>restartterm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>NCURSES_CONST</B> <B>char*</B><I>term</I><B>,</B> <B>int</B> <I>filedes</I><B>,</B> <B>int</B> <B>*</B><I>errret</I><B>);</B>
+       <B>TERMINAL*</B> <B>set_curterm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>TERMINAL*</B><I>nterm</I><B>);</B>
+       <B>int</B> <B>tgetent_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>char</B> <B>*</B><I>bp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>name</I><B>);</B>
+       <B>int</B> <B>tgetflag_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>);</B>
+       <B>int</B> <B>tgetnum_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>);</B>
+       <B>char*</B> <B>tgetstr_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>,</B> <B>char</B> <B>**</B><I>area</I><B>);</B>
+       <B>char*</B> <B>tgoto_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>,</B> <B>int</B> <I>col</I><B>,</B> <B>int</B> <I>row</I><B>);</B>
+       <B>int</B> <B>tigetflag_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>);</B>
+       <B>int</B> <B>tigetnum_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>);</B>
+       <B>char*</B> <B>tigetstr_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>capname</I><B>);</B>
        /* may instead use 9 long parameters */
-       <STRONG>char*</STRONG> <STRONG>tparm_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
-       <STRONG>int</STRONG> <STRONG>tputs_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>str</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>affcnt</EM><STRONG>,</STRONG> <STRONG>NCURSES_SP_OUTC</STRONG> <EM>putc</EM><STRONG>);</STRONG>
+       <B>char*</B> <B>tparm_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>str</I><B>,</B> <B>...);</B>
+       <B>int</B> <B>tputs_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>str</I><B>,</B> <B>int</B> <I>affcnt</I><B>,</B> <B>NCURSES_SP_OUTC</B> <I>putc</I><B>);</B>
 
-       <STRONG>#include</STRONG> <STRONG>&lt;unctrl.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;unctrl.h&gt;</B>
 
-       <STRONG>NCURSES_CONST</STRONG> <STRONG>char*</STRONG> <STRONG>unctrl_sp(SCREEN*</STRONG> <EM>sp</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>c</EM><STRONG>);</STRONG>
+       <B>NCURSES_CONST</B> <B>char*</B> <B>unctrl_sp(SCREEN*</B> <I>sp</I><B>,</B> <B>chtype</B> <I>c</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -244,10 +244,10 @@
 
        new_prescr
             when  creating  a  new  screen,  the library uses static variables
-            which have been preset, e.g.,  by  <STRONG><A HREF="curs_util.3x.html">use_env(3x)</A></STRONG>,  <STRONG><A HREF="curs_util.3x.html">filter(3x)</A></STRONG>,  etc.
+            which have been preset, e.g.,  by  <B><A HREF="curs_util.3X.html">use_env(3X)</A></B>,  <B><A HREF="curs_util.3X.html">filter(3X)</A></B>,  etc.
             With  the  screen-pointer extension, there are situations where it
             must create a current screen before the unextended  library  does.
-            The  <STRONG>new_prescr</STRONG> function is used internally to handle these cases.
+            The  <B>new_prescr</B> function is used internally to handle these cases.
             It is also provided as an entrypoint to allow applications to cus-
             tomize the library initialization.
 
@@ -261,7 +261,7 @@
             extension is provided.
 
        NCURSES_SP_NAME
-            The new functions are named using the macro <EM>NCURSES</EM><STRONG>_</STRONG><EM>SP</EM><STRONG>_</STRONG><EM>NAME</EM>, which
+            The new functions are named using the macro <I>NCURSES</I><B>_</B><I>SP</I><B>_</B><I>NAME</I>, which
             hides the actual implementation.  Currently this adds a "_sp" suf-
             fix  to the name of the unextended function.  This manual page in-
             dexes the extensions showing the full name.   However  the  proper
@@ -271,26 +271,26 @@
 
        NCURSES_SP_OUTC
             This  is  a new function-pointer type to use in the screen-pointer
-            functions where an <EM>NCURSES</EM><STRONG>_</STRONG><EM>OUTC</EM> is used in the unextended library.
+            functions where an <I>NCURSES</I><B>_</B><I>OUTC</I> is used in the unextended library.
 
        NCURSES_OUTC
             This is a function-pointer type used for the cases where  a  func-
-            tion passes characters to the output stream, e.g., <STRONG><A HREF="curs_terminfo.3x.html">vidputs(3x)</A></STRONG>.
+            tion passes characters to the output stream, e.g., <B><A HREF="curs_terminfo.3X.html">vidputs(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  are  specific  to ncurses.  They were not supported on
        Version 7, BSD or System V implementations.  It is recommended that any
-       code  depending  on  ncurses  extensions  be  conditioned  using <EM>NCURS-</EM>
-       <EM>ES</EM><STRONG>_</STRONG><EM>SP</EM><STRONG>_</STRONG><EM>FUNCS</EM>.
+       code  depending  on  ncurses  extensions  be  conditioned  using <I>NCURS-</I>
+       <I>ES</I><B>_</B><I>SP</I><B>_</B><I>FUNCS</I>.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>, <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>, <B><A HREF="curs_threads.3X.html">curs_threads(3X)</A></B>.
 
 
 
-                                                             <STRONG><A HREF="curs_sp_funcs.3x.html">curs_sp_funcs(3x)</A></STRONG>
+                                                             <B><A HREF="curs_sp_funcs.3X.html">curs_sp_funcs(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

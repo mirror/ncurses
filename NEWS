@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3673 2021/06/13 00:16:30 tom Exp $
+-- $Id: NEWS,v 1.3676 2021/06/19 19:09:22 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,11 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210619
+	+ improve configure-macro used for dependencies of --disable-leaks such
+	  as --with-valgrind
+	+ trim trailing blanks from files
 
 20210612
 	+ fixes for scan-build, valgrind build/testing.
@@ -119,7 +124,7 @@ it is not possible to add this information.
 	+ relax modification-time comparison in CF_LINK_FUNCS to allow it to
 	  accept link() function with NFS filesystems which change the mtime
 	  on the link target, e.g., several BSD systems.
-	+ call delay_output_sp to handle BSD-style padding when tputs_sp is 
+	+ call delay_output_sp to handle BSD-style padding when tputs_sp is
 	  called, whether directly or internally, to ensure that the SCREEN
 	  pointer is passed correctly (reports by Henric Jungheim, Juraj
 	  Lutter).

@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,68 +35,68 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_new 3x</TITLE>
+<TITLE>menu_new 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_new 3x</H1>
+<H1 class="no-header">menu_new 3X</H1>
 <PRE>
-<STRONG><A HREF="menu_new.3x.html">menu_new(3x)</A></STRONG>                                                      <STRONG><A HREF="menu_new.3x.html">menu_new(3x)</A></STRONG>
+<B><A HREF="menu_new.3X.html">menu_new(3X)</A></B>                                                      <B><A HREF="menu_new.3X.html">menu_new(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>new_menu</STRONG>, <STRONG>free_menu</STRONG> - create and destroy menus
+       <B>new_menu</B>, <B>free_menu</B> - create and destroy menus
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>MENU</STRONG> <STRONG>*new_menu(ITEM</STRONG> <STRONG>**</STRONG><EM>items</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>free_menu(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+       <B>MENU</B> <B>*new_menu(ITEM</B> <B>**</B><I>items</I><B>);</B>
+       <B>int</B> <B>free_menu(MENU</B> <B>*</B><I>menu</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function <STRONG>new_menu</STRONG> creates a new menu connected to a specified item
-       pointer array (which must be <STRONG>NULL</STRONG>-terminated).
+       The  function <B>new_menu</B> creates a new menu connected to a specified item
+       pointer array (which must be <B>NULL</B>-terminated).
 
-       The function <STRONG>free_menu</STRONG> disconnects <EM>menu</EM> from its item array  and  frees
+       The function <B>free_menu</B> disconnects <I>menu</I> from its item array  and  frees
        the storage allocated for the menu.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  function  <STRONG>new_menu</STRONG> returns <STRONG>NULL</STRONG> on error.  It sets <STRONG>errno</STRONG> according
+       The  function  <B>new_menu</B> returns <B>NULL</B> on error.  It sets <B>errno</B> according
        to the function's failure:
 
-       <STRONG>E_NOT_CONNECTED</STRONG>
+       <B>E_NOT_CONNECTED</B>
             No items are connected to the menu.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
+       <B>E_SYSTEM_ERROR</B>
             System error occurred, e.g., malloc failure.
 
-       The function <STRONG>free_menu</STRONG> returns one of the following:
+       The function <B>free_menu</B> returns one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_POSTED</STRONG>
+       <B>E_POSTED</B>
             The menu has already been posted.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -110,7 +110,7 @@
 
 
 
-                                                                  <STRONG><A HREF="menu_new.3x.html">menu_new(3x)</A></STRONG>
+                                                                  <B><A HREF="menu_new.3X.html">menu_new(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

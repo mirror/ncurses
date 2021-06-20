@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.45 2020/02/02 23:34:34 tom Exp $
+# $Id: ncurses_defs,v 1.46 2021/06/17 21:20:30 tom Exp $
 ##############################################################################
-# Copyright 2020 Thomas E. Dickey                                            #
+# Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 2008-2012,2013 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -44,7 +44,7 @@ GCC_UNUSED	/* nothing */
 HAVE_BIG_CORE
 HAVE_BSD_CGETENT
 HAVE_BSD_SIGNAL_H
-HAVE_BTOWC 
+HAVE_BTOWC
 HAVE_BUILTIN_H
 HAVE_CHGAT	1
 HAVE_COLOR_SET	1
@@ -101,7 +101,7 @@ HAVE_PANEL_H
 HAVE_POLL
 HAVE_POLL_H
 HAVE_PURIFY
-HAVE_PUTWC 
+HAVE_PUTWC
 HAVE_PUTWIN	1
 HAVE_REGEXPR_H_FUNCS
 HAVE_REGEXP_H_FUNCS
@@ -156,7 +156,7 @@ HAVE_VSNPRINTF
 HAVE_VSSCANF
 HAVE_WCSRTOMBS
 HAVE_WCSTOMBS
-HAVE_WCTOB 
+HAVE_WCTOB
 HAVE_WCTOMB
 HAVE_WCTYPE_H
 HAVE_WINSSTR	1

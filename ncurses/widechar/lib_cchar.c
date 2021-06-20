@@ -37,9 +37,9 @@
 #include <curses.priv.h>
 #include <wchar.h>
 
-MODULE_ID("$Id: lib_cchar.c,v 1.36 2021/04/03 22:06:41 tom Exp $")
+MODULE_ID("$Id: lib_cchar.c,v 1.37 2021/06/17 21:11:08 tom Exp $")
 
-/* 
+/*
  * The SuSv2 description leaves some room for interpretation.  We'll assume wch
  * points to a string which is L'\0' terminated, contains at least one
  * character with strictly positive width, which must be the first, and

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inch.3x,v 1.25 2020/10/18 00:25:23 tom Exp $
+.\" $Id: curs_inch.3x,v 1.26 2021/06/17 21:30:22 tom Exp $
 .TH curs_inch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -100,7 +100,7 @@ could be combined with characters in the window.
 Reflecting this improvement, the function was altered to return the
 character combined with all video attributes in a \fBchtype\fP value.
 .PP
-X/Open Curses does not specify 
+X/Open Curses does not specify
 the size and layout of attributes, color and character values in
 \fBchtype\fP; it is implementation-dependent.
 This implementation uses 8 bits for character values.

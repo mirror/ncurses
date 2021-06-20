@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018,2020 Thomas E. Dickey                                     *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
@@ -34,126 +34,126 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_outopts 3x</TITLE>
+<TITLE>curs_outopts 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_outopts 3x</H1>
+<H1 class="no-header">curs_outopts 3X</H1>
 <PRE>
-<STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>                                              <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+<B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>                                              <B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>clearok</STRONG>, <STRONG>idlok</STRONG>, <STRONG>idcok</STRONG>, <STRONG>immedok</STRONG>, <STRONG>leaveok</STRONG>, <STRONG>setscrreg</STRONG>, <STRONG>wsetscrreg</STRONG>,
-       <STRONG>scrollok</STRONG> - <STRONG>curses</STRONG> output options
+       <B>clearok</B>, <B>idlok</B>, <B>idcok</B>, <B>immedok</B>, <B>leaveok</B>, <B>setscrreg</B>, <B>wsetscrreg</B>,
+       <B>scrollok</B> - <B>curses</B> output options
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;curses.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>clearok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>idlok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>idcok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>void</STRONG> <STRONG>immedok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>leaveok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>scrollok(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>bool</STRONG> <EM>bf</EM><STRONG>);</STRONG>
+       <B>int</B> <B>clearok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>int</B> <B>idlok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>void</B> <B>idcok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>void</B> <B>immedok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>int</B> <B>leaveok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
+       <B>int</B> <B>scrollok(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>bool</B> <I>bf</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>setscrreg(int</STRONG> <EM>top</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bot</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wsetscrreg(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>top</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>bot</EM><STRONG>);</STRONG>
+       <B>int</B> <B>setscrreg(int</B> <I>top</I><B>,</B> <B>int</B> <I>bot</I><B>);</B>
+       <B>int</B> <B>wsetscrreg(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>top</I><B>,</B> <B>int</B> <I>bot</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These routines set options that change the style of output within <STRONG>curs-</STRONG>
-       <STRONG>es</STRONG>.   All  options are initially <STRONG>FALSE</STRONG>, unless otherwise stated.  It is
-       not necessary to turn these options off before calling <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG>.
+       These routines set options that change the style of output within <B>curs-</B>
+       <B>es</B>.   All  options are initially <B>FALSE</B>, unless otherwise stated.  It is
+       not necessary to turn these options off before calling <B><A HREF="curs_initscr.3X.html">endwin(3X)</A></B>.
 
 
 </PRE><H3><a name="h3-clearok">clearok</a></H3><PRE>
-       If <STRONG>clearok</STRONG> is called with <STRONG>TRUE</STRONG> as argument, the next call  to  <STRONG>wrefresh</STRONG>
+       If <B>clearok</B> is called with <B>TRUE</B> as argument, the next call  to  <B>wrefresh</B>
        with this window will clear the screen completely and redraw the entire
        screen from scratch.  This is useful when the contents  of  the  screen
        are  uncertain, or in some cases for a more pleasing visual effect.  If
-       the <EM>win</EM> argument to <STRONG>clearok</STRONG> is the global  variable  <STRONG>curscr</STRONG>,  the  next
-       call  to  <STRONG>wrefresh</STRONG>  with any window causes the screen to be cleared and
+       the <I>win</I> argument to <B>clearok</B> is the global  variable  <B>curscr</B>,  the  next
+       call  to  <B>wrefresh</B>  with any window causes the screen to be cleared and
        repainted from scratch.
 
 
 </PRE><H3><a name="h3-idlok">idlok</a></H3><PRE>
-       If <STRONG>idlok</STRONG> is called with <STRONG>TRUE</STRONG> as second argument, <STRONG>curses</STRONG> considers using
+       If <B>idlok</B> is called with <B>TRUE</B> as second argument, <B>curses</B> considers using
        the  hardware  insert/delete  line  feature  of  terminals so equipped.
-       Calling <STRONG>idlok</STRONG> with <STRONG>FALSE</STRONG> as second argument disables use of line inser-
+       Calling <B>idlok</B> with <B>FALSE</B> as second argument disables use of line inser-
        tion  and deletion.  This option should be enabled only if the applica-
        tion needs insert/delete line, for example, for a screen editor.  It is
        disabled by default because insert/delete line tends to be visually an-
        noying when used in applications where it is not really needed.  If in-
-       sert/delete line cannot be used, <STRONG>curses</STRONG> redraws the changed portions of
+       sert/delete line cannot be used, <B>curses</B> redraws the changed portions of
        all lines.
 
 
 </PRE><H3><a name="h3-idcok">idcok</a></H3><PRE>
-       If <STRONG>idcok</STRONG> is called with <STRONG>FALSE</STRONG> as second argument, <STRONG>curses</STRONG> no longer con-
+       If <B>idcok</B> is called with <B>FALSE</B> as second argument, <B>curses</B> no longer con-
        siders  using the hardware insert/delete character feature of terminals
        so equipped.  Use of character insert/delete  is  enabled  by  default.
-       Calling  <STRONG>idcok</STRONG> with <STRONG>TRUE</STRONG> as second argument re-enables use of character
+       Calling  <B>idcok</B> with <B>TRUE</B> as second argument re-enables use of character
        insertion and deletion.
 
 
 </PRE><H3><a name="h3-immedok">immedok</a></H3><PRE>
-       If <STRONG>immedok</STRONG> is called with <STRONG>TRUE</STRONG> <STRONG>as</STRONG> <STRONG>argument</STRONG>, any change  in  the  window
-       image, such as the ones caused by <STRONG>waddch,</STRONG> <STRONG>wclrtobot,</STRONG> <STRONG>wscrl</STRONG>, etc., auto-
-       matically cause a call to <STRONG>wrefresh</STRONG>.  However, it  may  degrade  perfor-
-       mance  considerably, due to repeated calls to <STRONG>wrefresh</STRONG>.  It is disabled
+       If <B>immedok</B> is called with <B>TRUE</B> <B>as</B> <B>argument</B>, any change  in  the  window
+       image, such as the ones caused by <B>waddch,</B> <B>wclrtobot,</B> <B>wscrl</B>, etc., auto-
+       matically cause a call to <B>wrefresh</B>.  However, it  may  degrade  perfor-
+       mance  considerably, due to repeated calls to <B>wrefresh</B>.  It is disabled
        by default.
 
 
 </PRE><H3><a name="h3-leaveok">leaveok</a></H3><PRE>
        Normally, the hardware cursor is left at the  location  of  the  window
-       cursor  being  refreshed.   The  <STRONG>leaveok</STRONG> option allows the cursor to be
+       cursor  being  refreshed.   The  <B>leaveok</B> option allows the cursor to be
        left wherever the update happens to leave it.  It is useful for  appli-
        cations  where  the  cursor  is not used, since it reduces the need for
        cursor motions.
 
 
 </PRE><H3><a name="h3-scrollok">scrollok</a></H3><PRE>
-       The <STRONG>scrollok</STRONG> option controls what happens when the cursor of  a  window
+       The <B>scrollok</B> option controls what happens when the cursor of  a  window
        is  moved  off  the edge of the window or scrolling region, either as a
        result of a newline action on the bottom line, or typing the last char-
-       acter of the last line.  If disabled, (<EM>bf</EM> is <STRONG>FALSE</STRONG>), the cursor is left
-       on the bottom line.  If enabled, (<EM>bf</EM> is <STRONG>TRUE</STRONG>), the window  is  scrolled
+       acter of the last line.  If disabled, (<I>bf</I> is <B>FALSE</B>), the cursor is left
+       on the bottom line.  If enabled, (<I>bf</I> is <B>TRUE</B>), the window  is  scrolled
        up one line (Note that to get the physical scrolling effect on the ter-
-       minal, it is also necessary to call <STRONG>idlok</STRONG>).
+       minal, it is also necessary to call <B>idlok</B>).
 
 
 </PRE><H3><a name="h3-setscrreg_wsetscrreg">setscrreg/wsetscrreg</a></H3><PRE>
-       The <STRONG>setscrreg</STRONG> and <STRONG>wsetscrreg</STRONG> routines allow the application  programmer
-       to set a software scrolling region in a window.  The <EM>top</EM> and <EM>bot</EM> param-
+       The <B>setscrreg</B> and <B>wsetscrreg</B> routines allow the application  programmer
+       to set a software scrolling region in a window.  The <I>top</I> and <I>bot</I> param-
        eters are the line  numbers  of  the  top  and  bottom  margin  of  the
        scrolling region.  (Line 0 is the top line of the window.)  If this op-
-       tion and <STRONG>scrollok</STRONG> are enabled, an attempt to move off the bottom margin
+       tion and <B>scrollok</B> are enabled, an attempt to move off the bottom margin
        line causes all lines in the scrolling region to scroll one line in the
        direction of the first line.  Only the text of the window is  scrolled.
        (Note  that this has nothing to do with the use of a physical scrolling
-       region capability in the terminal, like that in the VT100.  If <STRONG>idlok</STRONG> is
+       region capability in the terminal, like that in the VT100.  If <B>idlok</B> is
        enabled and the terminal has either a scrolling region or insert/delete
        line capability, they will probably be used by the output routines.)
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The functions <STRONG>setscrreg</STRONG> and <STRONG>wsetscrreg</STRONG> return <STRONG>OK</STRONG> upon success  and  <STRONG>ERR</STRONG>
+       The functions <B>setscrreg</B> and <B>wsetscrreg</B> return <B>OK</B> upon success  and  <B>ERR</B>
        upon  failure.  All other routines that return an integer always return
-       <STRONG>OK</STRONG>.
+       <B>OK</B>.
 
        X/Open Curses does not define any error conditions.
 
        In this implementation,
 
-       <STRONG>o</STRONG>   those functions that have a window pointer will return an error  if
+       <B>o</B>   those functions that have a window pointer will return an error  if
            the window pointer is null
 
-       <STRONG>o</STRONG>   <STRONG>wsetscrreg</STRONG>  returns  an error if the scrolling region limits extend
+       <B>o</B>   <B>wsetscrreg</B>  returns  an error if the scrolling region limits extend
            outside the window.
 
        X/Open does not define any error conditions.  This  implementation  re-
@@ -163,47 +163,47 @@
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are described in the XSI Curses standard, Issue 4.
 
-       From the outset, ncurses used <STRONG>nl</STRONG>/<STRONG>nonl</STRONG> to control the conversion of new-
+       From the outset, ncurses used <B>nl</B>/<B>nonl</B> to control the conversion of new-
        lines to carriage return/line-feed on output as  well  as  input.   XSI
        Curses  documents only the use of these functions for input.  This dif-
-       ference arose from converting the  <EM>pcurses</EM>  source  (which  used  <STRONG>ioctl</STRONG>
-       calls  with  the <STRONG>sgttyb</STRONG> structure) to termios (i.e., the POSIX terminal
+       ference arose from converting the  <I>pcurses</I>  source  (which  used  <B>ioctl</B>
+       calls  with  the <B>sgttyb</B> structure) to termios (i.e., the POSIX terminal
        interface).  In the former, both input and output were controlled via a
-       single  option  <STRONG>CRMOD</STRONG>,  while the latter separates these features.  Be-
-       cause that conversion interferes with output optimization, <STRONG>nl</STRONG>/<STRONG>nonl</STRONG> were
+       single  option  <B>CRMOD</B>,  while the latter separates these features.  Be-
+       cause that conversion interferes with output optimization, <B>nl</B>/<B>nonl</B> were
        amended after ncurses 6.2 to eliminate their effect on output.
 
        Some  historic  curses implementations had, as an undocumented feature,
-       the ability to do the equivalent of <STRONG>clearok(...,</STRONG> <STRONG>1)</STRONG>  by  saying  <STRONG>touch-</STRONG>
-       <STRONG>win(stdscr)</STRONG> or <STRONG>clear(stdscr)</STRONG>.  This will not work under ncurses.
+       the ability to do the equivalent of <B>clearok(...,</B> <B>1)</B>  by  saying  <B>touch-</B>
+       <B>win(stdscr)</B> or <B>clear(stdscr)</B>.  This will not work under ncurses.
 
-       Earlier  System  V  curses implementations specified that with <STRONG>scrollok</STRONG>
+       Earlier  System  V  curses implementations specified that with <B>scrollok</B>
        enabled, any window modification triggering  a  scroll  also  forced  a
-       physical refresh.  XSI Curses does not require this, and <STRONG>ncurses</STRONG> avoids
-       doing it to perform better  vertical-motion  optimization  at  <STRONG>wrefresh</STRONG>
+       physical refresh.  XSI Curses does not require this, and <B>ncurses</B> avoids
+       doing it to perform better  vertical-motion  optimization  at  <B>wrefresh</B>
        time.
 
        The XSI Curses standard does not mention that the cursor should be made
-       invisible as a side-effect of <STRONG>leaveok</STRONG>.  SVr4 curses documentation  does
-       this,  but  the code does not.  Use <STRONG>curs_set</STRONG> to make the cursor invisi-
+       invisible as a side-effect of <B>leaveok</B>.  SVr4 curses documentation  does
+       this,  but  the code does not.  Use <B>curs_set</B> to make the cursor invisi-
        ble.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <STRONG>clearok</STRONG>, <STRONG>leaveok</STRONG>,  <STRONG>scrollok</STRONG>,  <STRONG>idcok</STRONG>,  and  <STRONG>setscrreg</STRONG>  may  be
+       Note that <B>clearok</B>, <B>leaveok</B>,  <B>scrollok</B>,  <B>idcok</B>,  and  <B>setscrreg</B>  may  be
        macros.
 
-       The <STRONG>immedok</STRONG> routine is useful for windows that are used as terminal em-
+       The <B>immedok</B> routine is useful for windows that are used as terminal em-
        ulators.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>, <STRONG><A HREF="curs_clear.3x.html">curs_clear(3x)</A></STRONG>, <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,
-       <STRONG><A HREF="curs_scroll.3x.html">curs_scroll(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_addch.3X.html">curs_addch(3X)</A></B>, <B><A HREF="curs_clear.3X.html">curs_clear(3X)</A></B>, <B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>,
+       <B><A HREF="curs_scroll.3X.html">curs_scroll(3X)</A></B>, <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>.
 
 
 
-                                                              <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>
+                                                              <B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

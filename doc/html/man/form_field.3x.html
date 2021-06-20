@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,82 +35,82 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_field 3x</TITLE>
+<TITLE>form_field 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_field 3x</H1>
+<H1 class="no-header">form_field 3X</H1>
 <PRE>
-<STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>                                                  <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+<B><A HREF="form_field.3X.html">form_field(3X)</A></B>                                                  <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>form_field</STRONG> - make and break connections between fields and forms
+       <B>form_field</B> - make and break connections between fields and forms
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_form_fields(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>,</STRONG> <STRONG>FIELD</STRONG> <STRONG>**</STRONG><EM>fields</EM><STRONG>);</STRONG>
-       <STRONG>FIELD</STRONG> <STRONG>**form_fields(const</STRONG> <STRONG>FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>field_count(const</STRONG> <STRONG>FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>move_field(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>frow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fcol</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_form_fields(FORM</B> <B>*</B><I>form</I><B>,</B> <B>FIELD</B> <B>**</B><I>fields</I><B>);</B>
+       <B>FIELD</B> <B>**form_fields(const</B> <B>FORM</B> <B>*</B><I>form</I><B>);</B>
+       <B>int</B> <B>field_count(const</B> <B>FORM</B> <B>*</B><I>form</I><B>);</B>
+       <B>int</B> <B>move_field(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>int</B> <I>frow</I><B>,</B> <B>int</B> <I>fcol</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function  <STRONG>set_form_fields</STRONG>  changes  the field pointer array of the
-       given <EM>form</EM>.  The array must be terminated by a <STRONG>NULL</STRONG>.
+       The  function  <B>set_form_fields</B>  changes  the field pointer array of the
+       given <I>form</I>.  The array must be terminated by a <B>NULL</B>.
 
-       The function <STRONG>form_fields</STRONG> returns the field array of the given form.
+       The function <B>form_fields</B> returns the field array of the given form.
 
-       The function <STRONG>field_count</STRONG> returns the count of fields in <EM>form</EM>.
+       The function <B>field_count</B> returns the count of fields in <I>form</I>.
 
-       The  function  <STRONG>move_field</STRONG>  moves  the  given  field  (which   must   be
+       The  function  <B>move_field</B>  moves  the  given  field  (which   must   be
        disconnected) to a specified location on the screen.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  function  <STRONG>form_fields</STRONG>  returns  a pointer (which may be <STRONG>NULL</STRONG>).  It
-       does not set <STRONG>errno</STRONG>.
+       The  function  <B>form_fields</B>  returns  a pointer (which may be <B>NULL</B>).  It
+       does not set <B>errno</B>.
 
-       The function <STRONG>field_count</STRONG> returns <STRONG>ERR</STRONG> if the <EM>form</EM> parameter is <STRONG>NULL</STRONG>.
+       The function <B>field_count</B> returns <B>ERR</B> if the <I>form</I> parameter is <B>NULL</B>.
 
-       The  functions  <STRONG>set_form_fields</STRONG>  and  <STRONG>move_field</STRONG>  return  one  of   the
+       The  functions  <B>set_form_fields</B>  and  <B>move_field</B>  return  one  of   the
        following codes on error:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_CONNECTED</STRONG>
+       <B>E_CONNECTED</B>
             The field is already connected to a form.
 
-       <STRONG>E_POSTED</STRONG>
+       <B>E_POSTED</B>
             The form is already posted.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="form.3X.html">form(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These routines emulate the System  V  forms  library.   They  were  not
        supported on Version 7 or BSD versions.
 
-       The  SVr4  forms  library documentation specifies the <STRONG>field_count</STRONG> error
-       value as -1 (which is the value of <STRONG>ERR</STRONG>).
+       The  SVr4  forms  library documentation specifies the <B>field_count</B> error
+       value as -1 (which is the value of <B>ERR</B>).
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
@@ -119,7 +119,7 @@
 
 
 
-                                                                <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+                                                                <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

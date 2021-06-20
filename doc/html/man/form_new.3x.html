@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018,2020 Thomas E. Dickey                                     *
@@ -35,70 +35,70 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_new 3x</TITLE>
+<TITLE>form_new 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_new 3x</H1>
+<H1 class="no-header">form_new 3X</H1>
 <PRE>
-<STRONG><A HREF="form_new.3x.html">form_new(3x)</A></STRONG>                                                      <STRONG><A HREF="form_new.3x.html">form_new(3x)</A></STRONG>
+<B><A HREF="form_new.3X.html">form_new(3X)</A></B>                                                      <B><A HREF="form_new.3X.html">form_new(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>new_form</STRONG>, <STRONG>free_form</STRONG> - create and destroy forms
+       <B>new_form</B>, <B>free_form</B> - create and destroy forms
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>FORM</STRONG> <STRONG>*new_form(FIELD</STRONG> <STRONG>**</STRONG><EM>fields</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>free_form(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>);</STRONG>
+       <B>FORM</B> <B>*new_form(FIELD</B> <B>**</B><I>fields</I><B>);</B>
+       <B>int</B> <B>free_form(FORM</B> <B>*</B><I>form</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <STRONG>new_form</STRONG> creates a new form connected to a specified field
-       pointer array (which must be <STRONG>NULL</STRONG>-terminated).
+       The function <B>new_form</B> creates a new form connected to a specified field
+       pointer array (which must be <B>NULL</B>-terminated).
 
-       The function <STRONG>free_form</STRONG> disconnects <EM>form</EM> from its field array and  frees
+       The function <B>free_form</B> disconnects <I>form</I> from its field array and  frees
        the storage allocated for the form.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  function  <STRONG>new_form</STRONG> returns <STRONG>NULL</STRONG> on error.  It sets <STRONG>errno</STRONG> according
+       The  function  <B>new_form</B> returns <B>NULL</B> on error.  It sets <B>errno</B> according
        to the function's success:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_CONNECTED</STRONG>
+       <B>E_CONNECTED</B>
             The field is already connected to a form.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
+       <B>E_SYSTEM_ERROR</B>
             System error occurred, e.g., malloc failure.
 
-       The function <STRONG>free_form</STRONG> returns one of the following:
+       The function <B>free_form</B> returns one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_POSTED</STRONG>
+       <B>E_POSTED</B>
             The form has already been posted.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="form.3X.html">form(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -112,7 +112,7 @@
 
 
 
-                                                                  <STRONG><A HREF="form_new.3x.html">form_new(3x)</A></STRONG>
+                                                                  <B><A HREF="form_new.3X.html">form_new(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

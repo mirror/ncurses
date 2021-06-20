@@ -1,4 +1,4 @@
-<!-- 
+<!--
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
@@ -34,51 +34,51 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_driver 3x</TITLE>
+<TITLE>form_driver 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_driver 3x</H1>
+<H1 class="no-header">form_driver 3X</H1>
 <PRE>
-<STRONG><A HREF="form_driver.3x.html">form_driver(3x)</A></STRONG>                                                <STRONG><A HREF="form_driver.3x.html">form_driver(3x)</A></STRONG>
+<B><A HREF="form_driver.3X.html">form_driver(3X)</A></B>                                                <B><A HREF="form_driver.3X.html">form_driver(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>form_driver</STRONG>, <STRONG>form_driver_w</STRONG> - command-processing loop of the form system
+       <B>form_driver</B>, <B>form_driver_w</B> - command-processing loop of the form system
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;form.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>form_driver(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>form_driver_w(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>,</STRONG> <STRONG>wchar_t</STRONG> <EM>wch</EM><STRONG>);</STRONG>
+       <B>int</B> <B>form_driver(FORM</B> <B>*</B><I>form</I><B>,</B> <B>int</B> <I>c</I><B>);</B>
+       <B>int</B> <B>form_driver_w(FORM</B> <B>*</B><I>form</I><B>,</B> <B>int</B> <I>c</I><B>,</B> <B>wchar_t</B> <I>wch</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-form_driver">form_driver</a></H3><PRE>
        Once a form has been posted (displayed), you should funnel input events
-       to it through <STRONG>form_driver</STRONG>.  This routine has three major input cases:
+       to it through <B>form_driver</B>.  This routine has three major input cases:
 
-       <STRONG>o</STRONG>   The input is a form navigation request.  Navigation  request  codes
-           are constants defined in <STRONG>&lt;form.h&gt;</STRONG>, which are distinct from the key-
-           and character codes returned by <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG>.
+       <B>o</B>   The input is a form navigation request.  Navigation  request  codes
+           are constants defined in <B>&lt;form.h&gt;</B>, which are distinct from the key-
+           and character codes returned by <B><A HREF="curs_getch.3X.html">wgetch(3X)</A></B>.
 
-       <STRONG>o</STRONG>   The input is a printable character.   Printable  characters  (which
+       <B>o</B>   The input is a printable character.   Printable  characters  (which
            must  be  positive,  less  than  256)  are checked according to the
            program's locale settings.
 
-       <STRONG>o</STRONG>   The input is the KEY_MOUSE special key  associated  with  an  mouse
+       <B>o</B>   The input is the KEY_MOUSE special key  associated  with  an  mouse
            event.
 
 
 </PRE><H3><a name="h3-form_driver_w">form_driver_w</a></H3><PRE>
        This  extension  simplifies  the  use  of  the forms library using wide
        characters.  The input is either a key  code  (a  request)  or  a  wide
-       character returned by <STRONG><A HREF="curs_get_wch.3x.html">get_wch(3x)</A></STRONG>.  The type must be passed as well, to
+       character returned by <B><A HREF="curs_get_wch.3X.html">get_wch(3X)</A></B>.  The type must be passed as well, to
        enable the library  to  determine  whether  the  parameter  is  a  wide
        character or a request.
 
@@ -86,7 +86,7 @@
 </PRE><H3><a name="h3-Form-driver-requests">Form-driver requests</a></H3><PRE>
        The form driver requests are as follows:
 
-       <EM>Name</EM>               <EM>Description</EM>
+       <I>Name</I>               <I>Description</I>
        ---------------------------------------------------------------------
        REQ_BEG_FIELD      Move to the beginning of the field.
        REQ_BEG_LINE       Move to the beginning of the line.
@@ -160,19 +160,19 @@
        The form driver provides low-level control over  updates  to  the  form
        fields.   The  form driver also provides for validating modified fields
        to ensure that the contents meet whatever  constraints  an  application
-       may attach using <STRONG>set_field_type</STRONG>.
+       may attach using <B>set_field_type</B>.
 
        You  can  validate  a  field  without  making  any  changes to it using
-       <STRONG>REQ_VALIDATION</STRONG>.  The form driver also validates a field in these cases:
+       <B>REQ_VALIDATION</B>.  The form driver also validates a field in these cases:
 
-       <STRONG>o</STRONG>   a call to <STRONG>set_current_field</STRONG> attempts to move to a different field.
+       <B>o</B>   a call to <B>set_current_field</B> attempts to move to a different field.
 
-       <STRONG>o</STRONG>   a call to <STRONG>set_current_page</STRONG> attempts to move to a different page  of
+       <B>o</B>   a call to <B>set_current_page</B> attempts to move to a different page  of
            the form.
 
-       <STRONG>o</STRONG>   a request attempts to move to a different field.
+       <B>o</B>   a request attempts to move to a different field.
 
-       <STRONG>o</STRONG>   a request attempts to move to a different page of the form.
+       <B>o</B>   a request attempts to move to a different page of the form.
 
        In each case, the move fails if the field is invalid.
 
@@ -204,68 +204,68 @@
 
        If you click at an field inside the display area of the form:
 
-          <STRONG>o</STRONG>   the form cursor is positioned to that field.
+          <B>o</B>   the form cursor is positioned to that field.
 
-          <STRONG>o</STRONG>   If  you  double-click  a field, the form cursor is positioned to
-              that field and <STRONG>E_UNKNOWN_COMMAND</STRONG> is returned.  This return value
+          <B>o</B>   If  you  double-click  a field, the form cursor is positioned to
+              that field and <B>E_UNKNOWN_COMMAND</B> is returned.  This return value
               makes sense, because a double click usually means that an field-
               specific action should be returned.  It is exactly  the  purpose
               of  this  return  value  to  signal that an application specific
               command should be executed.
 
-          <STRONG>o</STRONG>   If a translation into a request was  done,  <STRONG>form_driver</STRONG>  returns
+          <B>o</B>   If a translation into a request was  done,  <B>form_driver</B>  returns
               the result of this request.
 
        If  you clicked outside the user window or the mouse event could not be
-       translated into a form request an <STRONG>E_REQUEST_DENIED</STRONG> is returned.
+       translated into a form request an <B>E_REQUEST_DENIED</B> is returned.
 
 
 </PRE><H3><a name="h3-Application-defined-commands">Application-defined commands</a></H3><PRE>
        If the second argument is neither printable nor one of the  above  pre-
        defined form requests, the driver assumes it is an application-specific
-       command and returns  <STRONG>E_UNKNOWN_COMMAND</STRONG>.   Application-defined  commands
-       should  be  defined relative to <STRONG>MAX_COMMAND</STRONG>, the maximum value of these
+       command and returns  <B>E_UNKNOWN_COMMAND</B>.   Application-defined  commands
+       should  be  defined relative to <B>MAX_COMMAND</B>, the maximum value of these
        pre-defined requests.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>form_driver</STRONG> returns one of the following error codes:
+       <B>form_driver</B> returns one of the following error codes:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_BAD_STATE</STRONG>
+       <B>E_BAD_STATE</B>
             Routine was called from an initialization or termination function.
 
-       <STRONG>E_NOT_POSTED</STRONG>
+       <B>E_NOT_POSTED</B>
             The form has not been posted.
 
-       <STRONG>E_INVALID_FIELD</STRONG>
+       <B>E_INVALID_FIELD</B>
             Contents of field is invalid.
 
-       <STRONG>E_NOT_CONNECTED</STRONG>
+       <B>E_NOT_CONNECTED</B>
             No fields are connected to the form.
 
-       <STRONG>E_REQUEST_DENIED</STRONG>
+       <B>E_REQUEST_DENIED</B>
             The form driver could not process the request.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
-       <STRONG>E_UNKNOWN_COMMAND</STRONG>
+       <B>E_UNKNOWN_COMMAND</B>
             The form driver code saw an unknown request code.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>,   <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>,    <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>,
-       <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>, <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>, <STRONG><A HREF="curs_getch.3x.html">getch(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>,   <B><A HREF="form.3X.html">form(3X)</A></B>,   <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>,    <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>,
+       <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>, <B><A HREF="form_variables.3X.html">form_variables(3X)</A></B>, <B><A HREF="curs_getch.3X.html">getch(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header files
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header files
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -279,7 +279,7 @@
 
 
 
-                                                               <STRONG><A HREF="form_driver.3x.html">form_driver(3x)</A></STRONG>
+                                                               <B><A HREF="form_driver.3X.html">form_driver(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.178 2021/01/23 20:34:00 tom Exp $
+# $Id: Makefile.in,v 1.179 2021/06/17 21:11:08 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -196,7 +196,7 @@ HEADER_DEPS	= @INTERNALS_HDR@ \
 	$(srcdir)/new_pair.h
 
 TEST_DEPS	= ../lib/@LIB_PREFIX@ncurses@DFT_DEP_SUFFIX@
-TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@ 
+TEST_ARGS	= @LDFLAGS_STATIC@ @TEST_ARGS@ @LDFLAGS_SHARED@
 TEST_LDFLAGS	= @LD_MODEL@ $(TEST_ARGS) @LIBS@ @LOCAL_LDFLAGS@ @LDFLAGS@
 
 TEST_PROGS = \
@@ -219,7 +219,7 @@ win32con = $(srcdir)/win32con
 ################################################################################
 all libs ::	$(AUTO_SRC) ../lib $(LIBRARIES)
 
-@CHECK_BUILD@all libs ::	report_offsets$(BUILD_EXEEXT) 
+@CHECK_BUILD@all libs ::	report_offsets$(BUILD_EXEEXT)
 
 sources:	$(AUTO_SRC)
 

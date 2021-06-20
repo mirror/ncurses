@@ -1,7 +1,7 @@
 <!--
-  $Id: announce.html.in,v 1.99 2020/10/19 08:18:12 tom Exp $
+  $Id: announce.html.in,v 1.100 2021/06/17 21:30:22 tom Exp $
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -1179,7 +1179,7 @@ diff --git a/st.info b/st.info
 + Se,
 + Ss,
 + Tc,
- 
+
  st-256color| simpleterm with 256 colors,
   use=st,
 </pre>

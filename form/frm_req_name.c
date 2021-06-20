@@ -38,7 +38,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_req_name.c,v 1.22 2021/03/27 23:49:58 tom Exp $")
+MODULE_ID("$Id: frm_req_name.c,v 1.23 2021/06/17 21:11:08 tom Exp $")
 
 #define DATA(s) { s }
 
@@ -112,9 +112,9 @@ static const char request_names[MAX_FORM_COMMAND - MIN_FORM_COMMAND + 1][13] =
 #define A_SIZE (sizeof(request_names)/sizeof(request_names[0]))
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  const char * form_request_name (int request);
-|   
+|
 |   Description   :  Get the external name of a form request.
 |
 |   Return Values :  Pointer to name      - on success
@@ -135,9 +135,9 @@ form_request_name(int request)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  int form_request_by_name (const char *str);
-|   
+|
 |   Description   :  Search for a request with this name.
 |
 |   Return Values :  Request Id       - on success

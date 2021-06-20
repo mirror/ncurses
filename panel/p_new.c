@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,11 +35,11 @@
  ****************************************************************************/
 
 /* p_new.c
- * Creation of a new panel 
+ * Creation of a new panel
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.22 2020/12/26 18:25:48 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.23 2021/06/17 21:20:30 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;

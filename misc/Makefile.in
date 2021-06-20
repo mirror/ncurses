@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.75 2021/03/27 20:39:59 tom Exp $
+# $Id: Makefile.in,v 1.76 2021/06/17 21:11:08 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -80,7 +80,7 @@ all \
 sources ::
 
 @MAKE_DATABASE@all \
-@MAKE_DATABASE@sources :: terminfo.tmp 
+@MAKE_DATABASE@sources :: terminfo.tmp
 
 depend :
 

@@ -29,7 +29,7 @@
 #
 #  Author:  Juergen Pfeifer, 1996
 #
-#  $Id: Makefile.in,v 1.62 2021/01/23 20:42:08 tom Exp $
+#  $Id: Makefile.in,v 1.63 2021/06/17 21:11:08 tom Exp $
 #
 .SUFFIXES:
 
@@ -107,7 +107,7 @@ THISLIB		= sample
 CARGS		= -cargs $(ADAFLAGS)
 LARGS		= -largs -L../lib -l@ADA_LIBNAME@ @TEST_ARG2@ $(LD_FLAGS) @TEST_LIBS2@
 
-PROGS		= tour$x ncurses$x @USE_GNAT_SIGINT@ rain$x 
+PROGS		= tour$x ncurses$x @USE_GNAT_SIGINT@ rain$x
 
 all ::  $(PROGS)
 	@echo made $@

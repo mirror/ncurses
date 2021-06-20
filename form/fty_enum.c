@@ -35,7 +35,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: fty_enum.c,v 1.32 2021/03/27 23:49:53 tom Exp $")
+MODULE_ID("$Id: fty_enum.c,v 1.33 2021/06/17 21:11:08 tom Exp $")
 
 typedef struct
   {
@@ -55,9 +55,9 @@ typedef struct
 enumParams;
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Generic_Enum_Type(void * arg)
-|   
+|
 |   Description   :  Allocate structure for enumeration type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
@@ -119,9 +119,9 @@ Generic_Enum_Type(void *arg)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Make_Enum_Type( va_list * ap )
-|   
+|
 |   Description   :  Allocate structure for enumeration type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error
@@ -139,10 +139,10 @@ Make_Enum_Type(va_list *ap)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void *Copy_Enum_Type( const void * argp )
-|   
-|   Description   :  Copy structure for enumeration type argument.  
+|
+|   Description   :  Copy structure for enumeration type argument.
 |
 |   Return Values :  Pointer to argument structure or NULL on error.
 +--------------------------------------------------------------------------*/
@@ -183,9 +183,9 @@ Copy_Enum_Type(const void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static void Free_Enum_Type( void * argp )
-|   
+|
 |   Description   :  Free structure for enumeration type argument.
 |
 |   Return Values :  -
@@ -220,11 +220,11 @@ Free_Enum_Type(void *argp)
 #define EXACT   2
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
-|   Function      :  static int Compare(const unsigned char * s,  
+|   Facility      :  libnform
+|   Function      :  static int Compare(const unsigned char * s,
 |                                       const unsigned char * buf,
 |                                       bool  ccase )
-|   
+|
 |   Description   :  Check whether or not the text in 'buf' matches the
 |                    text in 's', at least partial.
 |
@@ -275,11 +275,11 @@ Compare(const unsigned char *s, const unsigned char *buf,
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Check_Enum_Field(
 |                                      FIELD * field,
 |                                      const void  * argp)
-|   
+|
 |   Description   :  Validate buffer content to be a valid enumeration value
 |
 |   Return Values :  TRUE  - field is valid
@@ -333,10 +333,10 @@ static const char *dummy[] =
 {(char *)0};
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Next_Enum(FIELD * field,
 |                                          const void * argp)
-|   
+|
 |   Description   :  Check for the next enumeration value
 |
 |   Return Values :  TRUE  - next value found and loaded
@@ -370,11 +370,11 @@ Next_Enum(FIELD *field, const void *argp)
 }
 
 /*---------------------------------------------------------------------------
-|   Facility      :  libnform  
+|   Facility      :  libnform
 |   Function      :  static bool Previous_Enum(
 |                                          FIELD * field,
 |                                          const void * argp)
-|   
+|
 |   Description   :  Check for the previous enumeration value
 |
 |   Return Values :  TRUE  - previous value found and loaded

@@ -1,4 +1,4 @@
-<!-- 
+<!--
   * t
   ****************************************************************************
   * Copyright 2018-2019,2020 Thomas E. Dickey                                *
@@ -35,88 +35,88 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>mitem_current 3x</TITLE>
+<TITLE>mitem_current 3X</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">mitem_current 3x</H1>
+<H1 class="no-header">mitem_current 3X</H1>
 <PRE>
-<STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>                                            <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+<B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>                                            <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <STRONG>mitem_current</STRONG> - set and get current_menu_item
+       <B>mitem_current</B> - set and get current_menu_item
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
+       <B>#include</B> <B>&lt;menu.h&gt;</B>
 
-       <STRONG>int</STRONG> <STRONG>set_current_item(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>);</STRONG>
-       <STRONG>ITEM</STRONG> <STRONG>*current_item(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_current_item(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>ITEM</B> <B>*</B><I>item</I><B>);</B>
+       <B>ITEM</B> <B>*current_item(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>set_top_row(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>row</EM><STRONG>);</STRONG>
-       <STRONG>int</STRONG> <STRONG>top_row(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+       <B>int</B> <B>set_top_row(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>int</B> <I>row</I><B>);</B>
+       <B>int</B> <B>top_row(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
 
-       <STRONG>int</STRONG> <STRONG>item_index(const</STRONG> <STRONG>ITEM</STRONG> <STRONG>*</STRONG><EM>item</EM><STRONG>);</STRONG>
+       <B>int</B> <B>item_index(const</B> <B>ITEM</B> <B>*</B><I>item</I><B>);</B>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function <STRONG>set_current_item</STRONG> sets the current item (the item on which
-       the menu cursor is positioned).  <STRONG>current_item</STRONG> returns a pointer to  the
+       The  function <B>set_current_item</B> sets the current item (the item on which
+       the menu cursor is positioned).  <B>current_item</B> returns a pointer to  the
        current item in the given menu.
 
-       The function <STRONG>set_top_row</STRONG> sets the top row of the menu to show the given
+       The function <B>set_top_row</B> sets the top row of the menu to show the given
        row (the top row is initially 0, and is reset to  this  value  whenever
-       the  <STRONG>O_ROWMAJOR</STRONG> option is toggled).  The item leftmost on the given row
-       becomes current.  The function <STRONG>top_row</STRONG> returns the number  of  the  top
+       the  <B>O_ROWMAJOR</B> option is toggled).  The item leftmost on the given row
+       becomes current.  The function <B>top_row</B> returns the number  of  the  top
        menu row being displayed.
 
-       The  function <STRONG>item_index</STRONG> returns the (zero-origin) index of <EM>item</EM> in the
+       The  function <B>item_index</B> returns the (zero-origin) index of <I>item</I> in the
        menu's item pointer list.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <STRONG>current_item</STRONG> returns a pointer (which may be <STRONG>NULL</STRONG>).  It  does  not  set
-       <STRONG>errno</STRONG>.
+       <B>current_item</B> returns a pointer (which may be <B>NULL</B>).  It  does  not  set
+       <B>errno</B>.
 
-       <STRONG>top_row</STRONG>  and  <STRONG>item_index</STRONG> return <STRONG>ERR</STRONG> (the general <STRONG>curses</STRONG> error value) if
-       their <EM>menu</EM> parameter is <STRONG>NULL</STRONG>.
+       <B>top_row</B>  and  <B>item_index</B> return <B>ERR</B> (the general <B>curses</B> error value) if
+       their <I>menu</I> parameter is <B>NULL</B>.
 
-       <STRONG>set_current_item</STRONG> and <STRONG>set_top_row</STRONG> return one of the following:
+       <B>set_current_item</B> and <B>set_top_row</B> return one of the following:
 
-       <STRONG>E_OK</STRONG> The routine succeeded.
+       <B>E_OK</B> The routine succeeded.
 
-       <STRONG>E_BAD_ARGUMENT</STRONG>
+       <B>E_BAD_ARGUMENT</B>
             Routine detected an incorrect or out-of-range argument.
 
-       <STRONG>E_BAD_STATE</STRONG>
+       <B>E_BAD_STATE</B>
             Routine was called from an initialization or termination function.
 
-       <STRONG>E_NOT_CONNECTED</STRONG>
+       <B>E_NOT_CONNECTED</B>
             No items are connected to the menu.
 
-       <STRONG>E_SYSTEM_ERROR</STRONG>
-            System error occurred (see <STRONG>errno(3)</STRONG>).
+       <B>E_SYSTEM_ERROR</B>
+            System error occurred (see <B>errno(3)</B>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
+       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
-       <STRONG>&lt;curses.h&gt;</STRONG>.
+       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
+       <B>&lt;curses.h&gt;</B>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate  the  System  V  menu  library.  They were not
        supported on Version 7 or BSD versions.
 
-       The  SVr4  menu  library  documentation  specifies  the   <STRONG>top_row</STRONG>   and
-       <STRONG>index_item</STRONG> error value as -1 (which is the value of <STRONG>ERR</STRONG>).
+       The  SVr4  menu  library  documentation  specifies  the   <B>top_row</B>   and
+       <B>index_item</B> error value as -1 (which is the value of <B>ERR</B>).
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
@@ -125,7 +125,7 @@
 
 
 
-                                                             <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+                                                             <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
 </PRE>
 <div class="nav">
 <ul>

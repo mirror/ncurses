@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.31 2020/10/17 23:12:52 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.32 2021/06/17 21:30:22 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -103,7 +103,7 @@ cell with those from the new background character.
 If the cell uses color,
 and that matches the color in the current background,
 the library removes attributes
-which may have come from the current background 
+which may have come from the current background
 and adds attributes from the new background.
 It finishes by setting the cell
 to use the color from the new background.

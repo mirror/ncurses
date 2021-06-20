@@ -15081,7 +15081,7 @@ cat >"conftest.$ac_ext" <<_ACEOF
 int
 main (void)
 {
-String foo = malloc(1); (void)foo
+String foo = malloc(1); free((void*)foo)
   ;
   return 0;
 }

@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make_sed.sh,v 1.11 2020/02/02 23:34:34 tom Exp $
+# $Id: make_sed.sh,v 1.12 2021/06/17 21:20:30 tom Exp $
 ##############################################################################
-# Copyright 2020 Thomas E. Dickey                                            #
+# Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -58,7 +58,7 @@ done
 for F in 2 4
 do
 	tr abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ <$COL.$F >$UPPER
-	mv $UPPER $COL.$F 
+	mv $UPPER $COL.$F
 done
 paste $COL.* | \
 sed	-e 's/^/s\/\\</' \

@@ -4,7 +4,7 @@ Summary: ncurses-examples - example/test programs from ncurses
 %global AppProgram ncurses-examples
 %global AppVersion MAJOR.MINOR
 %global AppRelease YYYYMMDD
-# $Id: mingw-ncurses-examples.spec,v 1.9 2019/11/23 21:13:52 tom Exp $
+# $Id: mingw-ncurses-examples.spec,v 1.10 2021/06/17 21:11:12 tom Exp $
 Name: mingw32-ncurses6-examples
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -50,11 +50,11 @@ This package is used for testing ABI 6 with cross-compiles to MinGW.
 %prep
 
 # override location of bindir, e.g., to avoid conflict with pdcurses
-%global mingw32_bindir %{mingw32_exec_prefix}/bin/%{AppProgram} 
-%global mingw64_bindir %{mingw64_exec_prefix}/bin/%{AppProgram} 
+%global mingw32_bindir %{mingw32_exec_prefix}/bin/%{AppProgram}
+%global mingw64_bindir %{mingw64_exec_prefix}/bin/%{AppProgram}
 
-%global mingw32_datadir %{mingw32_datadir}/%{AppProgram} 
-%global mingw64_datadir %{mingw64_datadir}/%{AppProgram} 
+%global mingw32_datadir %{mingw32_datadir}/%{AppProgram}
+%global mingw64_datadir %{mingw64_datadir}/%{AppProgram}
 
 %define CFG_OPTS \\\
         --enable-echo \\\
