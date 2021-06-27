@@ -35,80 +35,80 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_attributes 3X</TITLE>
+<TITLE>menu_attributes 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_attributes 3X</H1>
+<H1 class="no-header">menu_attributes 3x</H1>
 <PRE>
-<B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>                                        <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
+<STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>                                        <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>menu_back</B>,     <B>menu_fore</B>,     <B>menu_grey</B>,    <B>menu_pad</B>,    <B>set_menu_back</B>,
-       <B>set_menu_fore</B>,  <B>set_menu_grey</B>,  <B>set_menu_pad</B>  -  color  and   attribute
+       <STRONG>menu_back</STRONG>,     <STRONG>menu_fore</STRONG>,     <STRONG>menu_grey</STRONG>,    <STRONG>menu_pad</STRONG>,    <STRONG>set_menu_back</STRONG>,
+       <STRONG>set_menu_fore</STRONG>,  <STRONG>set_menu_grey</STRONG>,  <STRONG>set_menu_pad</STRONG>  -  color  and   attribute
        control for menus
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
-       <B>int</B> <B>set_menu_fore(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>chtype</B> <I>attr</I><B>);</B>
-       <B>chtype</B> <B>menu_fore(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_fore(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>menu_fore(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>set_menu_back(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>chtype</B> <I>attr</I><B>);</B>
-       <B>chtype</B> <B>menu_back(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_back(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>menu_back(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>set_menu_grey(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>chtype</B> <I>attr</I><B>);</B>
-       <B>chtype</B> <B>menu_grey(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_grey(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>menu_grey(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>set_menu_pad(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>int</B> <I>pad</I><B>);</B>
-       <B>int</B> <B>menu_pad(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_pad(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pad</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>menu_pad(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function <B>set_menu_fore</B> sets the foreground attribute of <I>menu</I>. This
-       is the highlight used for selected menu items.  <B>menu_fore</B>  returns  the
-       foreground attribute.  The default is <B>A_REVERSE</B>.
+       The  function <STRONG>set_menu_fore</STRONG> sets the foreground attribute of <EM>menu</EM>. This
+       is the highlight used for selected menu items.  <STRONG>menu_fore</STRONG>  returns  the
+       foreground attribute.  The default is <STRONG>A_REVERSE</STRONG>.
 
-       The  function <B>set_menu_back</B> sets the background attribute of <I>menu</I>. This
+       The  function <STRONG>set_menu_back</STRONG> sets the background attribute of <EM>menu</EM>. This
        is the highlight used for selectable (but not currently selected)  menu
-       items.   The  function <B>menu_back</B> returns the background attribute.  The
-       default is <B>A_NORMAL</B>.
+       items.   The  function <STRONG>menu_back</STRONG> returns the background attribute.  The
+       default is <STRONG>A_NORMAL</STRONG>.
 
-       The function <B>set_menu_grey</B> sets the grey attribute of <I>menu</I>. This is the
+       The function <STRONG>set_menu_grey</STRONG> sets the grey attribute of <EM>menu</EM>. This is the
        highlight  used  for un-selectable menu items in menus that permit more
-       than one selection.  The function <B>menu_grey</B> returns the grey attribute.
-       The default is <B>A_UNDERLINE</B>.
+       than one selection.  The function <STRONG>menu_grey</STRONG> returns the grey attribute.
+       The default is <STRONG>A_UNDERLINE</STRONG>.
 
-       The  function  <B>set_menu_pad</B>  sets  the character used to fill the space
-       between the name and  description  parts  of  a  menu  item.   <B>menu_pad</B>
+       The  function  <STRONG>set_menu_pad</STRONG>  sets  the character used to fill the space
+       between the name and  description  parts  of  a  menu  item.   <STRONG>menu_pad</STRONG>
        returns the given menu's pad character.  The default is a blank.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>  and  related  pages  whose names begin "menu_" for detailed
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>  and  related  pages  whose names begin "menu_" for detailed
        descriptions of the entry points.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -122,7 +122,7 @@
 
 
 
-                                                           <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
+                                                           <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.98 2021/06/17 21:30:22 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.99 2021/06/26 20:44:59 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -118,8 +118,9 @@ curses_trace(unsigned tracelevel)
 		    _nc_STRCAT(MyPath, ".log", sizeof(MyPath));
 		}
 	    }
+#define SAFE_MODE (O_CREAT | O_EXCL | O_RDWR)
 	    if (_nc_access(MyPath, W_OK) < 0
-		|| (MyFD = open(MyPath, O_CREAT | O_EXCL | O_RDWR, 0600)) < 0
+		|| (MyFD = safe_open3(MyPath, SAFE_MODE, 0600)) < 0
 		|| (MyFP = fdopen(MyFD, BIN_W)) == 0) {
 		;		/* EMPTY */
 	    }

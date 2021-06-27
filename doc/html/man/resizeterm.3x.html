@@ -35,114 +35,114 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>resizeterm 3X</TITLE>
+<TITLE>resizeterm 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">resizeterm 3X</H1>
+<H1 class="no-header">resizeterm 3x</H1>
 <PRE>
-<B><A HREF="resizeterm.3X.html">resizeterm(3X)</A></B>                                                  <B><A HREF="resizeterm.3X.html">resizeterm(3X)</A></B>
+<STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>                                                  <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>is_term_resized</B>,  <B>resize_term</B>,  <B>resizeterm</B> - change the curses terminal
+       <STRONG>is_term_resized</STRONG>,  <STRONG>resize_term</STRONG>,  <STRONG>resizeterm</STRONG> - change the curses terminal
        size
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>bool</B> <B>is_term_resized(int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
-       <B>int</B> <B>resize_term(int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
-       <B>int</B> <B>resizeterm(int</B> <I>lines</I><B>,</B> <B>int</B> <I>columns</I><B>);</B>
+       <STRONG>bool</STRONG> <STRONG>is_term_resized(int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>resize_term(int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>resizeterm(int</STRONG> <EM>lines</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>columns</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This is an extension to the curses library.  It provides callers with a
-       hook  into  the  <B>ncurses</B>  data  to resize windows, primarily for use by
+       hook  into  the  <STRONG>ncurses</STRONG>  data  to resize windows, primarily for use by
        programs running in an X Window terminal (e.g., xterm).
 
 
 </PRE><H3><a name="h3-resizeterm">resizeterm</a></H3><PRE>
-       The function <B>resizeterm</B> resizes the standard and current windows to the
+       The function <STRONG>resizeterm</STRONG> resizes the standard and current windows to the
        specified  dimensions,  and  adjusts other bookkeeping data used by the
-       <B>ncurses</B> library that record the window dimensions such as the <B>LINES</B> and
-       <B>COLS</B> variables.
+       <STRONG>ncurses</STRONG> library that record the window dimensions such as the <STRONG>LINES</STRONG> and
+       <STRONG>COLS</STRONG> variables.
 
 
 </PRE><H3><a name="h3-resize_term">resize_term</a></H3><PRE>
-       Most  of the work is done by the inner function <B>resize_term</B>.  The outer
-       function <B>resizeterm</B> adds bookkeeping for the <B>SIGWINCH</B> handler, as  well
-       as repainting the soft-key area (see <B><A HREF="curs_slk.3X.html">slk_touch(3X)</A></B>).
+       Most  of the work is done by the inner function <STRONG>resize_term</STRONG>.  The outer
+       function <STRONG>resizeterm</STRONG> adds bookkeeping for the <STRONG>SIGWINCH</STRONG> handler, as  well
+       as repainting the soft-key area (see <STRONG><A HREF="curs_slk.3x.html">slk_touch(3x)</A></STRONG>).
 
-       When  resizing  the windows, <B>resize_term</B> blank-fills the areas that are
+       When  resizing  the windows, <STRONG>resize_term</STRONG> blank-fills the areas that are
        extended.  The calling application should  fill  in  these  areas  with
        appropriate data.
 
-       The  <B>resize_term</B> function attempts to resize all windows.  However, due
+       The  <STRONG>resize_term</STRONG> function attempts to resize all windows.  However, due
        to the calling convention of pads, it is not possible to  resize  these
        without additional interaction with the application.
 
-       When  resizing  windows,  <B>resize_term</B>  recursively  adjusts subwindows,
+       When  resizing  windows,  <STRONG>resize_term</STRONG>  recursively  adjusts subwindows,
        keeping them within the updated parent window's limits.  If a top-level
        window  happens  to extend to the screen's limits, then on resizing the
-       window, <B>resize_term</B> will keep the window extending to the corresponding
+       window, <STRONG>resize_term</STRONG> will keep the window extending to the corresponding
        limit, regardless of whether the screen has shrunk or grown.
 
 
 </PRE><H3><a name="h3-is_term_resized">is_term_resized</a></H3><PRE>
-       A support function <B>is_term_resized</B> is provided so that applications can
-       check if the <B>resize_term</B> function would modify the  window  structures.
-       It returns <B>TRUE</B> if the windows would be modified, and <B>FALSE</B> otherwise.
+       A support function <STRONG>is_term_resized</STRONG> is provided so that applications can
+       check if the <STRONG>resize_term</STRONG> function would modify the  window  structures.
+       It returns <STRONG>TRUE</STRONG> if the windows would be modified, and <STRONG>FALSE</STRONG> otherwise.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except  as  noted,  these functions return the integer <B>ERR</B> upon failure
-       and <B>OK</B> on success.  They will fail if either of the dimensions are less
+       Except  as  noted,  these functions return the integer <STRONG>ERR</STRONG> upon failure
+       and <STRONG>OK</STRONG> on success.  They will fail if either of the dimensions are less
        than  or  equal  to  zero,  or  if an error occurs while (re)allocating
        memory for the windows.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        While these functions are intended to  be  used  to  support  a  signal
-       handler  (i.e.,  for  <B>SIGWINCH</B>), care should be taken to avoid invoking
-       them in a context where <B>malloc</B> or <B>realloc</B> may  have  been  interrupted,
+       handler  (i.e.,  for  <STRONG>SIGWINCH</STRONG>), care should be taken to avoid invoking
+       them in a context where <STRONG>malloc</STRONG> or <STRONG>realloc</STRONG> may  have  been  interrupted,
        since it uses those functions.
 
-       If ncurses is configured to supply its own <B>SIGWINCH</B> handler,
+       If ncurses is configured to supply its own <STRONG>SIGWINCH</STRONG> handler,
 
-       <B>o</B>   on receipt of a <B>SIGWINCH</B>, the handler sets a flag
+       <STRONG>o</STRONG>   on receipt of a <STRONG>SIGWINCH</STRONG>, the handler sets a flag
 
-       <B>o</B>   which is tested in <B><A HREF="curs_getch.3X.html">wgetch(3X)</A></B> and <B>doupdate</B>,
+       <STRONG>o</STRONG>   which is tested in <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> and <STRONG>doupdate</STRONG>,
 
-       <B>o</B>   in turn, calling the <B>resizeterm</B> function,
+       <STRONG>o</STRONG>   in turn, calling the <STRONG>resizeterm</STRONG> function,
 
-       <B>o</B>   which <B>ungetch</B>'s a <B>KEY_RESIZE</B> which will be read on the next call to
-           <B>wgetch</B>.
+       <STRONG>o</STRONG>   which <STRONG>ungetch</STRONG>'s a <STRONG>KEY_RESIZE</STRONG> which will be read on the next call to
+           <STRONG>wgetch</STRONG>.
 
-           The <B>KEY_RESIZE</B> alerts an  application  that  the  screen  size  has
+           The <STRONG>KEY_RESIZE</STRONG> alerts an  application  that  the  screen  size  has
            changed,  and  that it should repaint special features such as pads
            that cannot be done automatically.
 
-           Calling <B>resizeterm</B> or <B>resize_term</B> directly from a signal handler is
+           Calling <STRONG>resizeterm</STRONG> or <STRONG>resize_term</STRONG> directly from a signal handler is
            unsafe.   This  indirect  method  is  used to provide a safe way to
            resize the ncurses data structures.
 
-       If the environment variables <B>LINES</B> or <B>COLUMNS</B> are set,  this  overrides
+       If the environment variables <STRONG>LINES</STRONG> or <STRONG>COLUMNS</STRONG> are set,  this  overrides
        the  library's  use  of  the  window  size  obtained from the operating
-       system.  Thus, even if a <B>SIGWINCH</B> is received, no  screen  size  change
+       system.  Thus, even if a <STRONG>SIGWINCH</STRONG> is received, no  screen  size  change
        may be recorded.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        It is possible to resize the screen with SVr4 curses, by
 
-       <B>o</B>   exiting curses with <B><A HREF="curs_initscr.3X.html">endwin(3X)</A></B> and
+       <STRONG>o</STRONG>   exiting curses with <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> and
 
-       <B>o</B>   resuming using <B><A HREF="curs_refresh.3X.html">refresh(3X)</A></B>.
+       <STRONG>o</STRONG>   resuming using <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG>.
 
        Doing that clears the screen and is visually distracting.
 
@@ -151,7 +151,7 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curs_getch.3X.html">curs_getch(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>, <B><A HREF="wresize.3X.html">wresize(3X)</A></B>.
+       <STRONG><A HREF="curs_getch.3x.html">curs_getch(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="wresize.3x.html">wresize(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -160,7 +160,7 @@
 
 
 
-                                                                <B><A HREF="resizeterm.3X.html">resizeterm(3X)</A></B>
+                                                                <STRONG><A HREF="resizeterm.3x.html">resizeterm(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

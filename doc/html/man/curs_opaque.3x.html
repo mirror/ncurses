@@ -34,100 +34,100 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_opaque 3X</TITLE>
+<TITLE>curs_opaque 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_opaque 3X</H1>
+<H1 class="no-header">curs_opaque 3x</H1>
 <PRE>
-<B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>                                                <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>
+<STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>                                                <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>is_cleared</B>, <B>is_idlok</B>, <B>is_idcok</B>, <B>is_immedok</B>, <B>is_keypad</B>, <B>is_leaveok</B>,
-       <B>is_nodelay</B>, <B>is_notimeout</B>, <B>is_pad</B>, <B>is_scrollok</B>, <B>is_subwin</B>, <B>is_syncok</B>,
-       <B>wgetdelay</B>, <B>wgetparent</B>, <B>wgetscrreg</B> - <B>curses</B> window properties
+       <STRONG>is_cleared</STRONG>, <STRONG>is_idlok</STRONG>, <STRONG>is_idcok</STRONG>, <STRONG>is_immedok</STRONG>, <STRONG>is_keypad</STRONG>, <STRONG>is_leaveok</STRONG>,
+       <STRONG>is_nodelay</STRONG>, <STRONG>is_notimeout</STRONG>, <STRONG>is_pad</STRONG>, <STRONG>is_scrollok</STRONG>, <STRONG>is_subwin</STRONG>, <STRONG>is_syncok</STRONG>,
+       <STRONG>wgetdelay</STRONG>, <STRONG>wgetparent</STRONG>, <STRONG>wgetscrreg</STRONG> - <STRONG>curses</STRONG> window properties
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>bool</B> <B>is_cleared(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_idcok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_idlok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_immedok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_keypad(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_leaveok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_nodelay(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_notimeout(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_pad(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_scrollok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_subwin(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>bool</B> <B>is_syncok(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>WINDOW</B> <B>*</B> <B>wgetparent(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>wgetdelay(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>wgetscrreg(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <B>*</B><I>top</I><B>,</B> <B>int</B> <B>*</B><I>bottom</I><B>);</B>
+       <STRONG>bool</STRONG> <STRONG>is_cleared(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_idcok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_idlok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_immedok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_keypad(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_leaveok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_nodelay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_notimeout(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_pad(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_scrollok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_subwin(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>bool</STRONG> <STRONG>is_syncok(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>WINDOW</STRONG> <STRONG>*</STRONG> <STRONG>wgetparent(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wgetdelay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wgetscrreg(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>top</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>bottom</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation  provides functions which return properties set in
-       the WINDOW structure, allowing it to be "opaque" if the  symbol  <B>NCURS-</B>
-       <B>ES_OPAQUE</B> is defined:
+       the WINDOW structure, allowing it to be "opaque" if the  symbol  <STRONG>NCURS-</STRONG>
+       <STRONG>ES_OPAQUE</STRONG> is defined:
 
-       <B>is_cleared</B>
-            returns the value set in <B>clearok</B>
+       <STRONG>is_cleared</STRONG>
+            returns the value set in <STRONG>clearok</STRONG>
 
-       <B>is_idcok</B>
-            returns the value set in <B>idcok</B>
+       <STRONG>is_idcok</STRONG>
+            returns the value set in <STRONG>idcok</STRONG>
 
-       <B>is_idlok</B>
-            returns the value set in <B>idlok</B>
+       <STRONG>is_idlok</STRONG>
+            returns the value set in <STRONG>idlok</STRONG>
 
-       <B>is_immedok</B>
-            returns the value set in <B>immedok</B>
+       <STRONG>is_immedok</STRONG>
+            returns the value set in <STRONG>immedok</STRONG>
 
-       <B>is_keypad</B>
-            returns the value set in <B>keypad</B>
+       <STRONG>is_keypad</STRONG>
+            returns the value set in <STRONG>keypad</STRONG>
 
-       <B>is_leaveok</B>
-            returns the value set in <B>leaveok</B>
+       <STRONG>is_leaveok</STRONG>
+            returns the value set in <STRONG>leaveok</STRONG>
 
-       <B>is_nodelay</B>
-            returns the value set in <B>nodelay</B>
+       <STRONG>is_nodelay</STRONG>
+            returns the value set in <STRONG>nodelay</STRONG>
 
-       <B>is_notimeout</B>
-            returns the value set in <B>notimeout</B>
+       <STRONG>is_notimeout</STRONG>
+            returns the value set in <STRONG>notimeout</STRONG>
 
-       <B>is_pad</B>
-            returns <B>TRUE</B> if the window is a pad i.e., created by <B>newpad</B>
+       <STRONG>is_pad</STRONG>
+            returns <STRONG>TRUE</STRONG> if the window is a pad i.e., created by <STRONG>newpad</STRONG>
 
-       <B>is_scrollok</B>
-            returns the value set in <B>scrollok</B>
+       <STRONG>is_scrollok</STRONG>
+            returns the value set in <STRONG>scrollok</STRONG>
 
-       <B>is_subwin</B>
-            returns <B>TRUE</B> if the window is a subwindow, i.e., created by <B>subwin</B>
-            or <B>derwin</B>
+       <STRONG>is_subwin</STRONG>
+            returns <STRONG>TRUE</STRONG> if the window is a subwindow, i.e., created by <STRONG>subwin</STRONG>
+            or <STRONG>derwin</STRONG>
 
-       <B>is_syncok</B>
-            returns the value set in <B>syncok</B>
+       <STRONG>is_syncok</STRONG>
+            returns the value set in <STRONG>syncok</STRONG>
 
-       <B>wgetdelay</B>
-            returns the delay timeout as set in <B>wtimeout</B>.
+       <STRONG>wgetdelay</STRONG>
+            returns the delay timeout as set in <STRONG>wtimeout</STRONG>.
 
-       <B>wgetparent</B>
+       <STRONG>wgetparent</STRONG>
             returns the parent WINDOW pointer for subwindows, or NULL for win-
             dows having no parent.
 
-       <B>wgetscrreg</B>
+       <STRONG>wgetscrreg</STRONG>
             returns the top and bottom rows for the scrolling margin as set in
-            <B>wsetscrreg</B>.
+            <STRONG>wsetscrreg</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       These functions all return <B>TRUE</B> or <B>FALSE</B>, except as noted.
+       These functions all return <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>, except as noted.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -142,11 +142,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_inopts.3X.html">curs_inopts(3X)</A></B>, <B><A HREF="curs_outopts.3X.html">curs_outopts(3X)</A></B>, <B><A HREF="curs_window.3X.html">curs_window(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>, <STRONG><A HREF="curs_outopts.3x.html">curs_outopts(3x)</A></STRONG>, <STRONG><A HREF="curs_window.3x.html">curs_window(3x)</A></STRONG>
 
 
 
-                                                               <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>
+                                                               <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

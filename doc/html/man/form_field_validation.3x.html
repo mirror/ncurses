@@ -34,70 +34,70 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_field_validation 3X</TITLE>
+<TITLE>form_field_validation 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_field_validation 3X</H1>
+<H1 class="no-header">form_field_validation 3x</H1>
 <PRE>
-<B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>                            <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>
+<STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>                            <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>form_field_validation</B> - data type validation for fields
+       <STRONG>form_field_validation</STRONG> - data type validation for fields
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
 
-       <B>void</B> <B>*field_arg(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
-       <B>FIELDTYPE</B> <B>*field_type(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
-       <B>int</B> <B>set_field_type(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>FIELDTYPE</B> <B>*</B><I>type</I><B>,</B> <B>...);</B>
+       <STRONG>void</STRONG> <STRONG>*field_arg(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*field_type(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>set_field_type(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>FIELDTYPE</STRONG> <STRONG>*</STRONG><EM>type</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
 
        /* predefined field types */
-       <B>FIELDTYPE</B> <B>*TYPE_ALNUM;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_ALPHA;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_ENUM;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_INTEGER;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_NUMERIC;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_REGEXP;</B>
-       <B>FIELDTYPE</B> <B>*TYPE_IPV4;</B>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ALNUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ALPHA;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_ENUM;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_INTEGER;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_NUMERIC;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_REGEXP;</STRONG>
+       <STRONG>FIELDTYPE</STRONG> <STRONG>*TYPE_IPV4;</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        By  default, no validation is done on form fields.  You can associate a
-       form with with a <I>field</I> <I>type</I>, making the form library validate input.
+       form with with a <EM>field</EM> <EM>type</EM>, making the form library validate input.
 
 
 </PRE><H3><a name="h3-field_arg">field_arg</a></H3><PRE>
-       Returns a pointer to the field's argument block.  The <I>argument</I> <I>block</I> is
+       Returns a pointer to the field's argument block.  The <EM>argument</EM> <EM>block</EM> is
        an  opaque  structure  containing a copy of the arguments provided in a
-       <B>set_field_type</B> call.
+       <STRONG>set_field_type</STRONG> call.
 
 
 </PRE><H3><a name="h3-field_type">field_type</a></H3><PRE>
-       Returns a pointer to the <I>field</I> <I>type</I> associated  with  the  form  field,
-       i.e., by calling <B>set_field_type</B>.
+       Returns a pointer to the <EM>field</EM> <EM>type</EM> associated  with  the  form  field,
+       i.e., by calling <STRONG>set_field_type</STRONG>.
 
 
 </PRE><H3><a name="h3-set_field_type">set_field_type</a></H3><PRE>
-       The  function  <B>set_field_type</B> associates a field type with a given form
+       The  function  <STRONG>set_field_type</STRONG> associates a field type with a given form
        field.  This is the type checked by validation functions.   Most  field
        types  are  configurable,  via arguments which the caller provides when
-       calling <B>set_field_type</B>.
+       calling <STRONG>set_field_type</STRONG>.
 
        Several field types are predefined by the form library.
 
 
 </PRE><H3><a name="h3-Predefined-types">Predefined types</a></H3><PRE>
        It is possible to set up new  programmer-defined  field  types.   Field
-       types  are implemented via the <B>FIELDTYPE</B> data structure, which contains
+       types  are implemented via the <STRONG>FIELDTYPE</STRONG> data structure, which contains
        several pointers to functions.
 
-       See the <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B> manual page, which describes functions which
+       See the <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG> manual page, which describes functions which
        can be used to construct a field-type dynamically.
 
        The predefined types are as follows:
@@ -105,21 +105,21 @@
        TYPE_ALNUM
             Alphanumeric data.  Required parameter:
 
-            <B>o</B>   a third <B>int</B> argument, a minimum field width.
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument, a minimum field width.
 
        TYPE_ALPHA
             Character data.  Required parameter:
 
-            <B>o</B>   a third <B>int</B> argument, a minimum field width.
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument, a minimum field width.
 
        TYPE_ENUM
             Accept one of a specified set of strings.  Required parameters:
 
-            <B>o</B>   a third <B>(char</B> <B>**)</B> argument pointing to a string list;
+            <STRONG>o</STRONG>   a third <STRONG>(char</STRONG> <STRONG>**)</STRONG> argument pointing to a string list;
 
-            <B>o</B>   a fourth <B>int</B> flag argument to enable case-sensitivity;
+            <STRONG>o</STRONG>   a fourth <STRONG>int</STRONG> flag argument to enable case-sensitivity;
 
-            <B>o</B>   a  fifth  <B>int</B> flag argument specifying whether a partial match
+            <STRONG>o</STRONG>   a  fifth  <STRONG>int</STRONG> flag argument specifying whether a partial match
                 must be a unique one.  If this flag is off, a  prefix  matches
                 the  first of any set of more than one list elements with that
                 prefix.
@@ -128,49 +128,49 @@
             lives in automatic variables on the stack.
 
        TYPE_INTEGER
-            Integer  data,  parsable  to  an  integer  by  <B>atoi(3)</B>.   Required
+            Integer  data,  parsable  to  an  integer  by  <STRONG>atoi(3)</STRONG>.   Required
             parameters:
 
-            <B>o</B>   a third <B>int</B> argument controlling the precision,
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
 
-            <B>o</B>   a fourth <B>long</B> argument constraining minimum value,
+            <STRONG>o</STRONG>   a fourth <STRONG>long</STRONG> argument constraining minimum value,
 
-            <B>o</B>   a fifth <B>long</B> constraining maximum value.  If the maximum value
+            <STRONG>o</STRONG>   a fifth <STRONG>long</STRONG> constraining maximum value.  If the maximum value
                 is  less  than  or  equal  to  the minimum value, the range is
                 simply ignored.
 
-            On return, the field buffer is formatted according to  the  <B>printf</B>
+            On return, the field buffer is formatted according to  the  <STRONG>printf</STRONG>
             format  specification  ".*ld",  where  the  "*" is replaced by the
             precision argument.
 
-            For details of the precision handling see <B>printf(3)</B>.
+            For details of the precision handling see <STRONG>printf(3)</STRONG>.
 
        TYPE_NUMERIC
             Numeric  data  (may  have   a   decimal-point   part).    Required
             parameters:
 
-            <B>o</B>   a third <B>int</B> argument controlling the precision,
+            <STRONG>o</STRONG>   a third <STRONG>int</STRONG> argument controlling the precision,
 
-            <B>o</B>   a fourth <B>double</B> argument constraining minimum value,
+            <STRONG>o</STRONG>   a fourth <STRONG>double</STRONG> argument constraining minimum value,
 
-            <B>o</B>   and a fifth <B>double</B> constraining maximum value.  If your system
+            <STRONG>o</STRONG>   and a fifth <STRONG>double</STRONG> constraining maximum value.  If your system
                 supports locales, the decimal point character must be the  one
                 specified  by  your locale.  If the maximum value is less than
                 or equal to the minimum value, the range is simply ignored.
 
-            On return, the field buffer is formatted according to  the  <B>printf</B>
+            On return, the field buffer is formatted according to  the  <STRONG>printf</STRONG>
             format  specification  ".*f",  where  the  "*"  is replaced by the
             precision argument.
 
-            For details of the precision handling see <B>printf(3)</B>.
+            For details of the precision handling see <STRONG>printf(3)</STRONG>.
 
        TYPE_REGEXP
             Regular expression data.  Required parameter:
 
-            <B>o</B>   a third argument, a regular expression <B>(char</B> <B>*)</B>  string.   The
+            <STRONG>o</STRONG>   a third argument, a regular expression <STRONG>(char</STRONG> <STRONG>*)</STRONG>  string.   The
                 data is valid if the regular expression matches it.
 
-            Regular expressions are in the format of <B>regcomp</B> and <B>regexec</B>.
+            Regular expressions are in the format of <STRONG>regcomp</STRONG> and <STRONG>regexec</STRONG>.
 
             The  regular  expression  must match the whole field.  If you have
             for example, an eight character wide field, a  regular  expression
@@ -183,10 +183,10 @@
        TYPE_IPV4
             An Internet Protocol Version 4 address.  Required parameter:
 
-            <B>o</B>   none
+            <STRONG>o</STRONG>   none
 
             The  form  library  checks  whether or not the buffer has the form
-            <I>a.b.c.d</I>, where <I>a</I>, <I>b</I>, <I>c</I>, and <I>d</I> are numbers in the range 0  to  255.
+            <EM>a.b.c.d</EM>, where <EM>a</EM>, <EM>b</EM>, <EM>c</EM>, and <EM>d</EM> are numbers in the range 0  to  255.
             Trailing  blanks in the buffer are ignored.  The address itself is
             not validated.
 
@@ -195,22 +195,22 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The  functions  <B>field_type</B>  and  <B>field_arg</B>  return  <B>NULL</B> on error.  The
-       function <B>set_field_type</B> returns one of the following:
+       The  functions  <STRONG>field_type</STRONG>  and  <STRONG>field_arg</STRONG>  return  <STRONG>NULL</STRONG> on error.  The
+       function <STRONG>set_field_type</STRONG> returns one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="form.3X.html">form(3X)</A></B>, <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>, <B><A HREF="form_variables.3X.html">form_variables(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>, <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>, <STRONG><A HREF="form_variables.3x.html">form_variables(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -224,7 +224,7 @@
 
 
 
-                                                     <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>
+                                                     <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

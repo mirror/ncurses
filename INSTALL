@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.230 2021/06/17 21:11:08 tom Exp $
+-- $Id: INSTALL,v 1.231 2021/06/26 21:02:02 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -474,6 +474,10 @@ CONFIGURE OPTIONS:
 	Finally, some tools ignore the subsecond timestamps supported by some
 	filesystems.  This option adds a 1-second sleep to help those tools
 	avoid unnecessary relinking during the install process.
+
+    --disable-root-access
+	Compile with environment restriction, so most file-access is limited
+	when running via a setuid/setgid application.
 
     --disable-root-environ
 	Compile with environment restriction, so certain environment variables

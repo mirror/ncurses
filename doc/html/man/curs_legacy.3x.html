@@ -34,75 +34,75 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_legacy 3X</TITLE>
+<TITLE>curs_legacy 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_legacy 3X</H1>
+<H1 class="no-header">curs_legacy 3x</H1>
 <PRE>
-<B><A HREF="curs_legacy.3X.html">curs_legacy(3X)</A></B>                                                <B><A HREF="curs_legacy.3X.html">curs_legacy(3X)</A></B>
+<STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>                                                <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       curs_legacy - get <B>curses</B> cursor and window coordinates, attributes
+       curs_legacy - get <STRONG>curses</STRONG> cursor and window coordinates, attributes
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>getattrs(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getattrs(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>getbegx(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>getbegy(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getbegx(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>getbegy(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>getcurx(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>getcury(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getcurx(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>getcury(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>getmaxx(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>getmaxy(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getmaxx(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>getmaxy(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>getparx(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>int</B> <B>getpary(const</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getparx(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>getpary(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        These  legacy  functions  are  simpler  to  use  than the X/Open Curses
        functions:
 
-       <B>o</B>   The <B>getattrs</B> function returns the same attribute data as <B>wattr_get</B>.
+       <STRONG>o</STRONG>   The <STRONG>getattrs</STRONG> function returns the same attribute data as <STRONG>wattr_get</STRONG>.
 
-           However, <B>getattrs</B> returns an integer  (actually  a  <B>chtype</B>),  while
-           <B>wattr_get</B>  returns  the current color pair in a separate parameter.
+           However, <STRONG>getattrs</STRONG> returns an integer  (actually  a  <STRONG>chtype</STRONG>),  while
+           <STRONG>wattr_get</STRONG>  returns  the current color pair in a separate parameter.
            In the wide-character library configuration, color  pairs  may  not
-           fit into a <B>chtype</B>, so <B>wattr_get</B> is the only way to obtain the color
+           fit into a <STRONG>chtype</STRONG>, so <STRONG>wattr_get</STRONG> is the only way to obtain the color
            information.
 
-           Because <B>getattrs</B> returns the attributes in a single  parameter,  it
+           Because <STRONG>getattrs</STRONG> returns the attributes in a single  parameter,  it
            would  not  be possible for an application to distinguish that from
-           <B>ERR</B> (a <I>-1</I>).  If the window  parameter  is  null,  <B>getattrs</B>  returns
-           <B>A_NORMAL</B> (zero).
+           <STRONG>ERR</STRONG> (a <EM>-1</EM>).  If the window  parameter  is  null,  <STRONG>getattrs</STRONG>  returns
+           <STRONG>A_NORMAL</STRONG> (zero).
 
-       <B>o</B>   The <B>getbegy</B> and <B>getbegx</B> functions return the same data as <B>getbegyx</B>.
+       <STRONG>o</STRONG>   The <STRONG>getbegy</STRONG> and <STRONG>getbegx</STRONG> functions return the same data as <STRONG>getbegyx</STRONG>.
 
-       <B>o</B>   The <B>getcury</B> and <B>getcurx</B> functions return the same data as <B>getyx</B>.
+       <STRONG>o</STRONG>   The <STRONG>getcury</STRONG> and <STRONG>getcurx</STRONG> functions return the same data as <STRONG>getyx</STRONG>.
 
-       <B>o</B>   The <B>getmaxy</B> and <B>getmaxx</B> functions return the same data as <B>getmaxyx</B>.
+       <STRONG>o</STRONG>   The <STRONG>getmaxy</STRONG> and <STRONG>getmaxx</STRONG> functions return the same data as <STRONG>getmaxyx</STRONG>.
 
-       <B>o</B>   The <B>getpary</B> and <B>getparx</B> functions return the same data as <B>getparyx</B>.
+       <STRONG>o</STRONG>   The <STRONG>getpary</STRONG> and <STRONG>getparx</STRONG> functions return the same data as <STRONG>getparyx</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Except  as  noted,  these  functions  return  an integer, or <B>ERR</B> if the
+       Except  as  noted,  these  functions  return  an integer, or <STRONG>ERR</STRONG> if the
        window parameter is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
        All of these interfaces are provided  as  macros  and  functions.   The
        macros   are   suppressed   (and  only  the  functions  provided)  when
-       <B>NCURSES_OPAQUE</B> is defined.  The standard forms such as  <B>getyx</B>  must  be
+       <STRONG>NCURSES_OPAQUE</STRONG> is defined.  The standard forms such as  <STRONG>getyx</STRONG>  must  be
        implemented  as  macros,  and  (in  this implementation) are defined in
        terms of the functions described here, to avoid  reliance  on  internal
        details of the WINDOW structure.
@@ -113,17 +113,17 @@
        implementations.  None of  those  implementations  checked  the  window
        parameter.
 
-       The  <B>getattrs</B>  function  and  macro  are  defined  to return a (signed)
+       The  <STRONG>getattrs</STRONG>  function  and  macro  are  defined  to return a (signed)
        integer  for  compatibility  with  those  implementations  although  an
        unsigned type would have been more appropriate.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_getyx.3X.html">curs_getyx(3X)</A></B>, <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>
 
 
 
-                                                               <B><A HREF="curs_legacy.3X.html">curs_legacy(3X)</A></B>
+                                                               <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

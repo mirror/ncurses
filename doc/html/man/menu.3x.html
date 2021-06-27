@@ -35,163 +35,163 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu 3X</TITLE>
+<TITLE>menu 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu 3X</H1>
+<H1 class="no-header">menu 3x</H1>
 <PRE>
-<B><A HREF="menu.3X.html">menu(3X)</A></B>                                                              <B><A HREF="menu.3X.html">menu(3X)</A></B>
+<STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>                                                              <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>menu</B> - curses extension for programming menus
+       <STRONG>menu</STRONG> - curses extension for programming menus
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <B>menu</B> library provides terminal-independent facilities for composing
+       The <STRONG>menu</STRONG> library provides terminal-independent facilities for composing
        menu systems on character-cell terminals.  The library  includes:  item
        routines,  which create and modify menu items; and menu routines, which
        group items into  menus,  display  menus  on  the  screen,  and  handle
        interaction with the user.
 
-       The <B>menu</B> library uses the <B>curses</B> libraries, and a curses initialization
-       routine such as <B>initscr</B> must  be  called  before  using  any  of  these
-       functions.   To  use  the  <B>menu</B>  library,  link with the options <B>-lmenu</B>
-       <B>-lcurses</B>.
+       The <STRONG>menu</STRONG> library uses the <STRONG>curses</STRONG> libraries, and a curses initialization
+       routine such as <STRONG>initscr</STRONG> must  be  called  before  using  any  of  these
+       functions.   To  use  the  <STRONG>menu</STRONG>  library,  link with the options <STRONG>-lmenu</STRONG>
+       <STRONG>-lcurses</STRONG>.
 
 
 </PRE><H3><a name="h3-Current-Default-Values-for-Item-Attributes">Current Default Values for Item Attributes</a></H3><PRE>
-       The <B>menu</B> library maintains a default value for  item  attributes.   You
-       can  get  or  set  this default by calling the appropriate <B>get_</B> or <B>set_</B>
-       routine with a <B>NULL</B> item pointer.  Changing this default  with  a  <B>set_</B>
+       The <STRONG>menu</STRONG> library maintains a default value for  item  attributes.   You
+       can  get  or  set  this default by calling the appropriate <STRONG>get_</STRONG> or <STRONG>set_</STRONG>
+       routine with a <STRONG>NULL</STRONG> item pointer.  Changing this default  with  a  <STRONG>set_</STRONG>
        function  affects  future  item  creations,  but  does  not  change the
        rendering of items already created.
 
 
 </PRE><H3><a name="h3-Routine-Name-Index">Routine Name Index</a></H3><PRE>
-       The following table lists each <B>menu</B> routine and the name of the  manual
+       The following table lists each <STRONG>menu</STRONG> routine and the name of the  manual
        page on which it is described.
 
-       <B>curses</B> Routine Name    Manual Page Name
+       <STRONG>curses</STRONG> Routine Name    Manual Page Name
        --------------------------------------------
-       current_item           <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
-       free_item              <B><A HREF="mitem_new.3X.html">mitem_new(3X)</A></B>
-       free_menu              <B><A HREF="menu_new.3X.html">menu_new(3X)</A></B>
-       item_count             <B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>
-       item_description       <B><A HREF="mitem_name.3X.html">mitem_name(3X)</A></B>
-       item_index             <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
-       item_init              <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       item_name              <B><A HREF="mitem_name.3X.html">mitem_name(3X)</A></B>
-       item_opts              <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
-       item_opts_off          <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
-       item_opts_on           <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
-       item_term              <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       item_userptr           <B><A HREF="mitem_userptr.3X.html">mitem_userptr(3X)</A></B>
-       item_value             <B><A HREF="mitem_value.3X.html">mitem_value(3X)</A></B>
-       item_visible           <B><A HREF="mitem_visible.3X.html">mitem_visible(3X)</A></B>
-       menu_back              <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       menu_driver            <B><A HREF="menu_driver.3X.html">menu_driver(3X)</A></B>
-       menu_fore              <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       menu_format            <B><A HREF="menu_format.3X.html">menu_format(3X)</A></B>
-       menu_grey              <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       menu_init              <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       menu_items             <B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>
-       menu_mark              <B><A HREF="menu_mark.3X.html">menu_mark(3X)</A></B>
-       menu_opts              <B><A HREF="menu_opts.3X.html">menu_opts(3X)</A></B>
-       menu_opts_off          <B><A HREF="menu_opts.3X.html">menu_opts(3X)</A></B>
-       menu_opts_on           <B><A HREF="menu_opts.3X.html">menu_opts(3X)</A></B>
-       menu_pad               <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       menu_pattern           <B><A HREF="menu_pattern.3X.html">menu_pattern(3X)</A></B>
-       menu_request_by_name   <B><A HREF="menu_requestname.3X.html">menu_requestname(3X)</A></B>
-       menu_request_name      <B><A HREF="menu_requestname.3X.html">menu_requestname(3X)</A></B>
+       current_item           <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+       free_item              <STRONG><A HREF="mitem_new.3x.html">mitem_new(3x)</A></STRONG>
+       free_menu              <STRONG><A HREF="menu_new.3x.html">menu_new(3x)</A></STRONG>
+       item_count             <STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>
+       item_description       <STRONG><A HREF="mitem_name.3x.html">mitem_name(3x)</A></STRONG>
+       item_index             <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+       item_init              <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       item_name              <STRONG><A HREF="mitem_name.3x.html">mitem_name(3x)</A></STRONG>
+       item_opts              <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+       item_opts_off          <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+       item_opts_on           <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+       item_term              <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       item_userptr           <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3x)</A></STRONG>
+       item_value             <STRONG><A HREF="mitem_value.3x.html">mitem_value(3x)</A></STRONG>
+       item_visible           <STRONG><A HREF="mitem_visible.3x.html">mitem_visible(3x)</A></STRONG>
+       menu_back              <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       menu_driver            <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>
+       menu_fore              <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       menu_format            <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
+       menu_grey              <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       menu_init              <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       menu_items             <STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>
+       menu_mark              <STRONG><A HREF="menu_mark.3x.html">menu_mark(3x)</A></STRONG>
+       menu_opts              <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
+       menu_opts_off          <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
+       menu_opts_on           <STRONG><A HREF="menu_opts.3x.html">menu_opts(3x)</A></STRONG>
+       menu_pad               <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       menu_pattern           <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+       menu_request_by_name   <STRONG><A HREF="menu_requestname.3x.html">menu_requestname(3x)</A></STRONG>
+       menu_request_name      <STRONG><A HREF="menu_requestname.3x.html">menu_requestname(3x)</A></STRONG>
 
-       menu_spacing           <B><A HREF="menu_spacing.3X.html">menu_spacing(3X)</A></B>
-       menu_sub               <B><A HREF="menu_win.3X.html">menu_win(3X)</A></B>
-       menu_term              <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       menu_userptr           <B><A HREF="menu_userptr.3X.html">menu_userptr(3X)</A></B>
-       menu_win               <B><A HREF="menu_win.3X.html">menu_win(3X)</A></B>
-       new_item               <B><A HREF="mitem_new.3X.html">mitem_new(3X)</A></B>
-       new_menu               <B><A HREF="menu_new.3X.html">menu_new(3X)</A></B>
-       pos_menu_cursor        <B><A HREF="menu_cursor.3X.html">menu_cursor(3X)</A></B>
-       post_menu              <B><A HREF="menu_post.3X.html">menu_post(3X)</A></B>
-       scale_menu             <B><A HREF="menu_win.3X.html">menu_win(3X)</A></B>
-       set_current_item       <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
-       set_item_init          <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       set_item_opts          <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
-       set_item_term          <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       set_item_userptr       <B><A HREF="mitem_userptr.3X.html">mitem_userptr(3X)</A></B>
-       set_item_value         <B><A HREF="mitem_value.3X.html">mitem_value(3X)</A></B>
-       set_menu_back          <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       set_menu_fore          <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       set_menu_format        <B><A HREF="menu_format.3X.html">menu_format(3X)</A></B>
-       set_menu_grey          <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       set_menu_init          <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       set_menu_items         <B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>
-       set_menu_mark          <B><A HREF="menu_mark.3X.html">menu_mark(3X)</A></B>
-       set_menu_opts          <B><A HREF="mitem_opts.3X.html">mitem_opts(3X)</A></B>
-       set_menu_pad           <B><A HREF="menu_attributes.3X.html">menu_attributes(3X)</A></B>
-       set_menu_pattern       <B><A HREF="menu_pattern.3X.html">menu_pattern(3X)</A></B>
-       set_menu_spacing       <B><A HREF="menu_spacing.3X.html">menu_spacing(3X)</A></B>
-       set_menu_sub           <B><A HREF="menu_win.3X.html">menu_win(3X)</A></B>
-       set_menu_term          <B><A HREF="menu_hook.3X.html">menu_hook(3X)</A></B>
-       set_menu_userptr       <B><A HREF="menu_userptr.3X.html">menu_userptr(3X)</A></B>
-       set_menu_win           <B><A HREF="menu_win.3X.html">menu_win(3X)</A></B>
-       set_top_row            <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
-       top_row                <B><A HREF="mitem_current.3X.html">mitem_current(3X)</A></B>
-       unpost_menu            <B><A HREF="menu_post.3X.html">menu_post(3X)</A></B>
+       menu_spacing           <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3x)</A></STRONG>
+       menu_sub               <STRONG><A HREF="menu_win.3x.html">menu_win(3x)</A></STRONG>
+       menu_term              <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       menu_userptr           <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
+       menu_win               <STRONG><A HREF="menu_win.3x.html">menu_win(3x)</A></STRONG>
+       new_item               <STRONG><A HREF="mitem_new.3x.html">mitem_new(3x)</A></STRONG>
+       new_menu               <STRONG><A HREF="menu_new.3x.html">menu_new(3x)</A></STRONG>
+       pos_menu_cursor        <STRONG><A HREF="menu_cursor.3x.html">menu_cursor(3x)</A></STRONG>
+       post_menu              <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
+       scale_menu             <STRONG><A HREF="menu_win.3x.html">menu_win(3x)</A></STRONG>
+       set_current_item       <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+       set_item_init          <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       set_item_opts          <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+       set_item_term          <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       set_item_userptr       <STRONG><A HREF="mitem_userptr.3x.html">mitem_userptr(3x)</A></STRONG>
+       set_item_value         <STRONG><A HREF="mitem_value.3x.html">mitem_value(3x)</A></STRONG>
+       set_menu_back          <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       set_menu_fore          <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       set_menu_format        <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
+       set_menu_grey          <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       set_menu_init          <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       set_menu_items         <STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>
+       set_menu_mark          <STRONG><A HREF="menu_mark.3x.html">menu_mark(3x)</A></STRONG>
+       set_menu_opts          <STRONG><A HREF="mitem_opts.3x.html">mitem_opts(3x)</A></STRONG>
+       set_menu_pad           <STRONG><A HREF="menu_attributes.3x.html">menu_attributes(3x)</A></STRONG>
+       set_menu_pattern       <STRONG><A HREF="menu_pattern.3x.html">menu_pattern(3x)</A></STRONG>
+       set_menu_spacing       <STRONG><A HREF="menu_spacing.3x.html">menu_spacing(3x)</A></STRONG>
+       set_menu_sub           <STRONG><A HREF="menu_win.3x.html">menu_win(3x)</A></STRONG>
+       set_menu_term          <STRONG><A HREF="menu_hook.3x.html">menu_hook(3x)</A></STRONG>
+       set_menu_userptr       <STRONG><A HREF="menu_userptr.3x.html">menu_userptr(3x)</A></STRONG>
+       set_menu_win           <STRONG><A HREF="menu_win.3x.html">menu_win(3x)</A></STRONG>
+       set_top_row            <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+       top_row                <STRONG><A HREF="mitem_current.3x.html">mitem_current(3x)</A></STRONG>
+       unpost_menu            <STRONG><A HREF="menu_post.3x.html">menu_post(3x)</A></STRONG>
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Routines  that  return  pointers  return  <B>NULL</B> on error.  Routines that
+       Routines  that  return  pointers  return  <STRONG>NULL</STRONG> on error.  Routines that
        return an integer return one of the following error codes:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_BAD_STATE</B>
+       <STRONG>E_BAD_STATE</STRONG>
             Routine was called from an initialization or termination function.
 
-       <B>E_NO_MATCH</B>
+       <STRONG>E_NO_MATCH</STRONG>
             Character failed to match.
 
-       <B>E_NO_ROOM</B>
+       <STRONG>E_NO_ROOM</STRONG>
             Menu is too large for its window.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to the menu.
 
-       <B>E_NOT_POSTED</B>
+       <STRONG>E_NOT_POSTED</STRONG>
             The menu has not been posted.
 
-       <B>E_NOT_SELECTABLE</B>
+       <STRONG>E_NOT_SELECTABLE</STRONG>
             The designated item cannot be selected.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The menu is already posted.
 
-       <B>E_REQUEST_DENIED</B>
+       <STRONG>E_REQUEST_DENIED</STRONG>
             The menu driver could not process the request.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
-       <B>E_UNKNOWN_COMMAND</B>
+       <STRONG>E_UNKNOWN_COMMAND</STRONG>
             The menu driver code saw an unknown request code.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  files
-       <B>&lt;curses.h&gt;</B> and <B>&lt;eti.h&gt;</B>.
+       The header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  files
+       <STRONG>&lt;curses.h&gt;</STRONG> and <STRONG>&lt;eti.h&gt;</STRONG>.
 
        In your library list, libmenu.a should be before libncurses.a; that is,
        you should say "-lmenu -lncurses", not  the  other  way  around  (which
@@ -202,16 +202,16 @@
        These  routines  emulate  the  System  V  menu  library.  They were not
        supported on Version 7 or BSD versions.
 
-       The menu facility was documented in SVr4.2 in <I>Character</I> <I>User</I>  <I>Interface</I>
-       <I>Programming</I> <I>(UNIX</I> <I>SVR4.2)</I>.
+       The menu facility was documented in SVr4.2 in <EM>Character</EM> <EM>User</EM>  <EM>Interface</EM>
+       <EM>Programming</EM> <EM>(UNIX</EM> <EM>SVR4.2)</EM>.
 
        It is not part of X/Open Curses.
 
        Aside from ncurses, there are few implementations:
 
-       <B>o</B>   systems based on SVr4 source code, e.g., Solaris.
+       <STRONG>o</STRONG>   systems based on SVr4 source code, e.g., Solaris.
 
-       <B>o</B>   NetBSD curses.
+       <STRONG>o</STRONG>   NetBSD curses.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
@@ -220,14 +220,14 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B> and related pages whose names  begin  "menu_"  for  detailed
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names  begin  "menu_"  for  detailed
        descriptions of the entry points.
 
-       This describes <B>ncurses</B> version 6.2 (patch 20210612).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210626).
 
 
 
-                                                                      <B><A HREF="menu.3X.html">menu(3X)</A></B>
+                                                                      <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

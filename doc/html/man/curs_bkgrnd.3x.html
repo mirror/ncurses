@@ -34,44 +34,44 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_bkgrnd 3X</TITLE>
+<TITLE>curs_bkgrnd 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_bkgrnd 3X</H1>
+<H1 class="no-header">curs_bkgrnd 3x</H1>
 <PRE>
-<B><A HREF="curs_bkgrnd.3X.html">curs_bkgrnd(3X)</A></B>                                                <B><A HREF="curs_bkgrnd.3X.html">curs_bkgrnd(3X)</A></B>
+<STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>                                                <STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>bkgrnd</B>,  <B>wbkgrnd</B>, <B>bkgrndset</B>, <B>wbkgrndset</B>, <B>getbkgrnd</B>, <B>wgetbkgrnd</B> - <B>curses</B>
+       <STRONG>bkgrnd</STRONG>,  <STRONG>wbkgrnd</STRONG>, <STRONG>bkgrndset</STRONG>, <STRONG>wbkgrndset</STRONG>, <STRONG>getbkgrnd</STRONG>, <STRONG>wgetbkgrnd</STRONG> - <STRONG>curses</STRONG>
        window complex background manipulation routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>bkgrnd(</B> <B>const</B> <B>cchar_t</B> <B>*</B><I>wch</I><B>);</B>
-       <B>int</B> <B>wbkgrnd(</B> <B>WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>cchar_t</B> <B>*</B><I>wch</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>bkgrnd(</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wbkgrnd(</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
 
-       <B>void</B> <B>bkgrndset(const</B> <B>cchar_t</B> <B>*</B><I>wch</I> <B>);</B>
-       <B>void</B> <B>wbkgrndset(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>cchar_t</B> <B>*</B><I>wch</I><B>);</B>
+       <STRONG>void</STRONG> <STRONG>bkgrndset(const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM> <STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>wbkgrndset(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>getbkgrnd(cchar_t</B> <B>*</B><I>wch</I><B>);</B>
-       <B>int</B> <B>wgetbkgrnd(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>cchar_t</B> <B>*</B><I>wch</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>getbkgrnd(cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wgetbkgrnd(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>wch</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-bkgrndset">bkgrndset</a></H3><PRE>
-       The <B>bkgrndset</B> and <B>wbkgrndset</B> routines manipulate the background of  the
-       named  window.   The  window  background is a <B>cchar_t</B> consisting of any
+       The <STRONG>bkgrndset</STRONG> and <STRONG>wbkgrndset</STRONG> routines manipulate the background of  the
+       named  window.   The  window  background is a <STRONG>cchar_t</STRONG> consisting of any
        combination of attributes (i.e., rendition) and  a  complex  character.
        The  attribute part of the background is combined (OR'ed) with all non-
-       blank characters that are written into the window  with  <B>waddch</B>.   Both
+       blank characters that are written into the window  with  <STRONG>waddch</STRONG>.   Both
        the  character  and attribute parts of the background are combined with
        the blank  characters.   The  background  becomes  a  property  of  the
        character  and  moves  with  the  character  through  any scrolling and
@@ -83,40 +83,40 @@
 
 
 </PRE><H3><a name="h3-bkgrnd">bkgrnd</a></H3><PRE>
-       The <B>bkgrnd</B> and <B>wbkgrnd</B> functions set the  background  property  of  the
+       The <STRONG>bkgrnd</STRONG> and <STRONG>wbkgrnd</STRONG> functions set the  background  property  of  the
        current  or  specified  window  and  then  apply  this setting to every
        character position in that window:
 
-       <B>o</B>   The rendition of every character on the screen is  changed  to  the
+       <STRONG>o</STRONG>   The rendition of every character on the screen is  changed  to  the
            new background rendition.
 
-       <B>o</B>   Wherever  the former background character appears, it is changed to
+       <STRONG>o</STRONG>   Wherever  the former background character appears, it is changed to
            the new background character.
 
 
 </PRE><H3><a name="h3-getbkgrnd">getbkgrnd</a></H3><PRE>
-       The <B>getbkgrnd</B> function returns the given  window's  current  background
-       character/attribute  pair  via  the  <B>wch</B>  pointer.  If the given window
+       The <STRONG>getbkgrnd</STRONG> function returns the given  window's  current  background
+       character/attribute  pair  via  the  <STRONG>wch</STRONG>  pointer.  If the given window
        pointer is null, the character is not updated (but no error returned).
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <B>bkgrnd</B>, <B>bkgrndset</B>, and <B>getbkgrnd</B> may be macros.
+       Note that <STRONG>bkgrnd</STRONG>, <STRONG>bkgrndset</STRONG>, and <STRONG>getbkgrnd</STRONG> may be macros.
 
        X/Open Curses does not provide details on how the rendition is changed.
        This  implementation follows the approach used in SVr4 curses, which is
-       explained in the manual page for <B>wbkgd</B>.
+       explained in the manual page for <STRONG>wbkgd</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The <B>bkgrndset</B> and <B>wbkgrndset</B> routines do not return a value.
+       The <STRONG>bkgrndset</STRONG> and <STRONG>wbkgrndset</STRONG> routines do not return a value.
 
-       Upon successful completion, the other functions return <B>OK</B>.   Otherwise,
-       they return <B>ERR</B>:
+       Upon successful completion, the other functions return <STRONG>OK</STRONG>.   Otherwise,
+       they return <STRONG>ERR</STRONG>:
 
-       <B>o</B>   A null window pointer is treated as an error.
+       <STRONG>o</STRONG>   A null window pointer is treated as an error.
 
-       <B>o</B>   A null character pointer is treated as an error.
+       <STRONG>o</STRONG>   A null character pointer is treated as an error.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -125,11 +125,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_bkgd.3X.html">curs_bkgd(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_bkgd.3x.html">curs_bkgd(3x)</A></STRONG>
 
 
 
-                                                               <B><A HREF="curs_bkgrnd.3X.html">curs_bkgrnd(3X)</A></B>
+                                                               <STRONG><A HREF="curs_bkgrnd.3x.html">curs_bkgrnd(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

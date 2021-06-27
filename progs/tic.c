@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.295 2021/04/17 15:18:02 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.296 2021/06/26 19:44:08 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -400,7 +400,7 @@ open_tempfile(char *filename)
     }
 #else
     if (tmpnam(filename) != 0)
-	result = fopen(filename, "w");
+	result = safe_fopen(filename, "w");
 #endif
     return result;
 }
@@ -442,7 +442,7 @@ copy_input(FILE *source, const char *filename, char *alt_file)
 	 * the one that we were writing on before starting to read from the
 	 * second stream.
 	 */
-	result = fopen(alt_file, "r+");
+	result = safe_fopen(alt_file, "r+");
 	fclose(target);
 	to_remove = strdup(alt_file);
     }
@@ -466,7 +466,7 @@ open_input(const char *filename, char *alt_file)
 	fprintf(stderr, "%s: %s is not a file\n", _nc_progname, filename);
 	ExitProgram(EXIT_FAILURE);
     } else {
-	fp = fopen(filename, "r");
+	fp = safe_fopen(filename, "r");
 
 	if (fp == 0) {
 	    fprintf(stderr, "%s: Can't open %s\n", _nc_progname, filename);

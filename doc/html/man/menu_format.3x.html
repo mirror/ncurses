@@ -35,70 +35,70 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_format 3X</TITLE>
+<TITLE>menu_format 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_format 3X</H1>
+<H1 class="no-header">menu_format 3x</H1>
 <PRE>
-<B><A HREF="menu_format.3X.html">menu_format(3X)</A></B>                                                <B><A HREF="menu_format.3X.html">menu_format(3X)</A></B>
+<STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>                                                <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>set_menu_format</B>, <B>menu_format</B> - set and get menu sizes
+       <STRONG>set_menu_format</STRONG>, <STRONG>menu_format</STRONG> - set and get menu sizes
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
-       <B>int</B> <B>set_menu_format(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>int</B> <I>rows</I><B>,</B> <B>int</B> <I>cols</I><B>);</B>
-       <B>void</B> <B>menu_format(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>,</B> <B>int</B> <B>*</B><I>rows</I><B>,</B> <B>int</B> <B>*</B><I>cols</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_format(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>rows</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>cols</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>menu_format(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>rows</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <STRONG>*</STRONG><EM>cols</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <B>set_menu_format</B> sets the maximum display size of the given
+       The function <STRONG>set_menu_format</STRONG> sets the maximum display size of the given
        menu.  If this size is too small to display all menu  items,  the  menu
        will  be  made  scrollable.   If  this  size  is  larger than the menus
        subwindow and the subwindow is too small to  display  all  menu  items,
-       <B>post_menu</B> will fail.
+       <STRONG>post_menu</STRONG> will fail.
 
-       The  default format is 16 rows, 1 column.  Calling <B>set_menu_format</B> with
+       The  default format is 16 rows, 1 column.  Calling <STRONG>set_menu_format</STRONG> with
        a null menu pointer will change this default.  A  zero  row  or  column
-       argument  to  <B>set_menu_format</B> is interpreted as a request not to change
+       argument  to  <STRONG>set_menu_format</STRONG> is interpreted as a request not to change
        the current value.
 
-       The function <B>menu_format</B> returns the maximum-size constraints  for  the
-       given menu into the storage addressed by <B>rows</B> and <B>cols</B>.
+       The function <STRONG>menu_format</STRONG> returns the maximum-size constraints  for  the
+       given menu into the storage addressed by <STRONG>rows</STRONG> and <STRONG>cols</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines returns one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The menu is already posted.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to the menu.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -112,7 +112,7 @@
 
 
 
-                                                               <B><A HREF="menu_format.3X.html">menu_format(3X)</A></B>
+                                                               <STRONG><A HREF="menu_format.3x.html">menu_format(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

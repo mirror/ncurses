@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.872 $
-#	$Date: 2021/03/20 21:45:39 $
+#	$Revision: 1.876 $
+#	$Date: 2021/06/26 18:47:42 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1659,7 +1659,7 @@ pccon+sgr+acs|sgr and default ASCII pseudographics for OpenBSD PC console,
 pccon+colors|ANSI colors for OpenBSD PC console,
 	bce,
 	colors#8, ncv#2, pairs#64,
-	op=\E[47;30m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+	op=\E[49;39m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 pccon+base|base capabilities for OpenBSD PC console,
 	am, km, mc5i, msgr, npc, nxon, xenl, xon,
 	cols#80, it#8, lines#24,
@@ -6620,6 +6620,56 @@ hpterm-color|HP X11 terminal emulator with color,
 	initp=\E&v%p2%da%p3%db%p4%dc%p5%dx%p6%dy%p7%dz%p1%dI,
 	op=\E&v0S, scp=\E&v%p1%dS, use=hpterm,
 
+# http://bitsavers.trailing-edge.com/pdf/hp/9000_hpux/1986/97089-90081_198611_Facilities_for_Series_200_300_and_500.pdf
+# http://bitsavers.trailing-edge.com/pdf/hp/9000_hpux/1987/97089-90081_198709_Facilities_for_Series_200_300_and_500_HP-UX_Concepts_and_Tutorials.pdf
+#
+# This article does not cover the HP 46020A keyboard that is used by the Model
+# 217 and 237 computers.  For information on this keyboard read the article,
+# "The Series 300 ITE as System Console" found in the manual, HP-UX Concepts
+# and Tutorials, Vol.  7. 
+#
+# Possibly:
+# http://bitsavers.trailing-edge.com/pdf/hp/9000_hpux/1986/97089-90042_198608_HP-UX_Concepts_and_Tutorials.pdf
+#
+# HP300_Series_ITE.pdf
+#
+# This version, which came from Martin Trusler, was tested with lynx using
+# ncurses 5.4
+hpterm-color2|X-hpterm-color2|hp X11 terminal emulator with color,
+	OTbs, am, ccc, da, db, km, mir, xhp,
+	colors#8, cols#80, it#8, lh#2, lines#24, lm#0, lw#8, nlab#8,
+	pairs#8, xmc#0,
+	acsc=+>\,<-\^.v0\374``a\374f\372g\376h\374j+k+l+m+n+o-q-s-t+
+	     u+v+w+x|y<z>{*|!}\273~\362,
+	bel=^G, bold=\E&dD, cbt=\Ei, clear=\EH\EJ, cr=\r, cub1=^H,
+	cud1=\EB, cuf1=\EC, cup=\E&a%p1%dy%p2%dC, cuu1=\EA,
+	dch1=\EP, dim=\E&dH, dl1=\EM, ed=\EJ$<1>, el=\EK,
+	home=\E&a0y0C, hpa=\E&a%p1%dC, ht=^I, hts=\E1, il1=\EL,
+	ind=\ES,
+	initp=\E&v0m%?%p2%{1000}%=%t1%e.%p2%d%;a%?%p3%{1000}%=%t1%e.
+	      %p3%d%;b%?%p4%{1000}%=%t1%e.%p4%d%;c%?%p5%{1000}%=%t1
+	      %e.%p5%d%;x%?%p6%{1000}%=%t1%e.%p6%d%;y%?%p7%{1000}%=
+	      %t1%e.%p7%d%;z%p1%dI,
+	is1=\EH\EJ, kbs=^H, kctab=\E2, kcub1=\ED, kcud1=\EB,
+	kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK,
+	kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev,
+	kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES,
+	kll=\EF, knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3,
+	meml=\El, memu=\Em,
+	oc=\E&v0m1a1b1c0I\E&v1a1I\E&v1b2I\E&v1a1b3I\E&v1c4I\E&v1a1c5
+	   I\E&v1b1c6I\E&v1x1y7I,
+	op=\E&v0S, pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
+	pfloc=\E&f1a%p1%dk%p2%l%dL%p2%s,
+	pfx=\E&f2a%p1%dk%p2%l%dL%p2%s,
+	pln=\E&f%p1%dk%p2%l%dd0L%p2%s, rev=\E&dB, ri=\ET,
+	rmacs=^O, rmam=\E&s1C, rmcup=\E&s0A, rmir=\ER, rmkx=\E&s0A,
+	rmln=\E&j@, rmm=\E&k0I, rmso=\E&d@, rmul=\E&d@, rs1=\EE,
+	scp=\E&v%p1%dS,
+	sgr=\E&d%p1%p3%|%{2}%*%p2%p6%|%{4}%*%+%p5%{8}%*%+%{64}%+%c%?
+	    %p9%t%'\016'%c%e%'\017'%c%;,
+	sgr0=\E&d@\017, smacs=^N, smam=\E&s0C, smcup=\E&s1A,
+	smir=\EQ, smkx=\E&s1A, smln=\E&jB, smm=\E&k1I, smso=\E&dB,
+	smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
 #### EMU
 # This is for the extensible terminal emulator on the X11R6 contrib tape.
 # It corresponds to emu's internal emulation:
@@ -9764,6 +9814,44 @@ hp98550|hp98550a|HP 9000 Series 300 color console,
 	rmacs=^O, rmir=\ER, rmkx=\E&s0A, rmso=\E&d@, rmul=\E&d@,
 	sgr0=\E&d@, smacs=^N, smir=\EQ, smkx=\E&s1A, smso=\E&dJ,
 	smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
+
+# From: Martin Trusler
+hp98550-color|hp98550a-color|HP 9000 Series 300 color console,
+	OTbs, am, ccc, da, db, km, mir, xhp,
+	colors#8, cols#128, it#8, lh#2, lines#49, lm#0, lw#8, nlab#8,
+	pairs#8, xmc#0,
+	acsc=+>\,<-\^.v0\374``a\374f\372g\376h\374j+k+l+m+n+o-q-s-t+
+	     u+v+w+x|y<z>{*|!}\273~\362,
+	bel=^G, bold=\E&dD, cbt=\Ei, clear=\EH\EJ, cr=\r, cub1=^H,
+	cud1=\EB, cuf1=\EC, cup=\E&a%p1%dy%p2%dC, cuu1=\EA,
+	dch1=\EP, dl1=\EM, ed=\EJ, el=\EK, home=\E&a0y0C,
+	hpa=\E&a%p1%dC, ht=^I, hts=\E1, il1=\EL, ind=\ES,
+	initp=\E&v0m%?%p2%{1000}%=%t1%e.%p2%d%;a%?%p3%{1000}%=%t1%e.
+	      %p3%d%;b%?%p4%{1000}%=%t1%e.%p4%d%;c%?%p5%{1000}%=%t1
+	      %e.%p5%d%;x%?%p6%{1000}%=%t1%e.%p6%d%;y%?%p7%{1000}%=
+	      %t1%e.%p7%d%;z%p1%dI,
+	is1=\EH\EJ, kbs=^H, kctab=\E2, kcub1=\ED, kcud1=\EB,
+	kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK,
+	kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev,
+	kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES,
+	kll=\EF, knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3,
+	meml=\El, memu=\Em,
+	oc=\E&v0m1a1b1c0I\E&v1a1I\E&v1b2I\E&v1a1b3I\E&v1c4I\E&v1a1c5
+	   I\E&v1b1c6I\E&v1x1y7I,
+	op=\E&v0S, pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
+	pfloc=\E&f1a%p1%dk%p2%l%dL%p2%s,
+	pfx=\E&f2a%p1%dk%p2%l%dL%p2%s,
+	pln=\E&f%p1%dk%p2%l%dd0L%p2%s, rev=\E&dB, ri=\ET,
+	rmacs=^O, rmam=\E&s1C, rmcup=\E&s0A, rmir=\ER, rmkx=\E&s0A,
+	rmln=\E&j@, rmm=\E&k0I, rmso=\E&d@, rmul=\E&d@, rs1=\EE,
+	scp=\E&v%p1%dS,
+	sgr=\E&d%p1%p3%|%{2}%*%p2%p6%|%{4}%*%+%{64}%+%c%?%p9%t%'
+	    \016'%c%e%'\017'%c%;,
+	sgr0=\E&d@\017, smacs=^N, smam=\E&s0C, smcup=\E&s1A,
+	smir=\EQ, smkx=\E&s1A, smln=\E&jB, smm=\E&k1I, smso=\E&dB,
+	smul=\E&dD, tbc=\E3, u6=\Ea%dc%dR\r, u7=\Ea,
+	u8=\E%[0123456789/], u9=\E*s1\^, vpa=\E&a%p1%dY,
+
 # From: Victor Duchovni <vic@fine.princeton.edu>
 # (hp700-wy: removed obsolete ":nl=^J:";
 # replaced /usr/share/tabset/hp700-wy with std because <it#8>,<hts=\E1> -- esr)
@@ -14746,19 +14834,20 @@ aaa+unk|aaa-unk|ann arbor ambassador (internal - don't use this directly),
 	vpa=\E[%p1%{1}%+%dd, use=ansi+rep,
 
 aaa+rv|ann arbor ambassador in reverse video,
-	blink=\E[5;7m, bold=\E[1;7m, invis=\E[7;8m,
-	is1=\E[7m\E7\E[H\E9\E8, rev=\E[m, rmso=\E[7m, rmul=\E[7m,
+	blink=\E[5;7m, bold=\E[1;7m, enacs=\E(B\E)0,
+	invis=\E[7;8m, is1=\E[7m\E7\E[H\E9\E8, rev=\E[m,
+	rmacs=^O, rmso=\E[7m, rmul=\E[7m,
 	rs1=\E[H\E[7m\E[J$<156>,
 	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p2%|%p3%!%|%t7
-	    ;%;%?%p7%t8;%;m\016,
-	sgr0=\E[7m\016, smso=\E[m, smul=\E[4;7m,
+	    ;%;%?%p7%t8;%;m%?%p9%t\016%e\017%;,
+	sgr0=\E[7m\017, smacs=^N, smso=\E[m, smul=\E[4;7m,
 # Ambassador with the DEC option, for partial vt100 compatibility.
 aaa+dec|ann arbor ambassador in dec vt100 mode,
 	acsc=aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}},
-	csr=\E[%i%p1%d;%p2%dr, enacs=\E(0, rmacs=^N,
+	csr=\E[%i%p1%d;%p2%dr, enacs=\E(B\E)0, rmacs=^O,
 	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p3%|%!%t7;%;%?
-	    %p7%t8;%;m%?%p9%t\017%e\016%;,
-	smacs=^O,
+	    %p7%t8;%;m%?%p9%t\016%e\017%;,
+	smacs=^N,
 aaa-18|ann arbor ambassador/18 lines,
 	lines#18,
 	is2=\E7\E[60;0;0;18p\E8,
@@ -26947,5 +27036,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2021-03-20
 #	+ add hterm, hterm-256color (Mike Frysinger)
+#
+# 2021-06-26
+#	+ use default colors in pccon "op" -TD
+#	+ correct rmacs/smacs in aaa+dec, aaa+rv -TD
+#	+ add hpterm-color2 and hp98550-color (Martin Trusler)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

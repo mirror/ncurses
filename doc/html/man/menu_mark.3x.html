@@ -35,27 +35,27 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_mark 3X</TITLE>
+<TITLE>menu_mark 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_mark 3X</H1>
+<H1 class="no-header">menu_mark 3x</H1>
 <PRE>
-<B><A HREF="menu_mark.3X.html">menu_mark(3X)</A></B>                                                    <B><A HREF="menu_mark.3X.html">menu_mark(3X)</A></B>
+<STRONG><A HREF="menu_mark.3x.html">menu_mark(3x)</A></STRONG>                                                    <STRONG><A HREF="menu_mark.3x.html">menu_mark(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>set_menu_mark</B>, <B>menu_mark</B> - get and set the menu mark string
+       <STRONG>set_menu_mark</STRONG>, <STRONG>menu_mark</STRONG> - get and set the menu mark string
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
-       <B>int</B> <B>set_menu_mark(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>mark</I><B>);</B>
-       <B>const</B> <B>char</B> <B>*menu_mark(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_mark(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>mark</EM><STRONG>);</STRONG>
+       <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*menu_mark(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
@@ -63,40 +63,40 @@
        highlighting or color capability, the menu library marks selected items
        in a menu with a prefix string.
 
-       The  function  <B>set_menu_mark</B>  sets  the mark string for the given menu.
-       Calling <B>set_menu_mark</B> with a null  menu  item  will  abolish  the  mark
+       The  function  <STRONG>set_menu_mark</STRONG>  sets  the mark string for the given menu.
+       Calling <STRONG>set_menu_mark</STRONG> with a null  menu  item  will  abolish  the  mark
        string.   Note  that  changing the length of the mark string for a menu
        while the menu is posted is likely to produce unhelpful behavior.
 
-       The default string is "-" (a dash).  Calling <B>set_menu_mark</B> with a  non-
-       <B>NULL</B> menu argument will change this default.
+       The default string is "-" (a dash).  Calling <STRONG>set_menu_mark</STRONG> with a  non-
+       <STRONG>NULL</STRONG> menu argument will change this default.
 
-       The function <B>menu_mark</B> returns the menu's mark string (or <B>NULL</B> if there
+       The function <STRONG>menu_mark</STRONG> returns the menu's mark string (or <STRONG>NULL</STRONG> if there
        is none).
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The function <B>menu_mark</B> returns a pointer (which may be <B>NULL</B>).  It  does
-       not set <B>errno</B>.
+       The function <STRONG>menu_mark</STRONG> returns a pointer (which may be <STRONG>NULL</STRONG>).  It  does
+       not set <STRONG>errno</STRONG>.
 
-       The function <B>set_menu_mark</B> may return the following error codes:
+       The function <STRONG>set_menu_mark</STRONG> may return the following error codes:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -110,7 +110,7 @@
 
 
 
-                                                                 <B><A HREF="menu_mark.3X.html">menu_mark(3X)</A></B>
+                                                                 <STRONG><A HREF="menu_mark.3x.html">menu_mark(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

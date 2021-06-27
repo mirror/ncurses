@@ -35,49 +35,49 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>@CAPTOINFO@ 1M</TITLE>
+<TITLE>captoinfo 1m</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">@CAPTOINFO@ 1M</H1>
+<H1 class="no-header">captoinfo 1m</H1>
 <PRE>
-<B><A HREF="captoinfo.1M.html">captoinfo(1M)</A></B>                                                    <B><A HREF="captoinfo.1M.html">captoinfo(1M)</A></B>
+<STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>                                                    <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>captoinfo</B> - convert a <I>termcap</I> description into a <I>terminfo</I> description
+       <STRONG>captoinfo</STRONG> - convert a <EM>termcap</EM> description into a <EM>terminfo</EM> description
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>captoinfo</B> [<B>-v</B><I>n</I> <I>width</I>]  [<B>-V</B>] [<B>-1</B>] [<B>-w</B> <I>width</I>] <I>file</I> ...
+       <STRONG>captoinfo</STRONG> [<STRONG>-v</STRONG><EM>n</EM> <EM>width</EM>]  [<STRONG>-V</STRONG>] [<STRONG>-1</STRONG>] [<STRONG>-w</STRONG> <EM>width</EM>] <EM>file</EM> ...
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       <B>captoinfo</B>  looks in each given text <I>file</I> for <B>termcap</B> descriptions.  For
-       each one found,  an  equivalent  <B>terminfo</B>  description  is  written  to
-       standard  output.   Termcap  <B>tc</B> capabilities are translated directly to
-       terminfo <B>use</B> capabilities.
+       <STRONG>captoinfo</STRONG>  looks in each given text <EM>file</EM> for <STRONG>termcap</STRONG> descriptions.  For
+       each one found,  an  equivalent  <STRONG>terminfo</STRONG>  description  is  written  to
+       standard  output.   Termcap  <STRONG>tc</STRONG> capabilities are translated directly to
+       terminfo <STRONG>use</STRONG> capabilities.
 
-       If no <I>file</I> is given, then the environment variable <B>TERMCAP</B> is used  for
-       the  filename  or entry.  If <B>TERMCAP</B> is a full pathname to a file, only
-       the terminal whose name is specified in the environment  variable  <B>TERM</B>
-       is  extracted  from  that file.  If the environment variable <B>TERMCAP</B> is
-       not set, then the file <B>/usr/share/terminfo</B> is read.
+       If no <EM>file</EM> is given, then the environment variable <STRONG>TERMCAP</STRONG> is used  for
+       the  filename  or entry.  If <STRONG>TERMCAP</STRONG> is a full pathname to a file, only
+       the terminal whose name is specified in the environment  variable  <STRONG>TERM</STRONG>
+       is  extracted  from  that file.  If the environment variable <STRONG>TERMCAP</STRONG> is
+       not set, then the file <STRONG>/usr/share/terminfo</STRONG> is read.
 
-       <B>-v</B>   print out tracing information on standard  error  as  the  program
+       <STRONG>-v</STRONG>   print out tracing information on standard  error  as  the  program
             runs.
 
-       <B>-V</B>   print  out the version of the program in use on standard error and
+       <STRONG>-V</STRONG>   print  out the version of the program in use on standard error and
             exit.
 
-       <B>-1</B>   cause the fields to print out  one  to  a  line.   Otherwise,  the
+       <STRONG>-1</STRONG>   cause the fields to print out  one  to  a  line.   Otherwise,  the
             fields  will be printed several to a line to a maximum width of 60
             characters.
 
-       <B>-w</B>   change the output to <I>width</I> characters.
+       <STRONG>-w</STRONG>   change the output to <EM>width</EM> characters.
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
@@ -86,7 +86,7 @@
 
 </PRE><H2><a name="h2-TRANSLATIONS-FROM-NONSTANDARD-CAPABILITIES">TRANSLATIONS FROM NONSTANDARD CAPABILITIES</a></H2><PRE>
        Some obsolete nonstandard capabilities will automatically be translated
-       into  standard  (SVr4/XSI  Curses)  terminfo capabilities by <B>captoinfo</B>.
+       into  standard  (SVr4/XSI  Curses)  terminfo capabilities by <STRONG>captoinfo</STRONG>.
        Whenever one of these automatic translations is done, the program  will
        issue an notification to stderr, inviting the user to check that it has
        not mistakenly translated a completely unknown  and  random  capability
@@ -156,8 +156,8 @@
        GG    acs magic cookie count
 
        If   the   single-line  capabilities  occur  in  an  entry,  they  will
-       automatically  be  composed  into  an  <B>acsc</B>  string.   The  double-line
-       capabilities and <B>GG</B> are discarded with a warning message.
+       automatically  be  composed  into  an  <STRONG>acsc</STRONG>  string.   The  double-line
+       capabilities and <STRONG>GG</STRONG> are discarded with a warning message.
 
        IBM's  AIX  has  a  terminfo  facility descended from SVr1 terminfo but
        incompatible with the SVr4 format.  The following  AIX  extensions  are
@@ -172,34 +172,34 @@
        font2   s2ds
        font3   s3ds
 
-       Additionally,  the AIX <I>box1</I> capability will be automatically translated
-       to an <B>acsc</B> string.
+       Additionally,  the AIX <EM>box1</EM> capability will be automatically translated
+       to an <STRONG>acsc</STRONG> string.
 
        Hewlett-Packard's terminfo library supports  two  nonstandard  terminfo
-       capabilities  <B>meml</B>  (memory lock) and <B>memu</B> (memory unlock).  These will
+       capabilities  <STRONG>meml</STRONG>  (memory lock) and <STRONG>memu</STRONG> (memory unlock).  These will
        be discarded with a warning message.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       This utility is actually a link to <B><A HREF="tic.1M.html">tic(1M)</A></B>, running in  <I>-I</I>  mode.   You
-       can use other <B>tic</B> options such as <B>-f</B> and  <B>-x</B>.
+       This utility is actually a link to <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>, running in  <EM>-I</EM>  mode.   You
+       can use other <STRONG>tic</STRONG> options such as <STRONG>-f</STRONG> and  <STRONG>-x</STRONG>.
 
        The  verbose option is not identical to SVr4's.  Under SVr4, instead of
-       following the <B>-v</B> with a trace level n, you repeat it n times.
+       following the <STRONG>-v</STRONG> with a trace level n, you repeat it n times.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       X/Open Curses, Issue 7 (2009) describes <B>tic</B>  briefly,  but  omits  this
-       program.  SVr4 systems provide <B>captoinfo</B> as a separate application from
-       <B>tic</B>.
+       X/Open Curses, Issue 7 (2009) describes <STRONG>tic</STRONG>  briefly,  but  omits  this
+       program.  SVr4 systems provide <STRONG>captoinfo</STRONG> as a separate application from
+       <STRONG>tic</STRONG>.
 
        NetBSD does not provide this application.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="infocmp.1M.html">infocmp(1M)</A></B>, <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="terminfo.5.html">terminfo(5)</A></B>
+       <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
-       This describes <B>ncurses</B> version 6.2 (patch 20210612).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210626).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -208,7 +208,7 @@
 
 
 
-                                                                 <B><A HREF="captoinfo.1M.html">captoinfo(1M)</A></B>
+                                                                 <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

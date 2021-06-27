@@ -35,73 +35,73 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_post 3X</TITLE>
+<TITLE>form_post 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_post 3X</H1>
+<H1 class="no-header">form_post 3x</H1>
 <PRE>
-<B><A HREF="form_post.3X.html">form_post(3X)</A></B>                                                    <B><A HREF="form_post.3X.html">form_post(3X)</A></B>
+<STRONG><A HREF="form_post.3x.html">form_post(3x)</A></STRONG>                                                    <STRONG><A HREF="form_post.3x.html">form_post(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>post_form</B>,   <B>unpost_form</B>   -  write  or  erase  forms  from  associated
+       <STRONG>post_form</STRONG>,   <STRONG>unpost_form</STRONG>   -  write  or  erase  forms  from  associated
        subwindows
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
 
-       <B>int</B> <B>post_form(FORM</B> <B>*</B><I>form</I><B>);</B>
-       <B>int</B> <B>unpost_form(FORM</B> <B>*</B><I>form</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>post_form(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>unpost_form(FORM</STRONG> <STRONG>*</STRONG><EM>form</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <B>post_form</B> displays a form to its associated subwindow.  To
-       trigger  physical  display  of  the  subwindow, use <B><A HREF="curs_refresh.3X.html">refresh(3X)</A></B> or some
-       equivalent <B>curses</B> routine (the implicit <B>doupdate</B> triggered by an <B>curses</B>
+       The function <STRONG>post_form</STRONG> displays a form to its associated subwindow.  To
+       trigger  physical  display  of  the  subwindow, use <STRONG><A HREF="curs_refresh.3x.html">refresh(3x)</A></STRONG> or some
+       equivalent <STRONG>curses</STRONG> routine (the implicit <STRONG>doupdate</STRONG> triggered by an <STRONG>curses</STRONG>
        input request will do).
 
-       The function <B>unpost_form</B> erases form from its associated subwindow.
+       The function <STRONG>unpost_form</STRONG> erases form from its associated subwindow.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_BAD_STATE</B>
+       <STRONG>E_BAD_STATE</STRONG>
             Routine was called from an initialization or termination function.
 
-       <B>E_NOT_POSTED</B>
+       <STRONG>E_NOT_POSTED</STRONG>
             The form has not been posted.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to the form.
 
-       <B>E_NO_ROOM</B>
+       <STRONG>E_NO_ROOM</STRONG>
             Form is too large for its window.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The form has already been posted.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="form.3X.html">form(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -115,7 +115,7 @@
 
 
 
-                                                                 <B><A HREF="form_post.3X.html">form_post(3X)</A></B>
+                                                                 <STRONG><A HREF="form_post.3x.html">form_post(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

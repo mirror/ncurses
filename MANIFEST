@@ -553,6 +553,7 @@
 ./include/edit_cfg.sh
 ./include/hashed_db.h
 ./include/headers
+./include/nc_access.h
 ./include/nc_alloc.h
 ./include/nc_mingw.h
 ./include/nc_panel.h

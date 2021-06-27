@@ -36,51 +36,51 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_threads 3X</TITLE>
+<TITLE>curs_threads 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_threads 3X</H1>
+<H1 class="no-header">curs_threads 3x</H1>
 <PRE>
-<B><A HREF="curs_threads.3X.html">curs_threads(3X)</A></B>                                              <B><A HREF="curs_threads.3X.html">curs_threads(3X)</A></B>
+<STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>                                              <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>curs_threads</B> - <B>curses</B> thread support
+       <STRONG>curs_threads</STRONG> - <STRONG>curses</STRONG> thread support
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>typedef</B> <B>int</B> <B>(*NCURSES_WINDOW_CB)(WINDOW</B> <B>*,</B> <B>void</B> <B>*);</B>
-       <B>typedef</B> <B>int</B> <B>(*NCURSES_SCREEN_CB)(SCREEN</B> <B>*,</B> <B>void</B> <B>*);</B>
+       <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_WINDOW_CB)(WINDOW</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
+       <STRONG>typedef</STRONG> <STRONG>int</STRONG> <STRONG>(*NCURSES_SCREEN_CB)(SCREEN</STRONG> <STRONG>*,</STRONG> <STRONG>void</STRONG> <STRONG>*);</STRONG>
 
-       <B>int</B> <B>get_escdelay(void);</B>
-       <B>int</B> <B>set_escdelay(int</B> <I>ms</I><B>);</B>
-       <B>int</B> <B>set_tabsize(int</B> <I>cols</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>get_escdelay(void);</STRONG>
+       <STRONG>int</STRONG> <STRONG>set_escdelay(int</STRONG> <EM>ms</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>set_tabsize(int</STRONG> <EM>cols</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>use_screen(SCREEN</B> <B>*</B><I>scr</I><B>,</B> <B>NCURSES_SCREEN_CB</B> <I>func</I><B>,</B> <B>void</B> <B>*</B><I>data</I><B>);</B>
-       <B>int</B> <B>use_window(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>NCURSES_WINDOW_CB</B> <I>func</I><B>,</B> <B>void</B> <B>*</B><I>data</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>use_screen(SCREEN</STRONG> <STRONG>*</STRONG><EM>scr</EM><STRONG>,</STRONG> <STRONG>NCURSES_SCREEN_CB</STRONG> <EM>func</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG><EM>data</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>use_window(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>NCURSES_WINDOW_CB</STRONG> <EM>func</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG><EM>data</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation  can  be configured to provide rudimentary support
        for multi-threaded applications.  This makes a  different  set  of  li-
-       braries, e.g., <I>libncursest</I> since the binary interfaces are different.
+       braries, e.g., <EM>libncursest</EM> since the binary interfaces are different.
 
        Rather  than  modify  the interfaces to pass a thread specifier to each
        function, it adds a few functions which can be used in  any  configura-
        tion  which  hide  the  mutex's needed to prevent concurrent use of the
        global variables when configured for threading.
 
-       In addition to forcing access to members of the <B>WINDOW</B> structure to  be
-       via  functions  (see <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>), it makes functions of the common
+       In addition to forcing access to members of the <STRONG>WINDOW</STRONG> structure to  be
+       via  functions  (see <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>), it makes functions of the common
        global variables, e.g., COLORS,  COLOR_PAIRS,  COLS,  ESCDELAY,  LINES,
        TABSIZE  curscr, newscr and ttytype.  Those variables are maintained as
-       read-only values, stored in the <B>SCREEN</B> structure.
+       read-only values, stored in the <STRONG>SCREEN</STRONG> structure.
 
        Even this is not enough to make a thread-safe application using curses.
        A multi-threaded application would be expected to have threads updating
@@ -90,14 +90,14 @@
        here address these special situations.
 
        The ESCDELAY and TABSIZE global variables are modified by some applica-
-       tions.  To modify them in any configuration, use  the  <B>set_escdelay</B>  or
-       <B>set_tabsize</B> functions.  Other global variables are not modifiable.
+       tions.  To modify them in any configuration, use  the  <STRONG>set_escdelay</STRONG>  or
+       <STRONG>set_tabsize</STRONG> functions.  Other global variables are not modifiable.
 
-       The <B>get_escdelay</B> function returns the value for ESCDELAY.
+       The <STRONG>get_escdelay</STRONG> function returns the value for ESCDELAY.
 
-       The  <B>use_window</B> and <B>use_screen</B> functions provide coarse granularity mu-
-       texes for their respective <B>WINDOW</B> and <B>SCREEN</B> parameters, and call a us-
-       er-supplied  function,  passing  it a <I>data</I> parameter, and returning the
+       The  <STRONG>use_window</STRONG> and <STRONG>use_screen</STRONG> functions provide coarse granularity mu-
+       texes for their respective <STRONG>WINDOW</STRONG> and <STRONG>SCREEN</STRONG> parameters, and call a us-
+       er-supplied  function,  passing  it a <EM>data</EM> parameter, and returning the
        value from the user-supplied function to the application.
 
 
@@ -106,22 +106,22 @@
        tered during operation.  In addition, they use data which is maintained
        within a hierarchy of scopes.
 
-          <B>o</B>   global data, e.g., used in the low-level terminfo or termcap in-
+          <STRONG>o</STRONG>   global data, e.g., used in the low-level terminfo or termcap in-
               terfaces.
 
-          <B>o</B>   terminal data, e.g., associated with a call to <I>set</I><B>_</B><I>curterm</I>.  The
+          <STRONG>o</STRONG>   terminal data, e.g., associated with a call to <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.  The
               terminal data are initialized when screens are created.
 
-          <B>o</B>   screen data, e.g., associated with a call to <I>newterm</I> or <I>initscr</I>.
+          <STRONG>o</STRONG>   screen data, e.g., associated with a call to <EM>newterm</EM> or <EM>initscr</EM>.
 
-          <B>o</B>   window data, e.g., associated with a call to <I>newwin</I>  or  <I>subwin</I>.
+          <STRONG>o</STRONG>   window data, e.g., associated with a call to <EM>newwin</EM>  or  <EM>subwin</EM>.
               Windows  are  associated with screens.  Pads are not necessarily
               associated with a particular screen.
 
               Most curses applications operate on one or more windows within a
               single screen.
 
-          <B>o</B>   reentrant, i.e., it uses only the data passed as parameters.
+          <STRONG>o</STRONG>   reentrant, i.e., it uses only the data passed as parameters.
 
        This  table lists the scope of data used for each symbol in the ncurses
        library when it is configured to support threading:
@@ -133,7 +133,7 @@
             COLOR_PAIR              reentrant
             COLOR_PAIRS             screen (readonly)
             COLS                    screen (readonly)
-            ESCDELAY                screen (readonly, see <I>set</I><B>_</B><I>escdelay</I>)
+            ESCDELAY                screen (readonly, see <EM>set</EM><STRONG>_</STRONG><EM>escdelay</EM>)
             LINES                   screen (readonly)
             PAIR_NUMBER             reentrant
             PC                      global
@@ -589,7 +589,7 @@
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       These functions all return <B>TRUE</B> or <B>FALSE</B>, except as noted.
+       These functions all return <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>, except as noted.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
@@ -604,11 +604,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>, <B><A HREF="curs_variables.3X.html">curs_variables(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
 
 
 
-                                                              <B><A HREF="curs_threads.3X.html">curs_threads(3X)</A></B>
+                                                              <STRONG><A HREF="curs_threads.3x.html">curs_threads(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

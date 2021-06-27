@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.52 2020/09/05 19:35:06 tom Exp $
+ * $Id: progs.priv.h,v 1.53 2021/06/26 20:43:19 tom Exp $
  *
  *	progs.priv.h
  *
@@ -136,6 +136,7 @@ extern int optind;
 
 #include <nc_string.h>
 #include <nc_alloc.h>
+#include <nc_access.h>
 
 #if HAVE_NC_FREEALL
 #undef ExitProgram

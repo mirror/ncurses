@@ -34,157 +34,157 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_trace 3X</TITLE>
+<TITLE>curs_trace 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_trace 3X</H1>
+<H1 class="no-header">curs_trace 3x</H1>
 <PRE>
-<B><A HREF="curs_trace.3X.html">curs_trace(3X)</A></B>                                                  <B><A HREF="curs_trace.3X.html">curs_trace(3X)</A></B>
+<STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>curses_trace</B>, <B>trace</B>, <B>_tracef</B>, <B>_traceattr</B>, <B>_traceattr2</B>, <B>_tracecchar_t</B>,
-       <B>_tracecchar_t2</B>, <B>_tracechar</B>, <B>_tracechtype</B>, <B>_tracechtype2</B>, <B>_nc_tracebits</B>,
-       <B>_tracedump</B>, <B>_tracemouse</B> - <B>curses</B> debugging routines
+       <STRONG>curses_trace</STRONG>, <STRONG>trace</STRONG>, <STRONG>_tracef</STRONG>, <STRONG>_traceattr</STRONG>, <STRONG>_traceattr2</STRONG>, <STRONG>_tracecchar_t</STRONG>,
+       <STRONG>_tracecchar_t2</STRONG>, <STRONG>_tracechar</STRONG>, <STRONG>_tracechtype</STRONG>, <STRONG>_tracechtype2</STRONG>, <STRONG>_nc_tracebits</STRONG>,
+       <STRONG>_tracedump</STRONG>, <STRONG>_tracemouse</STRONG> - <STRONG>curses</STRONG> debugging routines
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>unsigned</B> <B>curses_trace(const</B> <B>unsigned</B> <I>param</I><B>);</B>
+       <STRONG>unsigned</STRONG> <STRONG>curses_trace(const</STRONG> <STRONG>unsigned</STRONG> <EM>param</EM><STRONG>);</STRONG>
 
-       <B>void</B> <B>_tracef(const</B> <B>char</B> <B>*</B><I>format</I><B>,</B> <B>...);</B>
+       <STRONG>void</STRONG> <STRONG>_tracef(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>format</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
 
-       <B>char</B> <B>*_traceattr(attr_t</B> <I>attr</I><B>);</B>
-       <B>char</B> <B>*_traceattr2(int</B> <I>buffer</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
-       <B>char</B> <B>*_tracecchar_t(const</B> <B>cchar_t</B> <B>*</B><I>string</I><B>);</B>
-       <B>char</B> <B>*_tracecchar_t2(int</B> <I>buffer</I><B>,</B> <B>const</B> <B>cchar_t</B> <B>*</B><I>string</I><B>);</B>
-       <B>char</B> <B>*_tracechar(int</B> <I>ch</I><B>);</B>
-       <B>char</B> <B>*_tracechtype(chtype</B> <I>ch</I><B>);</B>
-       <B>char</B> <B>*_tracechtype2(int</B> <I>buffer</I><B>,</B> <B>chtype</B> <I>ch</I><B>);</B>
+       <STRONG>char</STRONG> <STRONG>*_traceattr(attr_t</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_traceattr2(int</STRONG> <EM>buffer</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracecchar_t(const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>string</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracecchar_t2(int</STRONG> <EM>buffer</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>cchar_t</STRONG> <STRONG>*</STRONG><EM>string</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracechar(int</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracechtype(chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracechtype2(int</STRONG> <EM>buffer</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>ch</EM><STRONG>);</STRONG>
 
-       <B>void</B> <B>_tracedump(const</B> <B>char</B> <B>*</B><I>label</I><B>,</B> <B>WINDOW</B> <B>*</B><I>win</I><B>);</B>
-       <B>char</B> <B>*_nc_tracebits(void);</B>
-       <B>char</B> <B>*_tracemouse(const</B> <B>MEVENT</B> <B>*</B><I>event</I><B>);</B>
+       <STRONG>void</STRONG> <STRONG>_tracedump(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>label</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_nc_tracebits(void);</STRONG>
+       <STRONG>char</STRONG> <STRONG>*_tracemouse(const</STRONG> <STRONG>MEVENT</STRONG> <STRONG>*</STRONG><EM>event</EM><STRONG>);</STRONG>
 
        /* deprecated */
-       <B>void</B> <B>trace(const</B> <B>unsigned</B> <B>int</B> <I>param</I><B>);</B>
+       <STRONG>void</STRONG> <STRONG>trace(const</STRONG> <STRONG>unsigned</STRONG> <STRONG>int</STRONG> <EM>param</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <I>curses</I> <I>trace</I> routines are used for debugging the ncurses libraries,
+       The <EM>curses</EM> <EM>trace</EM> routines are used for debugging the ncurses libraries,
        as well as applications which use the ncurses libraries.  Some  limita-
        tions apply:
 
-       <B>o</B>   Aside from <B>curses_trace</B>, the other functions are normally available
-           only with the debugging library e.g., <I>libncurses</I><B>_</B><I>g.a</I>.
+       <STRONG>o</STRONG>   Aside from <STRONG>curses_trace</STRONG>, the other functions are normally available
+           only with the debugging library e.g., <EM>libncurses</EM><STRONG>_</STRONG><EM>g.a</EM>.
 
            All of the trace functions may be compiled into any model  (shared,
-           static, profile) by defining the symbol <B>TRACE</B>.
+           static, profile) by defining the symbol <STRONG>TRACE</STRONG>.
 
-       <B>o</B>   Additionally,  the  functions  which use <B>cchar_t</B> are only available
+       <STRONG>o</STRONG>   Additionally,  the  functions  which use <STRONG>cchar_t</STRONG> are only available
            with the wide-character configuration of the libraries.
 
 
 </PRE><H3><a name="h3-Functions">Functions</a></H3><PRE>
        The principal parts of this interface are
 
-       <B>o</B>   <B>curses_trace</B>, which selectively enables different tracing features,
+       <STRONG>o</STRONG>   <STRONG>curses_trace</STRONG>, which selectively enables different tracing features,
            and
 
-       <B>o</B>   <B>_tracef</B>, which writes formatted data to the <I>trace</I> file.
+       <STRONG>o</STRONG>   <STRONG>_tracef</STRONG>, which writes formatted data to the <EM>trace</EM> file.
 
            The other functions either return a pointer to a string-area (allo-
            cated by the corresponding function), or return no value  (such  as
-           <B>_tracedump</B>,  which  implements  the  screen dump for <B>TRACE_UPDATE</B>).
+           <STRONG>_tracedump</STRONG>,  which  implements  the  screen dump for <STRONG>TRACE_UPDATE</STRONG>).
            The caller should not free these strings, since the  allocation  is
            reused on successive calls.  To work around the problem of a single
            string-area per  function,  some  use  a  buffer-number  parameter,
            telling the library to allocate additional string-areas.
 
-       The <B>curses_trace</B> function is always available, whether or not the other
+       The <STRONG>curses_trace</STRONG> function is always available, whether or not the other
        trace functions are available:
 
-       <B>o</B>   If tracing is available, calling <B>curses_trace</B> with a nonzero param-
+       <STRONG>o</STRONG>   If tracing is available, calling <STRONG>curses_trace</STRONG> with a nonzero param-
            eter updates the trace mask, and returns the previous trace mask.
 
            When the trace mask is nonzero, ncurses creates the file "trace" in
            the current directory for output.  If the file already  exists,  no
            tracing is done.
 
-       <B>o</B>   If tracing is not available, <B>curses_trace</B> returns zero (0).
+       <STRONG>o</STRONG>   If tracing is not available, <STRONG>curses_trace</STRONG> returns zero (0).
 
 
 </PRE><H3><a name="h3-Trace-Parameter">Trace Parameter</a></H3><PRE>
        The  trace  parameter  is  formed  by  OR'ing  values  from the list of
-       <B>TRACE_</B><I>xxx</I> definitions in <B>&lt;curses.h&gt;</B>.  These include:
+       <STRONG>TRACE_</STRONG><EM>xxx</EM> definitions in <STRONG>&lt;curses.h&gt;</STRONG>.  These include:
 
-       <B>TRACE_DISABLE</B>
+       <STRONG>TRACE_DISABLE</STRONG>
             turn off tracing by passing a zero parameter.
 
             The library flushes the output file, but retains an open  file-de-
             scriptor  to the trace file so that it can resume tracing later if
-            a nonzero parameter is passed to the <B>curses_trace</B> function.
+            a nonzero parameter is passed to the <STRONG>curses_trace</STRONG> function.
 
-       <B>TRACE_TIMES</B>
+       <STRONG>TRACE_TIMES</STRONG>
             trace user and system times of updates.
 
-       <B>TRACE_TPUTS</B>
-            trace <B><A HREF="curs_terminfo.3X.html">tputs(3X)</A></B> calls.
+       <STRONG>TRACE_TPUTS</STRONG>
+            trace <STRONG><A HREF="curs_terminfo.3x.html">tputs(3x)</A></STRONG> calls.
 
-       <B>TRACE_UPDATE</B>
+       <STRONG>TRACE_UPDATE</STRONG>
             trace update actions, old &amp; new screens.
 
-       <B>TRACE_MOVE</B>
+       <STRONG>TRACE_MOVE</STRONG>
             trace cursor movement and scrolling.
 
-       <B>TRACE_CHARPUT</B>
+       <STRONG>TRACE_CHARPUT</STRONG>
             trace all character outputs.
 
-       <B>TRACE_ORDINARY</B>
+       <STRONG>TRACE_ORDINARY</STRONG>
             trace all update actions.  The old and  new  screen  contents  are
             written to the trace file for each refresh.
 
-       <B>TRACE_CALLS</B>
+       <STRONG>TRACE_CALLS</STRONG>
             trace  all curses calls.  The parameters for each call are traced,
             as well as return values.
 
-       <B>TRACE_VIRTPUT</B>
-            trace virtual character puts, i.e., calls to <B>addch</B>.
+       <STRONG>TRACE_VIRTPUT</STRONG>
+            trace virtual character puts, i.e., calls to <STRONG>addch</STRONG>.
 
-       <B>TRACE_IEVENT</B>
+       <STRONG>TRACE_IEVENT</STRONG>
             trace low-level input processing, including timeouts.
 
-       <B>TRACE_BITS</B>
+       <STRONG>TRACE_BITS</STRONG>
             trace state of TTY control bits.
 
-       <B>TRACE_ICALLS</B>
+       <STRONG>TRACE_ICALLS</STRONG>
             trace internal/nested calls.
 
-       <B>TRACE_CCALLS</B>
+       <STRONG>TRACE_CCALLS</STRONG>
             trace per-character calls.
 
-       <B>TRACE_DATABASE</B>
+       <STRONG>TRACE_DATABASE</STRONG>
             trace read/write of terminfo/termcap data.
 
-       <B>TRACE_ATTRS</B>
+       <STRONG>TRACE_ATTRS</STRONG>
             trace changes to video attributes and colors.
 
-       <B>TRACE_MAXIMUM</B>
+       <STRONG>TRACE_MAXIMUM</STRONG>
             maximum trace level, enables all of the separate trace features.
 
-       Some tracing features are enabled whenever the  <B>curses_trace</B>  parameter
+       Some tracing features are enabled whenever the  <STRONG>curses_trace</STRONG>  parameter
        is  nonzero.   Some features overlap.  The specific names are used as a
        guideline.
 
 
 </PRE><H3><a name="h3-Initialization">Initialization</a></H3><PRE>
-       These functions check the <B>NCURSES_TRACE</B> environment  variable,  to  set
-       the tracing feature as if <B>curses_trace</B> was called:
+       These functions check the <STRONG>NCURSES_TRACE</STRONG> environment  variable,  to  set
+       the tracing feature as if <STRONG>curses_trace</STRONG> was called:
 
            filter, initscr, new_prescr, newterm, nofilter, restartterm,
            ripoffline, setupterm, slk_init, tgetent, use_env,
@@ -192,19 +192,19 @@
 
 
 </PRE><H3><a name="h3-Command-line-Utilities">Command-line Utilities</a></H3><PRE>
-       The  command-line  utilities  such  as  <B><A HREF="tic.1M.html">tic(1)</A></B> provide a verbose option
-       which extends the set of messages written using the <B>curses_trace</B>  func-
-       tion.   Both  of  these  (<B>-v</B>  and  <B>curses_trace</B>)  use the same variable
-       (<B>_nc_tracing</B>), which determines the messages which are written.
+       The  command-line  utilities  such  as  <STRONG><A HREF="tic.1m.html">tic(1)</A></STRONG> provide a verbose option
+       which extends the set of messages written using the <STRONG>curses_trace</STRONG>  func-
+       tion.   Both  of  these  (<STRONG>-v</STRONG>  and  <STRONG>curses_trace</STRONG>)  use the same variable
+       (<STRONG>_nc_tracing</STRONG>), which determines the messages which are written.
 
        Because the command-line utilities may  call  initialization  functions
-       such  as <B>setupterm</B>, <B>tgetent</B> or <B>use_extended_names</B>, some of their debug-
-       ging output may be directed to the <I>trace</I> file if the <B>NCURSES_TRACE</B>  en-
+       such  as <STRONG>setupterm</STRONG>, <STRONG>tgetent</STRONG> or <STRONG>use_extended_names</STRONG>, some of their debug-
+       ging output may be directed to the <EM>trace</EM> file if the <STRONG>NCURSES_TRACE</STRONG>  en-
        vironment variable is set:
 
-       <B>o</B>   messages produced in the utility are written to the standard error.
+       <STRONG>o</STRONG>   messages produced in the utility are written to the standard error.
 
-       <B>o</B>   messages produced by the underlying library are written to <I>trace</I>.
+       <STRONG>o</STRONG>   messages produced by the underlying library are written to <EM>trace</EM>.
 
        If  ncurses  is built without tracing, none of the latter are produced,
        and fewer diagnostics are provided by the command-line utilities.
@@ -212,7 +212,7 @@
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        Routines which return a value are designed to be used as parameters  to
-       the <B>_tracef</B> routine.
+       the <STRONG>_tracef</STRONG> routine.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -220,14 +220,14 @@
        implementations are known to have similar features, but  they  are  not
        compatible with ncurses:
 
-       <B>o</B>   SVr4  provided  <B>traceon</B>  and <B>traceoff</B>, to control whether debugging
+       <STRONG>o</STRONG>   SVr4  provided  <STRONG>traceon</STRONG>  and <STRONG>traceoff</STRONG>, to control whether debugging
            information was written to the "trace" file.  While  the  functions
-           were  always  available, this feature was only enabled if <B>DEBUG</B> was
+           were  always  available, this feature was only enabled if <STRONG>DEBUG</STRONG> was
            defined when building the library.
 
            The SVr4 tracing feature is undocumented.
 
-       <B>o</B>   PDCurses provides <B>traceon</B> and <B>traceoff</B>, which (like SVr4)  are  al-
+       <STRONG>o</STRONG>   PDCurses provides <STRONG>traceon</STRONG> and <STRONG>traceoff</STRONG>, which (like SVr4)  are  al-
            ways  available, and enable tracing to the "trace" file only when a
            debug-library is built.
 
@@ -236,9 +236,9 @@
            does not mention SVr4, but the functions'  inclusion  in  a  header
            file section labeled "Quasi-standard" hints at the origin.
 
-       <B>o</B>   NetBSD  does  not  provide functions for enabling/disabling traces.
-           It  uses  environment   variables   <B>CURSES_TRACE_MASK</B>   and   <B>CURS-</B>
-           <B>ES_TRACE_FILE</B>  to  determine  what is traced, and where the results
+       <STRONG>o</STRONG>   NetBSD  does  not  provide functions for enabling/disabling traces.
+           It  uses  environment   variables   <STRONG>CURSES_TRACE_MASK</STRONG>   and   <STRONG>CURS-</STRONG>
+           <STRONG>ES_TRACE_FILE</STRONG>  to  determine  what is traced, and where the results
            are written.  This is available only when a debug-library is built.
 
            The NetBSD tracing feature is undocumented.
@@ -248,16 +248,16 @@
 
            _nc_tracebits, _tracedump, _tracemouse
 
-       The  original  <B>trace</B> routine was deprecated because it often conflicted
+       The  original  <STRONG>trace</STRONG> routine was deprecated because it often conflicted
        with application names.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
 
 
 
-                                                                <B><A HREF="curs_trace.3X.html">curs_trace(3X)</A></B>
+                                                                <STRONG><A HREF="curs_trace.3x.html">curs_trace(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.641 2021/04/03 22:12:56 tom Exp $
+ * $Id: curses.priv.h,v 1.642 2021/06/26 20:23:20 tom Exp $
  *
  *	curses.priv.h
  *
@@ -204,17 +204,6 @@ extern int errno;
 #    undef NCURSES_PATHSEP
 #  endif
 #  define NCURSES_PATHSEP ';'
-#endif
-
-/*
- * If desired, one can configure this, disabling environment variables that
- * point to custom terminfo/termcap locations.
- */
-#ifdef USE_ROOT_ENVIRON
-#define use_terminfo_vars() 1
-#else
-#define use_terminfo_vars() _nc_env_access()
-extern NCURSES_EXPORT(int) _nc_env_access (void);
 #endif
 
 /*
@@ -1728,6 +1717,7 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 #define FreeAndNull(p)   do { free(p); p = 0; } while (0)
 
 #include <nc_alloc.h>
+#include <nc_access.h>
 
 /*
  * Use these for tic/infocmp malloc failures.  Generally the ncurses library

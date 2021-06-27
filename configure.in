@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.730 2021/04/17 22:22:17 tom Exp $
+dnl $Id: configure.in,v 1.733 2021/06/26 23:10:42 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.730 $)
+AC_REVISION($Revision: 1.733 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -844,13 +844,21 @@ AC_ARG_ENABLE(home-terminfo,
 AC_MSG_RESULT($with_home_terminfo)
 test "x$with_home_terminfo" = "xyes" && AC_DEFINE(USE_HOME_TERMINFO,1,[Define to 1 if $HOME/.terminfo feature is wanted])
 
-AC_MSG_CHECKING(if you want to use restricted environment when running as root)
+AC_MSG_CHECKING(if you want to permit root to use ncurses environment variables)
 AC_ARG_ENABLE(root-environ,
-	[  --disable-root-environ  restrict environment when running as root],
+	[  --disable-root-environ  restrict root use of ncurses environment variables],
 	[with_root_environ=$enableval],
 	[with_root_environ=yes])
 AC_MSG_RESULT($with_root_environ)
-test "x$with_root_environ" = xyes && AC_DEFINE(USE_ROOT_ENVIRON,1,[Define to 1 if environment should be restricted for root user])
+test "x$with_root_environ" = xyes && AC_DEFINE(USE_ROOT_ENVIRON,1,[Define to 1 if root is allowed to use ncurses environment])
+
+AC_MSG_CHECKING(if you want to permit setuid programs to access all files)
+AC_ARG_ENABLE(root-environ,
+	[  --disable-root-access   restrict file-access when running setuid],
+	[with_root_access=$enableval],
+	[with_root_access=yes])
+AC_MSG_RESULT($with_root_access)
+test "x$with_root_access" = xyes && AC_DEFINE(USE_ROOT_ACCESS,1,[Define to 1 if setuid is allowed all file-access])
 
 ###   Use option --enable-symlinks to make tic use symlinks, not hard links
 ###   to reduce storage requirements for the terminfo database.
@@ -1792,6 +1800,7 @@ select \
 setbuf \
 setbuffer \
 setenv \
+setfsuid \
 setvbuf \
 sigaction \
 sigvec \

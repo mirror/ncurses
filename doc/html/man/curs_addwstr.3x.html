@@ -34,72 +34,72 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_addwstr 3X</TITLE>
+<TITLE>curs_addwstr 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_addwstr 3X</H1>
+<H1 class="no-header">curs_addwstr 3x</H1>
 <PRE>
-<B><A HREF="curs_addwstr.3X.html">curs_addwstr(3X)</A></B>                                              <B><A HREF="curs_addwstr.3X.html">curs_addwstr(3X)</A></B>
+<STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>                                              <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>addwstr</B>, <B>addnwstr</B>, <B>waddwstr</B>, <B>waddnwstr</B>, <B>mvaddwstr</B>, <B>mvaddnwstr</B>,
-       <B>mvwaddwstr</B>, <B>mvwaddnwstr</B> - add a string of wide characters to a <B>curses</B>
+       <STRONG>addwstr</STRONG>, <STRONG>addnwstr</STRONG>, <STRONG>waddwstr</STRONG>, <STRONG>waddnwstr</STRONG>, <STRONG>mvaddwstr</STRONG>, <STRONG>mvaddnwstr</STRONG>,
+       <STRONG>mvwaddwstr</STRONG>, <STRONG>mvwaddnwstr</STRONG> - add a string of wide characters to a <STRONG>curses</STRONG>
        window and advance cursor
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>addwstr(const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>);</B>
-       <B>int</B> <B>addnwstr(const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>,</B> <B>int</B> <I>n</I><B>);</B>
-       <B>int</B> <B>waddwstr(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>);</B>
-       <B>int</B> <B>waddnwstr(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>,</B> <B>int</B> <I>n</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>addwstr(const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>addnwstr(const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddwstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>waddnwstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>mvaddwstr(int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>);</B>
-       <B>int</B> <B>mvaddnwstr(int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>,</B> <B>int</B> <I>n</I><B>);</B>
-       <B>int</B> <B>mvwaddwstr(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>);</B>
-       <B>int</B> <B>mvwaddnwstr(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>wchar_t</B> <B>*</B><I>wstr</I><B>,</B> <B>int</B> <I>n</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>mvaddwstr(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvaddnwstr(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddwstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwaddnwstr(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>wstr</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>n</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       These  functions  write the characters of the (null-terminated) <B>wchar_t</B>
-       character string <I>wstr</I> on the given window.  It is similar to construct-
-       ing a <B>cchar_t</B> for each wchar_t in the string, then calling <B>wadd_wch</B> for
-       the resulting <B>cchar_t</B>.
+       These  functions  write the characters of the (null-terminated) <STRONG>wchar_t</STRONG>
+       character string <EM>wstr</EM> on the given window.  It is similar to construct-
+       ing a <STRONG>cchar_t</STRONG> for each wchar_t in the string, then calling <STRONG>wadd_wch</STRONG> for
+       the resulting <STRONG>cchar_t</STRONG>.
 
-       The <I>mv</I> functions perform cursor movement once, before writing any char-
+       The <EM>mv</EM> functions perform cursor movement once, before writing any char-
        acters.  Thereafter, the cursor is advanced as a side-effect of writing
        to the window.
 
-       The four functions with <I>n</I> as the last argument write at most <I>n</I>  <B>wchar_t</B>
-       characters,  or  until a terminating null is reached.  If <I>n</I> is -1, then
+       The four functions with <EM>n</EM> as the last argument write at most <EM>n</EM>  <STRONG>wchar_t</STRONG>
+       characters,  or  until a terminating null is reached.  If <EM>n</EM> is -1, then
        the entire string will be added.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All functions return the integer <B>ERR</B> upon failure and <B>OK</B> on success.
+       All functions return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> on success.
 
        X/Open does not define any error conditions.  This  implementation  re-
        turns an error
 
-       <B>o</B>   if the window pointer is null or
+       <STRONG>o</STRONG>   if the window pointer is null or
 
-       <B>o</B>   if the string pointer is null or
+       <STRONG>o</STRONG>   if the string pointer is null or
 
-       <B>o</B>   if the corresponding calls to <B>wadd_wch</B> return an error.
+       <STRONG>o</STRONG>   if the corresponding calls to <STRONG>wadd_wch</STRONG> return an error.
 
        Functions  with  a  "mv"  prefix  first perform a cursor movement using
-       <B>wmove</B>, and return an error if the position is outside the window, or if
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       All of these functions except <B>waddnwstr</B> may be macros.
+       All of these functions except <STRONG>waddnwstr</STRONG> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -107,11 +107,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_add_wch.3X.html">curs_add_wch(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_add_wch.3x.html">curs_add_wch(3x)</A></STRONG>
 
 
 
-                                                              <B><A HREF="curs_addwstr.3X.html">curs_addwstr(3X)</A></B>
+                                                              <STRONG><A HREF="curs_addwstr.3x.html">curs_addwstr(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

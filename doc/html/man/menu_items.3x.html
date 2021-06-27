@@ -35,80 +35,80 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_items 3X</TITLE>
+<TITLE>menu_items 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_items 3X</H1>
+<H1 class="no-header">menu_items 3x</H1>
 <PRE>
-<B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>                                                  <B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>
+<STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>                                                  <STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>set_menu_items</B>,  <B>menu_items</B>,  <B>item_count</B>  -  make and break connections
+       <STRONG>set_menu_items</STRONG>,  <STRONG>menu_items</STRONG>,  <STRONG>item_count</STRONG>  -  make and break connections
        between items and menus
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
-       <B>int</B> <B>set_menu_items(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>ITEM</B> <B>**</B><I>items</I><B>);</B>
-       <B>ITEM</B> <B>**menu_items(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
-       <B>int</B> <B>item_count(const</B> <B>MENU</B> <B>*</B><I>menu</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_menu_items(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>ITEM</STRONG> <STRONG>**</STRONG><EM>items</EM><STRONG>);</STRONG>
+       <STRONG>ITEM</STRONG> <STRONG>**menu_items(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>item_count(const</STRONG> <STRONG>MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The function <B>set_menu_items</B> changes the item pointer array of the given
-       <I>menu</I>.  The array must be terminated by a <B>NULL</B>.
+       The function <STRONG>set_menu_items</STRONG> changes the item pointer array of the given
+       <EM>menu</EM>.  The array must be terminated by a <STRONG>NULL</STRONG>.
 
-       The function <B>menu_items</B> returns the item array of the given menu.
+       The function <STRONG>menu_items</STRONG> returns the item array of the given menu.
 
-       The function <B>item_count</B> returns the count of items in <I>menu</I>.
+       The function <STRONG>item_count</STRONG> returns the count of items in <EM>menu</EM>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       The function <B>menu_items</B> returns a pointer (which may be <B>NULL</B>).  It does
-       not set <B>errno</B>.
+       The function <STRONG>menu_items</STRONG> returns a pointer (which may be <STRONG>NULL</STRONG>).  It does
+       not set <STRONG>errno</STRONG>.
 
-       The function <B>item_count</B> returns <B>ERR</B> (the general  <B>curses</B>  error  return
-       value) if its <I>menu</I> parameter is <B>NULL</B>.
+       The function <STRONG>item_count</STRONG> returns <STRONG>ERR</STRONG> (the general  <STRONG>curses</STRONG>  error  return
+       value) if its <EM>menu</EM> parameter is <STRONG>NULL</STRONG>.
 
-       The  function  <B>set_menu_items</B>  returns  one  of  the following codes on
+       The  function  <STRONG>set_menu_items</STRONG>  returns  one  of  the following codes on
        error:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No items are connected to the menu.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The menu is already posted.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These  routines  emulate  the  System  V  menu  library.  They were not
        supported on Version 7 or BSD versions.
 
-       The SVr4 menu library  documentation  specifies  the  <B>item_count</B>  error
-       value as -1 (which is the value of <B>ERR</B>).
+       The SVr4 menu library  documentation  specifies  the  <STRONG>item_count</STRONG>  error
+       value as -1 (which is the value of <STRONG>ERR</STRONG>).
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
@@ -117,7 +117,7 @@
 
 
 
-                                                                <B><A HREF="menu_items.3X.html">menu_items(3X)</A></B>
+                                                                <STRONG><A HREF="menu_items.3x.html">menu_items(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

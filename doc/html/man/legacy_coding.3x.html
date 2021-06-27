@@ -35,52 +35,52 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>legacy_coding 3X</TITLE>
+<TITLE>legacy_coding 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">legacy_coding 3X</H1>
+<H1 class="no-header">legacy_coding 3x</H1>
 <PRE>
-<B><A HREF="legacy_coding.3X.html">legacy_coding(3X)</A></B>                                            <B><A HREF="legacy_coding.3X.html">legacy_coding(3X)</A></B>
+<STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>                                            <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>use_legacy_coding</B> - override locale-encoding checks
+       <STRONG>use_legacy_coding</STRONG> - override locale-encoding checks
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>use_legacy_coding(int</B> <I>level</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>use_legacy_coding(int</STRONG> <EM>level</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  <B>use_legacy_coding</B>  function is an extension to the curses library.
-       It allows the caller to change  the  result  of  <B>unctrl</B>,  and  suppress
+       The  <STRONG>use_legacy_coding</STRONG>  function is an extension to the curses library.
+       It allows the caller to change  the  result  of  <STRONG>unctrl</STRONG>,  and  suppress
        related checks within the library that would normally cause nonprinting
        characters to be rendered in visible form.   This  affects  only  8-bit
        characters.
 
-       The <I>level</I> parameter controls the result:
+       The <EM>level</EM> parameter controls the result:
 
               0    the   library  functions  normally,  rendering  nonprinting
-                   characters as described in <B>unctrl</B>.
+                   characters as described in <STRONG>unctrl</STRONG>.
 
-              1    the  library  ignores  <B>isprintf</B>  for  codes  in  the  range
+              1    the  library  ignores  <STRONG>isprintf</STRONG>  for  codes  in  the  range
                    160-255.
 
-              2    the  library  ignores  <B>isprintf</B>  for  codes  in  the  range
-                   128-255.  It also modifies the output  of  <B>unctrl</B>,  showing
+              2    the  library  ignores  <STRONG>isprintf</STRONG>  for  codes  in  the  range
+                   128-255.  It also modifies the output  of  <STRONG>unctrl</STRONG>,  showing
                    codes in the range 128-159 as is.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       If  the  screen has not been initialized, or the <I>level</I> parameter is out
-       of range, the function returns <B>ERR</B>.  Otherwise, it returns the previous
-       level: <B>0</B>, <B>1</B> or <B>2</B>.
+       If  the  screen has not been initialized, or the <EM>level</EM> parameter is out
+       of range, the function returns <STRONG>ERR</STRONG>.  Otherwise, it returns the previous
+       level: <STRONG>0</STRONG>, <STRONG>1</STRONG> or <STRONG>2</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -90,7 +90,7 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B>unctrl</B>.
+       <STRONG>unctrl</STRONG>.
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>
@@ -98,7 +98,7 @@
 
 
 
-                                                             <B><A HREF="legacy_coding.3X.html">legacy_coding(3X)</A></B>
+                                                             <STRONG><A HREF="legacy_coding.3x.html">legacy_coding(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

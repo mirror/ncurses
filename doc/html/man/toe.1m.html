@@ -34,49 +34,49 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>@TOE@ 1M</TITLE>
+<TITLE>toe 1m</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">@TOE@ 1M</H1>
+<H1 class="no-header">toe 1m</H1>
 <PRE>
-<B><A HREF="toe.1M.html">toe(1M)</A></B>                                                                <B><A HREF="toe.1M.html">toe(1M)</A></B>
+<STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>                                                                <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>toe</B> - table of (terminfo) entries
+       <STRONG>toe</STRONG> - table of (terminfo) entries
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>toe</B> [<B>-v</B>[<I>n</I>]] [<B>-ahsuUV</B>] <I>file...</I>
+       <STRONG>toe</STRONG> [<STRONG>-v</STRONG>[<EM>n</EM>]] [<STRONG>-ahsuUV</STRONG>] <EM>file...</EM>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       With no options, <B>toe</B> lists all available terminal types by primary name
+       With no options, <STRONG>toe</STRONG> lists all available terminal types by primary name
        with descriptions.   File  arguments  specify  the  directories  to  be
        scanned;  if  no  such  arguments  are  given,  your  default  terminfo
-       directory is scanned.  If you also specify the <B>-h</B> option,  a  directory
+       directory is scanned.  If you also specify the <STRONG>-h</STRONG> option,  a  directory
        header will be issued as each directory is entered.
 
        There are other options intended for use by terminfo file maintainers:
 
-       <B>-a</B>     report  on  all  of  the  terminal databases which ncurses would
+       <STRONG>-a</STRONG>     report  on  all  of  the  terminal databases which ncurses would
               search, rather than only the first one that it finds.
 
-              If the <B>-s</B> is also given,  <B>toe</B>  adds  a  column  to  the  report,
-              showing (like <B>conflict(1)</B>) which entries which belong to a given
+              If the <STRONG>-s</STRONG> is also given,  <STRONG>toe</STRONG>  adds  a  column  to  the  report,
+              showing (like <STRONG>conflict(1)</STRONG>) which entries which belong to a given
               terminal database.  An "*" marks entries which differ,  and  "+"
               marks equivalent entries.
 
-              Without  the <B>-s</B> option, <B>toe</B> does not attempt to merge duplicates
+              Without  the <STRONG>-s</STRONG> option, <STRONG>toe</STRONG> does not attempt to merge duplicates
               in its report
 
-       <B>-s</B>     sort the output by the entry names.
+       <STRONG>-s</STRONG>     sort the output by the entry names.
 
-       <B>-u</B> <I>file</I>
+       <STRONG>-u</STRONG> <EM>file</EM>
               says  to  write  a  report  to  the  standard  output,   listing
               dependencies  in  the  given  terminfo/termcap source file.  The
               report condenses the "use" relation: each line consists  of  the
@@ -85,7 +85,7 @@
               of all terminals which occur in those use capabilities, followed
               by a newline
 
-       <B>-U</B> <I>file</I>
+       <STRONG>-U</STRONG> <EM>file</EM>
               says to write a report to the standard output,  listing  reverse
               dependencies  in  the  given  terminfo/termcap source file.  The
               report reverses the "use" relation: each line  consists  of  the
@@ -94,20 +94,20 @@
               primary names of all terminals which depend on it, followed by a
               newline.
 
-       <B>-v</B><I>n</I>    specifies that (verbose) output be written  to  standard  error,
-              showing <B>toe</B>'s progress.
+       <STRONG>-v</STRONG><EM>n</EM>    specifies that (verbose) output be written  to  standard  error,
+              showing <STRONG>toe</STRONG>'s progress.
 
-              The  optional  parameter <I>n</I> is a number from 1 to 10, interpreted
-              as for <B><A HREF="tic.1M.html">tic(1M)</A></B>.  If ncurses is built  without  tracing  support,
+              The  optional  parameter <EM>n</EM> is a number from 1 to 10, interpreted
+              as for <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>.  If ncurses is built  without  tracing  support,
               the optional parameter is ignored.
 
-       <B>-V</B>     reports  the  version of ncurses which was used in this program,
+       <STRONG>-V</STRONG>     reports  the  version of ncurses which was used in this program,
               and exits.
 
 
 </PRE><H2><a name="h2-EXAMPLES">EXAMPLES</a></H2><PRE>
-       Without sorting, the <B>-a</B> option reports all of the names found in all of
-       the   terminal  databases  found  by  the  <B>TERMINFO</B>  and  <B>TERMINFO_DIRS</B>
+       Without sorting, the <STRONG>-a</STRONG> option reports all of the names found in all of
+       the   terminal  databases  found  by  the  <STRONG>TERMINFO</STRONG>  and  <STRONG>TERMINFO_DIRS</STRONG>
        environment variables:
 
            MtxOrb162      16x2 Matrix Orbital LCD display
@@ -124,7 +124,7 @@
            qansi-t        QNX ansi without console writes
            . . .
 
-       Use the <B>-a</B>  and  <B>-s</B>  options  together  to  show  where  each  terminal
+       Use the <STRONG>-a</STRONG>  and  <STRONG>-s</STRONG>  options  together  to  show  where  each  terminal
        description was found:
 
            --&gt; /usr/local/ncurses/share/terminfo
@@ -144,38 +144,38 @@
 
 
 </PRE><H2><a name="h2-FILES">FILES</a></H2><PRE>
-       <B>/usr/share/terminfo/?/*</B>
+       <STRONG>/usr/share/terminfo/?/*</STRONG>
             Compiled terminal description database.
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
        This  utility  is  not  provided by other implementations.  There is no
-       relevant X/Open or POSIX standard for <B>toe</B>.
+       relevant X/Open or POSIX standard for <STRONG>toe</STRONG>.
 
        The program name refers to a developer's pun:
 
-       <B>o</B>   <B>tic</B>,
+       <STRONG>o</STRONG>   <STRONG>tic</STRONG>,
 
-       <B>o</B>   <B>tac</B> (now <B>tack</B>),
+       <STRONG>o</STRONG>   <STRONG>tac</STRONG> (now <STRONG>tack</STRONG>),
 
-       <B>o</B>   <B>toe</B>.
+       <STRONG>o</STRONG>   <STRONG>toe</STRONG>.
 
-       It replaced a <B>-T</B> option which was  briefly  supported  by  the  ncurses
-       <B>infocmp</B> utility in 1995.
+       It replaced a <STRONG>-T</STRONG> option which was  briefly  supported  by  the  ncurses
+       <STRONG>infocmp</STRONG> utility in 1995.
 
-       The  <B>-a</B>  and <B>-s</B> options were added to <B>toe</B> several years later (2006 and
+       The  <STRONG>-a</STRONG>  and <STRONG>-s</STRONG> options were added to <STRONG>toe</STRONG> several years later (2006 and
        2011, respectively).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="captoinfo.1M.html">captoinfo(1M)</A></B>,   <B><A HREF="infocmp.1M.html">infocmp(1M)</A></B>,   <B><A HREF="infotocap.1M.html">infotocap(1M)</A></B>,   <B><A HREF="tic.1M.html">tic(1M)</A></B>,   <B><A HREF="curses.3X.html">curses(3X)</A></B>,
-       <B><A HREF="terminfo.5.html">terminfo(5)</A></B>.
+       <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="tic.1m.html">tic(1m)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
+       <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <B>ncurses</B> version 6.2 (patch 20210612).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210626).
 
 
 
-                                                                       <B><A HREF="toe.1M.html">toe(1M)</A></B>
+                                                                       <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

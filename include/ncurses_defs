@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.96 2021/06/17 21:30:22 tom Exp $
+# $Id: ncurses_defs,v 1.97 2021/06/26 18:56:32 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2000-2016,2017 Free Software Foundation, Inc.                    #
@@ -143,6 +143,7 @@ HAVE_SCR_DUMP 1
 HAVE_SELECT
 HAVE_SETBUF
 HAVE_SETBUFFER
+HAVE_SETFSUID
 HAVE_SETENV
 HAVE_SETUPTERM	1
 HAVE_SETVBUF

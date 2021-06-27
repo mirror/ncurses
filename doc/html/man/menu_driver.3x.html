@@ -34,41 +34,41 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>menu_driver 3X</TITLE>
+<TITLE>menu_driver 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">menu_driver 3X</H1>
+<H1 class="no-header">menu_driver 3x</H1>
 <PRE>
-<B><A HREF="menu_driver.3X.html">menu_driver(3X)</A></B>                                                <B><A HREF="menu_driver.3X.html">menu_driver(3X)</A></B>
+<STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>                                                <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>menu_driver</B> - command-processing loop of the menu system
+       <STRONG>menu_driver</STRONG> - command-processing loop of the menu system
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;menu.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;menu.h&gt;</STRONG>
 
-       <B>int</B> <B>menu_driver(MENU</B> <B>*</B><I>menu</I><B>,</B> <B>int</B> <I>c</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>menu_driver(MENU</STRONG> <STRONG>*</STRONG><EM>menu</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>c</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        Once a menu has been posted (displayed), you should funnel input events
-       to it through <B>menu_driver</B>.  This routine has three major input cases:
+       to it through <STRONG>menu_driver</STRONG>.  This routine has three major input cases:
 
-       <B>o</B>   The input is a form navigation request.  Navigation  request  codes
-           are constants defined in <B>&lt;form.h&gt;</B>, which are distinct from the key-
-           and character codes returned by <B><A HREF="curs_getch.3X.html">wgetch(3X)</A></B>.
+       <STRONG>o</STRONG>   The input is a form navigation request.  Navigation  request  codes
+           are constants defined in <STRONG>&lt;form.h&gt;</STRONG>, which are distinct from the key-
+           and character codes returned by <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG>.
 
-       <B>o</B>   The input is a printable character.   Printable  characters  (which
+       <STRONG>o</STRONG>   The input is a printable character.   Printable  characters  (which
            must  be  positive,  less  than  256)  are checked according to the
            program's locale settings.
 
-       <B>o</B>   The input is the KEY_MOUSE special key  associated  with  an  mouse
+       <STRONG>o</STRONG>   The input is the KEY_MOUSE special key  associated  with  an  mouse
            event.
 
        The menu driver requests are as follows:
@@ -126,7 +126,7 @@
 
        If the second argument is a printable character, the code appends it to
        the pattern buffer and attempts to move to the next item  matching  the
-       new pattern.  If there is no such match, <B>menu_driver</B> returns <B>E_NO_MATCH</B>
+       new pattern.  If there is no such match, <STRONG>menu_driver</STRONG> returns <STRONG>E_NO_MATCH</STRONG>
        and deletes the appended character from the buffer.
 
        If the second argument is one of the above  pre-defined  requests,  the
@@ -141,79 +141,79 @@
 
        If you click above the display region of the menu:
 
-       <B>o</B>   a REQ_SCR_ULINE is generated for a single click,
+       <STRONG>o</STRONG>   a REQ_SCR_ULINE is generated for a single click,
 
-       <B>o</B>   a REQ_SCR_UPAGE is generated for a double-click and
+       <STRONG>o</STRONG>   a REQ_SCR_UPAGE is generated for a double-click and
 
-       <B>o</B>   a REQ_FIRST_ITEM is generated for a triple-click.
+       <STRONG>o</STRONG>   a REQ_FIRST_ITEM is generated for a triple-click.
 
        If you click below the display region of the menu:
 
-       <B>o</B>   a REQ_SCR_DLINE is generated for a single click,
+       <STRONG>o</STRONG>   a REQ_SCR_DLINE is generated for a single click,
 
-       <B>o</B>   a REQ_SCR_DPAGE is generated for a double-click and
+       <STRONG>o</STRONG>   a REQ_SCR_DPAGE is generated for a double-click and
 
-       <B>o</B>   a REQ_LAST_ITEM is generated for a triple-click.
+       <STRONG>o</STRONG>   a REQ_LAST_ITEM is generated for a triple-click.
 
        If you click at an item inside the display area of the menu:
 
-       <B>o</B>   the menu cursor is positioned to that item.
+       <STRONG>o</STRONG>   the menu cursor is positioned to that item.
 
-       <B>o</B>   If you double-click an item  a  REQ_TOGGLE_ITEM  is  generated  and
-           <B>E_UNKNOWN_COMMAND</B>  is  returned.   This  return  value makes sense,
+       <STRONG>o</STRONG>   If you double-click an item  a  REQ_TOGGLE_ITEM  is  generated  and
+           <STRONG>E_UNKNOWN_COMMAND</STRONG>  is  returned.   This  return  value makes sense,
            because a double click usually means that an  item-specific  action
            should be returned.  It is exactly the purpose of this return value
            to signal that an application specific command should be executed.
 
-       <B>o</B>   If a translation into a request was done, <B>menu_driver</B>  returns  the
+       <STRONG>o</STRONG>   If a translation into a request was done, <STRONG>menu_driver</STRONG>  returns  the
            result of this request.
 
        If  you clicked outside the user window or the mouse event could not be
-       translated into a menu request an <B>E_REQUEST_DENIED</B> is returned.
+       translated into a menu request an <STRONG>E_REQUEST_DENIED</STRONG> is returned.
 
 
 </PRE><H3><a name="h3-APPLICATION-DEFINED-COMMANDS">APPLICATION-DEFINED COMMANDS</a></H3><PRE>
        If the second argument is neither printable nor one of the  above  pre-
        defined  menu  requests  or  KEY_MOUSE,  the  drive  assumes  it  is an
-       application-specific    command    and    returns    <B>E_UNKNOWN_COMMAND</B>.
-       Application-defined commands should be defined relative to <B>MAX_COMMAND</B>,
+       application-specific    command    and    returns    <STRONG>E_UNKNOWN_COMMAND</STRONG>.
+       Application-defined commands should be defined relative to <STRONG>MAX_COMMAND</STRONG>,
        the maximum value of these pre-defined requests.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <B>menu_driver</B> return one of the following error codes:
+       <STRONG>menu_driver</STRONG> return one of the following error codes:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_BAD_STATE</B>
+       <STRONG>E_BAD_STATE</STRONG>
             Routine was called from an initialization or termination function.
 
-       <B>E_NOT_POSTED</B>
+       <STRONG>E_NOT_POSTED</STRONG>
             The menu has not been posted.
 
-       <B>E_UNKNOWN_COMMAND</B>
+       <STRONG>E_UNKNOWN_COMMAND</STRONG>
             The menu driver code saw an unknown request code.
 
-       <B>E_NO_MATCH</B>
+       <STRONG>E_NO_MATCH</STRONG>
             Character failed to match.
 
-       <B>E_REQUEST_DENIED</B>
+       <STRONG>E_REQUEST_DENIED</STRONG>
             The menu driver could not process the request.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_getch.3X.html">getch(3X)</A></B>, <B><A HREF="menu.3X.html">menu(3X)</A></B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_getch.3x.html">getch(3x)</A></STRONG>, <STRONG><A HREF="menu.3x.html">menu(3x)</A></STRONG>.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header  file  <B>&lt;menu.h&gt;</B>  automatically  includes  the  header  files
-       <B>&lt;curses.h&gt;</B>.
+       The header  file  <STRONG>&lt;menu.h&gt;</STRONG>  automatically  includes  the  header  files
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -228,7 +228,7 @@
 
 
 
-                                                               <B><A HREF="menu_driver.3X.html">menu_driver(3X)</A></B>
+                                                               <STRONG><A HREF="menu_driver.3x.html">menu_driver(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

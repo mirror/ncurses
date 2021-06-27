@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.116 2020/08/29 16:22:03 juergen Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.117 2021/06/26 20:43:19 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -71,7 +71,7 @@ write_file(char *filename, TERMTYPE2 *tp)
 	_nc_warning("entry is larger than %u bytes", limit);
     } else {
 	FILE *fp = ((_nc_access(filename, W_OK) == 0)
-		    ? fopen(filename, BIN_W)
+		    ? safe_fopen(filename, BIN_W)
 		    : 0);
 	size_t actual;
 

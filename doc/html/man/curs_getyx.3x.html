@@ -34,41 +34,41 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_getyx 3X</TITLE>
+<TITLE>curs_getyx 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_getyx 3X</H1>
+<H1 class="no-header">curs_getyx 3x</H1>
 <PRE>
-<B><A HREF="curs_getyx.3X.html">curs_getyx(3X)</A></B>                                                  <B><A HREF="curs_getyx.3X.html">curs_getyx(3X)</A></B>
+<STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>getyx</B>,  <B>getparyx</B>,  <B>getbegyx</B>,  <B>getmaxyx</B>  -  get <B>curses</B> cursor and window
+       <STRONG>getyx</STRONG>,  <STRONG>getparyx</STRONG>,  <STRONG>getbegyx</STRONG>,  <STRONG>getmaxyx</STRONG>  -  get <STRONG>curses</STRONG> cursor and window
        coordinates
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>void</B> <B>getyx(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>);</B>
-       <B>void</B> <B>getparyx(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>);</B>
-       <B>void</B> <B>getbegyx(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>);</B>
-       <B>void</B> <B>getmaxyx(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>);</B>
+       <STRONG>void</STRONG> <STRONG>getyx(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getparyx(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getbegyx(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
+       <STRONG>void</STRONG> <STRONG>getmaxyx(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <B>getyx</B> macro places the current cursor position of the given  window
-       in the two integer variables <I>y</I> and <I>x</I>.
+       The <STRONG>getyx</STRONG> macro places the current cursor position of the given  window
+       in the two integer variables <EM>y</EM> and <EM>x</EM>.
 
-       If  <I>win</I>  is  a  subwindow,  the  <B>getparyx</B>  macro  places  the beginning
+       If  <EM>win</EM>  is  a  subwindow,  the  <STRONG>getparyx</STRONG>  macro  places  the beginning
        coordinates of the subwindow relative to the  parent  window  into  two
-       integer variables <I>y</I> and <I>x</I>.  Otherwise, <B>-1</B> is placed into <I>y</I> and <I>x</I>.
+       integer variables <EM>y</EM> and <EM>x</EM>.  Otherwise, <STRONG>-1</STRONG> is placed into <EM>y</EM> and <EM>x</EM>.
 
-       Like  <B>getyx</B>,  the  <B>getbegyx</B>  and  <B>getmaxyx</B>  macros  store  the  current
+       Like  <STRONG>getyx</STRONG>,  the  <STRONG>getbegyx</STRONG>  and  <STRONG>getmaxyx</STRONG>  macros  store  the  current
        beginning coordinates and size of the specified window.
 
 
@@ -78,16 +78,16 @@
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       All  of these interfaces are macros.  A "<B>&amp;</B>" is not necessary before the
-       variables <I>y</I> and <I>x</I>.
+       All  of these interfaces are macros.  A "<STRONG>&amp;</STRONG>" is not necessary before the
+       variables <EM>y</EM> and <EM>x</EM>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       The <B>getyx</B>, <B>getparyx</B>, <B>getbegyx</B> and <B>getmaxyx</B> macros are described in  the
+       The <STRONG>getyx</STRONG>, <STRONG>getparyx</STRONG>, <STRONG>getbegyx</STRONG> and <STRONG>getmaxyx</STRONG> macros are described in  the
        XSI Curses standard, Issue 4.
 
-       This  implementation also provides functions <B>getbegx</B>, <B>getbegy</B>, <B>getcurx</B>,
-       <B>getcury</B>, <B>getmaxx</B>, <B>getmaxy</B>, <B>getparx</B> and <B>getpary</B> for  compatibility  with
+       This  implementation also provides functions <STRONG>getbegx</STRONG>, <STRONG>getbegy</STRONG>, <STRONG>getcurx</STRONG>,
+       <STRONG>getcury</STRONG>, <STRONG>getmaxx</STRONG>, <STRONG>getmaxy</STRONG>, <STRONG>getparx</STRONG> and <STRONG>getpary</STRONG> for  compatibility  with
        older versions of curses.
 
        Although  X/Open  Curses  does  not  address this, many implementations
@@ -101,15 +101,15 @@
        example,  the  WINDOW._maxx and WINDOW._maxy values in ncurses have (at
        least  since  release  1.8.1)  differed  by   one   from   some   other
        implementations.   The  difference  is  hidden  by  means  of the macro
-       <B>getmaxyx</B>.
+       <STRONG>getmaxyx</STRONG>.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_legacy.3X.html">curs_legacy(3X)</A></B>, <B><A HREF="curs_opaque.3X.html">curs_opaque(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_legacy.3x.html">curs_legacy(3x)</A></STRONG>, <STRONG><A HREF="curs_opaque.3x.html">curs_opaque(3x)</A></STRONG>
 
 
 
-                                                                <B><A HREF="curs_getyx.3X.html">curs_getyx(3X)</A></B>
+                                                                <STRONG><A HREF="curs_getyx.3x.html">curs_getyx(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

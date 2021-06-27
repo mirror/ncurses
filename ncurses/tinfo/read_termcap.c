@@ -57,7 +57,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.100 2021/06/17 21:11:08 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.101 2021/06/26 19:43:17 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -1126,7 +1126,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 
 	    TR(TRACE_DATABASE, ("Looking for %s in %s", tn, termpaths[i]));
 	    if (_nc_access(termpaths[i], R_OK) == 0
-		&& (fp = fopen(termpaths[i], "r")) != (FILE *) 0) {
+		&& (fp = safe_fopen(termpaths[i], "r")) != (FILE *) 0) {
 		_nc_set_source(termpaths[i]);
 
 		/*

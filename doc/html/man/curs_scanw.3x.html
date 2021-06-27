@@ -34,64 +34,64 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_scanw 3X</TITLE>
+<TITLE>curs_scanw 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_scanw 3X</H1>
+<H1 class="no-header">curs_scanw 3x</H1>
 <PRE>
-<B><A HREF="curs_scanw.3X.html">curs_scanw(3X)</A></B>                                                  <B><A HREF="curs_scanw.3X.html">curs_scanw(3X)</A></B>
+<STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3x)</A></STRONG>                                                  <STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>scanw</B>, <B>wscanw</B>, <B>mvscanw</B>, <B>mvwscanw</B>, <B>vwscanw</B>, <B>vw_scanw</B> - convert formatted
-       input from a <B>curses</B> window
+       <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG>, <STRONG>mvscanw</STRONG>, <STRONG>mvwscanw</STRONG>, <STRONG>vwscanw</STRONG>, <STRONG>vw_scanw</STRONG> - convert formatted
+       input from a <STRONG>curses</STRONG> window
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>scanw(const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>...);</B>
-       <B>int</B> <B>wscanw(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>...);</B>
-       <B>int</B> <B>mvscanw(int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>...);</B>
-       <B>int</B> <B>mvwscanw(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>int</B> <I>y</I><B>,</B> <B>int</B> <I>x</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>...);</B>
+       <STRONG>int</STRONG> <STRONG>scanw(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>wscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvscanw(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
+       <STRONG>int</STRONG> <STRONG>mvwscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>...);</STRONG>
 
-       <B>int</B> <B>vw_scanw(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>va_list</B> <I>varglist</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>vw_scanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>va_list</STRONG> <EM>varglist</EM><STRONG>);</STRONG>
 
        /* obsolete */
-       <B>int</B> <B>vwscanw(WINDOW</B> <B>*</B><I>win</I><B>,</B> <B>const</B> <B>char</B> <B>*</B><I>fmt</I><B>,</B> <B>va_list</B> <I>varglist</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>vwscanw(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>fmt</EM><STRONG>,</STRONG> <STRONG>va_list</STRONG> <EM>varglist</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <B>scanw</B>, <B>wscanw</B> and <B>mvscanw</B> routines  are  analogous  to  <B>scanf</B>  [see
-       <B>scanf(3)</B>].   The  effect  of  these  routines is as though <B>wgetstr</B> were
+       The <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG> and <STRONG>mvscanw</STRONG> routines  are  analogous  to  <STRONG>scanf</STRONG>  [see
+       <STRONG>scanf(3)</STRONG>].   The  effect  of  these  routines is as though <STRONG>wgetstr</STRONG> were
        called on the  window,  and  the  resulting  line  used  as  input  for
-       <B>sscanf(3)</B>.   Fields which do not map to a variable in the <I>fmt</I> field are
+       <STRONG>sscanf(3)</STRONG>.   Fields which do not map to a variable in the <EM>fmt</EM> field are
        lost.
 
-       The <B>vwscanw</B> and <B>vw_scanw</B> routines are  analogous  to  <B>vscanf(3)</B>.   They
-       perform a <B>wscanw</B> using a variable argument list.  The third argument is
-       a <I>va</I><B>_</B><I>list</I>, a pointer to a list of arguments, as defined in <B>&lt;stdarg.h&gt;</B>.
+       The <STRONG>vwscanw</STRONG> and <STRONG>vw_scanw</STRONG> routines are  analogous  to  <STRONG>vscanf(3)</STRONG>.   They
+       perform a <STRONG>wscanw</STRONG> using a variable argument list.  The third argument is
+       a <EM>va</EM><STRONG>_</STRONG><EM>list</EM>, a pointer to a list of arguments, as defined in <STRONG>&lt;stdarg.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       <B>vwscanw</B> returns <B>ERR</B> on failure and an integer equal to  the  number  of
+       <STRONG>vwscanw</STRONG> returns <STRONG>ERR</STRONG> on failure and an integer equal to  the  number  of
        fields scanned on success.
 
-       Applications  may  use the return value from the <B>scanw</B>, <B>wscanw</B>, <B>mvscanw</B>
-       and <B>mvwscanw</B> routines to determine the  number  of  fields  which  were
+       Applications  may  use the return value from the <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG>, <STRONG>mvscanw</STRONG>
+       and <STRONG>mvwscanw</STRONG> routines to determine the  number  of  fields  which  were
        mapped in the call.
 
        Functions  with  a  "mv"  prefix  first perform a cursor movement using
-       <B>wmove</B>, and return an error if the position is outside the window, or if
+       <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
-       While  <B>scanw</B>  was implemented in 4BSD, none of the BSD releases used it
+       While  <STRONG>scanw</STRONG>  was implemented in 4BSD, none of the BSD releases used it
        until 4.4BSD (in a game).  That early version of curses was before  the
        ANSI  C  standard.   It  did  not  use  &lt;varargs.h&gt;,  though  that  was
        available.  In 1991  (a  couple  of  years  after  SVr4  was  generally
@@ -100,57 +100,57 @@
        Even  with this improvement, BSD curses did not use function prototypes
        (or even declare functions) in the &lt;curses.h&gt; header until 1992.
 
-       SVr2 documented <B>scanw</B>, <B>wscanw</B> tersely as  "scanf  through  <I>stdscr</I>"  and
-       tersely as "scanf through <I>win</I>", respectively.
+       SVr2 documented <STRONG>scanw</STRONG>, <STRONG>wscanw</STRONG> tersely as  "scanf  through  <EM>stdscr</EM>"  and
+       tersely as "scanf through <EM>win</EM>", respectively.
 
-       SVr3 added <B>mvscanw</B>, and <B>mvwscanw</B>, with a three-line summary saying that
-       they were analogous to <B>scanf(3)</B>, explaining that the string which would
-       be  output  from  <B>scanf(3)</B> would instead be output using <B>waddstr</B> on the
-       given window.  SVr3 also added <B>vwscanw</B>, saying that the third parameter
-       is  a  <B>va_list</B>, defined in &lt;varargs.h&gt;, and referring the reader to the
-       manual  pages  for  <I>varargs</I>  and  <I>vprintf</I>  for  detailed  descriptions.
-       (Because the SVr3 documentation does not mention <I>vscanf</I>, that reference
-       to <I>vprintf</I> may not be an error).
+       SVr3 added <STRONG>mvscanw</STRONG>, and <STRONG>mvwscanw</STRONG>, with a three-line summary saying that
+       they were analogous to <STRONG>scanf(3)</STRONG>, explaining that the string which would
+       be  output  from  <STRONG>scanf(3)</STRONG> would instead be output using <STRONG>waddstr</STRONG> on the
+       given window.  SVr3 also added <STRONG>vwscanw</STRONG>, saying that the third parameter
+       is  a  <STRONG>va_list</STRONG>, defined in &lt;varargs.h&gt;, and referring the reader to the
+       manual  pages  for  <EM>varargs</EM>  and  <EM>vprintf</EM>  for  detailed  descriptions.
+       (Because the SVr3 documentation does not mention <EM>vscanf</EM>, that reference
+       to <EM>vprintf</EM> may not be an error).
 
-       SVr4  added  no  new  variations  of  <B>scanw</B>,  but  provided  for  using
-       &lt;varargs.h&gt; or &lt;stdarg.h&gt; to define the <B>va_list</B> type.
+       SVr4  added  no  new  variations  of  <STRONG>scanw</STRONG>,  but  provided  for  using
+       &lt;varargs.h&gt; or &lt;stdarg.h&gt; to define the <STRONG>va_list</STRONG> type.
 
-       X/Open  Curses  added  <B>vw_scanw</B>  to  replace  <B>vwscanw</B>, stating that its
-       <B>va_list</B> definition requires &lt;stdarg.h&gt;.
+       X/Open  Curses  added  <STRONG>vw_scanw</STRONG>  to  replace  <STRONG>vwscanw</STRONG>, stating that its
+       <STRONG>va_list</STRONG> definition requires &lt;stdarg.h&gt;.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       In this implementation, <B>vw_scanw</B> and <B>vwscanw</B> are equivalent, to support
-       legacy applications.  However, the latter (<B>vwscanw</B>) is obsolete:
+       In this implementation, <STRONG>vw_scanw</STRONG> and <STRONG>vwscanw</STRONG> are equivalent, to support
+       legacy applications.  However, the latter (<STRONG>vwscanw</STRONG>) is obsolete:
 
-       <B>o</B>   The  XSI Curses standard, Issue 4 described these functions, noting
-           that the function <B>vwscanw</B> is marked TO BE WITHDRAWN, and is  to  be
-           replaced by a function <B>vw_scanw</B> using the <B>&lt;stdarg.h&gt;</B> interface.
+       <STRONG>o</STRONG>   The  XSI Curses standard, Issue 4 described these functions, noting
+           that the function <STRONG>vwscanw</STRONG> is marked TO BE WITHDRAWN, and is  to  be
+           replaced by a function <STRONG>vw_scanw</STRONG> using the <STRONG>&lt;stdarg.h&gt;</STRONG> interface.
 
-       <B>o</B>   The  Single  Unix Specification, Version 2 states that <B>vw_scanw</B>  is
-           preferred  to  <B>vwscanw</B>  since   the   latter   requires   including
-           <B>&lt;varargs.h&gt;</B>,  which  cannot be used in the same file as <B>&lt;stdarg.h&gt;</B>.
-           This implementation uses <B>&lt;stdarg.h&gt;</B> for both, because  that  header
-           is included in <B>&lt;curses.h</B>&gt;.
+       <STRONG>o</STRONG>   The  Single  Unix Specification, Version 2 states that <STRONG>vw_scanw</STRONG>  is
+           preferred  to  <STRONG>vwscanw</STRONG>  since   the   latter   requires   including
+           <STRONG>&lt;varargs.h&gt;</STRONG>,  which  cannot be used in the same file as <STRONG>&lt;stdarg.h&gt;</STRONG>.
+           This implementation uses <STRONG>&lt;stdarg.h&gt;</STRONG> for both, because  that  header
+           is included in <STRONG>&lt;curses.h</STRONG>&gt;.
 
-       <B>o</B>   X/Open  Curses,  Issue 5 (December 2007) marked <B>vwscanw</B> (along with
-           <B>vwprintw</B> and the termcap interface) as withdrawn.
+       <STRONG>o</STRONG>   X/Open  Curses,  Issue 5 (December 2007) marked <STRONG>vwscanw</STRONG> (along with
+           <STRONG>vwprintw</STRONG> and the termcap interface) as withdrawn.
 
        Both XSI and The Single Unix Specification, Version 2 state that  these
-       functions return <B>ERR</B> or <B>OK</B>.
+       functions return <STRONG>ERR</STRONG> or <STRONG>OK</STRONG>.
 
-       <B>o</B>   Since  the  underlying  <B>scanf(3)</B>  can  return  the  number of items
+       <STRONG>o</STRONG>   Since  the  underlying  <STRONG>scanf(3)</STRONG>  can  return  the  number of items
            scanned, and the SVr4 code was documented to use this feature, this
            is  probably  an  editing error which was introduced in XSI, rather
            than being done intentionally.
 
-       <B>o</B>   This implementation  returns  the  number  of  items  scanned,  for
+       <STRONG>o</STRONG>   This implementation  returns  the  number  of  items  scanned,  for
            compatibility  with  SVr4  curses.   As of 2018, NetBSD curses also
            returns the number of  items  scanned.   Both  ncurses  and  NetBSD
-           curses call <B>vsscanf</B> to scan the string, which returns <B>EOF</B> on error.
+           curses call <STRONG>vsscanf</STRONG> to scan the string, which returns <STRONG>EOF</STRONG> on error.
 
-       <B>o</B>   Portable  applications should only test if the return value is <B>ERR</B>,
-           since the <B>OK</B> value (zero) is likely to be misleading.
+       <STRONG>o</STRONG>   Portable  applications should only test if the return value is <STRONG>ERR</STRONG>,
+           since the <STRONG>OK</STRONG> value (zero) is likely to be misleading.
 
            One possible way to get useful results  would  be  to  use  a  "%n"
            conversion at the end of the format string to ensure that something
@@ -158,12 +158,12 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_getstr.3X.html">curs_getstr(3X)</A></B>, <B><A HREF="curs_printw.3X.html">curs_printw(3X)</A></B>, <B><A HREF="curs_termcap.3X.html">curs_termcap(3X)</A></B>,
-       <B>scanf(3)</B>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_getstr.3x.html">curs_getstr(3x)</A></STRONG>, <STRONG><A HREF="curs_printw.3x.html">curs_printw(3x)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>,
+       <STRONG>scanf(3)</STRONG>.
 
 
 
-                                                                <B><A HREF="curs_scanw.3X.html">curs_scanw(3X)</A></B>
+                                                                <STRONG><A HREF="curs_scanw.3x.html">curs_scanw(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

@@ -34,64 +34,64 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_overlay 3X</TITLE>
+<TITLE>curs_overlay 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_overlay 3X</H1>
+<H1 class="no-header">curs_overlay 3x</H1>
 <PRE>
-<B><A HREF="curs_overlay.3X.html">curs_overlay(3X)</A></B>                                              <B><A HREF="curs_overlay.3X.html">curs_overlay(3X)</A></B>
+<STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3x)</A></STRONG>                                              <STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>overlay</B>, <B>overwrite</B>, <B>copywin</B> - overlay and manipulate overlapped <B>curses</B>
+       <STRONG>overlay</STRONG>, <STRONG>overwrite</STRONG>, <STRONG>copywin</STRONG> - overlay and manipulate overlapped <STRONG>curses</STRONG>
        windows
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>overlay(const</B> <B>WINDOW</B> <B>*</B><I>srcwin</I><B>,</B> <B>WINDOW</B> <B>*</B><I>dstwin</I><B>);</B>
-       <B>int</B> <B>overwrite(const</B> <B>WINDOW</B> <B>*</B><I>srcwin</I><B>,</B> <B>WINDOW</B> <B>*</B><I>dstwin</I><B>);</B>
-       <B>int</B> <B>copywin(const</B> <B>WINDOW</B> <B>*</B><I>srcwin</I><B>,</B> <B>WINDOW</B> <B>*</B><I>dstwin</I><B>,</B> <B>int</B> <I>sminrow</I><B>,</B>
-             <B>int</B> <I>smincol</I><B>,</B> <B>int</B> <I>dminrow</I><B>,</B> <B>int</B> <I>dmincol</I><B>,</B> <B>int</B> <I>dmaxrow</I><B>,</B>
-             <B>int</B> <I>dmaxcol</I><B>,</B> <B>int</B> <I>overlay</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>overlay(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>overwrite(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>copywin(const</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>srcwin</EM><STRONG>,</STRONG> <STRONG>WINDOW</STRONG> <STRONG>*</STRONG><EM>dstwin</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>sminrow</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>smincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dminrow</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dmincol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>dmaxrow</EM><STRONG>,</STRONG>
+             <STRONG>int</STRONG> <EM>dmaxcol</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>overlay</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
 
 </PRE><H3><a name="h3-overlay_-overwrite">overlay, overwrite</a></H3><PRE>
-       The <B>overlay</B> and <B>overwrite</B> routines overlay <I>srcwin</I>  on  top  of  <I>dstwin</I>.
-       <I>scrwin</I> and <I>dstwin</I> are not required to be the same size; only text where
-       the two windows overlap is copied.  The difference is that  <B>overlay</B>  is
-       non-destructive  (blanks  are not copied) whereas <B>overwrite</B> is destruc-
+       The <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> routines overlay <EM>srcwin</EM>  on  top  of  <EM>dstwin</EM>.
+       <EM>scrwin</EM> and <EM>dstwin</EM> are not required to be the same size; only text where
+       the two windows overlap is copied.  The difference is that  <STRONG>overlay</STRONG>  is
+       non-destructive  (blanks  are not copied) whereas <STRONG>overwrite</STRONG> is destruc-
        tive.
 
 
 </PRE><H3><a name="h3-copywin">copywin</a></H3><PRE>
-       The <B>copywin</B> routine provides a finer granularity of  control  over  the
-       <B>overlay</B>  and <B>overwrite</B> routines.  As in the <B>prefresh</B> routine, a rectan-
-       gle is specified in the  destination  window,  (<I>dminrow</I>,  <I>dmincol</I>)  and
-       (<I>dmaxrow</I>, <I>dmaxcol</I>), and the upper-left-corner coordinates of the source
-       window, (<I>sminrow</I>, <I>smincol</I>).  If the  argument  <I>overlay</I>  is  <B>true</B>,  then
-       copying is non-destructive, as in <B>overlay</B>.
+       The <STRONG>copywin</STRONG> routine provides a finer granularity of  control  over  the
+       <STRONG>overlay</STRONG>  and <STRONG>overwrite</STRONG> routines.  As in the <STRONG>prefresh</STRONG> routine, a rectan-
+       gle is specified in the  destination  window,  (<EM>dminrow</EM>,  <EM>dmincol</EM>)  and
+       (<EM>dmaxrow</EM>, <EM>dmaxcol</EM>), and the upper-left-corner coordinates of the source
+       window, (<EM>sminrow</EM>, <EM>smincol</EM>).  If the  argument  <EM>overlay</EM>  is  <STRONG>true</STRONG>,  then
+       copying is non-destructive, as in <STRONG>overlay</STRONG>.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Routines  that  return an integer return <B>ERR</B> upon failure, and <B>OK</B> (SVr4
-       only specifies "an integer value other than <B>ERR</B>") upon successful  com-
+       Routines  that  return an integer return <STRONG>ERR</STRONG> upon failure, and <STRONG>OK</STRONG> (SVr4
+       only specifies "an integer value other than <STRONG>ERR</STRONG>") upon successful  com-
        pletion.
 
-       X/Open  defines  no error conditions.  In this implementation, <B>copywin</B>,
-       <B>overlay</B> and <B>overwrite</B> return an error if either of the window  pointers
+       X/Open  defines  no error conditions.  In this implementation, <STRONG>copywin</STRONG>,
+       <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> return an error if either of the window  pointers
        are null, or if some part of the window would be placed off-screen.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <B>overlay</B> and <B>overwrite</B> may be macros.
+       Note that <STRONG>overlay</STRONG> and <STRONG>overwrite</STRONG> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -102,11 +102,11 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>, <B><A HREF="curs_pad.3X.html">curs_pad(3X)</A></B>, <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_pad.3x.html">curs_pad(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>
 
 
 
-                                                              <B><A HREF="curs_overlay.3X.html">curs_overlay(3X)</A></B>
+                                                              <STRONG><A HREF="curs_overlay.3x.html">curs_overlay(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

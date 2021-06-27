@@ -34,91 +34,91 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>curs_scr_dump 3X</TITLE>
+<TITLE>curs_scr_dump 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">curs_scr_dump 3X</H1>
+<H1 class="no-header">curs_scr_dump 3x</H1>
 <PRE>
-<B><A HREF="curs_scr_dump.3X.html">curs_scr_dump(3X)</A></B>                                            <B><A HREF="curs_scr_dump.3X.html">curs_scr_dump(3X)</A></B>
+<STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>                                            <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>scr_dump</B>, <B>scr_restore</B>, <B>scr_init</B>, <B>scr_set</B> - read (write) a <B>curses</B> screen
+       <STRONG>scr_dump</STRONG>, <STRONG>scr_restore</STRONG>, <STRONG>scr_init</STRONG>, <STRONG>scr_set</STRONG> - read (write) a <STRONG>curses</STRONG> screen
        from (to) a file
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;curses.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
-       <B>int</B> <B>scr_dump(const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
-       <B>int</B> <B>scr_restore(const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
-       <B>int</B> <B>scr_init(const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
-       <B>int</B> <B>scr_set(const</B> <B>char</B> <B>*</B><I>filename</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>scr_dump(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scr_restore(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scr_init(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>scr_set(const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>filename</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <B>scr_dump</B> routine dumps the current contents of the  <I>virtual</I>  <I>screen</I>
-       to the file <I>filename</I>.
+       The <STRONG>scr_dump</STRONG> routine dumps the current contents of the  <EM>virtual</EM>  <EM>screen</EM>
+       to the file <EM>filename</EM>.
 
-       The  <B>scr_restore</B>  routine  sets  the  <I>virtual</I> <I>screen</I> to the contents of
-       <I>filename</I>, which must have been written using <B>scr_dump</B>.  The  next  call
-       to  <B>doupdate</B>  restores  the <I>physical</I> <I>screen</I> to the way it looked in the
+       The  <STRONG>scr_restore</STRONG>  routine  sets  the  <EM>virtual</EM> <EM>screen</EM> to the contents of
+       <EM>filename</EM>, which must have been written using <STRONG>scr_dump</STRONG>.  The  next  call
+       to  <STRONG>doupdate</STRONG>  restores  the <EM>physical</EM> <EM>screen</EM> to the way it looked in the
        dump file.
 
-       The <B>scr_init</B> routine reads in the contents of <I>filename</I> and uses them to
-       initialize the <B>curses</B> data structures about what the terminal currently
-       has on its screen.  If the data is determined to be valid, <B>curses</B> bases
+       The <STRONG>scr_init</STRONG> routine reads in the contents of <EM>filename</EM> and uses them to
+       initialize the <STRONG>curses</STRONG> data structures about what the terminal currently
+       has on its screen.  If the data is determined to be valid, <STRONG>curses</STRONG> bases
        its  next update of the screen on this information rather than clearing
-       the screen and starting from scratch.  <B>scr_init</B> is used  after  <B>initscr</B>
-       or  a  <B>system</B>  call  to share the screen with another process which has
-       done a <B>scr_dump</B> after its <B><A HREF="curs_initscr.3X.html">endwin(3X)</A></B> call.  The data  is  declared  in-
+       the screen and starting from scratch.  <STRONG>scr_init</STRONG> is used  after  <STRONG>initscr</STRONG>
+       or  a  <STRONG>system</STRONG>  call  to share the screen with another process which has
+       done a <STRONG>scr_dump</STRONG> after its <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> call.  The data  is  declared  in-
        valid
 
-       <B>o</B>   if the terminfo capabilities <B>rmcup</B> and <B>nrrmc</B> exist, also
+       <STRONG>o</STRONG>   if the terminfo capabilities <STRONG>rmcup</STRONG> and <STRONG>nrrmc</STRONG> exist, also
 
-       <B>o</B>   if  the  terminal  has been written to since the preceding <B>scr_dump</B>
+       <STRONG>o</STRONG>   if  the  terminal  has been written to since the preceding <STRONG>scr_dump</STRONG>
            call.
 
-       The <B>scr_set</B> routine is a combination of <B>scr_restore</B> and  <B>scr_init</B>.   It
-       tells the program that the information in <I>filename</I> is what is currently
+       The <STRONG>scr_set</STRONG> routine is a combination of <STRONG>scr_restore</STRONG> and  <STRONG>scr_init</STRONG>.   It
+       tells the program that the information in <EM>filename</EM> is what is currently
        on the screen, and also what the program wants on the screen.  This can
        be thought of as a screen inheritance function.
 
-       To  read  (write)  a window from (to) a file, use the <B>getwin</B> and <B>putwin</B>
-       routines [see <B><A HREF="curs_util.3X.html">curs_util(3X)</A></B>].
+       To  read  (write)  a window from (to) a file, use the <STRONG>getwin</STRONG> and <STRONG>putwin</STRONG>
+       routines [see <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>].
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       All routines return the integer <B>ERR</B> upon failure and <B>OK</B> upon success.
+       All routines return the integer <STRONG>ERR</STRONG> upon failure and <STRONG>OK</STRONG> upon success.
 
        X/Open defines no error conditions.  In this implementation, each  will
        return an error if the file cannot be opened.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       Note that <B>scr_init</B>, <B>scr_set</B>, and <B>scr_restore</B> may be macros.
+       Note that <STRONG>scr_init</STRONG>, <STRONG>scr_set</STRONG>, and <STRONG>scr_restore</STRONG> may be macros.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        The XSI Curses standard, Issue 4, describes these functions (adding the
        const qualifiers).
 
-       The SVr4 docs merely say under <B>scr_init</B> that the dump data is also con-
+       The SVr4 docs merely say under <STRONG>scr_init</STRONG> that the dump data is also con-
        sidered invalid "if the time-stamp of the tty is old" but do not define
        "old".
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>,    <B><A HREF="curs_initscr.3X.html">curs_initscr(3X)</A></B>,    <B><A HREF="curs_refresh.3X.html">curs_refresh(3X)</A></B>,    <B><A HREF="curs_util.3X.html">curs_util(3X)</A></B>,
-       <B><A HREF="scr_dump.5.html">scr_dump(5)</A></B>, <B>system(3)</B>
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,    <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,    <STRONG><A HREF="curs_refresh.3x.html">curs_refresh(3x)</A></STRONG>,    <STRONG><A HREF="curs_util.3x.html">curs_util(3x)</A></STRONG>,
+       <STRONG><A HREF="scr_dump.5.html">scr_dump(5)</A></STRONG>, <STRONG>system(3)</STRONG>
 
 
 
-                                                             <B><A HREF="curs_scr_dump.3X.html">curs_scr_dump(3X)</A></B>
+                                                             <STRONG><A HREF="curs_scr_dump.3x.html">curs_scr_dump(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

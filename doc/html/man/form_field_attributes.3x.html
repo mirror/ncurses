@@ -35,71 +35,71 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form_field_attributes 3X</TITLE>
+<TITLE>form_field_attributes 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form_field_attributes 3X</H1>
+<H1 class="no-header">form_field_attributes 3x</H1>
 <PRE>
-<B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>                            <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
+<STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>                            <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>form_field_attributes</B> - color and attribute control for form fields
+       <STRONG>form_field_attributes</STRONG> - color and attribute control for form fields
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
 
-       <B>int</B> <B>set_field_fore(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>chtype</B> <I>attr</I><B>);</B>
-       <B>chtype</B> <B>field_fore(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_field_fore(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>field_fore(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>set_field_back(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>chtype</B> <I>attr</I><B>);</B>
-       <B>chtype</B> <B>field_back(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_field_back(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>chtype</STRONG> <EM>attr</EM><STRONG>);</STRONG>
+       <STRONG>chtype</STRONG> <STRONG>field_back(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
 
-       <B>int</B> <B>set_field_pad(FIELD</B> <B>*</B><I>field</I><B>,</B> <B>int</B> <I>pad</I><B>);</B>
-       <B>int</B> <B>field_pad(const</B> <B>FIELD</B> <B>*</B><I>field</I><B>);</B>
+       <STRONG>int</STRONG> <STRONG>set_field_pad(FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>pad</EM><STRONG>);</STRONG>
+       <STRONG>int</STRONG> <STRONG>field_pad(const</STRONG> <STRONG>FIELD</STRONG> <STRONG>*</STRONG><EM>field</EM><STRONG>);</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The  function  <B>set_field_fore</B>  sets  the foreground attribute of <I>field</I>.
+       The  function  <STRONG>set_field_fore</STRONG>  sets  the foreground attribute of <EM>field</EM>.
        This is the highlight used to display the field contents.  The function
-       <B>field_fore</B>   returns   the   foreground   attribute.   The  default  is
-       <B>A_STANDOUT</B>.
+       <STRONG>field_fore</STRONG>   returns   the   foreground   attribute.   The  default  is
+       <STRONG>A_STANDOUT</STRONG>.
 
-       The function <B>set_field_back</B> sets the background attribute of <I>form</I>. This
+       The function <STRONG>set_field_back</STRONG> sets the background attribute of <EM>form</EM>. This
        is  the  highlight  used to display the extent fields in the form.  The
-       function <B>field_back</B> returns the background attribute.  The  default  is
-       <B>A_NORMAL</B>.
+       function <STRONG>field_back</STRONG> returns the background attribute.  The  default  is
+       <STRONG>A_NORMAL</STRONG>.
 
-       The  function  <B>set_field_pad</B> sets the character used to fill the field.
-       The function <B>field_pad</B> returns the given  form's  pad  character.   The
+       The  function  <STRONG>set_field_pad</STRONG> sets the character used to fill the field.
+       The function <STRONG>field_pad</STRONG> returns the given  form's  pad  character.   The
        default is a blank.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
        These routines return one of the following:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B>  and  related  pages  whose names begin "form_" for detailed
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>  and  related  pages  whose names begin "form_" for detailed
        descriptions of the entry points.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The  header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  file
-       <B>&lt;curses.h&gt;</B>.
+       The  header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  file
+       <STRONG>&lt;curses.h&gt;</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -113,7 +113,7 @@
 
 
 
-                                                     <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
+                                                     <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>

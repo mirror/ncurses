@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3676 2021/06/19 19:09:22 tom Exp $
+-- $Id: NEWS,v 1.3678 2021/06/26 20:47:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210626
+	+ add configure option --disable-root-access, which tells ncurses to
+	  disallow most file-opens by setuid processes.
+	+ use default colors in pccon "op" -TD
+	+ correct rmacs/smacs in aaa+dec, aaa+rv -TD
+	+ add hpterm-color2 and hp98550-color (Martin Trusler)
+	+ regenerate man-html documentation.
 
 20210619
 	+ improve configure-macro used for dependencies of --disable-leaks such

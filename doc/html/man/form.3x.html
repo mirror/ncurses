@@ -35,184 +35,184 @@
 <HEAD>
 <meta http-equiv="Content-Type" content="text/html; charset=us-ascii">
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
-<TITLE>form 3X</TITLE>
+<TITLE>form 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 </HEAD>
 <BODY>
-<H1 class="no-header">form 3X</H1>
+<H1 class="no-header">form 3x</H1>
 <PRE>
-<B><A HREF="form.3X.html">form(3X)</A></B>                                                              <B><A HREF="form.3X.html">form(3X)</A></B>
+<STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>                                                              <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>
 
 
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       <B>form</B> - curses extension for programming forms
+       <STRONG>form</STRONG> - curses extension for programming forms
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
-       <B>#include</B> <B>&lt;form.h&gt;</B>
+       <STRONG>#include</STRONG> <STRONG>&lt;form.h&gt;</STRONG>
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       The <B>form</B> library provides terminal-independent facilities for composing
+       The <STRONG>form</STRONG> library provides terminal-independent facilities for composing
        form screens on character-cell terminals.  The library includes:  field
        routines, which create and modify form fields; and form routines, which
        group fields into forms,  display  forms  on  the  screen,  and  handle
        interaction with the user.
 
-       The  <B>form</B>  library uses the <B>curses</B> libraries.  To use the <B>form</B> library,
-       link with the options <B>-lform</B> <B>-lcurses</B>.
+       The  <STRONG>form</STRONG>  library uses the <STRONG>curses</STRONG> libraries.  To use the <STRONG>form</STRONG> library,
+       link with the options <STRONG>-lform</STRONG> <STRONG>-lcurses</STRONG>.
 
        Your program should set up the locale, e.g.,
 
-            <B>setlocale(LC_ALL,</B> <B>"");</B>
+            <STRONG>setlocale(LC_ALL,</STRONG> <STRONG>"");</STRONG>
 
        so that input/output processing will work.
 
-       A curses initialization routine such as <B>initscr</B> must be  called  before
+       A curses initialization routine such as <STRONG>initscr</STRONG> must be  called  before
        using any of these functions.
 
 
 </PRE><H3><a name="h3-Current-Default-Values-for-Field-Attributes">Current Default Values for Field Attributes</a></H3><PRE>
-       The  <B>form</B>  library maintains a default value for field attributes.  You
-       can get or  set  this  default  by  calling  the  appropriate  <B>set_</B>  or
-       retrieval  routine  with  a  <B>NULL</B> field pointer.  Changing this default
-       with a <B>set_</B> function affects  future  field  creations,  but  does  not
+       The  <STRONG>form</STRONG>  library maintains a default value for field attributes.  You
+       can get or  set  this  default  by  calling  the  appropriate  <STRONG>set_</STRONG>  or
+       retrieval  routine  with  a  <STRONG>NULL</STRONG> field pointer.  Changing this default
+       with a <STRONG>set_</STRONG> function affects  future  field  creations,  but  does  not
        change the rendering of fields already created.
 
 
 </PRE><H3><a name="h3-Routine-Name-Index">Routine Name Index</a></H3><PRE>
-       The  following table lists each <B>form</B> routine and the name of the manual
+       The  following table lists each <STRONG>form</STRONG> routine and the name of the manual
        page on which it is described.  Routines flagged with "*" are  ncurses-
        specific, not present in SVr4.
 
-       <B>curses</B> Routine Name     Manual Page Name
+       <STRONG>curses</STRONG> Routine Name     Manual Page Name
        --------------------------------------------------
-       current_field           <B><A HREF="form_page.3X.html">form_page(3X)</A></B>
-       data_ahead              <B><A HREF="form_data.3X.html">form_data(3X)</A></B>
-       data_behind             <B><A HREF="form_data.3X.html">form_data(3X)</A></B>
-       dup_field               <B><A HREF="form_field_new.3X.html">form_field_new(3X)</A></B>
-       dynamic_field_info      <B><A HREF="form_field_info.3X.html">form_field_info(3X)</A></B>
-       field_arg               <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>
-       field_back              <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       field_buffer            <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>
-       field_count             <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
-       field_fore              <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       field_index             <B><A HREF="form_page.3X.html">form_page(3X)</A></B>
-       field_info              <B><A HREF="form_field_info.3X.html">form_field_info(3X)</A></B>
-       field_init              <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       field_just              <B><A HREF="form_field_just.3X.html">form_field_just(3X)</A></B>
-       field_opts              <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
-       field_opts_off          <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
-       field_opts_on           <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
-       field_pad               <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       field_status            <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>
-       field_term              <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       field_type              <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>
-       field_userptr           <B><A HREF="form_field_userptr.3X.html">form_field_userptr(3X)</A></B>
+       current_field           <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>
+       data_ahead              <STRONG><A HREF="form_data.3x.html">form_data(3x)</A></STRONG>
+       data_behind             <STRONG><A HREF="form_data.3x.html">form_data(3x)</A></STRONG>
+       dup_field               <STRONG><A HREF="form_field_new.3x.html">form_field_new(3x)</A></STRONG>
+       dynamic_field_info      <STRONG><A HREF="form_field_info.3x.html">form_field_info(3x)</A></STRONG>
+       field_arg               <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>
+       field_back              <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       field_buffer            <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>
+       field_count             <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+       field_fore              <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       field_index             <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>
+       field_info              <STRONG><A HREF="form_field_info.3x.html">form_field_info(3x)</A></STRONG>
+       field_init              <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       field_just              <STRONG><A HREF="form_field_just.3x.html">form_field_just(3x)</A></STRONG>
+       field_opts              <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+       field_opts_off          <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+       field_opts_on           <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+       field_pad               <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       field_status            <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>
+       field_term              <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       field_type              <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>
+       field_userptr           <STRONG><A HREF="form_field_userptr.3x.html">form_field_userptr(3x)</A></STRONG>
 
-       form_driver             <B><A HREF="form_driver.3X.html">form_driver(3X)</A></B>
-       form_driver_w           <B><A HREF="form_driver.3X.html">form_driver(3X)</A></B>*
-       form_fields             <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
-       form_init               <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       form_opts               <B><A HREF="form_opts.3X.html">form_opts(3X)</A></B>
-       form_opts_off           <B><A HREF="form_opts.3X.html">form_opts(3X)</A></B>
-       form_opts_on            <B><A HREF="form_opts.3X.html">form_opts(3X)</A></B>
-       form_page               <B><A HREF="form_page.3X.html">form_page(3X)</A></B>
-       form_request_by_name    <B><A HREF="form_requestname.3X.html">form_requestname(3X)</A></B>*
-       form_request_name       <B><A HREF="form_requestname.3X.html">form_requestname(3X)</A></B>*
-       form_sub                <B><A HREF="form_win.3X.html">form_win(3X)</A></B>
-       form_term               <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       form_userptr            <B><A HREF="form_userptr.3X.html">form_userptr(3X)</A></B>
-       form_win                <B><A HREF="form_win.3X.html">form_win(3X)</A></B>
-       free_field              <B><A HREF="form_field_new.3X.html">form_field_new(3X)</A></B>
-       free_fieldtype          <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>
-       free_form               <B><A HREF="form_new.3X.html">form_new(3X)</A></B>
-       link_field              <B><A HREF="form_field_new.3X.html">form_field_new(3X)</A></B>
-       link_fieldtype          <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>
-       move_field              <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
-       new_field               <B><A HREF="form_field_new.3X.html">form_field_new(3X)</A></B>
-       new_fieldtype           <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>
-       new_form                <B><A HREF="form_new.3X.html">form_new(3X)</A></B>
-       new_page                <B><A HREF="form_new_page.3X.html">form_new_page(3X)</A></B>
-       pos_form_cursor         <B><A HREF="form_cursor.3X.html">form_cursor(3X)</A></B>
-       post_form               <B><A HREF="form_post.3X.html">form_post(3X)</A></B>
-       scale_form              <B><A HREF="form_win.3X.html">form_win(3X)</A></B>
-       set_current_field       <B><A HREF="form_page.3X.html">form_page(3X)</A></B>
-       set_field_back          <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       set_field_buffer        <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>
-       set_field_fore          <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       set_field_init          <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       set_field_just          <B><A HREF="form_field_just.3X.html">form_field_just(3X)</A></B>
-       set_field_opts          <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
-       set_field_pad           <B><A HREF="form_field_attributes.3X.html">form_field_attributes(3X)</A></B>
-       set_field_status        <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>
-       set_field_term          <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       set_field_type          <B><A HREF="form_field_validation.3X.html">form_field_validation(3X)</A></B>
-       set_field_userptr       <B><A HREF="form_field_userptr.3X.html">form_field_userptr(3X)</A></B>
-       set_fieldtype_arg       <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>
-       set_fieldtype_choice    <B><A HREF="form_fieldtype.3X.html">form_fieldtype(3X)</A></B>
-       set_form_fields         <B><A HREF="form_field.3X.html">form_field(3X)</A></B>
-       set_form_init           <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       set_form_opts           <B><A HREF="form_field_opts.3X.html">form_field_opts(3X)</A></B>
-       set_form_page           <B><A HREF="form_page.3X.html">form_page(3X)</A></B>
-       set_form_sub            <B><A HREF="form_win.3X.html">form_win(3X)</A></B>
-       set_form_term           <B><A HREF="form_hook.3X.html">form_hook(3X)</A></B>
-       set_form_userptr        <B><A HREF="form_userptr.3X.html">form_userptr(3X)</A></B>
-       set_form_win            <B><A HREF="form_win.3X.html">form_win(3X)</A></B>
-       set_max_field           <B><A HREF="form_field_buffer.3X.html">form_field_buffer(3X)</A></B>
-       set_new_page            <B><A HREF="form_new_page.3X.html">form_new_page(3X)</A></B>
-       unfocus_current_field   <B><A HREF="form_page.3X.html">form_page(3X)</A></B>*
-       unpost_form             <B><A HREF="form_post.3X.html">form_post(3X)</A></B>
+       form_driver             <STRONG><A HREF="form_driver.3x.html">form_driver(3x)</A></STRONG>
+       form_driver_w           <STRONG><A HREF="form_driver.3x.html">form_driver(3x)</A></STRONG>*
+       form_fields             <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+       form_init               <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       form_opts               <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
+       form_opts_off           <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
+       form_opts_on            <STRONG><A HREF="form_opts.3x.html">form_opts(3x)</A></STRONG>
+       form_page               <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>
+       form_request_by_name    <STRONG><A HREF="form_requestname.3x.html">form_requestname(3x)</A></STRONG>*
+       form_request_name       <STRONG><A HREF="form_requestname.3x.html">form_requestname(3x)</A></STRONG>*
+       form_sub                <STRONG><A HREF="form_win.3x.html">form_win(3x)</A></STRONG>
+       form_term               <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       form_userptr            <STRONG><A HREF="form_userptr.3x.html">form_userptr(3x)</A></STRONG>
+       form_win                <STRONG><A HREF="form_win.3x.html">form_win(3x)</A></STRONG>
+       free_field              <STRONG><A HREF="form_field_new.3x.html">form_field_new(3x)</A></STRONG>
+       free_fieldtype          <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>
+       free_form               <STRONG><A HREF="form_new.3x.html">form_new(3x)</A></STRONG>
+       link_field              <STRONG><A HREF="form_field_new.3x.html">form_field_new(3x)</A></STRONG>
+       link_fieldtype          <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>
+       move_field              <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+       new_field               <STRONG><A HREF="form_field_new.3x.html">form_field_new(3x)</A></STRONG>
+       new_fieldtype           <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>
+       new_form                <STRONG><A HREF="form_new.3x.html">form_new(3x)</A></STRONG>
+       new_page                <STRONG><A HREF="form_new_page.3x.html">form_new_page(3x)</A></STRONG>
+       pos_form_cursor         <STRONG><A HREF="form_cursor.3x.html">form_cursor(3x)</A></STRONG>
+       post_form               <STRONG><A HREF="form_post.3x.html">form_post(3x)</A></STRONG>
+       scale_form              <STRONG><A HREF="form_win.3x.html">form_win(3x)</A></STRONG>
+       set_current_field       <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>
+       set_field_back          <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       set_field_buffer        <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>
+       set_field_fore          <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       set_field_init          <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       set_field_just          <STRONG><A HREF="form_field_just.3x.html">form_field_just(3x)</A></STRONG>
+       set_field_opts          <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+       set_field_pad           <STRONG><A HREF="form_field_attributes.3x.html">form_field_attributes(3x)</A></STRONG>
+       set_field_status        <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>
+       set_field_term          <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       set_field_type          <STRONG><A HREF="form_field_validation.3x.html">form_field_validation(3x)</A></STRONG>
+       set_field_userptr       <STRONG><A HREF="form_field_userptr.3x.html">form_field_userptr(3x)</A></STRONG>
+       set_fieldtype_arg       <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>
+       set_fieldtype_choice    <STRONG><A HREF="form_fieldtype.3x.html">form_fieldtype(3x)</A></STRONG>
+       set_form_fields         <STRONG><A HREF="form_field.3x.html">form_field(3x)</A></STRONG>
+       set_form_init           <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       set_form_opts           <STRONG><A HREF="form_field_opts.3x.html">form_field_opts(3x)</A></STRONG>
+       set_form_page           <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>
+       set_form_sub            <STRONG><A HREF="form_win.3x.html">form_win(3x)</A></STRONG>
+       set_form_term           <STRONG><A HREF="form_hook.3x.html">form_hook(3x)</A></STRONG>
+       set_form_userptr        <STRONG><A HREF="form_userptr.3x.html">form_userptr(3x)</A></STRONG>
+       set_form_win            <STRONG><A HREF="form_win.3x.html">form_win(3x)</A></STRONG>
+       set_max_field           <STRONG><A HREF="form_field_buffer.3x.html">form_field_buffer(3x)</A></STRONG>
+       set_new_page            <STRONG><A HREF="form_new_page.3x.html">form_new_page(3x)</A></STRONG>
+       unfocus_current_field   <STRONG><A HREF="form_page.3x.html">form_page(3x)</A></STRONG>*
+       unpost_form             <STRONG><A HREF="form_post.3x.html">form_post(3x)</A></STRONG>
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
-       Routines  that  return  pointers return <B>NULL</B> on error, and set <B>errno</B> to
+       Routines  that  return  pointers return <STRONG>NULL</STRONG> on error, and set <STRONG>errno</STRONG> to
        the  corresponding  error-code  returned  by  functions  returning   an
        integer.   Routines  that return an integer return one of the following
        error codes:
 
-       <B>E_OK</B> The routine succeeded.
+       <STRONG>E_OK</STRONG> The routine succeeded.
 
-       <B>E_BAD_ARGUMENT</B>
+       <STRONG>E_BAD_ARGUMENT</STRONG>
             Routine detected an incorrect or out-of-range argument.
 
-       <B>E_BAD_STATE</B>
+       <STRONG>E_BAD_STATE</STRONG>
             Routine was called from an initialization or termination function.
 
-       <B>E_CONNECTED</B>
+       <STRONG>E_CONNECTED</STRONG>
             The field is already connected to a form.
 
-       <B>E_INVALID_FIELD</B>
+       <STRONG>E_INVALID_FIELD</STRONG>
             Contents of a field are not valid.
 
-       <B>E_NOT_CONNECTED</B>
+       <STRONG>E_NOT_CONNECTED</STRONG>
             No fields are connected to the form.
 
-       <B>E_NOT_POSTED</B>
+       <STRONG>E_NOT_POSTED</STRONG>
             The form has not been posted.
 
-       <B>E_NO_ROOM</B>
+       <STRONG>E_NO_ROOM</STRONG>
             Form is too large for its window.
 
-       <B>E_POSTED</B>
+       <STRONG>E_POSTED</STRONG>
             The form is already posted.
 
-       <B>E_REQUEST_DENIED</B>
+       <STRONG>E_REQUEST_DENIED</STRONG>
             The form driver could not process the request.
 
-       <B>E_SYSTEM_ERROR</B>
-            System error occurred (see <B>errno(3)</B>).
+       <STRONG>E_SYSTEM_ERROR</STRONG>
+            System error occurred (see <STRONG>errno(3)</STRONG>).
 
-       <B>E_UNKNOWN_COMMAND</B>
+       <STRONG>E_UNKNOWN_COMMAND</STRONG>
             The form driver code saw an unknown request code.
 
 
 </PRE><H2><a name="h2-NOTES">NOTES</a></H2><PRE>
-       The header  file  <B>&lt;form.h&gt;</B>  automatically  includes  the  header  files
-       <B>&lt;curses.h&gt;</B> and <B>&lt;eti.h&gt;</B>.
+       The header  file  <STRONG>&lt;form.h&gt;</STRONG>  automatically  includes  the  header  files
+       <STRONG>&lt;curses.h&gt;</STRONG> and <STRONG>&lt;eti.h&gt;</STRONG>.
 
        In your library list, libform.a should be before libncurses.a; that is,
        you want to say "-lform -lncurses", not the  other  way  around  (which
@@ -223,20 +223,20 @@
        These  routines  emulate  the  System  V  forms library.  They were not
        supported on Version 7 or BSD versions.
 
-       The menu facility was documented in SVr4.2 in <I>Character</I> <I>User</I>  <I>Interface</I>
-       <I>Programming</I> <I>(UNIX</I> <I>SVR4.2)</I>.
+       The menu facility was documented in SVr4.2 in <EM>Character</EM> <EM>User</EM>  <EM>Interface</EM>
+       <EM>Programming</EM> <EM>(UNIX</EM> <EM>SVR4.2)</EM>.
 
        It is not part of X/Open Curses.
 
        Aside from ncurses, there are few implementations:
 
-       <B>o</B>   systems based on SVr4 source code, e.g., Solaris.
+       <STRONG>o</STRONG>   systems based on SVr4 source code, e.g., Solaris.
 
-       <B>o</B>   NetBSD curses.
+       <STRONG>o</STRONG>   NetBSD curses.
 
        A  few  functions  in  this  implementation  are  extensions  added for
        ncurses,   but   not   provided   by   other   implementations,   e.g.,
-       <B>form_driver_w</B>, <B>unfocus_current_field</B>.
+       <STRONG>form_driver_w</STRONG>, <STRONG>unfocus_current_field</STRONG>.
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
@@ -245,14 +245,14 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <B><A HREF="curses.3X.html">curses(3X)</A></B> and related pages whose names  begin  "form_"  for  detailed
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG> and related pages whose names  begin  "form_"  for  detailed
        descriptions of the entry points.
 
-       This describes <B>ncurses</B> version 6.2 (patch 20210612).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210626).
 
 
 
-                                                                      <B><A HREF="form.3X.html">form(3X)</A></B>
+                                                                      <STRONG><A HREF="form.3x.html">form(3x)</A></STRONG>
 </PRE>
 <div class="nav">
 <ul>
