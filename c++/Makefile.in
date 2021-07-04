@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.131 2021/06/17 21:11:08 tom Exp $
+# $Id: Makefile.in,v 1.133 2021/07/03 18:53:57 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2016 Free Software Foundation, Inc.                    #
@@ -163,14 +163,30 @@ LDFLAGS		= $(TEST_ARGS) @LDFLAGS@ \
 AUTO_SRC	= \
 		etip.h
 
+################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	check
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	depend
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.libs
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.libs
+
 all \
 libs ::		$(AUTO_SRC) $(LIBRARIES)
 
 @MAKE_TESTS@all ::		demo$x
 
-sources :	$(AUTO_SRC)
-
 depend :
+
+sources :	$(AUTO_SRC)
 
 tags:
 	$(CTAGS) *.[h] *.cc
@@ -260,7 +276,7 @@ etip.h:	$(srcdir)/etip.h.in $(srcdir)/edit_cfg.sh
 	$(SHELL) $(srcdir)/edit_cfg.sh ../include/ncurses_cfg.h $@
 
 # Verify that each header-file can be compiled without including another.
-check::
+check ::
 	@$(SHELL) -c "for header in *.h;\
 		do \
 			[ \$${header} = etip.h ] && continue; \

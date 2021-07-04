@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.76 2021/06/17 21:11:08 tom Exp $
+# $Id: Makefile.in,v 1.78 2021/07/03 19:07:50 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -76,13 +76,29 @@ INSTALL_DATA	= @INSTALL_DATA@
 PKG_CONFIG_LIBDIR = @PKG_CONFIG_LIBDIR@
 
 ################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	check
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	depend
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.data
+@MAKE_PHONY@.PHONY :	install.libs
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.data
+@MAKE_PHONY@.PHONY :	uninstall.libs
+
 all \
+depend \
 sources ::
 
 @MAKE_DATABASE@all \
 @MAKE_DATABASE@sources :: terminfo.tmp
-
-depend :
 
 @MAKE_DATABASE@install :: @MISC_INSTALL_DATA@
 

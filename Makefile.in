@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.43 2020/02/02 23:34:34 tom Exp $
+# $Id: Makefile.in,v 1.44 2021/07/03 14:31:59 tom Exp $
 ##############################################################################
 # Copyright 2018-2019,2020 Thomas E. Dickey                                  #
 # Copyright 1998-2014,2015 Free Software Foundation, Inc.                    #
@@ -67,6 +67,19 @@ INSTALL_DATA	= @INSTALL_DATA@
 
 DIRS_TO_MAKE	= @DIRS_TO_MAKE@
 
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	check
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	depend
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	preinstall
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	tags
+@MAKE_PHONY@.PHONY :	uninstall
+
 all ::	$(DIRS_TO_MAKE)
 
 $(DIRS_TO_MAKE) :
@@ -99,7 +112,7 @@ preinstall :
 distclean \
 realclean ::
 
-check:
+check :
 	@ echo The test-programs are interactive
 
 

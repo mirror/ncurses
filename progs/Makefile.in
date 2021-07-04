@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.110 2021/04/18 11:32:39 tom Exp $
+# $Id: Makefile.in,v 1.111 2021/07/03 15:45:33 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2016,2018 Free Software Foundation, Inc.                    #
@@ -151,6 +151,23 @@ HEADER_DEPS	= \
 	$(INCDIR)/nc_alloc.h
 
 ################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	check
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.libs
+@MAKE_PHONY@.PHONY :	install.progs
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	lint
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.libs
+@MAKE_PHONY@.PHONY :	uninstall.progs
+
 all:		$(AUTO_SRC) $(PROGS)
 
 sources:	$(AUTO_SRC)

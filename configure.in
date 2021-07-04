@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.733 2021/06/26 23:10:42 tom Exp $
+dnl $Id: configure.in,v 1.734 2021/07/03 14:51:53 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.733 $)
+AC_REVISION($Revision: 1.734 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -280,6 +280,7 @@ fi
 
 # do this after mixed-case option (tags/TAGS is not as important as tic).
 AC_PROG_MAKE_SET
+CF_MAKE_PHONY
 CF_MAKE_TAGS
 CF_MAKEFLAGS
 
@@ -2573,6 +2574,7 @@ cf_cv_do_reranlib="$cf_cv_do_reranlib"
 cf_cv_do_symlinks="$cf_cv_do_symlinks"
 cf_cv_enable_lp64="$cf_cv_enable_lp64"
 cf_cv_enable_opaque="$cf_cv_enable_opaque"
+cf_cv_make_PHONY="$cf_cv_make_PHONY"
 cf_cv_prog_CC_c_o=$cf_cv_prog_CC_c_o
 cf_cv_prog_CXX_c_o=$cf_cv_prog_CXX_c_o
 cf_cv_prog_gnat_correct=$cf_cv_prog_gnat_correct

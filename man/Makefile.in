@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.50 2020/02/02 23:34:34 tom Exp $
+# $Id: Makefile.in,v 1.52 2021/07/03 18:57:29 tom Exp $
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2013,2015 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -51,6 +51,21 @@ INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
+
+################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	depend
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.man
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.man
 
 all \
 sources :	terminfo.5

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.179 2021/06/17 21:11:08 tom Exp $
+# $Id: Makefile.in,v 1.180 2021/07/03 15:27:09 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -217,6 +217,16 @@ wide	 = $(srcdir)/widechar
 win32con = $(srcdir)/win32con
 
 ################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	test_progs
+
 all libs ::	$(AUTO_SRC) ../lib $(LIBRARIES)
 
 @CHECK_BUILD@all libs ::	report_offsets$(BUILD_EXEEXT)
@@ -235,7 +245,7 @@ $(DESTDIR)$(libdir) :
 ./lib_gen.c : $(base)/MKlib_gen.sh ../include/curses.h
 	$(SHELL) -e $(base)/MKlib_gen.sh "$(CPP) $(CPPFLAGS)" "$(AWK)" generated <../include/curses.h >$@
 
-init_keytry.h: make_keys$(BUILD_EXEEXT) keys.list
+init_keytry.h : make_keys$(BUILD_EXEEXT) keys.list
 	./make_keys$(BUILD_EXEEXT) keys.list > $@
 
 keys.list :	$(tinfo)/MKkeys_list.sh

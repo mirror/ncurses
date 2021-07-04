@@ -30,7 +30,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #     and:  Thomas E. Dickey, 1997
 #
-#  $Id: Makefile.in,v 1.96 2021/01/23 20:42:08 tom Exp $
+#  $Id: Makefile.in,v 1.97 2021/07/03 15:45:33 tom Exp $
 #
 .SUFFIXES:
 
@@ -143,6 +143,19 @@ GEN_SRC		= $(srcdir)/$(ABASE).ads.m4				\
 	          $(srcdir)/$(ABASE)-forms-field_user_data.ads.m4	\
 	          $(srcdir)/$(ABASE)-panels-user_data.ads.m4
 
+################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.libs
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.libs
 
 all \
 libs :	$(GEN_TARGETS)

@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.26 2021/01/23 20:34:50 tom Exp $
+# $Id: Makefile.in,v 1.28 2021/07/03 18:54:54 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2010,2015 Free Software Foundation, Inc.                    #
@@ -31,7 +31,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #
 #  Version Control
-#  $Revision: 1.26 $
+#  $Revision: 1.28 $
 #
 SHELL		= @SHELL@
 VPATH		= @srcdir@
@@ -41,6 +41,21 @@ SUBDIRS         = @ADA_SUBDIRS@
 
 TOP_MFLAGS	= @cf_cv_makeflags@ DESTDIR="$(DESTDIR)" RPATH_LIST="$(RPATH_LIST)"
 @SET_MAKE@
+
+################################################################################
+
+@MAKE_PHONY@.PHONY :	all
+@MAKE_PHONY@.PHONY :	clean
+@MAKE_PHONY@.PHONY :	depend
+@MAKE_PHONY@.PHONY :	distclean
+@MAKE_PHONY@.PHONY :	install
+@MAKE_PHONY@.PHONY :	install.libs
+@MAKE_PHONY@.PHONY :	libs
+@MAKE_PHONY@.PHONY :	mostlyclean
+@MAKE_PHONY@.PHONY :	realclean
+@MAKE_PHONY@.PHONY :	sources
+@MAKE_PHONY@.PHONY :	uninstall
+@MAKE_PHONY@.PHONY :	uninstall.libs
 
 all \
 libs \
@@ -71,6 +86,8 @@ realclean ::
 	done
 	-rm -f config.cache config.log config.status include/ncurses_cfg.h
 	-rm -f Makefile
+
+depend :
 
 tags :
 	@
