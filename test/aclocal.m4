@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.196 2021/07/03 20:21:44 tom Exp $
+dnl $Id: aclocal.m4,v 1.197 2021/07/10 21:40:29 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -4225,7 +4225,7 @@ fi
 AC_SUBST(no_x11_rgb)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_CURSES version: 16 updated: 2021/01/02 09:31:20
+dnl CF_XOPEN_CURSES version: 17 updated: 2021/07/10 12:22:27
 dnl ---------------
 dnl Test if we should define X/Open source for curses, needed on Digital Unix
 dnl 4.x, to see the extended functions, but breaks on IRIX 6.x.
@@ -4245,15 +4245,14 @@ AC_TRY_LINK([
 	make an error
 #endif
 #endif
-#ifdef NCURSES_VERSION
+#ifdef NCURSES_WIDECHAR
+make an error	/* prefer to fall-through on the second checks */
+#endif
 	cchar_t check;
 	int check2 = curs_set((int)sizeof(check));
-#endif
 	long x = winnstr(stdscr, "", 0);
 	int x1, y1;
-#ifdef NCURSES_VERSION
 	(void)check2;
-#endif
 	getbegyx(stdscr, y1, x1);
 	(void)x;
 	(void)y1;
@@ -4267,16 +4266,12 @@ AC_TRY_LINK([
 #define $cf_try_xopen_extension 1
 #include <stdlib.h>
 #include <${cf_cv_ncurses_header:-curses.h}>],[
-#ifdef NCURSES_VERSION
 		cchar_t check;
 		int check2 = curs_set((int)sizeof(check));
-#endif
 		long x = winnstr(stdscr, "", 0);
 		int x1, y1;
 		getbegyx(stdscr, y1, x1);
-#ifdef NCURSES_VERSION
 		(void)check2;
-#endif
 		(void)x;
 		(void)y1;
 		(void)x1;

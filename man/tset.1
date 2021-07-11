@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.56 2021/06/17 21:26:02 tom Exp $
+.\" $Id: tset.1,v 1.57 2021/07/10 22:50:45 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -284,33 +284,24 @@ and that \fBcsh\fR users insert a backslash character (\*(``\e\*('') before
 any exclamation marks (\*(``!\*('').
 .SH HISTORY
 .PP
-A \fBreset\fP command appeared in 2BSD (April 1979), written by Kurt Shoens.
+A \fBreset\fP command appeared in 1BSD (March 1978), written by Kurt Shoens.
 This program set the \fIerase\fP and \fIkill\fP characters
 to \fB^H\fP (backspace) and \fB@\fP respectively.
 Mark Horton improved that in 3BSD (October 1979), adding
 \fIintr\fP, \fIquit\fP, \fIstart\fP/\fIstop\fP and \fIeof\fP characters
 as well as changing the program to avoid modifying any user settings.
+That version of \fBreset\fP did not use the termcap database.
 .PP
-Later in 4.1BSD (December 1980),
-Mark Horton added a call to the \fBtset\fP program
-using the \fB\-I\fP and \fB\-Q\fP options, i.e.,
-using that to improve the terminal modes.
-With those options,
-that version of \fBreset\fP did not use the termcap database.
-.PP
-A separate \fBtset\fP command was provided in 2BSD by Eric Allman.
-While the oldest published source (from 1979)
-provides both \fBtset\fP and \fBreset\fP,
-Allman's comments in the 2BSD source code indicate
+A separate \fBtset\fP command was provided in 1BSD by Eric Allman,
+using the termcap database.
+Allman's comments in the source code indicate
 that he began work in October 1977,
 continuing development over the next few years.
 .PP
-In September 1980, Eric Allman modified \fBtset\fP,
-adding the code from the existing \*(``reset\*(''
-feature when \fBtset\fP was invoked as \fBreset\fP.
-Rather than simply copying the existing program,
-in this merged version, \fBtset\fP used the termcap database
-to do additional (re)initialization of the terminal.
+According to comments in the source code,
+the \fBtset\fP program was modified in September 1980,
+to use logic copied from the 3BSD \*(``reset\*(''
+when it was invoked as \fBreset\fP.
 This version appeared in 4.1cBSD, late in 1982.
 .PP
 Other developers (e.g., Keith Bostic and Jim Bloom)

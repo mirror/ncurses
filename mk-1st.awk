@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.114 2021/07/03 20:05:20 tom Exp $
+# $Id: mk-1st.awk,v 1.115 2021/07/10 17:15:43 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -465,7 +465,14 @@ END	{
 			else if ( MODEL == "LIBTOOL" )
 			{
 				end_name = lib_name;
-				printf "../lib/%s : $(%s_OBJS)\n", lib_name, OBJS
+				printf "../lib/%s : \\\n", lib_name
+				if ( (name != TermlibRoot ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
+					printf "\t\t../lib/lib%s.la \\\n", TermlibRoot;
+					if ( index(name, "tic") == 1 && index(TermlibRoot, "ncurses") != 1 ) {
+						printf "\t\t../lib/lib%s%s.la \\\n", "ncurses", LIB_SUFFIX;
+					}
+				}
+				printf "\t\t$(%s_OBJS)\n", OBJS
 				if ( is_ticlib() ) {
 					which_list = "TICS_LIST";
 				} else if ( is_termlib() ) {

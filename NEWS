@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3680 2021/07/03 19:02:51 tom Exp $
+-- $Id: NEWS,v 1.3683 2021/07/10 22:55:59 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,15 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210710
+	+ improve history section for tset manpage based on the 1BSD tarball,
+	  which preceded BSD's SCCS checkins by more than three years.
+	+ improve CF_XOPEN_CURSES macro used in test/configure (report by Urs
+	  Jansen).
+	+ further improvement of libtool configuration, adding a dependency of
+	  the install.tic rule, etc., on the library in the build-tree.
+	+ update config.sub
 
 20210703
 	+ amend libtool configuration to add dependency for install.tic, etc.,

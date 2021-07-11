@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 
-/* $Id: nc_access.h,v 1.1 2021/06/26 21:38:47 tom Exp $ */
+/* $Id: nc_access.h,v 1.2 2021/07/10 22:07:06 tom Exp $ */
 
 #ifndef NC_ACCESS_included
 #define NC_ACCESS_included 1
@@ -34,6 +34,7 @@
 
 #include <ncurses_cfg.h>
 #include <curses.h>
+#include <sys/types.h>
 
 #ifdef __cplusplus
 extern "C" {
