@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.115 2021/07/10 17:15:43 tom Exp $
+# $Id: mk-1st.awk,v 1.122 2021/07/18 18:47:20 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -37,6 +37,7 @@
 #	MODEL		  (e.g., "DEBUG", uppercase; toupper is not portable)
 #	CXX_MODEL	  (e.g., "DEBUG", uppercase)
 #	LIB_SUFFIX	  (e.g., "", "w", "t", "tw")
+#	USE_LIB_SUFFIX (e.g., "", "w", "t", "tw")
 #	model		  (directory into which we compile, e.g., "obj")
 #	prefix		  (e.g., "lib", for Unix-style libraries)
 #	suffix		  (e.g., "_g.a", for debug libraries)
@@ -268,6 +269,15 @@ function in_subset(value) {
 		check = " " check " ";
 		return index(check,value);
 	}
+function trim_suffix(value) {
+	if (USE_LIB_SUFFIX != "" && length(value) > length(USE_LIB_SUFFIX)) {
+		check = substr(value, 1 + length(value) - length(USE_LIB_SUFFIX));
+		if (check == USE_LIB_SUFFIX) {
+			value = substr(value, 1, length(value) - length(USE_LIB_SUFFIX));
+		}
+	}
+	return value;
+}
 BEGIN	{
 		TOOL_PREFIX = "";
 		found = 0;
@@ -298,6 +308,7 @@ BEGIN	{
 					printf "#  MODEL:           %s\n", MODEL
 					printf "#  CXX_MODEL:       %s\n", CXX_MODEL
 					printf "#  LIB_SUFFIX:      %s\n", LIB_SUFFIX
+					printf "#  USE_LIB_SUFFIX:  %s\n", USE_LIB_SUFFIX
 					printf "#  model:           %s\n", model
 					printf "#  prefix:          %s\n", prefix
 					printf "#  suffix:          %s\n", suffix
@@ -465,11 +476,16 @@ END	{
 			else if ( MODEL == "LIBTOOL" )
 			{
 				end_name = lib_name;
+				use_name = trim_suffix(TermlibRoot) USE_LIB_SUFFIX
+				printf "# FIXME\n";
+				printf "# name '%s'\n", name;
+				printf "# end_name '%s'\n", end_name;
+				printf "# use_name '%s'\n", use_name;
 				printf "../lib/%s : \\\n", lib_name
-				if ( (name != TermlibRoot ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
-					printf "\t\t../lib/lib%s.la \\\n", TermlibRoot;
+				if ( (name != use_name ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
+					printf "\t\t../lib/lib%s.la \\\n", use_name;
 					if ( index(name, "tic") == 1 && index(TermlibRoot, "ncurses") != 1 ) {
-						printf "\t\t../lib/lib%s%s.la \\\n", "ncurses", LIB_SUFFIX;
+						printf "\t\t../lib/lib%s%s.la \\\n", "ncurses", USE_LIB_SUFFIX;
 					}
 				}
 				printf "\t\t$(%s_OBJS)\n", OBJS
@@ -486,17 +502,18 @@ END	{
 				printf "\t\t%s $(NCURSES_MAJOR):$(NCURSES_MINOR) $(LT_UNDEF) $(%s) $(LDFLAGS)\n", libtool_version, which_list;
 				if ( make_phony == "yes" ) {
 					print  ""
-					printf ".PHONY :\tinstall.%s\n", name;
+					printf ".PHONY :\tinstall.%s\n", trim_suffix(name);
 				}
 				print  ""
 				print  "install \\"
 				print  "install.libs \\"
-				printf "install.%s :: \\\n", name;
+				printf "install.%s :: \\\n", trim_suffix(name);
 				printf "\t\t$(DESTDIR)$(libdir) \\\n";
-				if ( (name != TermlibRoot ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
-					printf "\t\tinstall.%s \\\n", TermlibRoot;
+				use_name = TermlibRoot USE_LIB_SUFFIX
+				if ( (name != use_name ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
+					printf "\t\tinstall.%s \\\n", trim_suffix(TermlibRoot);
 					if ( index(name, "tic") == 1 && index(TermlibRoot, "ncurses") != 1 ) {
-						printf "\t\tinstall.%s%s \\\n", "ncurses", LIB_SUFFIX;
+						printf "\t\tinstall.%s \\\n", "ncurses";
 					}
 				}
 				printf "\t\t../lib/%s\n", lib_name
@@ -505,7 +522,7 @@ END	{
 				print  ""
 				print  "uninstall \\"
 				print  "uninstall.libs \\"
-				printf "uninstall.%s ::\n", name
+				printf "uninstall.%s ::\n", trim_suffix(name)
 				printf "\t@echo uninstalling $(DESTDIR)$(libdir)/%s\n", lib_name
 				printf "\t-@$(LIBTOOL_UNINSTALL) rm -f $(DESTDIR)$(libdir)/%s\n", lib_name
 			}

@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.969 2021/07/03 20:17:35 tom Exp $
+dnl $Id: aclocal.m4,v 1.971 2021/07/17 17:12:05 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4302,7 +4302,7 @@ ifelse($1,,,[$1=$LIB_PREFIX])
 	AC_SUBST(LIB_PREFIX)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LIB_RULES version: 96 updated: 2021/07/03 16:16:40
+dnl CF_LIB_RULES version: 97 updated: 2021/07/17 13:10:54
 dnl ------------
 dnl Append definitions and rules for the given models to the subdirectory
 dnl Makefiles, and the recursion rule for the top-level Makefile.  If the
@@ -4641,6 +4641,7 @@ CF_EOF
 				MODEL=$cf_ITEM \
 				CXX_MODEL=$CXX_MODEL \
 				LIB_SUFFIX=$LIB_SUFFIX \
+				USE_LIB_SUFFIX=$USE_LIB_SUFFIX \
 				make_phony="${cf_cv_make_PHONY:-no}" \
 				model=$cf_subdir \
 				prefix=$cf_prefix \

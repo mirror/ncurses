@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.734 2021/07/03 14:51:53 tom Exp $
+dnl $Id: configure.in,v 1.736 2021/07/18 22:17:57 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.734 $)
+AC_REVISION($Revision: 1.736 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1019,18 +1019,18 @@ else
 	with_tic_depends=no
 fi
 
-###   use option --disable-wattr-macros to suppress wattr* macros from curses.h
-AC_MSG_CHECKING(if you want to suppress wattr* macros to help with ncurses5/ncurses6 transition)
+###   use option --enable-wattr-macros to enable wattr* macros in curses.h
+AC_MSG_CHECKING(if you want to enable wattr* macros)
 AC_ARG_ENABLE(wattr-macros,
-	[  --disable-wattr-macros  suppress wattr* macros to help with ncurses5/ncurses6 transition],
+	[  --enable-wattr-macros   enable wattr* macros],
 	[with_wattr_macros=$enableval],
-	[with_wattr_macros=yes])
+	[with_wattr_macros=no])
 if [[ "x$with_wattr_macros" != xyes ]]; then
 	NCURSES_WATTR_MACROS=0
-	AC_MSG_RESULT(yes)
+	AC_MSG_RESULT(no)
 else
 	NCURSES_WATTR_MACROS=1
-	AC_MSG_RESULT(no)
+	AC_MSG_RESULT(yes)
 fi
 AC_SUBST(NCURSES_WATTR_MACROS)
 

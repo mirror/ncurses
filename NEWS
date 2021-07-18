@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3683 2021/07/10 22:55:59 tom Exp $
+-- $Id: NEWS,v 1.3686 2021/07/18 19:58:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210718
+	+ correct typo in "vip" comments (report by Nick Black), reviewed this
+	  against Glink manual -TD
+	+ fill in some missing pieces for pccons, to make it comparable to the
+	  vt220 entry -TD
+	+ modify mk-1st.awk to account for extra-suffix configure option
+	  (report by Juergen Pfeifer).
+	+ change default for --disable-wattr-macros option to help packagers
+	  who reuse wide ncursesw header file with non-wide ncurses library.
+	+ build-fix for test/test_opaque.c, for configurations without opaque
+	  curses structs.
 
 20210710
 	+ improve history section for tset manpage based on the 1BSD tarball,

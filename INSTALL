@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.231 2021/06/26 21:02:02 tom Exp $
+-- $Id: INSTALL,v 1.232 2021/07/17 16:30:27 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -516,26 +516,6 @@ CONFIGURE OPTIONS:
 	list documented in X/Open.  ncurses provides varargs support for this
 	function.  Use --disable-tparm-varargs to disable this support.
 
-    --disable-wattr-macros
-	The 6.0 ABI adds support for extended colors and for extended mouse.
-	The former is a noticeable problem when developers inadvertently
-	compile using the ncurses6 header files and link with an ncurses5
-	library, because the wattr* macros use a new field in the WINDOW
-	structure.  These macros are used in several applications.
-
-	Since ncurses provides an actual function for each of these macros,
-	suppressing them from the curses.h header allows the ncurses5 libraries
-	to be used in most applications.
-
-	NOTE: The extended colors also are used in the cchar_t structure, but
-	fewer applications use that.
-
-	NOTE: This workaround does not help with mismatches in the ncurses
-	mouse version.  The extended mouse feature uses one less fewer bit for
-	each button, so that only the first button will work as expected with
-	a mismatch between header and library.  Again, most applications will
-	work, since most use only the first button.
-
     --enable-assertions
 	For testing, compile-in assertion code.  This is used only for a few
 	places where ncurses cannot easily recover by returning an error code.
@@ -777,6 +757,26 @@ CONFIGURE OPTIONS:
 
     --enable-warnings
 	Turn on GCC compiler warnings.  There should be only a few.
+
+    --enable-wattr-macros
+	The 6.0 ABI adds support for extended colors and for extended mouse.
+	The former is a noticeable problem when developers inadvertently
+	compile using the ncurses6 header files and link with an ncurses5
+	library, because the wattr* macros use a new field in the WINDOW
+	structure.  These macros are used in several applications.
+
+	Since ncurses provides an actual function for each of these macros,
+	suppressing them from the curses.h header allows the ncurses5 libraries
+	to be used in most applications.
+
+	NOTE: The extended colors also are used in the cchar_t structure, but
+	fewer applications use that.
+
+	NOTE: This workaround does not help with mismatches in the ncurses
+	mouse version.  The extended mouse feature uses one less fewer bit for
+	each button, so that only the first button will work as expected with
+	a mismatch between header and library.  Again, most applications will
+	work, since most use only the first button.
 
     --enable-weak-symbols
 	If the --with-pthread option is set, check if the compiler supports

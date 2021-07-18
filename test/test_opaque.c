@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.12 2021/03/06 23:53:34 tom Exp $
+ * $Id: test_opaque.c,v 1.13 2021/07/11 09:13:49 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -55,7 +55,7 @@
 #define BASE_Y 6
 #define MAX_COLS 1024
 
-#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20080119) && NCURSES_EXT_FUNCS
+#if defined(NCURSES_VERSION_PATCH) && (NCURSES_VERSION_PATCH >= 20080119) && NCURSES_EXT_FUNCS && NCURSES_OPAQUE
 
 static bool
 Quit(int ch)

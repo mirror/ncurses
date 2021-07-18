@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.876 $
-#	$Date: 2021/06/26 18:47:42 $
+#	$Revision: 1.881 $
+#	$Date: 2021/07/18 00:11:20 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1649,12 +1649,11 @@ pccon+sgr+acs0|sgr and simple ASCII pseudographics for OpenBSD PC console,
 	sgr=\E[0%?%p1%p3%|%t;7%;%?%p6%t;1%;%?%p2%t;4%;m,
 	sgr0=\E[m,
 pccon+sgr+acs|sgr and default ASCII pseudographics for OpenBSD PC console,
-	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
-	     yzz{{||}}~~,
-	enacs=\E)0$<5>, rmacs=\E(B$<5>,
+	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	enacs=\E)0, rmacs=\E(B,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e
-	    \E(B%;$<2>,
-	sgr0=\E[m\E(B$<5>, smacs=\E(0$<5>,
+	    \E(B%;,
+	sgr0=\E[m\E(B, smacs=\E(0,
 # underline renders as color
 pccon+colors|ANSI colors for OpenBSD PC console,
 	bce,
@@ -1663,20 +1662,24 @@ pccon+colors|ANSI colors for OpenBSD PC console,
 pccon+base|base capabilities for OpenBSD PC console,
 	am, km, mc5i, msgr, npc, nxon, xenl, xon,
 	cols#80, it#8, lines#24,
-	bel=^G, bold=\E[1m, clear=\E[H\E[J, cr=\r, cub1=^H, cud1=\n,
-	cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A,
-	dch=\E[%p1%dP, dch1=\E[P, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J,
-	el=\E[K, el1=\E[1K, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
-	il1=\E[L, ind=\ED, nel=\EE, rev=\E[7m, ri=\EM, rmam=\E[?7l,
-	rmso=\E[27m, rmul=\E[24m, rs2=\Ec$<50>, smam=\E[?7h,
-	smso=\E[7m, smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR,
-	u7=\E[6n,
+	bel=^G, bold=\E[1m, clear=\E[H\E[J, cr=\r,
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
+	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
+	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
+	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
+	flash=\E[?5h$<200/>\E[?5l, home=\E[H, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=\ED, nel=\EE,
+	rc=\E8, rev=\E[7m, ri=\EM, rmam=\E[?7l, rmso=\E[27m,
+	rmul=\E[24m, rs2=\Ec, sc=\E7, smam=\E[?7h, smso=\E[7m,
+	smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
 pccon0-m|OpenBSD PC console without colors & with simple ASCII pseudographics,
 	use=pccon+sgr+acs0, use=pccon+base, use=pccon+keys,
 pccon0|OpenBSD PC console with simple ASCII pseudographics,
 	use=pccon0-m, use=pccon+colors,
 pccon-m|OpenBSD PC console without colors,
 	use=pccon+base, use=pccon+sgr+acs, use=pccon+keys,
+	use=ansi+enq, use=vt220+cvis,
 pccon|OpenBSD PC console,
 	use=pccon-m, use=pccon+colors,
 
@@ -21962,52 +21965,52 @@ bq300-8-pc-w-rv|Questar 303 with PC keyboard full 8 bits reverse 132 columns,
 #======================================================#
 
 # normal mode, 8 bits, 80 columns terminal.
-#	RES reset :			^[e
-#	RIS reset initial state:	^[c
-#	BLE bell enable			^[h
-#	BLD bell disable		^[g
-#	CAMS char. attr. mode set	^[[D
-#	CAMR char. attr. mode reset	^[[G
-#	CLR clear			^[`
-#	KBU keyboard unlock (set)	^[[W
-#	KBL keyboard lock (reset)	^[[X
-#	CM  character mode (async.)	^[k
-#	NEP non echoplex mode (by host)	^[l
-#	EP  echoplex mode (by host)	^[m
-#	IM  insert mode set		^[[I
-#	IM  insert mode reset		^[[J
-#	RMS roll mode set		^[r
-#	RMR roll mode reset		^[q
-#	SM78 set mode vip7800		^[[1q
-#	SD  scroll up	(72 lines)	^[[0s
-#	SD  scroll down (72 lines)	^[[1s
-#	RBM block mode reset		^[[E
-#	SLS status line set		^[w
-#	SLR status line reset		^[v
-#	SLL status line lock		^[O
-#	LGS Line-graphic mode set	^[G
-#	LGR Line-graphic mode reset	^[F
-#	TBC tab clear (at cursor pos.)	^[[g
-#	TBI tab initialize		^[[N
-#	TBS tab set (at cursor pos.)	^[p
-#	PDS  print data space		^[[0p
-#	PHD  print host data		^[[3p
-#	PDT  print data terminator	^[[<p
-#	PRES print adapter reset	^[[2p
-#	SSPR multi-part. reset		^[[<>u
-#	SSP0 partition 0 set		^[[00u
-#	SSP1 partition n format 1	^[[PnPnSTRINGu
-#	SSP2 partition n format 2	^[[PnPnSTRINGu
-#	SSP3 partition n format 3	^[[PnPnu
+#	BLD  bell disable			^[g
+#	BLE  bell enable			^[h
+#	CAMR char. attr. mode reset		^[[G
+#	CAMS char. attr. mode set		^[[D
+#	CLR  clear				^[`
+#	CM   character mode (async.)		^[k
+#	EP   echoplex mode (by host)		^[m
+#	IM   insert mode set			^[[I
+#	IMR  insert mode reset			^[[J
+#	KBL  keyboard lock (reset)		^[[X
+#	KBU  keyboard unlock (set)		^[[W
+#	LGR  Line-graphic mode reset		^[F
+#	LGS  Line-graphic mode set		^[G
+#	NEP  non echoplex mode (by host)	^[l
+#	PDS  print data space			^[[0p
+#	PDT  print data terminator		^[[<p
+#	PHD  print host data			^[[3p
+#	PRES print adapter reset		^[[2p
+#	RBM  block mode reset			^[[E
+#	RES  reset :				^[e
+#	RIS  reset initial state:		^[c
+#	RMR  roll mode reset			^[q
+#	RMS  roll mode set			^[r
+#	SCD  scroll down (72 lines)		^[[1s
+#	SCU  scroll up	(72 lines)		^[[0s
+#	SLL  status line lock			^[O
+#	SLR  status line reset			^[v
+#	SLS  status line set			^[w
+#	SM78 set mode vip7800			^[[1q
+#	SSP0 partition 0 set			^[[00u
+#	SSP1 partition n format 1		^[[PnPnSTRINGu
+#	SSP2 partition n format 2		^[[PnPnSTRINGu
+#	SSP3 partition n format 3		^[[PnPnu
+#	SSPR multi-part. reset			^[[<>u
+#	TBC  tab clear (at cursor pos.)		^[[g
+#	TBI  tab initialize			^[[N
+#	TBS  tab set (at cursor pos.)		^[p
+#
 #	ATR attribute (visual)
-#	    blink :			^[sB
-#	    dim :			^[sL
-#	    hide (blank) :		^[sH
-#	    restore :			^[sR
-#	    inverse video :		^[sI
-#	    prot. :			^[sP
-#	    underline :			^[s_
-#	    reset :			^{
+#	    blink :				^[sB
+#	    dim :				^[sL
+#	    hide (blank) :			^[sH
+#	    inverse video :			^[sI
+#	    protected :				^[sP
+#	    reset :				^[sR
+#	    underline :				^[s_
 #
 # This covers the vip7800 and BQ3155-vip7800
 vip|Bull Questar 3155-7800,
@@ -27041,5 +27044,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ use default colors in pccon "op" -TD
 #	+ correct rmacs/smacs in aaa+dec, aaa+rv -TD
 #	+ add hpterm-color2 and hp98550-color (Martin Trusler)
+#
+# 2021-07-17
+#	+ correct typo in "vip" comments (report by Nick Black), reviewed this
+#	  against Glink manual -TD
+#	+ fill in some missing pieces for pccons, to make it comparable to the
+#	  vt220 entry -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
