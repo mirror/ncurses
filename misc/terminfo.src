@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.881 $
-#	$Date: 2021/07/18 00:11:20 $
+#	$Revision: 1.889 $
+#	$Date: 2021/07/25 00:09:06 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1646,32 +1646,35 @@ pccon+keys|OpenBSD PC keyboard keys,
 pccon+sgr+acs0|sgr and simple ASCII pseudographics for OpenBSD PC console,
 	acsc=+>\,<-\^.v0#`+a:f\\h#i#j+k+l+m+n+o~p-q-r-s_t+u+v+w+x|y#
 	     z#{*|!}#~o,
+	bold=\E[1m, rev=\E[7m, rmso=\E[27m,
 	sgr=\E[0%?%p1%p3%|%t;7%;%?%p6%t;1%;%?%p2%t;4%;m,
-	sgr0=\E[m,
+	sgr0=\E[m, smso=\E[7m,
 pccon+sgr+acs|sgr and default ASCII pseudographics for OpenBSD PC console,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
-	enacs=\E)0, rmacs=\E(B,
+	bold=\E[1m, enacs=\E)0, rev=\E[7m, rmacs=\E(B, rmso=\E[27m,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;m%?%p9%t\E(0%e
 	    \E(B%;,
-	sgr0=\E[m\E(B, smacs=\E(0,
+	sgr0=\E[m\E(B, smacs=\E(0, smso=\E[7m,
 # underline renders as color
 pccon+colors|ANSI colors for OpenBSD PC console,
 	bce,
 	colors#8, ncv#2, pairs#64,
 	op=\E[49;39m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+# OpenBSD uses wscons,
+# + which does not implement DECSCNM or anything comparable, so it does not
+#   support flash.
+# + it renders underline using color.
 pccon+base|base capabilities for OpenBSD PC console,
 	am, km, mc5i, msgr, npc, nxon, xenl, xon,
 	cols#80, it#8, lines#24,
-	bel=^G, bold=\E[1m, clear=\E[H\E[J, cr=\r,
-	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
-	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
-	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
-	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
-	flash=\E[?5h$<200/>\E[?5l, home=\E[H, ht=^I, hts=\EH,
-	ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L, ind=\ED, nel=\EE,
-	rc=\E8, rev=\E[7m, ri=\EM, rmam=\E[?7l, rmso=\E[27m,
-	rmul=\E[24m, rs2=\Ec, sc=\E7, smam=\E[?7h, smso=\E[7m,
+	bel=^G, clear=\E[H\E[J, cr=\r, csr=\E[%i%p1%d;%p2%dr,
+	cub=\E[%p1%dD, cub1=^H, cud=\E[%p1%dB, cud1=\n,
+	cuf=\E[%p1%dC, cuf1=\E[C, cup=\E[%i%p1%d;%p2%dH,
+	cuu=\E[%p1%dA, cuu1=\E[A, dch=\E[%p1%dP, dch1=\E[P,
+	dl=\E[%p1%dM, dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
+	el1=\E[1K, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
+	il=\E[%p1%dL, il1=\E[L, ind=\ED, nel=\EE, rc=\E8, ri=\EM,
+	rmam=\E[?7l, rmul=\E[24m, rs2=\Ec, sc=\E7, smam=\E[?7h,
 	smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
 pccon0-m|OpenBSD PC console without colors & with simple ASCII pseudographics,
 	use=pccon+sgr+acs0, use=pccon+base, use=pccon+keys,
@@ -4424,9 +4427,57 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 	use=ms-vt100+,
 
 # Windows Terminal (Preview)
+# https://github.com/microsoft/terminal
+#
+# Windows 10 21H1
+# Version 1.9.1942.0
+#
+# This has longstanding issues with CR/LF mapping, e.g.,
+# - first reported by Juergen Pfeifer August 13, 2020, with workaround
+# - https://github.com/microsoft/terminal/issues/8303
+# - https://github.com/microsoft/terminal/issues/6733
+#
+# still seen in testing during May-July 2021.  As a workaround, this terminal
+# description sets cud1 to an escape sequence rather than just \r.
+#
+# Using TERM=xterm-256color shows a number of problems.
+# A few are seen only in the WSL2 environment.
+#
+# tack:
+# - flash does not work.
+# - video attribute blink does not work.
+# - video attribute invis does not work in WSL2.
+# - italics sitm/ritm do not work in WSL2.
+# - crossed-out smxx/rmxx do not work in WSL2.
+# - reloading colors via initp interchanges red/blue.
+# - does not implement OSC 104, which is used for resetting colors in xterm.
+# - does not support numeric keypad application mode.
+# - control-modifier (without alt/shift) does not work for special keys.
+# - meta-key sends escape character rather than acting as a meta key.
+#
+# vttest:
+# - identifies itself as a VT100.
+# - cursor movement (menu 1) does not work properly, e.g., for wrapping.
+# - does not support 8-bit controls.
+# - does not support VT420 rectangles.
+# - does not support VT420 left/right margins.
+# - ECMA-48 cursor-movement works.
+# - does not support X10 mouse, or mouse highlight tracking.
+# - SGR mouse mode 1006 works.
+# - any-event mouse mode shows no focus-in/focus-out events.
+# - alternate screen 47/48 modes do not work, nor do 1047/1048.
+# - alternate screen 1049 mode works.
+# - none of the window report/modify operations work.
+# - none of the DECRPM/DECRQM reporting operations work.
+#
+# xterm:
+# - 256colors2.pl -r, -i and -q options work.
+# - dynamic colors do not work.
+# - paste64.pl does not work, i.e., bracketed-paste.
+# - tcapquery.pl does not work.
+#
 # Windows 10 1903
 # Version 0.2.1831.0
-# https://github.com/microsoft/terminal
 #
 # The task manager shows this as "OpenConsole.exe", which differs
 # from the "Windows Command Processor" used for the command-prompt.
@@ -4465,9 +4516,10 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 # - does not recognize either xterm+direct or xterm+indirect escapes.
 ms-terminal|Windows10 terminal,
 	npc,
-	rmkx=\E[?1l, rmm@, smkx=\E[?1h, smm@, use=xterm+256setaf,
-	use=xterm+pcfkeys, use=ansi+rep, use=ecma+index,
-	use=ecma+italics, use=xterm-basic,
+	cud1=\E[B, rmkx=\E[?1l, rmm@, smkx=\E[?1h, smm@,
+	use=xterm+256setaf, use=xterm+pcfkeys, use=ansi+rep,
+	use=xterm+sm+1006, use=ecma+index, use=ecma+italics,
+	use=xterm-basic,
 
 #### Visual Studio
 # Visual Studio Code 1.45.0 uses xterm.js 12.8.1 (see https://xtermjs.org/).
@@ -14837,13 +14889,12 @@ aaa+unk|aaa-unk|ann arbor ambassador (internal - don't use this directly),
 	vpa=\E[%p1%{1}%+%dd, use=ansi+rep,
 
 aaa+rv|ann arbor ambassador in reverse video,
-	blink=\E[5;7m, bold=\E[1;7m, enacs=\E(B\E)0,
-	invis=\E[7;8m, is1=\E[7m\E7\E[H\E9\E8, rev=\E[m,
-	rmacs=^O, rmso=\E[7m, rmul=\E[7m,
+	blink=\E[5;7m, bold=\E[1;7m, invis=\E[7;8m,
+	is1=\E[7m\E7\E[H\E9\E8, rev=\E[m, rmso=\E[7m, rmul=\E[7m,
 	rs1=\E[H\E[7m\E[J$<156>,
 	sgr=\E[%?%p2%t4;%;%?%p4%t5;%;%?%p6%t1;%;%?%p1%p2%|%p3%!%|%t7
-	    ;%;%?%p7%t8;%;m%?%p9%t\016%e\017%;,
-	sgr0=\E[7m\017, smacs=^N, smso=\E[m, smul=\E[4;7m,
+	    ;%;%?%p7%t8;%;m\016,
+	sgr0=\E[7m\016, smso=\E[m, smul=\E[4;7m,
 # Ambassador with the DEC option, for partial vt100 compatibility.
 aaa+dec|ann arbor ambassador in dec vt100 mode,
 	acsc=aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}},
@@ -27048,7 +27099,14 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2021-07-17
 #	+ correct typo in "vip" comments (report by Nick Black), reviewed this
 #	  against Glink manual -TD
-#	+ fill in some missing pieces for pccons, to make it comparable to the
+#	+ fill in some missing pieces for pccon, to make it comparable to the
 #	  vt220 entry -TD
+#
+# 2021-07-24
+#	+ trim "flash" from pccon+base -TD
+#	+ revert change for aaa+rv -TD
+#	+ add workaround for Windows Terminal's problems with CR/LF mapping to
+#	  ms-terminal (patch by Juergen Pfeifer).
+#	+ review/update current Windows Terminal vs ms-terminal -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
