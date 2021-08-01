@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.889 $
-#	$Date: 2021/07/25 00:09:06 $
+#	$Revision: 1.907 $
+#	$Date: 2021/08/01 00:06:57 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -351,6 +351,8 @@ ansi+erase|ANSI clear screen/line,
 	clear=\E[H\E[J, ed=\E[J, el=\E[K,
 ansi+rca|ANSI relative cursor-addressing,
 	hpa=\E[%p1%{1}%+%dG, vpa=\E[%p1%{1}%+%dd,
+ansi+rca2|ANSI relative cursor-addressing,
+	hpa=\E[%i%p1%dG, vpa=\E[%i%p1%dd,
 ansi+cup|ANSI absolute cursor-addressing,
 	cup=\E[%i%p1%d;%p2%dH, home=\E[H,
 ansi+rep|ANSI repeat-character,
@@ -3573,7 +3575,7 @@ iTerm.app|iterm|iTerm.app terminal emulator for Mac OS X,
 
 # iTerm2 3.0.15
 #
-# https://www.iterm2.com/
+# https://iterm2.com/
 # https://github.com/gnachman/iTerm2
 # ~/Library/Preferences/com.googlecode.iterm2.plist
 # "iTerm" stalled in 2009.  A different set of developers began "iTerm2".
@@ -4434,8 +4436,10 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 #
 # This has longstanding issues with CR/LF mapping, e.g.,
 # - first reported by Juergen Pfeifer August 13, 2020, with workaround
-# - https://github.com/microsoft/terminal/issues/8303
-# - https://github.com/microsoft/terminal/issues/6733
+# - Windows Terminal #8303 "Updates to ms-terminal terminal type in terminfo to
+#   1.4 from 0.2"
+# - Windows Terminal #6733 "Midnight Commander (mc) output is screwed when
+#   using the 'ms-terminal' as $TERM"
 #
 # still seen in testing during May-July 2021.  As a workaround, this terminal
 # description sets cud1 to an escape sequence rather than just \r.
@@ -4516,10 +4520,11 @@ ms-vt-utf8|vt-utf8|UTF-8 flavor of vt100+,
 # - does not recognize either xterm+direct or xterm+indirect escapes.
 ms-terminal|Windows10 terminal,
 	npc,
-	cud1=\E[B, rmkx=\E[?1l, rmm@, smkx=\E[?1h, smm@,
-	use=xterm+256setaf, use=xterm+pcfkeys, use=ansi+rep,
-	use=xterm+sm+1006, use=ecma+index, use=ecma+italics,
-	use=xterm-basic,
+	cud1=\E[B, kcbt=\E[Z, rmkx=\E[?1l, rmm@, smkx=\E[?1h, smm@,
+	Cr@, Ms@, use=xterm+256color, use=xterm+pcfkeys,
+	use=ansi+rep, use=xterm+sm+1006, use=ecma+index,
+	use=ecma+italics, use=ecma+strikeout, use=xterm-basic,
+	use=xterm+tmux,
 
 #### Visual Studio
 # Visual Studio Code 1.45.0 uses xterm.js 12.8.1 (see https://xtermjs.org/).
@@ -5286,6 +5291,9 @@ xterm-direct256|xterm with direct-colors and 256 indexed colors,
 xterm+tmux|advanced xterm features used in tmux,
 	Cr=\E]112\007, Cs=\E]12;%p1%s\007,
 	Ms=\E]52;%p1%s;%p2%s\007, Se=\E[2 q, Ss=\E[%p1%d q,
+xterm+tmux2|advanced xterm features used in tmux,
+	Cr=\E]112\E\\, Cs=\E]12;%p1%s\E\\,
+	Ms=\E]52;%p1%s;%p2%s\E\\, Se=\E[ q, Ss=\E[%p1%d q,
 
 # This is another variant, for XFree86 4.0 xterm (T.Dickey)
 # This is an 8-bit version of xterm, which emulates DEC vt220 with ANSI color.
@@ -7555,6 +7563,62 @@ kitty+common|KovId's TTY common properties,
 	use=ecma+strikeout, use=xterm+pce2, use=xterm+pcc2,
 	use=ecma+italics, use=xterm+alt1049, use=att610+cvis,
 	use=xterm+tmux,
+
+######## WAYLAND CLIENTS
+
+#### Foot
+# https://codeberg.org/dnkl/foot/
+# Version 1.8.2
+#
+# This identifies as a VT220 with 4=sixel and 22=color, however:
+# tack:
+#	bell does not work
+#	status-line does not work because foot does not set the window title
+#	sends escape when meta key is used, whether or not smm/rmm enabled
+# vttest:
+#	wrap-test fails
+#	no application-mode for numeric keypad (unless private mode 1035 is set)
+#	no NRCS
+#	no VT52
+#	no SRM
+#	protected areas do not work
+#	SU/SD work, SL/SR do not
+#	DECRPM responds, but not the corresponding ANSI reports.
+#	otherwise few reports, except cursor-position and mouse and some dtterm
+#	VT520 cursor-movement works, except for left/right margins
+#	supports xterm/DECSCUSR, though default case in vttest does not blink
+#		Send: <27> [ 0 <32> q 
+#		Text: The cursor should be a blinking rectangle
+#	partial support for xterm mouse any-event mode and button-event mode:
+#	+ does not report focus-in/focus-out
+#	+ does not report buttons 6/7
+#	alternate-screen works
+foot|foot terminal emulator,
+	oc=\E]104\E\\, use=xterm+256color2, use=foot+base,
+
+foot-direct|foot with direct color indexing,
+	use=xterm+direct, use=foot+base,
+
+foot+base|foot base fragment,
+	am, bce, bw, hs, mir, msgr, npc, xenl, AX, XT,
+	cols#80, it#8, lines#24,
+	acsc=``aaffggiijjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
+	bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[H\E[2J, cr=\r,
+	cub1=^H, cud1=\n, dim=\E[2m, ech=\E[%p1%dX, ed=\E[J, el=\E[K,
+	el1=\E[1K, flash=\E]555\E\\, ind=\n, invis=\E[8m,
+	is2=\E[!p\E[?3;4l\E[4l\E>, kbs=^?, kcbt=\E[Z,
+	oc=\E]104\E\\, op=\E[39;49m, rev=\E[7m, ri=\EM, rmacs=\E(B,
+	rmam=\E[?7l, rmkx=\E[?1l\E>, rmso=\E[27m, rmul=\E[24m,
+	rs1=\Ec, rs2=\E[!p\E[?3;4l\E[4l\E>,
+	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
+	    %?%p1%p3%|%t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
+	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smkx=\E[?1h\E=,
+	smso=\E[7m, smul=\E[4m, E3=\E[3J, use=att610+cvis,
+	use=ansi+csr, use=ansi+cup, use=ansi+enq, use=ansi+local,
+	use=ansi+idc, use=ansi+idl, use=ansi+rca2, use=ansi+rep,
+	use=ansi+tabs, use=ecma+index, use=ecma+italics,
+	use=ecma+strikeout, use=xterm+alt+title,
+	use=xterm+pcfkeys, use=xterm+sm+1006, use=xterm+tmux2,
 
 ######## WEB CLIENTS
 
@@ -27108,5 +27172,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add workaround for Windows Terminal's problems with CR/LF mapping to
 #	  ms-terminal (patch by Juergen Pfeifer).
 #	+ review/update current Windows Terminal vs ms-terminal -TD
+#
+# 2021-07-31
+#	+ add extensions in xterm+tmux and ecma+strikeout to ms-terminal,
+#	  but cancel the non-working Cr and Ms capabilities -TD
+#	+ add foot and foot-direct -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
