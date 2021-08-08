@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.65 2021/05/04 23:15:34 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.66 2021/08/08 00:09:37 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -93,14 +93,14 @@ _nc_copy_entry(ENTRY * oldp)
 
 /* save a copy of string in the string buffer */
 NCURSES_EXPORT(char *)
-_nc_save_str(const char *const string)
+_nc_save_str(const char *string)
 {
     char *result = 0;
     size_t old_next_free = next_free;
     size_t len;
 
     if (!VALID_STRING(string))
-	return _nc_save_str("");
+	string = "";
     len = strlen(string) + 1;
 
     if (len == 1 && next_free != 0) {

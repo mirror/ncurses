@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.971 2021/07/17 17:12:05 tom Exp $
+dnl $Id: aclocal.m4,v 1.972 2021/08/07 21:01:11 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -7027,7 +7027,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 105 updated: 2021/01/02 17:09:14
+dnl CF_SHARED_OPTS version: 106 updated: 2021/08/07 16:59:57
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -7197,6 +7197,10 @@ CF_EOF
 		if test "$cf_cv_ldflags_search_paths_first" = yes; then
 			LDFLAGS="$LDFLAGS -Wl,-search_paths_first"
 		fi
+		;;
+	(haiku*)
+		CF_SHARED_SONAME
+		MK_SHARED_LIB='${CC} ${LDFLAGS} ${CFLAGS} -shared -Wl,-soname,'$cf_cv_shared_soname',-stats,-lc -o $[@]'
 		;;
 	(hpux[[7-8]]*)
 		# HP-UX 8.07 ld lacks "+b" option used for libdir search-list

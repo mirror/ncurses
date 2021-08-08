@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2006-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.9 2020/02/02 23:34:34 tom Exp $
+ * $Id: foldkeys.c,v 1.10 2021/08/08 00:41:57 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -146,7 +146,8 @@ demo_foldkeys(void)
 	int first, second;
 	char final[2];
 	char *value;
-	size_t need = 0;
+	size_t need;
+
 	if (info[j].state == 0
 	    && sscanf(info[j].value,
 		      "\033[%d;%d%c",
@@ -156,6 +157,7 @@ demo_foldkeys(void)
 	    && *final != ';'
 	    && (need = strlen(info[j].value)) != 0
 	    && (value = strdup(info[j].value)) != 0) {
+	    (void) need;	/* _nc_SLIMIT is normally nothing  */
 	    _nc_SPRINTF(value, _nc_SLIMIT(need) "\033[%d%c", first, *final);
 	    for (k = 0; k < info_len; ++k) {
 		if (info[k].state == 0

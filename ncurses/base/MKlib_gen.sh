@@ -2,10 +2,10 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.68 2020/08/23 00:02:29 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.69 2021/08/07 21:17:46 tom Exp $)
 #
 ##############################################################################
-# Copyright 2018,2020 Thomas E. Dickey                                       #
+# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -69,10 +69,19 @@ USE="$3"
 
 # A patch discussed here:
 #	https://gcc.gnu.org/ml/gcc-patches/2014-06/msg02185.html
+#
 # introduces spurious #line markers into the preprocessor output.  The result
 # appears in gcc 5.0 and (with modification) in 5.1, making it necessary to
 # determine if we are using gcc, and if so, what version because the proposed
 # solution uses a nonstandard option.
+#
+# As illustrated in
+#	https://gcc.gnu.org/bugzilla/show_bug.cgi?id=60723
+#
+# gcc developers chose to ignore the problems with this, and summarized those
+# as "intriguing problems" in
+#	https://gcc.gnu.org/gcc-5/porting_to.html
+
 PRG=`echo "$1" | "$AWK" '{ sub(/^[ 	]*/,""); sub(/[ 	].*$/, ""); print; }' || exit 0`
 FSF=`("$PRG" --version 2>/dev/null || exit 0) | fgrep "Free Software Foundation" | head -n 1`
 ALL=`"$PRG" -dumpversion 2>/dev/null || exit 0`

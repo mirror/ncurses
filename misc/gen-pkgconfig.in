@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.51 2021/04/17 22:22:29 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.52 2021/08/07 21:36:33 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
@@ -93,6 +93,9 @@ do
 		continue
 		;;
 	-Wl,-z,*) # ignore flags used to manipulate shared image
+		continue
+		;;
+	-Wl,--dynamic-linker*) # ignore ELF interpreter
 		continue
 		;;
 	-L*)
