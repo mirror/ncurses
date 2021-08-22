@@ -900,6 +900,7 @@
 ./ncurses/new_pair.h
 ./ncurses/report_hashing.c
 ./ncurses/report_offsets.c
+./ncurses/term.priv.h
 ./ncurses/tinfo/MKcaptab.awk
 ./ncurses/tinfo/MKcaptab.sh
 ./ncurses/tinfo/MKcodes.awk

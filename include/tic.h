@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.82 2021/03/20 16:06:15 tom Exp $
+ * $Id: tic.h,v 1.84 2021/08/21 00:24:45 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -337,7 +337,8 @@ extern NCURSES_EXPORT_VAR(const struct tinfo_fkeys) _nc_tinfo_fkeys[];
 
 extern NCURSES_EXPORT_VAR(int) _nc_tparm_err;
 
-extern NCURSES_EXPORT(int) _nc_tparm_analyze(const char *, char **, int *);
+extern NCURSES_EXPORT(int) _nc_tparm_analyze(TERMINAL *, const char *, char **, int *);
+extern NCURSES_EXPORT(void) _nc_reset_tparm(TERMINAL *);
 
 /* lib_trace.c */
 extern NCURSES_EXPORT_VAR(unsigned) _nc_tracing;

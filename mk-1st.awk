@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.122 2021/07/18 18:47:20 tom Exp $
+# $Id: mk-1st.awk,v 1.123 2021/08/15 20:01:44 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -62,7 +62,7 @@
 # Notes:
 #	CLIXs nawk does not like underscores in command-line variable names.
 #	Mixed-case variable names are ok.
-#	HP/UX requires shared libraries to have executable permissions.
+#	HP-UX requires shared libraries to have executable permissions.
 #
 function is_ticlib() {
 		return ( subset ~ /^ticlib$/ );

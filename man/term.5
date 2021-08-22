@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.38 2020/07/25 21:56:02 tom Exp $
+.\" $Id: term.5,v 1.40 2021/08/15 19:38:47 tom Exp $
 .TH term 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -286,7 +286,7 @@ to expect a different set of capabilities
 than are actually present in the file.
 Either the database may have been updated since
 .B setupterm
-has been recompiled
+was recompiled
 (resulting in extra unrecognized entries in the file)
 or the program may have been recompiled more recently
 than the database was updated
@@ -400,7 +400,7 @@ Compiled entries are limited to 32768 bytes because offsets into the
 The legacy format could have supported 32768-byte entries,
 but was limited a virtual memory page's 4096 bytes.
 .SH FILES
-\*d/*/*	compiled terminal capability data base
+\*d/*/*	compiled terminal capability database
 .SH SEE ALSO
 \fBcurses\fR(3X), \fBterminfo\fR(\*n).
 .SH AUTHORS

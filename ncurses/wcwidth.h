@@ -59,6 +59,16 @@
  * Latest version: http://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
  */
 
+#ifndef _WCWIDTH_H_incl
+#define _WCWIDTH_H_incl 1
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+#include <ncurses_cfg.h>
+#include <ncurses_dll.h>
+
 #include <wchar.h>
 
 struct interval {
@@ -310,3 +320,9 @@ NCURSES_EXPORT(int) mk_wcswidth_cjk(const wchar_t *pwcs, size_t n)
 
   return width;
 }
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif /* _WCWIDTH_H_incl 1 */

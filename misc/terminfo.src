@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.907 $
-#	$Date: 2021/08/01 00:06:57 $
+#	$Revision: 1.909 $
+#	$Date: 2021/08/17 00:26:19 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5244,12 +5244,12 @@ nsterm-direct|nsterm with direct-color indexing,
 
 xterm+direct16|xterm with direct-color indexing,
 	CO#16,
-	setab=\E[%?%p1%{8}%<%t4%p1%d%e%?%p1%{16}%<%t%p1%{92}%+%e48:2
-	      ::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&%d
+	setab=\E[%?%p1%{8}%<%t4%p1%d%e%?%p1%{16}%<%t%p1%{92}%+%d%e48
+	      :2::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&
+	      %d%;%;m,
+	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%?%p1%{16}%<%t%p1%'R'%+%d%e38:
+	      2::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&%d
 	      %;%;m,
-	setaf=\E[%?%p1%{8}%<%t3%p1%d%e%?%p1%{16}%<%t%p1%'R'%+%e38:2:
-	      :%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&%d%;
-	      %;m,
 	setb@, setf@, use=xterm+direct,
 
 xterm-direct16|xterm with direct-colors and 16 indexed colors,
@@ -7238,7 +7238,7 @@ terminator|Terminator no line wrap,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p5%t;2%;%?%p1%p3%|%t;7
 	    %;m%?%p9%t\E(0%e\E(B%;,
 	sgr0=\E[m\E(B, smacs=\E(0, smir=\E[4h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, tsl=\E]2;%p1, vpa=\E[%i%p1%dd,
+	smul=\E[4m, tbc=\E[3g, tsl=\E]2;, vpa=\E[%i%p1%dd,
 	use=vt220+pcedit, use=ecma+italics, use=ecma+index,
 	use=xterm+256setaf, use=xterm+sl-twm,
 	use=xterm+alt1049, use=vt220+cvis,
@@ -27177,5 +27177,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add extensions in xterm+tmux and ecma+strikeout to ms-terminal,
 #	  but cancel the non-working Cr and Ms capabilities -TD
 #	+ add foot and foot-direct -TD
+#
+# 2021-08-15
+#	+ fix missing "%d" for setaf/setab code 8-15 in xterm+direct16 (report
+#	  by Florian Weimer) -TD
+#
+# 2021-08-16
+#	+ corrected tsl capability for terminator -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

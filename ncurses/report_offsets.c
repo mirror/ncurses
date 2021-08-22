@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -33,7 +33,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: report_offsets.c,v 1.21 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: report_offsets.c,v 1.22 2021/08/19 19:51:33 tom Exp $")
 
 #define show_size(type) \
 	flag = 0; \
@@ -175,6 +175,7 @@ main(void)
     show_offset(TERMINAL, Nttyb);
     show_offset(TERMINAL, _baudrate);
     show_offset(TERMINAL, _termname);
+    show_offset(TERMINAL, tparm_state);
 #if HAVE_INIT_EXTENDED_COLOR
     show_COLORS(TERMINAL, type2);
 #endif
@@ -187,6 +188,15 @@ main(void)
 #endif
 
     printf("\n");
+    show_size(TPARM_STATE);
+    show_offset(TPARM_STATE, stack);
+    show_offset(TPARM_STATE, stack_ptr);
+    show_offset(TPARM_STATE, out_buff);
+    show_offset(TPARM_STATE, fmt_buff);
+    show_offset(TPARM_STATE, static_vars);
+    show_TRACES(TPARM_STATE, tname);
+
+    printf("\n");
     show_size(WINDOW);
     show_WIDECH(WINDOW, _bkgrnd);
     show_COLORS(WINDOW, _color);
@@ -194,6 +204,11 @@ main(void)
     printf("\n");
     show_size(NCURSES_GLOBALS);
     show_offset(NCURSES_GLOBALS, init_signals);
+    show_offset(NCURSES_GLOBALS, tgetent_cache);
+    show_offset(NCURSES_GLOBALS, dbd_vars);
+#if HAVE_TSEARCH
+    show_offset(NCURSES_GLOBALS, cached_tparm);
+#endif
     show_DRIVER(NCURSES_GLOBALS, term_driver);
     show_NORMAL(NCURSES_GLOBALS, _nc_windowlist);
 #if USE_HOME_TERMINFO
@@ -212,10 +227,13 @@ main(void)
 
     printf("\n");
     show_size(NCURSES_PRESCREEN);
+    show_offset(NCURSES_PRESCREEN, tparm_state);
     show_offset(NCURSES_PRESCREEN, saved_tty);
     show_offset(NCURSES_PRESCREEN, use_tioctl);
     show_offset(NCURSES_PRESCREEN, _outch);
+#ifndef USE_SP_RIPOFF
     show_NORMAL(NCURSES_PRESCREEN, rippedoff);
+#endif
 #if NCURSES_NO_PADDING
     show_OPTION(NCURSES_PRESCREEN, _no_padding);
 #endif
@@ -223,6 +241,9 @@ main(void)
     show_offset(NCURSES_PRESCREEN, real_acs_map);
 #else
     show_REENTR(NCURSES_PRESCREEN, real_acs_map);
+#endif
+#if BROKEN_LINKER || USE_REENTRANT
+    show_TRACES(NCURSES_PRESCREEN, _outchars);
 #endif
 
     return EXIT_SUCCESS;

@@ -32,7 +32,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.head,v 1.40 2021/06/17 21:30:22 tom Exp @
+  * @Id: terminfo.head,v 1.41 2021/08/15 19:32:53 tom Exp @
   * Head of terminfo man page ends here
   ****************************************************************************
   * Copyright 2018-2020,2021 Thomas E. Dickey                                *
@@ -62,7 +62,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.tail,v 1.101 2021/06/17 21:30:22 tom Exp @
+  * @Id: terminfo.tail,v 1.102 2021/08/21 22:55:23 tom Exp @
   *.in -2
   *.in +2
   *.in -2
@@ -87,7 +87,7 @@
 
 
 </PRE><H2><a name="h2-NAME">NAME</a></H2><PRE>
-       terminfo - terminal capability data base
+       terminfo - terminal capability database
 
 
 </PRE><H2><a name="h2-SYNOPSIS">SYNOPSIS</a></H2><PRE>
@@ -95,7 +95,7 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       <EM>Terminfo</EM>  is  a data base describing terminals, used by screen-oriented
+       <EM>Terminfo</EM>  is  a  database describing terminals, used by screen-oriented
        programs  such  as  <STRONG>nvi(1)</STRONG>,  <STRONG>lynx(1)</STRONG>,   <STRONG>mutt(1)</STRONG>,   and   other   curses
        applications,  using  high-level calls to libraries such as <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>.
        It is also used via low-level calls by  non-curses  applications  which
@@ -106,7 +106,7 @@
        have, by specifying how to perform screen operations, and by specifying
        padding requirements and initialization sequences.
 
-       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210710).
+       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210821).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -1475,7 +1475,27 @@
             these are simply two different sets of variables, whose values are
             not reset between calls to <STRONG><A HREF="curs_terminfo.3x.html">tparm(3x)</A></STRONG>.  However, that fact  is  not
             documented in other implementations.  Relying on it will adversely
-            impact portability to other implementations.
+            impact portability to other implementations:
+
+            <STRONG>o</STRONG>   SVr4 curses  stores  the  <EM>static</EM>  variables  in  the  <STRONG>TERMINAL</STRONG>
+                structure  (declared  in <STRONG>term.h</STRONG>), and the <EM>dynamic</EM> <EM>variables</EM> on
+                the stack in  the  <STRONG>tparm</STRONG>  function.   The  former  are  zeroed
+                automatically  when the <STRONG>setupterm</STRONG> function allocates the data.
+                The latter are set only by a <STRONG>%P</STRONG> operator.  A <STRONG>%g</STRONG>  for  a  given
+                variable   without   first   setting  it  with  <STRONG>%P</STRONG>  will  give
+                unpredictable results.
+
+            <STRONG>o</STRONG>   Solaris XPG4 curses does not distinguish between  <EM>dynamic</EM>  and
+                <EM>static</EM>  variables.  They are the same.  Like SVr4 curses, XPG4
+                curses does not initialize these explicitly.
+
+            <STRONG>o</STRONG>   Before version 6.3, ncurses stores  both  <EM>dynamic</EM>  and  <EM>static</EM>
+                variables in persistent storage, initialized to zeros.
+
+            <STRONG>o</STRONG>   Beginning  with version 6.3, ncurses stores <EM>static</EM> and <EM>dynamic</EM>
+                variables  in  the  same  manner  as   SVr4.    Unlike   other
+                implementations,  ncurses  zeros  dynamic variables before the
+                first <STRONG>%g</STRONG> or <STRONG>%P</STRONG> operator.
 
        <STRONG>%'</STRONG><EM>c</EM><STRONG>'</STRONG> char constant <EM>c</EM>
 
@@ -2094,7 +2114,6 @@
          board of squares            ACS_BOARD      #         h        0x68
          lantern symbol              ACS_LANTERN    #         i        0x69
          lower right corner          ACS_LRCORNER   +         j        0x6a
-
          upper right corner          ACS_URCORNER   +         k        0x6b
          upper left corner           ACS_ULCORNER   +         l        0x6c
          lower left corner           ACS_LLCORNER   +         m        0x6d

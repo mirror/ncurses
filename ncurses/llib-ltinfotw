@@ -76,6 +76,19 @@ NCURSES_BOOL _nc_is_file_path(
 int	_nc_env_access(void)
 		{ return(*(int *)0); }
 
+#undef _nc_safe_fopen
+FILE	*_nc_safe_fopen(
+		const char *path,
+		const char *mode)
+		{ return(*(FILE **)0); }
+
+#undef _nc_safe_open3
+int	_nc_safe_open3(
+		const char *path,
+		int	flags,
+		mode_t	mode)
+		{ return(*(int *)0); }
+
 /* ./tinfo/add_tries.c */
 
 #undef _nc_add_to_try
@@ -984,6 +997,7 @@ int	_nc_tparm_err;
 
 #undef _nc_tparm_analyze
 int	_nc_tparm_analyze(
+		TERMINAL *term,
 		const char *string,
 		char	**p_is_s,
 		int	*_nc_popcount)
@@ -1007,6 +1021,11 @@ char	*_nc_tiparm(
 		const char *string,
 		...)
 		{ return(*(char **)0); }
+
+#undef _nc_reset_tparm
+void	_nc_reset_tparm(
+		TERMINAL *term)
+		{ /* void */ }
 
 /* ./tinfo/lib_tputs.c */
 

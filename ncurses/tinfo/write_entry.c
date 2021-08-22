@@ -51,7 +51,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.117 2021/06/26 20:43:19 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.118 2021/08/15 20:07:11 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -190,7 +190,7 @@ make_db_root(const char *path)
 #else
 	struct stat statbuf;
 
-	if ((rc = stat(path, &statbuf)) < 0) {
+	if ((rc = stat(path, &statbuf)) == -1) {
 	    rc = mkdir(path
 #ifndef _NC_WINDOWS
 		       ,0777
@@ -442,7 +442,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
     write_file(filename, tp);
 
     if (start_time == 0) {
-	if (stat(filename, &statbuf) < 0
+	if (stat(filename, &statbuf) == -1
 	    || (start_time = statbuf.st_mtime) == 0) {
 	    _nc_syserr_abort("error obtaining time from %s/%s",
 			     _nc_tic_dir(0), filename);

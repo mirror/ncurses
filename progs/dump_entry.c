@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.187 2021/06/12 22:06:55 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.188 2021/08/15 20:00:48 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -85,7 +85,7 @@ static int indent = 8;
 /* cover various ports and variants of terminfo */
 #define V_ALLCAPS	0	/* all capabilities (SVr4, XSI, ncurses) */
 #define V_SVR1		1	/* SVR1, Ultrix */
-#define V_HPUX		2	/* HP/UX */
+#define V_HPUX		2	/* HP-UX */
 #define V_AIX		3	/* AIX */
 #define V_BSD		4	/* BSD */
 

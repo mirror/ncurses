@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.51 2021/04/17 17:39:43 tom Exp $
+ * $Id: ditto.c,v 1.52 2021/08/15 20:07:11 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -182,7 +182,7 @@ open_tty(char *path)
 #else
     struct stat sb;
 
-    if (stat(path, &sb) < 0)
+    if (stat(path, &sb) == -1)
 	failed(path);
     if ((sb.st_mode & S_IFMT) != S_IFCHR) {
 	errno = ENOTTY;

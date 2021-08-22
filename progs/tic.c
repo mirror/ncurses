@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.296 2021/06/26 19:44:08 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.301 2021/08/21 00:24:45 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -458,7 +458,7 @@ open_input(const char *filename, char *alt_file)
 
     if (!strcmp(filename, "-")) {
 	fp = copy_input(stdin, STDIN_NAME, alt_file);
-    } else if (stat(filename, &sb) < 0) {
+    } else if (stat(filename, &sb) == -1) {
 	fprintf(stderr, "%s: %s %s\n", _nc_progname, filename, strerror(errno));
 	ExitProgram(EXIT_FAILURE);
     } else if ((mode = (sb.st_mode & S_IFMT)) == S_IFDIR
@@ -1922,19 +1922,63 @@ is_user_capability(const char *name)
     return result;
 }
 
+static bool
+line_capability(const char *name)
+{
+    bool result = FALSE;
+    static const char *table[] =
+    {
+	"csr",			/* change_scroll_region          */
+	"clear",		/* clear_screen                  */
+	"ed",			/* clr_eos                       */
+	"cwin",			/* create_window                 */
+	"cup",			/* cursor_address                */
+	"cud1",			/* cursor_down                   */
+	"home",			/* cursor_home                   */
+	"mrcup",		/* cursor_mem_address            */
+	"ll",			/* cursor_to_ll                  */
+	"cuu1",			/* cursor_up                     */
+	"dl1",			/* delete_line                   */
+	"hd",			/* down_half_line                */
+	"flash",		/* flash_screen                  */
+	"ff",			/* form_feed                     */
+	"il1",			/* insert_line                   */
+	"nel",			/* newline                       */
+	"dl",			/* parm_delete_line              */
+	"cud",			/* parm_down_cursor              */
+	"indn",			/* parm_index                    */
+	"il",			/* parm_insert_line              */
+	"rin",			/* parm_rindex                   */
+	"cuu",			/* parm_up_cursor                */
+	"mc0",			/* print_screen                  */
+	"vpa",			/* row_address                   */
+	"ind",			/* scroll_forward                */
+	"ri",			/* scroll_reverse                */
+	"hu",			/* up_half_line                  */
+    };
+    size_t n;
+    for (n = 0; n < SIZEOF(table); ++n) {
+	if (!strcmp(name, table[n])) {
+	    result = TRUE;
+	    break;
+	}
+    }
+    return result;
+}
+
 /*
  * Make a quick sanity check for the parameters which are used in the given
  * strings.  If there are no "%p" tokens, then there should be no other "%"
  * markers.
  */
 static void
-check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
+check_params(TERMTYPE2 *tp, const char *name, const char *value, int extended)
 {
     int expected = expected_params(name);
     int actual = 0;
     int n;
     bool params[1 + NUM_PARM];
-    char *s = value;
+    const char *s = value;
 
 #ifdef set_top_margin_parm
     if (!strcmp(name, "smgbp")
@@ -2000,10 +2044,11 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
      * may not have been fully translated.  Also, tparm does its own analysis.
      * Report differences here.
      */
+    _nc_reset_tparm(NULL);
     if (actual >= 0) {
 	char *p_is_s[NUM_PARM];
 	int popcount;
-	int analyzed = _nc_tparm_analyze(value, p_is_s, &popcount);
+	int analyzed = _nc_tparm_analyze(NULL, value, p_is_s, &popcount);
 	if (analyzed < popcount) {
 	    analyzed = popcount;
 	}
@@ -2021,52 +2066,32 @@ check_params(TERMTYPE2 *tp, const char *name, char *value, int extended)
 		_nc_warning("tparm analyzed %d parameters for %s, expected %d",
 			    analyzed, name, actual);
 	    }
-	}
-    }
-}
+	} else if (expected > 0
+		   && actual == expected
+		   && guess_tparm_type(expected, p_is_s) == Numbers) {
+	    int limit = 1;
 
-static bool
-line_capability(const char *name)
-{
-    bool result = FALSE;
-    static const char *table[] =
-    {
-	"csr",			/* change_scroll_region          */
-	"clear",		/* clear_screen                  */
-	"ed",			/* clr_eos                       */
-	"cwin",			/* create_window                 */
-	"cup",			/* cursor_address                */
-	"cud1",			/* cursor_down                   */
-	"home",			/* cursor_home                   */
-	"mrcup",		/* cursor_mem_address            */
-	"ll",			/* cursor_to_ll                  */
-	"cuu1",			/* cursor_up                     */
-	"dl1",			/* delete_line                   */
-	"hd",			/* down_half_line                */
-	"flash",		/* flash_screen                  */
-	"ff",			/* form_feed                     */
-	"il1",			/* insert_line                   */
-	"nel",			/* newline                       */
-	"dl",			/* parm_delete_line              */
-	"cud",			/* parm_down_cursor              */
-	"indn",			/* parm_index                    */
-	"il",			/* parm_insert_line              */
-	"rin",			/* parm_rindex                   */
-	"cuu",			/* parm_up_cursor                */
-	"mc0",			/* print_screen                  */
-	"vpa",			/* row_address                   */
-	"ind",			/* scroll_forward                */
-	"ri",			/* scroll_reverse                */
-	"hu",			/* up_half_line                  */
-    };
-    size_t n;
-    for (n = 0; n < SIZEOF(table); ++n) {
-	if (!strcmp(name, table[n])) {
-	    result = TRUE;
-	    break;
+	    if (!strcmp(name, "setf")
+		|| !strcmp(name, "setb")
+		|| !strcmp(name, "setaf")
+		|| !strcmp(name, "setab")) {
+		if ((limit = max_colors) > 256)
+		    limit = 256;
+	    } else if (line_capability(name)) {
+		limit = 24;
+	    } else if (is_user_capability(name) < 0) {
+		limit = 80;
+	    }
+	    for (n = 0; n < limit; ++n) {
+		_nc_reset_tparm(NULL);
+		(void) TPARM_9(value, n, n, n, n, n, n, n, n, n);
+		if (_nc_tparm_err)
+		    _nc_warning("problem%s in tparm(%s, %d, ...)",
+				(_nc_tparm_err == 1) ? "" : "s",
+				name, n);
+	    }
 	}
     }
-    return result;
 }
 
 /*
@@ -2206,8 +2231,9 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 	next += strlen(next) + 1;
     }
 
+    _nc_reset_tparm(NULL);
     expect = tparm_type(name);
-    nparam = _nc_tparm_analyze(value, p_is_s, &ignored);
+    nparam = _nc_tparm_analyze(NULL, value, p_is_s, &ignored);
     actual = guess_tparm_type(nparam, p_is_s);
 
     if (expect != actual) {
@@ -2215,6 +2241,7 @@ check_1_infotocap(const char *name, NCURSES_CONST char *value, int count)
 	actual = Other;
     }
 
+    _nc_reset_tparm(NULL);
     switch (actual) {
     case Num_Str:
 	result = TPARM_2(value, numbers[1], strings[2]);
@@ -2403,8 +2430,8 @@ check_infotocap(TERMTYPE2 *tp, int i, const char *value)
 	    || !strcmp(name, "setb")
 	    || !strcmp(name, "setaf")
 	    || !strcmp(name, "setab")) {
-	    if ((limit = max_colors) > 16)
-		limit = 16;
+	    if ((limit = max_colors) > 256)
+		limit = 256;
 	}
 	for (count = 0; count < limit; ++count) {
 	    char *ti_check = check_1_infotocap(name, ti_value, count);

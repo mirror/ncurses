@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.101 2021/06/17 21:30:22 tom Exp $
+.\" $Id: terminfo.tail,v 1.102 2021/08/21 22:55:23 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -483,7 +483,31 @@ The terms \*(``static\*('' and \*(``dynamic\*('' are misleading.
 Historically, these are simply two different sets of variables,
 whose values are not reset between calls to \fBtparm\fP(3X).
 However, that fact is not documented in other implementations.
-Relying on it will adversely impact portability to other implementations.
+Relying on it will adversely impact portability to other implementations:
+.RS
+.bP
+SVr4 curses stores the \fIstatic\fP variables in the \fBTERMINAL\fP
+structure (declared in \fBterm.h\fP), and the \fIdynamic variables\fP
+on the stack in the \fBtparm\fP function.
+The former are zeroed automatically when the \fBsetupterm\fP function
+allocates the data.
+The latter are set only by a \fB%P\fP operator.
+A \fB%g\fP for a given variable without first setting it with \fB%P\fP
+will give unpredictable results.
+.bP
+Solaris XPG4 curses does not distinguish between \fIdynamic\fP and
+\fIstatic\fP variables.
+They are the same.
+Like SVr4 curses, XPG4 curses does not initialize these explicitly.
+.bP
+Before version 6.3, ncurses stores both \fIdynamic\fP and \fIstatic\fP
+variables in persistent storage, initialized to zeros.
+.bP
+Beginning with version 6.3, ncurses stores \fIstatic\fP and \fIdynamic\fP
+variables in the same manner as SVr4.
+Unlike other implementations, ncurses zeros dynamic variables 
+before the first \fB%g\fP or \fB%P\fP operator.
+.RE
 .TP
 \fB%'\fP\fIc\fP\fB'\fP
 char constant \fIc\fP

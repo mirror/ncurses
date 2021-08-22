@@ -61,7 +61,7 @@
 
 #endif
 
-MODULE_ID("$Id: new_pair.c,v 1.22 2021/05/08 15:26:34 tom Exp $")
+MODULE_ID("$Id: new_pair.c,v 1.23 2021/08/16 22:11:26 tom Exp $")
 
 #if NCURSES_EXT_COLORS
 
@@ -106,7 +106,7 @@ dumpit(SCREEN *sp, int pair, const char *tag)
     size_t have = sizeof(bigbuf);
 
     _nc_STRCPY(p, tag, have);
-    for (n = 0; n < sp->_pair_limit; ++n) {
+    for (n = 0; n < sp->_pair_alloc; ++n) {
 	if (list[n].mode != cpFREE) {
 	    p += strlen(p);
 	    if ((size_t) (p - bigbuf) + 50 > have)

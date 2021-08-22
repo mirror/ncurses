@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.40 2021/06/17 21:30:22 tom Exp $
+.\" $Id: terminfo.head,v 1.41 2021/08/15 19:32:53 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -54,12 +54,12 @@
 .el    .in -2
 ..
 .SH NAME
-terminfo \- terminal capability data base
+terminfo \- terminal capability database
 .SH SYNOPSIS
 \*d/*/*
 .SH DESCRIPTION
 .I Terminfo
-is a data base describing terminals,
+is a database describing terminals,
 used by screen-oriented programs such as
 \fBnvi\fR(1),
 \fBlynx\fR(1),

@@ -1,5 +1,5 @@
 <!--
-  $Id: announce.html.in,v 1.100 2021/06/17 21:30:22 tom Exp $
+  $Id: announce.html.in,v 1.101 2021/08/15 20:02:52 tom Exp $
   ****************************************************************************
   * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   *                                                                          *
@@ -1605,7 +1605,7 @@ diff --git a/st.info b/st.info
       <p>The <span class="main-name">ncurses</span> utilities have
       options to allow you to filter terminfo entries for use with
       less capable <em>curses</em>/<em>terminfo</em> versions such
-      as the HP/UX and AIX ports.</p>
+      as the HP-UX and AIX ports.</p>
     </li>
   </ul>
 

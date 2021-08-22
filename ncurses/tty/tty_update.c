@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.310 2021/02/06 14:24:38 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.311 2021/08/16 21:51:11 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -1325,8 +1325,8 @@ TransformLine(NCURSES_SP_DCLx int const lineno)
 		newPair = GetPair(newLine[n]);
 		if (oldPair != newPair
 		    && unColor(oldLine[n]) == unColor(newLine[n])) {
-		    if (oldPair < SP_PARM->_pair_limit
-			&& newPair < SP_PARM->_pair_limit
+		    if (oldPair < SP_PARM->_pair_alloc
+			&& newPair < SP_PARM->_pair_alloc
 			&& (isSamePair(SP_PARM->_color_pairs[oldPair],
 				       SP_PARM->_color_pairs[newPair]))) {
 			SetPair(oldLine[n], GetPair(newLine[n]));

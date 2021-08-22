@@ -48,7 +48,7 @@ ENTRY	*_nc_copy_entry(
 
 #undef _nc_save_str
 char	*_nc_save_str(
-		const char *const string)
+		const char *string)
 		{ return(*(char **)0); }
 
 #undef _nc_wrap_entry

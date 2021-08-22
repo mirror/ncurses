@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.642 2021/06/26 20:23:20 tom Exp $
+ * $Id: curses.priv.h,v 1.644 2021/08/18 21:55:42 tom Exp $
  *
  *	curses.priv.h
  *
@@ -396,7 +396,7 @@ typedef union {
 
 #include <nc_panel.h>
 
-#include <term.h>
+#include <term.priv.h>
 #include <nc_termios.h>
 
 #define IsPreScreen(sp)      (((sp) != 0) && sp->_prescreen)
@@ -799,12 +799,6 @@ typedef struct _SLK {
 
 #endif	/* USE_TERMLIB */
 
-typedef	struct {
-	WINDOW *win;		/* the window used in the hook      */
-	int	line;		/* lines to take, < 0 => from bottom*/
-	int	(*hook)(WINDOW *, int); /* callback for user	    */
-} ripoff_t;
-
 #if USE_GPM_SUPPORT
 #undef buttons			/* term.h defines this, and gpm uses it! */
 #include <gpm.h>
@@ -832,16 +826,6 @@ typedef int (*TYPE_Gpm_GetEvent) (Gpm_Event *);
 #endif /* HAVE_LIBDL */
 #endif /* USE_GPM_SUPPORT */
 
-typedef struct {
-    long sequence;
-    bool last_used;
-    char *fix_sgr0;		/* this holds the filtered sgr0 string */
-    char *last_bufp;		/* help with fix_sgr0 leak */
-    TERMINAL *last_term;
-} TGETENT_CACHE;
-
-#define TGETENT_MAX 4
-
 /*
  * When converting from terminfo to termcap, check for cases where we can trim
  * octal escapes down to 2-character form.  It is useful for terminfo format
@@ -851,46 +835,6 @@ typedef struct {
 #define MIN_TC_FIXUPS	4
 
 #define isoctal(c) ((c) >= '0' && (c) <= '7')
-
-/*
- * State of tparm().
- */
-#define STACKSIZE 20
-
-typedef struct {
-	union {
-		int	num;
-		char	*str;
-	} data;
-	bool num_type;
-} STACK_FRAME;
-
-#define NUM_VARS 26
-
-typedef struct {
-	const char	*tparam_base;
-
-	STACK_FRAME	stack[STACKSIZE];
-	int		stack_ptr;
-
-	char		*out_buff;
-	size_t		out_size;
-	size_t		out_used;
-
-	char		*fmt_buff;
-	size_t		fmt_size;
-
-	int		dynamic_var[NUM_VARS];
-	int		static_vars[NUM_VARS];
-#ifdef TRACE
-	const char	*tname;
-#endif
-} TPARM_STATE;
-
-typedef struct {
-    char *text;
-    size_t size;
-} TRACEBUF;
 
 /*
  * The filesystem database normally uses a single-letter for the lower level
@@ -922,131 +866,7 @@ struct DriverTCB; /* Terminal Control Block forward declaration */
 #define INIT_TERM_DRIVER()	/* nothing */
 #endif
 
-typedef struct {
-    const char *name;
-    char *value;
-} ITERATOR_VARS;
-
-/*
- * Global data which is not specific to a screen.
- */
-typedef struct {
-	SIG_ATOMIC_T	have_sigtstp;
-	SIG_ATOMIC_T	have_sigwinch;
-	SIG_ATOMIC_T	cleanup_nested;
-
-	bool		init_signals;
-	bool		init_screen;
-
-	char		*comp_sourcename;
-	char		*comp_termtype;
-
-	bool		have_tic_directory;
-	bool		keep_tic_directory;
-	const char	*tic_directory;
-
-	char		*dbi_list;
-	int		dbi_size;
-
-	char		*first_name;
-	char		**keyname_table;
-	int		init_keyname;
-
-	int		slk_format;
-
-	int		getstr_limit;	/* getstr_limit based on POSIX LINE_MAX */
-
-	char		*safeprint_buf;
-	size_t		safeprint_used;
-
-	TGETENT_CACHE	tgetent_cache[TGETENT_MAX];
-	int		tgetent_index;
-	long		tgetent_sequence;
-
-	char		*dbd_blob;	/* string-heap for dbd_list[] */
-	char		**dbd_list;	/* distinct places to look for data */
-	int		dbd_size;	/* length of dbd_list[] */
-	time_t		dbd_time;	/* cache last updated */
-	ITERATOR_VARS	dbd_vars[dbdLAST];
-
-#if HAVE_TSEARCH
-	void		*cached_tparm;
-	int		count_tparm;
-#endif /* HAVE_TSEARCH */
-
-#ifdef USE_TERM_DRIVER
-	int		(*term_driver)(struct DriverTCB*, const char*, int*);
-#endif
-
-#ifndef USE_SP_WINDOWLIST
-	WINDOWLIST	*_nc_windowlist;
-#define WindowList(sp)	_nc_globals._nc_windowlist
-#endif
-
-#if USE_HOME_TERMINFO
-	char		*home_terminfo;
-#endif
-
-#if !USE_SAFE_SPRINTF
-	int		safeprint_cols;
-	int		safeprint_rows;
-#endif
-
-#ifdef USE_PTHREADS
-	pthread_mutex_t	mutex_curses;
-	pthread_mutex_t	mutex_prescreen;
-	pthread_mutex_t	mutex_screen;
-	pthread_mutex_t	mutex_update;
-	pthread_mutex_t	mutex_tst_tracef;
-	pthread_mutex_t	mutex_tracef;
-	int		nested_tracef;
-	int		use_pthreads;
-#define _nc_use_pthreads	_nc_globals.use_pthreads
-#if USE_PTHREADS_EINTR
-	pthread_t	read_thread;		/* The reading thread */
-#endif
-#endif
-#if USE_WIDEC_SUPPORT
-	char		key_name[MB_LEN_MAX + 1];
-#endif
-
-#ifdef TRACE
-	bool		trace_opened;
-	char		trace_fname[PATH_MAX];
-	int		trace_level;
-	FILE		*trace_fp;
-	int		trace_fd;
-
-	char		*tracearg_buf;
-	size_t		tracearg_used;
-
-	TRACEBUF	*tracebuf_ptr;
-	size_t		tracebuf_used;
-
-	char		tracechr_buf[40];
-
-	char		*tracedmp_buf;
-	size_t		tracedmp_used;
-
-	unsigned char	*tracetry_buf;
-	size_t		tracetry_used;
-
-	char		traceatr_color_buf[2][80];
-	int		traceatr_color_sel;
-	int		traceatr_color_last;
-#if !defined(USE_PTHREADS) && USE_REENTRANT
-	int		nested_tracef;
-#endif
-#endif	/* TRACE */
-
-#if NO_LEAKS
-	bool		leak_checking;
-#endif
-} NCURSES_GLOBALS;
-
 extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
-
-#define N_RIPS 5
 
 /* The limit reserves one byte for a terminating NUL */
 #define my_getstr_limit	(_nc_globals.getstr_limit - 1)
@@ -1056,54 +876,6 @@ extern NCURSES_EXPORT_VAR(NCURSES_GLOBALS) _nc_globals;
 	 : (((n) > my_getstr_limit) \
 	    ? my_getstr_limit \
 	    : (n)))
-
-#ifdef USE_PTHREADS
-typedef struct _prescreen_list {
-	struct _prescreen_list *next;
-	pthread_t id;
-	struct screen *sp;
-} PRESCREEN_LIST;
-#endif
-
-/*
- * Global data which can be swept up into a SCREEN when one is created.
- * It may be modified before the next SCREEN is created.
- */
-typedef struct {
-#ifdef USE_PTHREADS
-	PRESCREEN_LIST *allocated;
-#else
-	struct screen * allocated;
-#endif
-	bool		use_env;
-	bool		filter_mode;
-	attr_t		previous_attr;
-	TPARM_STATE	tparm_state;
-	TTY		*saved_tty;	/* savetty/resetty information	    */
-	bool		use_tioctl;
-	NCURSES_SP_OUTC	_outch;		/* output handler if not putc */
-#ifndef USE_SP_RIPOFF
-	ripoff_t	rippedoff[N_RIPS];
-	ripoff_t	*rsp;
-#endif
-#if NCURSES_NO_PADDING
-	bool		_no_padding;	/* flag to set if padding disabled  */
-#endif
-#if BROKEN_LINKER || USE_REENTRANT
-	chtype		*real_acs_map;
-	int		_LINES;
-	int		_COLS;
-	int		_TABSIZE;
-	int		_ESCDELAY;
-	TERMINAL	*_cur_term;
-#endif
-#ifdef TRACE
-#if BROKEN_LINKER || USE_REENTRANT
-	long		_outchars;
-	const char	*_tputs_trace;
-#endif
-#endif
-} NCURSES_PRESCREEN;
 
 /*
  * Use screen-specific ripoff data (for softkeys) rather than global.
