@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.102 2021/08/21 22:55:23 tom Exp $
+.\" $Id: terminfo.tail,v 1.106 2021/08/28 19:00:29 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -442,8 +442,8 @@ The parameter mechanism uses a stack and special \fB%\fP codes
 to manipulate it.
 Typically a sequence will push one of the
 parameters onto the stack and then print it in some format.
-Print (e.g., "%d") is a special case.
-Other operations, including "%t" pop their operand from the stack.
+Print (e.g., \*(``%d\*('') is a special case.
+Other operations, including \*(``%t\*('' pop their operand from the stack.
 It is noted that more complex operations are often necessary,
 e.g., in the \fBsgr\fP string.
 .PP
@@ -486,14 +486,20 @@ However, that fact is not documented in other implementations.
 Relying on it will adversely impact portability to other implementations:
 .RS
 .bP
-SVr4 curses stores the \fIstatic\fP variables in the \fBTERMINAL\fP
-structure (declared in \fBterm.h\fP), and the \fIdynamic variables\fP
-on the stack in the \fBtparm\fP function.
-The former are zeroed automatically when the \fBsetupterm\fP function
-allocates the data.
-The latter are set only by a \fB%P\fP operator.
+SVr2 curses supported \fIdynamic\fP variables.
+Those are set only by a \fB%P\fP operator.
 A \fB%g\fP for a given variable without first setting it with \fB%P\fP
-will give unpredictable results.
+will give unpredictable results, because dynamic variables are
+an uninitialized local array on the stack in the \fBtparm\fP function.
+.bP
+SVr3.2 curses supported \fIstatic\fP variables.
+Those are an array in the \fBTERMINAL\fP
+structure (declared in \fBterm.h\fP),
+and are zeroed automatically when the \fBsetupterm\fP function
+allocates the data.
+.bP
+SVr4 curses made no further improvements
+to the \fIdynamic/static\fP variable feature.
 .bP
 Solaris XPG4 curses does not distinguish between \fIdynamic\fP and
 \fIstatic\fP variables.
@@ -509,7 +515,7 @@ Unlike other implementations, ncurses zeros dynamic variables
 before the first \fB%g\fP or \fB%P\fP operator.
 .RE
 .TP
-\fB%'\fP\fIc\fP\fB'\fP
+\fB%\(aq\fP\fIc\fP\fB\(aq\fP
 char constant \fIc\fP
 .TP
 \fB%{\fP\fInn\fP\fB}\fP
@@ -557,7 +563,7 @@ on one line.
 The \fB\-f\fP option splits the string into lines with the parts indented.
 .PP
 Binary operations are in postfix form with the operands in the usual order.
-That is, to get x\-5 one would use "%gx%{5}%-".
+That is, to get x\-5 one would use \*(``%gx%{5}%\-\*(''.
 \fB%P\fP and \fB%g\fP variables are
 persistent across escape-string evaluations.
 .PP
@@ -581,7 +587,7 @@ tabs are never expanded, so \et is safe to send.
 This turns out to be essential for the Ann Arbor 4080.)
 .PP
 A final example is the \s-1LSI ADM\s0-3a, which uses row and column
-offset by a blank character, thus \*(``cup=\eE=%p1%' '%+%c%p2%' '%+%c\*(''.
+offset by a blank character, thus \*(``cup=\eE=%p1%\(aq \(aq%+%c%p2%\(aq \(aq%+%c\*(''.
 After sending \*(``\eE=\*('', this pushes the first parameter, pushes the
 ASCII value for a space (32), adds them (pushing the sum on the stack
 in place of the two previous values) and outputs that value as a character.
@@ -1649,7 +1655,7 @@ this can be indicated with the parameterized string
 .BR rep .
 The first parameter is the character to be repeated and the second
 is the number of times to repeat it.
-Thus, tparm(repeat_char, 'x', 10) is the same as \*(``xxxxxxxxxx\*(''.
+Thus, tparm(repeat_char, \(aqx\(aq, 10) is the same as \*(``xxxxxxxxxx\*(''.
 .PP
 If the terminal has a settable command character, such as the \s-1TEKTRONIX\s+1 4025,
 this can be indicated with

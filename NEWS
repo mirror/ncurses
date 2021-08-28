@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3698 2021/08/21 23:25:57 tom Exp $
+-- $Id: NEWS,v 1.3700 2021/08/28 22:32:19 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,18 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210828
+	+ correct reversed check for --disable-root-environ (report/analysis
+	  by Arnav Singh, cf: 20210626).
+	+ apply gcc format attribute to prototypes which use a va_list
+	  parameter rather than a "..." variable-length parameter list
+	  (prompted by discussion in a tmux pull-request).
+	+ modify configure scripts to filter out redefinitions of _XOPEN_SOURCE,
+	  e.g., for NetBSD which generally supports 500, but 600 is needed for
+	  ncursesw.
+	+ improve documentation for tparm and static/dynamic variables.
+	+ improve typography in terminfo.5 (patch by Branden Robinson).
 
 20210821
 	+ improve tparm implementation of %P and %g, more closely matching

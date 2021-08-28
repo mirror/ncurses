@@ -45,7 +45,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: access.c,v 1.29 2021/06/26 23:50:02 tom Exp $")
+MODULE_ID("$Id: access.c,v 1.30 2021/08/28 22:07:31 tom Exp $")
 
 #define LOWERCASE(c) ((isalpha(UChar(c)) && isupper(UChar(c))) ? tolower(UChar(c)) : (c))
 
@@ -215,7 +215,7 @@ _nc_env_access(void)
 
     if (is_elevated()) {
 	result = FALSE;
-    } else if ((getuid() != ROOT_UID) && (geteuid() != ROOT_UID)) {
+    } else if ((getuid() == ROOT_UID) && (geteuid() == ROOT_UID)) {
 	result = FALSE;
     }
     return result;
