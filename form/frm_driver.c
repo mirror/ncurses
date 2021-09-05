@@ -33,7 +33,7 @@
 
 #include "form.priv.h"
 
-MODULE_ID("$Id: frm_driver.c,v 1.134 2021/03/27 23:49:58 tom Exp $")
+MODULE_ID("$Id: frm_driver.c,v 1.135 2021/09/01 23:34:01 tom Exp $")
 
 /*----------------------------------------------------------------------------
   This is the core module of the form library. It contains the majority
@@ -3556,7 +3556,7 @@ Upper_Neighbor_Field(FIELD *field)
 |   Function      :  static FIELD *Down_Neighbor_Field(FIELD * field)
 |
 |   Description   :  Because of the row-major nature of sorting the fields,
-|                    it's more difficult to define what the down neighbor
+|                    it is more difficult to define what the down neighbor
 |                    field really means. We define that it must be on a
 |                    'next' line (cyclic order!) and is the leftmost
 |                    field laying on the right side of the given field. If

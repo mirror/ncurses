@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.84 2021/08/19 08:01:33 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.85 2021/09/04 10:54:35 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when

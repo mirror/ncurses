@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -44,7 +44,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.141 2020/09/05 22:50:47 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.142 2021/09/04 10:52:55 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -551,7 +551,7 @@ _nc_wgetch(WINDOW *win,
 	 * This is tricky.  We only want to get special-key
 	 * events one at a time.  But we want to accumulate
 	 * mouse events until either (a) the mouse logic tells
-	 * us it's picked up a complete gesture, or (b)
+	 * us it has picked up a complete gesture, or (b)
 	 * there's a detectable time lapse after one.
 	 *
 	 * Note: if the mouse code starts failing to compose

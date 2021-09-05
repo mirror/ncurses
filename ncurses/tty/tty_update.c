@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.311 2021/08/16 21:51:11 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.312 2021/09/04 10:29:59 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -473,7 +473,7 @@ wrap_cursor(NCURSES_SP_DCL0)
 	 * An aggressive way to handle this would be to emit CR/LF after the
 	 * char and then assume the wrap is done, you're on the first position
 	 * of the next line, and the terminal out of its weird state.  Here
-	 * it's safe to just tell the code that the cursor is in hyperspace and
+	 * it is safe to just tell the code that the cursor is in hyperspace and
 	 * let the next mvcur() call straighten things out.
 	 */
 	SP_PARM->_curscol = -1;
@@ -823,7 +823,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
     /*
      * This is the support for magic-cookie terminals.  The theory:  we scan
      * the virtual screen looking for attribute turnons.  Where we find one,
-     * check to make sure it's realizable by seeing if the required number of
+     * check to make sure it is realizable by seeing if the required number of
      * un-attributed blanks are present before and after the attributed range;
      * try to shift the range boundaries over blanks (not changing the screen
      * display) so this becomes true.  If it is, shift the beginning attribute
@@ -885,7 +885,7 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
 		    bool end_onscreen = FALSE;
 		    int m, n = j;
 
-		    /* find end of span, if it's onscreen */
+		    /* find end of span, if it is onscreen */
 		    for (m = i; m < screen_lines(SP_PARM); m++) {
 			for (; n < screen_columns(SP_PARM); n++) {
 			    attr_t testattr =

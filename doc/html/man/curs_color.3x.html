@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_color.3x,v 1.64 2021/06/17 21:30:22 tom Exp @
+  * @Id: curs_color.3x,v 1.66 2021/09/04 19:42:20 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -439,6 +439,50 @@
        <STRONG>o</STRONG>   Color RGB values are not settable.
 
 
+</PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
+       SVr3.2 introduced color support to curses in 1987.
+
+       SVr4 made internal changes, e.g., moving  the  storage  for  the  color
+       state  from  <STRONG>SP</STRONG> (the <STRONG>SCREEN</STRONG> structure) to <STRONG>cur_term</STRONG> (the <STRONG>TERMINAL</STRONG> struc-
+       ture), but provided the same set of library functions.
+
+       SVr4 curses limits the number of color pairs  to  64,  reserving  color
+       pair  zero  (0)  as the terminal's initial uncolored state.  This limit
+       arises because the color pair information is a bitfield in  the  <STRONG>chtype</STRONG>
+       data type (denoted by <STRONG>A_COLOR</STRONG>).
+
+       Other implementations of curses had different limits:
+
+       <STRONG>o</STRONG>   PCCurses (1987-1990) provided for only eight (8) colors.
+
+       <STRONG>o</STRONG>   PDCurses  (1992-present)  inherited the 8-color limitation from PC-
+           Curses, but changed this to 256 in version 2.5 (2001),  along  with
+           changing <STRONG>chtype</STRONG> from 16-bits to 32-bits.
+
+       <STRONG>o</STRONG>   X/Open Curses (1992-present) added a new structure <STRONG>cchar_t</STRONG> to store
+           the character, attributes and color-pair values, allowing increased
+           range  of  color-pairs.   Both  color-pairs and color-values used a
+           signed <STRONG>short</STRONG>, limiting values to 15 bits.
+
+       <STRONG>o</STRONG>   ncurses (1992-present) uses eight bits for <STRONG>A_COLOR</STRONG> in  <STRONG>chtype</STRONG>  val-
+           ues.
+
+           Version  5.3  provided  a wide-character interface (2002), but left
+           color-pairs as part of the attributes-field.
+
+           Since version 6 (2015), ncurses uses a separate <STRONG>int</STRONG> for color-pairs
+           in the <STRONG>cchar_t</STRONG> values.  When those color-pair values fit in 8 bits,
+           ncurses allows color-pairs to be manipulated via the functions  us-
+           ing <STRONG>chtype</STRONG> values.
+
+       <STRONG>o</STRONG>   NetBSD  curses  used  6 bits from 2000 (when colors were first sup-
+           ported) until 2004.  At that point, NetBSD changed to use 10  bits.
+           As of 2021, that size is unchanged.  Like ncurses before version 6,
+           the NetBSD color-pair information is stored in the attributes field
+           of  <STRONG>cchar_t</STRONG>,  limiting the number of color-pairs by the size of the
+           bitfield.
+
+
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        This implementation satisfies XSI Curses's minimum maximums for  <STRONG>COLORS</STRONG>
        and <STRONG>COLOR_PAIRS</STRONG>.
@@ -511,6 +555,7 @@
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
+<li><a href="#h2-HISTORY">HISTORY</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>
 <li><a href="#h2-SEE-ALSO">SEE ALSO</a></li>
 </ul>

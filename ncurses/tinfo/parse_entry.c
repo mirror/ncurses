@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.101 2020/10/24 21:37:13 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.102 2021/09/04 10:54:35 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -362,7 +362,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 				       _nc_get_hash_table(_nc_syntax));
 
 	    /*
-	     * Our kluge to handle aliasing.  The reason it's done
+	     * Our kluge to handle aliasing.  The reason it is done
 	     * this ugly way, with a linear search, is so the hashing
 	     * machinery doesn't have to be made really complicated
 	     * (also we get better warnings this way).  No point in
@@ -929,7 +929,7 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	    if (tp->Strings[to_ptr->nte_index]) {
 		const char *s = tp->Strings[from_ptr->nte_index];
 		const char *t = tp->Strings[to_ptr->nte_index];
-		/* There's no point in warning about it if it's the same
+		/* There's no point in warning about it if it is the same
 		 * string; that's just an inefficiency.
 		 */
 		if (VALID_STRING(s) && VALID_STRING(t) && strcmp(s, t) != 0)

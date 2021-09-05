@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.974 2021/08/28 20:24:23 tom Exp $
+dnl $Id: aclocal.m4,v 1.975 2021/09/04 10:36:30 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -264,9 +264,9 @@ CXXFLAGS="$CFLAGS"
 CFLAGS="$cf_save_CXXFLAGS"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ADD_INCDIR version: 16 updated: 2020/12/31 20:19:42
+dnl CF_ADD_INCDIR version: 17 updated: 2021/09/04 06:35:04
 dnl -------------
-dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it's
+dnl Add an include-directory to $CPPFLAGS.  Don't add /usr/include, since it is
 dnl redundant.  We don't normally need to add -I/usr/local/include for gcc,
 dnl but old versions (and some misinstalled ones) need that.  To make things
 dnl worse, gcc 3.x may give error messages if -I/usr/local/include is added to
@@ -619,10 +619,10 @@ else	AC_MSG_RESULT(no)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_BOOL_SIZE version: 17 updated: 2020/10/24 19:48:55
+dnl CF_BOOL_SIZE version: 18 updated: 2021/09/04 06:35:04
 dnl ------------
 dnl Test for the size of 'bool' in the configured C++ compiler (e.g., a type).
-dnl Don't bother looking for bool.h, since it's been deprecated.
+dnl Don't bother looking for bool.h, since it has been deprecated.
 dnl
 dnl If the current compiler is C rather than C++, we get the bool definition
 dnl from <stdbool.h>.
@@ -1108,10 +1108,10 @@ fi
 CF_CHECK_EXTERN_DATA($1,ifelse([$2],,int,[$2]))
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_EXTERN_DATA version: 4 updated: 2015/04/18 08:56:57
+dnl CF_CHECK_EXTERN_DATA version: 5 updated: 2021/09/04 06:35:04
 dnl --------------------
 dnl Check for existence of external data in the current set of libraries.  If
-dnl we can modify it, it's real enough.
+dnl we can modify it, it is real enough.
 dnl $1 = the name to check
 dnl $2 = its type
 AC_DEFUN([CF_CHECK_EXTERN_DATA],
@@ -1879,9 +1879,9 @@ done
 AC_SUBST(DIRS_TO_MAKE)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_DISABLE_ECHO version: 13 updated: 2015/04/18 08:56:57
+dnl CF_DISABLE_ECHO version: 14 updated: 2021/09/04 06:35:04
 dnl ---------------
-dnl You can always use "make -n" to see the actual options, but it's hard to
+dnl You can always use "make -n" to see the actual options, but it is hard to
 dnl pick out/analyze warning messages when the compile-line is long.
 dnl
 dnl Sets:
@@ -5407,7 +5407,7 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_FORMAT version: 14 updated: 2021/01/02 17:09:14
+dnl CF_MANPAGE_FORMAT version: 15 updated: 2021/09/04 06:35:04
 dnl -----------------
 dnl Option to allow user to override automatic configuration of manpage format.
 dnl There are several special cases:
@@ -5443,7 +5443,7 @@ case "$MANPAGE_FORMAT" in
 		MANPATH="/usr/man:/usr/share/man"
 	fi
 
-	# look for the 'date' man-page (it's most likely to be installed!)
+	# look for the 'date' man-page (it is most likely to be installed!)
 	MANPAGE_FORMAT=
 	cf_preform="no"
 	cf_catonly="yes"
@@ -7746,7 +7746,7 @@ AC_MSG_RESULT($cf_cv_sig_atomic_t)
 test "$cf_cv_sig_atomic_t" != no && AC_DEFINE_UNQUOTED(SIG_ATOMIC_T, $cf_cv_sig_atomic_t,[Define to signal global datatype])
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SIZECHANGE version: 17 updated: 2021/01/01 13:31:04
+dnl CF_SIZECHANGE version: 18 updated: 2021/09/04 06:35:04
 dnl -------------
 dnl Check for definitions & structures needed for window size-changing
 dnl
@@ -7777,7 +7777,7 @@ do
 
 #ifdef NEED_PTEM_H
 /* This is a workaround for SCO:  they neglected to define struct winsize in
- * termios.h -- it's only in termio.h and ptem.h
+ * termios.h -- it is only in termio.h and ptem.h
  */
 #include <sys/stream.h>
 #include <sys/ptem.h>
@@ -9067,7 +9067,7 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATH version: 11 updated: 2012/09/29 15:04:19
+dnl CF_WITH_PATH version: 12 updated: 2021/09/04 06:35:04
 dnl ------------
 dnl Wrapper for AC_ARG_WITH to ensure that user supplies a pathname, not just
 dnl defaulting to yes/no.
@@ -9076,7 +9076,7 @@ dnl $1 = option name
 dnl $2 = help-text
 dnl $3 = environment variable to set
 dnl $4 = default value, shown in the help-message, must be a constant
-dnl $5 = default value, if it's an expression & cannot be in the help-message
+dnl $5 = default value, if it is an expression & cannot be in the help-message
 dnl
 AC_DEFUN([CF_WITH_PATH],
 [AC_ARG_WITH($1,[$2 ](default: ifelse([$4],,empty,[$4])),,
@@ -9088,7 +9088,7 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PATHLIST version: 12 updated: 2021/01/01 13:31:04
+dnl CF_WITH_PATHLIST version: 13 updated: 2021/09/04 06:35:04
 dnl ----------------
 dnl Process an option specifying a list of colon-separated paths.
 dnl
@@ -9096,7 +9096,7 @@ dnl $1 = option name
 dnl $2 = help-text
 dnl $3 = environment variable to set
 dnl $4 = default value, shown in the help-message, must be a constant
-dnl $5 = default value, if it's an expression & cannot be in the help-message
+dnl $5 = default value, if it is an expression & cannot be in the help-message
 dnl $6 = flag to tell if we want to define or substitute
 dnl
 AC_DEFUN([CF_WITH_PATHLIST],[

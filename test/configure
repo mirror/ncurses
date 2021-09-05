@@ -9881,7 +9881,7 @@ fi
 case "$host_os" in
 (freebsd*)
 	# This is only necessary if you are linking against an obsolete
-	# version of ncurses (but it should do no harm, since it's static).
+	# version of ncurses (but it should do no harm, since it is static).
 	if test "$cf_nculib_root" = ncurses ; then
 		echo "$as_me:9886: checking for tgoto in -lmytinfo" >&5
 echo $ECHO_N "checking for tgoto in -lmytinfo... $ECHO_C" >&6
@@ -12004,7 +12004,7 @@ fi
 case "$host_os" in
 (freebsd*)
 	# This is only necessary if you are linking against an obsolete
-	# version of ncurses (but it should do no harm, since it's static).
+	# version of ncurses (but it should do no harm, since it is static).
 	if test "$cf_nculib_root" = ncurses ; then
 		echo "$as_me:12009: checking for tgoto in -lmytinfo" >&5
 echo $ECHO_N "checking for tgoto in -lmytinfo... $ECHO_C" >&6

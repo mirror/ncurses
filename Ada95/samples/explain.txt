@@ -61,7 +61,7 @@ You may leave the help with the Function Key labeled 'Quit'.
 #MAIN
 This is the main menu of the sample program for the ncurses Ada95
 binding. The main intention of the demo is not to demonstrate or
-test all the features of ncurses and it's subsystems, but to provide
+test all the features of ncurses and its subsystems, but to provide
 to you some sample code how to use the binding with Ada95.
 
 You may select this options:
@@ -91,7 +91,7 @@ flip between the non-spaced and a spaced version of the menu. Please
 note that this functionality is unique for ncurses and is not found
 in the SVr4 menu implementation.
 
-This is a menu that sometimes does not fit into it's window and
+This is a menu that sometimes does not fit into its window and
 therefore it becomes a scroll menu.
 
 You can also see here very nicely the pattern matching functionality
@@ -109,7 +109,7 @@ With the Keys "O-Row" or "O-Col" (they occupy the same label and
 switch on selection) you can change the major order scheme for
 the menu. If "O-Col" is visible, the menu is currently major
 ordered by rows, you can switch to major column order by pressing
-the key. If "O-Row" is visible, it's just the reverse situation.
+the key. If "O-Row" is visible, it is just the reverse situation.
 This Key is not visible in "4x1" layout mode, because in this case
 the functionality makes no sense.
 
@@ -160,7 +160,7 @@ In this demo you may use this keys:
 You may click the mouse buttons at any location at the screen and look
 at the protocol window !
 #MOUSE00
-A rather simple use of a mouse as demo. It's there just to test the
+A rather simple use of a mouse as demo. It is there just to test the
 code and to provide the sample source.
 
 It might be of interest, that the output into the protocol window is
@@ -169,7 +169,7 @@ the button and state names is done by Ads's enumeration IO, which
 allows you to print the names of enumeration literals. That's really
 nice.
 #MOUSE-PAD00
-This is a very simple demo of the mouse features of ncurses. It's there
+This is a very simple demo of the mouse features of ncurses. It is there
 just to test whether or not the generated code for the binding really
 works on the different architectures (seems so).
 #ATTRIBDEMO

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.109 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.110 2021/09/04 10:54:35 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -556,7 +556,7 @@ _nc_get_token(bool silent)
 		 * Grrr...what we ought to do here is barf, complaining that
 		 * the entry is malformed.  But because a couple of name fields
 		 * in the 8.2 termcap file end with |\, we just have to assume
-		 * it's termcap syntax.
+		 * it is termcap syntax.
 		 */
 		_nc_syntax = SYN_TERMCAP;
 		separator = ':';

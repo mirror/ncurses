@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -36,7 +36,7 @@
  *   Demo code for NCursesMenu and NCursesForm written by
  *   Juergen Pfeifer
  *
- * $Id: demo.cc,v 1.49 2020/09/13 00:47:00 tom Exp $
+ * $Id: demo.cc,v 1.50 2021/09/04 10:52:55 tom Exp $
  */
 
 #include "internal.h"
@@ -104,7 +104,7 @@ class SillyDemo
     }
 
     //  A refresh to any valid panel updates all panels and refreshes
-    //  the screen.  Using mystd is just convenient - We know it's always
+    //  the screen.  Using mystd is just convenient - We know it is always
     //  valid until the end of the program.
 
     mystd->refresh();

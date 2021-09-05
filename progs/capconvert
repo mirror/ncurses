@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2011,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -27,7 +27,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: capconvert,v 1.9 2020/02/02 23:34:34 tom Exp $
+# $Id: capconvert,v 1.10 2021/09/04 10:55:04 tom Exp $
 #
 # capconvert -- automated conversion from termcap to terminfo
 #
@@ -95,7 +95,7 @@ else
 fi
 echo "";
 
-# Check if test -x works (it's not portable, but useful)
+# Check if test -x works (it is not portable, but useful)
 OPT="-x"
 TMP=test$$; touch $TMP && chmod 755 $TMP
 if test $OPT $TMP ; then
@@ -227,7 +227,7 @@ fi
 
 # OK, here comes the nasty case...user has a TERMCAP.  Instead of
 # trying to follow all the convolutions of the relationship between
-# TERM and TERMCAP (partly because it's too painful, and partly because
+# TERM and TERMCAP (partly because it is too painful, and partly because
 # we don't actually know what TERM will be nor even if it always has
 # the same value for this user) we do the following three steps...
 

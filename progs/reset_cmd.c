@@ -47,13 +47,13 @@
 #endif
 
 #if NEED_PTEM_H
-/* they neglected to define struct winsize in termios.h -- it's only
+/* they neglected to define struct winsize in termios.h -- it is only
    in termio.h	*/
 #include <sys/stream.h>
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.26 2021/06/26 19:44:08 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.27 2021/09/04 10:29:59 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,

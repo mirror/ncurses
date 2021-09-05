@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.75 2021/06/17 21:11:08 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.76 2021/09/04 19:58:03 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -461,8 +461,15 @@
        ters supported by <STRONG>tgoto</STRONG>).
 
        SVr3  introduced  the functions for switching between terminal descrip-
-       tions, e.g., <STRONG>set_curterm</STRONG>.  The various global variables such  as  <STRONG>bool-</STRONG>
-       <STRONG>names</STRONG> were mentioned in the programming manual at this point.
+       tions, e.g., <STRONG>set_curterm</STRONG>.  Some of that was incremental improvements to
+       the SVr2 library:
+
+       <STRONG>o</STRONG>   The  <STRONG>TERMINAL</STRONG>  type  definition  was introduced in SVr3.01, for the
+           <STRONG>term</STRONG> structure provided in SVr2.
+
+       <STRONG>o</STRONG>   The various global variables such as <STRONG>boolnames</STRONG>  were  mentioned  in
+           the  programming  manual  at  this point, though the variables were
+           provided in SVr2.
 
        SVr4 added the <STRONG>vid_attr</STRONG> and <STRONG>vid_puts</STRONG> functions.
 
@@ -476,15 +483,15 @@
 </PRE><H3><a name="h3-Legacy-functions">Legacy functions</a></H3><PRE>
        X/Open notes that <STRONG>vidattr</STRONG> and <STRONG>vidputs</STRONG> may be macros.
 
-       The  function <STRONG>setterm</STRONG> is not described by X/Open and must be considered
+       The function <STRONG>setterm</STRONG> is not described by X/Open and must be  considered
        non-portable.  All other functions are as described by X/Open.
 
 
 </PRE><H3><a name="h3-Legacy-data">Legacy data</a></H3><PRE>
-       <STRONG>setupterm</STRONG> copies the terminal name to the array <STRONG>ttytype</STRONG>.  This  is  not
+       <STRONG>setupterm</STRONG>  copies  the terminal name to the array <STRONG>ttytype</STRONG>.  This is not
        part of X/Open Curses, but is assumed by some applications.
 
-       Other  implementions  may not declare the capability name arrays.  Some
+       Other implementions may not declare the capability name  arrays.   Some
        provide them without declaring them.  X/Open does not specify them.
 
        Extended terminal capability names, e.g., as defined by <STRONG>tic</STRONG> <STRONG>-x</STRONG>, are not
@@ -492,14 +499,14 @@
 
 
 </PRE><H3><a name="h3-Output-buffering">Output buffering</a></H3><PRE>
-       Older  versions  of  <STRONG>ncurses</STRONG> assumed that the file descriptor passed to
+       Older versions of <STRONG>ncurses</STRONG> assumed that the file  descriptor  passed  to
        <STRONG>setupterm</STRONG> from <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG> uses buffered I/O, and would write to
-       the  corresponding stream.  In addition to the limitation that the ter-
-       minal was left in block-buffered mode on exit (like System  V  curses),
-       it  was  problematic  because  <STRONG>ncurses</STRONG>  did not allow a reliable way to
+       the corresponding stream.  In addition to the limitation that the  ter-
+       minal  was  left in block-buffered mode on exit (like System V curses),
+       it was problematic because <STRONG>ncurses</STRONG> did not  allow  a  reliable  way  to
        cleanup on receiving SIGTSTP.
 
-       The current version (ncurses6) uses output buffers managed directly  by
+       The  current version (ncurses6) uses output buffers managed directly by
        <STRONG>ncurses</STRONG>.  Some of the low-level functions described in this manual page
        write to the standard output.  They are not signal-safe.  The high-lev-
        el functions in <STRONG>ncurses</STRONG> use alternate versions of these functions using
@@ -508,69 +515,69 @@
 
 </PRE><H3><a name="h3-Function-prototypes">Function prototypes</a></H3><PRE>
        The X/Open Curses prototypes are based on the SVr4 curses header decla-
-       rations,  which  were defined at the same time the C language was first
+       rations, which were defined at the same time the C language  was  first
        standardized in the late 1980s.
 
-       <STRONG>o</STRONG>   X/Open Curses uses <STRONG>const</STRONG>  less  effectively  than  a  later  design
-           might,  in  some cases applying it needlessly to values are already
-           constant, and in most cases overlooking parameters  which  normally
-           would  use <STRONG>const</STRONG>.  Using constant parameters for functions which do
+       <STRONG>o</STRONG>   X/Open  Curses  uses  <STRONG>const</STRONG>  less  effectively  than a later design
+           might, in some cases applying it needlessly to values  are  already
+           constant,  and  in most cases overlooking parameters which normally
+           would use <STRONG>const</STRONG>.  Using constant parameters for functions which  do
            not use <STRONG>const</STRONG> may prevent the program from compiling.  On the other
            hand, <EM>writable</EM> <EM>strings</EM> are an obsolescent feature.
 
-           As  an  extension,  this implementation can be configured to change
-           the function prototypes to use the <STRONG>const</STRONG> keyword.  The ncurses  ABI
+           As an extension, this implementation can be  configured  to  change
+           the  function prototypes to use the <STRONG>const</STRONG> keyword.  The ncurses ABI
            6 enables this feature by default.
 
-       <STRONG>o</STRONG>   X/Open  Curses  prototypes <STRONG>tparm</STRONG> with a fixed number of parameters,
+       <STRONG>o</STRONG>   X/Open Curses prototypes <STRONG>tparm</STRONG> with a fixed number  of  parameters,
            rather than a variable argument list.
 
-           This implementation uses a variable argument list, but can be  con-
-           figured  to  use  the  fixed-parameter list.  Portable applications
-           should provide 9 parameters after the format; zeroes are  fine  for
+           This  implementation uses a variable argument list, but can be con-
+           figured to use the  fixed-parameter  list.   Portable  applications
+           should  provide  9 parameters after the format; zeroes are fine for
            this purpose.
 
-           In  response  to review comments by Thomas E. Dickey, X/Open Curses
+           In response to review comments by Thomas E. Dickey,  X/Open  Curses
            Issue 7 proposed the <STRONG>tiparm</STRONG> function in mid-2009.
 
 
 </PRE><H3><a name="h3-Special-TERM-treatment">Special TERM treatment</a></H3><PRE>
        If configured to use the terminal-driver, e.g., for the MinGW port,
 
-       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG> interprets a missing/empty TERM variable as  the  special
+       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG>  interprets  a missing/empty TERM variable as the special
            value "unknown".
 
-       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG>  allows explicit use of the the windows console driver by
-           checking if $TERM is set to "#win32con" or an abbreviation of  that
+       <STRONG>o</STRONG>   <STRONG>setupterm</STRONG> allows explicit use of the the windows console driver  by
+           checking  if $TERM is set to "#win32con" or an abbreviation of that
            string.
 
 
 </PRE><H3><a name="h3-Other-portability-issues">Other portability issues</a></H3><PRE>
-       In  System  V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return type and returns
+       In System V Release 4, <STRONG>set_curterm</STRONG> has an <STRONG>int</STRONG> return type  and  returns
        <STRONG>OK</STRONG> or <STRONG>ERR</STRONG>.  We have chosen to implement the X/Open Curses semantics.
 
-       In System V Release 4, the third argument of <STRONG>tputs</STRONG>  has  the  type  <STRONG>int</STRONG>
+       In  System  V  Release  4, the third argument of <STRONG>tputs</STRONG> has the type <STRONG>int</STRONG>
        <STRONG>(*putc)(char)</STRONG>.
 
-       At  least one implementation of X/Open Curses (Solaris) returns a value
-       other than <STRONG>OK</STRONG>/<STRONG>ERR</STRONG> from <STRONG>tputs</STRONG>.  That returns the length of  the  string,
+       At least one implementation of X/Open Curses (Solaris) returns a  value
+       other  than  <STRONG>OK</STRONG>/<STRONG>ERR</STRONG> from <STRONG>tputs</STRONG>.  That returns the length of the string,
        and does no error-checking.
 
-       X/Open  notes  that after calling <STRONG>mvcur</STRONG>, the curses state may not match
+       X/Open notes that after calling <STRONG>mvcur</STRONG>, the curses state may  not  match
        the actual terminal state, and that an application should touch and re-
        fresh the window before resuming normal curses calls.  Both <STRONG>ncurses</STRONG> and
-       System V Release 4 curses implement <STRONG>mvcur</STRONG> using the SCREEN  data  allo-
-       cated  in  either  <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  So though it is documented as a
-       terminfo function, <STRONG>mvcur</STRONG> is really a curses function which is not  well
+       System  V  Release 4 curses implement <STRONG>mvcur</STRONG> using the SCREEN data allo-
+       cated in either <STRONG>initscr</STRONG> or <STRONG>newterm</STRONG>.  So though it is  documented  as  a
+       terminfo  function, <STRONG>mvcur</STRONG> is really a curses function which is not well
        specified.
 
-       X/Open  states that the old location must be given for <STRONG>mvcur</STRONG>.  This im-
-       plementation allows the caller to use -1's for the old  ordinates.   In
+       X/Open states that the old location must be given for <STRONG>mvcur</STRONG>.  This  im-
+       plementation  allows  the caller to use -1's for the old ordinates.  In
        that case, the old location is unknown.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,    <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,   <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>,
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,   <STRONG><A HREF="curs_initscr.3x.html">curs_initscr(3x)</A></STRONG>,   <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>,    <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>,
        <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>, <STRONG><A HREF="term_variables.3x.html">term_variables(3x)</A></STRONG>, <STRONG>putc(3)</STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
 
 

@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.213 2021/03/20 14:43:35 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.214 2021/09/01 23:38:12 tom Exp $")
 
 /****************************************************************************
  *
@@ -66,7 +66,7 @@ MODULE_ID("$Id: lib_setup.c,v 1.213 2021/03/20 14:43:35 tom Exp $")
 #endif
 
 #if NEED_PTEM_H
- /* On SCO, they neglected to define struct winsize in termios.h -- it's only
+ /* On SCO, they neglected to define struct winsize in termios.h -- it is only
   * in termio.h and ptem.h (the former conflicts with other definitions).
   */
 # include <sys/stream.h>

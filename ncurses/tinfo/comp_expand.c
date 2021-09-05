@@ -36,7 +36,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_expand.c,v 1.33 2021/02/28 00:58:19 tom Exp $")
+MODULE_ID("$Id: comp_expand.c,v 1.34 2021/09/04 10:29:15 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -206,7 +206,7 @@ _nc_tic_expand(const char *srcp, bool tic_format, int numbers)
 
     /*
      * If most of a short string is ASCII control characters, reformat the
-     * string to show those in up-arrow format.  For longer strings, it's
+     * string to show those in up-arrow format.  For longer strings, it is
      * more likely that the characters are just binary coding.
      *
      * If we're formatting termcap, just use the shorter format (up-arrows).

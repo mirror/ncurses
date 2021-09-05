@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.75 2021/06/17 21:11:08 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.76 2021/09/04 19:58:03 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -556,8 +556,14 @@ and handling functions such as \fBvidattr\fP
 .PP
 SVr3 introduced the functions for switching between terminal
 descriptions, e.g., \fBset_curterm\fP.
+Some of that was incremental improvements to the SVr2 library:
+.bP
+The \fBTERMINAL\fP type definition was introduced in SVr3.01,
+for the \fBterm\fP structure provided in SVr2.
+.bP
 The various global variables such as \fBboolnames\fP were mentioned
-in the programming manual at this point.
+in the programming manual at this point,
+though the variables were provided in SVr2.
 .PP
 SVr4 added the \fBvid_attr\fP and \fBvid_puts\fP functions.
 .PP

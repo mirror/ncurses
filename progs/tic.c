@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.301 2021/08/21 00:24:45 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.302 2021/09/04 10:29:59 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -878,7 +878,7 @@ main(int argc, char *argv[])
      * One problem with immedhook is it means we can't do -e.  Problem
      * is that we can't guarantee that for each terminal listed, all the
      * terminals it depends on will have been kept in core for reference
-     * resolution -- in fact it's certain the primitive types at the end
+     * resolution -- in fact it is certain the primitive types at the end
      * of reference chains *won't* be in core unless they were explicitly
      * in the select list themselves.
      */

@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.526 2021/05/22 19:45:57 tom Exp $
+$Id: ncurses.c,v 1.527 2021/09/04 10:31:03 tom Exp $
 
 ***************************************************************************/
 
@@ -7236,11 +7236,11 @@ overlap_test(bool recur GCC_UNUSED)
 	    overlap_test_0(win2, win1);
 	    break;
 
-	case 'c':		/* fill window A so it's visible */
+	case 'c':		/* fill window A so it is visible */
 	    overlap_test_1(flavor[otBASE_fill], 0, win1, 'A');
 	    break;
 
-	case 'd':		/* fill window B so it's visible */
+	case 'd':		/* fill window B so it is visible */
 	    overlap_test_1(flavor[otBASE_fill], 1, win2, 'B');
 	    break;
 
@@ -7436,11 +7436,11 @@ x_overlap_test(bool recur GCC_UNUSED)
 	    overlap_test_0(win2, win1);
 	    break;
 
-	case 'c':		/* fill window A so it's visible */
+	case 'c':		/* fill window A so it is visible */
 	    x_overlap_test_1(flavor[otBASE_fill], 0, win1, WIDE_A);
 	    break;
 
-	case 'd':		/* fill window B so it's visible */
+	case 'd':		/* fill window B so it is visible */
 	    x_overlap_test_1(flavor[otBASE_fill], 1, win2, WIDE_B);
 	    break;
 
@@ -7855,7 +7855,7 @@ main_menu(bool top)
 
 	if (doit != NULL && doit(FALSE) == OK) {
 	    /*
-	     * This may be overkill; it's intended to reset everything back
+	     * This may be overkill; it is intended to reset everything back
 	     * to the initial terminal modes so that tests don't get in
 	     * each other's way.
 	     */

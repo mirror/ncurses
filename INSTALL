@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.232 2021/07/17 16:30:27 tom Exp $
+-- $Id: INSTALL,v 1.233 2021/09/01 23:29:12 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -2167,7 +2167,7 @@ FOR SYSTEM INTEGRATORS:
 	Please pick a name unique to your console driver and set that up
 	in the /etc/inittab table or local equivalent.  Send the entry to the
 	terminfo maintainer (listed in the misc/terminfo file) to be included
-	in the terminfo file, if it's not already there.  See the
+	in the terminfo file, if it is not already there.  See the
 	term(7) manual page included with this distribution for more on
 	conventions for choosing type names.
 

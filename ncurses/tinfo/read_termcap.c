@@ -57,7 +57,7 @@
 #include <sys/types.h>
 #include <tic.h>
 
-MODULE_ID("$Id: read_termcap.c,v 1.101 2021/06/26 19:43:17 tom Exp $")
+MODULE_ID("$Id: read_termcap.c,v 1.102 2021/09/04 10:29:15 tom Exp $")
 
 #if !PURE_TERMINFO
 
@@ -187,7 +187,7 @@ _nc_cgetcap(char *buf, const char *cap, int type)
     bp = buf;
     for (;;) {
 	/*
-	 * Skip past the current capability field - it's either the
+	 * Skip past the current capability field - it is either the
 	 * name field if this is the first time through the loop, or
 	 * the remainder of a field whose name failed to match cap.
 	 */
@@ -1115,7 +1115,7 @@ _nc_read_termcap_entry(const char *const tn, TERMTYPE2 *const tp)
 
 	/*
 	 * We don't suppress warning messages here.  The presumption is
-	 * that since it's just a single entry, they won't be a pain.
+	 * that since it is just a single entry, they won't be a pain.
 	 */
 	_nc_read_entry_source((FILE *) 0, tc_buf, FALSE, FALSE, NULLHOOK);
 	free(tc_buf);

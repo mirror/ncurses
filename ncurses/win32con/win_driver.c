@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -55,7 +55,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.66 2020/03/01 00:18:49 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.67 2021/09/04 10:54:35 tom Exp $")
 
 #define TypeAlloca(type,count) (type*) _alloca(sizeof(type) * (size_t) (count))
 
@@ -114,7 +114,7 @@ static const LONG ansi_keys[] =
 #define MAPSIZE (FKEYS + N_INI)
 #define NUMPAIRS 64
 
-/*   A process can only have a single console, so it's safe
+/*   A process can only have a single console, so it is safe
      to maintain all the information about it in a single
      static structure.
  */
@@ -1867,7 +1867,7 @@ get_handle(int fd)
 #if WINVER >= 0x0600
 /*   This function tests, whether or not the ncurses application
      is running as a descendant of MSYS2/cygwin mintty terminal
-     application. mintty doesn't use Windows Console for it's screen
+     application. mintty doesn't use Windows Console for its screen
      I/O, so the native Windows _isatty doesn't recognize it as
      character device. But we can discover we are at the end of an
      Pipe and can query to server side of the pipe, looking whether
@@ -1974,7 +1974,7 @@ _nc_mingw_isatty(int fd)
 
 /*   This is used when running in terminfo mode to discover,
      whether or not the "terminal" is actually a Windows
-     Console. It's the responsibility of the console to deal
+     Console. It is the responsibility of the console to deal
      with the terminal escape sequences that are sent by
      terminfo.
  */

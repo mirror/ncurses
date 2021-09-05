@@ -33,7 +33,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.274 2021/08/28 21:52:12 tom Exp $ */
+/* $Id: curses.h.in,v 1.276 2021/08/29 09:30:34 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -550,14 +550,10 @@ struct _win_st
 
 /*
  * We cannot define these in ncurses_cfg.h, since they require parameters to be
- * passed (that is non-portable).  If you happen to be using gcc with warnings
- * enabled, define
- *	GCC_PRINTF
- *	GCC_SCANF
- * to improve checking of calls to printw(), etc.
+ * passed (that is non-portable).
  */
 #ifndef GCC_PRINTFLIKE
-#if defined(GCC_PRINTF) && !defined(printf)
+#ifndef printf
 #define GCC_PRINTFLIKE(fmt,var) __attribute__((format(printf,fmt,var)))
 #else
 #define GCC_PRINTFLIKE(fmt,var) /*nothing*/
@@ -565,7 +561,7 @@ struct _win_st
 #endif
 
 #ifndef GCC_SCANFLIKE
-#if defined(GCC_SCANF) && !defined(scanf)
+#ifndef scanf
 #define GCC_SCANFLIKE(fmt,var)  __attribute__((format(scanf,fmt,var)))
 #else
 #define GCC_SCANFLIKE(fmt,var)  /*nothing*/
@@ -813,10 +809,14 @@ extern NCURSES_EXPORT(void) use_tioctl (bool);				/* implemented */
 extern NCURSES_EXPORT(int) vidattr (chtype);				/* implemented */
 extern NCURSES_EXPORT(int) vidputs (chtype, NCURSES_OUTC);		/* implemented */
 extern NCURSES_EXPORT(int) vline (chtype, int);				/* generated */
-extern NCURSES_EXPORT(int) vwprintw (WINDOW *, const char *, va_list) GCC_PRINTFLIKE(2,0) GCC_DEPRECATED(use vw_printw);	/* implemented */
-extern NCURSES_EXPORT(int) vw_printw (WINDOW *, const char *, va_list) GCC_PRINTFLIKE(2,0);	/* implemented */
-extern NCURSES_EXPORT(int) vwscanw (WINDOW *, const char *, va_list) GCC_SCANFLIKE(2,0) GCC_DEPRECATED(use vw_scanw);	/* implemented */
-extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, const char *, va_list) GCC_SCANFLIKE(2,0);	/* implemented */
+extern NCURSES_EXPORT(int) vwprintw (WINDOW *, const char *, va_list) GCC_DEPRECATED(use vw_printw)	/* implemented */
+		GCC_PRINTFLIKE(2,0);
+extern NCURSES_EXPORT(int) vw_printw (WINDOW *, const char *, va_list)	/* implemented */
+		GCC_PRINTFLIKE(2,0);	
+extern NCURSES_EXPORT(int) vwscanw (WINDOW *, const char *, va_list) GCC_DEPRECATED(use vw_scanw)	/* implemented */
+		GCC_SCANFLIKE(2,0);
+extern NCURSES_EXPORT(int) vw_scanw (WINDOW *, const char *, va_list)	/* implemented */
+		GCC_SCANFLIKE(2,0);
 extern NCURSES_EXPORT(int) waddch (WINDOW *, const chtype);		/* implemented */
 extern NCURSES_EXPORT(int) waddchnstr (WINDOW *,const chtype *,int);	/* implemented */
 extern NCURSES_EXPORT(int) waddchstr (WINDOW *,const chtype *);		/* generated */

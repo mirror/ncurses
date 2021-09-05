@@ -83,8 +83,8 @@
 
 /*
  * The average overhead of a full optimization computation in character
- * transmission times.  If it's too high, the algorithm will be a bit
- * over-biased toward using cup rather than local motions; if it's too
+ * transmission times.  If it is too high, the algorithm will be a bit
+ * over-biased toward using cup rather than local motions; if it is too
  * low, the algorithm may spend more time than is strictly optimal
  * looking for non-cup motions.  Profile the optimizer using the `t'
  * command of the exerciser (see below), and round to the nearest integer.
@@ -98,7 +98,7 @@
 
 /*
  * LONG_DIST is the distance we consider to be just as costly to move over as a
- * cup sequence is to emit.  In other words, it's the length of a cup sequence
+ * cup sequence is to emit.  In other words, it is the length of a cup sequence
  * adjusted for average computation overhead.  The magic number is the length
  * of "\033[yy;xxH", the typical cup sequence these days.
  */
@@ -148,7 +148,7 @@
  *	int		_rep_cost;	// cost of (repeat_char)
  *
  * The USE_HARD_TABS switch controls whether it is reliable to use tab/backtabs
- * for local motions.  On many systems, it's not, due to uncertainties about
+ * for local motions.  On many systems, it is not, due to uncertainties about
  * tab delays and whether or not tabs will be expanded in raw mode.  If you
  * have parm_right_cursor, tab motions don't win you a lot anyhow.
  */
@@ -160,7 +160,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mvcur.c,v 1.155 2021/02/06 13:53:41 tom Exp $")
+MODULE_ID("$Id: lib_mvcur.c,v 1.156 2021/09/04 10:29:15 tom Exp $")
 
 #define WANT_CHAR(sp, y, x) NewScreen(sp)->_line[y].text[x]	/* desired state */
 
@@ -760,7 +760,7 @@ relative_move(NCURSES_SP_DCLx
 #endif /* !NO_OPTIMIZE */
 
 /*
- * With the machinery set up above, it's conceivable that
+ * With the machinery set up above, it is conceivable that
  * onscreen_mvcur could be modified into a recursive function that does
  * an alpha-beta search of motion space, as though it were a chess
  * move tree, with the weight function being boolean and the search

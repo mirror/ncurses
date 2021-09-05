@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.909 $
-#	$Date: 2021/08/17 00:26:19 $
+#	$Revision: 1.911 $
+#	$Date: 2021/09/04 15:32:00 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1056,8 +1056,19 @@ linux2.6|linux 2.6.x console,
 
 # The 3.0 kernel adds support for clearing scrollback buffer (capability E3).
 # It is the same as xterm's erase-saved-lines feature.
+#
+# Linux 3.0 was released in July 2011.  The keyboard utilities (kbd) are
+# used for configuring its keyboard mappings.
+#
+# kbd 1.14 was released before that (January 2008), but due to its placement
+# late in the Linux 2.6.x series had no immediate effect for most users.  That
+# provided a default mapping for shift-tab to the (misnamed) Meta_Tab, i.e.,
+# the same as Alt-Tab.
+#
+# The suggested mapping for the conventional \E[Z is provided in this entry as
+# an extended key to lessen user surprise -TD
 linux3.0|linux 3.0 kernels,
-	E3=\E[3J, use=linux2.6,
+	kcbt=\E^I, E3=\E[3J, kcbt2=\E[Z, use=linux2.6,
 
 # This is Linux console for ncurses.
 linux|linux console,
@@ -27184,5 +27195,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2021-08-16
 #	+ corrected tsl capability for terminator -TD
+#
+# 2021-09-04
+#	+ modify linux3.0 entry to reflect default mapping of shift-tab by
+#	  kbd 1.14 (report by Jan Engelhardt) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

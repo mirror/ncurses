@@ -1539,7 +1539,7 @@ int main()
         </li>
       </ol>
 
-      <p>These functions can be used interchangeably and it's a
+      <p>These functions can be used interchangeably and it is a
       matter of style as to which class is used. Let's see each one
       in detail.</p>
 
@@ -2224,8 +2224,8 @@ int main(int argc, char *argv[])
         <tt class="LITERAL">newwin()</tt>. It doesn't create any
         thing on the screen actually. It allocates memory for a
         structure to manipulate the window and updates the
-        structure with data regarding the window like it's size,
-        beginy, beginx etc.. Hence in curses, a window is just an
+        structure with data regarding the window such as its size,
+        beginy, beginx etc. Hence in curses, a window is just an
         abstraction of an imaginary window, which can be
         manipulated independent of other parts of screen. The
         function newwin() returns a pointer to structure WINDOW,
@@ -2316,7 +2316,7 @@ WINDOW *create_newwin(int height, int width, int starty, int startx)
 void destroy_win(WINDOW *local_win)
 {       
         /* box(local_win, ' ', ' '); : This won't produce the desired
-         * result of erasing the window. It will leave it's four corners 
+         * result of erasing the window. It will leave its four corners 
          * and so an ugly remnant of window. 
          */
         wborder(local_win, ' ', ' ', ' ',' ',' ',' ',' ',' ');
@@ -2344,7 +2344,7 @@ void destroy_win(WINDOW *local_win)
         <h3 class="SECT2"><a name="BORDEREXEXPL" id=
         "BORDEREXEXPL">9.3. Explanation</a></h3>
 
-        <p>Don't scream. I know it's a big example. But I have to
+        <p>Don't scream. I know it is a big example. But I have to
         explain some important things here :-). This program
         creates a rectangular window that can be moved with left,
         right, up, down arrow keys. It repeatedly creates and
@@ -2711,7 +2711,7 @@ void print_in_middle(WINDOW *win, int starty, int startx, int width, char *strin
         user. Let's deal with the keys first.</p>
 
         <p>As you have seen in almost all of the above examples,
-        it's very easy to get key input from the user. A simple way
+        it is very easy to get key input from the user. A simple way
         of getting key presses is to use <tt class=
         "LITERAL">getch()</tt> function. The cbreak mode should be
         enabled to read keys when you are interested in reading
@@ -2947,7 +2947,7 @@ void print_menu(WINDOW *menu_win, int highlight)
 </pre>
 
         <p>getmouse() returns the event into the pointer given to
-        it. It's a structure which contains</p>
+        it. It is a structure which contains</p>
         <pre class="PROGRAMLISTING">
     typedef struct
     {
@@ -3188,7 +3188,7 @@ void report_choice(int mouse_x, int mouse_y, int *p_choice)
         used to copy a window completely onto another window. It
         takes the source and destination windows as parameters and
         according to the rectangle specified, it copies the
-        rectangular region from source to destination window. It's
+        rectangular region from source to destination window. Its
         last parameter specifies whether to overwrite or just
         overlay the contents on to the destination window. If this
         argument is true, then the copying is non-destructive.</p>
@@ -3668,7 +3668,7 @@ void print_in_middle(WINDOW *win, int starty, int startx, int width, char *strin
         can be accessed using the function <tt class=
         "LITERAL">panel_userptr()</tt> which will return the user
         pointer for the panel given as argument. After finding the
-        next panel in the cycle It's brought to the top by the
+        next panel in the cycle It is brought to the top by the
         function top_panel(). This function brings the panel given
         as argument to the top of the panel stack.</p>
       </div>
@@ -3953,7 +3953,7 @@ void print_in_middle(WINDOW *win, int starty, int startx, int width, char *strin
         the user presses &lt;ENTER&gt; present selection ends and
         panel is resized by using the concept explained. While in
         resizing mode the program doesn't show how the window is
-        getting resized. It's left as an exercise to the reader to
+        getting resized. It is left as an exercise to the reader to
         print a dotted border while it gets resized to a new
         position.</p>
 
@@ -5106,7 +5106,7 @@ int main()
         This brings us to the interesting option for an item the
         one and only O_SELECTABLE. We can turn it off by the
         function item_opts_off() and after that that item is not
-        selectable. It's like a grayed item in those fancy windows
+        selectable. It is like a grayed item in those fancy windows
         menus. Let's put these concepts in practice with this
         example</p>
 
@@ -5206,10 +5206,10 @@ int main()
         "MENUUSERPTR">17.9. The useful User Pointer</a></h3>
 
         <p>We can associate a user pointer with each item in the
-        menu. It works the same way as user pointer in panels. It's
+        menu. It works the same way as user pointer in panels. It is
         not touched by menu system. You can store any thing you
         like in that. I usually use it to store the function to be
-        executed when the menu option is chosen (It's selected and
+        executed when the menu option is chosen (It is selected and
         may be the user pressed &lt;ENTER&gt;);</p>
 
         <div class="EXAMPLE">
@@ -5318,7 +5318,7 @@ void func(char *name)
       <p>Well. If you have seen those forms on web pages which take
       input from users and do various kinds of things, you might be
       wondering how would any one create such forms in text mode
-      display. It's quite difficult to write those nifty forms in
+      display. It is quite difficult to write those nifty forms in
       plain ncurses. Forms library tries to provide a basic frame
       work to build and maintain forms with ease. It has lot of
       features(functions) which manage validation, dynamic
@@ -5989,7 +5989,7 @@ int set_field_status(FIELD *field,      /* field to alter */
 int field_status(FIELD *field);         /* fetch status of field */
 </pre>
 
-          <p>It's better to check the field's status only after
+          <p>It is better to check the field's status only after
           after leaving the field, as data buffer might not have
           been updated yet as the validation is still due. To
           guarantee that right status is returned, call
@@ -6042,7 +6042,7 @@ char *field_userptr(FIELD *field);      /* fetch user pointer of the field */
     field_opts_off(field_pointer, O_STATIC);
 </pre>
 
-          <p>But it's usually not advisable to allow a field to
+          <p>But it is usually not advisable to allow a field to
           grow infinitely. You can set a maximum limit to the
           growth of the field with</p>
           <pre class="PROGRAMLISTING">
@@ -6342,7 +6342,7 @@ FIELDTYPE *field_type(FIELD *field);      /* field to query */
         </ul>
 
         <p>The following are the pre-defined validation types. You
-        can also specify custom validation, though it's a bit
+        can also specify custom validation, though it is a bit
         tricky and cumbersome.</p>
 
         <h1 class="BRIDGEHEAD"><a name="AEN1069" id=
@@ -6360,7 +6360,7 @@ int set_field_type(FIELD *field,          /* field to alter */
         <p>The width argument sets a minimum width of data. The
         user has to enter at-least width number of characters
         before he can leave the field. Typically you'll want to set
-        this to the field width; if it's greater than the field
+        this to the field width; if it is greater than the field
         width, the validation check will always fail. A minimum
         width of zero makes field completion optional.</p>
 
@@ -6378,7 +6378,7 @@ int set_field_type(FIELD *field,          /* field to alter */
 
         <p>The width argument sets a minimum width of data. As with
         TYPE_ALPHA, typically you'll want to set this to the field
-        width; if it's greater than the field width, the validation
+        width; if it is greater than the field width, the validation
         check will always fail. A minimum width of zero makes field
         completion optional.</p>
 
@@ -6497,7 +6497,7 @@ int form_driver(FORM *form,     /* form on which to operate     */
 
         <p>As you have seen some of the examples above, you have to
         be in a loop looking for user input and then decide whether
-        it's a field data or a form request. The form requests are
+        it is a field data or a form request. The form requests are
         then passed to form_driver() to do the work.</p>
 
         <p>The requests roughly can be divided into following
@@ -7073,7 +7073,7 @@ int set_new_page(FIELD *field,/* Field at which page break to be set or unset */
         development of full screen curses programs.</i></span></p>
 
         <p>The kit provides some useful widgets, which can be used
-        in your programs directly. It's pretty well written and the
+        in your programs directly. It is pretty well written and the
         documentation is very good. The examples in the examples
         directory can be a good place to start for beginners. The
         CDK can be downloaded from <a href=

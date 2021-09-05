@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -33,7 +33,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.60 2020/02/29 15:46:00 anonymous.maarten Exp $ */
+/* $Id: term_entry.h,v 1.61 2021/09/04 10:52:55 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -142,7 +142,7 @@ extern NCURSES_EXPORT_VAR(ENTRY *) _nc_tail;
 
 /*
  * Note that WANTED and PRESENT are not simple inverses!  If a capability
- * has been explicitly cancelled, it's not considered WANTED.
+ * has been explicitly cancelled, it is not considered WANTED.
  */
 #define WANTED(s)	((s) == ABSENT_STRING)
 #define PRESENT(s)	(((s) != ABSENT_STRING) && ((s) != CANCELLED_STRING))

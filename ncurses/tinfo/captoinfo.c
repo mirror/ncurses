@@ -98,7 +98,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: captoinfo.c,v 1.101 2021/02/28 01:05:07 tom Exp $")
+MODULE_ID("$Id: captoinfo.c,v 1.102 2021/09/04 10:29:15 tom Exp $")
 
 #if 0
 #define DEBUG_THIS(p) DEBUG(9, p)
@@ -940,7 +940,7 @@ _nc_infotocap(const char *cap GCC_UNUSED, const char *str, int const parameteriz
 		break;
 
 		/*
-		 * %s isn't in termcap, but it's convenient to pass it through
+		 * %s isn't in termcap, but it is convenient to pass it through
 		 * so we can represent things like terminfo pfkey strings in
 		 * termcap notation.
 		 */

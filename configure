@@ -14520,7 +14520,7 @@ case "$MANPAGE_FORMAT" in
 		MANPATH="/usr/man:/usr/share/man"
 	fi
 
-	# look for the 'date' man-page (it's most likely to be installed!)
+	# look for the 'date' man-page (it is most likely to be installed!)
 	MANPAGE_FORMAT=
 	cf_preform="no"
 	cf_catonly="yes"
@@ -22527,7 +22527,7 @@ do
 
 #ifdef NEED_PTEM_H
 /* This is a workaround for SCO:  they neglected to define struct winsize in
- * termios.h -- it's only in termio.h and ptem.h
+ * termios.h -- it is only in termio.h and ptem.h
  */
 #include <sys/stream.h>
 #include <sys/ptem.h>

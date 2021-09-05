@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.644 2021/08/18 21:55:42 tom Exp $
+ * $Id: curses.priv.h,v 1.645 2021/09/04 10:29:15 tom Exp $
  *
  *	curses.priv.h
  *
@@ -2212,7 +2212,7 @@ extern NCURSES_EXPORT_VAR(SCREEN *) SP;
 
 /*
  * We don't want to use the lines or columns capabilities internally, because
- * if the application is running multiple screens under X, it's quite possible
+ * if the application is running multiple screens under X, it is quite possible
  * they could all have type xterm but have different sizes!  So...
  */
 #define screen_lines(sp)        (sp)->_lines

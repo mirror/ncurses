@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.50 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.51 2021/09/04 10:54:35 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -130,7 +130,7 @@ signal_name(int sig)
  * (this may include XENIX).
  *
  * This implementation will probably be changed to use signal(3) in
- * the future.  If nothing else, it's simpler...
+ * the future.  If nothing else, it is simpler...
  */
 
 #if USE_SIGTSTP

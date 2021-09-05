@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.67 2021/06/17 21:11:08 tom Exp $
+.\" $Id: tput.1,v 1.70 2021/09/04 19:02:50 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -436,10 +436,21 @@ T}
 The \fBtput\fP command was begun by Bill Joy in 1980.
 The initial version only cleared the screen.
 .PP
-AT&T System V provided a different \fBtput\fP command,
-whose \fBinit\fP and \fBreset\fP  subcommands
+AT&T System V provided a different \fBtput\fP command:
+.bP
+SVr2 provided a rudimentary \fBtput\fP
+which checked the parameter against each
+predefined capability and returned the corresponding value.
+This version of \fBtput\fP did not use \fBtparm\fP(3X) for
+the capabilities which are parameterized.
+.bP
+SVr3 replaced that, a year later, by a more extensive program
+whose \fBinit\fP and \fBreset\fP subcommands
 (more than half the program) were incorporated from
 the \fBreset\fP feature of BSD \fBtset\fP written by Eric Allman.
+.bP
+SVr4 added color initialization using the \fIorig_colors\fP and
+\fIorig_pairs\fP capabilities in the \fBinit\fP subcommand.
 .PP
 Keith Bostic replaced the BSD \fBtput\fP command in 1989
 with a new implementation

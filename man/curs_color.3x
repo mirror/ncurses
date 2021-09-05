@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.64 2021/06/17 21:30:22 tom Exp $
+.\" $Id: curs_color.3x,v 1.66 2021/09/04 19:42:20 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -467,6 +467,54 @@ Paradise and compatibles) do the wrong thing when you try to set a bright
 \*(``yellow\*('' background (you get a blinking yellow foreground instead).
 .bP
 Color RGB values are not settable.
+.SH HISTORY
+.PP
+SVr3.2 introduced color support to curses in 1987.
+.PP
+SVr4 made internal changes,
+e.g., moving the storage for the color state
+from \fBSP\fP (the \fBSCREEN\fP structure)
+to \fBcur_term\fP (the \fBTERMINAL\fP structure),
+but provided the same set of library functions.
+.PP
+SVr4 curses limits the number of color pairs to 64,
+reserving color pair zero (0) as the terminal's initial uncolored state.
+This limit arises because the color pair information is a bitfield
+in the \fBchtype\fP data type (denoted by \fBA_COLOR\fP).
+.PP
+Other implementations of curses had different limits:
+.bP
+PCCurses (1987-1990) provided for only eight (8) colors.
+.bP
+PDCurses (1992-present) inherited the 8-color limitation from PCCurses,
+but changed this to 256 in version 2.5 (2001),
+along with changing \fBchtype\fP from 16-bits to 32-bits.
+.bP
+X/Open Curses (1992-present)
+added a new structure \fBcchar_t\fP to store the character,
+attributes and color-pair values, allowing increased range of color-pairs.
+Both color-pairs and color-values used a signed \fBshort\fP,
+limiting values to 15 bits.
+.bP
+ncurses (1992-present) uses eight bits for \fBA_COLOR\fP in \fBchtype\fP values.
+.IP
+Version 5.3 provided a wide-character interface (2002),
+but left color-pairs as part of the attributes-field.
+.IP
+Since version 6 (2015),
+ncurses uses a separate \fBint\fP for color-pairs in the \fBcchar_t\fP values.
+When those color-pair values fit in 8 bits,
+ncurses allows color-pairs to be manipulated
+via the functions using \fBchtype\fP values.
+.bP
+NetBSD curses used 6 bits from
+2000 (when colors were first supported) until 2004.
+At that point, NetBSD changed to use 10 bits.
+As of 2021, that size is unchanged.
+Like ncurses before version 6,
+the NetBSD color-pair information is stored in
+the attributes field of \fBcchar_t\fP, limiting the number of color-pairs
+by the size of the bitfield.
 .SH PORTABILITY
 This implementation satisfies XSI Curses's minimum maximums
 for \fBCOLORS\fR and \fBCOLOR_PAIRS\fR.

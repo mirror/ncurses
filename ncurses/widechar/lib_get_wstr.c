@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.18 2021/05/22 23:49:33 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.19 2021/09/04 10:29:59 tom Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)
@@ -144,7 +144,7 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
 	if (code == KEY_CODE_YES) {
 	    /*
 	     * Some terminals (the Wyse-50 is the most common) generate a \n
-	     * from the down-arrow key.  With this logic, it's the user's
+	     * from the down-arrow key.  With this logic, it is the user's
 	     * choice whether to set kcud=\n for wget_wch(); terminating
 	     * *getn_wstr() with \n should work either way.
 	     */

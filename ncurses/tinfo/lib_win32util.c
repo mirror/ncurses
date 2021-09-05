@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32util.c,v 1.1 2020/08/14 21:57:01 juergen Exp $")
+MODULE_ID("$Id: lib_win32util.c,v 1.2 2021/09/04 10:54:35 tom Exp $")
 
 #ifdef _NC_WINDOWS
 #include <io.h>
@@ -48,7 +48,7 @@ MODULE_ID("$Id: lib_win32util.c,v 1.1 2020/08/14 21:57:01 juergen Exp $")
 
 /*   This function tests, whether or not the ncurses application
      is running as a descendant of MSYS2/cygwin mintty terminal
-     application. mintty doesn't use Windows Console for it's screen
+     application. mintty doesn't use Windows Console for its screen
      I/O, so the native Windows _isatty doesn't recognize it as
      character device. But we can discover we are at the end of an
      Pipe and can query the server side of the pipe, looking whether

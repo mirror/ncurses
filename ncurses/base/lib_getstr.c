@@ -42,7 +42,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getstr.c,v 1.36 2021/05/22 19:57:21 tom Exp $")
+MODULE_ID("$Id: lib_getstr.c,v 1.37 2021/09/04 10:29:15 tom Exp $")
 
 /*
  * This wipes out the last character, no matter whether it was a tab, control
@@ -114,7 +114,7 @@ wgetnstr_events(WINDOW *win,
     while ((ch = wgetch_events(win, evl)) != ERR) {
 	/*
 	 * Some terminals (the Wyse-50 is the most common) generate
-	 * a \n from the down-arrow key.  With this logic, it's the
+	 * a \n from the down-arrow key.  With this logic, it is the
 	 * user's choice whether to set kcud=\n for wgetch();
 	 * terminating *getstr() with \n should work either way.
 	 */

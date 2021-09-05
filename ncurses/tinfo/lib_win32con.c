@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32con.c,v 1.6 2020/11/21 23:44:58 tom Exp $")
+MODULE_ID("$Id: lib_win32con.c,v 1.7 2021/09/04 10:54:35 tom Exp $")
 
 #ifdef _NC_WINDOWS
 
@@ -104,7 +104,7 @@ static const LONG ansi_keys[] =
 #define FKEYS 24
 #define MAPSIZE (FKEYS + N_INI)
 
-/*   A process can only have a single console, so it's safe
+/*   A process can only have a single console, so it is safe
      to maintain all the information about it in a single
      static structure.
  */
@@ -198,7 +198,7 @@ IsConsoleHandle(HANDLE hdl)
 
 /*   This is used when running in terminfo mode to discover,
      whether or not the "terminal" is actually a Windows
-     Console. It's the responsibility of the console to deal
+     Console. It is the responsibility of the console to deal
      with the terminal escape sequences that are sent by
      terminfo.
  */

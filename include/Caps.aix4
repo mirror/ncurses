@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2001-2015,2016 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -29,7 +29,7 @@
 #
 # Author: Thomas Dickey
 #
-# $Id: Caps.aix4,v 1.18 2020/10/17 21:30:19 tom Exp $
+# $Id: Caps.aix4,v 1.19 2021/09/04 10:52:55 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is designed to align with AIX 4.x's terminfo.
@@ -58,7 +58,7 @@
 #
 # The codes following [Y-] in column 7 describe the versions of termcap which
 # use the given capability.  This information is not used by the curses library
-# proper; rather, it's there to help the terminfo maintainer avoid emitting
+# proper; rather, it is there to help the terminfo maintainer avoid emitting
 # termcap entry translations that are more than 1023 bytes long (and tank a
 # lot of old termcap-using programs).  The codes read as follows:
 #	B = mentioned in the BSD man page for 4.4BSD curses
@@ -98,8 +98,8 @@
 # 3. List it in the standard table.  You almost certainly do *not* want
 # to do this -- the capabilities in that one, and their order, have been
 # carefully chosen to be SVr4-binary-compatible when they're written out
-# as a terminfo object, and breaking this would be bad.  It's up to the ncurses
-# library what to do with the terminfo data after it's read in.
+# as a terminfo object, and breaking this would be bad.  It is up to the ncurses
+# library what to do with the terminfo data after it is read in.
 #
 # 4. List it in the aliases table with an IGNORE target field.  If you
 # do this, the capability will be ignored on input (though the user will
@@ -108,7 +108,7 @@
 # 5. List it in the extensions table. If you do this, the compiler will
 # silently accept the capability, but the curses library proper will never
 # see it (because it won't be written out as part of the terminfo object
-# format).  It's up to you what you have the compiler do with it.
+# format).  It is up to you what you have the compiler do with it.
 #
 # There are two opposite reasons to choose option 5.  One is when you want
 # to eat the capability silently and discard it when doing translations
@@ -985,7 +985,7 @@ has_hardware_tabs		OTpt	bool	pt	-		-	YB---	has 8-char tabs invoked with ^I
 return_does_clr_eol		OTxr	bool	xr	-		-	YB---	return clears the line
 # tek_4025_insert_line		OTxx	bool	xx	-		-	-BC--	Tektronix 4025 insert-line glitch
 #
-# mytinfo described this as a termcap capability, but it's not listed in the
+# mytinfo described this as a termcap capability, but it is not listed in the
 # 4.4BSD man pages, and not found in the 4.4BSD termcap file.  The ncurses
 # package, like System V, behaves as though it is always true.
 #

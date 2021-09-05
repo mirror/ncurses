@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.188 2021/08/15 20:00:48 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.189 2021/09/04 10:29:59 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -1564,7 +1564,7 @@ dump_entry(TERMTYPE2 *tterm,
 	}
 	if (FMT_ENTRY() > critlen) {
 	    /*
-	     * We pick on sgr because it's a nice long string capability that
+	     * We pick on sgr because it is a nice long string capability that
 	     * is really just an optimization hack.  Another good candidate is
 	     * acsc since it is both long and unused by BSD termcap.
 	     */
