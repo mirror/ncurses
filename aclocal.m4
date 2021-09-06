@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.975 2021/09/04 10:36:30 tom Exp $
+dnl $Id: aclocal.m4,v 1.977 2021/09/05 21:32:31 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -415,7 +415,7 @@ ifelse([$5],NONE,,[{ test -z "$5" || test "x$5" = xNONE || test "x$4" != "x$5"; 
 }
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_APPEND_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_APPEND_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Use CF_ADD_CFLAGS after first checking for potential redefinitions.
 dnl $1 = flags to add
@@ -424,10 +424,14 @@ define([CF_APPEND_CFLAGS],
 [
 for cf_add_cflags in $1
 do
-	CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
-	CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+	case "x$cf_add_cflags" in
+	(x-[[DU]]*)
+		CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
+		CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+		;;
+	esac
+	CF_ADD_CFLAGS([$cf_add_cflags],[$2])
 done
-CF_ADD_CFLAGS([$1],[$2])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_APPEND_TEXT version: 1 updated: 2017/02/25 18:58:55
@@ -5244,10 +5248,10 @@ int main(void)
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAKEFLAGS version: 20 updated: 2021/01/03 19:29:49
+dnl CF_MAKEFLAGS version: 21 updated: 2021/09/04 06:47:34
 dnl ------------
 dnl Some 'make' programs support ${MAKEFLAGS}, some ${MFLAGS}, to pass 'make'
-dnl options to lower-levels.  It's very useful for "make -n" -- if we have it.
+dnl options to lower-levels.  It is very useful for "make -n" -- if we have it.
 dnl (GNU 'make' does both, something POSIX 'make', which happens to make the
 dnl ${MAKEFLAGS} variable incompatible because it adds the assignments :-)
 AC_DEFUN([CF_MAKEFLAGS],
@@ -6858,7 +6862,7 @@ case "$cf_cv_regex_hdrs" in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REMOVE_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_REMOVE_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Remove a given option from CFLAGS/CPPFLAGS
 dnl $1 = option to remove
@@ -6867,25 +6871,13 @@ dnl $3 = nonempty to allow verbose message
 define([CF_REMOVE_CFLAGS],
 [
 cf_tmp_cflag=`echo "x$1" | sed -e 's/^.//' -e 's/=.*//'`
-cf_old_cflag="[$]$2"
-
-case "[$]$2" in
-(*$1=*)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag=[[^ 	]]*%%g"`
-	;;
-(*$1\ *)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%${cf_tmp_cflag}.%%"`
-	;;
-(*$1)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag%%"`
-	;;
-esac
-
-if test "[$]$2" != "$cf_old_cflag" ;
-then
+while true
+do
+	cf_old_cflag=`echo "x[$]$2" | sed -e 's/^.//' -e 's/[[ 	]][[ 	]]*-/ -/g' -e "s%$cf_tmp_cflag\\(=[[^ 	]][[^ 	]]*\\)\?%%" -e 's/^[[ 	]]*//' -e 's%[[ ]][[ ]]*-D% -D%g' -e 's%[[ ]][[ ]]*-I% -I%g'`
+	test "[$]$2" != "$cf_old_cflag" || break
 	ifelse([$3],,,[CF_VERBOSE(removing old option $1 from $2)])
-	$2="$cf_new_cflag"
-fi
+	$2="$cf_old_cflag"
+done
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_DEFINE version: 3 updated: 2010/01/09 11:05:50
@@ -7072,7 +7064,7 @@ do
 done
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_SHARED_OPTS version: 106 updated: 2021/08/07 16:59:57
+dnl CF_SHARED_OPTS version: 107 updated: 2021/09/04 06:47:34
 dnl --------------
 dnl --------------
 dnl Attempt to determine the appropriate CC/LD options for creating a shared
@@ -7096,7 +7088,7 @@ dnl The variable 'cf_cv_shlib_version_infix' controls whether shared library
 dnl version numbers are infix (ex: libncurses.<ver>.dylib) or postfix
 dnl (ex: libncurses.so.<ver>).
 dnl
-dnl Some loaders leave 'so_locations' lying around.  It's nice to clean up.
+dnl Some loaders leave 'so_locations' lying around.  It is nice to clean up.
 AC_DEFUN([CF_SHARED_OPTS],
 [
 	AC_REQUIRE([CF_LD_RPATH_OPT])

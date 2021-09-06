@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.199 2021/09/04 10:39:46 tom Exp $
+dnl $Id: aclocal.m4,v 1.201 2021/09/05 21:29:34 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -345,7 +345,7 @@ ifelse([$5],NONE,,[{ test -z "$5" || test "x$5" = xNONE || test "x$4" != "x$5"; 
 }
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_APPEND_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_APPEND_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Use CF_ADD_CFLAGS after first checking for potential redefinitions.
 dnl $1 = flags to add
@@ -354,10 +354,14 @@ define([CF_APPEND_CFLAGS],
 [
 for cf_add_cflags in $1
 do
-	CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
-	CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+	case "x$cf_add_cflags" in
+	(x-[[DU]]*)
+		CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
+		CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+		;;
+	esac
+	CF_ADD_CFLAGS([$cf_add_cflags],[$2])
 done
-CF_ADD_CFLAGS([$1],[$2])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_APPEND_TEXT version: 1 updated: 2017/02/25 18:58:55
@@ -565,7 +569,7 @@ AC_TRY_LINK([#include <stdio.h>],[printf("Hello world");],,
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CHECK_CURSES_LIB version: 3 updated: 2021/01/04 19:45:09
+dnl CF_CHECK_CURSES_LIB version: 4 updated: 2021/09/05 17:25:40
 dnl -------------------
 dnl $1 = nominal library name, used also for header lookup
 dnl $2 = suffix to append to library name
@@ -587,10 +591,11 @@ elif test "x${PKG_CONFIG:=none}" != xnone; then
 
 		AC_MSG_CHECKING(if the $1$2 package files work)
 
+		cf_save_CFLAGS="$CFLAGS"
 		cf_save_CPPFLAGS="$CPPFLAGS"
 		cf_save_LIBS="$LIBS"
 
-		CF_ADD_CFLAGS(`$PKG_CONFIG --cflags "$1$2"`)
+		CF_APPEND_CFLAGS(`$PKG_CONFIG --cflags "$1$2"`)
 		CF_ADD_LIBS(`$PKG_CONFIG --libs "$1$2"`)
 
 		AC_TRY_LINK([#include <$1.h>],
@@ -604,13 +609,14 @@ elif test "x${PKG_CONFIG:=none}" != xnone; then
 			[cf_have_curses_lib=no])
 		AC_MSG_RESULT($cf_have_curses_lib)
 		test "$cf_have_curses_lib" = maybe && cf_have_curses_lib=yes
-		if test "$cf_have_curses_lib" != "yes"
+		if test "$cf_have_curses_lib" = "yes"
 		then
-			CPPFLAGS="$cf_save_CPPFLAGS"
-			LIBS="$cf_save_LIBS"
-		else
 			CF_UPPER(cf_upper,have_lib$1)
 			AC_DEFINE_UNQUOTED($cf_upper,1)
+		else
+			CFLAGS="$cf_save_CFLAGS"
+			CPPFLAGS="$cf_save_CPPFLAGS"
+			LIBS="$cf_save_LIBS"
 		fi
 	fi
 fi
@@ -3389,7 +3395,7 @@ esac
 AC_SUBST(LINT_OPTS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REMOVE_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_REMOVE_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Remove a given option from CFLAGS/CPPFLAGS
 dnl $1 = option to remove
@@ -3398,25 +3404,13 @@ dnl $3 = nonempty to allow verbose message
 define([CF_REMOVE_CFLAGS],
 [
 cf_tmp_cflag=`echo "x$1" | sed -e 's/^.//' -e 's/=.*//'`
-cf_old_cflag="[$]$2"
-
-case "[$]$2" in
-(*$1=*)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag=[[^ 	]]*%%g"`
-	;;
-(*$1\ *)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%${cf_tmp_cflag}.%%"`
-	;;
-(*$1)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag%%"`
-	;;
-esac
-
-if test "[$]$2" != "$cf_old_cflag" ;
-then
+while true
+do
+	cf_old_cflag=`echo "x[$]$2" | sed -e 's/^.//' -e 's/[[ 	]][[ 	]]*-/ -/g' -e "s%$cf_tmp_cflag\\(=[[^ 	]][[^ 	]]*\\)\?%%" -e 's/^[[ 	]]*//' -e 's%[[ ]][[ ]]*-D% -D%g' -e 's%[[ ]][[ ]]*-I% -I%g'`
+	test "[$]$2" != "$cf_old_cflag" || break
 	ifelse([$3],,,[CF_VERBOSE(removing old option $1 from $2)])
-	$2="$cf_new_cflag"
-fi
+	$2="$cf_old_cflag"
+done
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_DEFINE version: 3 updated: 2010/01/09 11:05:50

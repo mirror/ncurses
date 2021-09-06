@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.181 2021/09/04 10:47:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.183 2021/09/05 21:33:34 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -340,7 +340,7 @@ ifelse([$5],NONE,,[{ test -z "$5" || test "x$5" = xNONE || test "x$4" != "x$5"; 
 }
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_APPEND_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_APPEND_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Use CF_ADD_CFLAGS after first checking for potential redefinitions.
 dnl $1 = flags to add
@@ -349,10 +349,14 @@ define([CF_APPEND_CFLAGS],
 [
 for cf_add_cflags in $1
 do
-	CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
-	CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+	case "x$cf_add_cflags" in
+	(x-[[DU]]*)
+		CF_REMOVE_CFLAGS($cf_add_cflags,CFLAGS,[$2])
+		CF_REMOVE_CFLAGS($cf_add_cflags,CPPFLAGS,[$2])
+		;;
+	esac
+	CF_ADD_CFLAGS([$cf_add_cflags],[$2])
 done
-CF_ADD_CFLAGS([$1],[$2])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_APPEND_TEXT version: 1 updated: 2017/02/25 18:58:55
@@ -3731,7 +3735,7 @@ AC_MSG_RESULT($cf_prog_ln_sf)
 test "$cf_prog_ln_sf" = yes && LN_S="$LN_S -f"
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_REMOVE_CFLAGS version: 1 updated: 2021/08/28 15:20:37
+dnl CF_REMOVE_CFLAGS version: 3 updated: 2021/09/05 17:25:40
 dnl ----------------
 dnl Remove a given option from CFLAGS/CPPFLAGS
 dnl $1 = option to remove
@@ -3740,25 +3744,13 @@ dnl $3 = nonempty to allow verbose message
 define([CF_REMOVE_CFLAGS],
 [
 cf_tmp_cflag=`echo "x$1" | sed -e 's/^.//' -e 's/=.*//'`
-cf_old_cflag="[$]$2"
-
-case "[$]$2" in
-(*$1=*)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag=[[^ 	]]*%%g"`
-	;;
-(*$1\ *)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%${cf_tmp_cflag}.%%"`
-	;;
-(*$1)
-	cf_old_cflag=`echo "x$cf_old_cflag" | sed -e 's/^.//' -e "s%$cf_tmp_cflag%%"`
-	;;
-esac
-
-if test "[$]$2" != "$cf_old_cflag" ;
-then
+while true
+do
+	cf_old_cflag=`echo "x[$]$2" | sed -e 's/^.//' -e 's/[[ 	]][[ 	]]*-/ -/g' -e "s%$cf_tmp_cflag\\(=[[^ 	]][[^ 	]]*\\)\?%%" -e 's/^[[ 	]]*//' -e 's%[[ ]][[ ]]*-D% -D%g' -e 's%[[ ]][[ ]]*-I% -I%g'`
+	test "[$]$2" != "$cf_old_cflag" || break
 	ifelse([$3],,,[CF_VERBOSE(removing old option $1 from $2)])
-	$2="$cf_new_cflag"
-fi
+	$2="$cf_old_cflag"
+done
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_DEFINE version: 3 updated: 2010/01/09 11:05:50
