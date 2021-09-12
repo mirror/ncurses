@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3706 2021/09/05 17:01:19 tom Exp $
+-- $Id: NEWS,v 1.3708 2021/09/11 23:45:11 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20210911
+	+ adjust ifdef in test_opaque.c to fix build with ncurses 5.7
+	+ add testing note for xterm-{hp|sco|sun} -TD
+	+ corrected description for ansi.sys-old -TD
+	+ add xterm+nopcfkeys, to fill in keys for xterm-hp, xterm-sun -TD
+	+ use hp+arrows in a few places -TD
+	+ use hp+pfk-cr in a few places -TD
 
 20210905
 	+ correct logic in filtering of redefinitions (report by Sven Joachim,

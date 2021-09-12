@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.911 $
-#	$Date: 2021/09/04 15:32:00 $
+#	$Revision: 1.916 $
+#	$Date: 2021/09/11 23:22:59 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -651,7 +651,10 @@ ansi-generic|ansiterm|generic ansi standard terminal,
 # though undocumented.  The <pfkey> capability is untested but should work for
 # keys F1-F10 (%p1 values outside this range will yield unpredictable results).
 # From: Eric S. Raymond <esr@snark.thyrsus.com> Nov 7 1995
-ansi.sys-old|ANSI.SYS under PC-DOS 2.1,
+#
+# DOS 2.0 (January 1983) documented these features in
+# Chapter 13, "Using Extended Screen and Keyboard Control" -TD
+ansi.sys-old|ANSI.SYS under PC-DOS 2.0,
 	OTbs, am, mir, msgr, xon,
 	cols#80, lines#25,
 	clear=\E[2J, cub1=^H, cud1=\E[B, cuf1=\E[C,
@@ -4837,7 +4840,28 @@ xterm+kbs|fragment for backspace key,
 xterm+pcfkeys|fragment for PC-style fkeys,
 	use=xterm+app, use=xterm+pcf2, use=xterm+pcc2,
 	use=xterm+pce2,
-#
+
+# The xterm ctrlFKeys resource defaults to 10, so without the "pc-style"
+# feature, e.g., setting the modifyCursorKeys and modifyFunctionKeys resources
+# to -1 to disable them, one gets 42 function-keys on a 12-function-key
+# keyboard, e.g.,
+# kf1                   = \E[11~
+# kf11 shift f1         = \E[23~
+# kf21 control f1       = \E[42~
+# kf31 shift control f1 = \E[52~
+xterm+nopcfkeys|fragment without PC-style fkeys,
+	kf1=\E[11~, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
+	kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, kf16=\E[29~,
+	kf17=\E[31~, kf18=\E[32~, kf19=\E[33~, kf2=\E[12~,
+	kf20=\E[34~, kf21=\E[42~, kf22=\E[43~, kf23=\E[44~,
+	kf24=\E[45~, kf25=\E[46~, kf26=\E[47~, kf27=\E[48~,
+	kf28=\E[49~, kf29=\E[50~, kf3=\E[13~, kf30=\E[51~,
+	kf31=\E[52~, kf32=\E[53~, kf33=\E[54~, kf34=\E[55~,
+	kf35=\E[56~, kf36=\E[57~, kf37=\E[58~, kf38=\E[59~,
+	kf39=\E[60~, kf4=\E[14~, kf40=\E[61~, kf41=\E[62~,
+	kf42=\E[63~, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~,
+
 xterm+noapp|fragment with cursor keys in normal mode,
 	kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A, kend=\E[F,
 	khome=\E[H,
@@ -5361,11 +5385,27 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	u7=\E[6n, u8=\233[?%[;0123456789]c, u9=\E[c,
 	vpa=\233%i%p1%dd, use=xterm+kbs,
 
+# Note: normally xterm supports modified function-keys as described in
+#	XTerm - "Other" modified keys
+#	https://invisible-island.net/xterm/modified-keys.html
+#
+# However, xterm-hp, xterm-sco and xterm-sun assume no modifiers.  Here is
+# a simple script which demonstrates these descriptions:
+#	#!/bin/sh
+#	export TERM=xterm-$1
+#	xterm \
+#		-kt $1 \
+#		-fs 16 -fa mono \
+#		-title $TERM \
+#		-tn $TERM \
+#		-xrm '*modifyCursorKeys:-1' \
+#		-xrm '*modifyFunctionKeys:-1' \
+#		-e tack
+# e.g., "foo sun" if the script is named "foo" -TD
 xterm-hp|xterm with hpterm function keys,
 	kclr=\EJ, kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA,
-	kdch1=\EP, kend=\EF, kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es,
-	kf5=\Et, kf6=\Eu, kf7=\Ev, kf8=\Ew, khome=\Eh, kich1=\EQ,
-	knp=\ES, kpp=\ET, use=xterm+nofkeys,
+	kdch1=\EP, kend=\EF, khome=\Eh, kich1=\EQ, knp=\ES, kpp=\ET,
+	use=hp+pfk-cr, use=xterm+nofkeys, use=xterm+nopcfkeys,
 
 xterm-sco|xterm with SCO function keys,
 	kbeg=\E[E, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
@@ -5761,7 +5801,7 @@ xterm-sun|xterm with sunFunctionKeys true,
 	kf5=\E[228z, kf6=\E[229z, kf7=\E[230z, kf8=\E[231z,
 	kf9=\E[232z, kfnd=\E[200z, khlp=\E[196z, khome=\E[214z,
 	kich1=\E[2z, knp=\E[222z, kpp=\E[216z, kund=\E[195z,
-	use=xterm+nofkeys,
+	use=xterm+nofkeys, use=xterm+nopcfkeys,
 xterms-sun|small (80x24) xterm with sunFunctionKeys true,
 	cols#80, lines#24, use=xterm-sun,
 
@@ -6670,12 +6710,10 @@ hpterm|X-hpterm|hp X11 terminal emulator,
 	cub1=^H, cud1=\EB, cuf1=\EC, cup=\E&a%p1%dy%p2%dC,
 	cuu1=\EA, dch1=\EP, dim=\E&dH, dl1=\EM, ed=\EJ$<1>, el=\EK,
 	hpa=\E&a%p1%dC, ht=^I, hts=\E1, il1=\EL, ind=\n, kbs=^H,
-	kclr=\EJ, kctab=\E2, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
-	kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK, kf1=\Ep,
-	kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev, kf8=\Ew,
-	khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES, kll=\EF,
-	knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3, meml=\El,
-	memu=\Em, pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
+	kclr=\EJ, kctab=\E2, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK,
+	khts=\E1, kich1=\EQ, kil1=\EL, knp=\EU, kpp=\EV, krmir=\ER,
+	ktbc=\E3, meml=\El, memu=\Em,
+	pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
 	pfloc=\E&f1a%p1%dk%p2%l%dL%p2%s,
 	pfx=\E&f2a%p1%dk%p2%l%dL%p2%s,
 	pln=\E&f%p1%dk%p2%l%dd0L%p2%s, rev=\E&dB, ri=\ET,
@@ -6685,7 +6723,7 @@ hpterm|X-hpterm|hp X11 terminal emulator,
 	    %p5%{8}%*%+%{64}%+%c%?%p9%t%'\016'%c%e%'\017'%c%;,
 	sgr0=\E&d@\017, smacs=^N, smir=\EQ, smkx=\E&s1A,
 	smln=\E&jB, smso=\E&dJ, smul=\E&dD, tbc=\E3,
-	vpa=\E&a%p1%dY,
+	vpa=\E&a%p1%dY, use=hp+pfk-cr, use=hp+arrows,
 # HPUX 11 provides a color version.
 hpterm-color|HP X11 terminal emulator with color,
 	ccc,
@@ -6724,12 +6762,9 @@ hpterm-color2|X-hpterm-color2|hp X11 terminal emulator with color,
 	      %p3%d%;b%?%p4%{1000}%=%t1%e.%p4%d%;c%?%p5%{1000}%=%t1
 	      %e.%p5%d%;x%?%p6%{1000}%=%t1%e.%p6%d%;y%?%p7%{1000}%=
 	      %t1%e.%p7%d%;z%p1%dI,
-	is1=\EH\EJ, kbs=^H, kctab=\E2, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK,
-	kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev,
-	kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES,
-	kll=\EF, knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3,
-	meml=\El, memu=\Em,
+	is1=\EH\EJ, kbs=^H, kctab=\E2, kdch1=\EP, kdl1=\EM, ked=\EJ,
+	kel=\EK, khts=\E1, kich1=\EQ, kil1=\EL, knp=\EU, kpp=\EV,
+	krmir=\ER, ktbc=\E3, meml=\El, memu=\Em,
 	oc=\E&v0m1a1b1c0I\E&v1a1I\E&v1b2I\E&v1a1b3I\E&v1c4I\E&v1a1c5
 	   I\E&v1b1c6I\E&v1x1y7I,
 	op=\E&v0S, pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
@@ -6743,7 +6778,8 @@ hpterm-color2|X-hpterm-color2|hp X11 terminal emulator with color,
 	    %p9%t%'\016'%c%e%'\017'%c%;,
 	sgr0=\E&d@\017, smacs=^N, smam=\E&s0C, smcup=\E&s1A,
 	smir=\EQ, smkx=\E&s1A, smln=\E&jB, smm=\E&k1I, smso=\E&dB,
-	smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
+	smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY, use=hp+pfk-cr,
+	use=hp+arrows,
 #### EMU
 # This is for the extensible terminal emulator on the X11R6 contrib tape.
 # It corresponds to emu's internal emulation:
@@ -9864,12 +9900,9 @@ hp2|hpex2|hewlett-packard extended capabilities newer version,
 	bel=^G, clear=\E&a0y0C\EJ, cr=\r, cub1=^H, cud1=\EB,
 	cuf1=\EC, cup=\E&a%p1%dy%p2%dC, cuu1=\EA, dch1=\EP,
 	dl1=\EM, ed=\EJ, el=\EK, hpa=\E&a%p1%dC, ht=^I, hts=\E1,
-	il1=\EL, ind=\n, kbs=^H, kclr=\EJ, kctab=\E2, kcub1=\ED,
-	kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM,
-	ked=\EJ, kel=\EK, kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et,
-	kf6=\Eu, kf7=\Ev, kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ,
-	kil1=\EL, kind=\ES, kll=\EF, knp=\EU, kpp=\EV, kri=\ET,
-	krmir=\ER, ktbc=\E3, meml=\El, memu=\Em,
+	il1=\EL, ind=\n, kbs=^H, kclr=\EJ, kctab=\E2, kdch1=\EP,
+	kdl1=\EM, ked=\EJ, kel=\EK, khts=\E1, kich1=\EQ, kil1=\EL,
+	knp=\EU, kpp=\EV, krmir=\ER, ktbc=\E3, meml=\El, memu=\Em,
 	pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
 	pfloc=\E&f1a%p1%dk%p2%l%dL%p2%s,
 	pfx=\E&f2a%p1%dk%p2%l%dL%p2%s,
@@ -9879,6 +9912,7 @@ hp2|hpex2|hewlett-packard extended capabilities newer version,
 	    %p5%{8}%*%+%{64}%+%c%?%p9%t%'\016'%c%e%'\017'%c%;,
 	sgr0=\E&d@\017, smir=\EQ, smkx=\E&s1A, smln=\E&jB,
 	smso=\E&dB, smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
+	use=hp+pfk-cr, use=hp+arrows,
 
 # HP 236 console
 # From: <ddavis@ic.berkeley.edu>
@@ -9936,14 +9970,12 @@ hp98550|hp98550a|HP 9000 Series 300 color console,
 	cup=\E&a%p1%dy%p2%dC, cuu1=\EA, dch1=\EP, dim=\E&dH,
 	dl1=\EM, ed=\EJ, el=\EK, hpa=\E&a%p1%dC, ht=^I, hts=\E1,
 	if=/usr/share/tabset/std, il1=\EL, ind=\n, invis=\E&ds,
-	kbs=^H, kclr=\EJ, kctab=\E2, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
-	kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK, kf1=\Ep,
-	kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev, kf8=\Ew,
-	khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES, kll=\EF,
-	knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3, rev=\E&dJ,
-	rmacs=^O, rmir=\ER, rmkx=\E&s0A, rmso=\E&d@, rmul=\E&d@,
-	sgr0=\E&d@, smacs=^N, smir=\EQ, smkx=\E&s1A, smso=\E&dJ,
-	smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
+	kbs=^H, kclr=\EJ, kctab=\E2, kdch1=\EP, kdl1=\EM, ked=\EJ,
+	kel=\EK, khts=\E1, kich1=\EQ, kil1=\EL, kll=\EF, knp=\EU,
+	kpp=\EV, krmir=\ER, ktbc=\E3, rev=\E&dJ, rmacs=^O, rmir=\ER,
+	rmkx=\E&s0A, rmso=\E&d@, rmul=\E&d@, sgr0=\E&d@, smacs=^N,
+	smir=\EQ, smkx=\E&s1A, smso=\E&dJ, smul=\E&dD, tbc=\E3,
+	vpa=\E&a%p1%dY, use=hp+pfk-cr, use=hp+arrows,
 
 # From: Martin Trusler
 hp98550-color|hp98550a-color|HP 9000 Series 300 color console,
@@ -9960,12 +9992,9 @@ hp98550-color|hp98550a-color|HP 9000 Series 300 color console,
 	      %p3%d%;b%?%p4%{1000}%=%t1%e.%p4%d%;c%?%p5%{1000}%=%t1
 	      %e.%p5%d%;x%?%p6%{1000}%=%t1%e.%p6%d%;y%?%p7%{1000}%=
 	      %t1%e.%p7%d%;z%p1%dI,
-	is1=\EH\EJ, kbs=^H, kctab=\E2, kcub1=\ED, kcud1=\EB,
-	kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM, ked=\EJ, kel=\EK,
-	kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev,
-	kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ, kil1=\EL, kind=\ES,
-	kll=\EF, knp=\EU, kpp=\EV, kri=\ET, krmir=\ER, ktbc=\E3,
-	meml=\El, memu=\Em,
+	is1=\EH\EJ, kbs=^H, kctab=\E2, kdch1=\EP, kdl1=\EM, ked=\EJ,
+	kel=\EK, khts=\E1, kich1=\EQ, kil1=\EL, kll=\EF, knp=\EU,
+	kpp=\EV, krmir=\ER, ktbc=\E3, meml=\El, memu=\Em,
 	oc=\E&v0m1a1b1c0I\E&v1a1I\E&v1b2I\E&v1a1b3I\E&v1c4I\E&v1a1c5
 	   I\E&v1b1c6I\E&v1x1y7I,
 	op=\E&v0S, pfkey=\E&f%p1%dk%p2%l%dL%p2%s,
@@ -9981,6 +10010,7 @@ hp98550-color|hp98550a-color|HP 9000 Series 300 color console,
 	smir=\EQ, smkx=\E&s1A, smln=\E&jB, smm=\E&k1I, smso=\E&dB,
 	smul=\E&dD, tbc=\E3, u6=\Ea%dc%dR\r, u7=\Ea,
 	u8=\E%[0123456789/], u9=\E*s1\^, vpa=\E&a%p1%dY,
+	use=hp+pfk-cr, use=hp+arrows,
 
 # From: Victor Duchovni <vic@fine.princeton.edu>
 # (hp700-wy: removed obsolete ":nl=^J:";
@@ -10005,15 +10035,13 @@ hp70092|hp70092a|hp70092A|HP 700/92,
 	bold=\E&dB, cbt=\Ei, clear=\E&a0y0C\EJ, cr=\r, cub1=^H,
 	cud1=\EB, cuf1=\EC, cup=\E&a%p1%dy%p2%dC, cuu1=\EA,
 	dch1=\EP, dim=\E&dH, dl1=\EM, el=\EK, hpa=\E&a%p1%dC, ht=^I,
-	hts=\E1, il1=\EL, kbs=^H, kclr=\EJ, kctab=\E2, kcub1=\ED,
-	kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kdch1=\EP, kdl1=\EM,
-	ked=\EJ, kel=\EK, kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et,
-	kf6=\Eu, kf7=\Ev, kf8=\Ew, khome=\Eh, khts=\E1, kich1=\EQ,
-	kil1=\EL, kind=\ES, kll=\EF, knp=\EU, kpp=\EV, kri=\ET,
-	krmir=\ER, ktbc=\E3, rev=\E&dB, ri=\ET, rmacs=^O, rmir=\ER,
-	rmkx=\E&s0A, rmln=\E&j@, rmso=\E&d@, rmul=\E&d@,
-	sgr0=\E&d@, smacs=^N, smir=\EQ, smkx=\E&s1A, smln=\E&jB,
-	smso=\E&dJ, smul=\E&dD, tbc=\E3, vpa=\E&a%p1%dY,
+	hts=\E1, il1=\EL, kbs=^H, kclr=\EJ, kctab=\E2, kdch1=\EP,
+	kdl1=\EM, ked=\EJ, kel=\EK, khts=\E1, kich1=\EQ, kil1=\EL,
+	kll=\EF, knp=\EU, kpp=\EV, krmir=\ER, ktbc=\E3, rev=\E&dB,
+	ri=\ET, rmacs=^O, rmir=\ER, rmkx=\E&s0A, rmln=\E&j@,
+	rmso=\E&d@, rmul=\E&d@, sgr0=\E&d@, smacs=^N, smir=\EQ,
+	smkx=\E&s1A, smln=\E&jB, smso=\E&dJ, smul=\E&dD, tbc=\E3,
+	vpa=\E&a%p1%dY, use=hp+pfk-cr, use=hp+arrows,
 
 bobcat|sbobcat|HP 9000 model 300 console,
 	am, da, db, mir, xhp,
@@ -17368,11 +17396,10 @@ sb1|beehive superbee,
 	    \s\s\s\s\s\EP$<3>\s\EO\ER\EA$<3>,
 	ind=\n, is2=\EE$<3>\EX\EZ\EO\Eb\Eg\ER, kbs=^_, kcub1=\ED,
 	kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kdl1=\EM, ked=\EJ, kel=\EK,
-	kf0=\E2, kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu,
-	kf7=\Ev, kf8=\Ew, kf9=\E1, khome=\EH, kich1=\EQ\EO,
-	krmir=\ER, lf0=TAB CLEAR, lf9=TAB SET, rmcup=, rmir=\ER,
-	rmso=\E_3, rmul=\E_3, sgr0=\E_3, smcup=\EO, smir=\EQ\EO,
-	smso=\E_1, smul=\E_0, tbc=\E3,
+	kf0=\E2, kf9=\E1, khome=\EH, kich1=\EQ\EO, krmir=\ER,
+	lf0=TAB CLEAR, lf9=TAB SET, rmcup=, rmir=\ER, rmso=\E_3,
+	rmul=\E_3, sgr0=\E_3, smcup=\EO, smir=\EQ\EO, smso=\E_1,
+	smul=\E_0, tbc=\E3, use=hp+pfk-cr,
 sbi|superbee|beehive superbee at Indiana U.,
 	xsb,
 	cr=\r$<1>, il1=\EN$<1>\EL$<9>\EQ \EP$<9> \EO\ER\EA,
@@ -17395,9 +17422,8 @@ superbee-xsb|beehive super bee,
 	dch1=\EP$<3>, dl1=\EM$<100>, ed=\EJ$<3>, el=\EK$<3>,
 	home=\EH, ht=^I, hts=\E1,
 	ind=\n\0\0\0\n\0\0\0\EA\EK\0\0\0\ET\ET, is2=\EH\EJ,
-	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, kf1=\Ep, kf2=\Eq,
-	kf3=\Er, kf4=\Es, kf5=\Et, kf6=\Eu, kf7=\Ev, kf8=\Ew,
-	khome=\EH, rmso=\E_3, sgr0=\E_3, smso=\E_1, tbc=\E3,
+	kcub1=\ED, kcud1=\EB, kcuf1=\EC, kcuu1=\EA, khome=\EH,
+	rmso=\E_3, sgr0=\E_3, smso=\E_1, tbc=\E3, use=hp+pfk-cr,
 # This loses on lines > 80 chars long, use at your own risk
 superbeeic|super bee with insert char,
 	ich1=, rmir=\ER, smir=\EQ, use=superbee-xsb,
@@ -17453,9 +17479,8 @@ microb|microbee|micro bee series,
 	bel=^G, clear=\EE, cr=\r, cub1=^H, cud1=\n, cuf1=\EC,
 	cup=\EF%p1%{32}%+%c%p2%{32}%+%c, cuu1=\EA, ed=\EJ,
 	el=\EK, ht=^I, ind=\n, kcub1=\ED, kcud1=\EB, kcuf1=\EC,
-	kcuu1=\EA, kf1=\Ep, kf2=\Eq, kf3=\Er, kf4=\Es, kf5=\Et,
-	kf6=\Eu, kf7=\Ev, kf8=\Ew, kf9=\Ex, khome=\EH, rmso=\Ed@,
-	rmul=\Ed@, sgr0=\Ed@, smso=\s\EdP, smul=\Ed`,
+	kcuu1=\EA, kf9=\Ex, khome=\EH, rmso=\Ed@, rmul=\Ed@,
+	sgr0=\Ed@, smso=\s\EdP, smul=\Ed`, use=hp+pfk-cr,
 
 # 8675, 8686, and bee from Cyrus Rahman
 # (8675: changed k10, k11...k16 to k;, F1...F6 -- esr)
@@ -27199,5 +27224,12 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2021-09-04
 #	+ modify linux3.0 entry to reflect default mapping of shift-tab by
 #	  kbd 1.14 (report by Jan Engelhardt) -TD
+#
+# 2021-09-11
+#	+ add testing note for xterm-{hp|sco|sun} -TD
+#	+ corrected description for ansi.sys-old -TD
+#	+ add xterm+nopcfkeys, to fill in keys for xterm-hp, xterm-sun -TD
+#	+ use hp+arrows in a few places -TD
+#	+ use hp+pfk-cr in a few places -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
