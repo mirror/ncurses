@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.69 2021/08/07 21:17:46 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.70 2021/09/24 19:23:20 tom Exp $)
 #
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
@@ -471,6 +471,7 @@ END		{
 					gsub(/[ \t]+/," ",value);
 					sub(/^[0-9a-zA-Z_]+ /,"",value);
 					sub(/^\* /,"",value);
+					gsub("struct [0-9a-zA-Z_]+ \*","",value);
 					gsub(/[0-9a-zA-Z_]+ \* /,"",value);
 					gsub(/ (const) /," ",value);
 					gsub(/ (int|short|attr_t|chtype|wchar_t|NCURSES_BOOL|NCURSES_OUTC|NCURSES_OUTC_sp|va_list) /," ",value);

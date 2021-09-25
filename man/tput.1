@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.70 2021/09/04 19:02:50 tom Exp $
+.\" $Id: tput.1,v 1.71 2021/09/19 00:34:23 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -423,7 +423,7 @@ exit code	error message
 \fB0\fR	T{
 (\fIcapname\fR is a numeric variable that is not specified in the
 \fBterminfo\fR(5) database for this terminal type, e.g.
-\fB@TPUT@ \-T450 lines\fR and \fB@TPUT@ \-T2621 xmc\fR)
+\fB@TPUT@ \-T450 lines\fR and \fB@TPUT@ \-Thp2621 xmc\fR)
 T}
 \fB1\fR	no error message is printed, see the \fBEXIT CODES\fR section.
 \fB2\fR	usage error
@@ -516,6 +516,14 @@ requiring \fB@TPUT@\fP to know which type to use.
 This implementation uses a table to determine the parameter types for
 the standard \fIcapname\fR operands, and an internal library
 function to analyze nonstandard \fIcapname\fR operands.
+.IP
+Besides providing more reliable operation than AT&T's utility,
+a portability problem is introduced by this analysis.
+An OpenBSD developer adapted the internal library function from ncurses
+to allow \fBtput\fP to interpret multiple commands on a line.
+Portable applications should not rely upon this feature;
+ncurses provides it to support applications written
+specifically for OpenBSD.
 .PP
 This implementation (unlike others) can accept both \fItermcap\fP
 and \fIterminfo\fP names for the \fIcapname\fP feature,

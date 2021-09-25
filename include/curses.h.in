@@ -33,7 +33,7 @@
  *     and: Thomas E. Dickey                        1996-on                 *
  ****************************************************************************/
 
-/* $Id: curses.h.in,v 1.276 2021/08/29 09:30:34 tom Exp $ */
+/* $Id: curses.h.in,v 1.277 2021/09/24 16:07:37 tom Exp $ */
 
 #ifndef __NCURSES_H
 #define __NCURSES_H
@@ -431,7 +431,14 @@ extern NCURSES_EXPORT_VAR(chtype) acs_map[];
  */
 #define _NEWINDEX	-1
 
+#ifdef NCURSES_INTERNALS
+#undef SCREEN
+#define SCREEN struct screen
+SCREEN;
+#else
 typedef struct screen  SCREEN;
+#endif
+
 typedef struct _win_st WINDOW;
 
 typedef	chtype	attr_t;		/* ...must be at least as wide as chtype */

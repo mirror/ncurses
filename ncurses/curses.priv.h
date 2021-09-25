@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.645 2021/09/04 10:29:15 tom Exp $
+ * $Id: curses.priv.h,v 1.646 2021/09/24 16:09:35 tom Exp $
  *
  *	curses.priv.h
  *
@@ -899,8 +899,7 @@ typedef enum {
 /*
  * The SCREEN structure.
  */
-
-struct screen {
+typedef struct screen {
 	int		_ifd;		/* input file descriptor for screen */
 	int		_ofd;		/* output file descriptor for screen */
 	FILE		*_ofp;		/* output file ptr for screen	    */
@@ -1184,7 +1183,8 @@ struct screen {
 	const char	*_tputs_trace;
 #endif
 #endif
-};
+#undef SCREEN
+} SCREEN;
 
 extern NCURSES_EXPORT_VAR(SCREEN *) _nc_screen_chain;
 extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;

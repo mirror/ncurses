@@ -60,7 +60,7 @@ BEGIN {
 	print  "/*    and: Thomas E. Dickey                        1995-on                  */"
 	print  "/****************************************************************************/"
 	print  ""
-	print  "/* $Id: MKterm.h.awk.in,v 1.81 2021/08/18 20:52:42 tom Exp $ */"
+	print  "/* $Id: MKterm.h.awk.in,v 1.82 2021/09/24 17:02:46 tom Exp $ */"
 	print  ""
 	print  "/*"
 	print  "**	term.h -- Definition of struct term"
@@ -250,13 +250,16 @@ END {
 	print  " */"
 	print  "#ifdef NCURSES_INTERNALS"
 	print  ""
+	print  "#undef TERMINAL"
+	print  "#define TERMINAL struct term"
+	print  "TERMINAL;"
+	print  ""
 	if (@NCURSES_EXT_COLORS@) {
 	declare_termtype("int","2");
 	} else {
-	print  "typedef TERMTYPE TERMTYPE2;"
+	print  "#undef TERMTYPE2"
+	print  "#define TERMTYPE2 TERMTYPE"
 	}
-	print  ""
-	print  "typedef struct term TERMINAL;"
 	print  "#else"
 	print  ""
 	print  "typedef struct term {		/* describe an actual terminal */"

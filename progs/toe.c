@@ -45,7 +45,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.82 2021/06/26 19:44:08 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.83 2021/09/21 20:07:51 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -245,7 +245,9 @@ make_db_name(char *dst, const char *src, unsigned limit)
 	    && !strcmp(src + size - lens, suffix)) {
 	    _nc_STRCPY(dst, src, PATH_MAX);
 	} else {
-	    _nc_SPRINTF(dst, _nc_SLIMIT(PATH_MAX) "%s%s", src, suffix);
+	    _nc_SPRINTF(dst, _nc_SLIMIT(PATH_MAX) "%.*s%s",
+			(int) (PATH_MAX - sizeof(suffix)),
+			src, suffix);
 	}
 	result = TRUE;
     }

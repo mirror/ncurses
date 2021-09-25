@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: term.priv.h,v 1.4 2021/08/19 20:02:09 tom Exp $
+ * $Id: term.priv.h,v 1.5 2021/09/24 16:42:04 tom Exp $
  *
  *	term.priv.h
  *
@@ -102,11 +102,6 @@ typedef struct {
 /*
  * Internals for term.h
  */
-
-#if NCURSES_EXT_COLORS
-typedef struct termtype2  TERMTYPE2;
-#endif
-
 typedef struct term {			/* describe an actual terminal */
 	TERMTYPE	type;		/* terminal type description */
 	short		Filedes;	/* file description being written to */
@@ -118,6 +113,7 @@ typedef struct term {			/* describe an actual terminal */
 #if NCURSES_EXT_COLORS
 	TERMTYPE2	type2;		/* extended terminal type description */
 #endif
+#undef TERMINAL
 } TERMINAL;
 
 /*

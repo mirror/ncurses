@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.57 2021/07/10 22:50:45 tom Exp $
+.\" $Id: tset.1,v 1.58 2021/09/18 21:21:55 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -150,19 +150,19 @@ The options are as follows:
 .B \-c
 Set control characters and modes.
 .TP 5
-.B \-e
+.BI \-e\  ch
 Set the erase character to \fIch\fR.
 .TP
 .B \-I
 Do not send the terminal or tab initialization strings to the terminal.
 .TP
-.B \-i
+.BI \-i\  ch
 Set the interrupt character to \fIch\fR.
 .TP
-.B \-k
+.BI \-k\  ch
 Set the line kill character to \fIch\fR.
 .TP
-.B \-m
+.BI \-m\  mapping
 Specify a mapping from a port type to a terminal.
 See the section
 .B TERMINAL TYPE MAPPING

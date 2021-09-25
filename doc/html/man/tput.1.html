@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.70 2021/09/04 19:02:50 tom Exp @
+  * @Id: tput.1,v 1.71 2021/09/19 00:34:23 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -374,7 +374,7 @@
        ---------------------------------------------------------------------
        <STRONG>0</STRONG>           (<EM>capname</EM>  is a numeric variable that is not specified in
                    the <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG> database for this  terminal  type,  e.g.
-                   <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>lines</STRONG> and <STRONG>tput</STRONG> <STRONG>-T2621</STRONG> <STRONG>xmc</STRONG>)
+                   <STRONG>tput</STRONG> <STRONG>-T450</STRONG> <STRONG>lines</STRONG> and <STRONG>tput</STRONG> <STRONG>-Thp2621</STRONG> <STRONG>xmc</STRONG>)
        <STRONG>1</STRONG>           no error message is printed, see the <STRONG>EXIT</STRONG> <STRONG>CODES</STRONG> section.
        <STRONG>2</STRONG>           usage error
        <STRONG>3</STRONG>           unknown terminal <EM>type</EM> or no <STRONG>terminfo</STRONG> database
@@ -458,76 +458,83 @@
            for the standard <EM>capname</EM> operands, and an internal library function
            to analyze nonstandard <EM>capname</EM> operands.
 
+           Besides  providing  more  reliable operation than AT&amp;T's utility, a
+           portability problem is introduced by  this  analysis.   An  OpenBSD
+           developer  adapted  the  internal  library function from ncurses to
+           allow <STRONG>tput</STRONG> to interpret multiple  commands  on  a  line.   Portable
+           applications should not rely upon this feature; ncurses provides it
+           to support applications written specifically for OpenBSD.
+
        This  implementation  (unlike  others)  can  accept  both  <EM>termcap</EM>  and
-       <EM>terminfo</EM> names for the <EM>capname</EM> feature, if <EM>termcap</EM> support is  compiled
-       in.   However,  the  predefined  <EM>termcap</EM>  and  <EM>terminfo</EM>  names have two
+       <EM>terminfo</EM>  names for the <EM>capname</EM> feature, if <EM>termcap</EM> support is compiled
+       in.  However, the  predefined  <EM>termcap</EM>  and  <EM>terminfo</EM>  names  have  two
        ambiguities in this case (and the <EM>terminfo</EM> name is assumed):
 
-       <STRONG>o</STRONG>   The <EM>termcap</EM> name <STRONG>dl</STRONG> corresponds to the <EM>terminfo</EM>  name  <STRONG>dl1</STRONG>  (delete
+       <STRONG>o</STRONG>   The  <EM>termcap</EM>  name  <STRONG>dl</STRONG> corresponds to the <EM>terminfo</EM> name <STRONG>dl1</STRONG> (delete
            one line).
-           The  <EM>terminfo</EM>  name <STRONG>dl</STRONG> corresponds to the <EM>termcap</EM> name <STRONG>DL</STRONG> (delete a
+           The <EM>terminfo</EM> name <STRONG>dl</STRONG> corresponds to the <EM>termcap</EM> name <STRONG>DL</STRONG>  (delete  a
            given number of lines).
 
-       <STRONG>o</STRONG>   The <EM>termcap</EM> name <STRONG>ed</STRONG> corresponds to  the  <EM>terminfo</EM>  name  <STRONG>rmdc</STRONG>  (end
+       <STRONG>o</STRONG>   The  <EM>termcap</EM>  name  <STRONG>ed</STRONG>  corresponds  to the <EM>terminfo</EM> name <STRONG>rmdc</STRONG> (end
            delete mode).
-           The  <EM>terminfo</EM>  name <STRONG>ed</STRONG> corresponds to the <EM>termcap</EM> name <STRONG>cd</STRONG> (clear to
+           The <EM>terminfo</EM> name <STRONG>ed</STRONG> corresponds to the <EM>termcap</EM> name <STRONG>cd</STRONG>  (clear  to
            end of screen).
 
-       The <STRONG>longname</STRONG> and <STRONG>-S</STRONG> options, and  the  parameter-substitution  features
-       used  in  the  <STRONG>cup</STRONG>  example,  were  not  supported in BSD curses before
+       The  <STRONG>longname</STRONG>  and  <STRONG>-S</STRONG> options, and the parameter-substitution features
+       used in the <STRONG>cup</STRONG> example,  were  not  supported  in  BSD  curses  before
        4.3reno (1989) or in AT&amp;T/USL curses before SVr4 (1988).
 
-       IEEE  Std  1003.1/The  Open  Group    Base   Specifications   Issue   7
-       (POSIX.1-2008)  documents  only the operands for <STRONG>clear</STRONG>, <STRONG>init</STRONG> and <STRONG>reset</STRONG>.
+       IEEE   Std   1003.1/The   Open   Group   Base  Specifications  Issue  7
+       (POSIX.1-2008) documents only the operands for <STRONG>clear</STRONG>, <STRONG>init</STRONG>  and  <STRONG>reset</STRONG>.
        There are a few interesting observations to make regarding that:
 
-       <STRONG>o</STRONG>   In this implementation, <STRONG>clear</STRONG> is part of the <EM>capname</EM> support.   The
-           others   (<STRONG>init</STRONG>   and   <STRONG>longname</STRONG>)  do  not  correspond  to  terminal
+       <STRONG>o</STRONG>   In  this implementation, <STRONG>clear</STRONG> is part of the <EM>capname</EM> support.  The
+           others  (<STRONG>init</STRONG>  and  <STRONG>longname</STRONG>)  do  not   correspond   to   terminal
            capabilities.
 
        <STRONG>o</STRONG>   Other  implementations  of  <STRONG>tput</STRONG>  on  SVr4-based  systems  such  as
-           Solaris,  IRIX64  and  HPUX as well as others such as AIX and Tru64
+           Solaris, IRIX64 and HPUX as well as others such as  AIX  and  Tru64
            provide support for <EM>capname</EM> operands.
 
        <STRONG>o</STRONG>   A few platforms such as FreeBSD recognize termcap names rather than
            terminfo capability names in their respective <STRONG>tput</STRONG> commands.  Since
-           2010, NetBSD's <STRONG>tput</STRONG> uses terminfo names.   Before  that,  it  (like
+           2010,  NetBSD's  <STRONG>tput</STRONG>  uses  terminfo names.  Before that, it (like
            FreeBSD) recognized termcap names.
 
-           Beginning  in  2021,  FreeBSD uses the ncurses <STRONG>tput</STRONG>, configured for
+           Beginning in 2021, FreeBSD uses the ncurses  <STRONG>tput</STRONG>,  configured  for
            both terminfo (tested first) and termcap (as a fallback).
 
        Because (apparently) <EM>all</EM> of the certified Unix systems support the full
-       set  of  capability names, the reasoning for documenting only a few may
+       set of capability names, the reasoning for documenting only a  few  may
        not be apparent.
 
-       <STRONG>o</STRONG>   X/Open Curses Issue 7 documents <STRONG>tput</STRONG> differently, with <EM>capname</EM>  and
+       <STRONG>o</STRONG>   X/Open  Curses Issue 7 documents <STRONG>tput</STRONG> differently, with <EM>capname</EM> and
            the other features used in this implementation.
 
-       <STRONG>o</STRONG>   That  is,  there  are  two standards for <STRONG>tput</STRONG>: POSIX (a subset) and
-           X/Open Curses (the full implementation).  POSIX documents a  subset
-           to  avoid  the  complication  of  including  X/Open  Curses and the
+       <STRONG>o</STRONG>   That is, there are two standards for <STRONG>tput</STRONG>:  POSIX  (a  subset)  and
+           X/Open  Curses (the full implementation).  POSIX documents a subset
+           to avoid the  complication  of  including  X/Open  Curses  and  the
            terminal capabilities database.
 
-       <STRONG>o</STRONG>   While it is certainly possible to  write  a  <STRONG>tput</STRONG>  program  without
-           using   curses,   none   of   the   systems  which  have  a  curses
-           implementation provide a <STRONG>tput</STRONG> utility which does  not  provide  the
+       <STRONG>o</STRONG>   While  it  is  certainly  possible  to write a <STRONG>tput</STRONG> program without
+           using  curses,  none  of  the   systems   which   have   a   curses
+           implementation  provide  a  <STRONG>tput</STRONG> utility which does not provide the
            <EM>capname</EM> feature.
 
        X/Open  Curses  Issue  7  (2009)  is  the  first  version  to  document
        utilities.  However that part of X/Open Curses does not follow existing
        practice (i.e., Unix features documented in SVID 3):
 
-       <STRONG>o</STRONG>   It  assigns exit code 4 to "invalid operand", which may be the same
-           as <EM>unknown</EM> <EM>capability</EM>.  For instance, the source code for  Solaris'
+       <STRONG>o</STRONG>   It assigns exit code 4 to "invalid operand", which may be the  same
+           as  <EM>unknown</EM> <EM>capability</EM>.  For instance, the source code for Solaris'
            xcurses uses the term "invalid" in this case.
 
-       <STRONG>o</STRONG>   It  assigns  exit  code  255  to  a  numeric  variable  that is not
+       <STRONG>o</STRONG>   It assigns exit  code  255  to  a  numeric  variable  that  is  not
            specified in the terminfo database.  That likely is a documentation
-           error,  confusing  the  <STRONG>-1</STRONG>  written  to  the standard output for an
+           error, confusing the <STRONG>-1</STRONG> written  to  the  standard  output  for  an
            absent or cancelled numeric value versus an (unsigned) exit code.
 
-       The various Unix systems (AIX, HPUX, Solaris) use the  same  exit-codes
+       The  various  Unix systems (AIX, HPUX, Solaris) use the same exit-codes
        as ncurses.
 
        NetBSD curses documents different exit codes which do not correspond to
@@ -537,7 +544,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>stty(1)</STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210904).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210925).
 
 
 

@@ -34,7 +34,7 @@
 /*
  * Common type definitions and macros for new_pair.c, lib_color.c
  *
- * $Id: new_pair.h,v 1.12 2021/08/18 19:18:12 tom Exp $
+ * $Id: new_pair.h,v 1.13 2021/09/24 17:52:01 tom Exp $
  */
 
 #ifndef NEW_PAIR_H
@@ -46,7 +46,9 @@
 
 #include <sys/types.h>
 
-typedef struct screen  SCREEN;
+#undef SCREEN
+#define SCREEN struct screen
+SCREEN;
 
 #define LIMIT_TYPED(n,t) \
 	(t)(((n) > MAX_OF_TYPE(t)) \

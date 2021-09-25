@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.916 $
-#	$Date: 2021/09/11 23:22:59 $
+#	$Revision: 1.918 $
+#	$Date: 2021/09/21 08:18:36 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2837,7 +2837,9 @@ vt340|dec-vt340|vt330|dec-vt330|dec vt340 graphics terminal with 24 line page,
 
 # Left/right margins are supported in xterm since patch #279 (2012/05/10)
 vt420+lrmm|VT420 left/right margins,
-	mgc=\E[?69l, smglr=\E[?69h\E[%i%p1%d;%p2%ds,
+	mgc=\E[?69l, smglp=\E[?69h\E[%i%p1%ds,
+	smglr=\E[?69h\E[%i%p1%d;%p2%ds,
+	smgrp=\E[?69h\E[%i;%p1%ds,
 
 # DEC doesn't supply a vt400 description, so we add Daniel Glasser's
 # (originally written with vt420 as its primary name, and usable for it).
@@ -5033,22 +5035,34 @@ xterm+alt+title|xterm 90 and 251 features combined,
 #  | NumLock |    /    |    *    |    -    |
 #  |         |   $Oo   |   $Oj   |   $OS   |
 #  |_________|__kpDIV__|__kpMUL__|__kpSUB__|
-#  |    7         8         9    |         |
-#  |   $Ow   |   $Ox   |   $Oy   |    +    |
-#  |_ka1__K1_|_________|_ka3__K3_|   $Ok   |
-#  |    4    |    5    |    6    |  kpADD  |
+#  |    7         8         9    |    +    |
+#  |   $Ow   |   $Ox   |   $Oy   |   $Ok   |
+#  |_ka1__K1_|_________|_ka3__K3_|  kpADD  |
+#  |    4    |    5    |    6    |         |
 #  |   $Ot   |   $Ou   |   $Ov   |         |
 #  |_________|_kb2__K2_|_________|_________|
 #  |    1    |    2    |    3    |         |
 #  |   $Oq   |   $Or   |   $Os   |         |
 #  |_kc1__K4_|_________|_kc3__K5_|  enter  |
-#  |         0         |   .     |   $OM   |
-#  |        $Op        |  $On    |         |
-#  |___________________|_________|_kent_@8_|
+#  |         0         |    .    |   $OM   |
+#  |        $Op        |   $On   |         |
+#  |_______kpZRO_______|__kpDOT__|_kent_@8_|
+#
+# ka2, kb1, kb3 and kc2 are extensions, as are the mixed-case names.
+# There are no termcap equivalents for these extensions.
+#
+# kpCMA (comma) is used here for the VT100 keypad, which xterm emulates with
+# shifted-keypad-plus, though normally that invokes a font-size change.
+#
+# Old versions of xterm, e.g., xterm-xfree86, documented \EOE as kb2, which
+# does not fit into this layout.  The extension kp5 fits, but is not visible
+# to termcap applications.  As an alternative, kbeg (which does have a termcap
+# equivalent) is provided.
 #
 xterm+keypad|xterm emulating VT100/VT220 numeric keypad,
-	kp5=\EOE, kpADD=\EOk, kpCMA=\EOl, kpDIV=\EOo, kpDOT=\EOn,
-	kpMUL=\EOj, kpSUB=\EOm, kpZRO=\EOp, use=vt220+keypad,
+	kbeg=\EOE, kp5=\EOE, kpADD=\EOk, kpCMA=\EOl, kpDIV=\EOo,
+	kpDOT=\EOn, kpMUL=\EOj, kpSUB=\EOm, kpZRO=\EOp,
+	use=vt220+keypad,
 #
 # Those chunks use the new-style (the xterm oldFunctionKeys resource is false).
 # Alternatively, the same scheme with old-style function keys as in xterm-r6
@@ -27231,5 +27245,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add xterm+nopcfkeys, to fill in keys for xterm-hp, xterm-sun -TD
 #	+ use hp+arrows in a few places -TD
 #	+ use hp+pfk-cr in a few places -TD
+#
+# 2021-09-21
+#	+ add kbeg to xterm+keypad to accommodate termcap applications -TD
+#	+ add smglp and smgrp to vt420+lrmm, to provide useful data for the
+#	  "tabs" +m option -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
