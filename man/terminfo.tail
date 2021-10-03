@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.106 2021/08/28 19:00:29 tom Exp $
+.\" $Id: terminfo.tail,v 1.107 2021/10/02 20:54:06 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -647,6 +647,122 @@ If the \fBsmcup\fP sequence will not restore the screen after an
 \fBrmcup\fP sequence is output (to the state prior to outputting
 \fBrmcup\fP), specify \fBnrrmc\fP.
 .PP
+.SS Margins
+SVr4 (and X/Open Curses)
+list several string capabilities for setting margins.
+Two were intended for use with terminals,
+and another six were intended for use with printers.
+.bP
+The two terminal capabilities assume that the terminal may have
+the capability of setting the left and/or right margin at the current
+cursor column position.
+.bP
+The printer capabilities assume that the printer may have
+two types of capability:
+.RS
+.bP
+the ability to set a top and/or bottom margin using the current
+line position, and
+.bP
+parameterized capabilities for setting the top, bottom, left, right margins
+given the number of rows or columns.
+.RE
+.RE
+.PP
+In practice, the categorization into \*(``terminal\*('' and \*(``printer\*(''
+is not suitable:
+.bP
+The AT&T SVr4 terminal database uses \fBsmgl\fP four times,
+for AT&T hardware.
+.IP
+Three of the four are printers.
+They lack the ability to set left/right margins by specifying the column.
+.bP
+Other (non-AT&T) terminals may support margins
+but using different assumptions from AT&T.
+.IP
+For instance, the DEC VT420 supports left/right margins,
+but only using a column parameter.
+As an added complication, the VT420 uses two settings to fully enable
+left/right margins (left/right margin mode, and origin mode).
+The former enables the margins, which causes printed text
+to wrap within margins, but the latter is needed to prevent
+cursor-addressing outside those margins.
+.bP
+Both DEC VT420 left/right margins are set with a single control sequence.
+If either is omitted, the corresponding margin is set to the left or
+right edge of the display (rather than leaving the margin unmodified).
+.PP
+These are the margin-related capabilities:
+.TS
+center;
+l l
+_ _
+lw8 lw18.
+\fBName	Description\fP
+smgl	Set left margin at current column
+smgr	Set right margin at current column
+smgb	Set bottom margin at current line
+smgt	Set top margin at current line
+smgbp	Set bottom margin at line \fIN\fP
+smglp	Set left margin at column \fIN\fP
+smgrp	Set right margin at column \fIN\fP
+smgtp	Set top margin at line \fIN\fP
+.TE
+.PP
+When writing an application that
+uses these string capabilities,
+the pairs should be first checked to see
+if each capability in the pair is set or only one is set:
+.bP
+If both \fBsmglp\fP and \fBsmgrp\fP are set,
+each is used with a single argument, \fIN\fP,
+that gives the column number of the left and right margin, respectively.
+.bP
+If both \fBsmgtp\fP and \fBsmgbp\fP are set,
+each is used to set the top and bottom margin,
+respectively:
+.RS 4
+.bP
+\fBsmgtp\fP is used with a single argument, \fIN\fP,
+the line number of the top margin.
+.bP
+\fBsmgbp\fP is used with two arguments, \fIN\fP and \fIM\fP,
+that give the line number of the bottom margin,
+the first counting from the top of the
+page and the second counting from the bottom.
+This accommodates the two styles of specifying
+the bottom margin in different manufacturers' printers.
+.RE
+.IP
+When designing a terminfo entry for a
+printer that has a settable bottom margin,
+only the first or second argument should be used, depending on the printer.
+When developing an application that uses \fBsmgbp\fP to set the bottom margin,
+both arguments must be given.
+.PP
+Conversely, when only one capability in the pair is set:
+.bP 
+If only one of \fBsmglp\fP and \fBsmgrp\fP is set,
+then it is used with two arguments,
+the column number of the left and right margins, in that order.
+.bP
+Likewise, if only one of \fBsmgtp\fP and \fBsmgbp\fP is set, then it
+is used with two arguments that give the top and bottom margins,
+in that order, counting from the top of the page.
+.IP
+When designing a terminfo entry for a printer that requires setting both
+left and right or top and bottom margins simultaneously,
+only one capability in the pairs
+\fBsmglp\fP and \fBsmgrp\fP or
+\fBsmgtp\fP and \fBsmgbp\fP should be defined,
+leaving the other unset.
+.PP
+When setting margins, the line- and column-values are zero-based.
+.PP
+The \fBmgc\fP string capability should be defined.
+Applications such as \fBtabs\fP(1) rely upon this to reset all margins.
+.\"
 .SS Area Clears
 .PP
 If the terminal can clear from the current position to the end of the
@@ -662,6 +778,7 @@ if a true
 .B ed
 is not available.)
 .PP
+.\"
 .SS Insert/delete line and vertical motions
 .PP
 If the terminal can open a new blank line before the line where the cursor

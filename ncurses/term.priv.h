@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: term.priv.h,v 1.5 2021/09/24 16:42:04 tom Exp $
+ * $Id: term.priv.h,v 1.6 2021/09/26 20:43:08 tom Exp $
  *
  *	term.priv.h
  *
@@ -54,6 +54,12 @@ extern "C" {
 #include <signal.h>		/* sig_atomic_t */
 #include <time.h>		/* time_t */
 #include <term.h>		/* time_t */
+
+#ifdef USE_PTHREADS
+#if USE_REENTRANT
+#include <pthread.h>
+#endif
+#endif
 
 /*
  * State of tparm().

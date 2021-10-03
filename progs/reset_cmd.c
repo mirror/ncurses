@@ -53,7 +53,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.27 2021/09/04 10:29:59 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.28 2021/10/02 18:08:44 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -193,7 +193,7 @@ out_char(int c)
  * a child program dies in raw mode.
  */
 void
-reset_tty_settings(int fd, TTY * tty_settings)
+reset_tty_settings(int fd, TTY * tty_settings, int noset)
 {
     GET_TTY(fd, tty_settings);
 
@@ -329,7 +329,9 @@ reset_tty_settings(int fd, TTY * tty_settings)
 	);
 #endif
 
-    SET_TTY(fd, tty_settings);
+    if (!noset) {
+	SET_TTY(fd, tty_settings);
+    }
 }
 
 /*

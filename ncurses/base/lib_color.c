@@ -49,7 +49,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_color.c,v 1.147 2021/05/08 15:11:48 tom Exp $")
+MODULE_ID("$Id: lib_color.c,v 1.148 2021/10/02 22:55:48 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define CanChange      InfoOf(SP_PARM).canchange
@@ -831,7 +831,6 @@ static int
 _nc_color_content(SCREEN *sp, int color, int *r, int *g, int *b)
 {
     int result = ERR;
-    int maxcolors;
 
     T((T_CALLED("color_content(%p,%d,%p,%p,%p)"),
        (void *) sp,
@@ -841,7 +840,7 @@ _nc_color_content(SCREEN *sp, int color, int *r, int *g, int *b)
        (void *) b));
 
     if (sp != 0) {
-	maxcolors = MaxColors;
+	int maxcolors = MaxColors;
 
 	if (color >= 0 && OkColorHi(color) && sp->_coloron) {
 	    int c_r, c_g, c_b;

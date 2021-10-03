@@ -45,7 +45,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.83 2021/09/21 20:07:51 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.84 2021/09/28 08:27:29 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -330,6 +330,26 @@ sorthook(int db_index, int db_limit, const char *term_name, TERMTYPE2 *tp)
 }
 
 #if NCURSES_USE_TERMCAP
+/*
+ * Check if the buffer contents are printable ASCII, ensuring that we do not
+ * accidentally pick up incompatible binary content from a hashed database.
+ */
+static bool
+is_termcap(char *buffer)
+{
+    bool result = TRUE;
+    while (*buffer != '\0') {
+	int ch = UChar(*buffer++);
+	if (ch == '\t')
+	    continue;
+	if (ch < ' ' || ch > '~') {
+	    result = FALSE;
+	    break;
+	}
+    }
+    return result;
+}
+
 static void
 show_termcap(int db_index, int db_limit, char *buffer, DescHook hook)
 {
@@ -518,11 +538,13 @@ typelist(int eargc, char *eargv[],
 	    db_array[1] = 0;
 
 	    if (cgetfirst(&buffer, db_array) > 0) {
-		show_termcap(i, eargc, buffer, hook);
-		free(buffer);
-		while (cgetnext(&buffer, db_array) > 0) {
+		if (is_termcap(buffer)) {
 		    show_termcap(i, eargc, buffer, hook);
 		    free(buffer);
+		    while (cgetnext(&buffer, db_array) > 0) {
+			show_termcap(i, eargc, buffer, hook);
+			free(buffer);
+		    }
 		}
 		cgetclose();
 		continue;
@@ -539,6 +561,8 @@ typelist(int eargc, char *eargv[],
 
 	    if ((fp = safe_fopen(eargv[i], "r")) != 0) {
 		while (fgets(buffer, sizeof(buffer), fp) != 0) {
+		    if (!is_termcap(buffer))
+			break;
 		    if (*buffer == '#')
 			continue;
 		    if (isspace(*buffer))

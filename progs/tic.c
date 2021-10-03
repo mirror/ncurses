@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.302 2021/09/04 10:29:59 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.305 2021/10/02 11:13:50 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1338,7 +1338,7 @@ check_ansi_cursor(char *list[4])
 	    if (j != k
 		&& !strcmp(list[j], list[k])) {
 		char *value = _nc_tic_expand(list[k], TRUE, 0);
-		_nc_warning("repeated cursor control %s\n", value);
+		_nc_warning("repeated cursor control %s", value);
 		repeated = TRUE;
 	    }
 	}
@@ -1367,19 +1367,19 @@ check_ansi_cursor(char *list[4])
 		    continue;
 		if (memcmp(list[j], up, prefix)) {
 		    char *value = _nc_tic_expand(list[j], TRUE, 0);
-		    _nc_warning("inconsistent prefix for %s\n", value);
+		    _nc_warning("inconsistent prefix for %s", value);
 		    continue;
 		}
 		if (strlen(list[j]) < suffix) {
 		    char *value = _nc_tic_expand(list[j], TRUE, 0);
-		    _nc_warning("inconsistent length for %s, expected %d\n",
+		    _nc_warning("inconsistent length for %s, expected %d",
 				value, (int) suffix + 1);
 		    continue;
 		}
 		want = "BADC"[j];
 		if (list[j][suffix] != want) {
 		    char *value = _nc_tic_expand(list[j], TRUE, 0);
-		    _nc_warning("inconsistent suffix for %s, expected %c, have %c\n",
+		    _nc_warning("inconsistent suffix for %s, expected %c, have %c",
 				value, want, list[j][suffix]);
 		}
 	    }
@@ -2085,10 +2085,13 @@ check_params(TERMTYPE2 *tp, const char *name, const char *value, int extended)
 	    for (n = 0; n < limit; ++n) {
 		_nc_reset_tparm(NULL);
 		(void) TPARM_9(value, n, n, n, n, n, n, n, n, n);
-		if (_nc_tparm_err)
+		if (_nc_tparm_err) {
 		    _nc_warning("problem%s in tparm(%s, %d, ...)",
 				(_nc_tparm_err == 1) ? "" : "s",
 				name, n);
+		    if (debug_level < 2)
+			break;
+		}
 	    }
 	}
     }

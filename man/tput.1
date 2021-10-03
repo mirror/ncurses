@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.71 2021/09/19 00:34:23 tom Exp $
+.\" $Id: tput.1,v 1.72 2021/10/02 21:41:00 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -518,9 +518,10 @@ the standard \fIcapname\fR operands, and an internal library
 function to analyze nonstandard \fIcapname\fR operands.
 .IP
 Besides providing more reliable operation than AT&T's utility,
-a portability problem is introduced by this analysis.
+a portability problem is introduced by this analysis:
 An OpenBSD developer adapted the internal library function from ncurses
-to allow \fBtput\fP to interpret multiple commands on a line.
+to port NetBSD's termcap-based \fBtput\fP to terminfo.
+That had been modified to interpret multiple commands on a line.
 Portable applications should not rely upon this feature;
 ncurses provides it to support applications written
 specifically for OpenBSD.

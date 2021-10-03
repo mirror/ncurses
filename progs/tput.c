@@ -47,13 +47,12 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.94 2021/09/19 00:06:44 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.97 2021/10/02 18:09:23 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
 const char *_nc_progname = "tput";
 
-static char *prg_name;
 static bool is_init = FALSE;
 static bool is_reset = FALSE;
 static bool is_clear = FALSE;
@@ -64,7 +63,7 @@ quit(int status, const char *fmt, ...)
     va_list argp;
 
     va_start(argp, fmt);
-    fprintf(stderr, "%s: ", prg_name);
+    fprintf(stderr, "%s: ", _nc_progname);
     vfprintf(stderr, fmt, argp);
     fprintf(stderr, "\n");
     va_end(argp);
@@ -72,7 +71,7 @@ quit(int status, const char *fmt, ...)
 }
 
 static GCC_NORETURN void
-usage(void)
+usage(const char *optstring)
 {
 #define KEEP(s) s "\n"
     static const char msg[] =
@@ -91,8 +90,21 @@ usage(void)
 	KEEP("  capname     unlike clear/init/reset, print value for capability \"capname\"")
     };
 #undef KEEP
-    (void) fprintf(stderr, "Usage: %s [options] [command]\n", prg_name);
-    fputs(msg, stderr);
+    (void) fprintf(stderr, "Usage: %s [options] [command]\n", _nc_progname);
+    if (optstring != NULL) {
+	const char *s = msg;
+	while (*s != '\0') {
+	    fputc(UChar(*s), stderr);
+	    if (!strncmp(s, "  -", 3)) {
+		if (strchr(optstring, s[3]) == NULL)
+		    s = strchr(s, '\n') + 1;
+	    } else if (!strncmp(s, "\n\nC", 3))
+		break;
+	    ++s;
+	}
+    } else {
+	fputs(msg, stderr);
+    }
     ExitProgram(ErrUsage);
 }
 
@@ -156,7 +168,7 @@ tput_cmd(int fd, TTY * settings, bool opt_x, int argc, char **argv, int *used)
 
 	if (is_reset) {
 	    reset_start(stdout, TRUE, FALSE);
-	    reset_tty_settings(fd, settings);
+	    reset_tty_settings(fd, settings, FALSE);
 	} else {
 	    reset_start(stdout, FALSE, TRUE);
 	}
@@ -329,11 +341,12 @@ main(int argc, char **argv)
     bool is_alias;
     bool need_tty;
 
-    prg_name = check_aliases(_nc_rootname(argv[0]), TRUE);
+    _nc_progname = check_aliases(_nc_rootname(argv[0]), TRUE);
+    is_alias = (is_clear || is_reset || is_init);
 
     term = getenv("TERM");
 
-    while ((c = getopt(argc, argv, "ST:Vx")) != -1) {
+    while ((c = getopt(argc, argv, is_alias ? "T:Vx" : "ST:Vx")) != -1) {
 	switch (c) {
 	case 'S':
 	    cmdline = FALSE;
@@ -350,12 +363,11 @@ main(int argc, char **argv)
 	    opt_x = TRUE;
 	    break;
 	default:
-	    usage();
+	    usage(is_alias ? "TVx" : NULL);
 	    /* NOTREACHED */
 	}
     }
 
-    is_alias = (is_clear || is_reset || is_init);
     need_tty = ((is_reset || is_init) ||
 		(optind < argc &&
 		 (!strcmp(argv[optind], "reset") ||
@@ -369,7 +381,7 @@ main(int argc, char **argv)
 	    argc -= optind;
 	    argv += optind;
 	}
-	argv[0] = prg_name;
+	argv[0] = strdup(_nc_progname);
     } else {
 	argc -= optind;
 	argv += optind;
@@ -386,7 +398,7 @@ main(int argc, char **argv)
     if (cmdline) {
 	int code = 0;
 	if ((argc <= 0) && !is_alias)
-	    usage();
+	    usage(NULL);
 	while (argc > 0) {
 	    code = tput_cmd(fd, &tty_settings, opt_x, argc, argv, &used);
 	    if (code != 0)

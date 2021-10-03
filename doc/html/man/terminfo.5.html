@@ -62,7 +62,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: terminfo.tail,v 1.106 2021/08/28 19:00:29 tom Exp @
+  * @Id: terminfo.tail,v 1.107 2021/10/02 20:54:06 tom Exp @
   *.in -2
   *.in +2
   *.in -2
@@ -106,7 +106,7 @@
        have, by specifying how to perform screen operations, and by specifying
        padding requirements and initialization sequences.
 
-       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20210925).
+       This manual describes <STRONG>ncurses</STRONG> version 6.2 (patch 20211002).
 
 
 </PRE><H3><a name="h3-Terminfo-Entry-Syntax">Terminfo Entry Syntax</a></H3><PRE>
@@ -1605,6 +1605,107 @@
        outputting <STRONG>rmcup</STRONG>), specify <STRONG>nrrmc</STRONG>.
 
 
+</PRE><H3><a name="h3-Margins">Margins</a></H3><PRE>
+       SVr4  (and  X/Open Curses) list several string capabilities for setting
+       margins.  Two were intended for use with  terminals,  and  another  six
+       were intended for use with printers.
+
+       <STRONG>o</STRONG>   The two terminal capabilities assume that the terminal may have the
+           capability of setting the left and/or right margin at  the  current
+           cursor column position.
+
+       <STRONG>o</STRONG>   The printer capabilities assume that the printer may have two types
+           of capability:
+
+           <STRONG>o</STRONG>   the ability to set a top and/or bottom margin using the current
+               line position, and
+
+           <STRONG>o</STRONG>   parameterized  capabilities  for setting the top, bottom, left,
+               right margins given the number of rows or columns.
+
+       In practice, the categorization into "terminal" and  "printer"  is  not
+       suitable:
+
+       <STRONG>o</STRONG>   The  AT&amp;T  SVr4  terminal  database  uses <STRONG>smgl</STRONG> four times, for AT&amp;T
+           hardware.
+
+           Three of the four are printers.   They  lack  the  ability  to  set
+           left/right margins by specifying the column.
+
+       <STRONG>o</STRONG>   Other  (non-AT&amp;T) terminals may support margins but using different
+           assumptions from AT&amp;T.
+
+           For instance, the DEC VT420 supports left/right margins,  but  only
+           using a column parameter.  As an added complication, the VT420 uses
+           two settings to fully enable left/right margins (left/right  margin
+           mode,  and  origin  mode).   The  former enables the margins, which
+           causes printed text to wrap  within  margins,  but  the  latter  is
+           needed to prevent cursor-addressing outside those margins.
+
+       <STRONG>o</STRONG>   Both  DEC  VT420  left/right  margins are set with a single control
+           sequence.  If either is omitted, the corresponding margin is set to
+           the  left  or  right  edge  of the display (rather than leaving the
+           margin unmodified).
+
+       These are the margin-related capabilities:
+
+                    <STRONG>Name</STRONG>       <STRONG>Description</STRONG>
+                    ----------------------------------------------
+                    smgl       Set left margin at current column
+                    smgr       Set right margin at current column
+                    smgb       Set bottom margin at current line
+                    smgt       Set top margin at current line
+                    smgbp      Set bottom margin at line <EM>N</EM>
+                    smglp      Set left margin at column <EM>N</EM>
+                    smgrp      Set right margin at column <EM>N</EM>
+                    smgtp      Set top margin at line <EM>N</EM>
+
+       When writing an application that uses these  string  capabilities,  the
+       pairs  should be first checked to see if each capability in the pair is
+       set or only one is set:
+
+       <STRONG>o</STRONG>   If both <STRONG>smglp</STRONG> and <STRONG>smgrp</STRONG>  are  set,  each  is  used  with  a  single
+           argument,  <EM>N</EM>,  that  gives  the column number of the left and right
+           margin, respectively.
+
+       <STRONG>o</STRONG>   If both <STRONG>smgtp</STRONG> and <STRONG>smgbp</STRONG> are set, each is used to set  the  top  and
+           bottom margin, respectively:
+
+           <STRONG>o</STRONG>   <STRONG>smgtp</STRONG> is used with a single argument, <EM>N</EM>, the line number of the
+               top margin.
+
+           <STRONG>o</STRONG>   <STRONG>smgbp</STRONG> is used with two arguments, <EM>N</EM> and <EM>M</EM>, that give  the  line
+               number of the bottom margin, the first counting from the top of
+               the page  and  the  second  counting  from  the  bottom.   This
+               accommodates  the two styles of specifying the bottom margin in
+               different manufacturers' printers.
+
+           When designing a terminfo entry for a printer that has  a  settable
+           bottom  margin,  only  the first or second argument should be used,
+           depending on the printer.  When developing an application that uses
+           <STRONG>smgbp</STRONG> to set the bottom margin, both arguments must be given.
+
+       Conversely, when only one capability in the pair is set:
+
+       <STRONG>o</STRONG>   If  only  one  of  <STRONG>smglp</STRONG> and <STRONG>smgrp</STRONG> is set, then it is used with two
+           arguments, the column number of the left and right margins, in that
+           order.
+
+       <STRONG>o</STRONG>   Likewise,  if  only  one of <STRONG>smgtp</STRONG> and <STRONG>smgbp</STRONG> is set, then it is used
+           with two arguments that give the top and bottom  margins,  in  that
+           order, counting from the top of the page.
+
+           When designing a terminfo entry for a printer that requires setting
+           both left and right or top and bottom margins simultaneously,  only
+           one  capability  in  the  pairs  <STRONG>smglp</STRONG> and <STRONG>smgrp</STRONG> or <STRONG>smgtp</STRONG> and <STRONG>smgbp</STRONG>
+           should be defined, leaving the other unset.
+
+       When setting margins, the line- and column-values are zero-based.
+
+       The <STRONG>mgc</STRONG> string capability should  be  defined.   Applications  such  as
+       <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG> rely upon this to reset all margins.
+
+
 </PRE><H3><a name="h3-Area-Clears">Area Clears</a></H3><PRE>
        If  the  terminal can clear from the current position to the end of the
        line, leaving the cursor where it is, this should be given as  <STRONG>el</STRONG>.   If
@@ -1786,6 +1887,7 @@
                <STRONG>tparm</STRONG> <STRONG>parameter</STRONG>      <STRONG>attribute</STRONG>        <STRONG>escape</STRONG> <STRONG>sequence</STRONG>
 
                none                 none             \E[0m
+
                p1                   standout         \E[0;1;7m
                p2                   underline        \E[0;4m
                p3                   reverse          \E[0;7m
@@ -2114,7 +2216,6 @@
          solid square block          ACS_BLOCK      #         0        0x30
          diamond                     ACS_DIAMOND    +         `        0x60
          checker board (stipple)     ACS_CKBOARD    :         a        0x61
-
          degree symbol               ACS_DEGREE     \         f        0x66
          plus/minus                  ACS_PLMINUS    #         g        0x67
          board of squares            ACS_BOARD      #         h        0x68
@@ -2132,6 +2233,7 @@
          tee pointing right          ACS_LTEE       +         t        0x74
          tee pointing left           ACS_RTEE       +         u        0x75
          tee pointing up             ACS_BTEE       +         v        0x76
+
          tee pointing down           ACS_TTEE       +         w        0x77
          vertical line               ACS_VLINE      |         x        0x78
          less-than-or-equal-to       ACS_LEQUAL     &lt;         y        0x79
@@ -2565,6 +2667,7 @@
 <li><a href="#h3-Basic-Capabilities">Basic Capabilities</a></li>
 <li><a href="#h3-Parameterized-Strings">Parameterized Strings</a></li>
 <li><a href="#h3-Cursor-Motions">Cursor Motions</a></li>
+<li><a href="#h3-Margins">Margins</a></li>
 <li><a href="#h3-Area-Clears">Area Clears</a></li>
 <li><a href="#h3-Insert_delete-line-and-vertical-motions">Insert/delete line and vertical motions</a></li>
 <li><a href="#h3-Insert_Delete-Character">Insert/Delete Character</a></li>

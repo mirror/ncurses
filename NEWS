@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3712 2021/09/24 19:45:04 tom Exp $
+-- $Id: NEWS,v 1.3717 2021/10/02 22:25:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,21 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211002
+	+ use return-value from vsnprintf to reallocate as needed to allow for
+	  buffers larger than the screen size (report by "_RuRo_").
+	+ modify tset "-q" option to refrain from modifying terminal modes, to
+	  match the documentation.
+	+ add section on margins to terminfo.5, adapted from X/Open Curses.
+	+ make tput/tset warning messages consistently using alias names when
+	  those are used, rather than the underlying program's name.
+	+ improve tput usage message for aliases such as clear, by eliminating
+	  tput-specific portions.
+	+ add a check in toe to ensure that a "termcap file" is text rather
+	  than binary.
+	+ further build-fixes for OpenBSD 6.9, whose header files differ from
+	  the other BSDs.
 
 20210925
 	+ add kbeg to xterm+keypad to accommodate termcap applications -TD

@@ -98,7 +98,7 @@
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.128 2021/04/03 23:03:48 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.130 2021/10/02 18:08:09 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -775,6 +775,7 @@ main(int argc, char **argv)
     bool opt_w = FALSE;		/* set window-size */
     TTY mode, oldmode;
 
+    _nc_progname = _nc_rootname(*argv);
     obsolete(argv);
     noinit = noset = quiet = Sflag = sflag = showterm = 0;
     while ((ch = getopt(argc, argv, "a:cd:e:Ii:k:m:p:qQrSsVw")) != -1) {
@@ -833,7 +834,6 @@ main(int argc, char **argv)
 	}
     }
 
-    _nc_progname = _nc_rootname(*argv);
     argc -= optind;
     argv += optind;
 
@@ -855,7 +855,7 @@ main(int argc, char **argv)
 
     if (same_program(_nc_progname, PROG_RESET)) {
 	reset_start(stderr, TRUE, FALSE);
-	reset_tty_settings(my_fd, &mode);
+	reset_tty_settings(my_fd, &mode, noset);
     } else {
 	reset_start(stderr, FALSE, TRUE);
     }
