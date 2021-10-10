@@ -45,7 +45,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.84 2021/09/28 08:27:29 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.86 2021/10/10 00:55:32 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -146,6 +146,7 @@ show_termdata(int eargc, char **eargv)
 	if (use_termdata > 1)
 	    qsort(ptr_termdata, use_termdata, sizeof(TERMDATA), compare_termdata);
 	for (n = 0; n < use_termdata; ++n) {
+	    int nk = -1;
 
 	    /*
 	     * If there is more than one database, show how they differ.
@@ -154,6 +155,11 @@ show_termdata(int eargc, char **eargv)
 		unsigned long check = 0;
 		int k = 0;
 		for (;;) {
+		    char mark = ((check == 0
+				  || (check != ptr_termdata[n].checksum))
+				 ? '*'
+				 : '+');
+
 		    for (; k < ptr_termdata[n].db_index; ++k) {
 			printf("--");
 		    }
@@ -163,11 +169,10 @@ show_termdata(int eargc, char **eargv)
 		     * from the first entry's checksum, print "*". Otherwise
 		     * it looks enough like a duplicate to print "+".
 		     */
-		    printf("%c-", ((check == 0
-				    || (check != ptr_termdata[n].checksum))
-				   ? '*'
-				   : '+'));
+		    printf("%c-", mark);
 		    check = ptr_termdata[n].checksum;
+		    if (mark == '*' && nk < 0)
+			nk = (int) n;
 
 		    ++k;
 		    if ((n + 1) >= use_termdata
@@ -182,10 +187,12 @@ show_termdata(int eargc, char **eargv)
 		}
 		printf(":\t");
 	    }
+	    if (nk < 0)
+		nk = (int) n;
 
 	    (void) printf("%-10s\t%s\n",
 			  ptr_termdata[n].term_name,
-			  ptr_termdata[n].description);
+			  ptr_termdata[nk].description);
 	}
     }
 }

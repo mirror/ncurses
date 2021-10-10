@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.305 2021/10/02 11:13:50 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.307 2021/10/05 08:07:05 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -312,9 +312,9 @@ put_translate(int c)
 
 	if (used + 1 >= have) {
 	    have += 132;
-	    if ((namebuf = typeRealloc(char, have, namebuf)) == 0)
+	    if ((namebuf = typeRealloc(char, have, namebuf)) == NULL)
 		  failed("put_translate namebuf");
-	    if ((suffix = typeRealloc(char, have, suffix)) == 0)
+	    if ((suffix = typeRealloc(char, have, suffix)) == NULL)
 		  failed("put_translate suffix");
 	}
 	if (c == '\n' || c == '@') {
@@ -413,12 +413,12 @@ copy_input(FILE *source, const char *filename, char *alt_file)
     FILE *target;
     int ch;
 
-    if (alt_file == 0)
+    if (alt_file == NULL)
 	alt_file = my_altfile;
 
-    if (source == 0) {
+    if (source == NULL) {
 	failed("copy_input (source)");
-    } else if ((target = open_tempfile(alt_file)) == 0) {
+    } else if ((target = open_tempfile(alt_file)) == NULL) {
 	failed("copy_input (target)");
     } else {
 	clearerr(source);
@@ -468,7 +468,7 @@ open_input(const char *filename, char *alt_file)
     } else {
 	fp = safe_fopen(filename, "r");
 
-	if (fp == 0) {
+	if (fp == NULL) {
 	    fprintf(stderr, "%s: Can't open %s\n", _nc_progname, filename);
 	    ExitProgram(EXIT_FAILURE);
 	}
@@ -495,7 +495,7 @@ make_namelist(char *src)
     unsigned pass, n, nn;
     char buffer[BUFSIZ];
 
-    if (src == 0) {
+    if (src == NULL) {
 	/* EMPTY */ ;
     } else if (strchr(src, '/') != 0) {		/* a filename */
 	FILE *fp = open_input(src, (char *) 0);
@@ -512,7 +512,7 @@ make_namelist(char *src)
 		}
 	    }
 	    if (pass == 1) {
-		if ((dst = typeCalloc(char *, nn + 1)) == 0)
+		if ((dst = typeCalloc(char *, nn + 1)) == NULL)
 		      failed("make_namelist");
 		rewind(fp);
 	    }
@@ -536,7 +536,7 @@ make_namelist(char *src)
 		    break;
 	    }
 	    if (pass == 1) {
-		if ((dst = typeCalloc(char *, nn + 1)) == 0)
+		if ((dst = typeCalloc(char *, nn + 1)) == NULL)
 		      failed("make_namelist");
 	    }
 	}
@@ -578,7 +578,7 @@ valid_db_path(const char *nominal)
     size_t need = strlen(nominal) + sizeof(suffix);
     char *result = malloc(need);
 
-    if (result == 0)
+    if (result == NULL)
 	failed("valid_db_path");
     _nc_STRCPY(result, nominal, need);
     if (strcmp(result + need - sizeof(suffix), suffix)) {
@@ -643,7 +643,7 @@ show_databases(const char *outdir)
     char *result;
     const char *tried = 0;
 
-    if (outdir == 0) {
+    if (outdir == NULL) {
 	outdir = _nc_tic_dir(0);
     }
     if ((result = valid_db_path(outdir)) != 0) {
@@ -932,7 +932,7 @@ main(int argc, char *argv[])
 	}
     }
 
-    if (tmp_fp == 0) {
+    if (tmp_fp == NULL) {
 	tmp_fp = open_input(source_file, my_altfile);
 	if (!strcmp(source_file, "-")) {
 	    source_file = STDIN_NAME;
@@ -1218,7 +1218,7 @@ check_colors(TERMTYPE2 *tp)
     char *value;
 
     if ((max_colors > 0) != (max_pairs > 0)
-	|| ((max_colors > max_pairs) && (initialize_pair == 0)))
+	|| ((max_colors > max_pairs) && !VALID_STRING(initialize_pair)))
 	_nc_warning("inconsistent values for max_colors (%d) and max_pairs (%d)",
 		    max_colors, max_pairs);
 
@@ -1412,7 +1412,7 @@ check_cursor(TERMTYPE2 *tp)
 	check_noaddress(tp, "hard_copy");
     } else if (generic_type) {
 	check_noaddress(tp, "generic_type");
-    } else if (strchr(tp->term_names, '+') == 0) {
+    } else if (strchr(tp->term_names, '+') == NULL) {
 	int y = 0;
 	int x = 0;
 	if (PRESENT(column_address))
@@ -1669,20 +1669,10 @@ check_printer(TERMTYPE2 *tp)
     ANDMISSING(start_char_set_def, stop_char_set_def);
 #endif
 
-    /* if we have a parameterized form, then the non-parameterized is easy */
-#if defined(set_bottom_margin_parm) && defined(set_bottom_margin)
-    ANDMISSING(set_bottom_margin_parm, set_bottom_margin);
-#endif
-#if defined(set_left_margin_parm) && defined(set_left_margin)
-    ANDMISSING(set_left_margin_parm, set_left_margin);
-#endif
-#if defined(set_right_margin_parm) && defined(set_right_margin)
-    ANDMISSING(set_right_margin_parm, set_right_margin);
-#endif
-#if defined(set_top_margin_parm) && defined(set_top_margin)
-    ANDMISSING(set_top_margin_parm, set_top_margin);
-#endif
-
+    /*
+     * If we have a parameterized form, then the non-parameterized is easy.
+     * note: parameterized/non-parameterized margin settings are unrelated.
+     */
 #if defined(parm_down_micro) && defined(micro_down)
     ANDMISSING(parm_down_micro, micro_down);
 #endif
@@ -1721,7 +1711,7 @@ check_screen(TERMTYPE2 *tp)
 	char *name = _nc_first_name(tp->term_names);
 	bool is_screen = !strncmp(name, "screen", 6);
 	bool screen_base = (is_screen
-			    && strchr(name, '.') == 0);
+			    && strchr(name, '.') == NULL);
 
 	if (!VALID_BOOLEAN(have_bce)) {
 	    have_bce = FALSE;
@@ -1771,7 +1761,7 @@ check_screen(TERMTYPE2 *tp)
 	} else {
 	    if (have_kmouse
 		&& !have_XM
-		&& !screen_base && strchr(name, '+') == 0) {
+		&& !screen_base && strchr(name, '+') == NULL) {
 		_nc_warning("expected XT to be set, given kmous");
 	    }
 	}
@@ -1980,9 +1970,24 @@ check_params(TERMTYPE2 *tp, const char *name, const char *value, int extended)
     bool params[1 + NUM_PARM];
     const char *s = value;
 
+#ifdef set_left_margin_parm
+    if (!strcmp(name, "smgrp")
+	&& !VALID_STRING(set_left_margin_parm))
+	expected = 2;
+#endif
+#ifdef set_right_margin_parm
+    if (!strcmp(name, "smglp")
+	&& !VALID_STRING(set_right_margin_parm))
+	expected = 2;
+#endif
 #ifdef set_top_margin_parm
     if (!strcmp(name, "smgbp")
-	&& set_top_margin_parm == 0)
+	&& !VALID_STRING(set_top_margin_parm))
+	expected = 2;
+#endif
+#ifdef set_bottom_margin_parm
+    if (!strcmp(name, "smgtp")
+	&& !VALID_STRING(set_bottom_margin_parm))
 	expected = 2;
 #endif
 
@@ -2139,7 +2144,7 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 
 	    for (q = base; *q != '\0'; ++q) {
 		if (*q == '>') {
-		    if (mark == 0)
+		    if (mark == NULL)
 			mark = q;
 		    break;
 		} else if (*q == '*' || *q == '/') {
@@ -2147,7 +2152,7 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 			++proportional;
 		    if (*q == '/')
 			++mandatory;
-		    if (mark == 0)
+		    if (mark == NULL)
 			mark = q;
 		} else if (!(isalnum(UChar(*q)) || strchr("+-.", *q) != 0)) {
 		    break;
@@ -2169,7 +2174,7 @@ check_delays(TERMTYPE2 *tp, const char *name, const char *value)
 		    _nc_warning("non-line capability using proportional delay: %s", name);
 		} else if (!xon_xoff &&
 			   !mandatory &&
-			   strchr(_nc_first_name(tp->term_names), '+') == 0) {
+			   strchr(_nc_first_name(tp->term_names), '+') == NULL) {
 		    _nc_warning("%s in %s is used since no xon/xoff",
 				(proportional
 				 ? "proportional delay"
@@ -2309,7 +2314,7 @@ parse_delay_value(const char *src, double *delays, int *always)
 	}
     }
     while (*src == '*' || *src == '/') {
-	if (always == 0 && *src == '/')
+	if (always == NULL && *src == '/')
 	    break;
 	if (*src++ == '*') {
 	    star = 1;
@@ -2666,7 +2671,7 @@ get_fkey_list(TERMTYPE2 *tp)
     int used = 0;
     unsigned j;
 
-    if (result == 0)
+    if (result == NULL)
 	failed("get_fkey_list");
 
     for (j = 0; all_fkeys[j].code; j++) {
@@ -2719,7 +2724,7 @@ check_conflict(TERMTYPE2 *tp)
 	NAME_VALUE *given = get_fkey_list(tp);
 	unsigned j, k;
 
-	if (check == 0)
+	if (check == NULL)
 	    failed("check_conflict");
 
 	for (j = 0; given[j].keycode; ++j) {
@@ -3082,7 +3087,7 @@ check_termtype(TERMTYPE2 *tp, bool literal)
     if (PRESENT(exit_attribute_mode)) {
 	char *check_sgr0 = _nc_trim_sgr0(tp);
 
-	if (check_sgr0 == 0 || *check_sgr0 == '\0') {
+	if (check_sgr0 == NULL || *check_sgr0 == '\0') {
 	    _nc_warning("trimmed sgr0 is empty");
 	} else {
 	    show_where(2);

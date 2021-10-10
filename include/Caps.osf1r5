@@ -29,7 +29,7 @@
 #
 # Author: Thomas Dickey
 #
-# $Id: Caps.osf1r5,v 1.15 2021/09/04 10:52:55 tom Exp $
+# $Id: Caps.osf1r5,v 1.16 2021/10/08 07:55:48 tom Exp $
 #
 # This is an adaptation of ncurses' termcap/terminfo capability table, which
 # is designed to align with OSF/1 version 5 (Tru64) terminfo.
@@ -743,7 +743,7 @@ set_clock			sclk	str	SC	-		-	-----	set clock, #1 hrs #2 mins #3 secs
 set_color_band		setcolor	str	Yz	-		-	-----	Change to ribbon color #1
 set_color_pair			scp	str	sp	-		-	-----	Set current color pair to #1
 set_foreground			setf	str	Sf	-		-	-----	Set foreground color #1
-set_left_margin			smgl	str	ML	-		-	-----	set left soft margin at current column.	 See smgl. (ML is not in BSD termcap).
+set_left_margin			smgl	str	ML	-		-	-----	set left soft margin at current column.	 (ML is not in BSD termcap).
 set_left_margin_parm		smglp	str	Zm	-		-	-----	Set left (right) margin at column #1
 set_lr_margin			smglr	str	ML	-		-	-----	Set both left and right margins to #1, #2.  (ML is not in BSD termcap).
 set_page_length			slines	str	YZ	-		-	-----	Set page length to #1 lines

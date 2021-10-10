@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3717 2021/10/02 22:25:41 tom Exp $
+-- $Id: NEWS,v 1.3721 2021/10/09 22:22:17 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,23 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211009
+	+ implement "+m" option in tabs program.
+	+ fill in some details for infoton -TD
+	+ fix spelling/consistency in several descriptions -TD
+	+ use vt420+lrmm in vt420 -TD
+	+ modify save_tty_settings() to avoid opening /dev/tty for cases other
+	  than reset/init, e.g., for clear.
+	+ modify output of "toe -as" to show first description found rather
+	  than the last.
+	+ improve tic checks for number of parameters of smglp, smgrp, smgtp,
+	  and smgbp (cf: 20020525).
+	+ correct off-by-one comparison in last_char(), which did not allow
+	  special case of ":" in a terminfo description field (cf: 20120407).
+	+ remove check in tic that assumes that none or both parameterized and
+	  non-parameterized margin-setting capabilities are present
+	  (cf: 20101002).
 
 20211002
 	+ use return-value from vsnprintf to reallocate as needed to allow for

@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.110 2021/09/04 10:54:35 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.112 2021/10/04 23:56:28 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -136,7 +136,7 @@ last_char(int from_end)
 
     while (len--) {
 	if (!isspace(UChar(bufptr[len]))) {
-	    if (from_end < (int) len)
+	    if (from_end <= (int) len)
 		result = bufptr[(int) len - from_end];
 	    break;
 	}
@@ -587,10 +587,11 @@ _nc_get_token(bool silent)
 	     */
 	    if (after_list != 0) {
 		if (!silent) {
-		    if (*after_list == '\0')
+		    if (*after_list == '\0' || strchr("|", after_list[1]) != NULL) {
 			_nc_warning("empty longname field");
-		    else if (strchr(after_list, ' ') == 0)
+		    } else if (strchr(after_list, ' ') == 0) {
 			_nc_warning("older tic versions may treat the description field as an alias");
+		    }
 		}
 	    } else {
 		after_list = tok_buf + strlen(tok_buf);

@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.28 2020/12/19 21:50:22 tom Exp @
+  * @Id: tabs.1,v 1.30 2021/10/09 23:48:50 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -133,25 +133,61 @@
 
 
 </PRE><H3><a name="h3-Predefined-Tab-Stops">Predefined Tab-Stops</a></H3><PRE>
-       X/Open defines several predefined lists of tab stops.
+       POSIX defines several predefined lists of tab stops.
 
        <STRONG>-a</STRONG>   Assembler, IBM S/370, first format
+            1,10,16,36,72
 
        <STRONG>-a2</STRONG>  Assembler, IBM S/370, second format
+            1,10,16,40,72
 
        <STRONG>-c</STRONG>   COBOL, normal format
+            1,8,12,16,20,55
 
        <STRONG>-c2</STRONG>  COBOL compact format
+            1,6,10,14,49
 
        <STRONG>-c3</STRONG>  COBOL compact format extended
+            1,6,10,14,18,22,26,30,34,38,42,46,50,54,58,62,67
 
        <STRONG>-f</STRONG>   FORTRAN
+            1,7,11,15,19,23
 
        <STRONG>-p</STRONG>   PL/I
+            1,5,9,13,17,21,25,29,33,37,41,45,49,53,57,61
 
        <STRONG>-s</STRONG>   SNOBOL
+            1,10,55
 
        <STRONG>-u</STRONG>   UNIVAC 1100 Assembler
+            1,12,20,44
+
+
+</PRE><H3><a name="h3-Margins">Margins</a></H3><PRE>
+       A  few  terminals  provide the capability for changing their left/right
+       margins.  The tabs program has an option to use this feature:
+
+       <STRONG>+m</STRONG> <EM>margin</EM>
+            The  effect  depends  on  whether  the  terminal  has  the  margin
+            capabilities:
+
+            <STRONG>o</STRONG>   If  the  terminal provides the capability for setting the left
+                margin, tabs uses this, and adjusts the  available  width  for
+                tab-stops.
+
+            <STRONG>o</STRONG>   If the terminal does not provide the margin capabilities, tabs
+                imitates the effect, putting the tab stops at the  appropriate
+                place  on  each  line.   The  terminal's  left-margin  is  not
+                modified.
+
+            If the <EM>margin</EM> parameter is omitted, the default is 10.  Use <STRONG>+m0</STRONG> to
+            reset  the  left  margin, i.e., to the left edge of the terminal's
+            display.  Before setting a left-margin, tabs resets the margin  to
+            reduce  problems which might arise on moving the cursor before the
+            current left-margin.
+
+       When setting or resetting the left-margin, tabs may  reset  the  right-
+       margin.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
@@ -164,7 +200,7 @@
            capability needed to support the feature.
 
        <STRONG>o</STRONG>   There  is no counterpart in X/Open Curses Issue 7 for this utility,
-           unlike <STRONG>tput(1)</STRONG>.
+           unlike <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>.
 
        The <STRONG>-d</STRONG> (debug) and <STRONG>-n</STRONG> (no-op) options are extensions  not  provided  by
        other implementations.
@@ -207,7 +243,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20211002).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20211009).
 
 
 
@@ -224,6 +260,7 @@
 <li><a href="#h3-Implicit-Lists">Implicit Lists</a></li>
 <li><a href="#h3-Explicit-Lists">Explicit Lists</a></li>
 <li><a href="#h3-Predefined-Tab-Stops">Predefined Tab-Stops</a></li>
+<li><a href="#h3-Margins">Margins</a></li>
 </ul>
 </li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>

@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.107 2021/10/02 20:54:06 tom Exp $
+.\" $Id: terminfo.tail,v 1.108 2021/10/09 23:13:23 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -708,6 +708,8 @@ smgbp	Set bottom margin at line \fIN\fP
 smglp	Set left margin at column \fIN\fP
 smgrp	Set right margin at column \fIN\fP
 smgtp	Set top margin at line \fIN\fP
+smglr	Set both left and right margins to \fIL\fP and \fIR\fP
+smgtb	Set both top and bottom margins to \fIT\fP and \fIB\fP
 .TE
 .PP
 When writing an application that
@@ -757,6 +759,13 @@ only one capability in the pairs
 \fBsmglp\fP and \fBsmgrp\fP or
 \fBsmgtp\fP and \fBsmgbp\fP should be defined,
 leaving the other unset.
+.PP
+Except for very old terminal descriptions, e.g., those developed for SVr4,
+the scheme just described should be considered obsolete.
+An improved set of capabilities was added late in the SVr4 releases
+(\fBsmglr\fP and \fBsmgtb\fP),
+which explicitly use two parameters for setting the left/right or top/bottom
+margins.
 .PP
 When setting margins, the line- and column-values are zero-based.
 .PP

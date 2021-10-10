@@ -30,7 +30,7 @@
 # Author: Zeyd M. Ben-Halim <zmbenhal@netcom.com> 1992,1995
 #    and: Eric S. Raymond <esr@snark.thyrsus.com>
 #
-# $Id: Caps,v 1.47 2021/09/04 10:52:55 tom Exp $
+# $Id: Caps,v 1.48 2021/10/08 07:55:48 tom Exp $
 #
 # This is the master termcap/terminfo capability table.
 #
@@ -601,7 +601,7 @@ key_f62				kf62	str	Fq	KEY_F(62)	-	----E	F62 function key
 key_f63				kf63	str	Fr	KEY_F(63)	-	----E	F63 function key
 clr_bol				el1	str	cb	-		-	-----	Clear to beginning of line
 clear_margins			mgc	str	MC	-		-	-----	clear right and left soft margins
-set_left_margin			smgl	str	ML	-		-	-----	set left soft margin at current column.	 See smgl. (ML is not in BSD termcap).
+set_left_margin			smgl	str	ML	-		-	-----	set left soft margin at current column.	 (ML is not in BSD termcap).
 set_right_margin		smgr	str	MR	-		-	-----	set right soft margin at current column
 label_format			fln	str	Lf	-		-	-----	label format
 set_clock			sclk	str	SC	-		-	-----	set clock, #1 hrs #2 mins #3 secs

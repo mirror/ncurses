@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.28 2020/12/19 21:50:22 tom Exp $
+.\" $Id: tabs.1,v 1.30 2021/10/09 23:48:50 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -140,34 +140,78 @@ tabs 1,+5,+5,+5,+5
 .PP
 which is equivalent to the 1,6,11,16,21 example.
 .SS Predefined Tab-Stops
-X/Open defines several predefined lists of tab stops.
+POSIX defines several predefined lists of tab stops.
 .TP 5
 .B \-a
 Assembler, IBM S/370, first format
+.br
+1,10,16,36,72
 .TP 5
 .B \-a2
 Assembler, IBM S/370, second format
+.br
+1,10,16,40,72
 .TP 5
 .B \-c
 COBOL, normal format
+.br
+1,8,12,16,20,55
 .TP 5
 .B \-c2
 COBOL compact format
+.br
+1,6,10,14,49
 .TP 5
 .B \-c3
 COBOL compact format extended
+.br
+1,6,10,14,18,22,26,30,34,38,42,46,50,54,58,62,67
 .TP 5
 .B \-f
 FORTRAN
+.br
+1,7,11,15,19,23
 .TP 5
 .B \-p
 PL/I
+.br
+1,5,9,13,17,21,25,29,33,37,41,45,49,53,57,61
 .TP 5
 .B \-s
 SNOBOL
+.br
+1,10,55
 .TP 5
 .B \-u
 UNIVAC 1100 Assembler
+.br
+1,12,20,44
+.SS Margins
+A few terminals provide the capability for changing their left/right margins.
+The @TABS@ program has an option to use this feature:
+.TP 5
+.BI \+m \ margin
+The effect depends on whether the terminal has the margin capabilities:
+.RS
+.bP
+If the terminal provides the capability for setting the left margin,
+@TABS@ uses this, and adjusts the available width for tab-stops.
+.bP
+If the terminal does not provide the margin capabilities,
+@TABS@ imitates the effect, putting the tab stops at the appropriate
+place on each line.
+The terminal's left-margin is not modified.
+.RE
+.IP
+If the \fImargin\fP parameter is omitted, the default is 10.
+Use \fB\+m0\fP to reset the left margin,
+i.e., to the left edge of the terminal's display.
+Before setting a left-margin,
+@TABS@ resets the margin to reduce problems which might arise
+on moving the cursor before the current left-margin.
+.PP
+When setting or resetting the left-margin,
+@TABS@ may reset the right-margin.
 .SH PORTABILITY
 .PP
 \fIIEEE Std 1003.1/The Open Group Base Specifications Issue 7\fP (POSIX.1-2008)
@@ -181,7 +225,7 @@ Very few of the entries in the terminal database provide the
 capability needed to support the feature.
 .bP
 There is no counterpart in X/Open Curses Issue 7 for this utility,
-unlike \fB@TPUT@(1)\fP.
+unlike \fB@TPUT@\fP(1).
 .PP
 The \fB\-d\fP (debug) and \fB\-n\fP (no-op) options are extensions not provided
 by other implementations.
