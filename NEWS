@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3721 2021/10/09 22:22:17 tom Exp $
+-- $Id: NEWS,v 1.3727 2021/10/16 15:17:50 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211016
+	+ build-fix for pmake with libtool.
+	+ improve make-tar.sh scripts, adding COPYING to tar file, and clean up
+	  shellcheck warnings.
+	+ add link for "reset6" manpage in test-package ncurses6-doc
+	+ revise configure option --with-pkg-config-libdir, using the actual
+	  search path from pkg-config or pkgconf using the output from --debug
+	  (report by Pascal Pignard).
+	+ freeze ABI in ".map" files.
 
 20211009
 	+ implement "+m" option in tabs program.

@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.2
-Release: 20211009
+Release: 20211016
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
@@ -77,7 +77,7 @@ This package is used for testing ABI %{MY_ABI}.
 	--enable-opaque-menu \\\
 	--enable-opaque-panel \\\
 	--enable-pc-files \\\
-	--enable-rpath \\\
+	--disable-rpath \\\
 	--enable-stdnoreturn \\\
 	--enable-warnings \\\
 	--enable-wgetch-events \\\
@@ -139,6 +139,9 @@ exit 0
 %{_libdir}/*
 
 %changelog
+
+* Sat Oct 16 2021 Thomas Dickey
+- disable rpath to address QA_RPATHS=1 warning.
 
 * Tue Dec 24 2019 Thomas Dickey
 - drop custom CC_NORMAL warning flags because setting CFLAGS interferes with

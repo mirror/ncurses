@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# $Id: rules,v 1.40 2021/03/23 00:17:05 tom Exp $
+# $Id: rules,v 1.41 2021/10/11 18:18:08 tom Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -208,6 +208,8 @@ install-ncurses6-doc-stamp: build-ncurses6-stamp
 	dh_prep        $(verbose) -pncurses6-doc
 
 	$(MAKE) -C t/ncurses6 install.man DESTDIR=$(NCURSES6_DIR)-doc
+
+	cd $(NCURSES6_DIR)-doc/usr/share/man/man1 && ln -sf tset6.1.gz reset6.1.gz
 
 	touch $@
 

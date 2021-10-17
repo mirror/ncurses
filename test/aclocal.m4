@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.201 2021/09/05 21:29:34 tom Exp $
+dnl $Id: aclocal.m4,v 1.202 2021/10/11 00:18:09 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -3181,9 +3181,11 @@ else
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 11 updated: 2021/01/01 13:31:04
+dnl CF_PKG_CONFIG version: 12 updated: 2021/10/10 20:18:09
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
+dnl
+dnl Sets $PKG_CONFIG to the pathname of the pkg-config program.
 AC_DEFUN([CF_PKG_CONFIG],
 [
 AC_MSG_CHECKING(if you want to use pkg-config)

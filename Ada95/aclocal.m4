@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.183 2021/09/05 21:33:34 tom Exp $
+dnl $Id: aclocal.m4,v 1.184 2021/10/11 00:18:09 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -3334,9 +3334,11 @@ case ".[$]$1" in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PKG_CONFIG version: 11 updated: 2021/01/01 13:31:04
+dnl CF_PKG_CONFIG version: 12 updated: 2021/10/10 20:18:09
 dnl -------------
 dnl Check for the package-config program, unless disabled by command-line.
+dnl
+dnl Sets $PKG_CONFIG to the pathname of the pkg-config program.
 AC_DEFUN([CF_PKG_CONFIG],
 [
 AC_MSG_CHECKING(if you want to use pkg-config)
@@ -4769,9 +4771,18 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 11 updated: 2021/01/01 16:16:30
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 12 updated: 2021/10/10 20:18:09
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
+dnl
+dnl pkg-config uses a search-list built from these colon-separated lists of
+dnl directories:
+dnl a) $PKG_CONFIG_PATH (tested first, added if set)
+dnl b) $PKG_CONFIG_LIBDIR (tested second, added if set)
+dnl c) builtin-list (added if $PKG_CONFIG_LIBDIR is not set)
+dnl
+dnl pkgconf (used with some systems such as FreeBSD in place of pkg-config)
+dnl optionally ignores $PKG_CONFIG_LIBDIR.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
 
 case "$PKG_CONFIG" in
@@ -4783,68 +4794,98 @@ case "$PKG_CONFIG" in
 	;;
 esac
 
-PKG_CONFIG_LIBDIR=no
+cf_search_path=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/:/ /g' -e 's,^[[ 	]]*,,'`
 AC_ARG_WITH(pkg-config-libdir,
 	[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
-	[PKG_CONFIG_LIBDIR=$withval],
-	[test "x$PKG_CONFIG" != xnone && PKG_CONFIG_LIBDIR=yes])
+	[cf_search_path=$withval],
+	[test "x$PKG_CONFIG" != xnone && cf_search_path=yes])
 
-case x$PKG_CONFIG_LIBDIR in
+case x$cf_search_path in
 (x/*)
 	;;
 (xyes)
+	cf_search_path=
+	CF_VERBOSE(auto...)
 	# Look for the library directory using the same prefix as the executable
+	AC_MSG_CHECKING(for search-list)
 	if test "x$PKG_CONFIG" = xnone
 	then
 		cf_path=$prefix
 	else
 		cf_path=`echo "$PKG_CONFIG" | sed -e 's,/[[^/]]*/[[^/]]*$,,'`
+		cf_search_path=`
+		"$PKG_CONFIG" --debug --exists no-such-package 2>&1 | awk "\
+/^Scanning directory #[1-9][0-9]* '.*'$/{ \
+	sub(\"^[[^']]*'\",\"\"); \
+	sub(\"'.*\",\"\"); \
+	printf \" %s\", \\[$]0; } \
+/trying path:/{
+	sub(\"^.* trying path: \",\"\");
+	sub(\" for no-such-package.*$\",\"\");
+	printf \" %s\", \\[$]0;
+}
+{ next; } \
+"`
 	fi
 
-	# If you don't like using the default architecture, you have to specify the
-	# intended library directory and corresponding compiler/linker options.
-	#
-	# This case allows for Debian's 2014-flavor of multiarch, along with the
-	# most common variations before that point.  Some other variants spell the
-	# directory differently, e.g., "pkg-config", and put it in unusual places.
-	# pkg-config has always been poorly standardized, which is ironic...
-	case x`(arch) 2>/dev/null` in
-	(*64)
-		cf_search_path="\
-			$cf_path/lib/*64-linux-gnu \
-			$cf_path/share \
-			$cf_path/lib64 \
-			$cf_path/lib32 \
-			$cf_path/lib"
-		;;
-	(*)
-		cf_search_path="\
-			$cf_path/lib/*-linux-gnu \
-			$cf_path/share \
-			$cf_path/lib32 \
-			$cf_path/lib \
-			$cf_path/libdata"
-		;;
-	esac
+	if test -z "$cf_search_path"
+	then
+		# If you don't like using the default architecture, you have to specify
+		# the intended library directory and corresponding compiler/linker
+		# options.
+		#
+		# This case allows for Debian's 2014-flavor of multiarch, along with
+		# the most common variations before that point.  Some other variants
+		# spell the directory differently, e.g., "pkg-config", and put it in
+		# unusual places.
+		#
+		# pkg-config has always been poorly standardized, which is ironic...
+		case x`(arch) 2>/dev/null` in
+		(*64)
+			cf_test_path="\
+				$cf_path/lib/*64-linux-gnu \
+				$cf_path/share \
+				$cf_path/lib64 \
+				$cf_path/lib32 \
+				$cf_path/lib"
+			;;
+		(*)
+			cf_test_path="\
+				$cf_path/lib/*-linux-gnu \
+				$cf_path/share \
+				$cf_path/lib32 \
+				$cf_path/lib \
+				$cf_path/libdata"
+			;;
+		esac
+		for cf_config in $cf_test_path
+		do
+			test -d "$cf_config/pkgconfig" && cf_search_path="$cf_search_path $cf_config/pkgconfig"
+		done
+	fi
 
-	CF_VERBOSE(list...)
-	for cf_config in $cf_search_path
-	do
-		CF_VERBOSE(checking $cf_config/pkgconfig)
-		if test -d "$cf_config/pkgconfig"
-		then
-			PKG_CONFIG_LIBDIR=$cf_config/pkgconfig
-			AC_MSG_CHECKING(done)
-			break
-		fi
-	done
+	AC_MSG_RESULT($cf_search_path)
+
 	;;
 (*)
 	;;
 esac
 
-if test "x$PKG_CONFIG_LIBDIR" != xno ; then
-	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+AC_MSG_CHECKING(for first directory)
+cf_pkg_config_path=none
+for cf_config in $cf_search_path
+do
+	if test -d "$cf_config"
+	then
+		cf_pkg_config_path=$cf_config
+		break
+	fi
+done
+AC_MSG_RESULT($cf_pkg_config_path)
+
+if test "x$cf_pkg_config_path" != xno ; then
+	# limit this to the first directory found
+	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
 fi
 
 AC_SUBST(PKG_CONFIG_LIBDIR)

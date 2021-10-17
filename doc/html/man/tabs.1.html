@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.30 2021/10/09 23:48:50 tom Exp @
+  * @Id: tabs.1,v 1.32 2021/10/16 13:37:43 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -212,38 +212,47 @@
 
        The PWB/Unix <STRONG>tabs</STRONG> utility, which was included  in  System  III  (1980),
        used  built-in  tables  rather than the terminal database, to support a
-       half-dozen terminal types.  It also had built-in logic to  support  the
-       left-margin,  as  well as a feature for copying the tab settings from a
-       file.
+       half-dozen hardcopy terminal (printer) types.   It  also  had  built-in
+       logic  to support the left-margin, as well as a feature for copying the
+       tab settings from a file.
 
        Later versions of Unix, e.g., SVr4,  added  support  for  the  terminal
-       database,   but  kept  the  tables,  as  a  fallback.   In  an  earlier
+       database,  but  kept the tables to support the printers.  In an earlier
        development effort, the tab-stop initialization provided by <STRONG>tset</STRONG> (1982)
        and incorporated into <STRONG>tput</STRONG> uses the terminal database,
 
-       POSIX  documents  no  limits on the number of tab stops.  Documentation
+       The  <STRONG>+m</STRONG>  option  was  documented  in  the  Base  Specifications Issue 5
+       (Unix98,  1997),  and  omitted  in  Issue  6  (Unix03,  2004)   without
+       documenting   the   rationale,  though  an  introductory  comment  <EM>"and</EM>
+       <EM>optionally</EM> <EM>adjusts</EM> <EM>the</EM> <EM>margin"</EM> remains, overlooked in the removal.  The
+       documented  <STRONG>tabs</STRONG>  utility  in  Issues  6 and later has no mechanism for
+       setting margins.  The <STRONG>+m</STRONG> option in this implementation differs from the
+       feature  in  SVr4  by  using terminal capabilities rather than built-in
+       tables.
+
+       POSIX documents no limits on the number of  tab  stops.   Documentation
        for other implementations states that there is a limit on the number of
-       tab  stops (e.g., 20 in PWB/Unix's <STRONG>tabs</STRONG> utility).  While some terminals
-       may not accept an arbitrary number of tab  stops,  this  implementation
-       will  attempt to set tab stops up to the right margin of the screen, if
+       tab stops (e.g., 20 in PWB/Unix's <STRONG>tabs</STRONG> utility).  While some  terminals
+       may  not  accept  an arbitrary number of tab stops, this implementation
+       will attempt to set tab stops up to the right margin of the screen,  if
        the given list happens to be that long.
 
-       The <EM>Rationale</EM> section of the POSIX documentation goes into some  detail
-       about  the  ways the committee considered redesigning the <STRONG>tabs</STRONG> and <STRONG>tput</STRONG>
+       The  <EM>Rationale</EM> section of the POSIX documentation goes into some detail
+       about the ways the committee considered redesigning the <STRONG>tabs</STRONG>  and  <STRONG>tput</STRONG>
        utilities, without proposing an improved solution.  It comments that
 
-            no known historical version of tabs  supports  the  capability  of
+            no  known  historical  version  of tabs supports the capability of
             setting arbitrary tab stops.
 
        However,  the  <EM>Explicit</EM>  <EM>Lists</EM>  described  in  this  manual  page  were
-       implemented in PWB/Unix.   Those  provide  the  capability  of  setting
+       implemented  in  PWB/Unix.   Those  provide  the  capability of setting
        abitrary tab stops.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20211009).
+       This describes <STRONG>ncurses</STRONG> version 6.2 (patch 20211016).
 
 
 

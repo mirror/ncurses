@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.30 2021/10/09 23:48:50 tom Exp $
+.\" $Id: tabs.1,v 1.32 2021/10/16 13:37:43 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -239,16 +239,27 @@ That option is not documented by POSIX.
 .PP
 The PWB/Unix \fBtabs\fP utility, which was included in System III (1980),
 used built-in tables rather than the terminal database,
-to support a half-dozen terminal types.
+to support a half-dozen hardcopy terminal (printer) types.
 It also had built-in logic to support the left-margin,
 as well as a feature for copying the tab settings from a file.
 .PP
 Later versions of Unix, e.g., SVr4,
 added support for the terminal database,
-but kept the tables, as a fallback.
+but kept the tables to support the printers.
 In an earlier development effort,
 the tab-stop initialization provided by \fBtset\fP (1982)
 and incorporated into \fBtput\fP uses the terminal database,
+.PP
+The \fB\+m\fP option was documented
+in the Base Specifications Issue 5 (Unix98, 1997),
+and omitted in Issue 6 (Unix03, 2004) without documenting the rationale,
+though an introductory comment
+\fI\*(``and optionally adjusts the margin\*(''\fP remains,
+overlooked in the removal.
+The documented \fBtabs\fP utility in Issues 6 and later has no mechanism
+for setting margins.
+The \fB\+m\fP option in this implementation differs from the feature
+in SVr4 by using terminal capabilities rather than built-in tables.
 .PP
 POSIX documents no limits on the number of tab stops.
 Documentation for other implementations states that there is a limit on the

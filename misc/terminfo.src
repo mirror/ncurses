@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.942 $
-#	$Date: 2021/10/09 22:06:46 $
+#	$Revision: 1.943 $
+#	$Date: 2021/10/14 00:40:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -23340,16 +23340,16 @@ ti700|ti733|ti735|ti745|ti800|Texas Instruments Silent 700/733/735/745 or OMNI 8
 # http://www.bitsavers.org/pdf/ti/terminal/silent_700/
 # Refer to:
 #	Model 707 Data Terminal User's Manual
+#	http://www.bitsavers.org/pdf/ti/terminal/silent_700/2310451-0001_Silent_700_Model_707_Users_Manual_Nov1983.pdf
 #
 # pages 2-7 and 2-8 say that the model 707 prints 10.2 characters per inch
 # (cpi) (80 characters per line) by default, and can be switched to/from 17.0
 # cpi using an escape sequence.  There is no 80/132-column capability in
 # terminfo (only the more general cpi which allows any value).
 ti703|ti707|Texas Instruments Silent 703/707,
-	am, hc, os, xenl,
-	cols#80, it#8,
-	bel=^G, cr=\r$<162>, cub1=^H, cud1=\n, cuf1=\s, ind=\n,
-	is2=\EPC\\, nel=\r\n,
+	am, xenl,
+	it#8,
+	cuf1=\s, is2=\EPC\\, nel=\r\n, use=ti700,
 ti703-w|ti707-w|Texas Instruments Silent 703/707,
 	cols#132,
 	is2=\EPD\\, use=ti703,
@@ -27269,5 +27269,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ fill in some details for infoton -TD
 #	+ fix spelling/consistency in several descriptions -TD
 #	+ use vt420+lrmm in vt420 -TD
+#
+# 2021-10-13
+#	+ trim some redundant definitions -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

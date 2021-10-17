@@ -92,7 +92,7 @@ char	*_nc_tic_expand(
 
 #undef _nc_check_termtype2
 void	(*_nc_check_termtype2)(
-		TERMTYPE2 *p1,
+		TERMTYPE *p1,
 		NCURSES_BOOL p2);
 
 #undef _nc_entry_match
@@ -187,12 +187,12 @@ void	_nc_set_writedir(
 
 #undef _nc_write_entry
 void	_nc_write_entry(
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ /* void */ }
 
 #undef _nc_write_object
 int	_nc_write_object(
-		TERMTYPE2 *tp,
+		TERMTYPE *tp,
 		char	*buffer,
 		unsigned *offset,
 		unsigned limit)

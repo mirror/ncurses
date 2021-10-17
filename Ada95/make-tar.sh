@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.19 2021/06/17 21:26:02 tom Exp $
+# $Id: make-tar.sh,v 1.20 2021/10/12 21:11:33 tom Exp $
 ##############################################################################
 # Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2010-2015,2017 Free Software Foundation, Inc.                    #
@@ -37,14 +37,14 @@ export CDPATH
 
 TARGET=`pwd`
 
-: ${ROOTNAME:=ncurses-Ada95}
-: ${PKG_NAME:=AdaCurses}
-: ${DESTDIR:=$TARGET}
-: ${TMPDIR:=/tmp}
+: "${ROOTNAME:=ncurses-Ada95}"
+: "${PKG_NAME:=AdaCurses}"
+: "${DESTDIR:=$TARGET}"
+: "${TMPDIR:=/tmp}"
 
 grep_assign() {
-	grep_assign=`egrep "^$2\>" "$1" | sed -e "s/^$2[ 	]*=[ 	]*//" -e 's/"//g'`
-	eval $2=\"$grep_assign\"
+	grep_assign=`grep -E "^$2\>" "$1" | sed -e "s/^$2[ 	]*=[ 	]*//" -e 's/"//g'`
+	eval "$2"=\""$grep_assign"\"
 }
 
 grep_patchdate() {
@@ -59,25 +59,28 @@ edit_specfile() {
 	sed \
 		-e "s/\\<MAJOR\\>/$NCURSES_MAJOR/g" \
 		-e "s/\\<MINOR\\>/$NCURSES_MINOR/g" \
-		-e "s/\\<YYYYMMDD\\>/$NCURSES_PATCH/g" $1 >$1.new
-	chmod u+w $1
-	mv $1.new $1
+		-e "s/\\<YYYYMMDD\\>/$NCURSES_PATCH/g" "$1" >"$1.new"
+	chmod u+w "$1"
+	mv "$1.new" "$1"
 }
 
 make_changelog() {
-	test -f $1 && chmod u+w $1
-	cat >$1 <<EOF
-`echo $PKG_NAME|tr '[A-Z]' '[a-z]'` ($NCURSES_MAJOR.$NCURSES_MINOR+$NCURSES_PATCH) unstable; urgency=low
+	[ -f "$1" ] && chmod u+w "$1"
+	cat >"$1" <<EOF
+`echo $PKG_NAME|tr 'ABCDEFGHIJKLMNOPQRSTUVWXYZ' 'abcdefghijklmnopqrstuvwxyz'` ($NCURSES_MAJOR.$NCURSES_MINOR+$NCURSES_PATCH) unstable; urgency=low
 
   * snapshot of ncurses subpackage for $PKG_NAME.
 
- -- `head -n 1 $HOME/.signature`  `date -R`
+ -- `head -n 1 "$HOME"/.signature`  `date -R`
 EOF
 }
 
 # This can be run from either the subdirectory, or from the top-level
 # source directory.  We will put the tar file in the original directory.
-test -d ./Ada95 && cd ./Ada95
+if [ -d ./Ada95 ]
+then
+	cd ./Ada95 || exit
+fi
 SOURCE=`cd ..;pwd`
 
 BUILD=$TMPDIR/make-tar$$
@@ -92,30 +95,30 @@ fi
 umask 022
 mkdir $BUILD/$ROOTNAME
 
-cp -p -r * $BUILD/$ROOTNAME/ || exit
+cp -p -r ./* $BUILD/$ROOTNAME/ || exit
 
 # Add the config.* utility scripts from the top-level directory.
 for i in . ..
 do
-	for j in config.guess config.sub install-sh tar-copy.sh
+	for j in COPYING config.guess config.sub install-sh tar-copy.sh
 	do
-		test -f $i/$j && cp -p $i/$j $BUILD/$ROOTNAME/
+		[ -f $i/$j ] && cp -p $i/$j $BUILD/$ROOTNAME/
 	done
 done
 
 # Make rpm and dpkg scripts for test-builds
 grep_patchdate
-for spec in $BUILD/$ROOTNAME/package/*.spec
+for spec in "$BUILD/$ROOTNAME"/package/*.spec
 do
-	edit_specfile $spec
+	edit_specfile "$spec"
 done
-for spec in $BUILD/$ROOTNAME/package/debian*
+for spec in "$BUILD/$ROOTNAME"/package/debian*
 do
-	make_changelog $spec/changelog
+	make_changelog "$spec"/changelog
 done
 
 cp -p ../man/MKada_config.in $BUILD/$ROOTNAME/doc/
-if test -z "$NO_HTML_DOCS"
+if [ -z "$NO_HTML_DOCS" ]
 then
 	# Add the ada documentation.
 	cd ../doc/html || exit
@@ -124,12 +127,12 @@ then
 	cp -p -r ada $BUILD/$ROOTNAME/doc/
 fi
 
-cp -p $SOURCE/NEWS $BUILD/$ROOTNAME
+cp -p "$SOURCE/NEWS" $BUILD/$ROOTNAME
 
 # cleanup empty directories (an artifact of ncurses source archives)
 
 touch $BUILD/$ROOTNAME/MANIFEST
-( cd $BUILD/$ROOTNAME && find . -type f -print |$SOURCE/misc/csort >MANIFEST )
+( cd $BUILD/$ROOTNAME && find . -type f -print | "$SOURCE/misc/csort" >MANIFEST )
 
 cd $BUILD || exit
 
@@ -148,8 +151,8 @@ find . -name "*.gz" -exec rm -rf {} \;
 # Make the files writable...
 chmod -R u+w .
 
-tar cf - $ROOTNAME | gzip >$DESTDIR/$ROOTNAME.tar.gz
-cd $DESTDIR
+tar cf - $ROOTNAME | gzip >"$DESTDIR/$ROOTNAME.tar.gz"
+cd "$DESTDIR" || exit
 
 pwd
 ls -l $ROOTNAME.tar.gz

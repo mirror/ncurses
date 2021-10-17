@@ -2831,8 +2831,8 @@ int	_nc_add_to_try(
 
 #undef _nc_align_termtype
 void	_nc_align_termtype(
-		TERMTYPE2 *to,
-		TERMTYPE2 *from)
+		TERMTYPE *to,
+		TERMTYPE *from)
 		{ /* void */ }
 
 #undef _nc_copy_termtype
@@ -2994,7 +2994,7 @@ ENTRY	*_nc_tail;
 #undef _nc_free_entry
 void	_nc_free_entry(
 		ENTRY	*headp,
-		TERMTYPE2 *tterm)
+		TERMTYPE *tterm)
 		{ /* void */ }
 
 #undef _nc_free_entries
@@ -3014,9 +3014,9 @@ void	exit_terminfo(
 /* ./fallback.c */
 
 #undef _nc_fallback
-const TERMTYPE2 *_nc_fallback(
+const TERMTYPE *_nc_fallback(
 		const char *name)
-		{ return(*(const TERMTYPE2 **)0); }
+		{ return(*(const TERMTYPE **)0); }
 
 /* ./tinfo/free_ttype.c */
 
@@ -3470,7 +3470,7 @@ void	_nc_update_screensize(
 #undef _nc_setup_tinfo
 int	_nc_setup_tinfo(
 		const char *const tn,
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ return(*(int *)0); }
 
 #undef _nc_tinfo_cmdch
@@ -4047,12 +4047,12 @@ void	_nc_set_buffer(
 
 #undef _nc_init_termtype
 void	_nc_init_termtype(
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ /* void */ }
 
 #undef _nc_read_termtype
 int	_nc_read_termtype(
-		TERMTYPE2 *ptr,
+		TERMTYPE *ptr,
 		char	*buffer,
 		int	limit)
 		{ return(*(int *)0); }
@@ -4060,14 +4060,14 @@ int	_nc_read_termtype(
 #undef _nc_read_file_entry
 int	_nc_read_file_entry(
 		const char *const filename,
-		TERMTYPE2 *ptr)
+		TERMTYPE *ptr)
 		{ return(*(int *)0); }
 
 #undef _nc_read_entry
 int	_nc_read_entry(
 		const char *const name,
 		char	*const filename,
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ return(*(int *)0); }
 
 /* ./tinfo/read_termcap.c */
@@ -4075,7 +4075,7 @@ int	_nc_read_entry(
 #undef _nc_read_termcap_entry
 int	_nc_read_termcap_entry(
 		const char *const tn,
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ return(*(int *)0); }
 
 /* ./tinfo/strings.c */
@@ -4158,7 +4158,7 @@ int	_nc_remove_string(
 
 #undef _nc_trim_sgr0
 char	*_nc_trim_sgr0(
-		TERMTYPE2 *tp)
+		TERMTYPE *tp)
 		{ return(*(char **)0); }
 
 /* ./unctrl.c */
@@ -4264,7 +4264,7 @@ char	*_nc_tic_expand(
 
 #undef _nc_check_termtype2
 void	(*_nc_check_termtype2)(
-		TERMTYPE2 *p1,
+		TERMTYPE *p1,
 		NCURSES_BOOL p2);
 
 #undef _nc_entry_match
@@ -4359,12 +4359,12 @@ void	_nc_set_writedir(
 
 #undef _nc_write_entry
 void	_nc_write_entry(
-		TERMTYPE2 *const tp)
+		TERMTYPE *const tp)
 		{ /* void */ }
 
 #undef _nc_write_object
 int	_nc_write_object(
-		TERMTYPE2 *tp,
+		TERMTYPE *tp,
 		char	*buffer,
 		unsigned *offset,
 		unsigned limit)

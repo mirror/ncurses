@@ -1,4 +1,4 @@
-# $Id: mk-1st.awk,v 1.123 2021/08/15 20:01:44 tom Exp $
+# $Id: mk-1st.awk,v 1.124 2021/10/15 00:50:05 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -477,10 +477,6 @@ END	{
 			{
 				end_name = lib_name;
 				use_name = trim_suffix(TermlibRoot) USE_LIB_SUFFIX
-				printf "# FIXME\n";
-				printf "# name '%s'\n", name;
-				printf "# end_name '%s'\n", end_name;
-				printf "# use_name '%s'\n", use_name;
 				printf "../lib/%s : \\\n", lib_name
 				if ( (name != use_name ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
 					printf "\t\t../lib/lib%s.la \\\n", use_name;
@@ -511,8 +507,10 @@ END	{
 				printf "\t\t$(DESTDIR)$(libdir) \\\n";
 				use_name = TermlibRoot USE_LIB_SUFFIX
 				if ( (name != use_name ) && ( index(name, "++") == 0 ) && ( index(name, "tic") == 1 || index(name, "ncurses") == 1 ) ) {
-					printf "\t\tinstall.%s \\\n", trim_suffix(TermlibRoot);
-					if ( index(name, "tic") == 1 && index(TermlibRoot, "ncurses") != 1 ) {
+					if ( trim_suffix(TermlibRoot) != trim_suffix(name) ) {
+						printf "\t\tinstall.%s \\\n", trim_suffix(TermlibRoot);
+					}
+					if ( index(name, "tic") == 1 && index(TermlibRoot, "ncurses") != 1 && trim_suffix(name) != "ncurses" ) {
 						printf "\t\tinstall.%s \\\n", "ncurses";
 					}
 				}
