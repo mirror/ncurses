@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.979 2021/10/11 00:20:48 tom Exp $
+dnl $Id: aclocal.m4,v 1.981 2021/10/17 15:14:04 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2041,7 +2041,7 @@ fi
 AC_SUBST(BROKEN_LINKER)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ENABLE_PC_FILES version: 13 updated: 2015/11/01 05:27:39
+dnl CF_ENABLE_PC_FILES version: 14 updated: 2021/10/17 11:12:47
 dnl ------------------
 dnl This is the "--enable-pc-files" option, which is available if there is a
 dnl pkg-config configuration on the local machine.
@@ -2066,7 +2066,7 @@ if test "x$enable_pc_files" != xno
 then
 	MAKE_PC_FILES=
 	case "x$PKG_CONFIG_LIBDIR" in
-	(xno|xyes)
+	(xno|xnone|xyes)
 		AC_MSG_WARN(no PKG_CONFIG_LIBDIR was found)
 		;;
 	(*)
@@ -9206,7 +9206,7 @@ if test "x$with_pcre2" != xno ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 12 updated: 2021/10/10 20:18:09
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 13 updated: 2021/10/17 11:12:47
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
@@ -9318,7 +9318,7 @@ do
 done
 AC_MSG_RESULT($cf_pkg_config_path)
 
-if test "x$cf_pkg_config_path" != xno ; then
+if test "x$cf_pkg_config_path" != xnone ; then
 	# limit this to the first directory found
 	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
 fi

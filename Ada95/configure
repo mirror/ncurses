@@ -3379,7 +3379,7 @@ done
 echo "$as_me:3379: result: $cf_pkg_config_path" >&5
 echo "${ECHO_T}$cf_pkg_config_path" >&6
 
-if test "x$cf_pkg_config_path" != xno ; then
+if test "x$cf_pkg_config_path" != xnone ; then
 	# limit this to the first directory found
 	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
 fi

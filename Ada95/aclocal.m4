@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.184 2021/10/11 00:18:09 tom Exp $
+dnl $Id: aclocal.m4,v 1.185 2021/10/17 15:16:03 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4771,7 +4771,7 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 12 updated: 2021/10/10 20:18:09
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 13 updated: 2021/10/17 11:12:47
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
@@ -4883,7 +4883,7 @@ do
 done
 AC_MSG_RESULT($cf_pkg_config_path)
 
-if test "x$cf_pkg_config_path" != xno ; then
+if test "x$cf_pkg_config_path" != xnone ; then
 	# limit this to the first directory found
 	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
 fi

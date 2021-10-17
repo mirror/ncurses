@@ -4238,7 +4238,7 @@ done
 echo "$as_me:4238: result: $cf_pkg_config_path" >&5
 echo "${ECHO_T}$cf_pkg_config_path" >&6
 
-if test "x$cf_pkg_config_path" != xno ; then
+if test "x$cf_pkg_config_path" != xnone ; then
 	# limit this to the first directory found
 	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
 fi
@@ -4266,7 +4266,7 @@ if test "x$enable_pc_files" != xno
 then
 	MAKE_PC_FILES=
 	case "x$PKG_CONFIG_LIBDIR" in
-	(xno|xyes)
+	(xno|xnone|xyes)
 		{ echo "$as_me:4270: WARNING: no PKG_CONFIG_LIBDIR was found" >&5
 echo "$as_me: WARNING: no PKG_CONFIG_LIBDIR was found" >&2;}
 		;;

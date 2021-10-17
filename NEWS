@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3727 2021/10/16 15:17:50 tom Exp $
+-- $Id: NEWS,v 1.3729 2021/10/17 15:11:55 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211017
+	+ amend change for pkg-config to account for "none" being returned in
+	  the libdir-path result rather than "no" (report by Gabriele Balducci).
 
 20211016
 	+ build-fix for pmake with libtool.
