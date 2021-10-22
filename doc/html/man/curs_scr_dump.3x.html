@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scr_dump.3x,v 1.16 2020/10/24 09:44:43 tom Exp @
+  * @Id: curs_scr_dump.3x,v 1.17 2021/10/20 22:37:48 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -61,14 +61,20 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE><H3><a name="h3-scr_dump">scr_dump</a></H3><PRE>
        The <STRONG>scr_dump</STRONG> routine dumps the current contents of the  <EM>virtual</EM>  <EM>screen</EM>
        to the file <EM>filename</EM>.
 
+
+</PRE><H3><a name="h3-scr_restore">scr_restore</a></H3><PRE>
        The  <STRONG>scr_restore</STRONG>  routine  sets  the  <EM>virtual</EM> <EM>screen</EM> to the contents of
        <EM>filename</EM>, which must have been written using <STRONG>scr_dump</STRONG>.  The  next  call
        to  <STRONG>doupdate</STRONG>  restores  the <EM>physical</EM> <EM>screen</EM> to the way it looked in the
        dump file.
 
+
+</PRE><H3><a name="h3-scr_init">scr_init</a></H3><PRE>
        The <STRONG>scr_init</STRONG> routine reads in the contents of <EM>filename</EM> and uses them to
        initialize the <STRONG>curses</STRONG> data structures about what the terminal currently
        has on its screen.  If the data is determined to be valid, <STRONG>curses</STRONG> bases
@@ -83,6 +89,8 @@
        <STRONG>o</STRONG>   if  the  terminal  has been written to since the preceding <STRONG>scr_dump</STRONG>
            call.
 
+
+</PRE><H3><a name="h3-scr_set">scr_set</a></H3><PRE>
        The <STRONG>scr_set</STRONG> routine is a combination of <STRONG>scr_restore</STRONG> and  <STRONG>scr_init</STRONG>.   It
        tells the program that the information in <EM>filename</EM> is what is currently
        on the screen, and also what the program wants on the screen.  This can
@@ -124,7 +132,14 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-scr_dump">scr_dump</a></li>
+<li><a href="#h3-scr_restore">scr_restore</a></li>
+<li><a href="#h3-scr_init">scr_init</a></li>
+<li><a href="#h3-scr_set">scr_set</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>

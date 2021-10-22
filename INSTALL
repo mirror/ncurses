@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.234 2021/10/10 22:36:55 tom Exp $
+-- $Id: INSTALL,v 1.235 2021/10/19 23:34:17 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1400,6 +1400,38 @@ COMPATIBILITY WITH OLDER RELEASES:
     Here are some of the major interface changes, and related problems which
     you may encounter when building a system with different versions of
     ncurses:
+
+    6.3 (Oct 21, 2021)
+	Interface changes:
+
+	+ the definition of TERMTYPE2 is now internal, not visible in the ABI,
+	  like the enclosing TERMINAL which was previously made opaque.  This
+	  was done to provide SCREEN-specific "static" variables in terminfo.
+
+	Added extensions:
+
+	+ add sp-funcs for erasewchar, killwchar.
+
+	Added internal functions (other than "_sp" variants):
+
+	+ _nc_safe_fopen and _nc_safe_open3 limit privileges if possible when
+	  opening a file; otherwise disallow access for updating files.
+
+	+ _nc_tiparm is a variant of tiparm which is used when all of the
+	  parameters are known to be numbers rather than possibly strings.
+
+	+ _nc_reset_tparm improves tic's checks by resetting the terminfo
+	  "static variables" before calling functions which may update them.
+
+	Removed internal functions:
+
+	+ none
+
+	Modified internal functions:
+
+	+ _nc_trace_ttymode passes pointer to const data
+
+	+ _nc_tparm_analyze passes pointer to int*, not int[]
 
     6.2 (Feb 12, 2020)
 	Interface changes:

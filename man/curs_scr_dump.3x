@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scr_dump.3x,v 1.16 2020/10/24 09:44:43 tom Exp $
+.\" $Id: curs_scr_dump.3x,v 1.17 2021/10/20 22:37:48 tom Exp $
 .TH curs_scr_dump 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -58,14 +58,18 @@
 \fBint scr_set(const char *\fP\fIfilename\fP\fB);\fR
 .br
 .SH DESCRIPTION
+.SS scr_dump
+.PP
 The \fBscr_dump\fR routine dumps the current contents
 of the \fIvirtual screen\fP
 to the file \fIfilename\fR.
+.SS scr_restore
 .PP
 The \fBscr_restore\fR routine sets the \fIvirtual screen\fP to the contents
 of \fIfilename\fR, which must have been written using \fBscr_dump\fR.
 The next call to \fBdoupdate\fR restores
 the \fIphysical screen\fP to the way it looked in the dump file.
+.SS scr_init
 .PP
 The \fBscr_init\fR routine reads in the contents of \fIfilename\fR and uses
 them to initialize the \fBcurses\fR data structures about what the terminal
@@ -82,6 +86,7 @@ The data is declared invalid
 if the terminfo capabilities \fBrmcup\fR and \fBnrrmc\fR exist, also
 .bP
 if the terminal has been written to since the preceding \fBscr_dump\fR call.
+.SS scr_set
 .PP
 The \fBscr_set\fR routine is a combination of \fBscr_restore\fR and
 \fBscr_init\fR.  It tells the program that the information in \fIfilename\fR is

@@ -769,6 +769,7 @@
 ./misc/makellib
 ./misc/menu.def
 ./misc/menu.ref
+./misc/ncu2openbsd
 ./misc/ncurses-config.in
 ./misc/ncurses.def
 ./misc/ncurses.ref

@@ -590,17 +590,17 @@ int	addstr(
 
 #undef attroff
 int	attroff(
-		int	z)
+		NCURSES_ATTR_T	z)
 		{ return(*(int *)0); }
 
 #undef attron
 int	attron(
-		int	z)
+		NCURSES_ATTR_T	z)
 		{ return(*(int *)0); }
 
 #undef attrset
 int	attrset(
-		int	z)
+		NCURSES_ATTR_T	z)
 		{ return(*(int *)0); }
 
 #undef attr_get
