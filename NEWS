@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3732 2021/10/20 22:49:51 tom Exp $
+-- $Id: NEWS,v 1.3735 2021/10/26 08:34:43 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211026
+	+ corrected regex needed for older pkg-config used in Solaris 10.
+	+ amend configure option's auto-search to account for systems where
+	  none of the directories known to pkg-config exist, adapted from
+	  mailing-list comment (report by Milan P. Stanic).
 
 20211021 6.3 release for upload to ftp.gnu.org
 	+ update release notes

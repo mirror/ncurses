@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.235 2021/10/19 23:34:17 tom Exp $
+-- $Id: INSTALL,v 1.236 2021/10/26 07:55:02 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1146,8 +1146,15 @@ CONFIGURE OPTIONS:
 	path.  The configure script allows only a single directory, because
 	that is used as the directory in which to install ".pc" files.
 
-	The automatic check for the library path selects the first directory
-	which currently exists.
+	The automatic check for the library path prefers the first directory
+	which currently exists.  If none of the directories listed by
+	pkg-config exist, the check prefers a pkgconfig directory under the
+	"libdir" set by the configure script (which may not be the system
+	default), or if pkg-config lists nothing suitable, the first one which
+	is listed by pkg-config is used.
+
+	Automatic selection is overridden by providing an option-value
+	beginning with "/".
 
     --with-profile
 	Generate profile-libraries These are named by adding "_p" to the root,
