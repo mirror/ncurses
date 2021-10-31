@@ -44,7 +44,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.142 2021/09/04 10:52:55 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.143 2021/10/23 17:06:20 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -404,7 +404,7 @@ recur_wrefresh(WINDOW *win)
     } else
 #endif
 	if ((is_wintouched(win) || (win->_flags & _HASMOVED))
-	    && !(win->_flags & _ISPAD)) {
+	    && !IS_PAD(win)) {
 	wrefresh(win);
     }
 }
@@ -639,7 +639,7 @@ _nc_wgetch(WINDOW *win,
      * However, we provide the same visual result as Solaris, moving the
      * cursor to the left.
      */
-    if (sp->_echo && !(win->_flags & _ISPAD)) {
+    if (sp->_echo && !IS_PAD(win)) {
 	chtype backup = (chtype) ((ch == KEY_BACKSPACE) ? '\b' : ch);
 	if (backup < KEY_MIN)
 	    wechochar(win, backup);

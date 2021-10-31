@@ -42,7 +42,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getstr.c,v 1.37 2021/09/04 10:29:15 tom Exp $")
+MODULE_ID("$Id: lib_getstr.c,v 1.38 2021/10/23 19:02:39 tom Exp $")
 
 /*
  * This wipes out the last character, no matter whether it was a tab, control
@@ -161,7 +161,7 @@ wgetnstr_events(WINDOW *win,
 		    waddch(win, (chtype) ' ');
 		    str = WipeOut(win, y, x, oldstr, str, oldecho);
 		    continue;
-		} else if (win->_flags & _WRAPPED) {
+		} else if (IS_WRAPPED(win)) {
 		    /*
 		     * If the last waddch forced a wrap &
 		     * scroll, adjust our reference point

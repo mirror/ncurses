@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.187 2021/10/26 20:50:11 tom Exp $
+dnl $Id: aclocal.m4,v 1.188 2021/10/30 20:49:04 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -777,6 +777,37 @@ case "$cf_cv_gnat_version" in
 	;;
 esac
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_LIBSSP version: 1 updated: 2021/10/30 10:40:19
+dnl ---------------
+dnl Check if libssp is needed, e.g., to work around misconfigured libraries
+dnl used in cross-compiling to MinGW.
+AC_DEFUN([CF_CHECK_LIBSSP],[
+AC_CACHE_CHECK(if ssp library is needed,cf_cv_need_libssp,[
+AC_TRY_LINK([
+#include <sys/types.h>
+#include <dirent.h>
+],[
+       DIR *dp = opendir(".");
+],cf_cv_need_libssp=no,[
+	cf_save_LIBS="$LIBS"
+	LIBS="$LIBS -lssp"
+	AC_TRY_LINK([
+#include <sys/types.h>
+#include <dirent.h>
+	],[
+		   DIR *dp = opendir(".");
+	],cf_cv_need_libssp=yes,
+	  cf_cv_need_libssp=maybe)
+	LIBS="$cf_save_LIBS"
+])dnl
+])
+
+if test "x$cf_cv_need_libssp" = xyes
+then
+	CF_ADD_LIB(ssp)
+fi
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CLANG_COMPILER version: 8 updated: 2021/01/01 13:31:04
 dnl -----------------

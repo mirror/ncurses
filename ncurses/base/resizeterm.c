@@ -46,7 +46,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: resizeterm.c,v 1.51 2021/09/04 10:54:35 tom Exp $")
+MODULE_ID("$Id: resizeterm.c,v 1.52 2021/10/23 17:12:33 tom Exp $")
 
 /*
  * If we're trying to be reentrant, do not want any local statics.
@@ -293,7 +293,7 @@ decrease_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	for (each_window(SP_PARM, wp)) {
 	    WINDOW *win = &(wp->win);
 
-	    if (!(win->_flags & _ISPAD)) {
+	    if (!IS_PAD(win)) {
 		if (child_depth(win) == depth) {
 		    found = TRUE;
 		    if (adjust_window(win, ToLines, ToCols,
@@ -328,7 +328,7 @@ increase_size(NCURSES_SP_DCLx int ToLines, int ToCols, int stolen EXTRA_DCLS)
 	for (each_window(SP_PARM, wp)) {
 	    WINDOW *win = &(wp->win);
 
-	    if (!(win->_flags & _ISPAD)) {
+	    if (!IS_PAD(win)) {
 		if (parent_depth(win) == depth) {
 		    found = TRUE;
 		    if (adjust_window(win, ToLines, ToCols,

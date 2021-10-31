@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.83 2021/07/03 20:23:24 tom Exp $
+dnl $Id: configure.in,v 1.84 2021/10/30 20:47:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210509)
-AC_REVISION($Revision: 1.83 $)
+AC_REVISION($Revision: 1.84 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -419,6 +419,7 @@ CF_DISABLE_GNAT_PROJECTS
 ###	Checks for libraries.
 case $cf_cv_system_name in
 (*mingw32*)
+	CF_CHECK_LIBSSP
 	;;
 (*)
 AC_CHECK_FUNC(gettimeofday,

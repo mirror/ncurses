@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.28 2021/07/03 18:54:54 tom Exp $
+# $Id: Makefile.in,v 1.29 2021/10/23 16:00:22 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2010,2015 Free Software Foundation, Inc.                    #
@@ -31,7 +31,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #
 #  Version Control
-#  $Revision: 1.28 $
+#  $Revision: 1.29 $
 #
 SHELL		= @SHELL@
 VPATH		= @srcdir@
@@ -88,6 +88,10 @@ realclean ::
 	-rm -f Makefile
 
 depend :
+	@
+
+check :
+	@
 
 tags :
 	@

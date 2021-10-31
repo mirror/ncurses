@@ -42,7 +42,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_screen.c,v 1.103 2021/10/18 22:40:48 tom Exp $")
+MODULE_ID("$Id: lib_screen.c,v 1.104 2021/10/23 17:12:16 tom Exp $")
 
 #define MAX_SIZE 0x3fff		/* 16k is big enough for a window or pad */
 
@@ -542,7 +542,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 	returnWin(0);
     }
 
-    if (tmp._flags & _ISPAD) {
+    if (IS_PAD(&tmp)) {
 	nwin = NCURSES_SP_NAME(newpad) (NCURSES_SP_ARGx
 					tmp._maxy + 1,
 					tmp._maxx + 1);
@@ -587,7 +587,7 @@ NCURSES_SP_NAME(getwin) (NCURSES_SP_DCLx FILE *filep)
 	nwin->_regtop = tmp._regtop;
 	nwin->_regbottom = tmp._regbottom;
 
-	if (tmp._flags & _ISPAD)
+	if (IS_PAD(&tmp))
 	    nwin->_pad = tmp._pad;
 
 	if (old_format) {
@@ -824,7 +824,7 @@ putwin(WINDOW *win, FILE *filep)
 	    attr_t attr;
 
 	    *buffer = '\0';
-	    if (!strncmp(name, "_pad.", (size_t) 5) && !(win->_flags & _ISPAD)) {
+	    if (!strncmp(name, "_pad.", (size_t) 5) && !IS_PAD(win)) {
 		continue;
 	    }
 	    switch (scr_params[y].type) {

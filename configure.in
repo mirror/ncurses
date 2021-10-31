@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.736 2021/07/18 22:17:57 tom Exp $
+dnl $Id: configure.in,v 1.737 2021/10/30 14:14:11 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.736 $)
+AC_REVISION($Revision: 1.737 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1696,12 +1696,13 @@ CF_DISABLE_GNAT_PROJECTS
 ###	Checks for libraries.
 case "$cf_cv_system_name" in
 (*mingw32*|*mingw64*)
-	if test "x$with_exp_win32" = xyes ; then
-	CPPFLAGS="$CPPFLAGS -DWINVER=0x0600 -DWIN32_LEAN_AND_MEAN"
-	else
-	CPPFLAGS="$CPPFLAGS -DWINVER=0x0501 -DWIN32_LEAN_AND_MEAN"
-	fi
 	# Note: WINVER may be a problem with Windows 10
+	if test "x$with_exp_win32" = xyes ; then
+		CPPFLAGS="$CPPFLAGS -DWINVER=0x0600 -DWIN32_LEAN_AND_MEAN"
+	else
+		CPPFLAGS="$CPPFLAGS -DWINVER=0x0501 -DWIN32_LEAN_AND_MEAN"
+	fi
+	CF_CHECK_LIBSSP
 	;;
 (*)
 AC_CHECK_FUNC(gettimeofday,

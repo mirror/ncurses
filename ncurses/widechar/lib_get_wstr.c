@@ -40,7 +40,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_get_wstr.c,v 1.19 2021/09/04 10:29:59 tom Exp $")
+MODULE_ID("$Id: lib_get_wstr.c,v 1.20 2021/10/23 19:02:59 tom Exp $")
 
 static int
 wadd_wint(WINDOW *win, wint_t *src)
@@ -183,7 +183,7 @@ wgetn_wstr(WINDOW *win, wint_t *str, int maxlen)
 		    waddch(win, (chtype) ' ');
 		    tmpstr = WipeOut(win, y, x, oldstr, tmpstr, oldecho);
 		    continue;
-		} else if (win->_flags & _WRAPPED) {
+		} else if (IS_WRAPPED(win)) {
 		    /*
 		     * If the last waddch forced a wrap & scroll, adjust our
 		     * reference point for erasures.

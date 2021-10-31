@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.990 2021/10/26 20:50:11 tom Exp $
+dnl $Id: aclocal.m4,v 1.991 2021/10/30 14:46:08 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1346,6 +1346,37 @@ if test "$cf_cv_check_gpm_wgetch" != yes ; then
 	AC_MSG_WARN(GPM library is already linked with curses - read the FAQ)
 fi
 ])])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CHECK_LIBSSP version: 1 updated: 2021/10/30 10:40:19
+dnl ---------------
+dnl Check if libssp is needed, e.g., to work around misconfigured libraries
+dnl used in cross-compiling to MinGW.
+AC_DEFUN([CF_CHECK_LIBSSP],[
+AC_CACHE_CHECK(if ssp library is needed,cf_cv_need_libssp,[
+AC_TRY_LINK([
+#include <sys/types.h>
+#include <dirent.h>
+],[
+       DIR *dp = opendir(".");
+],cf_cv_need_libssp=no,[
+	cf_save_LIBS="$LIBS"
+	LIBS="$LIBS -lssp"
+	AC_TRY_LINK([
+#include <sys/types.h>
+#include <dirent.h>
+	],[
+		   DIR *dp = opendir(".");
+	],cf_cv_need_libssp=yes,
+	  cf_cv_need_libssp=maybe)
+	LIBS="$cf_save_LIBS"
+])dnl
+])
+
+if test "x$cf_cv_need_libssp" = xyes
+then
+	CF_ADD_LIB(ssp)
+fi
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CHECK_LIBTOOL_VERSION version: 2 updated: 2021/05/01 16:24:34
 dnl ------------------------

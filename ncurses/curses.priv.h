@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.646 2021/09/24 16:09:35 tom Exp $
+ * $Id: curses.priv.h,v 1.647 2021/10/23 16:13:16 tom Exp $
  *
  *	curses.priv.h
  *
@@ -574,6 +574,10 @@ NCURSES_EXPORT(int *)        _nc_ptr_Escdelay (SCREEN *);
 #define SET_ESCDELAY(value)  ESCDELAY = value
 
 #endif
+
+#define IS_SUBWIN(w)         ((w)->_flags & _SUBWIN)
+#define IS_PAD(w)            ((w)->_flags & _ISPAD)
+#define IS_WRAPPED(w)        ((w)->_flags & _WRAPPED)
 
 #define HasHardTabs()	(NonEmpty(clear_all_tabs) && NonEmpty(set_tab))
 
