@@ -39,7 +39,7 @@
  */
 #include "panel.priv.h"
 
-MODULE_ID("$Id: p_new.c,v 1.23 2021/06/17 21:20:30 tom Exp $")
+MODULE_ID("$Id: p_new.c,v 1.24 2021/10/23 15:12:06 tom Exp $")
 
 #ifdef TRACE
 static char *stdscr_id;
@@ -117,7 +117,7 @@ new_panel(WINDOW *win)
     (void)root_panel(NCURSES_SP_ARG);
   assert(_nc_stdscr_pseudo_panel);
 
-  if (!(win->_flags & _ISPAD) && (pan = AllocPanel("new_panel")))
+  if ((pan = AllocPanel("new_panel")) != NULL)
     {
       pan->win = win;
       pan->above = (PANEL *)0;

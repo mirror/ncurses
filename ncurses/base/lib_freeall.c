@@ -40,7 +40,7 @@
 extern int malloc_errfd;	/* FIXME */
 #endif
 
-MODULE_ID("$Id: lib_freeall.c,v 1.75 2021/10/23 18:53:46 tom Exp $")
+MODULE_ID("$Id: lib_freeall.c,v 1.76 2021/11/06 21:52:49 tom Exp $")
 
 /*
  * Free all ncurses data.  This is used for testing only (there's no practical
@@ -77,6 +77,9 @@ NCURSES_SP_NAME(_nc_freeall) (NCURSES_SP_DCL0)
 	    for (each_window(SP_PARM, p)) {
 		WINDOW *p_win = &(p->win);
 		bool found = FALSE;
+
+		if (IS_PAD(p_win))
+		    continue;
 
 #ifndef USE_SP_WINDOWLIST
 		if (p->screen != SP_PARM)
