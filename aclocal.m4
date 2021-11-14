@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.991 2021/10/30 14:46:08 tom Exp $
+dnl $Id: aclocal.m4,v 1.992 2021/11/07 15:31:47 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -9237,7 +9237,7 @@ if test "x$with_pcre2" != xno ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 16 updated: 2021/10/26 16:50:11
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 17 updated: 2021/11/07 10:30:15
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
@@ -9277,12 +9277,15 @@ case x$cf_search_path in
 	if test "x$PKG_CONFIG" != xnone
 	then
 		# works for pkg-config since version 0.24 (2009)
-		cf_pkg_program=`echo "$PKG_CONFIG" | sed -e 's,^.*/,,'`
-		cf_search_path=`"$PKG_CONFIG" --variable=pc_path "$cf_pkg_program" 2>/dev/null | tr : ' '`
-
 		# works for pkgconf since version 0.8.3 (2012)
-		test -z "$cf_search_path" && \
-		cf_search_path=`pkgconf --variable=pc_path pkgconf 2>/dev/null | tr : ' '`
+		for cf_pkg_program in \
+			`echo "$PKG_CONFIG" | sed -e 's,^.*/,,'` \
+			pkg-config \
+			pkgconf
+		do
+			cf_search_path=`"$PKG_CONFIG" --variable=pc_path "$cf_pkg_program" 2>/dev/null | tr : ' '`
+			test -n "$cf_search_path" && break
+		done
 
 		# works for pkg-config since import in 2005 of original 2001 HP code.
 		test -z "$cf_search_path" && \

@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.943 $
-#	$Date: 2021/10/14 00:40:38 $
+#	$Revision: 1.947 $
+#	$Date: 2021/11/14 00:01:04 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5493,6 +5493,24 @@ xterm-utf8|xterm with no VT100 line-drawing in UTF-8 mode,
 #    window managers such as twm (and possibly window managers descended from
 #    it such as tvtwm, ctwm, and vtwm) track windows by icon-name. Thus, you
 #    don't want to mess with icon-name when using those window managers.
+# c) fsl ends the escape sequence begun by tsl.  Printable characters between
+#    those (probably) will appear in the window title.  Nonprintable characters
+#    may cause the escape sequence to end with an error.
+# d) the BEL (^G or \007) used in the original title-as-statusline came from 
+#    David J. MacKenzie's "pseudo-color" entry in 20 Apr 1995.  At that time
+#    xterm used BEL as the string-terminator rather than ST (\E\\).  Either
+#    BEL or ST has worked since xterm patch #28 in 1996, but most uses of
+#    this feature have been embedded in shell scripts.
+#
+# But that issue regarding the parameter for tsl means that applications may
+# not rely on it.  The SVr4 documentation says tsl will "move to status line,
+# column #1".  At the point in time when ESR added DJM's "pseudo-color" entry
+# with the split-up escape sequence for tsl/fsl, there were 65 entries using
+# tsl:
+#    32 used a parameter, matching the documentation (including x10term).
+#    21 used a parameterless control, exiting from the status line on ^M.
+#     6 used parameterless controls for tsl and fsl
+#     6 used a split-up escape sequence, e.g., the same approach.
 #
 # The extension "TS" is preferable, because it does not accept a parameter.
 # However, if you are using a non-extended terminfo, "TS" is not visible.
@@ -5502,6 +5520,9 @@ xterm+sl|access X title line and icon name,
 xterm+sl-twm|access X title line (pacify twm-descended window managers),
 	hs,
 	dsl=\E]2;\007, fsl=^G, tsl=\E]2;, TS=\E]2;,
+xterm+sl-alt|alternate access X title line,
+	hs,
+	dsl=\E]2;\E\\, fsl=\E\\, tsl=\E]2;, TS=\E]2;,
 
 # In contrast, this block can be used for a DEC vt320 and up.  There are two
 # controls used.
@@ -7680,6 +7701,7 @@ foot+base|foot base fragment,
 	use=ansi+tabs, use=ecma+index, use=ecma+italics,
 	use=ecma+strikeout, use=xterm+alt+title,
 	use=xterm+pcfkeys, use=xterm+sm+1006, use=xterm+tmux2,
+	use=xterm+sl-alt,
 
 ######## WEB CLIENTS
 
@@ -8453,11 +8475,9 @@ sun+sl|Sun Workstation window status line,
 
 # From: <john@ucbrenoir>  Tue Sep 24 13:14:44 1985
 sun-s|Sun Microsystems Workstation window with status line,
-	hs,
-	dsl=\E]l\E\\, fsl=\E\\, tsl=\E]l, use=sun,
+	use=sun+sl, use=sun,
 sun-e-s|sun-s-e|Sun Microsystems Workstation with status hacked for emacs,
-	hs,
-	dsl=\E]l\E\\, fsl=\E\\, tsl=\E]l, use=sun-e,
+	use=sun+sl, use=sun-e,
 sun-48|Sun 48-line window,
 	cols#80, lines#48, use=sun,
 sun-34|Sun 34-line window,
@@ -27272,5 +27292,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2021-10-13
 #	+ trim some redundant definitions -TD
+#
+# 2021-11-13
+#	+ add xterm+sl-alt, use that in foot+base (report by Jonas Grosse
+#	  Sundrup) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
