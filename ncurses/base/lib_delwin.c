@@ -43,7 +43,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_delwin.c,v 1.22 2021/11/06 21:54:14 tom Exp $")
+MODULE_ID("$Id: lib_delwin.c,v 1.23 2021/11/15 23:05:32 tom Exp $")
 
 static bool
 cannot_delete(WINDOW *win)
@@ -83,7 +83,7 @@ delwin(WINDOW *win)
 	    result = ERR;
 	} else if (IS_PAD(win)) {
 	    win->_parent = NULL;
-	    result = OK;
+	    result = _nc_freewin(win);
 	} else {
 #if NCURSES_SP_FUNCS
 	    SCREEN *sp = _nc_screen_of(win);

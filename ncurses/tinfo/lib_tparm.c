@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.134 2021/08/21 21:52:08 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.135 2021/11/15 23:31:31 tom Exp $")
 
 /*
  *	char *
@@ -209,6 +209,8 @@ _nc_free_tparm(void)
 static int
 tparm_error(TPARM_STATE *tps, const char *message)
 {
+    (void) tps;
+    (void) message;
     DEBUG(2, ("%s: %s", message, _nc_visbuf(TPS(tparam_base))));
     return ++_nc_tparm_err;
 }
