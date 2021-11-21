@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: aclocal.m4,v 1.189 2021/11/07 15:35:59 tom Exp $
+dnl $Id: aclocal.m4,v 1.191 2021/11/20 19:58:23 tom Exp $
 dnl Macros used in NCURSES Ada95 auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4802,7 +4802,7 @@ eval $3="$withval"
 AC_SUBST($3)dnl
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 17 updated: 2021/11/07 10:30:15
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 19 updated: 2021/11/20 14:57:36
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
@@ -4825,18 +4825,31 @@ case "$PKG_CONFIG" in
 	;;
 esac
 
+# if $PKG_CONFIG_LIBDIR is set, try to use that
 cf_search_path=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/:/ /g' -e 's,^[[ 	]]*,,'`
+
+# if the option is used, let that override.  otherwise default to "libdir"
 AC_ARG_WITH(pkg-config-libdir,
 	[  --with-pkg-config-libdir=XXX use given directory for installing pc-files],
 	[cf_search_path=$withval],
-	[test "x$PKG_CONFIG" != xnone && cf_search_path=yes])
+	[test "x$PKG_CONFIG" != xnone && test -z "$cf_search_path" && cf_search_path=libdir])
 
 case x$cf_search_path in
-(x/*)
-	;;
-(xyes)
+(xlibdir)
+	PKG_CONFIG_LIBDIR='${libdir}/pkgconfig'
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
 	cf_search_path=
-	CF_VERBOSE(auto...)
+	;;
+(x)
+	;;
+(x/*)
+	PKG_CONFIG_LIBDIR="$cf_search_path"
+	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+	cf_search_path=
+	;;
+(xyes|xauto)
+	AC_MSG_RESULT(auto)
+	cf_search_path=
 	# Look for the library directory using the same prefix as the executable
 	AC_MSG_CHECKING(for search-list)
 	if test "x$PKG_CONFIG" != xnone
@@ -4865,54 +4878,57 @@ case x$cf_search_path in
 	fi
 
 	AC_MSG_RESULT($cf_search_path)
-
 	;;
 (*)
+	AC_MSG_ERROR(Unexpected option value: $cf_search_path)
 	;;
 esac
 
-AC_MSG_CHECKING(for first directory)
-cf_pkg_config_path=none
-for cf_config in $cf_search_path
-do
-	if test -d "$cf_config"
-	then
-		cf_pkg_config_path=$cf_config
-		break
-	fi
-done
-AC_MSG_RESULT($cf_pkg_config_path)
-
-if test "x$cf_pkg_config_path" != xnone ; then
-	# limit this to the first directory found
-	PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
-fi
-
-if test -z "$PKG_CONFIG_LIBDIR" && test -n "$cf_search_path"
+if test -n "$cf_search_path"
 then
-	AC_MSG_CHECKING(for workaround)
-	if test "$prefix" = "NONE" ; then
-		cf_prefix="$ac_default_prefix"
-	else
-		cf_prefix="$prefix"
-	fi
-	eval cf_libdir=$libdir
-	cf_libdir=`echo "$cf_libdir" | sed -e "s,^NONE,$cf_prefix,"`
-	cf_backup=
+	AC_MSG_CHECKING(for first directory)
+	cf_pkg_config_path=none
 	for cf_config in $cf_search_path
 	do
-		case $cf_config in
-		$cf_libdir/pkgconfig)
-			PKG_CONFIG_LIBDIR=$cf_libdir/pkgconfig
+		if test -d "$cf_config"
+		then
+			cf_pkg_config_path=$cf_config
 			break
-			;;
-		*)
-			test -z "$cf_backup" && cf_backup=$cf_config
-			;;
-		esac
+		fi
 	done
-	test -z "$PKG_CONFIG_LIBDIR" && PKG_CONFIG_LIBDIR=$cf_backup
-	AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+	AC_MSG_RESULT($cf_pkg_config_path)
+
+	if test "x$cf_pkg_config_path" != xnone ; then
+		# limit this to the first directory found
+		PKG_CONFIG_LIBDIR="$cf_pkg_config_path"
+	fi
+
+	if test -z "$PKG_CONFIG_LIBDIR" && test -n "$cf_search_path"
+	then
+		AC_MSG_CHECKING(for workaround)
+		if test "$prefix" = "NONE" ; then
+			cf_prefix="$ac_default_prefix"
+		else
+			cf_prefix="$prefix"
+		fi
+		eval cf_libdir=$libdir
+		cf_libdir=`echo "$cf_libdir" | sed -e "s,^NONE,$cf_prefix,"`
+		cf_backup=
+		for cf_config in $cf_search_path
+		do
+			case $cf_config in
+			$cf_libdir/pkgconfig)
+				PKG_CONFIG_LIBDIR=$cf_libdir/pkgconfig
+				break
+				;;
+			*)
+				test -z "$cf_backup" && cf_backup=$cf_config
+				;;
+			esac
+		done
+		test -z "$PKG_CONFIG_LIBDIR" && PKG_CONFIG_LIBDIR=$cf_backup
+		AC_MSG_RESULT($PKG_CONFIG_LIBDIR)
+	fi
 fi
 
 AC_SUBST(PKG_CONFIG_LIBDIR)

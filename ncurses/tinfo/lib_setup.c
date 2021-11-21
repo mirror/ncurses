@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.214 2021/09/01 23:38:12 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.215 2021/11/20 23:11:31 tom Exp $")
 
 /****************************************************************************
  *
@@ -743,6 +743,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 		       "Not enough memory to create terminal structure.\n",
 		       myname, free(myname));
 	}
+	++_nc_globals.terminal_count;
 #if HAVE_SYSCONF
 	{
 	    long limit;

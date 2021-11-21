@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2021 Thomas E. Dickey                                *
  * Copyright 2006-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -38,7 +38,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.30 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.32 2021/11/20 23:40:57 tom Exp $")
 
 /****************************************************************************
  *
@@ -122,7 +122,7 @@ _nc_leaks_tinfo(void)
     T((T_CALLED("_nc_free_tinfo()")));
 #if NO_LEAKS
     _nc_globals.leak_checking = TRUE;
-    _nc_free_tparm();
+    _nc_free_tparm(cur_term);
     _nc_tgetent_leaks();
 
     if (TerminalOf(CURRENT_SCREEN) != 0) {

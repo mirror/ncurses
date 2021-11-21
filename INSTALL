@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.236 2021/10/26 07:55:02 tom Exp $
+-- $Id: INSTALL,v 1.237 2021/11/20 17:54:20 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -1155,6 +1155,9 @@ CONFIGURE OPTIONS:
 
 	Automatic selection is overridden by providing an option-value
 	beginning with "/".
+
+	If this option is omitted, the default directory for installing
+	".pc" files is ${libdir}/pkgconfig
 
     --with-profile
 	Generate profile-libraries These are named by adding "_p" to the root,

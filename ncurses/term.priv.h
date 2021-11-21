@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: term.priv.h,v 1.6 2021/09/26 20:43:08 tom Exp $
+ * $Id: term.priv.h,v 1.7 2021/11/20 23:33:33 tom Exp $
  *
  *	term.priv.h
  *
@@ -185,6 +185,7 @@ typedef struct {
 	TGETENT_CACHE	tgetent_cache[TGETENT_MAX];
 	int		tgetent_index;
 	long		tgetent_sequence;
+	int		terminal_count;
 
 	char *		dbd_blob;	/* string-heap for dbd_list[] */
 	char **		dbd_list;	/* distinct places to look for data */
@@ -322,6 +323,8 @@ typedef struct {
 } NCURSES_PRESCREEN;
 
 extern NCURSES_EXPORT_VAR(NCURSES_PRESCREEN) _nc_prescreen;
+
+extern NCURSES_EXPORT(void) _nc_free_tparm(TERMINAL*);
 
 #ifdef __cplusplus
 }

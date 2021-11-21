@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.947 $
-#	$Date: 2021/11/14 00:01:04 $
+#	$Revision: 1.949 $
+#	$Date: 2021/11/20 23:59:38 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -7126,9 +7126,9 @@ st-0.6|simpleterm 0.6,
 	cr=\r, csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
 	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
-	dch=\E[%p1%dP, dch1=\E[P, dl=\E[%p1%dM, dl1=\E[M,
-	ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K, enacs=\E)0,
-	flash=\E[?5h$<100/>\E[?5l, fsl=^G, home=\E[H,
+	dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m, dl=\E[%p1%dM,
+	dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
+	enacs=\E)0, flash=\E[?5h$<100/>\E[?5l, fsl=^G, home=\E[H,
 	hpa=\E[%i%p1%dG, ht=^I, hts=\EH, ich=\E[%p1%d@,
 	il=\E[%p1%dL, il1=\E[L, ind=\n, invis=\E[8m,
 	is2=\E[4l\E>\E[?1034l, kDC=\E[3;2~, kEND=\E[1;2F,
@@ -7165,13 +7165,13 @@ st-0.6|simpleterm 0.6,
 	setf=\E[3%?%p1%{1}%=%t4%e%p1%{3}%=%t6%e%p1%{4}%=%t1%e%p1%{6}
 	     %=%t3%e%p1%d%;m,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
-	    %t;7%;%?%p4%t;5%;%?%p7%t;8%;m,
+	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m,
 	sgr0=\E[0m, smacs=\E(0, smir=\E[4h, smkx=\E[?1h\E=,
 	smso=\E[7m, smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR,
 	u7=\E[6n, u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, Se=\E[2 q,
 	Ss=\E[%p1%d q, use=vt220+pcedit, use=ecma+index,
 	use=xterm+alt1049, use=vt220+cvis, use=xterm+sl,
-	use=ecma+italics,
+	use=ecma+italics, use=ecma+strikeout,
 #
 # st-0.1.1
 #
@@ -27296,5 +27296,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2021-11-13
 #	+ add xterm+sl-alt, use that in foot+base (report by Jonas Grosse
 #	  Sundrup) -TD
+#
+# 2021-11-20
+#	+ add dim, ecma+strikeout to st-0.6 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

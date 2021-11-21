@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# $Id: rules,v 1.41 2021/10/11 18:18:08 tom Exp $
+# $Id: rules,v 1.42 2021/11/20 15:51:09 tom Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -12,12 +12,15 @@ PACKAGES.arch  = ncurses6 ncursest6
 # from having to guess our platform (since we know it already)
 DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
+DEB_HOST_MULTIARCH  ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 
 CC_NORMAL = -Wall -Wstrict-prototypes -Wmissing-prototypes -Wshadow -Wconversion
 CC_STRICT = $(CC_NORMAL) -W -Wbad-function-cast -Wcast-align -Wcast-qual -Wmissing-declarations -Wnested-externs -Wpointer-arith -Wwrite-strings -ansi -pedantic
 
 MY_ABI=6
 MY_DIR=/usr
+BINDIR=$(MY_DIR)/bin
+LIBDIR=$(MY_DIR)/lib/$(DEB_HOST_MULTIARCH)
 MYDATA=/usr/local/ncurses/share/terminfo
 NORMAL_DIR=$(CURDIR)/debian/ncurses$(MY_ABI)
 THREAD_DIR=$(CURDIR)/debian/ncursest$(MY_ABI)
@@ -28,7 +31,7 @@ CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)
 LDFLAGS  = $(shell dpkg-buildflags --get LDFLAGS)
 
 ifneq ($(MY_DIR),/usr)
-	RPATH_ENV = RPATH_LIST=../lib:$(MY_DIR)/lib
+	RPATH_ENV = RPATH_LIST=../lib:$(LIBDIR)
 	RPATH_OPT = --enable-rpath
 else
 	RPATH_ENV =
@@ -54,6 +57,7 @@ configure = \
 		--host=$(DEB_HOST_GNU_TYPE) \
 		--build=$(DEB_BUILD_GNU_TYPE) \
 		--prefix=$(MY_DIR) \
+		--libdir=\$${prefix}/lib/$(DEB_HOST_MULTIARCH) \
 		--disable-echo \
 		--disable-getcap \
 		--disable-leaks \
@@ -182,9 +186,9 @@ install-ncurses6-stamp: build-ncurses6-stamp
 	dh_prep        $(verbose) -pncurses6
 
 	$(MAKE) -C t/ncurses6 install.libs install.progs DESTDIR=$(NCURSES6_DIR)
-	$(MAKE) -C t/ncurses6/test ncurses LOCAL_LIBDIR=$(MY_DIR)/lib
+	$(MAKE) -C t/ncurses6/test ncurses LOCAL_LIBDIR=$(LIBDIR)
 
-	mv t/ncurses6/test/ncurses $(NCURSES6_DIR)$(MY_DIR)/bin/ncurses$(MY_ABI)
+	mv t/ncurses6/test/ncurses $(NCURSES6_DIR)$(BINDIR)/ncurses$(MY_ABI)
 
 	touch $@
 
@@ -195,9 +199,9 @@ install-ncursest6-stamp: build-ncursest6-stamp
 	dh_prep        $(verbose) -pncursest6
 
 	$(MAKE) -C t/ncursest6 install.libs install.progs DESTDIR=$(NCURSEST6_DIR)
-	$(MAKE) -C t/ncursest6/test ncurses LOCAL_LIBDIR=$(MY_DIR)/lib
+	$(MAKE) -C t/ncursest6/test ncurses LOCAL_LIBDIR=$(LIBDIR)
 
-	mv t/ncursest6/test/ncurses $(NCURSEST6_DIR)$(MY_DIR)/bin/ncursest$(MY_ABI)
+	mv t/ncursest6/test/ncurses $(NCURSEST6_DIR)$(BINDIR)/ncursest$(MY_ABI)
 
 	touch $@
 

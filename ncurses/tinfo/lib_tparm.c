@@ -53,7 +53,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: lib_tparm.c,v 1.135 2021/11/15 23:31:31 tom Exp $")
+MODULE_ID("$Id: lib_tparm.c,v 1.137 2021/11/20 23:29:15 tom Exp $")
 
 /*
  *	char *
@@ -142,10 +142,8 @@ typedef struct {
 #if HAVE_TSEARCH
 #define MyCache _nc_globals.cached_tparm
 #define MyCount _nc_globals.count_tparm
-#if NO_LEAKS
 static int which_tparm;
 static TPARM_DATA **delete_tparm;
-#endif
 #endif /* HAVE_TSEARCH */
 
 static char dummy[] = "";	/* avoid const-cast */
@@ -160,10 +158,9 @@ cmp_format(const void *p, const void *q)
 }
 #endif
 
-#if NO_LEAKS
 #if HAVE_TSEARCH
 static void
-visit_nodes(const void *nodep, const VISIT which, const int depth)
+visit_nodes(const void *nodep, VISIT which, int depth)
 {
     (void) depth;
     if (which == preorder || which == leaf) {
@@ -174,9 +171,9 @@ visit_nodes(const void *nodep, const VISIT which, const int depth)
 #endif
 
 NCURSES_EXPORT(void)
-_nc_free_tparm(void)
+_nc_free_tparm(TERMINAL *termp)
 {
-    TPARM_STATE *tps = get_tparm_state(cur_term);	/* FIXME */
+    TPARM_STATE *tps = get_tparm_state(termp);
 #if HAVE_TSEARCH
     if (MyCount != 0) {
 	delete_tparm = typeCalloc(TPARM_DATA *, MyCount);
@@ -204,7 +201,6 @@ _nc_free_tparm(void)
     FreeAndNull(TPS(fmt_buff));
     TPS(fmt_size) = 0;
 }
-#endif
 
 static int
 tparm_error(TPARM_STATE *tps, const char *message)
