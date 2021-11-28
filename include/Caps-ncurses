@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: Caps-ncurses,v 1.10 2020/09/29 19:05:19 tom Exp $
+# $Id: Caps-ncurses,v 1.11 2021/11/27 20:58:18 tom Exp $
 #
 #############################################################################
 #
@@ -402,6 +402,7 @@ userdef	rmxx	str	-	reset ECMA-48 strikeout/crossed-out attributes.
 userdef	smxx	str	-	set ECMA-48 strikeout/crossed-out attributes.
 #
 used_by xterm
+userdef	csl	str	-	clear status line
 userdef	kDC3	str	-	alt delete-character
 userdef	kDC4	str	-	shift+alt delete-character
 userdef	kDC5	str	-	control delete-character

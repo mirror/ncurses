@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3749 2021/11/21 00:03:54 tom Exp $
+-- $Id: NEWS,v 1.3750 2021/11/21 16:19:20 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20211127
+	+ fix errata in description fields (report by Eric Lindblad) -TD
+	+ add x10term+sl, aixterm+sl, ncr260vp+sl, ncr260vp+vt, wyse+sl -TD
 
 20211120
 	+ add dim, ecma+strikeout to st-0.6 -TD
