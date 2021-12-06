@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.737 2021/10/30 14:14:11 tom Exp $
+dnl $Id: configure.in,v 1.738 2021/12/04 23:10:01 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.737 $)
+AC_REVISION($Revision: 1.738 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1737,7 +1737,6 @@ sys/poll.h \
 sys/select.h \
 sys/time.h \
 sys/times.h \
-ttyent.h \
 unistd.h \
 wctype.h \
 )
@@ -1792,7 +1791,6 @@ getcwd \
 getegid \
 geteuid \
 getopt \
-getttynam \
 issetugid \
 localeconv \
 poll \
@@ -1815,6 +1813,8 @@ times \
 tsearch \
 vsnprintf \
 )
+
+CF_FUNC_GETTTYNAM
 
 if test "x$ac_cv_func_getopt" = xno && \
    test "x$cf_with_progs$cf_with_tests" != xnono; then

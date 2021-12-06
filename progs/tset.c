@@ -91,14 +91,14 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-#if HAVE_GETTTYNAM && HAVE_TTYENT_H
+#if HAVE_GETTTYNAM
 #include <ttyent.h>
 #endif
 #ifdef NeXT
 char *ttyname(int fd);
 #endif
 
-MODULE_ID("$Id: tset.c,v 1.130 2021/10/02 18:08:09 tom Exp $")
+MODULE_ID("$Id: tset.c,v 1.131 2021/12/04 23:02:13 tom Exp $")
 
 #ifndef environ
 extern char **environ;
@@ -545,12 +545,14 @@ get_termcap_entry(int fd, char *userarg)
     int errret;
     char *p;
     const char *ttype;
+#if HAVE_PATH_TTYS
 #if HAVE_GETTTYNAM
     struct ttyent *t;
 #else
     FILE *fp;
 #endif
     char *ttypath;
+#endif /* HAVE_PATH_TTYS */
 
     (void) fd;
 
@@ -563,6 +565,7 @@ get_termcap_entry(int fd, char *userarg)
     if ((ttype = getenv("TERM")) != 0)
 	goto map;
 
+#if HAVE_PATH_TTYS
     if ((ttypath = ttyname(fd)) != 0) {
 	p = _nc_basename(ttypath);
 #if HAVE_GETTTYNAM
@@ -600,6 +603,7 @@ get_termcap_entry(int fd, char *userarg)
 	}
 #endif /* HAVE_GETTTYNAM */
     }
+#endif /* HAVE_PATH_TTYS */
 
     /* If still undefined, use "unknown". */
     ttype = "unknown";

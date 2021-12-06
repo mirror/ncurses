@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.997 2021/11/20 19:56:38 tom Exp $
+dnl $Id: aclocal.m4,v 1.999 2021/12/04 23:30:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -2543,6 +2543,61 @@ else
 	AC_MSG_ERROR(Cannot find dlsym function)
 fi
 ])
+dnl ---------------------------------------------------------------------------
+dnl CF_FUNC_GETTTYNAM version: 1 updated: 2021/12/04 18:29:47
+dnl -----------------
+dnl Check if the 4.3BSD function getttyname exists, as well as if <ttyent.h>
+dnl defines the _PATH_TTYS symbol.  If the corresponding file exists, but the
+dnl other checks fail, just define HAVE_PATH_TTYS.
+AC_DEFUN([CF_FUNC_GETTTYNAM],[
+AC_CACHE_CHECK(if _PATH_TTYS is defined in ttyent.h,cf_cv_PATH_TTYS,[
+AC_TRY_COMPILE([
+#include <stdio.h>
+#include <ttyent.h>],[
+FILE *fp = fopen(_PATH_TTYS, "r"); (void)fp],
+	[cf_cv_PATH_TTYS=yes],
+	[cf_cv_PATH_TTYS=no])])
+
+if test $cf_cv_PATH_TTYS = no
+then
+	for cf_ttys in /etc/ttytype /etc/ttys
+	do
+		if test -f $cf_ttys
+		then
+			cf_cv_PATH_TTYS=maybe
+			AC_DEFINE(_PATH_TTYS,$cf_ttys,[define to pathname of file containing mapping from tty name to terminal type])
+			break
+		fi
+	done
+fi
+
+if test $cf_cv_PATH_TTYS != no
+then
+	AC_CACHE_CHECK(if _PATH_TTYS file exists,cf_cv_have_PATH_TTYS,[
+		AC_TRY_RUN([
+#include <stdio.h>
+#include <ttyent.h>
+int main(void) {
+	FILE *fp = fopen(_PATH_TTYS, "r");
+	${cf_cv_main_return:-return} (fp == 0);
+}],
+			[cf_cv_have_PATH_TTYS=yes],
+			[cf_cv_have_PATH_TTYS=no],
+			[cf_cv_have_PATH_TTYS=unknown])])
+	test "$cf_cv_have_PATH_TTYS" = no && cf_cv_PATH_TTYS=no
+fi
+
+if test $cf_cv_PATH_TTYS != no
+then
+	AC_DEFINE(HAVE_PATH_TTYS,1,[define to 1 if system can map tty name to terminal type])
+	AC_CACHE_CHECK(for getttynam,cf_cv_func_getttynam,[
+		AC_TRY_LINK([#include <ttyent.h>],
+		[struct ttyent *fp = getttynam("/dev/tty"); (void)fp],
+		[cf_cv_func_getttynam=yes],
+		[cf_cv_func_getttynam=no])])
+	test "$cf_cv_func_getttynam" = yes && AC_DEFINE(HAVE_GETTTYNAM)
+fi
+])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_MEMMOVE version: 9 updated: 2017/01/21 11:06:25
 dnl ---------------
@@ -9238,7 +9293,7 @@ if test "x$with_pcre2" != xno ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 18 updated: 2021/11/20 12:48:37
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 19 updated: 2021/11/20 14:57:36
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
