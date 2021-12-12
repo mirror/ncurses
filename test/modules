@@ -1,4 +1,4 @@
-# $Id: modules,v 1.74 2021/02/13 16:33:43 tom Exp $
+# $Id: modules,v 1.75 2021/12/11 17:41:34 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
@@ -42,6 +42,7 @@ chgat		progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/popup_msg.h
 clip_printw	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/popup_msg.h
 color_content	progs		$(srcdir)	$(HEADER_DEPS)
 color_set	progs		$(srcdir)	$(HEADER_DEPS)
+combine		progs		$(srcdir)	$(HEADER_DEPS)
 demo_altkeys	progs		$(srcdir)	$(HEADER_DEPS)
 demo_defkey	progs		$(srcdir)	$(HEADER_DEPS)
 demo_forms	progs		$(srcdir)	$(HEADER_DEPS)	$(srcdir)/edit_field.h

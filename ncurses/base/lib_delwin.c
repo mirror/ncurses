@@ -43,16 +43,17 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_delwin.c,v 1.23 2021/11/15 23:05:32 tom Exp $")
+MODULE_ID("$Id: lib_delwin.c,v 1.24 2021/12/11 23:56:25 tom Exp $")
 
 static bool
 cannot_delete(WINDOW *win)
 {
-    WINDOWLIST *p;
     bool result = TRUE;
+
     if (IS_PAD(win)) {
 	result = FALSE;
     } else {
+	WINDOWLIST *p;
 #ifdef USE_SP_WINDOWLIST
 	SCREEN *sp = _nc_screen_of(win);
 #endif

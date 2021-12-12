@@ -1,4 +1,4 @@
-# $Id: programs,v 1.49 2021/03/13 20:37:44 tom Exp $
+# $Id: programs,v 1.50 2021/12/11 17:46:18 tom Exp $
 ##############################################################################
 # Copyright 2018-2020,2021 Thomas E. Dickey                                  #
 # Copyright 2006-2016,2017 Free Software Foundation, Inc.                    #
@@ -40,6 +40,7 @@ chgat		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	chgat popup_msg
 clip_printw	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	clip_printw popup_msg
 color_content	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	color_content
 color_set	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	color_set
+combine		$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	combine popup_msg
 demo_altkeys	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_altkeys
 demo_defkey	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	demo_defkey
 demo_forms	$(LDFLAGS_DEFAULT)	$(LOCAL_LIBS)	demo_forms edit_field popup_msg

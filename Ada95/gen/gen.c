@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2021 Thomas E. Dickey                                     *
  * Copyright 1998-2014,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
 
 /*
     Version Control
-    $Id: gen.c,v 1.77 2020/08/16 18:05:05 tom Exp $
+    $Id: gen.c,v 1.78 2021/12/11 21:03:21 tom Exp $
   --------------------------------------------------------------------------*/
 /*
   This program prints on its standard output the source for the
@@ -95,7 +95,7 @@ print_size_of(FILE * fp,
 	      const char *name,
 	      size_t value)
 {
-  fprintf(fp, "   %-28s : constant := %lu;\n", name, value);
+  fprintf(fp, "   %-28s : constant := %lu;\n", name, (unsigned long)value);
 }
 
 #define PRINT_NAMED_CONSTANT(name) \
@@ -490,6 +490,7 @@ main(int argc, const char *argv[])
   print_comment(fp, "Field_Options from opts(3FORM)");
   PRINT_NAMED_BITMASK(Field_Options, O_NL_OVERLOAD);
   PRINT_NAMED_BITMASK(Field_Options, O_BS_OVERLOAD);
+
   /*  Field_Options_Size is defined below */
 
   print_comment(fp, "MEVENT structure from mouse(3NCURSES)");

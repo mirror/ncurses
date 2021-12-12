@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.307 2021/10/05 08:07:05 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.308 2021/12/12 00:00:33 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -682,7 +682,6 @@ int
 main(int argc, char *argv[])
 {
     char my_tmpname[PATH_MAX];
-    char my_altfile[PATH_MAX];
     int v_opt = -1;
     int smart_defaults = TRUE;
     char *termcap;
@@ -933,6 +932,7 @@ main(int argc, char *argv[])
     }
 
     if (tmp_fp == NULL) {
+	char my_altfile[PATH_MAX];
 	tmp_fp = open_input(source_file, my_altfile);
 	if (!strcmp(source_file, "-")) {
 	    source_file = STDIN_NAME;
@@ -2717,12 +2717,11 @@ show_fkey_name(NAME_VALUE * data)
 static void
 check_conflict(TERMTYPE2 *tp)
 {
-    bool conflict = FALSE;
-
     if (!(_nc_syntax == SYN_TERMCAP && capdump)) {
 	char *check = calloc((size_t) (NUM_STRINGS(tp) + 1), sizeof(char));
 	NAME_VALUE *given = get_fkey_list(tp);
 	unsigned j, k;
+	bool conflict = FALSE;
 
 	if (check == NULL)
 	    failed("check_conflict");
