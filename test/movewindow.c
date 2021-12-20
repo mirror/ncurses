@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2021 Thomas E. Dickey                                *
  * Copyright 2006-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.51 2020/02/02 23:34:34 tom Exp $
+ * $Id: movewindow.c,v 1.52 2021/12/18 18:57:55 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -53,14 +53,6 @@ TODO:
 
 #ifdef HAVE_XCURSES
 #undef derwin
-#endif
-
-#if defined(NCURSES_CONST)
-#define CONST_FMT NCURSES_CONST
-#elif defined(PDCURSES)
-#define CONST_FMT const
-#else
-#define CONST_FMT		/* nothing */
 #endif
 
 #undef LINE_MAX

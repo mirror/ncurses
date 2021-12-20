@@ -26,12 +26,15 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: combine.c,v 1.7 2021/12/12 01:10:28 tom Exp $
+ * $Id: combine.c,v 1.17 2021/12/18 21:04:00 tom Exp $
  */
 
 #include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT
+
+#include <dump_window.h>
+#include <popup_msg.h>
 
 static int c_opt;
 static int r_opt;
@@ -41,6 +44,15 @@ next_char(int value)
 {
     do {
 	++value;
+    } while (!iswprint((wint_t) value));
+    return value;
+}
+
+static int
+prev_char(int value)
+{
+    do {
+	--value;
     } while (!iswprint((wint_t) value));
     return value;
 }
@@ -62,18 +74,18 @@ do_row(int row, int base_ch, int over_ch)
 
 	    source[1] = 0;
 
-	    source[0] = base_ch;
+	    source[0] = (wchar_t) base_ch;
 	    setcchar(&target, source, attr, 0, NULL);
 	    add_wch(&target);
 
-	    source[0] = over_ch;
+	    source[0] = (wchar_t) over_ch;
 	    setcchar(&target, source, attr, 0, NULL);
 	    add_wch(&target);
 	} else {
 	    wchar_t data[3];
 
-	    data[0] = base_ch;
-	    data[1] = over_ch;
+	    data[0] = (wchar_t) base_ch;
+	    data[1] = (wchar_t) over_ch;
 	    data[2] = 0;
 	    if (reverse)
 		attr_on(A_REVERSE, NULL);
@@ -106,14 +118,65 @@ prev_over(int value)
 }
 
 static void
-do_all(int over_it)
+do_all(int left_at, int over_it)
 {
     int row;
 
     for (row = 0; row < LINES; ++row) {
-	do_row(row, ' ', 0x300 + over_it);
+	do_row(row, left_at, 0x300 + over_it);
 	over_it = next_over(over_it);
     }
+}
+
+static void
+show_help(WINDOW *current)
+{
+    /* *INDENT-OFF* */
+    static struct {
+	int	key;
+	CONST_FMT char * msg;
+    } help[] = {
+	{ HELP_KEY_1,	"Show this screen" },
+	{ CTRL('L'),	"Repaint screen" },
+	{ '$',		"Scroll to end of combining-character range" },
+	{ '+',		"Scroll to next combining-character in range" },
+	{ KEY_DOWN,	"(same as \"+\")" },
+	{ '-',		"Scroll to previous combining-character in range" },
+	{ KEY_UP,	"(same as \"-\")" },
+	{ '0',		"Scroll to beginning of combining-character range" },
+	{ 'c',		"Toggle command-line option \"-c\"" },
+	{ 'd',		"Dump screen using scr_dump unless \"-l\" option used" },
+	{ 'h',		"Scroll test-data left one column" },
+	{ 'j',		"Scroll test-data down one row" },
+	{ 'k',		"Scroll test-data up one row" },
+	{ 'l',		"Scroll test-data right one column" },
+	{ 'q',		"Quit" },
+	{ ESCAPE,	"(same as \"q\")" },
+	{ QUIT,		"(same as \"q\")" },
+	{ 'r',		"Toggle command-line option \"-r\"" },
+    };
+    /* *INDENT-ON* */
+
+    char **msgs = typeCalloc(char *, SIZEOF(help) + 3);
+    size_t s;
+    int d = 0;
+
+    msgs[d++] = strdup("Test diacritic combining-characters range "
+		       "U+0300..U+036F");
+    msgs[d++] = strdup("");
+    for (s = 0; s < SIZEOF(help); ++s) {
+	char *name = strdup(keyname(help[s].key));
+	size_t need = (11 + strlen(name) + strlen(help[s].msg));
+	msgs[d] = typeMalloc(char, need);
+	_nc_SPRINTF(msgs[d], _nc_SLIMIT(need) "%-10s%s", name, help[s].msg);
+	free(name);
+	++d;
+    }
+    popup_msg2(current, msgs);
+    for (s = 0; msgs[s] != 0; ++s) {
+	free(msgs[s]);
+    }
+    free(msgs);
 }
 
 static void
@@ -127,6 +190,7 @@ usage(void)
 	"",
 	"Options:",
 	" -c       use cchar_t data rather than wchar_t string",
+	" -l FILE  log window-dumps to this file",
 	" -r       draw even-numbered rows in reverse-video",
     };
     unsigned n;
@@ -140,13 +204,21 @@ int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     int n;
+    int left_at = ' ';
     int over_it = 0;
     bool done = FALSE;
+    bool log_option = FALSE;
+    const char *dump_log = "combine.log";
 
-    while ((n = getopt(argc, argv, "cr")) != -1) {
+    while ((n = getopt(argc, argv, "cl:r")) != -1) {
 	switch (n) {
 	case 'c':
 	    c_opt = TRUE;
+	    break;
+	case 'l':
+	    log_option = TRUE;
+	    if (!open_dump(optarg))
+		usage();
 	    break;
 	case 'r':
 	    r_opt = TRUE;
@@ -164,12 +236,37 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     keypad(stdscr, TRUE);
 
     do {
-	do_all(over_it);
+	do_all(left_at, over_it);
 	switch (getch()) {
+	case HELP_KEY_1:
+	    show_help(stdscr);
+	    break;
 	case 'q':
 	case QUIT:
 	case ESCAPE:
 	    done = TRUE;
+	    break;
+	case CTRL('L'):
+	    redrawwin(stdscr);
+	    break;
+	case 'd':
+	    if (log_option)
+		dump_window(stdscr);
+	    else
+		scr_dump(dump_log);
+	    break;
+	case 'h':
+	    if (left_at > ' ')
+		left_at = prev_char(left_at);
+	    break;
+	case 'l':
+	    left_at = next_char(left_at);
+	    break;
+	case 'c':
+	    c_opt = !c_opt;
+	    break;
+	case 'r':
+	    r_opt = !r_opt;
 	    break;
 	case KEY_HOME:
 	case '0':
@@ -180,10 +277,12 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    over_it = LAST_OVER;
 	    break;
 	case KEY_UP:
+	case 'k':
 	case '-':
 	    over_it = prev_over(over_it);
 	    break;
 	case KEY_DOWN:
+	case 'j':
 	case '+':
 	    over_it = next_over(over_it);
 	    break;

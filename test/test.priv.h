@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.197 2021/04/25 00:00:24 tom Exp $ */
+/* $Id: test.priv.h,v 1.198 2021/12/18 18:55:10 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -1146,6 +1146,14 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define CONST_MENUS const
 #else
 #define CONST_MENUS		/* nothing */
+#endif
+
+#if defined(NCURSES_CONST)
+#define CONST_FMT NCURSES_CONST
+#elif defined(PDCURSES)
+#define CONST_FMT const
+#else
+#define CONST_FMT		/* nothing */
 #endif
 
 /*

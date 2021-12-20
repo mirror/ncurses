@@ -1,4 +1,4 @@
-# $Id: Makefile.in,v 1.129 2021/07/03 15:45:33 tom Exp $
+# $Id: Makefile.in,v 1.130 2021/12/18 23:00:28 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2017,2018 Free Software Foundation, Inc.                    #
@@ -44,6 +44,8 @@ destdir		=
 x		= @EXEEXT@
 o		= .@OBJEXT@
 
+PACKAGE		= @PACKAGE@
+
 MODEL		= ../@DFT_OBJ_SUBDIR@
 top_srcdir	= @top_srcdir@
 srcdir		= @srcdir@
@@ -52,18 +54,19 @@ exec_prefix	= @exec_prefix@
 datarootdir	= @datarootdir@
 
 bindir		= @bindir@
+libexecdir	= @libexecdir@
 libdir		= @libdir@
-includedir	= @includedir@
-includesubdir	= @includesubdir@
 datarootdir	= @datarootdir@
 datadir		= @datadir@
 
+real_bindir	= $(libexecdir)/$(PACKAGE)
+
 BINDIR		= $(DESTDIR)$(bindir)
+LIBEXECDIR	= $(DESTDIR)$(libexecdir)
 LIBDIR		= $(DESTDIR)$(libdir)
-INCLUDEDIR	= $(DESTDIR)$(includedir)$(includesubdir)
 DATADIR		= $(DESTDIR)$(datadir)
 
-PACKAGE		= @PACKAGE@
+REAL_BINDIR	= $(LIBEXECDIR)/$(PACKAGE)
 
 LIBTOOL		= @LIBTOOL@
 LIBTOOL_OPTS	= @LIBTOOL_OPTS@
