@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.66 2020/02/02 23:34:34 tom Exp @
+  * @Id: curs_attr.3x,v 1.70 2021/12/25 21:49:32 tom Exp @
   * ---------------------------------------------------------------------------
   * attr_get
   * .br
@@ -58,7 +58,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_attr 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_attr 3x</H1>
@@ -228,7 +228,7 @@
        the routines <STRONG>attron</STRONG>, <STRONG>attroff</STRONG>, and <STRONG>attrset</STRONG>, or OR'd with the  characters
        passed to <STRONG>addch</STRONG> (see <STRONG><A HREF="curs_addch.3x.html">curs_addch(3x)</A></STRONG>).
 
-              <EM>Name</EM>           <EM>Description</EM>
+              <STRONG>Name</STRONG>           <STRONG>Description</STRONG>
               -----------------------------------------------------------------
               <STRONG>A_NORMAL</STRONG>       Normal display (no highlight)
               <STRONG>A_STANDOUT</STRONG>     Best highlighting mode of the terminal.
@@ -247,7 +247,7 @@
        These  video  attributes are supported by <STRONG>attr_on</STRONG> and related functions
        (which also support the attributes recognized by <STRONG>attron</STRONG>, etc.):
 
-              <EM>Name</EM>            <EM>Description</EM>
+              <STRONG>Name</STRONG>            <STRONG>Description</STRONG>
               -----------------------------------------
               <STRONG>WA_HORIZONTAL</STRONG>   Horizontal highlight
               <STRONG>WA_LEFT</STRONG>         Left highlight
@@ -326,7 +326,7 @@
        nate  character  set implementation.  A 32-bit library can be used on a
        64-bit system, but not necessarily the reverse.
 
-              <EM>Year</EM>   <EM>System</EM>        <EM>Arch</EM>    <EM>Color</EM>   <EM>Char</EM>   <EM>Notes</EM>
+              <STRONG>Year</STRONG>   <STRONG>System</STRONG>        <STRONG>Arch</STRONG>    <STRONG>Color</STRONG>   <STRONG>Char</STRONG>   <STRONG>Notes</STRONG>
               ----------------------------------------------------------------
               1992   Solaris 5.2   32      6       17     SVr4 curses
               1992   HPUX 9        32      no      8      SVr2 curses
@@ -387,7 +387,7 @@
        Other interfaces are rarely used now:
 
        <STRONG>o</STRONG>   BSD  curses was improved slightly in 1993/1994 using Keith Bostic's
-           modification to make the library 8-bit clean  for  <STRONG>nvi</STRONG>.   He  moved
+           modification to make the library 8-bit clean for <STRONG>nvi(1)</STRONG>.  He  moved
            <EM>standout</EM> attribute to a structure member.
 
            The  resulting  4.4BSD curses was replaced by ncurses over the next
@@ -450,7 +450,7 @@
        macros prefixed with <STRONG>WA_</STRONG>.  The older macros have direct counterparts in
        the newer set of names:
 
-              <EM>Name</EM>            <EM>Description</EM>
+              <STRONG>Name</STRONG>            <STRONG>Description</STRONG>
               ------------------------------------------------------------
               <STRONG>WA_NORMAL</STRONG>       Normal display (no highlight)
               <STRONG>WA_STANDOUT</STRONG>     Best highlighting mode of the terminal.

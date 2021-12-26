@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_initscr.3x,v 1.33 2020/10/17 23:20:48 tom Exp $
+.\" $Id: curs_initscr.3x,v 1.36 2021/12/25 21:41:58 tom Exp $
 .TH curs_initscr 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -40,75 +40,75 @@
 .na
 .hy 0
 .SH NAME
-\fBinitscr\fR,
-\fBnewterm\fR,
-\fBendwin\fR,
-\fBisendwin\fR,
-\fBset_term\fR,
-\fBdelscreen\fR \- \fBcurses\fR screen initialization and manipulation routines
+\fBinitscr\fP,
+\fBnewterm\fP,
+\fBendwin\fP,
+\fBisendwin\fP,
+\fBset_term\fP,
+\fBdelscreen\fP \- \fBcurses\fP screen initialization and manipulation routines
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBWINDOW *initscr(void);\fR
+\fBWINDOW *initscr(void);\fP
 .br
-\fBint endwin(void);\fR
+\fBint endwin(void);\fP
 .sp
-\fBbool isendwin(void);\fR
+\fBbool isendwin(void);\fP
 .sp
-\fBSCREEN *newterm(const char *\fP\fItype\fP\fB, FILE *\fP\fIoutfd\fP\fB, FILE *\fP\fIinfd\fP\fB);\fR
+\fBSCREEN *newterm(const char *\fP\fItype\fP\fB, FILE *\fP\fIoutfd\fP\fB, FILE *\fP\fIinfd\fP\fB);\fP
 .br
-\fBSCREEN *set_term(SCREEN *\fP\fInew\fP\fB);\fR
+\fBSCREEN *set_term(SCREEN *\fP\fInew\fP\fB);\fP
 .br
-\fBvoid delscreen(SCREEN* \fP\fIsp\fP\fB);\fR
+\fBvoid delscreen(SCREEN* \fP\fIsp\fP\fB);\fP
 .br
 .SH DESCRIPTION
 .SS initscr
-\fBinitscr\fR is normally the first \fBcurses\fR routine to call when
+\fBinitscr\fP is normally the first \fBcurses\fP routine to call when
 initializing a program.
 A few special routines sometimes need to be called before it;
-these are \fBslk_init\fR(3X), \fBfilter\fR, \fBripoffline\fR,
-\fBuse_env\fR.
+these are \fBslk_init\fP(3X), \fBfilter\fP, \fBripoffline\fP,
+\fBuse_env\fP.
 For multiple-terminal applications,
-\fBnewterm\fR may be called before \fBinitscr\fR.
+\fBnewterm\fP may be called before \fBinitscr\fP.
 .PP
-The initscr code determines the terminal type and initializes all \fBcurses\fR
+The initscr code determines the terminal type and initializes all \fBcurses\fP
 data structures.
-\fBinitscr\fR also causes the first call to \fBrefresh\fR(3X)
+\fBinitscr\fP also causes the first call to \fBrefresh\fP(3X)
 to clear the screen.
-If errors occur, \fBinitscr\fR writes an appropriate error
+If errors occur, \fBinitscr\fP writes an appropriate error
 message to standard error and exits;
-otherwise, a pointer is returned to \fBstdscr\fR.
+otherwise, a pointer is returned to \fBstdscr\fP.
 .SS newterm
 .PP
-A program that outputs to more than one terminal should use the \fBnewterm\fR
-routine for each terminal instead of \fBinitscr\fR.
+A program that outputs to more than one terminal should use the \fBnewterm\fP
+routine for each terminal instead of \fBinitscr\fP.
 A program that needs to inspect capabilities,
 so it can continue to run in a line-oriented mode if the
 terminal cannot support a screen-oriented program, would also use
-\fBnewterm\fR.
-The routine \fBnewterm\fR should be called once for each terminal.
-It returns a variable of type \fBSCREEN *\fR which should be saved
+\fBnewterm\fP.
+The routine \fBnewterm\fP should be called once for each terminal.
+It returns a variable of type \fBSCREEN *\fP which should be saved
 as a reference to that terminal.
 \fBnewterm\fP's arguments are
 .bP
-the \fItype\fR of the terminal to be used in place of \fB$TERM\fR,
+the \fItype\fP of the terminal to be used in place of \fB$TERM\fP,
 .bP
 a file pointer for output to the terminal, and
 .bP
 another file pointer for input from the terminal
 .PP
-If the \fItype\fR parameter is \fBNULL\fR, \fB$TERM\fR will be used.
+If the \fItype\fP parameter is \fBNULL\fP, \fB$TERM\fP will be used.
 .SS endwin
 .PP
 The program must also call
-\fBendwin\fR for each terminal being used before exiting from \fBcurses\fR.
-If \fBnewterm\fR is called more than once for the same terminal, the first
-terminal referred to must be the last one for which \fBendwin\fR is called.
+\fBendwin\fP for each terminal being used before exiting from \fBcurses\fP.
+If \fBnewterm\fP is called more than once for the same terminal, the first
+terminal referred to must be the last one for which \fBendwin\fP is called.
 .PP
-A program should always call \fBendwin\fR before exiting or escaping from
-\fBcurses\fR mode temporarily.
+A program should always call \fBendwin\fP before exiting or escaping from
+\fBcurses\fP mode temporarily.
 This routine
 .bP
 resets colors to correspond with the default color pair 0,
@@ -123,32 +123,32 @@ stops cursor-addressing mode using the \fIexit_ca_mode\fP terminal capability,
 .bP
 restores tty modes (see \fBreset_shell_mode\fP(3X)).
 .PP
-Calling \fBrefresh\fR(3X) or \fBdoupdate\fR(3X) after a
+Calling \fBrefresh\fP(3X) or \fBdoupdate\fP(3X) after a
 temporary escape causes the program to resume visual mode.
 .SS isendwin
 .PP
-The \fBisendwin\fR routine returns \fBTRUE\fR if \fBendwin\fR has been
-called without any subsequent calls to \fBwrefresh\fR,
-and \fBFALSE\fR otherwise.
+The \fBisendwin\fP routine returns \fBTRUE\fP if \fBendwin\fP has been
+called without any subsequent calls to \fBwrefresh\fP,
+and \fBFALSE\fP otherwise.
 .SS set_term
 .PP
-The \fBset_term\fR routine is used to switch between different terminals.
-The screen reference \fBnew\fR becomes the new current terminal.
+The \fBset_term\fP routine is used to switch between different terminals.
+The screen reference \fInew\fP becomes the new current terminal.
 The previous terminal is returned by the routine.
-This is the only routine which manipulates \fBSCREEN\fR pointers;
+This is the only routine which manipulates \fBSCREEN\fP pointers;
 all other routines affect only the current terminal.
 .SS delscreen
 .PP
-The \fBdelscreen\fR routine frees storage associated with the
-\fBSCREEN\fR data structure.
-The \fBendwin\fR routine does not do
-this, so \fBdelscreen\fR should be called after \fBendwin\fR if a
-particular \fBSCREEN\fR is no longer needed.
+The \fBdelscreen\fP routine frees storage associated with the
+\fBSCREEN\fP data structure.
+The \fBendwin\fP routine does not do
+this, so \fBdelscreen\fP should be called after \fBendwin\fP if a
+particular \fBSCREEN\fP is no longer needed.
 .SH RETURN VALUE
-\fBendwin\fR returns the integer \fBERR\fR upon failure and \fBOK\fR
+\fBendwin\fP returns the integer \fBERR\fP upon failure and \fBOK\fP
 upon successful completion.
 .PP
-Routines that return pointers always return \fBNULL\fR on error.
+Routines that return pointers always return \fBNULL\fP on error.
 .PP
 X/Open defines no error conditions.
 In this implementation
@@ -168,7 +168,7 @@ These functions were described in the XSI Curses standard, Issue 4.
 As of 2015, the current document is X/Open Curses, Issue 7.
 .SS Differences
 X/Open specifies that portable applications must not
-call \fBinitscr\fR more than once:
+call \fBinitscr\fP more than once:
 .bP
 The portable way to use \fBinitscr\fP is once only,
 using \fBrefresh\fP (see curs_refresh(3X))
@@ -177,8 +177,8 @@ to restore the screen after \fBendwin\fP.
 This implementation allows using \fBinitscr\fP after \fBendwin\fP.
 .PP
 Old versions of curses, e.g., BSD 4.4, may have returned a null pointer
-from \fBinitscr\fR when an error is detected, rather than exiting.
-It is safe but redundant to check the return value of \fBinitscr\fR
+from \fBinitscr\fP when an error is detected, rather than exiting.
+It is safe but redundant to check the return value of \fBinitscr\fP
 in XSI Curses.
 .SS Unset TERM Variable
 .PP
@@ -238,7 +238,7 @@ When resuming the process, this implementation discards pending
 input with \fBflushinput\fP (see curs_util(3X)), and repaints the screen
 assuming that it has been completely altered.
 It also updates the saved terminal modes with \fBdef_shell_mode\fP
-(see \fBcurs_kernel\fR(3X)).
+(see \fBcurs_kernel\fP(3X)).
 .TP 5
 .B SIGWINCH
 This handles the window-size changes which were ignored in
@@ -251,10 +251,10 @@ At the same time, \fBwgetch\fP calls \fBresizeterm\fP to adjust the
 standard screen \fBstdscr\fP,
 and update other data such as \fBLINES\fP and \fBCOLS\fP.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_kernel\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBcurs_slk\fR(3X),
-\fBcurs_terminfo\fR(3X),
-\fBcurs_util\fR(3X),
-\fBcurs_variables\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_kernel\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBcurs_slk\fP(3X),
+\fBcurs_terminfo\fP(3X),
+\fBcurs_util\fP(3X),
+\fBcurs_variables\fP(3X).

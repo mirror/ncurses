@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.57 2020/12/19 21:38:20 tom Exp $
+.\" $Id: curs_getch.3x,v 1.61 2021/12/25 21:49:32 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -41,55 +41,55 @@
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBgetch\fR,
-\fBwgetch\fR,
-\fBmvgetch\fR,
-\fBmvwgetch\fR,
-\fBungetch\fR,
-\fBhas_key\fR \- get (or push back) characters from \fBcurses\fR terminal keyboard
+\fBgetch\fP,
+\fBwgetch\fP,
+\fBmvgetch\fP,
+\fBmvwgetch\fP,
+\fBungetch\fP,
+\fBhas_key\fP \- get (or push back) characters from \fBcurses\fP terminal keyboard
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBint getch(void);\fR
+\fBint getch(void);\fP
 .br
-\fBint wgetch(WINDOW *\fP\fIwin);\fR
+\fBint wgetch(WINDOW *\fP\fIwin);\fP
 .sp
-\fBint mvgetch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBint mvgetch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBint mvwgetch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBint mvwgetch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .sp
-\fBint ungetch(int \fP\fIch\fP\fB);\fR
+\fBint ungetch(int \fP\fIch\fP\fB);\fP
 .sp
 /* extension */
 .br
-\fBint has_key(int \fP\fIch\fP\fB);\fR
+\fBint has_key(int \fP\fIch\fP\fB);\fP
 .br
 .SH DESCRIPTION
 .SS Reading characters
-The \fBgetch\fR, \fBwgetch\fR, \fBmvgetch\fR and \fBmvwgetch\fR, routines read
+The \fBgetch\fP, \fBwgetch\fP, \fBmvgetch\fP and \fBmvwgetch\fP, routines read
 a character from the window.
-In no-delay mode, if no input is waiting, the value \fBERR\fR is returned.
+In no-delay mode, if no input is waiting, the value \fBERR\fP is returned.
 In delay mode, the program waits until the system
 passes text through to the program.
-Depending on the setting of \fBcbreak\fR,
+Depending on the setting of \fBcbreak\fP,
 this is after one character (cbreak mode),
 or after the first newline (nocbreak mode).
 In half-delay mode,
 the program waits until a character is typed or the
 specified timeout has been reached.
 .PP
-If \fBecho\fR is enabled, and the window is not a pad,
+If \fBecho\fP is enabled, and the window is not a pad,
 then the character will also be echoed into the
 designated window according to the following rules:
 .bP
 If the character is the current erase character, left arrow, or backspace,
 the cursor is moved one space to the left and that screen position is erased
-as if \fBdelch\fR had been called.
+as if \fBdelch\fP had been called.
 .bP
-If the character value is any other \fBKEY_\fR define, the user is alerted
-with a \fBbeep\fR call.
+If the character value is any other \fBKEY_\fP define, the user is alerted
+with a \fBbeep\fP call.
 .bP
 If the character is a carriage-return,
 and if \fBnl\fP is enabled,
@@ -98,17 +98,17 @@ it is translated to a line-feed after echoing.
 Otherwise the character is simply output to the screen.
 .PP
 If the window is not a pad, and it has been moved or modified since the last
-call to \fBwrefresh\fR, \fBwrefresh\fR will be called before another character
+call to \fBwrefresh\fP, \fBwrefresh\fP will be called before another character
 is read.
 .SS Keypad mode
 .PP
-If \fBkeypad\fR is \fBTRUE\fR, and a function key is pressed, the token for
+If \fBkeypad\fP is \fBTRUE\fP, and a function key is pressed, the token for
 that function key is returned instead of the raw characters:
 .bP
 The predefined function
-keys are listed in \fB<curses.h>\fR as macros with values outside the range
+keys are listed in \fB<curses.h>\fP as macros with values outside the range
 of 8-bit characters.
-Their names begin with \fBKEY_\fR.
+Their names begin with \fBKEY_\fP.
 .bP
 Other (user-defined) function keys which may be defined
 using \fBdefine_key\fP(3X)
@@ -121,7 +121,7 @@ larger.
 .PP
 When a character that could be the beginning of a function key is received
 (which, on modern terminals, means an escape character),
-\fBcurses\fR sets a timer.
+\fBcurses\fP sets a timer.
 If the remainder of the sequence does not come in within the designated
 time, the character is passed through;
 otherwise, the function key value is returned.
@@ -137,15 +137,15 @@ the terminal may appear to hang in notimeout mode after pressing the escape key
 until another key is pressed.
 .SS Ungetting characters
 .PP
-The \fBungetch\fR routine places \fIch\fR back onto the input queue to be
-returned by the next call to \fBwgetch\fR.
+The \fBungetch\fP routine places \fIch\fP back onto the input queue to be
+returned by the next call to \fBwgetch\fP.
 There is just one input queue for all windows.
 .PP
 .SS Predefined key-codes
-The following special keys are defined in \fB<curses.h>\fR.
+The following special keys are defined in \fB<curses.h>\fP.
 .bP
 Except for the special case \fBKEY_RESIZE\fP,
-it is necessary to enable \fBkeypad\fR for \fBgetch\fP to return these codes.
+it is necessary to enable \fBkeypad\fP for \fBgetch\fP to return these codes.
 .bP
 Not all of these are necessarily supported on any particular terminal.
 .bP
@@ -157,7 +157,7 @@ and were defined long ago, in the 1980s.
 .TS
 center tab(/) ;
 l l .
-\fIName\fR/\fIKey\fR \fIname\fR
+\fBName\fP/\fBKey\fP \fBname\fP
 _
 KEY_BREAK/Break key
 KEY_DOWN/The four arrow keys ...
@@ -169,8 +169,8 @@ KEY_BACKSPACE/Backspace
 KEY_F0/T{
 Function keys; space for 64 keys is reserved.
 T}
-KEY_F(\fIn\fR)/T{
-For 0 \(<= \fIn\fR \(<= 63
+KEY_F(\fIn\fP)/T{
+For 0 \(<= \fIn\fP \(<= 63
 T}
 KEY_DL/Delete line
 KEY_IL/Insert line
@@ -262,27 +262,27 @@ Keypad is arranged like this:
 .TS
 center allbox tab(/) ;
 c c c .
-\fBA1\fR/\fBup\fR/\fBA3\fR
-\fBleft\fR/\fBB2\fR/\fBright\fR
-\fBC1\fR/\fBdown\fR/\fBC3\fR
+\fBA1\fP/\fBup\fP/\fBA3\fP
+\fBleft\fP/\fBB2\fP/\fBright\fP
+\fBC1\fP/\fBdown\fP/\fBC3\fP
 .TE
 .sp
 A few of these predefined values do \fInot\fP correspond to a real key:
 .bP
 .B KEY_RESIZE
 is returned when the \fBSIGWINCH\fP signal has been detected
-(see \fBinitscr\fP(3X) and \fBresizeterm\fR(3X)).
+(see \fBinitscr\fP(3X) and \fBresizeterm\fP(3X)).
 This code is returned whether or not \fBkeypad\fP has been enabled.
 .bP
 .B KEY_MOUSE
-is returned for mouse-events (see \fBcurs_mouse\fR(3X)).
+is returned for mouse-events (see \fBcurs_mouse\fP(3X)).
 This code relies upon whether or not \fBkeypad\fP(3X) has been enabled,
-because (e.g., with \fIxterm\fP mouse prototocol) ncurses must
+because (e.g., with \fBxterm\fP(1) mouse prototocol) ncurses must
 read escape sequences,
 just like a function key.
 .SS Testing key-codes
 .PP
-The \fBhas_key\fR routine takes a key-code value from the above list, and
+The \fBhas_key\fP routine takes a key-code value from the above list, and
 returns \fBTRUE\fP or \fBFALSE\fP according to whether
 the current terminal type recognizes a key with that value.
 .PP
@@ -298,8 +298,8 @@ string (see \fBkey_defined\fP(3X)).
 .RE
 .PP
 .SH RETURN VALUE
-All routines return the integer \fBERR\fR upon failure and an integer value
-other than \fBERR\fR (\fBOK\fR in the case of \fBungetch\fP) upon successful
+All routines return the integer \fBERR\fP upon failure and an integer value
+other than \fBERR\fP (\fBOK\fP in the case of \fBungetch\fP) upon successful
 completion.
 .RS 3
 .TP 5
@@ -311,8 +311,8 @@ if there is no more room in the FIFO.
 returns \fBERR\fP
 if the window pointer is null, or
 if its timeout expires without having any data, or
-if the execution was interrupted by a signal (\fBerrno\fR will be set to
-\fBEINTR\fR).
+if the execution was interrupted by a signal (\fBerrno\fP will be set to
+\fBEINTR\fP).
 .RE
 .PP
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
@@ -330,9 +330,9 @@ keys, e.g.,
 Some curses implementations may differ according to whether they
 treat these control keys specially (and ignore the terminfo), or
 use the terminfo definitions.
-\fBNcurses\fR uses the terminfo definition.
+\fBNcurses\fP uses the terminfo definition.
 If it says that \fBKEY_ENTER\fP is control/M,
-\fBgetch\fR will return \fBKEY_ENTER\fP
+\fBgetch\fP will return \fBKEY_ENTER\fP
 when you press control/M.
 .PP
 Generally, \fBKEY_ENTER\fP denotes the character(s) sent by the \fIEnter\fP
@@ -349,42 +349,42 @@ may return either a carriage-return or line-feed, and finally
 .bP
 \*(``Enter or send\*('' is the standard description for this key.
 .PP
-When using \fBgetch\fR, \fBwgetch\fR, \fBmvgetch\fR, or
-\fBmvwgetch\fR, nocbreak mode (\fBnocbreak\fR) and echo mode
-(\fBecho\fR) should not be used at the same time.
+When using \fBgetch\fP, \fBwgetch\fP, \fBmvgetch\fP, or
+\fBmvwgetch\fP, nocbreak mode (\fBnocbreak\fP) and echo mode
+(\fBecho\fP) should not be used at the same time.
 Depending on the
 state of the tty driver when each character is typed, the program may
 produce undesirable results.
 .PP
-Note that \fBgetch\fR, \fBmvgetch\fR, and \fBmvwgetch\fR may be macros.
+Note that \fBgetch\fP, \fBmvgetch\fP, and \fBmvwgetch\fP may be macros.
 .PP
 Historically, the set of keypad macros was largely defined by the extremely
 function-key-rich keyboard of the AT&T 7300, aka 3B1, aka Safari 4.
 Modern
 personal computers usually have only a small subset of these.
 IBM PC-style
-consoles typically support little more than \fBKEY_UP\fR, \fBKEY_DOWN\fR,
-\fBKEY_LEFT\fR, \fBKEY_RIGHT\fR, \fBKEY_HOME\fR, \fBKEY_END\fR,
-\fBKEY_NPAGE\fR, \fBKEY_PPAGE\fR, and function keys 1 through 12.
+consoles typically support little more than \fBKEY_UP\fP, \fBKEY_DOWN\fP,
+\fBKEY_LEFT\fP, \fBKEY_RIGHT\fP, \fBKEY_HOME\fP, \fBKEY_END\fP,
+\fBKEY_NPAGE\fP, \fBKEY_PPAGE\fP, and function keys 1 through 12.
 The Ins key
-is usually mapped to \fBKEY_IC\fR.
+is usually mapped to \fBKEY_IC\fP.
 .SH PORTABILITY
 The *get* functions are described in the XSI Curses standard, Issue 4.
 They
 read single-byte characters only.
 The standard specifies that they return
-\fBERR\fR on failure, but specifies no error conditions.
+\fBERR\fP on failure, but specifies no error conditions.
 .PP
-The echo behavior of these functions on input of \fBKEY_\fR or backspace
+The echo behavior of these functions on input of \fBKEY_\fP or backspace
 characters was not specified in the SVr4 documentation.
 This description is
 adopted from the XSI Curses standard.
 .PP
-The behavior of \fBgetch\fR and friends in the presence of handled signals is
+The behavior of \fBgetch\fP and friends in the presence of handled signals is
 unspecified in the SVr4 and XSI Curses documentation.
 Under historical curses
 implementations, it varied depending on whether the operating system's
-implementation of handled signal receipt interrupts a \fBread\fR(2) call in
+implementation of handled signal receipt interrupts a \fBread\fP(2) call in
 progress or not, and also (in some implementations) depending on whether an
 input timeout or non-blocking mode has been set.
 .PP
@@ -396,23 +396,23 @@ The implementation in ncurses is an extension.
 NetBSD curses later added this extension.
 .PP
 Programmers concerned about portability should be prepared for either of two
-cases: (a) signal receipt does not interrupt \fBgetch\fR; (b) signal receipt
-interrupts \fBgetch\fR and causes it to return \fBERR\fP with \fBerrno\fR set to
-\fBEINTR\fR.
+cases: (a) signal receipt does not interrupt \fBgetch\fP; (b) signal receipt
+interrupts \fBgetch\fP and causes it to return \fBERR\fP with \fBerrno\fP set to
+\fBEINTR\fP.
 .PP
-The \fBhas_key\fR function is unique to \fBncurses\fR.
+The \fBhas_key\fP function is unique to \fBncurses\fP.
 We recommend that
-any code using it be conditionalized on the \fBNCURSES_VERSION\fR feature macro.
+any code using it be conditionalized on the \fBNCURSES_VERSION\fP feature macro.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_inopts\fR(3X),
-\fBcurs_mouse\fR(3X),
-\fBcurs_move\fR(3X),
-\fBcurs_outopts\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBcurs_variables\fR(3X),
-\fBresizeterm\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_inopts\fP(3X),
+\fBcurs_mouse\fP(3X),
+\fBcurs_move\fP(3X),
+\fBcurs_outopts\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBcurs_variables\fP(3X),
+\fBresizeterm\fP(3X).
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_get_wch\fR(3X).
+\fBcurs_get_wch\fP(3X).

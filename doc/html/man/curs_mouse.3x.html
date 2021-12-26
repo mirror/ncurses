@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.53 2020/10/17 23:25:08 tom Exp @
+  * @Id: curs_mouse.3x,v 1.57 2021/12/25 21:49:32 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -37,7 +37,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_mouse 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_mouse 3x</H1>
@@ -101,7 +101,7 @@
 </PRE><H3><a name="h3-Mouse-events">Mouse events</a></H3><PRE>
        Here are the mouse event type masks which may be defined:
 
-       <EM>Name</EM>                     <EM>Description</EM>
+       <STRONG>Name</STRONG>                     <STRONG>Description</STRONG>
        ---------------------------------------------------------------------
        BUTTON1_PRESSED          mouse button 1 down
        BUTTON1_RELEASED         mouse button 1 up
@@ -177,8 +177,8 @@
        reserve lines on top or bottom of the screen for  other  purposes  (see
        the <STRONG>ripoffline</STRONG> and <STRONG><A HREF="curs_slk.3x.html">slk_init(3x)</A></STRONG> calls, for example).
 
-       <STRONG>o</STRONG>   If the parameter <STRONG>to_screen</STRONG> is <STRONG>TRUE</STRONG>, the pointers <STRONG>pY,</STRONG> <STRONG>pX</STRONG> must refer-
-           ence the coordinates of a location inside the window <STRONG>win</STRONG>.  They are
+       <STRONG>o</STRONG>   If the parameter <EM>to</EM><STRONG>_</STRONG><EM>screen</EM> is <STRONG>TRUE</STRONG>, the pointers <EM>pY,</EM> <EM>pX</EM> must refer-
+           ence the coordinates of a location inside the window <EM>win</EM>.  They are
            converted  to  window-relative coordinates and returned through the
            pointers.  If the conversion was successful, the  function  returns
            <STRONG>TRUE</STRONG>.
@@ -186,9 +186,9 @@
        <STRONG>o</STRONG>   If one of the parameters was NULL or the location is not inside the
            window, <STRONG>FALSE</STRONG> is returned.
 
-       <STRONG>o</STRONG>   If <STRONG>to_screen</STRONG> is <STRONG>FALSE</STRONG>, the pointers <STRONG>pY,</STRONG> <STRONG>pX</STRONG> must  reference  window-
+       <STRONG>o</STRONG>   If <EM>to</EM><STRONG>_</STRONG><EM>screen</EM> is <STRONG>FALSE</STRONG>, the pointers <EM>pY,</EM> <EM>pX</EM> must  reference  window-
            relative  coordinates.  They are converted to stdscr-relative coor-
-           dinates if the window <STRONG>win</STRONG> encloses this point.  In  this  case  the
+           dinates if the window <EM>win</EM> encloses this point.  In  this  case  the
            function returns <STRONG>TRUE</STRONG>.
 
        <STRONG>o</STRONG>   If  one  of  the  parameters is NULL or the point is not inside the
@@ -199,7 +199,7 @@
 
 </PRE><H3><a name="h3-mouse_trafo">mouse_trafo</a></H3><PRE>
        The <STRONG>mouse_trafo</STRONG> function performs the same translation as <STRONG>wmouse_trafo</STRONG>,
-       using stdscr for <STRONG>win</STRONG>.
+       using stdscr for <EM>win</EM>.
 
 
 </PRE><H3><a name="h3-mouseinterval">mouseinterval</a></H3><PRE>
@@ -250,7 +250,7 @@
        These  calls  were  designed for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, and are not found in SVr4
        curses, 4.4BSD curses, or any other previous version of curses.
 
-       SVr4 curses had support for the mouse in a variant  of  <STRONG>xterm</STRONG>.   It  is
+       SVr4 curses had support for the mouse in a variant of <STRONG>xterm(1)</STRONG>.  It  is
        mentioned in a few places, but with no supporting documentation:
 
        <STRONG>o</STRONG>   the  "libcurses" manual page lists functions for this feature which

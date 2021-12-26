@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getcchar.3x,v 1.25 2021/06/17 21:26:02 tom Exp $
+.\" $Id: curs_getcchar.3x,v 1.27 2021/12/25 20:35:03 tom Exp $
 .TH curs_getcchar 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -177,7 +177,7 @@ characters \fIz\fP and a single spacing character \fIc\fP.
 HP-UX\ 10 uses an opaque structure with 28 bytes,
 which is large enough for the 6 \fBwchar_t\fP values.
 .bP
-Solaris xpg4 curses uses a single array of 6 \fBwchar_t\fP values.
+Solaris \fIxpg4\fP curses uses a single array of 6 \fBwchar_t\fP values.
 .PP
 This implementation's \fBcchar_t\fP was defined in 1995
 using \fB5\fP for the total of spacing and non-spacing characters
@@ -196,7 +196,7 @@ so some applications may be affected.
 .SH SEE ALSO
 .PP
 Functions:
-\fBcurs_attr\fR(3X),
-\fBcurs_color\fR(3X),
-\fBcurses\fR(3X),
-\fBwcwidth\fR(3).
+\fBcurs_attr\fP(3X),
+\fBcurs_color\fP(3X),
+\fBcurses\fP(3X),
+\fBwcwidth\fP(3).

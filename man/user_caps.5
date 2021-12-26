@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: user_caps.5,v 1.17 2021/06/17 21:30:22 tom Exp $
+.\" $Id: user_caps.5,v 1.20 2021/12/25 21:09:22 tom Exp $
 .TH user_caps 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -124,7 +124,7 @@ box characters primary set
 .RE
 .IP
 The memory lock/unlock capabilities were included because they were used
-in the X11R6 terminal description for \fBxterm\fP.
+in the X11R6 terminal description for \fBxterm\fP(1).
 The \fIbox1\fP capability is used in @TIC@ to help with terminal descriptions
 written for AIX.
 .PP
@@ -181,7 +181,7 @@ While terminfo and termcap have a set of 60 predefined function-key names,
 to which a series of keys can be assigned,
 that is insufficient for more than a dozen keys multiplied by more than
 a couple of modifier combinations.
-The ncurses database uses a convention based on \fBxterm\fP to
+The ncurses database uses a convention based on \fBxterm\fP(1) to
 provide extended special-key names.
 .IP
 Fitting that into termcap's limitation of 2-character names
@@ -258,7 +258,7 @@ Set this capability to a nonzero value to enable it.
 XM
 \fIstring\fP,
 override ncurses's built-in string which
-enables/disables \fBxterm\fP mouse mode.
+enables/disables \fBxterm\fP(1) mouse mode.
 .IP
 ncurses sends a character sequence to the terminal to initialize mouse mode,
 and when the user clicks the mouse buttons or (in certain modes) moves the
@@ -344,7 +344,7 @@ Several terminals provide the ability to send distinct strings for
 combinations of modified special keys.
 There is no standard for what those keys can send.
 .PP
-Since 1999, \fBxterm\fP has supported
+Since 1999, \fBxterm\fP(1) has supported
 \fIshift\fP, \fIcontrol\fP, \fIalt\fP, and \fImeta\fP modifiers which produce
 distinct special-key strings.
 In a terminal description, ncurses has no special knowledge of the
@@ -359,7 +359,7 @@ ncurses' terminal database defines these names to which a suffix is added:
 .TS
 tab(/) ;
 l l .
-\fIName\fR/\fIDescription\fR
+\fBName\fP/\fBDescription\fP
 _
 kDC/special form of kdch1 (delete character)
 kDN/special form of kcud1 (cursor down)
@@ -378,7 +378,7 @@ These are the suffixes used to denote the modifiers:
 .TS
 tab(/) ;
 l l .
-\fIValue\fR/\fIDescription\fR
+\fBValue\fP/\fBDescription\fP
 _
 2/Shift
 3/Alt
@@ -419,17 +419,17 @@ but makes no use of these capabilities itself.
 .\"
 .SH SEE ALSO
 .PP
-\fB@INFOCMP@\fR(1M),
-\fB@TIC@\fR(1M).
+\fB@INFOCMP@\fP(1M),
+\fB@TIC@\fP(1M).
 .PP
 The terminal database section
 .I "NCURSES USER-DEFINABLE CAPABILITIES"
 summarizes commonly-used user-defined capabilities
 which are used in the terminal descriptions.
-Some of those features are mentioned in \fBscreen\fR(1) or \fBtmux\fR(1).
+Some of those features are mentioned in \fBscreen\fP(1) or \fBtmux\fP(1).
 .PP
 .I "XTerm Control Sequences"
-provides further information on the \fBxterm\fP features
+provides further information on the \fBxterm\fP(1) features
 which are used in these extended capabilities.
 .\"
 .SH AUTHORS

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,12 +28,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_hook.3x,v 1.15 2020/10/17 23:44:57 tom Exp $
+.\" $Id: menu_hook.3x,v 1.17 2021/12/25 21:49:32 tom Exp $
 .TH menu_hook 3X ""
 .SH NAME
-\fBmenu_hook\fR \- set hooks for automatic invocation by applications
+\fBmenu_hook\fP \- set hooks for automatic invocation by applications
 .SH SYNOPSIS
-\fB#include <menu.h>\fR
+\fB#include <menu.h>\fP
 .sp
 \fBint set_item_init(MENU *\fP\fImenu\fP\fB, Menu_Hook \fP\fIfunc);\fP
 .br
@@ -53,32 +53,32 @@
 .br
 .SH DESCRIPTION
 These functions make it possible to set hook functions to be called at various
-points in the automatic processing of input event codes by \fBmenu_driver\fR.
+points in the automatic processing of input event codes by \fBmenu_driver\fP.
 .PP
-The function \fBset_item_init\fR sets a hook to be called at menu-post time and
+The function \fBset_item_init\fP sets a hook to be called at menu-post time and
 each time the selected item changes (after the change).
-\fBitem_init\fR
-returns the current item init hook, if any (\fBNULL\fR if there is no such
+\fBitem_init\fP
+returns the current item init hook, if any (\fBNULL\fP if there is no such
 hook).
 .PP
-The function \fBset_item_term\fR sets a hook to be called at menu-unpost time
+The function \fBset_item_term\fP sets a hook to be called at menu-unpost time
 and each time the selected item changes (before the change).
-\fBitem_term\fR
-returns the current item term hook, if any (\fBNULL\fR if there is no such
+\fBitem_term\fP
+returns the current item term hook, if any (\fBNULL\fP if there is no such
 hook).
 .PP
-The function \fBset_menu_init\fR sets a hook to be called at menu-post time and
+The function \fBset_menu_init\fP sets a hook to be called at menu-post time and
 just after the top row on the menu changes once it is posted.
-\fBmenu_init\fR
-returns the current menu init hook, if any (\fBNULL\fR if there is no such
+\fBmenu_init\fP
+returns the current menu init hook, if any (\fBNULL\fP if there is no such
 hook).
 .PP
-The function \fBset_menu_term\fR sets a hook to be called at menu-unpost time
+The function \fBset_menu_term\fP sets a hook to be called at menu-unpost time
 and just before the top row on the menu changes once it is posted.
-\fBmenu_term\fR returns the current menu term hook, if any (\fBNULL\fR if there
+\fBmenu_term\fP returns the current menu term hook, if any (\fBNULL\fP if there
 is no such hook).
 .SH RETURN VALUE
-Routines that return pointers return \fBNULL\fR on error.
+Routines that return pointers return \fBNULL\fP on error.
 Other routines
 return one of the following:
 .TP 5
@@ -86,12 +86,12 @@ return one of the following:
 The routine succeeded.
 .TP 5
 .B E_SYSTEM_ERROR
-System error occurred (see \fBerrno\fR(3)).
+System error occurred (see \fBerrno\fP(3)).
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBmenu\fR(3X).
+\fBcurses\fP(3X), \fBmenu\fP(3X).
 .SH NOTES
-The header file \fB<menu.h>\fR automatically includes the header file
-\fB<curses.h>\fR.
+The header file \fB<menu.h>\fP automatically includes the header file
+\fB<curses.h>\fP.
 .SH PORTABILITY
 These routines emulate the System V menu library.
 They were not supported on

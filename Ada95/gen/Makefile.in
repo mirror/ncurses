@@ -30,7 +30,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #     and:  Thomas E. Dickey, 1997
 #
-#  $Id: Makefile.in,v 1.97 2021/07/03 15:45:33 tom Exp $
+#  $Id: Makefile.in,v 1.98 2021/12/25 22:34:44 tom Exp $
 #
 .SUFFIXES:
 
@@ -301,23 +301,24 @@ instab.tmp : table.m4 $(GEN_SRC)
 	  $(M4) $(M4FLAGS) -DM4MACRO=table.m4 $$f | $(DEL_ADAMODE) >> $@ ;\
 	done;
 
+TABLE_TITLE=Correspondence between ncurses C and Ada functions
+
 $(HTML_DIR)/table.html : instab.tmp
 	@-touch $@
 	@-chmod +w $@
-	@echo '<!DOCTYPE HTML'  > $@
-	@echo 'PUBLIC "-//IETF//DTD HTML 3.0//EN">' >> $@
-	@echo '<HTML>' >> $@
-	@echo '<HEAD>' >> $@
-	@echo '<TITLE>Correspondence between ncurses C and Ada functions</TITLE>' >>$@
-	@echo '</HEAD>' >> $@
-	@echo '<BODY>' >> $@
-	@echo '<H1>Correspondence between ncurses C and Ada functions</H1>' >>$@
-	@echo '<H2>Sorted by C function name</H2>' >>$@
-	@echo '<TABLE ALIGN=CENTER BORDER>' >>$@
-	@echo '<TR ALIGN=LEFT>' >>$@
-	@echo '<TH>C name</TH><TH>Ada name</TH><TH>man page</TH></TR>' >>$@
+	@echo '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">' > $@
+	@echo '<html>' >> $@
+	@echo '<head>' >> $@
+	@echo '<title>$(TABLE_TITLE)</title>' >>$@
+	@echo '</head>' >> $@
+	@echo '<body>' >> $@
+	@echo '<h1>$(TABLE_TITLE)</h1>' >>$@
+	@echo '<h2>Sorted by C function name</h2>' >>$@
+	@echo '<table align="center" border summary="$(TABLE_TITLE)">' >>$@
+	@echo '<tr align="left">' >>$@
+	@echo '<th>C name</th><th>Ada name</th><th>man page</th></tr>' >>$@
 	@sort < instab.tmp >> $@
-	@echo '</TABLE></BODY></HTML>' >>$@
+	@echo '</table></body></html>' >>$@
 	@rm -f instab.tmp
 
 adahtml:

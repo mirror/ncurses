@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addstr.3x,v 1.23 2020/10/17 23:11:02 tom Exp $
+.\" $Id: curs_addstr.3x,v 1.25 2021/12/25 21:41:58 tom Exp $
 .TH curs_addstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -40,51 +40,51 @@
 .na
 .hy 0
 .SH NAME
-\fBaddstr\fR,
-\fBaddnstr\fR,
-\fBwaddstr\fR,
-\fBwaddnstr\fR,
-\fBmvaddstr\fR,
-\fBmvaddnstr\fR,
-\fBmvwaddstr\fR,
-\fBmvwaddnstr\fR \- add a string of characters to a \fBcurses\fR window and advance cursor
+\fBaddstr\fP,
+\fBaddnstr\fP,
+\fBwaddstr\fP,
+\fBwaddnstr\fP,
+\fBmvaddstr\fP,
+\fBmvaddnstr\fP,
+\fBmvwaddstr\fP,
+\fBmvwaddnstr\fP \- add a string of characters to a \fBcurses\fP window and advance cursor
 .ad
 .hy
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBint addstr(const char *\fR\fIstr\fR\fB);\fR
+\fBint addstr(const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint addnstr(const char *\fR\fIstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint addnstr(const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint waddstr(WINDOW *\fR\fIwin\fR\fB, const char *\fR\fIstr\fR\fB);\fR
+\fBint waddstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint waddnstr(WINDOW *\fR\fIwin\fR\fB, const char *\fR\fIstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint waddnstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .sp
-\fBint mvaddstr(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const char *\fR\fIstr\fR\fB);\fR
+\fBint mvaddstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvaddnstr(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const char *\fR\fIstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint mvaddnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint mvwaddstr(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const char *\fR\fIstr\fR\fB);\fR
+\fBint mvwaddstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvwaddnstr(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const char *\fR\fIstr, int \fR\fIn\fR\fB);\fR
+\fBint mvwaddnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr, int \fP\fIn\fP\fB);\fP
 .fi
 .SH DESCRIPTION
 These functions write the (null-terminated) character string
-\fIstr\fR on the given window.
-It is similar to calling \fBwaddch\fR once for each byte in the string.
+\fIstr\fP on the given window.
+It is similar to calling \fBwaddch\fP once for each byte in the string.
 .PP
-The \fImv\fR functions perform cursor movement once, before writing any
+The \fImv\fP functions perform cursor movement once, before writing any
 characters.
 Thereafter, the cursor is advanced as a side-effect of writing to the window.
 .PP
-The four functions with \fIn\fR as the last argument
-write at most \fIn\fR bytes,
+The four functions with \fIn\fP as the last argument
+write at most \fIn\fP bytes,
 or until a terminating null is reached.
-If \fIn\fR is \-1, then the entire string will be added.
+If \fIn\fP is \-1, then the entire string will be added.
 .SH RETURN VALUE
-All functions return the integer \fBERR\fR upon failure and \fBOK\fR on success.
+All functions return the integer \fBERR\fP upon failure and \fBOK\fP on success.
 .PP
 X/Open does not define any error conditions.
 This implementation returns an error
@@ -111,9 +111,9 @@ there is a special case in \fBwaddch\fP where an error may be
 returned after successfully writing a character to the lower-right corner
 of a window when \fBscrollok\fP is disabled.
 .SH NOTES
-All of these functions except \fBwaddnstr\fR may be macros.
+All of these functions except \fBwaddnstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_addch\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_addch\fP(3X).

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2000-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.21 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_trace.3x,v 1.24 2021/12/25 21:41:58 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -40,71 +40,71 @@
 .na
 .hy 0
 .SH NAME
-\fBcurses_trace\fR,
-\fBtrace\fR,
-\fB_tracef\fR,
-\fB_traceattr\fR,
-\fB_traceattr2\fR,
-\fB_tracecchar_t\fR,
-\fB_tracecchar_t2\fR,
-\fB_tracechar\fR,
-\fB_tracechtype\fR,
-\fB_tracechtype2\fR,
-\fB_nc_tracebits\fR,
-\fB_tracedump\fR,
-\fB_tracemouse\fR \- \fBcurses\fR debugging routines
+\fBcurses_trace\fP,
+\fBtrace\fP,
+\fB_tracef\fP,
+\fB_traceattr\fP,
+\fB_traceattr2\fP,
+\fB_tracecchar_t\fP,
+\fB_tracecchar_t2\fP,
+\fB_tracechar\fP,
+\fB_tracechtype\fP,
+\fB_tracechtype2\fP,
+\fB_nc_tracebits\fP,
+\fB_tracedump\fP,
+\fB_tracemouse\fP \- \fBcurses\fP debugging routines
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBunsigned curses_trace(const unsigned \fP\fIparam\fP\fB);\fR
+\fBunsigned curses_trace(const unsigned \fP\fIparam\fP\fB);\fP
 .sp
-\fBvoid _tracef(const char *\fP\fIformat\fP\fB, ...);\fR
+\fBvoid _tracef(const char *\fP\fIformat\fP\fB, ...);\fP
 .sp
-\fBchar *_traceattr(attr_t \fP\fIattr\fP\fB);\fR
+\fBchar *_traceattr(attr_t \fP\fIattr\fP\fB);\fP
 .br
-\fBchar *_traceattr2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBchar *_traceattr2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .br
-\fBchar *_tracecchar_t(const cchar_t *\fP\fIstring\fP\fB);\fR
+\fBchar *_tracecchar_t(const cchar_t *\fP\fIstring\fP\fB);\fP
 .br
-\fBchar *_tracecchar_t2(int \fP\fIbuffer\fP\fB, const cchar_t *\fP\fIstring\fP\fB);\fR
+\fBchar *_tracecchar_t2(int \fP\fIbuffer\fP\fB, const cchar_t *\fP\fIstring\fP\fB);\fP
 .br
-\fBchar *_tracechar(int \fP\fIch\fP\fB);\fR
+\fBchar *_tracechar(int \fP\fIch\fP\fB);\fP
 .br
-\fBchar *_tracechtype(chtype \fP\fIch\fP\fB);\fR
+\fBchar *_tracechtype(chtype \fP\fIch\fP\fB);\fP
 .br
-\fBchar *_tracechtype2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBchar *_tracechtype2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .sp
-\fBvoid _tracedump(const char *\fP\fIlabel\fP\fB, WINDOW *\fP\fIwin\fP\fB);\fR
+\fBvoid _tracedump(const char *\fP\fIlabel\fP\fB, WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBchar *_nc_tracebits(void);\fR
+\fBchar *_nc_tracebits(void);\fP
 .br
-\fBchar *_tracemouse(const MEVENT *\fP\fIevent\fP\fB);\fR
+\fBchar *_tracemouse(const MEVENT *\fP\fIevent\fP\fB);\fP
 .sp
 /* deprecated */
 .br
-\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fR
+\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fP
 .SH DESCRIPTION
-The \fIcurses trace\fR routines are used for debugging the ncurses libraries,
+The \fIcurses trace\fP routines are used for debugging the ncurses libraries,
 as well as applications which use the ncurses libraries.
 Some limitations apply:
 .bP
 Aside from \fBcurses_trace\fP,
 the other functions are normally available only with the debugging library
-e.g., \fIlibncurses_g.a\fR.
+e.g., \fBlibncurses_g.a\fP.
 .IP
 All of the trace functions may be compiled into any model (shared, static,
-profile) by defining the symbol \fBTRACE\fR.
+profile) by defining the symbol \fBTRACE\fP.
 .bP
 Additionally, the functions which use \fBcchar_t\fP
 are only available with the wide-character configuration of the libraries.
 .SS Functions
 The principal parts of this interface are
 .bP
-\fBcurses_trace\fR, which selectively enables different tracing features, and
+\fBcurses_trace\fP, which selectively enables different tracing features, and
 .bP
-\fB_tracef\fR, which writes formatted data to the \fItrace\fR file.
+\fB_tracef\fP, which writes formatted data to the \fItrace\fP file.
 .IP
 The other functions either return a pointer to a string-area
 (allocated by the corresponding function), or return no value
@@ -116,11 +116,11 @@ To work around the problem of a single string-area per function,
 some use a buffer-number parameter, telling the library to allocate
 additional string-areas.
 .PP
-The \fBcurses_trace\fR function is always available,
+The \fBcurses_trace\fP function is always available,
 whether or not the other trace functions are available:
 .bP
 If tracing is available,
-calling \fBcurses_trace\fR with a nonzero parameter
+calling \fBcurses_trace\fP with a nonzero parameter
 updates the trace mask,
 and returns the previous trace mask.
 .IP
@@ -131,7 +131,7 @@ If the file already exists, no tracing is done.
 If tracing is not available, \fBcurses_trace\fP returns zero (0).
 .SS Trace Parameter
 The trace parameter is formed by OR'ing
-values from the list of \fBTRACE_\fP\fIxxx\fR definitions in \fB<curses.h>\fR.
+values from the list of \fBTRACE_\fP\fIxxx\fP definitions in \fB<curses.h>\fP.
 These include:
 .TP 5
 .B TRACE_DISABLE
@@ -167,7 +167,7 @@ trace all curses calls.
 The parameters for each call are traced, as well as return values.
 .TP 5
 .B TRACE_VIRTPUT
-trace virtual character puts, i.e., calls to \fBaddch\fR.
+trace virtual character puts, i.e., calls to \fBaddch\fP.
 .TP 5
 .B TRACE_IEVENT
 trace low-level input processing, including timeouts.
@@ -190,7 +190,7 @@ trace changes to video attributes and colors.
 .B TRACE_MAXIMUM
 maximum trace level, enables all of the separate trace features.
 .PP
-Some tracing features are enabled whenever the \fBcurses_trace\fR parameter
+Some tracing features are enabled whenever the \fBcurses_trace\fP parameter
 is nonzero.
 Some features overlap.
 The specific names are used as a guideline.
@@ -238,7 +238,7 @@ If ncurses is built without tracing, none of the latter are produced,
 and fewer diagnostics are provided by the command-line utilities.
 .SH RETURN VALUE
 Routines which return a value are designed to be used as parameters
-to the \fB_tracef\fR routine.
+to the \fB_tracef\fP routine.
 .SH PORTABILITY
 These functions are not part of the XSI interface.
 Some other curses implementations are known to
@@ -287,4 +287,4 @@ _tracemouse
 The original \fBtrace\fP routine was deprecated because
 it often conflicted with application names.
 .SH SEE ALSO
-\fBcurses\fR(3X).
+\fBcurses\fP(3X).

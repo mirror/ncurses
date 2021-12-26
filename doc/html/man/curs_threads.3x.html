@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2020 Thomas E. Dickey                                          *
+  * Copyright 2020,2021 Thomas E. Dickey                                     *
   * Copyright 2008-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_threads.3x,v 1.27 2020/12/30 18:28:51 tom Exp @
+  * @Id: curs_threads.3x,v 1.30 2021/12/25 21:50:36 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
 -->
@@ -38,7 +38,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_threads 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_threads 3x</H1>
@@ -69,7 +69,7 @@
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This  implementation  can  be configured to provide rudimentary support
        for multi-threaded applications.  This makes a  different  set  of  li-
-       braries, e.g., <EM>libncursest</EM> since the binary interfaces are different.
+       braries, e.g., <STRONG>libncursest</STRONG> since the binary interfaces are different.
 
        Rather  than  modify  the interfaces to pass a thread specifier to each
        function, it adds a few functions which can be used in  any  configura-
@@ -109,12 +109,12 @@
           <STRONG>o</STRONG>   global data, e.g., used in the low-level terminfo or termcap in-
               terfaces.
 
-          <STRONG>o</STRONG>   terminal data, e.g., associated with a call to <EM>set</EM><STRONG>_</STRONG><EM>curterm</EM>.  The
+          <STRONG>o</STRONG>   terminal data, e.g., associated with a call to <STRONG>set_curterm</STRONG>.  The
               terminal data are initialized when screens are created.
 
-          <STRONG>o</STRONG>   screen data, e.g., associated with a call to <EM>newterm</EM> or <EM>initscr</EM>.
+          <STRONG>o</STRONG>   screen data, e.g., associated with a call to <STRONG>newterm</STRONG> or <STRONG>initscr</STRONG>.
 
-          <STRONG>o</STRONG>   window data, e.g., associated with a call to <EM>newwin</EM>  or  <EM>subwin</EM>.
+          <STRONG>o</STRONG>   window data, e.g., associated with a call to <STRONG>newwin</STRONG>  or  <STRONG>subwin</STRONG>.
               Windows  are  associated with screens.  Pads are not necessarily
               associated with a particular screen.
 
@@ -133,7 +133,7 @@
             COLOR_PAIR              reentrant
             COLOR_PAIRS             screen (readonly)
             COLS                    screen (readonly)
-            ESCDELAY                screen (readonly, see <EM>set</EM><STRONG>_</STRONG><EM>escdelay</EM>)
+            ESCDELAY                screen (readonly, see <STRONG>set_escdelay</STRONG>)
             LINES                   screen (readonly)
             PAIR_NUMBER             reentrant
             PC                      global

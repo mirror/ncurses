@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,19 +27,19 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.16 2020/10/24 09:25:14 tom Exp $
+.\" $Id: curs_print.3x,v 1.18 2021/12/25 21:41:58 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
-\fBmcprint\fR \- ship binary data to printer
+\fBmcprint\fP \- ship binary data to printer
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint mcprint(char *\fP\fIdata\fP\fB, int \fP\fIlen\fP\fB);\fR
+\fBint mcprint(char *\fP\fIdata\fP\fB, int \fP\fIlen\fP\fB);\fP
 .SH DESCRIPTION
-This function uses the \fBmc5p\fR or \fBmc4\fR and \fBmc5\fR capabilities,
+This function uses the \fBmc5p\fP or \fBmc4\fP and \fBmc5\fP capabilities,
 if they are present, to ship given data to a printer attached to the terminal.
 .PP
-Note that the \fBmcprint\fR code has no way to do flow control with the printer
+Note that the \fBmcprint\fP code has no way to do flow control with the printer
 or to know how much buffering it has.
 Your application is responsible for
 keeping the rate of writes to the printer below its continuous throughput rate
@@ -49,7 +49,7 @@ Dot-matrix printers and
 rule of thumb is to sleep for a second after shipping each 80-character line.
 .
 .SH RETURN VALUE
-The \fBmcprint\fR function returns \fBERR\fR if the write operation aborted
+The \fBmcprint\fP function returns \fBERR\fP if the write operation aborted
 for some reason.
 In this case, \fBerrno\fP will contain either an error associated
 with \fBwrite\fP(2) or one of the following:
@@ -60,13 +60,13 @@ Capabilities for printer redirection do not exist.
 ENOMEM
 Couldn't allocate sufficient memory to buffer the printer write.
 .PP
-When \fBmcprint\fR succeeds, it returns the number of characters actually
+When \fBmcprint\fP succeeds, it returns the number of characters actually
 sent to the printer.
 .SH PORTABILITY
-The \fBmcprint\fR call was designed for \fBncurses\fR(3X), and is not found
+The \fBmcprint\fP call was designed for \fBncurses\fP(3X), and is not found
 in SVr4 curses, 4.4BSD curses, or any other previous version of curses.
 .SH BUGS
-Padding in the \fBmc5p\fR, \fBmc4\fR and \fBmc5\fR capabilities will not be
+Padding in the \fBmc5p\fP, \fBmc4\fP and \fBmc5\fP capabilities will not be
 interpreted.
 .SH SEE ALSO
-\fBcurses\fR(3X)
+\fBcurses\fP(3X)

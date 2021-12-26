@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_scr_dump.3x,v 1.17 2021/10/20 22:37:48 tom Exp @
+  * @Id: curs_scr_dump.3x,v 1.19 2021/12/25 21:12:41 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_scr_dump 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_scr_dump 3x</H1>
@@ -79,10 +79,10 @@
        initialize the <STRONG>curses</STRONG> data structures about what the terminal currently
        has on its screen.  If the data is determined to be valid, <STRONG>curses</STRONG> bases
        its  next update of the screen on this information rather than clearing
-       the screen and starting from scratch.  <STRONG>scr_init</STRONG> is used  after  <STRONG>initscr</STRONG>
-       or  a  <STRONG>system</STRONG>  call  to share the screen with another process which has
-       done a <STRONG>scr_dump</STRONG> after its <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> call.  The data  is  declared  in-
-       valid
+       the  screen  and  starting  from  scratch.   <STRONG>scr_init</STRONG>  is  used   after
+       <STRONG><A HREF="curs_initscr.3x.html">initscr(3x)</A></STRONG>  or  a  <STRONG>system(3)</STRONG>  call  to  share  the screen with another
+       process which has done a <STRONG>scr_dump</STRONG> after its <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> call.  The  data
+       is declared invalid
 
        <STRONG>o</STRONG>   if the terminfo capabilities <STRONG>rmcup</STRONG> and <STRONG>nrrmc</STRONG> exist, also
 

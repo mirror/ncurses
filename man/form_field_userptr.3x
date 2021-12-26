@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,13 +28,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_userptr.3x,v 1.16 2020/10/24 09:06:33 tom Exp $
+.\" $Id: form_field_userptr.3x,v 1.18 2021/12/25 21:41:58 tom Exp $
 .TH form_field_userptr 3X ""
 .SH NAME
-\fBset_field_userptr\fR,
-\fBfield_userptr\fR \- associate application data with a form field
+\fBset_field_userptr\fP,
+\fBfield_userptr\fP \- associate application data with a form field
 .SH SYNOPSIS
-\fB#include <form.h>\fR
+\fB#include <form.h>\fP
 .sp
 \fBint set_field_userptr(FIELD *\fP\fIfield\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
 .br
@@ -45,15 +45,15 @@ Every form field has a field that can be used to hold application-specific data
 These functions get and set
 that field.
 .SH RETURN VALUE
-The function \fBfield_userptr\fR returns a pointer (which may be \fBNULL\fR).
+The function \fBfield_userptr\fP returns a pointer (which may be \fBNULL\fP).
 It does not set \fBerrno\fP.
 .PP
-The function \fBset_field_userptr\fR returns \fBE_OK\fP (success).
+The function \fBset_field_userptr\fP returns \fBE_OK\fP (success).
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBform\fR(3X).
+\fBcurses\fP(3X), \fBform\fP(3X).
 .SH NOTES
-The header file \fB<form.h>\fR automatically includes the header file
-\fB<curses.h>\fR.
+The header file \fB<form.h>\fP automatically includes the header file
+\fB<curses.h>\fP.
 .SH PORTABILITY
 These routines emulate the System V forms library.
 They were not supported on

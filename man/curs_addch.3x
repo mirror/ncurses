@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.56 2021/06/17 21:30:22 tom Exp $
+.\" $Id: curs_addch.3x,v 1.58 2021/12/25 20:18:06 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -39,47 +39,47 @@
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBaddch\fR,
-\fBwaddch\fR,
-\fBmvaddch\fR,
-\fBmvwaddch\fR,
-\fBechochar\fR,
-\fBwechochar\fR \- add a character (with attributes) to a \fBcurses\fR window, then advance the cursor
+\fBaddch\fP,
+\fBwaddch\fP,
+\fBmvaddch\fP,
+\fBmvwaddch\fP,
+\fBechochar\fP,
+\fBwechochar\fP \- add a character (with attributes) to a \fBcurses\fP window, then advance the cursor
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBint addch(const chtype \fP\fIch\fP\fB);\fR
+\fBint addch(const chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint waddch(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fR
+\fBint waddch(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint mvaddch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fR
+\fBint mvaddch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint mvwaddch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fR
+\fBint mvwaddch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fP
 .sp
-\fBint echochar(const chtype \fP\fIch\fP\fB);\fR
+\fBint echochar(const chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint wechochar(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fR
+\fBint wechochar(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fP
 .br
 .SH DESCRIPTION
 .SS Adding characters
-The \fBaddch\fR, \fBwaddch\fR, \fBmvaddch\fR and \fBmvwaddch\fR routines put
-the character \fIch\fR into the given window at its current window position,
+The \fBaddch\fP, \fBwaddch\fP, \fBmvaddch\fP and \fBmvwaddch\fP routines put
+the character \fIch\fP into the given window at its current window position,
 which is then advanced.
-They are analogous to \fBputchar\fR(3) in \fBstdio\fR(3).
+They are analogous to \fBputchar\fP(3) in \fBstdio\fP(3).
 If the advance is at the right margin:
 .bP
 The cursor automatically wraps to the beginning of the next line.
 .bP
 At the bottom of the current scrolling region,
-and if \fBscrollok\fR is enabled,
+and if \fBscrollok\fP is enabled,
 the scrolling region is scrolled up one line.
 .bP
-If \fBscrollok\fR is not enabled,
+If \fBscrollok\fP is not enabled,
 writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line
 .PP
-If \fIch\fR is a tab, newline, carriage return or backspace,
+If \fIch\fP is a tab, newline, carriage return or backspace,
 the cursor is moved appropriately within the window:
 .bP
 Backspace moves the cursor one character left; at the left
@@ -87,40 +87,40 @@ edge of a window it does nothing.
 .bP
 Carriage return moves the cursor to the window left margin on the current line.
 .bP
-Newline does a \fBclrtoeol\fR,
+Newline does a \fBclrtoeol\fP,
 then moves the cursor to the window left margin on the next line,
 scrolling the window if on the last line.
 .bP
 Tabs are considered to be at every eighth column.
-The tab interval may be altered by setting the \fBTABSIZE\fR variable.
+The tab interval may be altered by setting the \fBTABSIZE\fP variable.
 .PP
-If \fIch\fR is any other nonprintable character,
+If \fIch\fP is any other nonprintable character,
 it is drawn in printable form,
-i.e., the \fB^\fR\fIX\fR notation used by \fBunctrl\fR(3X).
-Calling \fBwinch\fR after adding a
+i.e., the \fB^\fP\fIX\fP notation used by \fBunctrl\fP(3X).
+Calling \fBwinch\fP after adding a
 nonprintable character does not return the character itself,
 but instead returns the printable representation of the character.
 .PP
 Video attributes can be combined with a character argument passed to
-\fBaddch\fR or related functions by logical-ORing them into the character.
+\fBaddch\fP or related functions by logical-ORing them into the character.
 (Thus, text, including attributes, can be copied from one place to another
-using \fBinch\fR(3X) and \fBaddch\fR.)  See the \fBcurs_attr\fR(3X) page for
+using \fBinch\fP(3X) and \fBaddch\fP.)  See the \fBcurs_attr\fP(3X) page for
 values of predefined video attribute constants that can be usefully OR'ed
 into characters.
 .SS Echoing characters
 .PP
-The \fBechochar\fR and \fBwechochar\fR routines are equivalent to a call to
-\fBaddch\fR followed by a call to \fBrefresh\fR(3X), or a call to \fBwaddch\fR
-followed by a call to \fBwrefresh\fR.
+The \fBechochar\fP and \fBwechochar\fP routines are equivalent to a call to
+\fBaddch\fP followed by a call to \fBrefresh\fP(3X), or a call to \fBwaddch\fP
+followed by a call to \fBwrefresh\fP.
 The knowledge that only a single
 character is being output is used and, for non-control characters, a
 considerable performance gain may be seen by using these routines instead of
 their equivalents.
 .SS Line Graphics
 The following variables may be used to add line drawing characters to the
-screen with routines of the \fBaddch\fR family.
+screen with routines of the \fBaddch\fP family.
 The default character listed
-below is used if the \fBacsc\fR capability does not define a terminal-specific
+below is used if the \fBacsc\fP capability does not define a terminal-specific
 replacement for it,
 or if the terminal and locale configuration requires Unicode but the
 library is unable to use Unicode.
@@ -132,8 +132,8 @@ l l l l
 l l l l
 _ _ _ _
 l l l l.
-\fBACS\fR	\fBACS\fR	\fBacsc\fP	\fBGlyph\fR
-\fBName\fR	\fBDefault\fR	\fBchar\fP	\fBName\fR
+\fBACS\fP	\fBACS\fP	\fBacsc\fP	\fBGlyph\fP
+\fBName\fP	\fBDefault\fP	\fBchar\fP	\fBName\fP
 ACS_BLOCK	#	0	solid square block
 ACS_BOARD	#	h	board of squares
 ACS_BTEE	+	v	bottom tee
@@ -168,9 +168,9 @@ ACS_URCORNER	+	k	upper right-hand corner
 ACS_VLINE	|	x	vertical line
 .TE
 .SH RETURN VALUE
-All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success
+All routines return the integer \fBERR\fP upon failure and \fBOK\fP on success
 (the SVr4 manuals specify only
-\*(``an integer value other than \fBERR\fR\*('') upon successful completion,
+\*(``an integer value other than \fBERR\fP\*('') upon successful completion,
 unless otherwise noted in the preceding routine descriptions.
 .PP
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
@@ -180,7 +180,7 @@ or if the window pointer is null.
 If it is not possible to add a complete character,
 an error is returned:
 .bP
-If \fBscrollok\fR is not enabled,
+If \fBscrollok\fP is not enabled,
 writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line
@@ -190,16 +190,16 @@ of bytes,
 or if it is not possible to add all of the resulting bytes in the window,
 an error is returned.
 .SH NOTES
-Note that \fBaddch\fR, \fBmvaddch\fR, \fBmvwaddch\fR, and
-\fBechochar\fR may be macros.
+Note that \fBaddch\fP, \fBmvaddch\fP, \fBmvwaddch\fP, and
+\fBechochar\fP may be macros.
 .SH PORTABILITY
 All these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for forms-drawing characters apply in the POSIX locale.
 .SS ACS Symbols
 .LP
-X/Open Curses states that the \fIACS_\fP definitions are \fBchar\fP constants.
+X/Open Curses states that the \fBACS_\fP definitions are \fBchar\fP constants.
 For the wide-character implementation (see \fBcurs_add_wch\fP),
-there are analogous \fIWACS_\fP definitions which are \fBcchar_t\fP constants.
+there are analogous \fBWACS_\fP definitions which are \fBcchar_t\fP constants.
 Some implementations are problematic:
 .bP
 Some implementations define the ACS symbols to a constant
@@ -209,8 +209,8 @@ This implementation uses an array \fBacs_map\fP, as done in SVr4 curses.
 NetBSD also uses an array, actually named \fB_acs_char\fP, with a \fB#define\fP
 for compatibility.
 .bP
-HPUX curses equates some of the \fIACS_\fP symbols
-to the analogous \fIWACS_\fP symbols as if the \fIACS_\fP symbols were
+HPUX curses equates some of the \fBACS_\fP symbols
+to the analogous \fBWACS_\fP symbols as if the \fBACS_\fP symbols were
 wide characters.
 The misdefined symbols are the arrows
 and other symbols which are not used for line-drawing.
@@ -221,7 +221,7 @@ to \fBI\fP (capital I), while the header files for SVr4 curses
 and the various implementations use \fBi\fP (lowercase).
 .IP
 None of the terminal descriptions on Unix platforms use uppercase-I,
-except for Solaris (i.e., \fIscreen\fP's terminal description,
+except for Solaris (i.e., \fBscreen\fP's terminal description,
 apparently based on the X/Open documentation around 1995).
 On the other hand, the terminal description \fIgs6300\fP
 (AT&T PC6300 with EMOTS Terminal Emulator) uses lowercase-i.
@@ -237,12 +237,12 @@ ACS_STERLING)
 were not documented in
 any publicly released System V.
 However, many publicly available terminfos
-include \fBacsc\fR strings in which their key characters (pryz{|}) are
+include \fBacsc\fP strings in which their key characters (pryz{|}) are
 embedded, and a second-hand list of their character descriptions has come
 to light.
-The ACS-prefixed names for them were invented for \fBncurses\fR(3X).
+The ACS-prefixed names for them were invented for \fBncurses\fP(3X).
 .LP
-The \fIdisplayed\fP values for the \fIACS_\fP and \fIWACS_\fP constants
+The \fIdisplayed\fP values for the \fBACS_\fP and \fBWACS_\fP constants
 depend on
 .bP
 the library configuration, i.e., \fBncurses\fP versus \fBncursesw\fP,
@@ -292,23 +292,23 @@ before attempting call \fBwaddch\fP, and
 call \fBwadd_wch\fP for characters which cannot be handled by \fBwaddch\fP.
 .SS TABSIZE
 .LP
-The \fBTABSIZE\fR variable is implemented in SVr4 and other versions of curses,
+The \fBTABSIZE\fP variable is implemented in SVr4 and other versions of curses,
 but is not part of X/Open curses
-(see \fBcurs_variables\fR(3X) for more details).
+(see \fBcurs_variables\fP(3X) for more details).
 .LP
-If \fIch\fR is a carriage return,
+If \fIch\fP is a carriage return,
 the cursor is moved to the beginning of the current row of the window.
 This is true of other implementations, but is not documented.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_attr\fR(3X),
-\fBcurs_clear\fR(3X),
-\fBcurs_inch\fR(3X),
-\fBcurs_outopts\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBcurs_variables\fR(3X),
-\fBputc\fR(3).
+\fBcurses\fP(3X),
+\fBcurs_attr\fP(3X),
+\fBcurs_clear\fP(3X),
+\fBcurs_inch\fP(3X),
+\fBcurs_outopts\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBcurs_variables\fP(3X),
+\fBputc\fP(3).
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_add_wch\fR(3X).
+\fBcurs_add_wch\fP(3X).

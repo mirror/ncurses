@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.56 2021/06/17 21:30:22 tom Exp @
+  * @Id: curs_addch.3x,v 1.58 2021/12/25 20:18:06 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -37,7 +37,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_addch 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_addch 3x</H1>
@@ -198,9 +198,9 @@
 
 
 </PRE><H3><a name="h3-ACS-Symbols">ACS Symbols</a></H3><PRE>
-       X/Open Curses states that the <EM>ACS</EM><STRONG>_</STRONG> definitions are <STRONG>char</STRONG> constants.  For
+       X/Open Curses states that the <STRONG>ACS_</STRONG> definitions are <STRONG>char</STRONG> constants.  For
        the  wide-character  implementation  (see  <STRONG>curs_add_wch</STRONG>),   there   are
-       analogous   <EM>WACS</EM><STRONG>_</STRONG>   definitions  which  are  <STRONG>cchar_t</STRONG>  constants.   Some
+       analogous   <STRONG>WACS_</STRONG>   definitions  which  are  <STRONG>cchar_t</STRONG>  constants.   Some
        implementations are problematic:
 
        <STRONG>o</STRONG>   Some implementations define the ACS symbols to a constant (such  as
@@ -210,8 +210,8 @@
            NetBSD also uses an array, actually named <STRONG>_acs_char</STRONG>, with a <STRONG>#define</STRONG>
            for compatibility.
 
-       <STRONG>o</STRONG>   HPUX curses equates some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the analogous <EM>WACS</EM><STRONG>_</STRONG>
-           symbols  as  if  the  <EM>ACS</EM><STRONG>_</STRONG>  symbols  were  wide  characters.    The
+       <STRONG>o</STRONG>   HPUX curses equates some of the <STRONG>ACS_</STRONG> symbols to the analogous <STRONG>WACS_</STRONG>
+           symbols  as  if  the  <STRONG>ACS_</STRONG>  symbols  were  wide  characters.    The
            misdefined  symbols  are the arrows and other symbols which are not
            used for line-drawing.
 
@@ -221,7 +221,7 @@
            implementations use <STRONG>i</STRONG> (lowercase).
 
            None  of the terminal descriptions on Unix platforms use uppercase-
-           I,  except  for  Solaris  (i.e.,  <EM>screen</EM>'s  terminal   description,
+           I,  except  for  Solaris  (i.e.,  <STRONG>screen</STRONG>'s  terminal   description,
            apparently  based on the X/Open documentation around 1995).  On the
            other hand, the terminal description <EM>gs6300</EM> (AT&amp;T PC6300 with EMOTS
            Terminal Emulator) uses lowercase-i.
@@ -233,7 +233,7 @@
        second-hand  list  of  their  character descriptions has come to light.
        The ACS-prefixed names for them were invented for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>.
 
-       The <EM>displayed</EM> values for the <EM>ACS</EM><STRONG>_</STRONG> and <EM>WACS</EM><STRONG>_</STRONG> constants depend on
+       The <EM>displayed</EM> values for the <STRONG>ACS_</STRONG> and <STRONG>WACS_</STRONG> constants depend on
 
        <STRONG>o</STRONG>   the library configuration, i.e., <STRONG>ncurses</STRONG> versus <STRONG>ncursesw</STRONG>, where the
            latter  is  capable  of displaying Unicode while the former is not,

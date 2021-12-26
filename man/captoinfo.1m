@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,45 +28,45 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: captoinfo.1m,v 1.30 2020/02/02 23:34:34 tom Exp $
+.\" $Id: captoinfo.1m,v 1.32 2021/12/25 21:37:49 tom Exp $
 .TH @CAPTOINFO@ 1M ""
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
-\fB@CAPTOINFO@\fR \- convert a \fItermcap\fR description into a \fIterminfo\fR description
+\fB@CAPTOINFO@\fP \- convert a \fItermcap\fP description into a \fIterminfo\fP description
 .SH SYNOPSIS
-\fB@CAPTOINFO@\fR [\fB\-v\fR\fIn\fR \fIwidth\fR]  [\fB\-V\fR] [\fB\-1\fR] [\fB\-w\fR \fIwidth\fR] \fIfile\fR ...
+\fB@CAPTOINFO@\fP [\fB\-v\fP\fIn\fP \fIwidth\fP]  [\fB\-V\fP] [\fB\-1\fP] [\fB\-w\fP \fIwidth\fP] \fIfile\fP ...
 .SH DESCRIPTION
-\fB@CAPTOINFO@\fR looks in each given text
-\fIfile\fR for \fBtermcap\fR descriptions.
+\fB@CAPTOINFO@\fP looks in each given text
+\fIfile\fP for \fBtermcap\fP descriptions.
 For each
-one found, an equivalent \fBterminfo\fR description is written to standard
+one found, an equivalent \fBterminfo\fP description is written to standard
 output.
-Termcap \fBtc\fR capabilities are translated directly to terminfo
-\fBuse\fR capabilities.
+Termcap \fBtc\fP capabilities are translated directly to terminfo
+\fBuse\fP capabilities.
 .PP
-If no \fIfile\fR is given, then the environment variable \fBTERMCAP\fR is used
+If no \fIfile\fP is given, then the environment variable \fBTERMCAP\fP is used
 for the filename or entry.
-If \fBTERMCAP\fR is a full pathname to a file, only
-the terminal whose name is specified in the environment variable \fBTERM\fR is
+If \fBTERMCAP\fP is a full pathname to a file, only
+the terminal whose name is specified in the environment variable \fBTERM\fP is
 extracted from that file.
-If the environment variable \fBTERMCAP\fR is not
-set, then the file \fB\*d\fR is read.
+If the environment variable \fBTERMCAP\fP is not
+set, then the file \fB\*d\fP is read.
 .TP 5
-\fB\-v\fR
+\fB\-v\fP
 print out tracing information on standard error as the program runs.
 .TP 5
-\fB\-V\fR
+\fB\-V\fP
 print out the version of the program in use on standard error and exit.
 .TP 5
-\fB\-1\fR
+\fB\-1\fP
 cause the fields to print out one to a line.
 Otherwise, the fields
 will be printed several to a line to a maximum width of 60
 characters.
 .TP 5
-\fB\-w\fR
-change the output to \fIwidth\fR characters.
+\fB\-w\fP
+change the output to \fIwidth\fP characters.
 .SH FILES
 .TP 20
 \*d
@@ -74,7 +74,7 @@ Compiled terminal description database.
 .SH TRANSLATIONS FROM NONSTANDARD CAPABILITIES
 .PP
 Some obsolete nonstandard capabilities will automatically be translated
-into standard (SVr4/XSI Curses) terminfo capabilities by \fB@CAPTOINFO@\fR.
+into standard (SVr4/XSI Curses) terminfo capabilities by \fB@CAPTOINFO@\fP.
 Whenever one of these automatic translations is done, the program
 will issue an notification to stderr, inviting the user to check that
 it has not mistakenly translated a completely unknown and random
@@ -153,9 +153,9 @@ GG	acs magic cookie count
 .TE
 .PP
 If the single-line capabilities occur in an entry, they will automatically
-be composed into an \fBacsc\fR string.
+be composed into an \fBacsc\fP string.
 The double-line capabilities and
-\fBGG\fR are discarded with a warning message.
+\fBGG\fP are discarded with a warning message.
 .PP
 IBM's AIX has a terminfo facility descended from SVr1 terminfo but incompatible
 with the SVr4 format.
@@ -174,19 +174,19 @@ font2	s2ds
 font3	s3ds
 .TE
 .PP
-Additionally, the AIX \fIbox1\fR capability will be automatically translated to
-an \fBacsc\fR string.
+Additionally, the AIX \fIbox1\fP capability will be automatically translated to
+an \fBacsc\fP string.
 .PP
 Hewlett-Packard's terminfo library supports two nonstandard terminfo
-capabilities \fBmeml\fR (memory lock) and \fBmemu\fR (memory unlock).
+capabilities \fBmeml\fP (memory lock) and \fBmemu\fP (memory unlock).
 These will be discarded with a warning message.
 .SH NOTES
-This utility is actually a link to \fB@TIC@\fR(1M), running in \fI\-I\fR mode.
-You can use other \fB@TIC@\fR options such as \fB\-f\fR and  \fB\-x\fR.
+This utility is actually a link to \fB@TIC@\fP(1M), running in \fI\-I\fP mode.
+You can use other \fB@TIC@\fP options such as \fB\-f\fP and  \fB\-x\fP.
 .PP
 The verbose option is not identical to SVr4's.
 Under SVr4, instead of following
-the \fB\-v\fR with a trace level n, you repeat it n times.
+the \fB\-v\fP with a trace level n, you repeat it n times.
 .SH PORTABILITY
 X/Open Curses, Issue 7 (2009) describes \fBtic\fP briefly,
 but omits this program.
@@ -194,11 +194,11 @@ SVr4 systems provide \fBcaptoinfo\fP as a separate application from \fBtic\fP.
 .PP
 NetBSD does not provide this application.
 .SH SEE ALSO
-\fB@INFOCMP@\fR(1M),
-\fBcurses\fR(3X),
-\fBterminfo\fR(\*n)
+\fB@INFOCMP@\fP(1M),
+\fBcurses\fP(3X),
+\fBterminfo\fP(\*n)
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SH AUTHOR
 Eric S. Raymond <esr@snark.thyrsus.com>

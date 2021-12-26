@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: clear.1,v 1.24 2021/11/14 00:33:00 tom Exp $
+.\" $Id: clear.1,v 1.26 2021/12/26 00:13:25 tom Exp $
 .TH @CLEAR@ 1 ""
 .\" these would be fallbacks for DS/DE,
 .\" but groff changed the meaning of the macros.
@@ -55,33 +55,33 @@
 ..
 .ds n 5
 .SH NAME
-\fB@CLEAR@\fR \- clear the terminal screen
+\fB@CLEAR@\fP \- clear the terminal screen
 .SH SYNOPSIS
-\fB@CLEAR@\fR [\fB\-T\fR\fItype\fR] [\fB\-V\fP] [\fB\-x\fP]
+\fB@CLEAR@\fP [\fB\-T\fP\fItype\fP] [\fB\-V\fP] [\fB\-x\fP]
 .br
 .SH DESCRIPTION
-\fB@CLEAR@\fR clears your terminal's screen if this is possible,
+\fB@CLEAR@\fP clears your terminal's screen if this is possible,
 including the terminal's scrollback buffer
 (if the extended \*(``E3\*('' capability is defined).
-\fB@CLEAR@\fR looks in the environment for the terminal type
+\fB@CLEAR@\fP looks in the environment for the terminal type
 given by the environment variable \fBTERM\fP,
 and then in the
-\fBterminfo\fR database to determine how to clear the screen.
+\fBterminfo\fP database to determine how to clear the screen.
 .PP
-\fB@CLEAR@\fR writes to the standard output.
+\fB@CLEAR@\fP writes to the standard output.
 You can redirect the standard output to a file (which prevents
-\fB@CLEAR@\fR from actually clearing the screen),
+\fB@CLEAR@\fP from actually clearing the screen),
 and later \fBcat\fP the file to the screen, clearing it at that point.
 .SH OPTIONS
 .PP
 .TP 5
 .B \-T \fItype\fP
-indicates the \fItype\fR of terminal.
+indicates the \fItype\fP of terminal.
 Normally this option is
 unnecessary, because the default is taken from the environment
-variable \fBTERM\fR.
-If \fB\-T\fR is specified, then the shell
-variables \fBLINES\fR and \fBCOLUMNS\fR will also be ignored.
+variable \fBTERM\fP.
+If \fB\-T\fP is specified, then the shell
+variables \fBLINES\fP and \fBCOLUMNS\fP will also be ignored.
 .TP
 .B \-V
 reports the version of ncurses which was used in this program, and exits.
@@ -117,7 +117,7 @@ BSD \fBclear\fP command (with terminfo, of course).
 .PP
 The \fBE3\fP extension came later:
 .bP
-In June 1999, xterm provided an extension to the standard control
+In June 1999, \fBxterm\fP provided an extension to the standard control
 sequence for clearing the screen.
 Rather than clearing just the visible part of the screen using
 .NS
@@ -130,13 +130,13 @@ printf '\\033[\fB3\fPJ'
 .NE
 .IP
 This is documented in \fIXTerm Control Sequences\fP as a feature originating
-with xterm.
+with \fBxterm\fP.
 .bP
 A few other terminal developers adopted the feature, e.g., PuTTY in 2006.
 .bP
 In April 2011, a Red Hat developer submitted a patch to the Linux
 kernel, modifying its console driver to do the same thing.
-The Linux change, part of the 3.0 release, did not mention xterm,
+The Linux change, part of the 3.0 release, did not mention \fBxterm\fP,
 although it was cited in the Red Hat bug report (#683733)
 which led to the change.
 .bP
@@ -157,7 +157,7 @@ The latter documents \fBtput\fP, which could be used to replace this utility
 either via a shell script or by an alias (such as a symbolic link) to
 run \fB@TPUT@\fP as \fB@CLEAR@\fP.
 .SH SEE ALSO
-\fB@TPUT@\fR(1), \fBterminfo\fR(\*n)
+\fB@TPUT@\fP(1), \fBterminfo\fP(\*n), \fBxterm\fP(1).
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

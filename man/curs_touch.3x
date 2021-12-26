@@ -27,36 +27,36 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_touch.3x,v 1.24 2021/06/17 21:26:02 tom Exp $
+.\" $Id: curs_touch.3x,v 1.25 2021/12/25 17:39:16 tom Exp $
 .TH curs_touch 3X ""
 .na
 .hy 0
 .SH NAME
-\fBtouchwin\fR,
-\fBtouchline\fR,
-\fBuntouchwin\fR,
-\fBwtouchln\fR,
-\fBis_linetouched\fR,
-\fBis_wintouched\fR \- \fBcurses\fR refresh control routines
+\fBtouchwin\fP,
+\fBtouchline\fP,
+\fBuntouchwin\fP,
+\fBwtouchln\fP,
+\fBis_linetouched\fP,
+\fBis_wintouched\fP \- \fBcurses\fP refresh control routines
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint touchline(WINDOW *\fP\fIwin\fP\fB, int \fP\fIstart\fP\fB, int \fP\fIcount\fP\fB);\fR
+\fBint touchline(WINDOW *\fP\fIwin\fP\fB, int \fP\fIstart\fP\fB, int \fP\fIcount\fP\fB);\fP
 .sp
-\fBint touchwin(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint touchwin(WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBint wtouchln(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIn\fP\fB, int \fP\fIchanged\fP\fB);\fR
+\fBint wtouchln(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIn\fP\fB, int \fP\fIchanged\fP\fB);\fP
 .sp
-\fBint untouchwin(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint untouchwin(WINDOW *\fP\fIwin\fP\fB);\fP
 .sp
-\fBbool is_linetouched(WINDOW *\fP\fIwin\fP\fB, int \fP\fIline\fP\fB);\fR
+\fBbool is_linetouched(WINDOW *\fP\fIwin\fP\fB, int \fP\fIline\fP\fB);\fP
 .br
-\fBbool is_wintouched(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_wintouched(WINDOW *\fP\fIwin\fP\fB);\fP
 .br
 .SH DESCRIPTION
-The \fBtouchwin\fR and \fBtouchline\fR routines throw away all
+The \fBtouchwin\fP and \fBtouchline\fP routines throw away all
 optimization information about which parts of the window have been
 touched, by pretending that the entire window has been drawn on.
 This
@@ -64,25 +64,25 @@ is sometimes necessary when using overlapping windows, since a change
 to one window affects the other window, but the records of which lines
 have been changed in the other window do not reflect the change.
 The
-routine \fBtouchline\fR only pretends that \fIcount\fR lines have been
-changed, beginning with line \fIstart\fR.
+routine \fBtouchline\fP only pretends that \fIcount\fP lines have been
+changed, beginning with line \fIstart\fP.
 .PP
-The \fBuntouchwin\fR routine marks all lines in the window as unchanged since
-the last call to \fBwrefresh\fR.
+The \fBuntouchwin\fP routine marks all lines in the window as unchanged since
+the last call to \fBwrefresh\fP.
 .PP
-The \fBwtouchln\fR routine makes \fIn\fR lines in the window, starting
-at line \fIy\fR, look as if they have (\fIchanged\fR\fB=1\fR) or have
-not (\fIchanged\fR\fB=0\fR) been changed since the last call to
-\fBwrefresh\fR.
+The \fBwtouchln\fP routine makes \fIn\fP lines in the window, starting
+at line \fIy\fP, look as if they have (\fIchanged\fP\fB=1\fP) or have
+not (\fIchanged\fP\fB=0\fP) been changed since the last call to
+\fBwrefresh\fP.
 .PP
-The \fBis_linetouched\fR and \fBis_wintouched\fR routines return
-\fBTRUE\fR if the specified line/window was modified since the last
-call to \fBwrefresh\fR; otherwise they return \fBFALSE\fR.  In
-addition, \fBis_linetouched\fR returns \fBERR\fR if \fIline\fR is not
+The \fBis_linetouched\fP and \fBis_wintouched\fP routines return
+\fBTRUE\fP if the specified line/window was modified since the last
+call to \fBwrefresh\fP; otherwise they return \fBFALSE\fP.  In
+addition, \fBis_linetouched\fP returns \fBERR\fP if \fIline\fP is not
 valid for the given window.
 .SH RETURN VALUE
-All routines return the integer \fBERR\fR upon failure and an integer value
-other than \fBERR\fR upon successful completion, unless otherwise noted in the
+All routines return the integer \fBERR\fP upon failure and an integer value
+other than \fBERR\fP upon successful completion, unless otherwise noted in the
 preceding routine descriptions.
 .PP
 X/Open does not define any error conditions.
@@ -122,8 +122,8 @@ otherwise this implementation behaves the same as SVr4.
 The XSI Curses standard, Issue 4 describes these functions,
 but defines no error conditions.
 .SH NOTES
-All of these routines except \fBwtouchln\fR may be macros.
+All of these routines except \fBwtouchln\fP may be macros.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBcurs_variables\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBcurs_variables\fP(3X).

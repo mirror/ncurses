@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020 Thomas E. Dickey                                          *
+.\" Copyright 2020,2021 Thomas E. Dickey                                     *
 .\" Copyright 2008-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.27 2020/12/30 18:28:51 tom Exp $
+.\" $Id: curs_threads.3x,v 1.30 2021/12/25 21:50:36 tom Exp $
 .TH curs_threads 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -36,30 +36,30 @@
 .na
 .hy 0
 .SH NAME
-\fBcurs_threads\fR \- \fBcurses\fR thread support
+\fBcurs_threads\fP \- \fBcurses\fP thread support
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBtypedef int (*NCURSES_WINDOW_CB)(WINDOW *, void *);\fR
+\fBtypedef int (*NCURSES_WINDOW_CB)(WINDOW *, void *);\fP
 .br
-\fBtypedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);\fR
+\fBtypedef int (*NCURSES_SCREEN_CB)(SCREEN *, void *);\fP
 .sp
-\fBint get_escdelay(void);\fR
+\fBint get_escdelay(void);\fP
 .br
-\fBint set_escdelay(int \fP\fIms\fP\fB);\fR
+\fBint set_escdelay(int \fP\fIms\fP\fB);\fP
 .br
-\fBint set_tabsize(int \fP\fIcols\fP\fB);\fR
+\fBint set_tabsize(int \fP\fIcols\fP\fB);\fP
 .sp
-\fBint use_screen(SCREEN *\fP\fIscr\fP\fB, NCURSES_SCREEN_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fR
+\fBint use_screen(SCREEN *\fP\fIscr\fP\fB, NCURSES_SCREEN_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fP
 .br
-\fBint use_window(WINDOW *\fP\fIwin\fP\fB, NCURSES_WINDOW_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fR
+\fBint use_window(WINDOW *\fP\fIwin\fP\fB, NCURSES_WINDOW_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fP
 .br
 .SH DESCRIPTION
 This implementation can be configured to provide rudimentary support
 for multi-threaded applications.
-This makes a different set of libraries, e.g., \fIlibncursest\fP since
+This makes a different set of libraries, e.g., \fBlibncursest\fP since
 the binary interfaces are different.
 .PP
 Rather than modify the interfaces to pass a thread specifier to
@@ -113,12 +113,12 @@ they use data which is maintained within a hierarchy of scopes.
 .bP
 global data, e.g., used in the low-level terminfo or termcap interfaces.
 .bP
-terminal data, e.g., associated with a call to \fIset_curterm\fP.
+terminal data, e.g., associated with a call to \fBset_curterm\fP.
 The terminal data are initialized when screens are created.
 .bP
-screen data, e.g., associated with a call to \fInewterm\fP or \fIinitscr\fP.
+screen data, e.g., associated with a call to \fBnewterm\fP or \fBinitscr\fP.
 .bP
-window data, e.g., associated with a call to \fInewwin\fP or \fIsubwin\fP.
+window data, e.g., associated with a call to \fBnewwin\fP or \fBsubwin\fP.
 Windows are associated with screens.
 Pads are not necessarily associated with a particular screen.
 .IP
@@ -140,7 +140,7 @@ COLORS/screen (readonly)
 COLOR_PAIR/reentrant
 COLOR_PAIRS/screen (readonly)
 COLS/screen (readonly)
-ESCDELAY/screen (readonly, see \fIset_escdelay\fP)
+ESCDELAY/screen (readonly, see \fBset_escdelay\fP)
 LINES/screen (readonly)
 PAIR_NUMBER/reentrant
 PC/global
@@ -598,6 +598,6 @@ They were not supported on Version 7, BSD or System V implementations.
 It is recommended that any code depending on ncurses extensions
 be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_opaque\fR(3X),
-\fBcurs_variables\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_opaque\fP(3X),
+\fBcurs_variables\fP(3X).

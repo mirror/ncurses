@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.head,v 1.41 2021/08/15 19:32:53 tom Exp $
+.\" $Id: terminfo.head,v 1.42 2021/12/25 17:39:16 tom Exp $
 .TH terminfo 5 "" "" "File Formats"
 .ds n 5
 .ds d @TERMINFO@
@@ -61,11 +61,11 @@ terminfo \- terminal capability database
 .I Terminfo
 is a database describing terminals,
 used by screen-oriented programs such as
-\fBnvi\fR(1),
-\fBlynx\fR(1),
-\fBmutt\fR(1),
+\fBnvi\fP(1),
+\fBlynx\fP(1),
+\fBmutt\fP(1),
 and other curses applications,
-using high-level calls to libraries such as \fBcurses\fR(3X).
+using high-level calls to libraries such as \fBcurses\fP(3X).
 It is also used via low-level calls by non-curses applications
 which may be screen-oriented (such as \fB@CLEAR@\fP(1))
 or non-screen (such as \fB@TABS@\fP(1)).
@@ -75,7 +75,7 @@ describes terminals by giving a set of capabilities which they
 have, by specifying how to perform screen operations, and by
 specifying padding requirements and initialization sequences.
 .PP
-This manual describes \fBncurses\fR
+This manual describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).
 .SS Terminfo Entry Syntax
 .PP
@@ -191,7 +191,7 @@ rather than a capability value.
 If there are two very similar terminals, one (the variant) can be defined as
 being just like the other (the base) with certain exceptions.
 In the
-definition of the variant, the string capability \fBuse\fR can be given with
+definition of the variant, the string capability \fBuse\fP can be given with
 the name of the base terminal:
 .bP
 The capabilities given before
@@ -199,14 +199,14 @@ The capabilities given before
 override those in the base type named by
 .BR use .
 .bP
-If there are multiple \fBuse\fR capabilities, they are merged in reverse order.
-That is, the rightmost \fBuse\fR reference is processed first, then the one to
+If there are multiple \fBuse\fP capabilities, they are merged in reverse order.
+That is, the rightmost \fBuse\fP reference is processed first, then the one to
 its left, and so forth.
 .bP
 Capabilities given explicitly in the entry override
-those brought in by \fBuse\fR references.
+those brought in by \fBuse\fP references.
 .PP
-A capability can be canceled by placing \fBxx@\fR to the left of the
+A capability can be canceled by placing \fBxx@\fP to the left of the
 use reference that imports it, where \fIxx\fP is the capability.
 For example, the entry
 .RS
@@ -214,7 +214,7 @@ For example, the entry
 2621\-nl, smkx@, rmkx@, use=2621,
 .RE
 .PP
-defines a 2621\-nl that does not have the \fBsmkx\fR or \fBrmkx\fR capabilities,
+defines a 2621\-nl that does not have the \fBsmkx\fP or \fBrmkx\fP capabilities,
 and hence does not turn on the function key labels when in visual mode.
 This is useful for different modes for a terminal, or for different
 user preferences.

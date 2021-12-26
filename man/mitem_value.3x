@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,43 +27,43 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_value.3x,v 1.15 2020/10/17 23:53:24 tom Exp $
+.\" $Id: mitem_value.3x,v 1.17 2021/12/25 21:49:32 tom Exp $
 .TH mitem_value 3X ""
 .SH NAME
 \fBset_item_value\fP,
 \fBitem_value\fP \- set and get menu item values
 .SH SYNOPSIS
-\fB#include <menu.h>\fR
+\fB#include <menu.h>\fP
 .sp
 \fBint set_item_value(ITEM *\fP\fIitem\fP\fB, bool \fP\fIvalue\fP\fB);\fP
 .br
 \fBbool item_value(const ITEM *\fP\fIitem\fP\fB);\fP
 .br
 .SH DESCRIPTION
-If you turn off the menu option \fBO_ONEVALUE\fR (e.g., with
-\fBset_menu_opts\fR or \fBmenu_opts_off\fR; see \fBmenu_opts\fR(3X)), the menu
+If you turn off the menu option \fBO_ONEVALUE\fP (e.g., with
+\fBset_menu_opts\fP or \fBmenu_opts_off\fP; see \fBmenu_opts\fP(3X)), the menu
 becomes multi-valued; that is, more than one item may simultaneously be
 selected.
 .PP
-In a multi_valued menu, you can used \fBset_item_value\fR to select the
-given menu item (second argument \fBTRUE\fR) or deselect it (second argument
-\fBFALSE\fR).
+In a multi_valued menu, you can used \fBset_item_value\fP to select the
+given menu item (second argument \fBTRUE\fP) or deselect it (second argument
+\fBFALSE\fP).
 .SH RETURN VALUE
-The function \fBset_item_value\fR returns one of the following:
+The function \fBset_item_value\fP returns one of the following:
 .TP 5
 .B E_OK
 The routine succeeded.
 .TP 5
 .B E_SYSTEM_ERROR
-System error occurred (see \fBerrno\fR(3)).
+System error occurred (see \fBerrno\fP(3)).
 .TP 5
 .B E_REQUEST_DENIED
 The menu driver could not process the request.
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBmenu\fR(3X).
+\fBcurses\fP(3X), \fBmenu\fP(3X).
 .SH NOTES
-The header file \fB<menu.h>\fR automatically includes the header file
-\fB<curses.h>\fR.
+The header file \fB<menu.h>\fP automatically includes the header file
+\fB<curses.h>\fP.
 .SH PORTABILITY
 These routines emulate the System V menu library.
 They were not supported on

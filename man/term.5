@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term.5,v 1.40 2021/08/15 19:38:47 tom Exp $
+.\" $Id: term.5,v 1.43 2021/12/25 21:28:59 tom Exp $
 .TH term 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -311,7 +311,7 @@ are at least three versions of terminfo (under HP\-UX, AIX, and OSF/1) which
 diverged from System V terminfo after SVr1, and have added extension
 capabilities to the string table that (in the binary format) collide with
 System V and XSI Curses extensions.
-See \fBterminfo\fR(\*n) for detailed
+See \fBterminfo\fP(\*n) for detailed
 discussion of terminfo source compatibility issues.
 .PP
 This implementation is by default compatible with the binary
@@ -326,7 +326,7 @@ with different configuration options.
 The magic number in a binary terminfo file is the first 16-bits (two bytes).
 Besides making it more reliable for the library to check that a file
 is terminfo,
-utilities such as \fBfile\fP also use that to tell what the file-format is.
+utilities such as \fBfile\fP(1) also use that to tell what the file-format is.
 System V defined more than one magic number,
 with 0433, 0435 as screen-dumps (see \fBscr_dump\fP(5)).
 This implementation uses 01036 as a continuation of that sequence,
@@ -402,7 +402,7 @@ but was limited a virtual memory page's 4096 bytes.
 .SH FILES
 \*d/*/*	compiled terminal capability database
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBterminfo\fR(\*n).
+\fBcurses\fP(3X), \fBterminfo\fP(\*n).
 .SH AUTHORS
 Thomas E. Dickey
 .br
@@ -414,4 +414,4 @@ extended number support for ncurses 6.1
 .sp
 Eric S. Raymond
 .br
-documented legacy terminfo format, e.g., from pcurses.
+documented legacy terminfo format, e.g., from \fIpcurses\fP.

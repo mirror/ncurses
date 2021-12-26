@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2010-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: term_variables.3x,v 1.12 2020/02/02 23:34:34 tom Exp $
+.\" $Id: term_variables.3x,v 1.15 2021/12/25 22:03:30 tom Exp $
 .TH term_variables 3X ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -50,40 +50,40 @@
 \fBstrfnames\fP,
 \fBstrnames\fP,
 \fBttytype\fP
-\- \fBcurses\fR terminfo global variables
+\- \fBcurses\fP terminfo global variables
 .ad
 .hy
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .br
-\fB#include <term.h>\fR
+\fB#include <term.h>\fP
 .PP
-\fBchtype acs_map[];\fR
+\fBchtype acs_map[];\fP
 .sp
-\fBSCREEN * SP;\fR
+\fBSCREEN * SP;\fP
 .sp
-\fBTERMINAL * cur_term;\fR
+\fBTERMINAL * cur_term;\fP
 .sp
-\fBchar ttytype[];\fR
+\fBchar ttytype[];\fP
 .sp
-\fBNCURSES_CONST char * const boolcodes[];\fR
+\fBNCURSES_CONST char * const boolcodes[];\fP
 .br
-\fBNCURSES_CONST char * const boolfnames[];\fR
+\fBNCURSES_CONST char * const boolfnames[];\fP
 .br
-\fBNCURSES_CONST char * const boolnames[];\fR
+\fBNCURSES_CONST char * const boolnames[];\fP
 .sp
-\fBNCURSES_CONST char * const numcodes[];\fR
+\fBNCURSES_CONST char * const numcodes[];\fP
 .br
-\fBNCURSES_CONST char * const numfnames[];\fR
+\fBNCURSES_CONST char * const numfnames[];\fP
 .br
-\fBNCURSES_CONST char * const numnames[];\fR
+\fBNCURSES_CONST char * const numnames[];\fP
 .sp
-\fBNCURSES_CONST char * const strcodes[];\fR
+\fBNCURSES_CONST char * const strcodes[];\fP
 .br
-\fBNCURSES_CONST char * const strfnames[];\fR
+\fBNCURSES_CONST char * const strfnames[];\fP
 .br
-\fBNCURSES_CONST char * const strnames[];\fR
+\fBNCURSES_CONST char * const strnames[];\fP
 .br
 .fi
 .SH DESCRIPTION
@@ -92,7 +92,7 @@ low-level terminfo interface.
 A more complete description is given in the \fBcurs_terminfo\fP(3X) manual page.
 .PP
 Depending on the configuration, these may be actual variables,
-or macros (see \fBcurs_threads\fR(3X))
+or macros (see \fBcurs_threads\fP(3X))
 which provide read-only access to \fIcurses\fP's state.
 In either case, applications should treat them as read-only to avoid
 confusing the library.
@@ -116,7 +116,7 @@ It is possible to save a value of \fBcur_term\fP for subsequent
 use as a parameter to \fBset_term\fP, for switching between screens.
 Alternatively, one can save the return value from \fBnewterm\fP
 or \fBsetupterm\fP(3X) to reuse in \fBset_term\fP.
-.SS Terminfo Names
+.SS Terminfo Lookup Tables
 The \fB@TIC@\fP(1) and \fB@INFOCMP@\fP(1) programs use lookup tables for
 the long and short names of terminfo capabilities,
 as well as the corresponding names for termcap capabilities.
@@ -159,7 +159,7 @@ which is defined
 .ft R
 .PP
 These symbols provide a faster method of accessing terminfo capabilities
-than using \fBtigetstr\fR(3X), etc.
+than using \fBtigetstr\fP(3X), etc.
 .PP
 The actual definition of \fBCUR\fP depends upon the implementation,
 but each terminfo library provides these long names defined to point
@@ -168,7 +168,7 @@ into the current terminal description loaded into memory.
 .SH NOTES
 The low-level terminfo interface is initialized using
 .hy 0
-\fBsetupterm\fR(3X).
+\fBsetupterm\fP(3X).
 .hy
 The upper-level curses interface uses the low-level terminfo interface,
 internally.
@@ -187,8 +187,8 @@ as described in the \fBTerminfo Names\fP section.
 Most, but not all, base the definition upon the \fBcur_term\fP variable.
 .SH SEE ALSO
 .hy 0
-\fBcurses\fR(3X),
-\fBcurs_terminfo\fR(3X),
-\fBcurs_threads\fR(3X),
-\fBterminfo\fR(\*n).
+\fBcurses\fP(3X),
+\fBcurs_terminfo\fP(3X),
+\fBcurs_threads\fP(3X),
+\fBterminfo\fP(\*n).
 .hy

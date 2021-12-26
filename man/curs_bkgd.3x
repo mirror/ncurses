@@ -27,37 +27,37 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.32 2021/06/17 21:30:22 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.33 2021/12/25 17:39:16 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .TH curs_bkgd 3X ""
 .SH NAME
-\fBbkgdset\fR, \fBwbkgdset\fR,
-\fBbkgd\fR, \fBwbkgd\fR,
-\fBgetbkgd\fR \- \fBcurses\fR window background manipulation routines
+\fBbkgdset\fP, \fBwbkgdset\fP,
+\fBbkgd\fP, \fBwbkgd\fP,
+\fBgetbkgd\fP \- \fBcurses\fP window background manipulation routines
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBvoid bkgdset(chtype \fP\fIch\fP\fB);\fR
+\fBvoid bkgdset(chtype \fP\fIch\fP\fB);\fP
 .br
-\fBvoid wbkgdset(WINDOW *\fP\fIwin, chtype \fP\fIch\fP\fB);\fR
+\fBvoid wbkgdset(WINDOW *\fP\fIwin, chtype \fP\fIch\fP\fB);\fP
 .sp
-\fBint bkgd(chtype \fP\fIch\fP\fB);\fR
+\fBint bkgd(chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint wbkgd(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBint wbkgd(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .sp
-\fBchtype getbkgd(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBchtype getbkgd(WINDOW *\fP\fIwin\fP\fB);\fP
 .br
 .SH DESCRIPTION
 .SS bkgdset
-The \fBbkgdset\fR and \fBwbkgdset\fR routines manipulate the
+The \fBbkgdset\fP and \fBwbkgdset\fP routines manipulate the
 background of the named window.
-The window background is a \fBchtype\fR consisting of
+The window background is a \fBchtype\fP consisting of
 any combination of attributes (i.e., rendition) and a character.
 The attribute part of the background is combined (OR'ed) with all non-blank
-characters that are written into the window with \fBwaddch\fR.
+characters that are written into the window with \fBwaddch\fP.
 Both the character and attribute parts of the background are combined with
 the blank characters.
 The background becomes a property of the
@@ -69,7 +69,7 @@ the attribute part of the background is displayed
 as the graphic rendition of the character put on the screen.
 .SS bkgd
 .PP
-The \fBbkgd\fR and \fBwbkgd\fR functions
+The \fBbkgd\fP and \fBwbkgd\fP functions
 set the background property of the current or specified window
 and then apply this setting to every character position in that window.
 According to X/Open Curses, it should do this:
@@ -121,20 +121,20 @@ or if color has not been started with \fBstart_color\fP,
 the new background character's color attribute will be ignored.
 .SS getbkgd
 .PP
-The \fBgetbkgd\fR function returns the given window's current background
+The \fBgetbkgd\fP function returns the given window's current background
 character/attribute pair.
 .SH RETURN VALUE
 .PP
 These functions are described in the XSI Curses standard, Issue 4.
-It specifies that \fBbkgd\fR and \fBwbkgd\fR return \fBERR\fR on failure,
+It specifies that \fBbkgd\fP and \fBwbkgd\fP return \fBERR\fP on failure,
 but gives no failure conditions.
 .PP
-The routines \fBbkgd\fR and \fBwbkgd\fR return the integer \fBOK\fR,
+The routines \fBbkgd\fP and \fBwbkgd\fP return the integer \fBOK\fP,
 unless the library has not been initialized.
 .PP
 In contrast,
-the SVr4.0 manual says \fBbkgd\fR and \fBwbkgd\fR may return \fBOK\fP
-"or a non-negative integer if \fBimmedok\fR is set",
+the SVr4.0 manual says \fBbkgd\fP and \fBwbkgd\fP may return \fBOK\fP
+"or a non-negative integer if \fBimmedok\fP is set",
 which refers to the return value from \fBwrefresh\fP
 (used to implement the immediate repainting).
 The SVr4 curses \fBwrefresh\fP returns the number of characters
@@ -142,7 +142,7 @@ written to the screen during the refresh.
 This implementation does not do that.
 .SH NOTES
 .PP
-Note that \fBbkgdset\fR and \fBbkgd\fR may be macros.
+Note that \fBbkgdset\fP and \fBbkgd\fP may be macros.
 .PP
 X/Open Curses mentions that the character part of the background must
 be a single-byte value.
@@ -155,7 +155,7 @@ These functions are described in the XSI Curses standard, Issue 4
 .SH SEE ALSO
 .na
 .PP
-\fBcurses\fR(3X),
-\fBcurs_addch\fR(3X),
-\fBcurs_attr\fR(3X),
-\fBcurs_outopts\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_addch\fP(3X),
+\fBcurs_attr\fP(3X),
+\fBcurs_outopts\fP(3X)

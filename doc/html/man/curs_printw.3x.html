@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_printw.3x,v 1.28 2020/10/24 09:22:45 tom Exp @
+  * @Id: curs_printw.3x,v 1.31 2021/12/25 21:49:32 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_printw 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_printw 3x</H1>
@@ -109,7 +109,7 @@
        would be output from <STRONG>printf(3)</STRONG> would instead be output using <STRONG>waddstr</STRONG> on
        the given window.  SVr3 also added <STRONG>vwprintw</STRONG>, saying that the third  pa-
        rameter  is a <STRONG>va_list</STRONG>, defined in &lt;varargs.h&gt;, and referring the reader
-       to the manual pages for <EM>varargs</EM> and <EM>vprintf</EM> for detailed descriptions.
+       to the manual pages for <EM>varargs</EM> and <STRONG>vprintf</STRONG> for detailed descriptions.
 
        SVr4 added  no  new  variations  of  <STRONG>printw</STRONG>,  but  provided  for  using
        &lt;varargs.h&gt; or &lt;stdarg.h&gt; to define the <STRONG>va_list</STRONG> type.

@@ -27,39 +27,39 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insstr.3x,v 1.27 2021/06/17 21:26:02 tom Exp $
+.\" $Id: curs_insstr.3x,v 1.28 2021/12/25 17:39:16 tom Exp $
 .TH curs_insstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fBinsstr\fR,
-\fBinsnstr\fR,
-\fBwinsstr\fR,
-\fBwinsnstr\fR,
-\fBmvinsstr\fR,
-\fBmvinsnstr\fR,
-\fBmvwinsstr\fR,
-\fBmvwinsnstr\fR \- insert string before cursor in a \fBcurses\fR window
+\fBinsstr\fP,
+\fBinsnstr\fP,
+\fBwinsstr\fP,
+\fBwinsnstr\fP,
+\fBmvinsstr\fP,
+\fBmvinsnstr\fP,
+\fBmvwinsstr\fP,
+\fBmvwinsnstr\fP \- insert string before cursor in a \fBcurses\fP window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .br
-\fBint insstr(const char *\fP\fIstr\fP\fB);\fR
+\fBint insstr(const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint insnstr(const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint insnstr(const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint winsstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB);\fR
+\fBint winsstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint winsnstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint winsnstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .sp
-\fBint mvinsstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fR
+\fBint mvinsstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvinsnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvinsnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint mvwinsstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fR
+\fBint mvwinsstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvwinsnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvwinsnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
 .SH DESCRIPTION
 These routines insert a character string
@@ -68,15 +68,15 @@ before the character under the cursor.
 All characters to the right of the cursor are shifted right
 with the possibility of the rightmost characters on the line being lost.
 The cursor position does not change
-(after moving to \fIy\fR, \fIx\fR, if specified).
-The functions with \fIn\fR as the last argument
-insert a leading substring of at most \fIn\fR characters.
-If \fIn\fR<=0, then the entire string is inserted.
+(after moving to \fIy\fP, \fIx\fP, if specified).
+The functions with \fIn\fP as the last argument
+insert a leading substring of at most \fIn\fP characters.
+If \fIn\fP<=0, then the entire string is inserted.
 .PP
 Special characters are handled as in \fBaddch\fP.
 .SH RETURN VALUE
-All routines that return an integer return \fBERR\fR upon failure and \fBOK\fP
-(SVr4 specifies only "an integer value other than \fBERR\fR")
+All routines that return an integer return \fBERR\fP upon failure and \fBOK\fP
+(SVr4 specifies only "an integer value other than \fBERR\fP")
 upon successful completion,
 unless otherwise noted in the preceding routine descriptions.
 .PP
@@ -89,7 +89,7 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES
-Note that all but \fBwinsnstr\fR may be macros.
+Note that all but \fBwinsnstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4, which adds
 const qualifiers to the arguments.
@@ -99,7 +99,7 @@ The Single Unix Specification, Version 2 states that
 This is probably an error, since it makes this group of functions inconsistent.
 Also, no implementation of curses documents this inconsistency.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_util\fR(3X),
-\fBcurs_clear\fR(3X),
-\fBcurs_inch\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_util\fP(3X),
+\fBcurs_clear\fP(3X),
+\fBcurs_inch\fP(3X).

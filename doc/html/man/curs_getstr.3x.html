@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getstr.3x,v 1.33 2021/05/22 21:36:35 tom Exp @
+  * @Id: curs_getstr.3x,v 1.35 2021/12/25 20:14:56 tom Exp @
   * X/Open says also until EOf
   * X/Open says then an EOS is added to the result
   * X/Open doesn't mention n&lt;0
@@ -39,7 +39,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_getstr 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_getstr 3x</H1>
@@ -200,7 +200,7 @@
            into account when deciding whether to handle echoing within <STRONG>getnstr</STRONG>
            or as a side-effect of the <STRONG>getch</STRONG> calls.
 
-       <STRONG>o</STRONG>   The original ncurses (as pcurses in 1986) set <STRONG>noraw</STRONG> and <STRONG>cbreak</STRONG> when
+       <STRONG>o</STRONG>   The original ncurses (as <EM>pcurses</EM> in 1986) set <STRONG>noraw</STRONG> and <STRONG>cbreak</STRONG> when
            accepting input for <STRONG>getnstr</STRONG>.  That may have been done to make func-
            tion- and cursor-keys work; it is not necessary with ncurses.
 

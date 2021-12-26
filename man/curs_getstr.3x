@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.33 2021/05/22 21:36:35 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.35 2021/12/25 20:14:56 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -40,52 +40,52 @@
 .na
 .hy 0
 .SH NAME
-\fBgetstr\fR,
-\fBgetnstr\fR,
-\fBwgetstr\fR,
-\fBwgetnstr\fR,
-\fBmvgetstr\fR,
-\fBmvgetnstr\fR,
-\fBmvwgetstr\fR,
-\fBmvwgetnstr\fR \- accept character strings from \fBcurses\fR terminal keyboard
+\fBgetstr\fP,
+\fBgetnstr\fP,
+\fBwgetstr\fP,
+\fBwgetnstr\fP,
+\fBmvgetstr\fP,
+\fBmvgetnstr\fP,
+\fBmvwgetstr\fP,
+\fBmvwgetnstr\fP \- accept character strings from \fBcurses\fP terminal keyboard
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint getstr(char *\fP\fIstr\fP\fB);\fR
+\fBint getstr(char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint getnstr(char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint getnstr(char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint wgetstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB);\fR
+\fBint wgetstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint wgetnstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint wgetnstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .sp
-\fBint mvgetstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fR
+\fBint mvgetstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvwgetstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fR
+\fBint mvwgetstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
 .br
-\fBint mvgetnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvgetnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint mvwgetnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvwgetnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
 .SH DESCRIPTION
-The function \fBgetstr\fR is equivalent to a series of calls to \fBgetch\fR,
+The function \fBgetstr\fP is equivalent to a series of calls to \fBgetch\fP,
 until a newline or carriage return is received (the terminating character is
 not included in the returned string).
 .\" X/Open says also until EOf
 .\" X/Open says then an EOS is added to the result
 .\" X/Open doesn't mention n<0
 The resulting value is placed in the
-area pointed to by the character pointer \fIstr\fR,
+area pointed to by the character pointer \fIstr\fP,
 followed by a NUL.
 .PP
-The \fBgetnstr\fR function reads
-from the \fIstdscr\fR default window.
+The \fBgetnstr\fP function reads
+from the \fIstdscr\fP default window.
 The other functions, such as \fBwgetnstr\fP,
 read from the window given as a parameter.
 .PP
-\fBgetnstr\fR reads at most \fIn\fR characters, thus preventing a possible
+\fBgetnstr\fP reads at most \fIn\fP characters, thus preventing a possible
 overflow of the input buffer.
 Any attempt to enter more characters (other
 than the terminating newline or carriage return) causes a beep.
@@ -98,19 +98,19 @@ The \fIerase\fP character (e.g., \fB^H\fP) erases the character
 at the end of the buffer, moving the cursor to the left.
 .IP
 If \fIkeypad\fP mode is on for the window,
-\fBKEY_LEFT\fR and \fBKEY_BACKSPACE\fR
+\fBKEY_LEFT\fP and \fBKEY_BACKSPACE\fP
 are both considered equivalent to the user's erase character.
 .bP
 The \fIkill\fP character (e.g., \fB^U\fP) erases the entire buffer,
 leaving the cursor at the beginning of the buffer.
 .PP
-Characters input are echoed only if \fBecho\fR is currently on.
+Characters input are echoed only if \fBecho\fP is currently on.
 In that case,
 backspace is echoed as deletion of the previous character (typically a left
 motion).
 .SH RETURN VALUE
-All routines return the integer \fBERR\fR upon failure and an \fBOK\fR (SVr4
-specifies only \*(``an integer value other than \fBERR\fR\*('') upon successful
+All routines return the integer \fBERR\fP upon failure and an \fBOK\fP (SVr4
+specifies only \*(``an integer value other than \fBERR\fP\*('') upon successful
 completion.
 .PP
 X/Open defines no error conditions.
@@ -128,27 +128,27 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES
-Note that \fBgetstr\fR, \fBmvgetstr\fR, and \fBmvwgetstr\fR may be macros.
+Note that \fBgetstr\fP, \fBmvgetstr\fP, and \fBmvwgetstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 They read single-byte characters only.
 The standard does not define any error conditions.
 This implementation returns \fBERR\fP if the window pointer is null,
-or if the lower-level \fBwgetch\fR(3X) call returns an \fBERR\fP.
+or if the lower-level \fBwgetch\fP(3X) call returns an \fBERR\fP.
 .PP
 SVr3 and early SVr4 curses implementations did not reject function keys;
 the SVr4.0 documentation claimed that \*(``special keys\*(''
 (such as function keys,
 \*(``home\*('' key,
 \*(``clear\*('' key,
-\fIetc\fR.) are \*(``interpreted\*('',
+\fIetc\fP.) are \*(``interpreted\*('',
 without giving details.
 It lied.
 In fact, the \*(``character\*('' value appended to the
 string by those implementations was predictable but not useful
 (being, in fact, the low-order eight bits of the key's KEY_ value).
 .PP
-The functions \fBgetnstr\fR, \fBmvgetnstr\fR, and \fBmvwgetnstr\fR were
+The functions \fBgetnstr\fP, \fBmvgetnstr\fP, and \fBmvwgetnstr\fP were
 present but not documented in SVr4.
 .PP
 X/Open Curses, Issue 5 (2007) stated that these functions
@@ -225,7 +225,7 @@ They may take the \fIcbreak\fP
 mode set by the caller into account when deciding whether to handle
 echoing within \fBgetnstr\fP or as a side-effect of the \fBgetch\fP calls.
 .bP
-The original ncurses (as pcurses in 1986) set \fBnoraw\fP and \fBcbreak\fP
+The original ncurses (as \fIpcurses\fP in 1986) set \fBnoraw\fP and \fBcbreak\fP
 when accepting input for \fBgetnstr\fP.
 That may have been done to make function- and cursor-keys work;
 it is not necessary with ncurses.
@@ -240,7 +240,7 @@ Starting in 2021 (ncurses 6.3), \fBgetnstr\fP sets \fBraw\fP,
 rather than \fBnoraw\fP and \fBcbreak\fP for better compatibility with
 SVr4-curses, e.g., allowing one to enter a \fB^C\fP into the buffer.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_getch\fR(3X),
-\fBcurs_termattrs\fR(3X),
-\fBcurs_variables\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_getch\fP(3X),
+\fBcurs_termattrs\fP(3X),
+\fBcurs_variables\fP(3X).

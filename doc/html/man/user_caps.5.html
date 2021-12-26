@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: user_caps.5,v 1.17 2021/06/17 21:30:22 tom Exp @
+  * @Id: user_caps.5,v 1.20 2021/12/25 21:09:22 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>user_caps 5</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">user_caps 5</H1>
@@ -115,7 +115,7 @@
                     (box1) box characters primary set
 
            The memory lock/unlock capabilities were included because they were
-           used in  the  X11R6  terminal  description  for  <STRONG>xterm</STRONG>.   The  <EM>box1</EM>
+           used in the X11R6 terminal  description  for  <STRONG>xterm(1)</STRONG>.   The  <EM>box1</EM>
            capability  is  used  in  tic  to  help  with terminal descriptions
            written for AIX.
 
@@ -168,7 +168,7 @@
            predefined function-key names, to which a series  of  keys  can  be
            assigned,   that  is  insufficient  for  more  than  a  dozen  keys
            multiplied by more than a couple  of  modifier  combinations.   The
-           ncurses  database  uses  a  convention  based  on  <STRONG>xterm</STRONG> to provide
+           ncurses  database  uses  a  convention based on <STRONG>xterm(1)</STRONG> to provide
            extended special-key names.
 
            Fitting that into termcap's limitation of 2-character  names  would
@@ -236,7 +236,7 @@
              Set this capability to a nonzero value to enable it.
 
           XM <EM>string</EM>, override ncurses's built-in string which enables/disables
-             <STRONG>xterm</STRONG> mouse mode.
+             <STRONG>xterm(1)</STRONG> mouse mode.
 
              ncurses  sends a character sequence to the terminal to initialize
              mouse mode, and when the user clicks the  mouse  buttons  or  (in
@@ -310,17 +310,17 @@
        combinations of modified special keys.  There is no standard  for  what
        those keys can send.
 
-       Since 1999, <STRONG>xterm</STRONG> has supported <EM>shift</EM>, <EM>control</EM>, <EM>alt</EM>, and <EM>meta</EM> modifiers
-       which produce distinct special-key strings.  In a terminal description,
-       ncurses  has  no special knowledge of the modifiers used.  Applications
-       can use the <EM>naming</EM> <EM>convention</EM>  established  for  <STRONG>xterm</STRONG>  to  find  these
-       special keys in the terminal description.
+       Since  1999,  <STRONG>xterm(1)</STRONG>  has  supported  <EM>shift</EM>,  <EM>control</EM>,  <EM>alt</EM>, and <EM>meta</EM>
+       modifiers which produce distinct special-key strings.   In  a  terminal
+       description,  ncurses  has  no special knowledge of the modifiers used.
+       Applications can use the <EM>naming</EM> <EM>convention</EM>  established  for  <STRONG>xterm</STRONG>  to
+       find these special keys in the terminal description.
 
        Starting  with  the curses convention that <EM>key</EM> <EM>names</EM> begin with "k" and
        that shifted special keys are  an  uppercase  name,  ncurses'  terminal
        database defines these names to which a suffix is added:
 
-            <EM>Name</EM>   <EM>Description</EM>
+            <STRONG>Name</STRONG>   <STRONG>Description</STRONG>
             ---------------------------------------------------------------
             kDC    special form of kdch1 (delete character)
             kDN    special form of kcud1 (cursor down)
@@ -334,7 +334,7 @@
 
        These are the suffixes used to denote the modifiers:
 
-            <EM>Value</EM>   <EM>Description</EM>
+            <STRONG>Value</STRONG>   <STRONG>Description</STRONG>
             ----------------------------------
             2       Shift
             3       Alt
@@ -377,7 +377,7 @@
        the  terminal  descriptions.   Some  of those features are mentioned in
        <STRONG>screen(1)</STRONG> or <STRONG>tmux(1)</STRONG>.
 
-       <EM>XTerm</EM> <EM>Control</EM> <EM>Sequences</EM>  provides  further  information  on  the  <STRONG>xterm</STRONG>
+       <EM>XTerm</EM> <EM>Control</EM> <EM>Sequences</EM> provides further information  on  the  <STRONG>xterm(1)</STRONG>
        features which are used in these extended capabilities.
 
 

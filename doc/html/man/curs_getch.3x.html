@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.57 2020/12/19 21:38:20 tom Exp @
+  * @Id: curs_getch.3x,v 1.61 2021/12/25 21:49:32 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -37,7 +37,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_getch 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_getch 3x</H1>
@@ -150,7 +150,7 @@
            the  long  terminfo capability names for the keys, and were defined
            long ago, in the 1980s.
 
-                  <EM>Name</EM>            <EM>Key</EM> <EM>name</EM>
+                  <STRONG>Name</STRONG>            <STRONG>Key</STRONG> <STRONG>name</STRONG>
                   -------------------------------------------------
                   KEY_BREAK       Break key
                   KEY_DOWN        The four arrow keys ...
@@ -264,8 +264,8 @@
 
        <STRONG>o</STRONG>   <STRONG>KEY_MOUSE</STRONG>  is returned for mouse-events (see <STRONG><A HREF="curs_mouse.3x.html">curs_mouse(3x)</A></STRONG>).  This
            code relies upon whether or not <STRONG><A HREF="curs_inopts.3x.html">keypad(3x)</A></STRONG> has  been  enabled,  be-
-           cause  (e.g., with <EM>xterm</EM> mouse prototocol) ncurses must read escape
-           sequences, just like a function key.
+           cause  (e.g., with <STRONG>xterm(1)</STRONG> mouse prototocol) ncurses must read es-
+           cape sequences, just like a function key.
 
 
 </PRE><H3><a name="h3-Testing-key-codes">Testing key-codes</a></H3><PRE>

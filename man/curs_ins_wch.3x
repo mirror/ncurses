@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2002-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,29 +27,29 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_ins_wch.3x,v 1.10 2020/10/18 00:22:21 tom Exp $
+.\" $Id: curs_ins_wch.3x,v 1.12 2021/12/25 21:41:58 tom Exp $
 .TH curs_ins_wch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fBins_wch\fR,
-\fBmvins_wch\fR,
-\fBmvwins_wch\fR,
-\fBwins_wch\fR \- insert a complex character and rendition into a window
+\fBins_wch\fP,
+\fBmvins_wch\fP,
+\fBmvwins_wch\fP,
+\fBwins_wch\fP \- insert a complex character and rendition into a window
 .SH SYNOPSIS
 #include <curses.h>
 .sp
-\fBint ins_wch(const cchar_t *\fR\fIwch\fR\fB);\fR
+\fBint ins_wch(const cchar_t *\fP\fIwch\fP\fB);\fP
 .br
-\fBint wins_wch(WINDOW *\fR\fIwin\fP\fB, const cchar_t *\fR\fIwch\fR\fB);\fR
+\fBint wins_wch(WINDOW *\fP\fIwin\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
 .sp
-\fBint mvins_wch(int \fR\fIy\fP\fB, int \fR\fIx\fP\fB, const cchar_t *\fR\fIwch\fR\fB);\fR
+\fBint mvins_wch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
 .br
-\fBint mvwins_wch(WINDOW *\fR\fIwin\fP\fB, int \fR\fIy\fP\fB, int \fR\fIx\fP\fB, const cchar_t *\fR\fIwch\fR\fB);\fR
+\fBint mvwins_wch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
 .SH DESCRIPTION
-These routines, insert the complex character \fIwch\fR with rendition
+These routines, insert the complex character \fIwch\fP with rendition
 before the character under the cursor.
 All characters to the right of the cursor are moved one space to the right,
 with the possibility of the rightmost character on the line being lost.
@@ -64,5 +64,5 @@ or if the window pointer is null.
 .SH ERRORS
 No errors are defined.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_insch\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_insch\fP(3X).

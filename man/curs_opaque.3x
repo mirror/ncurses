@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020 Thomas E. Dickey                                          *
+.\" Copyright 2020,2021 Thomas E. Dickey                                     *
 .\" Copyright 2007-2014,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_opaque.3x,v 1.15 2020/10/24 09:41:22 tom Exp $
+.\" $Id: curs_opaque.3x,v 1.17 2021/12/25 21:50:36 tom Exp $
 .TH curs_opaque 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -36,107 +36,107 @@
 .na
 .hy 0
 .SH NAME
-\fBis_cleared\fR,
-\fBis_idlok\fR,
-\fBis_idcok\fR,
-\fBis_immedok\fR,
-\fBis_keypad\fR,
-\fBis_leaveok\fR,
-\fBis_nodelay\fR,
-\fBis_notimeout\fR,
-\fBis_pad\fR,
-\fBis_scrollok\fR,
-\fBis_subwin\fR,
-\fBis_syncok\fR,
-\fBwgetdelay\fR,
-\fBwgetparent\fR,
-\fBwgetscrreg\fR \- \fBcurses\fR window properties
+\fBis_cleared\fP,
+\fBis_idlok\fP,
+\fBis_idcok\fP,
+\fBis_immedok\fP,
+\fBis_keypad\fP,
+\fBis_leaveok\fP,
+\fBis_nodelay\fP,
+\fBis_notimeout\fP,
+\fBis_pad\fP,
+\fBis_scrollok\fP,
+\fBis_subwin\fP,
+\fBis_syncok\fP,
+\fBwgetdelay\fP,
+\fBwgetparent\fP,
+\fBwgetscrreg\fP \- \fBcurses\fP window properties
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBbool is_cleared(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_cleared(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_idcok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_idcok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_idlok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_idlok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_immedok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_immedok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_keypad(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_keypad(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_leaveok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_leaveok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_nodelay(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_nodelay(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_notimeout(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_notimeout(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_pad(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_pad(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_scrollok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_scrollok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_subwin(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_subwin(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBbool is_syncok(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBbool is_syncok(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBWINDOW * wgetparent(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBWINDOW * wgetparent(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBint wgetdelay(const WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint wgetdelay(const WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBint wgetscrreg(const WINDOW *\fP\fIwin\fP\fB, int *\fP\fItop\fP\fB, int *\fP\fIbottom\fP\fB);\fR
+\fBint wgetscrreg(const WINDOW *\fP\fIwin\fP\fB, int *\fP\fItop\fP\fB, int *\fP\fIbottom\fP\fB);\fP
 .br
 .SH DESCRIPTION
 This implementation provides functions which return properties
 set in the WINDOW structure, allowing it to be \*(``opaque\*('' if
-the symbol \fBNCURSES_OPAQUE\fR is defined:
+the symbol \fBNCURSES_OPAQUE\fP is defined:
 .TP 5
-\fBis_cleared\fR
-returns the value set in \fBclearok\fR
+\fBis_cleared\fP
+returns the value set in \fBclearok\fP
 .TP 5
-\fBis_idcok\fR
-returns the value set in \fBidcok\fR
+\fBis_idcok\fP
+returns the value set in \fBidcok\fP
 .TP 5
-\fBis_idlok\fR
-returns the value set in \fBidlok\fR
+\fBis_idlok\fP
+returns the value set in \fBidlok\fP
 .TP 5
-\fBis_immedok\fR
-returns the value set in \fBimmedok\fR
+\fBis_immedok\fP
+returns the value set in \fBimmedok\fP
 .TP 5
-\fBis_keypad\fR
-returns the value set in \fBkeypad\fR
+\fBis_keypad\fP
+returns the value set in \fBkeypad\fP
 .TP 5
-\fBis_leaveok\fR
-returns the value set in \fBleaveok\fR
+\fBis_leaveok\fP
+returns the value set in \fBleaveok\fP
 .TP 5
-\fBis_nodelay\fR
-returns the value set in \fBnodelay\fR
+\fBis_nodelay\fP
+returns the value set in \fBnodelay\fP
 .TP 5
-\fBis_notimeout\fR
-returns the value set in \fBnotimeout\fR
+\fBis_notimeout\fP
+returns the value set in \fBnotimeout\fP
 .TP 5
-\fBis_pad\fR
+\fBis_pad\fP
 returns \fBTRUE\fP if the window is a pad
 i.e., created by \fBnewpad\fP
 .TP 5
-\fBis_scrollok\fR
-returns the value set in \fBscrollok\fR
+\fBis_scrollok\fP
+returns the value set in \fBscrollok\fP
 .TP 5
-\fBis_subwin\fR
+\fBis_subwin\fP
 returns \fBTRUE\fP if the window is a subwindow,
 i.e., created by \fBsubwin\fP or \fBderwin\fP
 .TP 5
-\fBis_syncok\fR
-returns the value set in \fBsyncok\fR
+\fBis_syncok\fP
+returns the value set in \fBsyncok\fP
 .TP 5
-\fBwgetdelay\fR
+\fBwgetdelay\fP
 returns the delay timeout as set in \fBwtimeout\fP.
 .TP 5
-\fBwgetparent\fR
+\fBwgetparent\fP
 returns the parent WINDOW pointer for subwindows,
 or NULL for windows having no parent.
 .TP 5
-\fBwgetscrreg\fR
+\fBwgetscrreg\fP
 returns the top and bottom rows for the scrolling margin
 as set in \fBwsetscrreg\fP.
 .SH RETURN VALUE
@@ -149,7 +149,7 @@ They were not supported on Version 7, BSD or System V implementations.
 It is recommended that any code depending on ncurses extensions
 be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_inopts\fR(3X),
-\fBcurs_outopts\fR(3X),
-\fBcurs_window\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_inopts\fP(3X),
+\fBcurs_outopts\fP(3X),
+\fBcurs_window\fP(3X)

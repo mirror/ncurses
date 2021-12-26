@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make_sed.sh,v 1.12 2021/06/17 21:20:30 tom Exp $
+# $Id: make_sed.sh,v 1.13 2021/12/25 17:39:16 tom Exp $
 ##############################################################################
 # Copyright 2020,2021 Thomas E. Dickey                                       #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -74,16 +74,16 @@ sed	-e 's/\//\/TH /' \
 
 echo "# Do the embedded references" >>$RESULT
 sed	-e 's/</<fB/' \
-	-e 's/	/\\\\fR(/' \
+	-e 's/	/\\\\fP(/' \
 	-e 's/	/)\/fB/' \
-	-e 's/	/\\\\fR(/' \
+	-e 's/	/\\\\fP(/' \
 	-e 's/\/$/)\//' \
 	$UPPER >>$RESULT
 
-echo "# Do the \fBxxx\fR references in the .NAME section" >>$RESULT
+echo "# Do the \fBxxx\fP references in the .NAME section" >>$RESULT
 sed	-e 's/\\</^\\\\fB/' \
 	-e 's/	[^	]*	/\\\\f[RP] -\/\\\\fB/' \
-	-e 's/	.*$/\\\\fR -\//' \
+	-e 's/	.*$/\\\\fP -\//' \
 	$UPPER >>$RESULT
 
 # Finally, send the result to standard output

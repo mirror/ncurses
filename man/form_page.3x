@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,12 +28,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_page.3x,v 1.19 2020/10/18 00:02:44 tom Exp $
+.\" $Id: form_page.3x,v 1.21 2021/12/25 21:49:32 tom Exp $
 .TH form_page 3X ""
 .SH NAME
-\fBform_page\fR \- set and get form page number
+\fBform_page\fP \- set and get form page number
 .SH SYNOPSIS
-\fB#include <form.h>\fR
+\fB#include <form.h>\fP
 .sp
 \fBint set_current_field(FORM *\fP\fIform\fP\fB, FIELD *\fP\fIfield\fP\fB);\fP
 .br
@@ -48,24 +48,24 @@
 \fBint field_index(const FIELD *\fP\fIfield\fP\fB);\fP
 .br
 .SH DESCRIPTION
-The function \fBset_current_field\fR sets the current field of the given
-form; \fBcurrent_field\fR returns the current field of the given form.
+The function \fBset_current_field\fP sets the current field of the given
+form; \fBcurrent_field\fP returns the current field of the given form.
 .PP
-The function \fBunfocus_current_field\fR removes the focus from the current
+The function \fBunfocus_current_field\fP removes the focus from the current
 field of the form.
-In such state, inquiries via \fBcurrent_field\fR shall return a NULL pointer.
+In such state, inquiries via \fBcurrent_field\fP shall return a NULL pointer.
 .PP
-The function \fBset_form_page\fR sets the form's page number (goes to page
-\fIn\fR of the form).
+The function \fBset_form_page\fP sets the form's page number (goes to page
+\fIn\fP of the form).
 .PP
-The function \fBform_page\fR returns the form's current page number.
+The function \fBform_page\fP returns the form's current page number.
 .PP
-The function \fBfield_index\fR returns the index of the field in the
+The function \fBfield_index\fP returns the index of the field in the
 field array of the form it is connected to.
-It returns \fBERR\fR if
+It returns \fBERR\fP if
 the argument is the null pointer or the field is not connected.
 .SH RETURN VALUE
-Except for \fBform_page\fR, each routine returns one of the following:
+Except for \fBform_page\fP, each routine returns one of the following:
 .TP 5
 .B E_OK
 The routine succeeded.
@@ -83,13 +83,13 @@ Contents of a field are not valid.
 The form driver could not process the request.
 .TP 5
 .B E_SYSTEM_ERROR
-System error occurred (see \fBerrno\fR(3)).
+System error occurred (see \fBerrno\fP(3)).
 .
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBform\fR(3X).
+\fBcurses\fP(3X), \fBform\fP(3X).
 .SH NOTES
-The header file \fB<form.h>\fR automatically includes the header file
-\fB<curses.h>\fR.
+The header file \fB<form.h>\fP automatically includes the header file
+\fB<curses.h>\fP.
 .SH PORTABILITY
 These routines emulate the System V forms library.
 They were not supported on

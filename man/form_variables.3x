@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020 Thomas E. Dickey                                          *
+.\" Copyright 2020,2021 Thomas E. Dickey                                     *
 .\" Copyright 2010-2013,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,32 +27,32 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_variables.3x,v 1.7 2020/12/12 14:45:16 tom Exp $
+.\" $Id: form_variables.3x,v 1.9 2021/12/25 21:50:36 tom Exp $
 .TH form_variables 3X ""
 .na
 .hy 0
 .SH NAME
-\fBTYPE_ALNUM\fR,
-\fBTYPE_ALPHA\fR,
-\fBTYPE_ENUM\fR,
-\fBTYPE_INTEGER\fR,
-\fBTYPE_IPV4\fR,
-\fBTYPE_NUMERIC\fR,
-\fBTYPE_REGEXP\fR
+\fBTYPE_ALNUM\fP,
+\fBTYPE_ALPHA\fP,
+\fBTYPE_ENUM\fP,
+\fBTYPE_INTEGER\fP,
+\fBTYPE_IPV4\fP,
+\fBTYPE_NUMERIC\fP,
+\fBTYPE_REGEXP\fP
 \- form system global variables
 .ad
 .hy
 .SH SYNOPSIS
 .nf
-\fB#include <form.h>\fR
+\fB#include <form.h>\fP
 .PP
-\fBFIELDTYPE * TYPE_ALNUM;\fR
-\fBFIELDTYPE * TYPE_ALPHA;\fR
-\fBFIELDTYPE * TYPE_ENUM;\fR
-\fBFIELDTYPE * TYPE_INTEGER;\fR
-\fBFIELDTYPE * TYPE_IPV4;\fR
-\fBFIELDTYPE * TYPE_NUMERIC;\fR
-\fBFIELDTYPE * TYPE_REGEXP;\fR
+\fBFIELDTYPE * TYPE_ALNUM;\fP
+\fBFIELDTYPE * TYPE_ALPHA;\fP
+\fBFIELDTYPE * TYPE_ENUM;\fP
+\fBFIELDTYPE * TYPE_INTEGER;\fP
+\fBFIELDTYPE * TYPE_IPV4;\fP
+\fBFIELDTYPE * TYPE_NUMERIC;\fP
+\fBFIELDTYPE * TYPE_REGEXP;\fP
 .fi
 .SH DESCRIPTION
 These are building blocks for the form library,
@@ -78,4 +78,4 @@ This holds a regular expression.
 The \fBTYPE_IPV4\fP variable is an extension not provided by older
 implementations of the form library.
 .SH SEE ALSO
-\fBform\fR(3X).
+\fBform\fP(3X).

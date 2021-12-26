@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,13 +28,13 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_userptr.3x,v 1.16 2020/10/18 00:39:49 tom Exp $
+.\" $Id: menu_userptr.3x,v 1.18 2021/12/25 21:42:57 tom Exp $
 .TH menu_userptr 3X ""
 .SH NAME
 \fBset_menu_userptr\fP,
-\fBmenu_userptr\fR \- associate application data with a menu item
+\fBmenu_userptr\fP \- associate application data with a menu item
 .SH SYNOPSIS
-\fB#include <menu.h>\fR
+\fB#include <menu.h>\fP
 .sp
 \fBint set_menu_userptr(MENU *\fP\fImenu\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
 .br
@@ -45,15 +45,15 @@ Every menu and every menu item has a field that can be used to hold
 application-specific data (that is, the menu-driver code leaves it alone).
 These functions get and set the menu user pointer field.
 .SH RETURN VALUE
-\fBmenu_userptr\fR returns a pointer (which may be \fBNULL\fR).
+\fBmenu_userptr\fP returns a pointer (which may be \fBNULL\fP).
 It does not set \fBerrno\fP.
 .PP
 \fBset_menu_userptr\fP returns \fBE_OK\fP (success).
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBmenu\fR(3X).
+\fBcurses\fP(3X), \fBmenu\fP(3X).
 .SH NOTES
-The header file \fB<menu.h>\fR automatically includes the header file
-\fB<curses.h>\fR.
+The header file \fB<menu.h>\fP automatically includes the header file
+\fB<curses.h>\fP.
 .SH PORTABILITY
 These routines emulate the System V menu library.
 They were not supported on

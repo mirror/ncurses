@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tset.1,v 1.58 2021/09/18 21:21:55 tom Exp @
+  * @Id: tset.1,v 1.61 2021/12/25 21:27:03 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>tset 1</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">tset 1</H1>
@@ -83,8 +83,8 @@
 
        3. (BSD systems only.) The terminal type associated with  the  standard
        error  output  device  in the <EM>/etc/ttys</EM> file.  (On System-V-like UNIXes
-       and systems using that convention, <EM>getty</EM> does this job by setting  <STRONG>TERM</STRONG>
-       according to the type passed to it by <EM>/etc/inittab</EM>.)
+       and systems using that convention, <STRONG>getty(1)</STRONG> does this  job  by  setting
+       <STRONG>TERM</STRONG> according to the type passed to it by <EM>/etc/inittab</EM>.)
 
        4. The default terminal type, "unknown".
 
@@ -206,165 +206,167 @@
        When the <STRONG>-s</STRONG> option is specified, the commands to enter the  information
        into  the  shell's  environment are written to the standard output.  If
        the <STRONG>SHELL</STRONG> environmental variable ends in "csh", the  commands  are  for
-       <STRONG>csh</STRONG>,  otherwise, they are for <STRONG>sh</STRONG>.  Note, the <STRONG>csh</STRONG> commands set and unset
-       the shell variable <STRONG>noglob</STRONG>, leaving it unset.  The following line in the
-       <STRONG>.login</STRONG> or <STRONG>.profile</STRONG> files will initialize the environment correctly:
+       <STRONG>csh</STRONG>,  otherwise,  they  are  for <STRONG>sh(1)</STRONG>.  Note, the <STRONG>csh</STRONG> commands set and
+       unset the shell variable <STRONG>noglob</STRONG>, leaving it unset.  The following  line
+       in  the  <STRONG>.login</STRONG>  or  <STRONG>.profile</STRONG>  files  will  initialize  the environment
+       correctly:
 
            eval `tset -s options ... `
 
 
 </PRE><H2><a name="h2-TERMINAL-TYPE-MAPPING">TERMINAL TYPE MAPPING</a></H2><PRE>
-       When  the  terminal  is  not  hardwired into the system (or the current
-       system information is incorrect) the terminal  type  derived  from  the
-       <EM>/etc/ttys</EM>  file  or  the <STRONG>TERM</STRONG> environmental variable is often something
-       generic like <STRONG>network</STRONG>, <STRONG>dialup</STRONG>, or <STRONG>unknown</STRONG>.   When  <STRONG>tset</STRONG>  is  used  in  a
-       startup  script  it is often desirable to provide information about the
+       When the terminal is not hardwired into  the  system  (or  the  current
+       system  information  is  incorrect)  the terminal type derived from the
+       <EM>/etc/ttys</EM> file or the <STRONG>TERM</STRONG> environmental variable  is  often  something
+       generic  like  <STRONG>network</STRONG>,  <STRONG>dialup</STRONG>,  or  <STRONG>unknown</STRONG>.   When <STRONG>tset</STRONG> is used in a
+       startup script it is often desirable to provide information  about  the
        type of terminal used on such ports.
 
-       The <STRONG>-m</STRONG> options maps from some set of conditions  to  a  terminal  type,
+       The  <STRONG>-m</STRONG>  options  maps  from some set of conditions to a terminal type,
        that is, to tell <STRONG>tset</STRONG> "If I'm on this port at a particular speed, guess
        that I'm on that kind of terminal".
 
-       The argument to the <STRONG>-m</STRONG> option consists of an  optional  port  type,  an
-       optional  operator,  an  optional  baud rate specification, an optional
-       colon (":") character and a terminal type.  The port type is  a  string
-       (delimited  by  either  the  operator  or  the  colon  character).  The
-       operator may be any combination of "&gt;", "&lt;", "@", and  "!";  "&gt;"  means
-       greater  than,  "&lt;" means less than, "@" means equal to and "!" inverts
-       the sense of the test.  The baud rate is specified as a number  and  is
-       compared  with  the speed of the standard error output (which should be
+       The  argument  to  the  <STRONG>-m</STRONG> option consists of an optional port type, an
+       optional operator, an optional baud  rate  specification,  an  optional
+       colon  (":")  character and a terminal type.  The port type is a string
+       (delimited by  either  the  operator  or  the  colon  character).   The
+       operator  may  be  any combination of "&gt;", "&lt;", "@", and "!"; "&gt;" means
+       greater than, "&lt;" means less than, "@" means equal to and  "!"  inverts
+       the  sense  of the test.  The baud rate is specified as a number and is
+       compared with the speed of the standard error output (which  should  be
        the control terminal).  The terminal type is a string.
 
-       If the terminal type is not specified  on  the  command  line,  the  <STRONG>-m</STRONG>
-       mappings  are  applied to the terminal type.  If the port type and baud
-       rate match the mapping, the terminal  type  specified  in  the  mapping
-       replaces  the current type.  If more than one mapping is specified, the
+       If  the  terminal  type  is  not  specified on the command line, the <STRONG>-m</STRONG>
+       mappings are applied to the terminal type.  If the port type  and  baud
+       rate  match  the  mapping,  the  terminal type specified in the mapping
+       replaces the current type.  If more than one mapping is specified,  the
        first applicable mapping is used.
 
-       For example, consider the following  mapping:  <STRONG>dialup&gt;9600:vt100</STRONG>.   The
+       For  example,  consider  the following mapping: <STRONG>dialup&gt;9600:vt100</STRONG>.  The
        port type is dialup , the operator is &gt;, the baud rate specification is
        9600, and the terminal type is vt100.  The result of this mapping is to
-       specify  that  if  the  terminal  type  is <STRONG>dialup</STRONG>, and the baud rate is
+       specify that if the terminal type is  <STRONG>dialup</STRONG>,  and  the  baud  rate  is
        greater than 9600 baud, a terminal type of <STRONG>vt100</STRONG> will be used.
 
-       If no baud rate is specified, the terminal type  will  match  any  baud
-       rate.   If  no port type is specified, the terminal type will match any
-       port type.  For example, <STRONG>-m</STRONG> <STRONG>dialup:vt100</STRONG>  <STRONG>-m</STRONG>  <STRONG>:?xterm</STRONG>  will  cause  any
+       If  no  baud  rate  is specified, the terminal type will match any baud
+       rate.  If no port type is specified, the terminal type will  match  any
+       port  type.   For  example,  <STRONG>-m</STRONG>  <STRONG>dialup:vt100</STRONG> <STRONG>-m</STRONG> <STRONG>:?xterm</STRONG> will cause any
        dialup port, regardless of baud rate, to match the terminal type vt100,
-       and any non-dialup port type to match the terminal type ?xterm.   Note,
-       because  of  the  leading  question mark, the user will be queried on a
+       and  any non-dialup port type to match the terminal type ?xterm.  Note,
+       because of the leading question mark, the user will  be  queried  on  a
        default port as to whether they are actually using an xterm terminal.
 
-       No whitespace characters are  permitted  in  the  <STRONG>-m</STRONG>  option  argument.
-       Also,  to avoid problems with meta-characters, it is suggested that the
+       No  whitespace  characters  are  permitted  in  the <STRONG>-m</STRONG> option argument.
+       Also, to avoid problems with meta-characters, it is suggested that  the
        entire <STRONG>-m</STRONG> option argument be placed within single quote characters, and
-       that   <STRONG>csh</STRONG>   users  insert  a  backslash  character  ("\")  before  any
+       that  <STRONG>csh</STRONG>  users  insert  a  backslash  character  ("\")   before   any
        exclamation marks ("!").
 
 
 </PRE><H2><a name="h2-HISTORY">HISTORY</a></H2><PRE>
-       A <STRONG>reset</STRONG> command appeared in 1BSD (March 1978), written by Kurt  Shoens.
-       This  program set the <EM>erase</EM> and <EM>kill</EM> characters to <STRONG>^H</STRONG> (backspace) and <STRONG>@</STRONG>
+       A  <STRONG>reset</STRONG> command appeared in 1BSD (March 1978), written by Kurt Shoens.
+       This program set the <EM>erase</EM> and <EM>kill</EM> characters to <STRONG>^H</STRONG> (backspace) and  <STRONG>@</STRONG>
        respectively.  Mark Horton improved that in 3BSD (October 1979), adding
-       <EM>intr</EM>,  <EM>quit</EM>,  <EM>start</EM>/<EM>stop</EM>  and  <EM>eof</EM>  characters  as well as changing the
-       program to avoid modifying any user settings.  That  version  of  <STRONG>reset</STRONG>
+       <EM>intr</EM>, <EM>quit</EM>, <EM>start</EM>/<EM>stop</EM> and <EM>eof</EM>  characters  as  well  as  changing  the
+       program  to  avoid  modifying any user settings.  That version of <STRONG>reset</STRONG>
        did not use the termcap database.
 
-       A  separate <STRONG>tset</STRONG> command was provided in 1BSD by Eric Allman, using the
-       termcap database.  Allman's comments in the source code  indicate  that
+       A separate <STRONG>tset</STRONG> command was provided in 1BSD by Eric Allman, using  the
+       termcap  database.   Allman's comments in the source code indicate that
        he began work in October 1977, continuing development over the next few
        years.
 
        According to comments in the source code, the <STRONG>tset</STRONG> program was modified
-       in  September  1980,  to use logic copied from the 3BSD "reset" when it
+       in September 1980, to use logic copied from the 3BSD  "reset"  when  it
        was invoked as <STRONG>reset</STRONG>.  This version appeared in 4.1cBSD, late in 1982.
 
        Other developers (e.g., Keith Bostic and Jim Bloom) continued to modify
        <STRONG>tset</STRONG> until 4.4BSD was released in 1993.
 
-       The  <STRONG>ncurses</STRONG> implementation was lightly adapted from the 4.4BSD sources
+       The <STRONG>ncurses</STRONG> implementation was lightly adapted from the 4.4BSD  sources
        for a terminfo environment by Eric S. Raymond &lt;esr@snark.thyrsus.com&gt;.
 
 
 </PRE><H2><a name="h2-COMPATIBILITY">COMPATIBILITY</a></H2><PRE>
-       Neither IEEE Std 1003.1/The Open  Group  Base  Specifications  Issue  7
+       Neither  IEEE  Std  1003.1/The  Open  Group Base Specifications Issue 7
        (POSIX.1-2008) nor X/Open Curses Issue 7 documents <STRONG>tset</STRONG> or <STRONG>reset</STRONG>.
 
-       The  AT&amp;T  <STRONG>tput</STRONG> utility (AIX, HPUX, Solaris) incorporated the terminal-
-       mode manipulation as well as termcap-based features such  as  resetting
-       tabstops  from  <STRONG>tset</STRONG>  in  BSD  (4.1c), presumably with the intention of
-       making <STRONG>tset</STRONG> obsolete.  However, each of those  systems  still  provides
-       <STRONG>tset</STRONG>.   In fact, the commonly-used <STRONG>reset</STRONG> utility is always an alias for
+       The AT&amp;T <STRONG>tput</STRONG> utility (AIX, HPUX, Solaris) incorporated  the  terminal-
+       mode  manipulation  as well as termcap-based features such as resetting
+       tabstops from <STRONG>tset</STRONG> in BSD (4.1c),  presumably  with  the  intention  of
+       making  <STRONG>tset</STRONG>  obsolete.   However, each of those systems still provides
+       <STRONG>tset</STRONG>.  In fact, the commonly-used <STRONG>reset</STRONG> utility is always an alias  for
        <STRONG>tset</STRONG>.
 
-       The  <STRONG>tset</STRONG>  utility  provides  for   backward-compatibility   with   BSD
-       environments  (under  most modern UNIXes, <STRONG>/etc/inittab</STRONG> and <STRONG>getty(1)</STRONG> can
-       set <STRONG>TERM</STRONG> appropriately for each dial-up line; this  obviates  what  was
-       <STRONG>tset</STRONG>'s  most  important  use).  This implementation behaves like 4.4BSD
+       The   <STRONG>tset</STRONG>   utility   provides  for  backward-compatibility  with  BSD
+       environments (under most modern UNIXes, <STRONG>/etc/inittab</STRONG> and  <STRONG>getty(1)</STRONG>  can
+       set  <STRONG>TERM</STRONG>  appropriately  for each dial-up line; this obviates what was
+       <STRONG>tset</STRONG>'s most important use).  This implementation  behaves  like  4.4BSD
        <STRONG>tset</STRONG>, with a few exceptions specified here.
 
-       A few options are different because the <STRONG>TERMCAP</STRONG> variable is  no  longer
+       A  few  options are different because the <STRONG>TERMCAP</STRONG> variable is no longer
        supported under terminfo-based <STRONG>ncurses</STRONG>:
 
-       <STRONG>o</STRONG>   The  <STRONG>-S</STRONG>  option  of  BSD  <STRONG>tset</STRONG>  no longer works; it prints an error
+       <STRONG>o</STRONG>   The <STRONG>-S</STRONG> option of BSD <STRONG>tset</STRONG> no  longer  works;  it  prints  an  error
            message to the standard error and dies.
 
        <STRONG>o</STRONG>   The <STRONG>-s</STRONG> option only sets <STRONG>TERM</STRONG>, not <STRONG>TERMCAP</STRONG>.
 
-       There was an undocumented 4.4BSD feature that invoking <STRONG>tset</STRONG> via a  link
-       named  "TSET"  (or  via  any  other  name  beginning with an upper-case
+       There  was an undocumented 4.4BSD feature that invoking <STRONG>tset</STRONG> via a link
+       named "TSET" (or via  any  other  name  beginning  with  an  upper-case
        letter) set the terminal to use upper-case only.  This feature has been
        omitted.
 
        The <STRONG>-A</STRONG>, <STRONG>-E</STRONG>, <STRONG>-h</STRONG>, <STRONG>-u</STRONG> and <STRONG>-v</STRONG> options were deleted from the <STRONG>tset</STRONG> utility in
-       4.4BSD.  None of them were documented in 4.3BSD and all are of  limited
-       utility  at  best.   The  <STRONG>-a</STRONG>,  <STRONG>-d</STRONG>,  and  <STRONG>-p</STRONG>  options  are similarly not
-       documented or useful, but  were  retained  as  they  appear  to  be  in
-       widespread  use.   It  is  strongly recommended that any usage of these
+       4.4BSD.   None of them were documented in 4.3BSD and all are of limited
+       utility at best.   The  <STRONG>-a</STRONG>,  <STRONG>-d</STRONG>,  and  <STRONG>-p</STRONG>  options  are  similarly  not
+       documented  or  useful,  but  were  retained  as  they  appear to be in
+       widespread use.  It is strongly recommended that  any  usage  of  these
        three options be changed to use the <STRONG>-m</STRONG> option instead.  The <STRONG>-a</STRONG>, <STRONG>-d</STRONG>, and
        <STRONG>-p</STRONG> options are therefore omitted from the usage summary above.
 
-       Very  old  systems,  e.g., 3BSD, used a different terminal driver which
-       was replaced in 4BSD in the early 1980s.  To  accommodate  these  older
-       systems,  the  4BSD  <STRONG>tset</STRONG>  provided a <STRONG>-n</STRONG> option to specify that the new
-       terminal driver should be used.  This implementation does  not  provide
+       Very old systems, e.g., 3BSD, used a different  terminal  driver  which
+       was  replaced  in  4BSD in the early 1980s.  To accommodate these older
+       systems, the 4BSD <STRONG>tset</STRONG> provided a <STRONG>-n</STRONG> option to  specify  that  the  new
+       terminal  driver  should be used.  This implementation does not provide
        that choice.
 
-       It  is  still permissible to specify the <STRONG>-e</STRONG>, <STRONG>-i</STRONG>, and <STRONG>-k</STRONG> options without
+       It is still permissible to specify the <STRONG>-e</STRONG>, <STRONG>-i</STRONG>, and <STRONG>-k</STRONG>  options  without
        arguments, although it is strongly recommended that such usage be fixed
        to explicitly specify the character.
 
-       As  of 4.4BSD, executing <STRONG>tset</STRONG> as <STRONG>reset</STRONG> no longer implies the <STRONG>-Q</STRONG> option.
+       As of 4.4BSD, executing <STRONG>tset</STRONG> as <STRONG>reset</STRONG> no longer implies the <STRONG>-Q</STRONG>  option.
        Also, the interaction between the - option and the <EM>terminal</EM> argument in
        some historic implementations of <STRONG>tset</STRONG> has been removed.
 
-       The  <STRONG>-c</STRONG>  and  <STRONG>-w</STRONG>  options  are  not  found  in earlier implementations.
+       The <STRONG>-c</STRONG> and  <STRONG>-w</STRONG>  options  are  not  found  in  earlier  implementations.
        However, a different window size-change feature was provided in 4.4BSD.
 
-       <STRONG>o</STRONG>   In 4.4BSD, <STRONG>tset</STRONG> uses the window size from the  termcap  description
-           to  set  the  window  size if <STRONG>tset</STRONG> is not able to obtain the window
+       <STRONG>o</STRONG>   In  4.4BSD,  <STRONG>tset</STRONG> uses the window size from the termcap description
+           to set the window size if <STRONG>tset</STRONG> is not able  to  obtain  the  window
            size from the operating system.
 
        <STRONG>o</STRONG>   In ncurses, <STRONG>tset</STRONG> obtains the window size using <STRONG>setupterm</STRONG>, which may
-           be  from  the  operating  system, the <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> environment
+           be from the operating system, the  <STRONG>LINES</STRONG>  and  <STRONG>COLUMNS</STRONG>  environment
            variables or the terminal description.
 
-       Obtaining the window size from the terminal description  is  common  to
-       both  implementations,  but considered obsolescent.  Its only practical
+       Obtaining  the  window  size from the terminal description is common to
+       both implementations, but considered obsolescent.  Its  only  practical
        use is for hardware terminals.  Generally speaking, a window size would
-       be  unset  only if there were some problem obtaining the value from the
-       operating system (and <STRONG>setupterm</STRONG> would still fail).   For  that  reason,
-       the  <STRONG>LINES</STRONG>  and <STRONG>COLUMNS</STRONG> environment variables may be useful for working
-       around window-size problems.  Those  have  the  drawback  that  if  the
-       window  is  resized, those variables must be recomputed and reassigned.
-       To do this more easily, use the <STRONG><A HREF="resize.1.html">resize(1)</A></STRONG> program.
+       be unset only if there were some problem obtaining the value  from  the
+       operating  system  (and  <STRONG>setupterm</STRONG> would still fail).  For that reason,
+       the <STRONG>LINES</STRONG> and <STRONG>COLUMNS</STRONG> environment variables may be useful  for  working
+       around  window-size  problems.   Those  have  the  drawback that if the
+       window is resized, those variables must be recomputed  and  reassigned.
+       To do this more easily, use the <STRONG>resize(1)</STRONG> program.
 
 
 </PRE><H2><a name="h2-ENVIRONMENT">ENVIRONMENT</a></H2><PRE>
        The <STRONG>tset</STRONG> command uses these environment variables:
 
        SHELL
-            tells <STRONG>tset</STRONG> whether to initialize <STRONG>TERM</STRONG> using <STRONG>sh</STRONG> or <STRONG>csh</STRONG> syntax.
+            tells  <STRONG>tset</STRONG>  whether  to  initialize  <STRONG>TERM</STRONG>  using  <STRONG>sh(1)</STRONG> or <STRONG>csh(1)</STRONG>
+            syntax.
 
        TERM Denotes your terminal  type.   Each  terminal  type  is  distinct,
             though many are similar.
@@ -389,7 +391,7 @@
        <STRONG>csh(1)</STRONG>,   <STRONG>sh(1)</STRONG>,   <STRONG>stty(1)</STRONG>,   <STRONG><A HREF="curs_terminfo.3x.html">curs_terminfo(3x)</A></STRONG>,  <STRONG>tty(4)</STRONG>,  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>,
        <STRONG>ttys(5)</STRONG>, <STRONG>environ(7)</STRONG>
 
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211021).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211225).
 
 
 

@@ -27,73 +27,73 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: MKncu_config.in,v 1.5 2021/06/17 21:20:30 tom Exp $
+.\" $Id: MKncu_config.in,v 1.6 2021/12/25 17:39:16 tom Exp $
 .TH @LIB_NAME@@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config 1 ""
 .SH NAME
 @LIB_NAME@@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config \- helper script for ncurses libraries
 .SH SYNOPSIS
 .B @LIB_NAME@@DFT_ARG_SUFFIX@@cf_cv_abi_version@-config
-[\fIoptions\fR]
+[\fIoptions\fP]
 .SH DESCRIPTION
 This is a shell script which simplifies configuring applications against
 a particular set of ncurses libraries.
 .SH OPTIONS
 .TP
-\fB\-\-prefix\fR
+\fB\-\-prefix\fP
 echos the package\-prefix of ncurses
 .TP
-\fB\-\-exec\-prefix\fR
+\fB\-\-exec\-prefix\fP
 echos the executable\-prefix of ncurses
 .TP
-\fB\-\-cflags\fR
+\fB\-\-cflags\fP
 echos the C compiler flags needed to compile with ncurses
 .TP
-\fB\-\-libs\fR
+\fB\-\-libs\fP
 echos the libraries needed to link with ncurses
 .TP
-\fB\-\-version\fR
+\fB\-\-version\fP
 echos the release+patchdate version of ncurses
 .TP
-\fB\-\-abi\-version\fR
+\fB\-\-abi\-version\fP
 echos the ABI version of ncurses
 .TP
-\fB\-\-mouse\-version\fR
+\fB\-\-mouse\-version\fP
 echos the mouse\-interface version of ncurses
 .TP
-\fB\-\-bindir\fR
+\fB\-\-bindir\fP
 echos the directory containing ncurses programs
 .TP
-\fB\-\-datadir\fR
+\fB\-\-datadir\fP
 echos the directory containing ncurses data
 .TP
-\fB\-\-includedir\fR
+\fB\-\-includedir\fP
 echos the directory containing ncurses header files
 .TP
-\fB\-\-libdir\fR
+\fB\-\-libdir\fP
 echos the directory containing ncurses libraries
 .TP
-\fB\-\-mandir\fR
+\fB\-\-mandir\fP
 echos the directory containing ncurses manpages
 .TP
-\fB\-\-terminfo\fR
+\fB\-\-terminfo\fP
 echos the $TERMINFO terminfo database path, e.g.,
 .RS
 @TERMINFO@
 .RE
 .TP
-\fB\-\-terminfo\-dirs\fR
+\fB\-\-terminfo\-dirs\fP
 echos the $TERMINFO_DIRS directory list, e.g.,
 .RS
 @TERMINFO_DIRS@
 .RE
 .TP
-\fB\-\-termpath\fR
+\fB\-\-termpath\fP
 echos the $TERMPATH termcap list, if support for termcap is configured.
 .TP
-\fB\-\-help\fR
+\fB\-\-help\fP
 prints this message
 .SH "SEE ALSO"
-\fBcurses\fR(3X)
+\fBcurses\fP(3X)
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

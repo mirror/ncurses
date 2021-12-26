@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018,2020 Thomas E. Dickey                                     *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: clear.1,v 1.23 2020/02/02 23:34:34 tom Exp @
+  * @Id: clear.1,v 1.26 2021/12/26 00:13:25 tom Exp @
   * these would be fallbacks for DS/DE,
   * but groff changed the meaning of the macros.
 -->
@@ -38,7 +38,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>clear 1</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">clear 1</H1>
@@ -57,11 +57,11 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
-       <STRONG>clear</STRONG>  clears your screen if this is possible, including its scrollback
-       buffer (if the extended "E3" capability is defined).   <STRONG>clear</STRONG>  looks  in
-       the environment for the terminal type given by the environment variable
-       <STRONG>TERM</STRONG>, and then in the <STRONG>terminfo</STRONG> database to determine how to  clear  the
-       screen.
+       <STRONG>clear</STRONG>  clears your terminal's screen if this is possible, including the
+       terminal's scrollback  buffer  (if  the  extended  "E3"  capability  is
+       defined).   <STRONG>clear</STRONG>  looks in the environment for the terminal type given
+       by the environment variable <STRONG>TERM</STRONG>, and then in the <STRONG>terminfo</STRONG> database  to
+       determine how to clear the screen.
 
        <STRONG>clear</STRONG>  writes  to  the  standard output.  You can redirect the standard
        output to a file (which  prevents  <STRONG>clear</STRONG>  from  actually  clearing  the
@@ -107,7 +107,7 @@
 
        The <STRONG>E3</STRONG> extension came later:
 
-       <STRONG>o</STRONG>   In  June  1999, xterm provided an extension to the standard control
+       <STRONG>o</STRONG>   In  June  1999, <STRONG>xterm</STRONG> provided an extension to the standard control
            sequence for clearing the screen.  Rather than  clearing  just  the
            visible part of the screen using
 
@@ -118,14 +118,14 @@
                printf '\033[<STRONG>3</STRONG>J'
 
            This  is  documented  in  <EM>XTerm</EM>  <EM>Control</EM>  <EM>Sequences</EM>  as  a  feature
-           originating with xterm.
+           originating with <STRONG>xterm</STRONG>.
 
        <STRONG>o</STRONG>   A few other terminal developers adopted the feature, e.g., PuTTY in
            2006.
 
        <STRONG>o</STRONG>   In  April  2011, a Red Hat developer submitted a patch to the Linux
            kernel, modifying its console driver to do  the  same  thing.   The
-           Linux  change,  part  of  the  3.0  release, did not mention xterm,
+           Linux  change,  part  of  the  3.0  release, did not mention <STRONG>xterm</STRONG>,
            although it was cited in the Red Hat bug report (#683733) which led
            to the change.
 
@@ -148,9 +148,9 @@
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>
+       <STRONG><A HREF="tput.1.html">tput(1)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>, <STRONG>xterm(1)</STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211021).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211225).
 
 
 

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2002-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,35 +27,35 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_in_wch.3x,v 1.10 2020/10/17 23:19:29 tom Exp $
+.\" $Id: curs_in_wch.3x,v 1.12 2021/12/25 21:49:32 tom Exp $
 .TH curs_in_wch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fBin_wch\fR,
-\fBmvin_wch\fR,
-\fBmvwin_wch\fR,
-\fBwin_wch\fR \- extract a complex character and rendition from a window
+\fBin_wch\fP,
+\fBmvin_wch\fP,
+\fBmvwin_wch\fP,
+\fBwin_wch\fP \- extract a complex character and rendition from a window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint in_wch(cchar_t *\fR\fIwcval\fR\fB);\fR
+\fBint in_wch(cchar_t *\fP\fIwcval\fP\fB);\fP
 .br
-\fBint win_wch(WINDOW *\fR\fIwin\fR\fB, cchar_t *\fR\fIwcval\fR\fB);\fR
+\fBint win_wch(WINDOW *\fP\fIwin\fP\fB, cchar_t *\fP\fIwcval\fP\fB);\fP
 .sp
-\fBint mvin_wch(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, cchar_t *\fR\fIwcval\fR\fB);\fR
+\fBint mvin_wch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwcval\fP\fB);\fP
 .br
-\fBint mvwin_wch(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, cchar_t *\fR\fIwcval\fR\fB);\fR
+\fBint mvwin_wch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwcval\fP\fB);\fP
 .SH DESCRIPTION
 These functions extract the complex character and rendition from
-the current position in the named window into the \fBcchar_t\fR object
+the current position in the named window into the \fBcchar_t\fP object
 referenced by wcval.
 .SH RETURN VALUE
 No errors are defined in the XSI Curses standard.
 This implementation checks for null pointers, returns \fBERR\fP in that case.
-Also, the \fImv\fR routines check for error moving the cursor,
+Also, the \fImv\fP routines check for error moving the cursor,
 returning \fBERR\fP in that case.
 Otherwise they return \fBOK\fP.
 .PP
@@ -67,5 +67,5 @@ Note that all of these routines may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_inch\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_inch\fP(3X).

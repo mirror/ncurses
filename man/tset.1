@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tset.1,v 1.58 2021/09/18 21:21:55 tom Exp $
+.\" $Id: tset.1,v 1.61 2021/12/25 21:27:03 tom Exp $
 .TH @TSET@ 1 ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -38,16 +38,16 @@
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fB@TSET@\fR, \fB@RESET@\fR \- terminal initialization
+\fB@TSET@\fP, \fB@RESET@\fP \- terminal initialization
 .SH SYNOPSIS
-\fB@TSET@\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
+\fB@TSET@\fP [\fB\-IQVcqrsw\fP] [\fB\-\fP] [\fB\-e\fP \fIch\fP] [\fB\-i\fP \fIch\fP] [\fB\-k\fP \fIch\fP] [\fB\-m\fP \fImapping\fP] [\fIterminal\fP]
 .br
-\fB@RESET@\fR [\fB\-IQVcqrsw\fR] [\fB\-\fR] [\fB\-e\fR \fIch\fR] [\fB\-i\fR \fIch\fR] [\fB\-k\fR \fIch\fR] [\fB\-m\fR \fImapping\fR] [\fIterminal\fR]
+\fB@RESET@\fP [\fB\-IQVcqrsw\fP] [\fB\-\fP] [\fB\-e\fP \fIch\fP] [\fB\-i\fP \fIch\fP] [\fB\-k\fP \fIch\fP] [\fB\-m\fP \fImapping\fP] [\fIterminal\fP]
 .SH DESCRIPTION
 .SS tset - initialization
 This program initializes terminals.
 .PP
-First, \fB@TSET@\fR retrieves the current terminal mode settings
+First, \fB@TSET@\fP retrieves the current terminal mode settings
 for your terminal.
 It does this by successively testing
 .bP
@@ -66,19 +66,19 @@ file descriptor to use when updating settings.
 Next, \fB@TSET@\fP determines the type of terminal that you are using.
 This determination is done as follows, using the first terminal type found.
 .PP
-1. The \fBterminal\fR argument specified on the command line.
+1. The \fBterminal\fP argument specified on the command line.
 .PP
-2. The value of the \fBTERM\fR environmental variable.
+2. The value of the \fBTERM\fP environmental variable.
 .PP
 3. (BSD systems only.) The terminal type associated with the standard
-error output device in the \fI/etc/ttys\fR file.
+error output device in the \fI/etc/ttys\fP file.
 (On System\-V-like UNIXes and systems using that convention,
-\fIgetty\fR does this job by setting
-\fBTERM\fR according to the type passed to it by \fI/etc/inittab\fR.)
+\fBgetty\fP(1) does this job by setting
+\fBTERM\fP according to the type passed to it by \fI/etc/inittab\fP.)
 .PP
 4. The default terminal type, \*(``unknown\*(''.
 .PP
-If the terminal type was not specified on the command-line, the \fB\-m\fR
+If the terminal type was not specified on the command-line, the \fB\-m\fP
 option mappings are then applied (see the section
 .B TERMINAL TYPE MAPPING
 for more information).
@@ -116,7 +116,7 @@ or are not set to their default values, their values are displayed to the
 standard error output.
 .SS reset - reinitialization
 .PP
-When invoked as \fB@RESET@\fR, \fB@TSET@\fR sets the terminal
+When invoked as \fB@RESET@\fP, \fB@TSET@\fP sets the terminal
 modes to \*(``sane\*('' values:
 .bP
 sets cooked and echo modes,
@@ -151,16 +151,16 @@ The options are as follows:
 Set control characters and modes.
 .TP 5
 .BI \-e\  ch
-Set the erase character to \fIch\fR.
+Set the erase character to \fIch\fP.
 .TP
 .B \-I
 Do not send the terminal or tab initialization strings to the terminal.
 .TP
 .BI \-i\  ch
-Set the interrupt character to \fIch\fR.
+Set the interrupt character to \fIch\fP.
 .TP
 .BI \-k\  ch
-Set the line kill character to \fIch\fR.
+Set the line kill character to \fIch\fP.
 .TP
 .BI \-m\  mapping
 Specify a mapping from a port type to a terminal.
@@ -170,7 +170,7 @@ for more information.
 .TP
 .B \-Q
 Do not display any values for the erase, interrupt and line kill characters.
-Normally \fB@TSET@\fR displays the values for control characters which
+Normally \fB@TSET@\fP displays the values for control characters which
 differ from the system's default values.
 .TP
 .B \-q
@@ -183,7 +183,7 @@ Print the terminal type to the standard error output.
 .TP
 .B \-s
 Print the sequence of shell commands to initialize the environment variable
-\fBTERM\fR to the standard output.
+\fBTERM\fP to the standard output.
 See the section
 .B SETTING THE ENVIRONMENT
 for details.
@@ -196,7 +196,7 @@ Resize the window to match the size deduced via \fBsetupterm\fP(3X).
 Normally this has no effect,
 unless \fBsetupterm\fP is not able to detect the window size.
 .PP
-The arguments for the \fB\-e\fR, \fB\-i\fR, and \fB\-k\fR
+The arguments for the \fB\-e\fP, \fB\-i\fP, and \fB\-k\fP
 options may either be entered as actual characters
 or by using the \*(``hat\*(''
 notation, i.e., control-h may be specified as \*(``^H\*('' or \*(``^h\*(''.
@@ -206,35 +206,35 @@ If neither \fB\-c\fP or \fB\-w\fP is given, both options are assumed.
 .SH SETTING THE ENVIRONMENT
 It is often desirable to enter the terminal type and information about
 the terminal's capabilities into the shell's environment.
-This is done using the \fB\-s\fR option.
+This is done using the \fB\-s\fP option.
 .PP
-When the \fB\-s\fR option is specified, the commands to enter the information
+When the \fB\-s\fP option is specified, the commands to enter the information
 into the shell's environment are written to the standard output.
 If
-the \fBSHELL\fR environmental variable ends in \*(``csh\*('', the commands
-are for \fBcsh\fR, otherwise, they are for \fBsh\fR.
-Note, the \fBcsh\fR commands set and unset the shell variable
-\fBnoglob\fR, leaving it unset.
-The following line in the \fB.login\fR
-or \fB.profile\fR files will initialize the environment correctly:
+the \fBSHELL\fP environmental variable ends in \*(``csh\*('', the commands
+are for \fBcsh\fP, otherwise, they are for \fBsh\fP(1).
+Note, the \fBcsh\fP commands set and unset the shell variable
+\fBnoglob\fP, leaving it unset.
+The following line in the \fB.login\fP
+or \fB.profile\fP files will initialize the environment correctly:
 .sp
     eval \`@TSET@ \-s options ... \`
 .
 .SH TERMINAL TYPE MAPPING
 When the terminal is not hardwired into the system (or the current
 system information is incorrect) the terminal type derived from the
-\fI/etc/ttys\fR file or the \fBTERM\fR environmental variable is often
-something generic like \fBnetwork\fR, \fBdialup\fR, or \fBunknown\fR.
-When \fB@TSET@\fR is used in a startup script it is often desirable to
+\fI/etc/ttys\fP file or the \fBTERM\fP environmental variable is often
+something generic like \fBnetwork\fP, \fBdialup\fP, or \fBunknown\fP.
+When \fB@TSET@\fP is used in a startup script it is often desirable to
 provide information about the type of terminal used on such ports.
 .PP
-The \fB\-m\fR options maps
+The \fB\-m\fP options maps
 from some set of conditions to a terminal type, that is, to
-tell \fB@TSET@\fR
+tell \fB@TSET@\fP
 \*(``If I'm on this port at a particular speed,
 guess that I'm on that kind of terminal\*(''.
 .PP
-The argument to the \fB\-m\fR option consists of an optional port type, an
+The argument to the \fB\-m\fP option consists of an optional port type, an
 optional operator, an optional baud rate specification, an optional
 colon (\*(``:\*('') character and a terminal type.
 The port type is a
@@ -252,7 +252,7 @@ The baud rate is specified as a number and is compared with the speed
 of the standard error output (which should be the control terminal).
 The terminal type is a string.
 .PP
-If the terminal type is not specified on the command line, the \fB\-m\fR
+If the terminal type is not specified on the command line, the \fB\-m\fP
 mappings are applied to the terminal type.
 If the port type and baud
 rate match the mapping, the terminal type specified in the mapping
@@ -260,27 +260,27 @@ replaces the current type.
 If more than one mapping is specified, the
 first applicable mapping is used.
 .PP
-For example, consider the following mapping: \fBdialup>9600:vt100\fR.
+For example, consider the following mapping: \fBdialup>9600:vt100\fP.
 The port type is dialup , the operator is >, the baud rate
 specification is 9600, and the terminal type is vt100.
 The result of
-this mapping is to specify that if the terminal type is \fBdialup\fR,
+this mapping is to specify that if the terminal type is \fBdialup\fP,
 and the baud rate is greater than 9600 baud, a terminal type of
-\fBvt100\fR will be used.
+\fBvt100\fP will be used.
 .PP
 If no baud rate is specified, the terminal type will match any baud rate.
 If no port type is specified, the terminal type will match any port type.
-For example, \fB\-m dialup:vt100 \-m :?xterm\fR
+For example, \fB\-m dialup:vt100 \-m :?xterm\fP
 will cause any dialup port, regardless of baud rate, to match the terminal
 type vt100, and any non-dialup port type to match the terminal type ?xterm.
 Note, because of the leading question mark, the user will be
 queried on a default port as to whether they are actually using an xterm
 terminal.
 .PP
-No whitespace characters are permitted in the \fB\-m\fR option argument.
+No whitespace characters are permitted in the \fB\-m\fP option argument.
 Also, to avoid problems with meta-characters, it is suggested that the
-entire \fB\-m\fR option argument be placed within single quote characters,
-and that \fBcsh\fR users insert a backslash character (\*(``\e\*('') before
+entire \fB\-m\fP option argument be placed within single quote characters,
+and that \fBcsh\fP users insert a backslash character (\*(``\e\*('') before
 any exclamation marks (\*(``!\*('').
 .SH HISTORY
 .PP
@@ -307,7 +307,7 @@ This version appeared in 4.1cBSD, late in 1982.
 Other developers (e.g., Keith Bostic and Jim Bloom)
 continued to modify \fBtset\fP until 4.4BSD was released in 1993.
 .PP
-The \fBncurses\fR implementation
+The \fBncurses\fP implementation
 was lightly adapted from the 4.4BSD sources for a terminfo environment by Eric
 S. Raymond <esr@snark.thyrsus.com>.
 .SH COMPATIBILITY
@@ -324,21 +324,21 @@ However, each of those systems still provides \fBtset\fP.
 In fact, the commonly-used \fBreset\fP utility
 is always an alias for \fBtset\fP.
 .PP
-The \fB@TSET@\fR utility provides for backward-compatibility with BSD
-environments (under most modern UNIXes, \fB/etc/inittab\fR and \fBgetty\fR(1)
-can set \fBTERM\fR appropriately for each dial-up line; this obviates what was
-\fB@TSET@\fR's most important use).
+The \fB@TSET@\fP utility provides for backward-compatibility with BSD
+environments (under most modern UNIXes, \fB/etc/inittab\fP and \fBgetty\fP(1)
+can set \fBTERM\fP appropriately for each dial-up line; this obviates what was
+\fB@TSET@\fP's most important use).
 This implementation behaves like 4.4BSD
 \fBtset\fP, with a few exceptions specified here.
 .PP
 A few options are different
-because the \fBTERMCAP\fR variable
-is no longer supported under terminfo-based \fBncurses\fR:
+because the \fBTERMCAP\fP variable
+is no longer supported under terminfo-based \fBncurses\fP:
 .bP
-The \fB\-S\fR option of BSD \fBtset\fP no longer works;
+The \fB\-S\fP option of BSD \fBtset\fP no longer works;
 it prints an error message to the standard error and dies.
 .bP
-The \fB\-s\fR option only sets \fBTERM\fR, not \fBTERMCAP\fP.
+The \fB\-s\fP option only sets \fBTERM\fP, not \fBTERMCAP\fP.
 .PP
 There was an undocumented 4.4BSD feature
 that invoking \fBtset\fP via a link named
@@ -346,17 +346,17 @@ that invoking \fBtset\fP via a link named
 set the terminal to use upper-case only.
 This feature has been omitted.
 .PP
-The \fB\-A\fR, \fB\-E\fR, \fB\-h\fR, \fB\-u\fR and \fB\-v\fR
-options were deleted from the \fB@TSET@\fR
+The \fB\-A\fP, \fB\-E\fP, \fB\-h\fP, \fB\-u\fP and \fB\-v\fP
+options were deleted from the \fB@TSET@\fP
 utility in 4.4BSD.
 None of them were documented in 4.3BSD and all are
 of limited utility at best.
-The \fB\-a\fR, \fB\-d\fR, and \fB\-p\fR options are similarly
+The \fB\-a\fP, \fB\-d\fP, and \fB\-p\fP options are similarly
 not documented or useful, but were retained as they appear to be in
 widespread use.
 It is strongly recommended that any usage of these
-three options be changed to use the \fB\-m\fR option instead.
-The \fB\-a\fP, \fB\-d\fP, and \fB\-p\fR options
+three options be changed to use the \fB\-m\fP option instead.
+The \fB\-a\fP, \fB\-d\fP, and \fB\-p\fP options
 are therefore omitted from the usage summary above.
 .PP
 Very old systems, e.g., 3BSD, used a different terminal driver which
@@ -365,15 +365,15 @@ To accommodate these older systems, the 4BSD \fB@TSET@\fP provided a
 \fB\-n\fP option to specify that the new terminal driver should be used.
 This implementation does not provide that choice.
 .PP
-It is still permissible to specify the \fB\-e\fR, \fB\-i\fR,
-and \fB\-k\fR options without arguments,
+It is still permissible to specify the \fB\-e\fP, \fB\-i\fP,
+and \fB\-k\fP options without arguments,
 although it is strongly recommended that such usage be fixed to
 explicitly specify the character.
 .PP
 As of 4.4BSD,
-executing \fB@TSET@\fR as \fB@RESET@\fR no longer implies the \fB\-Q\fR option.
-Also, the interaction between the \- option and the \fIterminal\fR
-argument in some historic implementations of \fB@TSET@\fR has been removed.
+executing \fB@TSET@\fP as \fB@RESET@\fP no longer implies the \fB\-Q\fP option.
+Also, the interaction between the \- option and the \fIterminal\fP
+argument in some historic implementations of \fB@TSET@\fP has been removed.
 .PP
 The \fB\-c\fP and \fB\-w\fP options are not found in earlier implementations.
 However, a different window size-change feature was provided in 4.4BSD.
@@ -382,7 +382,7 @@ In 4.4BSD, \fBtset\fP uses the window size from the termcap description
 to set the window size if \fBtset\fP is not able to obtain the window
 size from the operating system.
 .bP
-In ncurses, \fB@TSET@\fR obtains the window size using
+In ncurses, \fB@TSET@\fP obtains the window size using
 \fBsetupterm\fP, which may be from
 the operating system,
 the \fBLINES\fP and \fBCOLUMNS\fP environment variables or
@@ -400,11 +400,11 @@ Those have the drawback that if the window is resized,
 those variables must be recomputed and reassigned.
 To do this more easily, use the \fBresize\fP(1) program.
 .SH ENVIRONMENT
-The \fB@TSET@\fR command uses these environment variables:
+The \fB@TSET@\fP command uses these environment variables:
 .TP 5
 SHELL
-tells \fB@TSET@\fP whether to initialize \fBTERM\fP using \fBsh\fP or
-\fBcsh\fP syntax.
+tells \fB@TSET@\fP whether to initialize \fBTERM\fP using \fBsh\fP(1) or
+\fBcsh\fP(1) syntax.
 .TP 5
 TERM
 Denotes your terminal type.
@@ -434,5 +434,5 @@ terminal capability database
 \fBenviron\fP(7)
 .hy
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

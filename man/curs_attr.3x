@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.66 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_attr.3x,v 1.70 2021/12/25 21:49:32 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -57,97 +57,97 @@
 .\" ---------------------------------------------------------------------------
 .SH NAME
 .\" attr_get
-\fBattr_get\fR,
-\fBwattr_get\fR,
-\fBattr_set\fR,
-\fBwattr_set\fR,
+\fBattr_get\fP,
+\fBwattr_get\fP,
+\fBattr_set\fP,
+\fBwattr_set\fP,
 .\" .br
-\fBattr_off\fR,
-\fBwattr_off\fR,
-\fBattr_on\fR,
-\fBwattr_on\fR,
+\fBattr_off\fP,
+\fBwattr_off\fP,
+\fBattr_on\fP,
+\fBwattr_on\fP,
 .\" .br
-\fBattroff\fR,
-\fBwattroff\fR,
-\fBattron\fR,
-\fBwattron\fR,
-\fBattrset\fR,
-\fBwattrset\fR,
+\fBattroff\fP,
+\fBwattroff\fP,
+\fBattron\fP,
+\fBwattron\fP,
+\fBattrset\fP,
+\fBwattrset\fP,
 .\" .br
-\fBchgat\fR,
-\fBwchgat\fR,
-\fBmvchgat\fR,
-\fBmvwchgat\fR,
+\fBchgat\fP,
+\fBwchgat\fP,
+\fBmvchgat\fP,
+\fBmvwchgat\fP,
 .\" .br
-\fBcolor_set\fR,
-\fBwcolor_set\fR,
+\fBcolor_set\fP,
+\fBwcolor_set\fP,
 .\" .br
-\fBstandend\fR,
-\fBwstandend\fR,
-\fBstandout\fR,
-\fBwstandout\fR \- \fBcurses\fR character and window attribute control routines
+\fBstandend\fP,
+\fBwstandend\fP,
+\fBstandout\fP,
+\fBwstandout\fP \- \fBcurses\fP character and window attribute control routines
 .ad
 .hy
 .\" ---------------------------------------------------------------------------
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint attr_get(attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint attr_get(attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .br
-\fBint wattr_get(WINDOW *\fP\fIwin\fP\fB, attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB,\fR \fBvoid *\fP\fIopts\fP\fB);\fR
+\fBint wattr_get(WINDOW *\fP\fIwin\fP\fB, attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB,\fP \fBvoid *\fP\fIopts\fP\fB);\fP
 .br
-\fBint attr_set(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint attr_set(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .br
-\fBint wattr_set(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint wattr_set(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .sp
-\fBint attr_off(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint attr_off(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .br
-\fBint wattr_off(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint wattr_off(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .br
-\fBint attr_on(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint attr_on(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .br
-\fBint wattr_on(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fR
+\fBint wattr_on(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
 .sp
-\fBint attroff(int \fP\fIattrs);\fR
+\fBint attroff(int \fP\fIattrs);\fP
 .br
-\fBint wattroff(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fR
+\fBint wattroff(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
 .br
-\fBint attron(int \fP\fIattrs\fP\fB);\fR
+\fBint attron(int \fP\fIattrs\fP\fB);\fP
 .br
-\fBint wattron(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fR
+\fBint wattron(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
 .br
-\fBint attrset(int \fP\fIattrs\fP\fB);\fR
+\fBint attrset(int \fP\fIattrs\fP\fB);\fP
 .br
-\fBint wattrset(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fR
+\fBint wattrset(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
 .sp
-\fBint chgat(int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB,\fR \fBconst void *\fP\fIopts\fP\fB);\fR
+\fBint chgat(int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB,\fP \fBconst void *\fP\fIopts\fP\fB);\fP
 .br
 \fBint wchgat(WINDOW *\fP\fIwin\fP\fB,\fP
-      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
+      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fP \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
 .br
 \fBint mvchgat(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB,\fP
-      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fR \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
+      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fP \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
 .br
 \fBint mvwchgat(WINDOW *\fP\fIwin, int \fP\fIy, int \fP\fIx\fP\fB,\fP
-      \fBint \fP\fIn,\fR \fBattr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fR
+      \fBint \fP\fIn,\fP \fBattr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
 .sp
-\fBint color_set(short \fP\fIpair\fP\fB, void* \fP\fIopts\fP\fB);\fR
+\fBint color_set(short \fP\fIpair\fP\fB, void* \fP\fIopts\fP\fB);\fP
 .br
-\fBint wcolor_set(WINDOW *\fP\fIwin\fP\fB, short \fP\fIpair\fP\fB,\fR \fBvoid* \fP\fIopts);\fR
+\fBint wcolor_set(WINDOW *\fP\fIwin\fP\fB, short \fP\fIpair\fP\fB,\fP \fBvoid* \fP\fIopts);\fP
 .sp
-\fBint standend(void);\fR
+\fBint standend(void);\fP
 .br
-\fBint wstandend(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint wstandend(WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBint standout(void);\fR
+\fBint standout(void);\fP
 .br
-\fBint wstandout(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint wstandout(WINDOW *\fP\fIwin\fP\fB);\fP
 .\" ---------------------------------------------------------------------------
 .SH DESCRIPTION
 .PP
 These routines manipulate the current attributes of the named window,
 which then apply to all characters that are written into
-the window with \fBwaddch\fR, \fBwaddstr\fR and \fBwprintw\fR.
+the window with \fBwaddch\fP, \fBwaddstr\fP and \fBwprintw\fP.
 Attributes are
 a property of the character, and move with the character through any scrolling
 and insert/delete line/character operations.
@@ -157,7 +157,7 @@ put on the screen.
 .PP
 These routines do not affect the attributes used
 when erasing portions of the window.
-See \fBcurs_bkgd\fR(3X) for functions which modify the attributes used for
+See \fBcurs_bkgd\fP(3X) for functions which modify the attributes used for
 erasing and clearing.
 .PP
 Routines which do not have a \fBWINDOW*\fP parameter apply to \fBstdscr\fP.
@@ -228,39 +228,39 @@ The \fBattrset\fP routine is a legacy feature predating SVr4 curses
 but kept in X/Open Curses for the same reason that SVr4 curses kept it:
 compatibility.
 .PP
-The remaining \fBattr\fR* functions operate exactly like the corresponding
-\fBattr_\fR* functions, except that they take arguments of type \fBint\fR
-rather than \fBattr_t\fR.
+The remaining \fBattr\fP* functions operate exactly like the corresponding
+\fBattr_\fP* functions, except that they take arguments of type \fBint\fP
+rather than \fBattr_t\fP.
 .PP
 There is no corresponding \fBattrget\fP function as such in X/Open Curses,
 although ncurses provides \fBgetattrs\fP (see curs_legacy(3X)).
 .\" ---------------------------------------------------------------------------
 .SS Change character rendition
 .PP
-The routine \fBchgat\fR changes the attributes of a given number of characters
-starting at the current cursor location of \fBstdscr\fR.
+The routine \fBchgat\fP changes the attributes of a given number of characters
+starting at the current cursor location of \fBstdscr\fP.
 It does not update
 the cursor and does not perform wrapping.
 A character count of \-1 or greater
 than the remaining window width means to change attributes all the way to the
 end of the current line.
-The \fBwchgat\fR function generalizes this to any window;
-the \fBmvwchgat\fR function does a cursor move before acting.
+The \fBwchgat\fP function generalizes this to any window;
+the \fBmvwchgat\fP function does a cursor move before acting.
 .PP
 In these functions,
 the color \fIpair\fP argument is a color-pair index
-(as in the first argument of \fBinit_pair\fR, see \fBcurs_color\fR(3X)).
+(as in the first argument of \fBinit_pair\fP, see \fBcurs_color\fP(3X)).
 .\" ---------------------------------------------------------------------------
 .SS Change window color
-The routine \fBcolor_set\fR sets the current color of the given window to the
+The routine \fBcolor_set\fP sets the current color of the given window to the
 foreground/background combination described by the color \fIpair\fP parameter.
 .\" ---------------------------------------------------------------------------
 .SS Standout
 .PP
-The routine \fBstandout\fR is
-the same as \fBattron(A_STANDOUT)\fR.
-The routine \fBstandend\fR is the same
-as \fBattrset(A_NORMAL)\fR or \fBattrset(0)\fR, that is, it turns off all
+The routine \fBstandout\fP is
+the same as \fBattron(A_STANDOUT)\fP.
+The routine \fBstandend\fP is the same
+as \fBattrset(A_NORMAL)\fP or \fBattrset(0)\fP, that is, it turns off all
 attributes.
 .PP
 X/Open does not mark these \*(``restricted\*('', because
@@ -271,29 +271,29 @@ there is no ambiguity about the way the attributes
 might be combined with a color pair.
 .\" ---------------------------------------------------------------------------
 .SH VIDEO ATTRIBUTES
-The following video attributes, defined in \fB<curses.h>\fR, can be passed to
-the routines \fBattron\fR, \fBattroff\fR, and \fBattrset\fR, or OR'd with the
-characters passed to \fBaddch\fR (see \fBcurs_addch\fR(3X)).
+The following video attributes, defined in \fB<curses.h>\fP, can be passed to
+the routines \fBattron\fP, \fBattroff\fP, and \fBattrset\fP, or OR'd with the
+characters passed to \fBaddch\fP (see \fBcurs_addch\fP(3X)).
 .PP
 .RS
 .TS
 l l
 _ _ _
 l l .
-\fIName\fR	\fIDescription\fR
-\fBA_NORMAL\fR	Normal display (no highlight)
-\fBA_STANDOUT\fR	Best highlighting mode of the terminal.
-\fBA_UNDERLINE\fR	Underlining
-\fBA_REVERSE\fR	Reverse video
-\fBA_BLINK\fR	Blinking
-\fBA_DIM\fR	Half bright
-\fBA_BOLD\fR	Extra bright or bold
-\fBA_PROTECT\fR	Protected mode
-\fBA_INVIS\fR	Invisible or blank mode
-\fBA_ALTCHARSET\fR	Alternate character set
-\fBA_ITALIC\fR	Italics (non-X/Open extension)
-\fBA_CHARTEXT\fR	Bit-mask to extract a character
-\fBA_COLOR\fR	Bit-mask to extract a color (legacy routines)
+\fBName\fP	\fBDescription\fP
+\fBA_NORMAL\fP	Normal display (no highlight)
+\fBA_STANDOUT\fP	Best highlighting mode of the terminal.
+\fBA_UNDERLINE\fP	Underlining
+\fBA_REVERSE\fP	Reverse video
+\fBA_BLINK\fP	Blinking
+\fBA_DIM\fP	Half bright
+\fBA_BOLD\fP	Extra bright or bold
+\fBA_PROTECT\fP	Protected mode
+\fBA_INVIS\fP	Invisible or blank mode
+\fBA_ALTCHARSET\fP	Alternate character set
+\fBA_ITALIC\fP	Italics (non-X/Open extension)
+\fBA_CHARTEXT\fP	Bit-mask to extract a character
+\fBA_COLOR\fP	Bit-mask to extract a color (legacy routines)
 .TE
 .RE
 .PP
@@ -304,26 +304,26 @@ These video attributes are supported by \fBattr_on\fP and related functions
 l l
 _ _ _
 l l .
-\fIName\fR	\fIDescription\fR
-\fBWA_HORIZONTAL\fR	Horizontal highlight
-\fBWA_LEFT\fR	Left highlight
-\fBWA_LOW\fR	Low highlight
-\fBWA_RIGHT\fR	Right highlight
-\fBWA_TOP\fR	Top highlight
-\fBWA_VERTICAL\fR	Vertical highlight
+\fBName\fP	\fBDescription\fP
+\fBWA_HORIZONTAL\fP	Horizontal highlight
+\fBWA_LEFT\fP	Left highlight
+\fBWA_LOW\fP	Low highlight
+\fBWA_RIGHT\fP	Right highlight
+\fBWA_TOP\fP	Top highlight
+\fBWA_VERTICAL\fP	Vertical highlight
 .TE
 .RE
 .PP
 The return values of many of these routines are not meaningful (they are
 implemented as macro-expanded assignments and simply return their argument).
-The SVr4 manual page claims (falsely) that these routines always return \fB1\fR.
+The SVr4 manual page claims (falsely) that these routines always return \fB1\fP.
 .\" ---------------------------------------------------------------------------
 .SH NOTES
 These functions may be macros:
 .sp
 .RS
-\fBattroff\fR, \fBwattroff\fR, \fBattron\fR, \fBwattron\fR,
-\fBattrset\fR, \fBwattrset\fR, \fBstandend\fR and \fBstandout\fR.
+\fBattroff\fP, \fBwattroff\fP, \fBattron\fP, \fBwattron\fP,
+\fBattrset\fP, \fBwattrset\fP, \fBstandend\fP and \fBstandout\fP.
 .RE
 .PP
 Color pair values can only be OR'd with attributes if the pair
@@ -396,7 +396,7 @@ but not necessarily the reverse.
 l l l l l l
 _ _ _ _ _ _
 l l l l l l .
-\fIYear\fR	\fISystem\fR	\fIArch\fP	\fIColor\fR	\fIChar\fR	\fINotes\fR
+\fBYear\fP	\fBSystem\fP	\fBArch\fP	\fBColor\fP	\fBChar\fP	\fBNotes\fP
 1992	Solaris 5.2	32	6	17	SVr4 curses
 1992	HPUX 9	32	no	8	SVr2 curses
 1992	AIX 3.2	32	no	23	SVr2 curses
@@ -459,7 +459,7 @@ members are not specified in X/Open Curses) could be extended as needed.
 Other interfaces are rarely used now:
 .bP
 BSD curses was improved slightly in 1993/1994 using Keith Bostic's
-modification to make the library 8-bit clean for \fBnvi\fP.
+modification to make the library 8-bit clean for \fBnvi\fP(1).
 He moved \fIstandout\fP attribute to a structure member.
 .IP
 The resulting 4.4BSD curses was replaced by ncurses over the next ten years.
@@ -503,31 +503,31 @@ are not used by this implementation except to check that they are \fBNULL\fP.
 .SH PORTABILITY
 These functions are supported in the XSI Curses standard, Issue 4.
 The standard defined the dedicated type for highlights,
-\fBattr_t\fR, which was not defined in SVr4 curses.
-The functions taking \fBattr_t\fR arguments were not supported under SVr4.
+\fBattr_t\fP, which was not defined in SVr4 curses.
+The functions taking \fBattr_t\fP arguments were not supported under SVr4.
 .PP
 Very old versions of this library did not force an update of the screen
 when changing the attributes.
-Use \fBtouchwin\fR to force the screen to match the updated attributes.
+Use \fBtouchwin\fP to force the screen to match the updated attributes.
 .PP
 The XSI Curses standard states that whether the traditional functions
-\fBattron\fR/\fBattroff\fR/\fBattrset\fR can manipulate attributes other than
-\fBA_BLINK\fR, \fBA_BOLD\fR, \fBA_DIM\fR, \fBA_REVERSE\fR, \fBA_STANDOUT\fR, or
-\fBA_UNDERLINE\fR is \*(``unspecified\*(''.
+\fBattron\fP/\fBattroff\fP/\fBattrset\fP can manipulate attributes other than
+\fBA_BLINK\fP, \fBA_BOLD\fP, \fBA_DIM\fP, \fBA_REVERSE\fP, \fBA_STANDOUT\fP, or
+\fBA_UNDERLINE\fP is \*(``unspecified\*(''.
 Under this implementation as well as
 SVr4 curses, these functions correctly manipulate all other highlights
-(specifically, \fBA_ALTCHARSET\fR, \fBA_PROTECT\fR, and \fBA_INVIS\fR).
+(specifically, \fBA_ALTCHARSET\fP, \fBA_PROTECT\fP, and \fBA_INVIS\fP).
 .PP
 XSI Curses added these entry points:
 .sp
 .RS
-\fBattr_get\fR, \fBattr_on\fR,
-\fBattr_off\fR, \fBattr_set\fR, \fBwattr_on\fR, \fBwattr_off\fR,
-\fBwattr_get\fR, \fBwattr_set\fR
+\fBattr_get\fP, \fBattr_on\fP,
+\fBattr_off\fP, \fBattr_set\fP, \fBwattr_on\fP, \fBwattr_off\fP,
+\fBwattr_get\fP, \fBwattr_set\fP
 .RE
 .PP
 The new functions are intended to work with
-a new series of highlight macros prefixed with \fBWA_\fR.
+a new series of highlight macros prefixed with \fBWA_\fP.
 The older macros have direct counterparts in the newer set of names:
 .PP
 .RS
@@ -536,15 +536,15 @@ The older macros have direct counterparts in the newer set of names:
 l l
 _ _ _
 l l .
-\fIName\fR	\fIDescription\fR
-\fBWA_NORMAL\fR	Normal display (no highlight)
-\fBWA_STANDOUT\fR	Best highlighting mode of the terminal.
-\fBWA_UNDERLINE\fR	Underlining
-\fBWA_REVERSE\fR	Reverse video
-\fBWA_BLINK\fR	Blinking
-\fBWA_DIM\fR	Half bright
-\fBWA_BOLD\fR	Extra bright or bold
-\fBWA_ALTCHARSET\fR	Alternate character set
+\fBName\fP	\fBDescription\fP
+\fBWA_NORMAL\fP	Normal display (no highlight)
+\fBWA_STANDOUT\fP	Best highlighting mode of the terminal.
+\fBWA_UNDERLINE\fP	Underlining
+\fBWA_REVERSE\fP	Reverse video
+\fBWA_BLINK\fP	Blinking
+\fBWA_DIM\fP	Half bright
+\fBWA_BOLD\fP	Extra bright or bold
+\fBWA_ALTCHARSET\fP	Alternate character set
 .TE
 .RE
 .PP
@@ -552,8 +552,8 @@ XSI curses does not assign values to these symbols,
 nor does it state whether or not they are related to the
 similarly-named A_NORMAL, etc.:
 .bP
-The XSI curses standard specifies that each pair of corresponding \fBA_\fR
-and \fBWA_\fR-using functions operates on the same current-highlight
+The XSI curses standard specifies that each pair of corresponding \fBA_\fP
+and \fBWA_\fP-using functions operates on the same current-highlight
 information.
 .bP
 However, in some implementations, those symbols have unrelated values.
@@ -570,14 +570,14 @@ the same because it simplifies copying information between
 \fBchtype\fP and \fBcchar_t\fP variables.
 .PP
 The XSI standard extended conformance level adds new highlights
-\fBA_HORIZONTAL\fR, \fBA_LEFT\fR, \fBA_LOW\fR, \fBA_RIGHT\fR, \fBA_TOP\fR,
-\fBA_VERTICAL\fR (and corresponding \fBWA_\fR macros for each).
+\fBA_HORIZONTAL\fP, \fBA_LEFT\fP, \fBA_LOW\fP, \fBA_RIGHT\fP, \fBA_TOP\fP,
+\fBA_VERTICAL\fP (and corresponding \fBWA_\fP macros for each).
 As of August 2013,
 no known terminal provides these highlights
 (i.e., via the \fBsgr1\fP capability).
 .\" ---------------------------------------------------------------------------
 .SH RETURN VALUE
-All routines return the integer \fBOK\fR on success, or \fBERR\fP on failure.
+All routines return the integer \fBOK\fP on success, or \fBERR\fP on failure.
 .PP
 X/Open does not define any error conditions.
 .PP
@@ -597,9 +597,9 @@ or if the window pointer is null.
 .\" ---------------------------------------------------------------------------
 .SH SEE ALSO
 .na
-\fBcurses\fR(3X),
-\fBcurs_addch\fR(3X),
-\fBcurs_addstr\fR(3X),
-\fBcurs_bkgd\fR(3X),
-\fBcurs_printw\fR(3X),
-\fBcurs_variables\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_addch\fP(3X),
+\fBcurs_addstr\fP(3X),
+\fBcurs_bkgd\fP(3X),
+\fBcurs_printw\fP(3X),
+\fBcurs_variables\fP(3X)

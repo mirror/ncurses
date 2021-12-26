@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,50 +27,50 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_delch.3x,v 1.15 2020/10/24 09:36:43 tom Exp $
+.\" $Id: curs_delch.3x,v 1.17 2021/12/25 21:49:32 tom Exp $
 .TH curs_delch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fBdelch\fR,
-\fBwdelch\fR,
-\fBmvdelch\fR,
-\fBmvwdelch\fR \- delete character under the cursor in a \fBcurses\fR window
+\fBdelch\fP,
+\fBwdelch\fP,
+\fBmvdelch\fP,
+\fBmvwdelch\fP \- delete character under the cursor in a \fBcurses\fP window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint delch(void);\fR
+\fBint delch(void);\fP
 .br
-\fBint wdelch(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint wdelch(WINDOW *\fP\fIwin\fP\fB);\fP
 .br
-\fBint mvdelch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBint mvdelch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBint mvwdelch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBint mvwdelch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
 .SH DESCRIPTION
 These routines delete the character under the cursor; all characters to the
 right of the cursor on the same line are moved to the left one position and the
 last character on the line is filled with a blank.
 The cursor position does
-not change (after moving to \fIy\fR, \fIx\fR, if specified).
+not change (after moving to \fIy\fP, \fIx\fP, if specified).
 (This does not
 imply use of the hardware delete character feature.)
 .SH RETURN VALUE
-All routines return the integer \fBERR\fR upon failure and an \fBOK\fR (SVr4
-specifies only "an integer value other than \fBERR\fR") upon successful
+All routines return the integer \fBERR\fP upon failure and an \fBOK\fP (SVr4
+specifies only "an integer value other than \fBERR\fP") upon successful
 completion.
 .PP
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES
-Note that \fBdelch\fR, \fBmvdelch\fR, and \fBmvwdelch\fR may be macros.
+Note that \fBdelch\fP, \fBmvdelch\fP, and \fBmvwdelch\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 The
-standard specifies that they return \fBERR\fR on failure, but specifies no
+standard specifies that they return \fBERR\fP on failure, but specifies no
 error conditions.
 .SH SEE ALSO
-\fBcurses\fR(3X)
+\fBcurses\fP(3X)

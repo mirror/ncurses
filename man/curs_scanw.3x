@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.28 2020/10/24 09:29:26 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.31 2021/12/25 21:49:32 tom Exp $
 .TH curs_scanw 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -38,46 +38,46 @@
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBscanw\fR,
-\fBwscanw\fR,
-\fBmvscanw\fR,
-\fBmvwscanw\fR,
-\fBvwscanw\fR, \fBvw_scanw\fR \- convert formatted input from a \fBcurses\fR window
+\fBscanw\fP,
+\fBwscanw\fP,
+\fBmvscanw\fP,
+\fBmvwscanw\fP,
+\fBvwscanw\fP, \fBvw_scanw\fP \- convert formatted input from a \fBcurses\fP window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint scanw(const char *\fP\fIfmt\fP\fB, ...);\fR
+\fBint scanw(const char *\fP\fIfmt\fP\fB, ...);\fP
 .br
-\fBint wscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
+\fBint wscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
 .br
-\fBint mvscanw(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
+\fBint mvscanw(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
 .br
-\fBint mvwscanw(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fR
+\fBint mvwscanw(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
 .sp
-\fBint vw_scanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fR
+\fBint vw_scanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
 .sp
 /* obsolete */
 .br
-\fBint vwscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fR
+\fBint vwscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
 .SH DESCRIPTION
-The \fBscanw\fR, \fBwscanw\fR and \fBmvscanw\fR routines are analogous to
-\fBscanf\fR [see \fBscanf\fR(3)].
+The \fBscanw\fP, \fBwscanw\fP and \fBmvscanw\fP routines are analogous to
+\fBscanf\fP [see \fBscanf\fP(3)].
 The effect of these routines is as though
-\fBwgetstr\fR were called on the window, and the resulting line used as input
-for \fBsscanf\fR(3).
-Fields which do not map to a variable in the \fIfmt\fR
+\fBwgetstr\fP were called on the window, and the resulting line used as input
+for \fBsscanf\fP(3).
+Fields which do not map to a variable in the \fIfmt\fP
 field are lost.
 .PP
-The \fBvwscanw\fR and \fBvw_scanw\fR routines are analogous to \fBvscanf\fR(3).
-They perform a \fBwscanw\fR using a variable argument list.
-The third argument is a \fIva_list\fR,
-a pointer to a list of arguments, as defined in \fB<stdarg.h>\fR.
+The \fBvwscanw\fP and \fBvw_scanw\fP routines are analogous to \fBvscanf\fP(3).
+They perform a \fBwscanw\fP using a variable argument list.
+The third argument is a \fBva_list\fP,
+a pointer to a list of arguments, as defined in \fB<stdarg.h>\fP.
 .SH RETURN VALUE
-\fBvwscanw\fR returns \fBERR\fR on failure and an integer equal to the
+\fBvwscanw\fP returns \fBERR\fP on failure and an integer equal to the
 number of fields scanned on success.
 .PP
-Applications may use the return value from the \fBscanw\fR, \fBwscanw\fR,
-\fBmvscanw\fR and \fBmvwscanw\fR routines to determine the number of fields
+Applications may use the return value from the \fBscanw\fP, \fBwscanw\fP,
+\fBmvscanw\fP and \fBmvwscanw\fP routines to determine the number of fields
 which were mapped in the call.
 .PP
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
@@ -111,9 +111,9 @@ instead be output using \fBwaddstr\fP on the given window.
 SVr3 also added \fBvwscanw\fP, saying that the third parameter
 is a \fBva_list\fP, defined in <varargs.h>,
 and referring the reader to the manual pages for \fIvarargs\fP and
-\fIvprintf\fP for detailed descriptions.
-(Because the SVr3 documentation does not mention \fIvscanf\fP,
-that reference to \fIvprintf\fP may not be an error).
+\fBvprintf\fP for detailed descriptions.
+(Because the SVr3 documentation does not mention \fBvscanf\fP,
+that reference to \fBvprintf\fP may not be an error).
 .PP
 SVr4 added no new variations of \fBscanw\fP,
 but provided for using <varargs.h> or <stdarg.h> to define the \fBva_list\fP
@@ -128,15 +128,15 @@ However, the latter (\fBvwscanw\fP) is obsolete:
 .bP
 The XSI Curses standard, Issue 4 described these functions,
 noting that the function
-\fBvwscanw\fR is marked TO BE WITHDRAWN, and is to be replaced by a function
-\fBvw_scanw\fR using the \fB<stdarg.h>\fR interface.
+\fBvwscanw\fP is marked TO BE WITHDRAWN, and is to be replaced by a function
+\fBvw_scanw\fP using the \fB<stdarg.h>\fP interface.
 .bP
 The Single Unix Specification, Version 2 states that
-\fBvw_scanw\fR  is preferred to \fBvwscanw\fR since the latter requires
-including \fB<varargs.h>\fR, which
-cannot be used in the same file as \fB<stdarg.h>\fR.
-This implementation uses \fB<stdarg.h>\fR for both, because that header
-is included in \fB<curses.h\fR>.
+\fBvw_scanw\fP  is preferred to \fBvwscanw\fP since the latter requires
+including \fB<varargs.h>\fP, which
+cannot be used in the same file as \fB<stdarg.h>\fP.
+This implementation uses \fB<stdarg.h>\fP for both, because that header
+is included in \fB<curses.h\fP>.
 .bP
 X/Open Curses, Issue 5 (December 2007) marked \fBvwscanw\fP (along with
 \fBvwprintw\fP and the termcap interface) as withdrawn.
@@ -144,7 +144,7 @@ X/Open Curses, Issue 5 (December 2007) marked \fBvwscanw\fP (along with
 Both XSI and The Single Unix Specification, Version 2 state that these
 functions return \fBERR\fP or \fBOK\fP.
 .bP
-Since the underlying \fBscanf\fR(3) can return the number of items scanned,
+Since the underlying \fBscanf\fP(3) can return the number of items scanned,
 and the SVr4 code was documented to use this feature,
 this is probably an editing error which was introduced in XSI,
 rather than being done intentionally.
@@ -162,8 +162,8 @@ One possible way to get useful results would be to use a "%n" conversion
 at the end of the format string to ensure that something was processed.
 .SH SEE ALSO
 .na
-\fBcurses\fR(3X),
-\fBcurs_getstr\fR(3X),
-\fBcurs_printw\fR(3X),
+\fBcurses\fP(3X),
+\fBcurs_getstr\fP(3X),
+\fBcurs_printw\fP(3X),
 \fBcurs_termcap\fP(3X),
-\fBscanf\fR(3).
+\fBscanf\fP(3).

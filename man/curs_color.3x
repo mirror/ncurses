@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.66 2021/09/04 19:42:20 tom Exp $
+.\" $Id: curs_color.3x,v 1.67 2021/12/25 17:39:16 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -41,81 +41,81 @@
 .na
 .hy 0
 .SH NAME
-\fBstart_color\fR,
-\fBhas_colors\fR,
-\fBcan_change_color\fR,
-\fBinit_pair\fR,
-\fBinit_color\fR,
-\fBinit_extended_pair\fR,
-\fBinit_extended_color\fR,
-\fBcolor_content\fR,
-\fBpair_content\fR,
-\fBextended_color_content\fR,
-\fBextended_pair_content\fR,
-\fBreset_color_pairs\fR,
-\fBCOLOR_PAIR\fR,
-\fBPAIR_NUMBER\fR \- \fBcurses\fR color manipulation routines
+\fBstart_color\fP,
+\fBhas_colors\fP,
+\fBcan_change_color\fP,
+\fBinit_pair\fP,
+\fBinit_color\fP,
+\fBinit_extended_pair\fP,
+\fBinit_extended_color\fP,
+\fBcolor_content\fP,
+\fBpair_content\fP,
+\fBextended_color_content\fP,
+\fBextended_pair_content\fP,
+\fBreset_color_pairs\fP,
+\fBCOLOR_PAIR\fP,
+\fBPAIR_NUMBER\fP \- \fBcurses\fP color manipulation routines
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint start_color(void);\fR
+\fBint start_color(void);\fP
 .sp
-\fBbool has_colors(void);\fR
+\fBbool has_colors(void);\fP
 .br
-\fBbool can_change_color(void);\fR
+\fBbool can_change_color(void);\fP
 .sp
-\fBint init_pair(short \fP\fIpair\fP\fB, short \fP\fIf\fP\fB, short \fP\fIb\fP\fB);\fR
+\fBint init_pair(short \fP\fIpair\fP\fB, short \fP\fIf\fP\fB, short \fP\fIb\fP\fB);\fP
 .br
-\fBint init_color(short \fP\fIcolor\fP\fB, short \fP\fIr\fP\fB, short \fP\fIg\fP\fB, short \fP\fIb\fP\fB);\fR
+\fBint init_color(short \fP\fIcolor\fP\fB, short \fP\fIr\fP\fB, short \fP\fIg\fP\fB, short \fP\fIb\fP\fB);\fP
 .br
 /* extensions */
 .br
-\fBint init_extended_pair(int \fP\fIpair\fP\fB, int \fP\fIf\fP\fB, int \fP\fIb\fP\fB);\fR
+\fBint init_extended_pair(int \fP\fIpair\fP\fB, int \fP\fIf\fP\fB, int \fP\fIb\fP\fB);\fP
 .br
-\fBint init_extended_color(int \fP\fIcolor\fP\fB, int \fP\fIr\fP\fB, int \fP\fIg\fP\fB, int \fP\fIb\fP\fB);\fR
+\fBint init_extended_color(int \fP\fIcolor\fP\fB, int \fP\fIr\fP\fB, int \fP\fIg\fP\fB, int \fP\fIb\fP\fB);\fP
 .sp
-\fBint color_content(short \fP\fIcolor\fP\fB, short *\fP\fIr\fP\fB, short *\fP\fIg\fP\fB, short *\fP\fIb\fP\fB);\fR
+\fBint color_content(short \fP\fIcolor\fP\fB, short *\fP\fIr\fP\fB, short *\fP\fIg\fP\fB, short *\fP\fIb\fP\fB);\fP
 .br
-\fBint pair_content(short \fP\fIpair\fP\fB, short *\fP\fIf\fP\fB, short *\fP\fIb\fP\fB);\fR
+\fBint pair_content(short \fP\fIpair\fP\fB, short *\fP\fIf\fP\fB, short *\fP\fIb\fP\fB);\fP
 .br
 /* extensions */
 .br
-\fBint extended_color_content(int \fP\fIcolor\fP\fB, int *\fP\fIr\fP\fB, int *\fP\fIg\fP\fB, int *\fP\fIb\fP\fB);\fR
+\fBint extended_color_content(int \fP\fIcolor\fP\fB, int *\fP\fIr\fP\fB, int *\fP\fIg\fP\fB, int *\fP\fIb\fP\fB);\fP
 .br
-\fBint extended_pair_content(int \fP\fIpair\fP\fB, int *\fP\fIf\fP\fB, int *\fP\fIb\fP\fB);\fR
+\fBint extended_pair_content(int \fP\fIpair\fP\fB, int *\fP\fIf\fP\fB, int *\fP\fIb\fP\fB);\fP
 .sp
 /* extensions */
 .br
-\fBvoid reset_color_pairs(void);\fR
+\fBvoid reset_color_pairs(void);\fP
 .sp
-\fBint COLOR_PAIR(int \fP\fIn\fP\fB);\fR
+\fBint COLOR_PAIR(int \fP\fIn\fP\fB);\fP
 .br
-\fBPAIR_NUMBER(\fR\fIattrs\fR\fB);\fP
+\fBPAIR_NUMBER(\fP\fIattrs\fP\fB);\fP
 .br
 .SH DESCRIPTION
 .SS Overview
-\fBcurses\fR supports color attributes on terminals with that capability.
-To use these routines \fBstart_color\fR must be called, usually right after
-\fBinitscr\fR.
+\fBcurses\fP supports color attributes on terminals with that capability.
+To use these routines \fBstart_color\fP must be called, usually right after
+\fBinitscr\fP.
 Colors are always used in pairs (referred to as color-pairs).
 A color-pair consists of a foreground color (for characters) and a background
 color (for the blank field on which the characters are displayed).
-A programmer initializes a color-pair with the routine \fBinit_pair\fR.
-After it has been initialized, \fBCOLOR_PAIR\fR(\fIn\fR)
+A programmer initializes a color-pair with the routine \fBinit_pair\fP.
+After it has been initialized, \fBCOLOR_PAIR\fP(\fIn\fP)
 can be used to convert the pair to a video attribute.
 .PP
 If a terminal is capable of redefining colors, the programmer can use the
-routine \fBinit_color\fR to change the definition of a color.
-The routines \fBhas_colors\fR and \fBcan_change_color\fR
-return \fBTRUE\fR or \fBFALSE\fR,
+routine \fBinit_color\fP to change the definition of a color.
+The routines \fBhas_colors\fP and \fBcan_change_color\fP
+return \fBTRUE\fP or \fBFALSE\fP,
 depending on whether the terminal has color capabilities and whether the
 programmer can change the colors.
-The routine \fBcolor_content\fR allows a
+The routine \fBcolor_content\fP allows a
 programmer to extract the amounts of red, green, and blue components in an
 initialized color.
-The routine \fBpair_content\fR allows a programmer to find
+The routine \fBpair_content\fP allows a programmer to find
 out how a given color-pair is currently defined.
 .SS Color Rendering
 The \fBcurses\fP library combines these inputs to produce the
@@ -163,20 +163,20 @@ Consequently those calls use only the window attribute or
 the background character.
 .SH CONSTANTS
 .PP
-In \fB<curses.h>\fR the following macros are defined.
+In \fB<curses.h>\fP the following macros are defined.
 These are the standard colors (ISO-6429).
-\fBcurses\fR also assumes that \fBCOLOR_BLACK\fR is the default
+\fBcurses\fP also assumes that \fBCOLOR_BLACK\fP is the default
 background color for all terminals.
 .PP
 .nf
-      \fBCOLOR_BLACK\fR
-      \fBCOLOR_RED\fR
-      \fBCOLOR_GREEN\fR
-      \fBCOLOR_YELLOW\fR
-      \fBCOLOR_BLUE\fR
-      \fBCOLOR_MAGENTA\fR
-      \fBCOLOR_CYAN\fR
-      \fBCOLOR_WHITE\fR
+      \fBCOLOR_BLACK\fP
+      \fBCOLOR_RED\fP
+      \fBCOLOR_GREEN\fP
+      \fBCOLOR_YELLOW\fP
+      \fBCOLOR_BLUE\fP
+      \fBCOLOR_MAGENTA\fP
+      \fBCOLOR_CYAN\fP
+      \fBCOLOR_WHITE\fP
 .fi
 .PP
 Some terminals support more than the eight (8) \*(``ANSI\*('' colors.
@@ -190,14 +190,14 @@ is initialized by \fBstart_color\fP to the maximum number of color pairs
 the terminal can support.
 .SH FUNCTIONS
 .SS start_color
-The \fBstart_color\fR routine requires no arguments.
+The \fBstart_color\fP routine requires no arguments.
 It must be called if the programmer wants to use colors, and before any other
 color manipulation routine is called.
-It is good practice to call this routine right after \fBinitscr\fR.
-\fBstart_color\fR does this:
+It is good practice to call this routine right after \fBinitscr\fP.
+\fBstart_color\fP does this:
 .bP
-It initializes two global variables, \fBCOLORS\fR and
-\fBCOLOR_PAIRS\fR (respectively defining the maximum number of colors
+It initializes two global variables, \fBCOLORS\fP and
+\fBCOLOR_PAIRS\fP (respectively defining the maximum number of colors
 and color-pairs the terminal can support).
 .bP
 It initializes the special color pair \fB0\fP to the default foreground
@@ -237,8 +237,8 @@ along with the terminal's color.
 These limits apply to color values and color pairs.
 Values outside these limits are not legal, and may result in a runtime error:
 .bP
-\fBCOLORS\fP corresponds to the terminal database's \fBmax_colors\fR capability,
-(see \fBterminfo\fR(\*n)).
+\fBCOLORS\fP corresponds to the terminal database's \fBmax_colors\fP capability,
+(see \fBterminfo\fP(\*n)).
 .bP
 color values are expected to be in the range \fB0\fP to \fBCOLORS\-1\fP,
 inclusive (including \fB0\fP and \fBCOLORS\-1\fP).
@@ -248,7 +248,7 @@ to denote the \fIdefault color\fP (see \fBuse_default_colors\fP(3X)).
 .bP
 \fBCOLOR_PAIRS\fP corresponds to
 the terminal database's \fBmax_pairs\fP capability,
-(see \fBterminfo\fR(\*n)).
+(see \fBterminfo\fP(\*n)).
 .bP
 legal color pair values are in the range \fB1\fP to \fBCOLOR_PAIRS\-1\fP,
 inclusive.
@@ -260,22 +260,22 @@ but is actually whatever the terminal implements before color is initialized.
 It cannot be modified by the application.
 .SS has_colors
 .PP
-The \fBhas_colors\fR routine requires no arguments.
-It returns \fBTRUE\fR if
-the terminal can manipulate colors; otherwise, it returns \fBFALSE\fR.
+The \fBhas_colors\fP routine requires no arguments.
+It returns \fBTRUE\fP if
+the terminal can manipulate colors; otherwise, it returns \fBFALSE\fP.
 This routine facilitates writing terminal-independent programs.
 For example, a programmer can use it to decide
 whether to use color or some other video attribute.
 .SS can_change_color
 .PP
-The \fBcan_change_color\fR routine requires no arguments.
-It returns \fBTRUE\fR if the terminal supports colors
+The \fBcan_change_color\fP routine requires no arguments.
+It returns \fBTRUE\fP if the terminal supports colors
 and can change their definitions;
-other, it returns \fBFALSE\fR.
+other, it returns \fBFALSE\fP.
 This routine facilitates writing terminal-independent programs.
 .SS init_pair
 .PP
-The \fBinit_pair\fR routine changes the definition of a color-pair.
+The \fBinit_pair\fP routine changes the definition of a color-pair.
 It takes three arguments:
 the number of the color-pair to be changed, the foreground
 color number, and the background color number.
@@ -293,9 +293,9 @@ the screen is refreshed and all occurrences of that color-pair
 are changed to the new definition.
 .PP
 As an extension, ncurses allows you to set color pair \fB0\fP via
-the \fBassume_default_colors\fR(3X) routine, or to specify the use of
-default colors (color number \fB\-1\fR) if you first invoke the
-\fBuse_default_colors\fR(3X) routine.
+the \fBassume_default_colors\fP(3X) routine, or to specify the use of
+default colors (color number \fB\-1\fP) if you first invoke the
+\fBuse_default_colors\fP(3X) routine.
 .SS init_extended_pair
 .PP
 Because \fBinit_pair\fP uses signed \fBshort\fPs for its parameters,
@@ -306,19 +306,19 @@ for the color-pair and color-value,
 allowing a larger number of colors to be supported.
 .SS init_color
 .PP
-The \fBinit_color\fR routine changes the definition of a color.
+The \fBinit_color\fP routine changes the definition of a color.
 It takes four arguments:
 the number of the color to be changed followed by three RGB values
 (for the amounts of red, green, and blue components).
 .bP
 The first argument must be a legal color value;
 default colors are not allowed here.
-(See the section \fBColors\fR for the default color index.)
+(See the section \fBColors\fP for the default color index.)
 .bP
 Each of the last three arguments
 must be a value in the range \fB0\fP through \fB1000\fP.
 .PP
-When \fBinit_color\fR is used, all
+When \fBinit_color\fP is used, all
 occurrences of that color on the screen immediately change to the new
 definition.
 .SS init_extended_color
@@ -332,7 +332,7 @@ for setting the red, green, and blue components,
 allowing a larger number of colors to be supported.
 .SS color_content
 .PP
-The \fBcolor_content\fR routine gives programmers a way to find the intensity
+The \fBcolor_content\fP routine gives programmers a way to find the intensity
 of the red, green, and blue (RGB) components in a color.
 It requires four arguments: the color number, and three addresses
 of \fBshort\fRs for storing
@@ -357,18 +357,18 @@ for returning the red, green, and blue components,
 allowing a larger number of colors to be supported.
 .SS pair_content
 .PP
-The \fBpair_content\fR routine allows programmers to find out what colors a
+The \fBpair_content\fP routine allows programmers to find out what colors a
 given color-pair consists of.
 It requires three arguments: the color-pair
 number, and two addresses of \fBshort\fRs for storing the foreground and the
 background color numbers.
 .bP
 The first argument must be a legal color value,
-i.e., in the range \fB1\fP through \fBCOLOR_PAIRS\-1\fR, inclusive.
+i.e., in the range \fB1\fP through \fBCOLOR_PAIRS\-1\fP, inclusive.
 .bP
 The values that are stored at the addresses pointed
 to by the second and third arguments are in the
-range \fB0\fP through \fBCOLORS\fR, inclusive.
+range \fB0\fP through \fBCOLORS\fP, inclusive.
 .SS extended_pair_content
 .PP
 Because \fBpair_content\fP uses signed \fBshort\fPs for its parameters,
@@ -385,27 +385,27 @@ It also touches the current- and standard-screens, allowing an application to
 switch color palettes rapidly.
 .SS PAIR_NUMBER
 .PP
-\fBPAIR_NUMBER(\fR\fIattrs\fR) extracts the color
+\fBPAIR_NUMBER(\fP\fIattrs\fP) extracts the color
 value from its \fIattrs\fP parameter and returns it as a color pair number.
 .SS COLOR_PAIR
-Its inverse \fBCOLOR_PAIR(\fR\fIn\fR\fB)\fR converts a color pair number
+Its inverse \fBCOLOR_PAIR(\fP\fIn\fP\fB)\fP converts a color pair number
 to an attribute.
 Attributes can hold color pairs in the range 0 to 255.
 If you need a color pair larger than that, you must use functions
 such as \fBattr_set\fP (which pass the color pair as a separate parameter)
 rather than the legacy functions such as \fBattrset\fP.
 .SH RETURN VALUE
-The routines \fBcan_change_color\fR and \fBhas_colors\fR return \fBTRUE\fR
-or \fBFALSE\fR.
+The routines \fBcan_change_color\fP and \fBhas_colors\fP return \fBTRUE\fP
+or \fBFALSE\fP.
 .PP
-All other routines return the integer \fBERR\fR upon failure and an \fBOK\fR
+All other routines return the integer \fBERR\fP upon failure and an \fBOK\fP
 (SVr4 specifies only \*(``an integer value
-other than \fBERR\fR\*('') upon successful completion.
+other than \fBERR\fP\*('') upon successful completion.
 .PP
 X/Open defines no error conditions.
 SVr4 does document some error conditions which apply in general:
 .bP
-This implementation will return \fBERR\fR on attempts to
+This implementation will return \fBERR\fP on attempts to
 use color values outside the range \fB0\fP to \fBCOLORS\fP\-1
 (except for the default colors extension),
 or use color pairs outside the range \fB0\fP to \fBCOLOR_PAIRS\-1\fP.
@@ -440,10 +440,10 @@ from the terminal description.
 returns an error if the color table cannot be allocated.
 .RE
 .SH NOTES
-In the \fBncurses\fR implementation, there is a separate color activation flag,
+In the \fBncurses\fP implementation, there is a separate color activation flag,
 color palette, color pairs table,
 and associated \fBCOLORS\fP and \fBCOLOR_PAIRS\fP counts
-for each screen; the \fBstart_color\fR function only affects the current
+for each screen; the \fBstart_color\fP function only affects the current
 screen.
 The SVr4/XSI interface is not really designed with this in mind, and
 historical implementations may use a single shared color palette.
@@ -452,13 +452,13 @@ Setting an implicit background color via a color pair affects only
 character cells that a character write operation explicitly touches.
 To change
 the background color used when parts of a window are blanked by erasing or
-scrolling operations, see \fBcurs_bkgd\fR(3X).
+scrolling operations, see \fBcurs_bkgd\fP(3X).
 .PP
 Several caveats apply on older x86 machines
 (e.g., i386, i486) with VGA-compatible graphics:
 .bP
 COLOR_YELLOW is actually brown.
-To get yellow, use COLOR_YELLOW combined with the \fBA_BOLD\fR attribute.
+To get yellow, use COLOR_YELLOW combined with the \fBA_BOLD\fP attribute.
 .bP
 The A_BLINK attribute should in theory cause the background to go bright.
 This often fails to work, and even some cards for which it mostly works
@@ -517,15 +517,15 @@ the attributes field of \fBcchar_t\fP, limiting the number of color-pairs
 by the size of the bitfield.
 .SH PORTABILITY
 This implementation satisfies XSI Curses's minimum maximums
-for \fBCOLORS\fR and \fBCOLOR_PAIRS\fR.
+for \fBCOLORS\fP and \fBCOLOR_PAIRS\fP.
 .PP
 The \fBinit_pair\fP routine accepts negative values of foreground
-and background color to support the \fBuse_default_colors\fR(3X) extension,
+and background color to support the \fBuse_default_colors\fP(3X) extension,
 but only if that routine has been first invoked.
 .PP
-The assumption that \fBCOLOR_BLACK\fR is the default
+The assumption that \fBCOLOR_BLACK\fP is the default
 background color for all terminals can be modified using the
-\fBassume_default_colors\fR(3X) extension.
+\fBassume_default_colors\fP(3X) extension.
 .PP
 This implementation checks the pointers,
 e.g., for the values returned by
@@ -543,8 +543,8 @@ allowing applications to use larger color- and pair-numbers.
 .PP
 The \fBreset_color_pairs\fP function is an extension of ncurses.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_initscr\fR(3X),
-\fBcurs_attr\fR(3X),
-\fBcurs_variables\fR(3X),
-\fBdefault_colors\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_initscr\fP(3X),
+\fBcurs_attr\fP(3X),
+\fBcurs_variables\fP(3X),
+\fBdefault_colors\fP(3X)

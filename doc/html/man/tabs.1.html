@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tabs.1,v 1.32 2021/10/16 13:37:43 tom Exp @
+  * @Id: tabs.1,v 1.35 2021/12/25 19:04:39 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>tabs 1</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">tabs 1</H1>
@@ -56,7 +56,7 @@
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        The  <STRONG>tabs</STRONG> program clears and sets tab-stops on the terminal.  This uses
-       the terminfo <EM>clear</EM><STRONG>_</STRONG><EM>all</EM><STRONG>_</STRONG><EM>tabs</EM> and <EM>set</EM><STRONG>_</STRONG><EM>tab</EM>  capabilities.   If  either  is
+       the terminfo <STRONG>clear_all_tabs</STRONG> and <STRONG>set_tab</STRONG>  capabilities.   If  either  is
        absent,  <STRONG>tabs</STRONG> is unable to clear/set tab-stops.  The terminal should be
        configured to use hard tabs, e.g.,
 
@@ -252,7 +252,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211021).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211225).
 
 
 

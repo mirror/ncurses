@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inch.3x,v 1.26 2021/06/17 21:30:22 tom Exp $
+.\" $Id: curs_inch.3x,v 1.27 2021/12/25 17:39:16 tom Exp $
 .TH curs_inch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -39,38 +39,38 @@
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBinch\fR,
-\fBwinch\fR,
-\fBmvinch\fR,
-\fBmvwinch\fR \- get a character and attributes from a \fBcurses\fR window
+\fBinch\fP,
+\fBwinch\fP,
+\fBmvinch\fP,
+\fBmvwinch\fP \- get a character and attributes from a \fBcurses\fP window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBchtype inch(void);\fR
+\fBchtype inch(void);\fP
 .br
-\fBchtype winch(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBchtype winch(WINDOW *\fP\fIwin\fP\fB);\fP
 .sp
-\fBchtype mvinch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBchtype mvinch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBchtype mvwinch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBchtype mvwinch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
 .SH DESCRIPTION
-These routines return the character, of type \fBchtype\fR, at the current
+These routines return the character, of type \fBchtype\fP, at the current
 position in the named window.
 If any attributes are set for that position,
 their values are OR'ed into the value returned.
 Constants defined in
-\fB<curses.h>\fR can be used with the \fB&\fR (logical AND) operator to
+\fB<curses.h>\fP can be used with the \fB&\fP (logical AND) operator to
 extract the character or attributes alone.
 .
 .SS Attributes
-The following bit-masks may be AND-ed with characters returned by \fBwinch\fR.
+The following bit-masks may be AND-ed with characters returned by \fBwinch\fP.
 .
 .TS
 l l .
-\fBA_CHARTEXT\fR	Bit-mask to extract character
-\fBA_ATTRIBUTES\fR	Bit-mask to extract attributes
-\fBA_COLOR\fR	Bit-mask to extract color-pair field information
+\fBA_CHARTEXT\fP	Bit-mask to extract character
+\fBA_ATTRIBUTES\fP	Bit-mask to extract attributes
+\fBA_COLOR\fP	Bit-mask to extract color-pair field information
 .TE
 .SH RETURN VALUE
 Functions with a \*(``mv\*('' prefix first perform a cursor movement using
@@ -108,12 +108,12 @@ An application using more bits, e.g., a Unicode value,
 should use the wide-character equivalents to these functions.
 .SH SEE ALSO
 .TP 5
-\fBcurses\fR(3X)
+\fBcurses\fP(3X)
 gives an overview of the WINDOW and \fBchtype\fP data types.
 .TP 5
-\fBcurs_attr\fR(3X)
+\fBcurs_attr\fP(3X)
 goes into more detail, pointing out portability problems and
 constraints on the use of \fBchtype\fP for returning window information.
 .TP 5
-\fBcurs_in_wch\fR(3X)
+\fBcurs_in_wch\fP(3X)
 describes comparable functions for the wide-character (ncursesw) library.

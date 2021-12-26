@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addwstr.3x,v 1.15 2020/10/17 23:12:22 tom Exp $
+.\" $Id: curs_addwstr.3x,v 1.17 2021/12/25 21:41:58 tom Exp $
 .TH curs_addwstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -40,53 +40,53 @@
 .na
 .hy 0
 .SH NAME
-\fBaddwstr\fR,
-\fBaddnwstr\fR,
-\fBwaddwstr\fR,
-\fBwaddnwstr\fR,
-\fBmvaddwstr\fR,
-\fBmvaddnwstr\fR,
-\fBmvwaddwstr\fR,
-\fBmvwaddnwstr\fR \- add a string of wide characters to a \fBcurses\fR window and advance cursor
+\fBaddwstr\fP,
+\fBaddnwstr\fP,
+\fBwaddwstr\fP,
+\fBwaddnwstr\fP,
+\fBmvaddwstr\fP,
+\fBmvaddnwstr\fP,
+\fBmvwaddwstr\fP,
+\fBmvwaddnwstr\fP \- add a string of wide characters to a \fBcurses\fP window and advance cursor
 .ad
 .hy
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBint addwstr(const wchar_t *\fR\fIwstr\fR\fB);\fR
+\fBint addwstr(const wchar_t *\fP\fIwstr\fP\fB);\fP
 .br
-\fBint addnwstr(const wchar_t *\fR\fIwstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint addnwstr(const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint waddwstr(WINDOW *\fR\fIwin\fR\fB, const wchar_t *\fR\fIwstr\fR\fB);\fR
+\fBint waddwstr(WINDOW *\fP\fIwin\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
 .br
-\fBint waddnwstr(WINDOW *\fR\fIwin\fR\fB, const wchar_t *\fR\fIwstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint waddnwstr(WINDOW *\fP\fIwin\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .sp
-\fBint mvaddwstr(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const wchar_t *\fR\fIwstr\fR\fB);\fR
+\fBint mvaddwstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
 .br
-\fBint mvaddnwstr(int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const wchar_t *\fR\fIwstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint mvaddnwstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint mvwaddwstr(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const wchar_t *\fR\fIwstr\fR\fB);\fR
+\fBint mvwaddwstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
 .br
-\fBint mvwaddnwstr(WINDOW *\fR\fIwin\fR\fB, int \fR\fIy\fR\fB, int \fR\fIx\fR\fB, const wchar_t *\fR\fIwstr\fR\fB, int \fR\fIn\fR\fB);\fR
+\fBint mvwaddnwstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .fi
 .SH DESCRIPTION
 These functions write the characters of the
-(null-terminated) \fBwchar_t\fR character string
-\fIwstr\fR on the given window.
-It is similar to constructing a \fBcchar_t\fR for each wchar_t in the string,
-then calling \fBwadd_wch\fR for the resulting \fBcchar_t\fR.
+(null-terminated) \fBwchar_t\fP character string
+\fIwstr\fP on the given window.
+It is similar to constructing a \fBcchar_t\fP for each wchar_t in the string,
+then calling \fBwadd_wch\fP for the resulting \fBcchar_t\fP.
 .PP
-The \fImv\fR functions perform cursor movement once, before writing any
+The \fImv\fP functions perform cursor movement once, before writing any
 characters.
 Thereafter, the cursor is advanced as a side-effect of writing to the window.
 .PP
-The four functions with \fIn\fR as the last argument
-write at most \fIn\fR \fBwchar_t\fR characters,
+The four functions with \fIn\fP as the last argument
+write at most \fIn\fP \fBwchar_t\fP characters,
 or until a terminating null is reached.
-If \fIn\fR is \-1, then the entire string will be added.
+If \fIn\fP is \-1, then the entire string will be added.
 .SH RETURN VALUE
-All functions return the integer \fBERR\fR upon failure and \fBOK\fR on success.
+All functions return the integer \fBERR\fP upon failure and \fBOK\fP on success.
 .PP
 X/Open does not define any error conditions.
 This implementation returns an error
@@ -101,9 +101,9 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES
-All of these functions except \fBwaddnwstr\fR may be macros.
+All of these functions except \fBwaddnwstr\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_add_wch\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_add_wch\fP(3X)

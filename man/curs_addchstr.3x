@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addchstr.3x,v 1.22 2020/12/19 21:39:20 tom Exp $
+.\" $Id: curs_addchstr.3x,v 1.24 2021/12/25 21:41:58 tom Exp $
 .TH curs_addchstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -40,49 +40,49 @@
 .na
 .hy 0
 .SH NAME
-\fBaddchstr\fR,
-\fBaddchnstr\fR,
-\fBwaddchstr\fR,
-\fBwaddchnstr\fR,
-\fBmvaddchstr\fR,
-\fBmvaddchnstr\fR,
-\fBmvwaddchstr\fR,
-\fBmvwaddchnstr\fR \- add a string of characters (and attributes) to a \fBcurses\fR window
+\fBaddchstr\fP,
+\fBaddchnstr\fP,
+\fBwaddchstr\fP,
+\fBwaddchnstr\fP,
+\fBmvaddchstr\fP,
+\fBmvaddchnstr\fP,
+\fBmvwaddchstr\fP,
+\fBmvwaddchnstr\fP \- add a string of characters (and attributes) to a \fBcurses\fP window
 .ad
 .hy
 .SH SYNOPSIS
 .nf
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .PP
-\fBint addchstr(const chtype *\fP\fIchstr\fP\fB);\fR
+\fBint addchstr(const chtype *\fP\fIchstr\fP\fB);\fP
 .br
-\fBint addchnstr(const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint addchnstr(const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint waddchstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fR
+\fBint waddchstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
 .br
-\fBint waddchnstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint waddchnstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .sp
-\fBint mvaddchstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fR
+\fBint mvaddchstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
 .br
-\fBint mvaddchnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvaddchnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
-\fBint mvwaddchstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fR
+\fBint mvwaddchstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
 .br
-\fBint mvwaddchnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint mvwaddchnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
 .fi
 .SH DESCRIPTION
 These functions copy the (null-terminated)
-\fIchstr\fR array
+\fIchstr\fP array
 into the window image structure
 starting at the current cursor position.
-The four functions with \fIn\fR as the last
-argument copy at most \fIn\fR elements,
+The four functions with \fIn\fP as the last
+argument copy at most \fIn\fP elements,
 but no more than will fit on the line.
-If \fBn\fR=\fB\-1\fR then the whole array is copied,
+If \fBn\fP=\fB\-1\fP then the whole array is copied,
 to the maximum number of characters that will fit on the line.
 .PP
-The window cursor is \fInot\fR advanced.
-These functions work faster than \fBwaddnstr\fR.
+The window cursor is \fInot\fP advanced.
+These functions work faster than \fBwaddnstr\fP.
 On the other hand:
 .bP
 they do not perform checking
@@ -95,7 +95,7 @@ they do not expand other control characters to ^-escapes, and
 they truncate the string if it crosses the right margin,
 rather than wrapping it around to the new line.
 .SH RETURN VALUE
-All functions return the integer \fBERR\fR upon failure and \fBOK\fR on success.
+All functions return the integer \fBERR\fP upon failure and \fBOK\fP on success.
 .PP
 X/Open does not define any error conditions.
 This implementation returns an error
@@ -105,13 +105,13 @@ Functions with a \*(``mv\*('' prefix first perform a cursor movement using
 \fBwmove\fP, and return an error if the position is outside the window,
 or if the window pointer is null.
 .SH NOTES
-All functions except \fBwaddchnstr\fR may be macros.
+All functions except \fBwaddchnstr\fP may be macros.
 .SH PORTABILITY
 These entry points are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_addstr\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_addstr\fP(3X).
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_add_wchstr\fR(3X).
+\fBcurs_add_wchstr\fP(3X).

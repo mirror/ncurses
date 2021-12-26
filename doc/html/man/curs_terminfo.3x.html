@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_terminfo.3x,v 1.76 2021/09/04 19:58:03 tom Exp @
+  * @Id: curs_terminfo.3x,v 1.79 2021/12/25 21:34:58 tom Exp @
   * ***************************************************************************
   * ***************************************************************************
   * ***************************************************************************
@@ -43,7 +43,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_terminfo 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_terminfo 3x</H1>
@@ -289,7 +289,7 @@
        <STRONG>o</STRONG>   <EM>pair</EM> of type <STRONG>short</STRONG> for the color-pair number.
 
        The <STRONG>vid_attr</STRONG> and <STRONG>vid_puts</STRONG> routines are designed to  use  the  attribute
-       constants with the <EM>WA</EM><STRONG>_</STRONG> prefix.
+       constants with the <STRONG>WA_</STRONG> prefix.
 
        X/Open  Curses  reserves  the <EM>opts</EM> argument for future use, saying that
        applications must provide a null pointer for that argument.  As an  ex-
@@ -301,7 +301,7 @@
 
        While <STRONG>putp</STRONG> and <STRONG>mvcur</STRONG> are low-level functions which do not use the high-
        level curses state, they are declared in <STRONG>&lt;curses.h&gt;</STRONG> because SystemV did
-       this (see <STRONG>HISTORY</STRONG>).
+       this (see <EM>HISTORY</EM>).
 
 
 </PRE><H3><a name="h3-Terminal-Capability-Functions">Terminal Capability Functions</a></H3><PRE>
@@ -379,7 +379,7 @@
 
 </PRE><H3><a name="h3-Compatibility-macros">Compatibility macros</a></H3><PRE>
        This  implementation  provides a few macros for compatibility with sys-
-       tems  before  SVr4  (see  <STRONG>HISTORY</STRONG>).   Those  include  <STRONG>crmode</STRONG>,  <STRONG>fixterm</STRONG>,
+       tems  before  SVr4  (see  <EM>HISTORY</EM>).   Those  include  <STRONG>crmode</STRONG>,  <STRONG>fixterm</STRONG>,
        <STRONG>gettmode</STRONG>, <STRONG>nocrmode</STRONG>, <STRONG>resetterm</STRONG>, <STRONG>saveterm</STRONG>, and <STRONG>setterm</STRONG>.
 
        In  SVr4,  those  are  found in <STRONG>&lt;curses.h&gt;</STRONG>, but except for <STRONG>setterm</STRONG>, are
@@ -475,7 +475,7 @@
 
        There are other low-level functions declared in the curses header files
        on Unix systems, but none were documented.  The functions marked "obso-
-       lete" remained in use by the Unix <STRONG>vi</STRONG> editor.
+       lete" remained in use by the Unix <STRONG>vi(1)</STRONG> editor.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>

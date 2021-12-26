@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020 Thomas E. Dickey                                          *
+.\" Copyright 2020,2021 Thomas E. Dickey                                     *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,58 +27,58 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getyx.3x,v 1.20 2020/10/24 09:38:43 tom Exp $
+.\" $Id: curs_getyx.3x,v 1.22 2021/12/25 21:50:36 tom Exp $
 .TH curs_getyx 3X ""
 .SH NAME
-\fBgetyx\fR,
-\fBgetparyx\fR,
-\fBgetbegyx\fR,
-\fBgetmaxyx\fR \- get \fBcurses\fR cursor and window coordinates
+\fBgetyx\fP,
+\fBgetparyx\fP,
+\fBgetbegyx\fP,
+\fBgetmaxyx\fP \- get \fBcurses\fP cursor and window coordinates
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBvoid getyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBvoid getyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBvoid getparyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBvoid getparyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBvoid getbegyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBvoid getbegyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
-\fBvoid getmaxyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fR
+\fBvoid getmaxyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
 .br
 .SH DESCRIPTION
-The \fBgetyx\fR macro places the current cursor position of the given window in
-the two integer variables \fIy\fR and \fIx\fR.
+The \fBgetyx\fP macro places the current cursor position of the given window in
+the two integer variables \fIy\fP and \fIx\fP.
 .PP
-If \fIwin\fR is a subwindow, the \fBgetparyx\fR macro places the beginning
+If \fIwin\fP is a subwindow, the \fBgetparyx\fP macro places the beginning
 coordinates of the subwindow relative to the parent window into two integer
-variables \fIy\fR and \fIx\fR.
-Otherwise, \fB\-1\fR is placed into \fIy\fR and \fIx\fR.
+variables \fIy\fP and \fIx\fP.
+Otherwise, \fB\-1\fP is placed into \fIy\fP and \fIx\fP.
 .PP
-Like \fBgetyx\fR, the \fBgetbegyx\fR and \fBgetmaxyx\fR macros store
+Like \fBgetyx\fP, the \fBgetbegyx\fP and \fBgetmaxyx\fP macros store
 the current beginning coordinates and size of the specified window.
 .SH RETURN VALUE
 The return values of these macros are undefined (i.e.,
 they should not be used as the right-hand side of assignment statements).
 .SH NOTES
 All of these interfaces are macros.
-A "\fB&\fR" is not necessary before the variables \fIy\fR and \fIx\fR.
+A "\fB&\fP" is not necessary before the variables \fIy\fP and \fIx\fP.
 .SH PORTABILITY
 The
-\fBgetyx\fR,
-\fBgetparyx\fR,
-\fBgetbegyx\fR and
-\fBgetmaxyx\fR
+\fBgetyx\fP,
+\fBgetparyx\fP,
+\fBgetbegyx\fP and
+\fBgetmaxyx\fP
 macros are described in the XSI Curses standard, Issue 4.
 .PP
 This implementation also provides functions
-\fBgetbegx\fR,
-\fBgetbegy\fR,
-\fBgetcurx\fR,
-\fBgetcury\fR,
-\fBgetmaxx\fR,
-\fBgetmaxy\fR,
-\fBgetparx\fR and
-\fBgetpary\fR
+\fBgetbegx\fP,
+\fBgetbegy\fP,
+\fBgetcurx\fP,
+\fBgetcury\fP,
+\fBgetmaxx\fP,
+\fBgetmaxy\fP,
+\fBgetparx\fP and
+\fBgetpary\fP
 for compatibility with older versions of curses.
 .PP
 Although X/Open Curses does not address this,
@@ -96,6 +96,6 @@ have (at least since release 1.8.1) differed by one from some
 other implementations.
 The difference is hidden by means of the macro \fBgetmaxyx\fP.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_legacy\fR(3X),
-\fBcurs_opaque\fR(3X)
+\fBcurses\fP(3X),
+\fBcurs_legacy\fP(3X),
+\fBcurs_opaque\fP(3X)

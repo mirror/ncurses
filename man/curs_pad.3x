@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018,2020 Thomas E. Dickey                                     *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_pad.3x,v 1.26 2020/02/02 23:34:34 tom Exp $
+.\" $Id: curs_pad.3x,v 1.28 2021/12/25 21:41:58 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -36,36 +36,36 @@
 .na
 .hy 0
 .SH NAME
-\fBnewpad\fR,
-\fBsubpad\fR,
-\fBprefresh\fR,
-\fBpnoutrefresh\fR,
-\fBpechochar\fR,
-\fBpecho_wchar\fR \- create and display \fBcurses\fR pads
+\fBnewpad\fP,
+\fBsubpad\fP,
+\fBprefresh\fP,
+\fBpnoutrefresh\fP,
+\fBpechochar\fP,
+\fBpecho_wchar\fP \- create and display \fBcurses\fP pads
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBWINDOW *newpad(int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB);\fR
+\fBWINDOW *newpad(int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB);\fP
 .br
-\fBWINDOW *subpad(WINDOW *\fP\fIorig\fP\fB, int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fR
-      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fR
+\fBWINDOW *subpad(WINDOW *\fP\fIorig\fP\fB, int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fP
+      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
 .br
-\fBint prefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fR
-      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fR
+\fBint prefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fP
+      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fP
 .br
-\fBint pnoutrefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fR
-      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fR
+\fBint pnoutrefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fP
+      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fP
 .br
-\fBint pechochar(WINDOW *\fP\fIpad\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBint pechochar(WINDOW *\fP\fIpad\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint pecho_wchar(WINDOW *\fP\fIpad\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fR
+\fBint pecho_wchar(WINDOW *\fP\fIpad\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
 .SH DESCRIPTION
 .SS newpad
-The \fBnewpad\fR routine creates and returns a pointer to a new pad data
-structure with the given number of lines, \fInlines\fR, and columns,
-\fIncols\fR.
+The \fBnewpad\fP routine creates and returns a pointer to a new pad data
+structure with the given number of lines, \fInlines\fP, and columns,
+\fIncols\fP.
 A pad is like a window, except that it is not restricted by the
 screen size, and is not necessarily associated with a particular part of the
 screen.
@@ -75,36 +75,36 @@ Automatic refreshes of pads
 (e.g., from scrolling or echoing of input) do not occur.
 .PP
 It is not
-legal to call \fBwrefresh\fR with a \fIpad\fR as an argument; the routines
-\fBprefresh\fR or \fBpnoutrefresh\fR should be called instead.
+legal to call \fBwrefresh\fP with a \fIpad\fP as an argument; the routines
+\fBprefresh\fP or \fBpnoutrefresh\fP should be called instead.
 Note that these
 routines require additional parameters to specify the part of the pad to be
 displayed and the location on the screen to be used for the display.
 .SS subpad
 .PP
-The \fBsubpad\fR routine creates and returns a pointer to a subwindow within a
-pad with the given number of lines, \fInlines\fR, and columns, \fIncols\fR.
-Unlike \fBsubwin\fR, which uses screen coordinates, the window is at position
-(\fIbegin\fR_\fIx\fR\fB,\fR \fIbegin\fR_\fIy\fR) on the pad.
+The \fBsubpad\fP routine creates and returns a pointer to a subwindow within a
+pad with the given number of lines, \fInlines\fP, and columns, \fIncols\fP.
+Unlike \fBsubwin\fP, which uses screen coordinates, the window is at position
+(\fIbegin\fR_\fIx\fP\fB,\fP \fIbegin\fR_\fIy\fP) on the pad.
 The window is
-made in the middle of the window \fIorig\fR, so that changes made to one window
+made in the middle of the window \fIorig\fP, so that changes made to one window
 affect both windows.
 During the use of this routine, it will often be
-necessary to call \fBtouchwin\fR or \fBtouchline\fR on \fIorig\fR before
-calling \fBprefresh\fR.
+necessary to call \fBtouchwin\fP or \fBtouchline\fP on \fIorig\fP before
+calling \fBprefresh\fP.
 .SS prefresh, pnoutrefresh
 .PP
-The \fBprefresh\fR and \fBpnoutrefresh\fR routines are analogous to
-\fBwrefresh\fR and \fBwnoutrefresh\fR except that they relate to pads instead
+The \fBprefresh\fP and \fBpnoutrefresh\fP routines are analogous to
+\fBwrefresh\fP and \fBwnoutrefresh\fP except that they relate to pads instead
 of windows.
 The additional parameters are needed to indicate what part of the
 pad and screen are involved.
 .bP
-The \fIpminrow\fR and \fIpmincol\fR parameters specify the upper
+The \fIpminrow\fP and \fIpmincol\fP parameters specify the upper
 left-hand corner of the rectangle to be displayed in the pad.
 .bP
-The \fIsminrow\fR,
-\fIsmincol\fR, \fIsmaxrow\fR, and \fIsmaxcol\fR
+The \fIsminrow\fP,
+\fIsmincol\fP, \fIsmaxrow\fP, and \fIsmaxcol\fP
 parameters specify the edges of the
 rectangle to be displayed on the screen.
 .PP
@@ -114,34 +114,34 @@ since the rectangles must be the same size.
 Both rectangles must be entirely
 contained within their respective structures.
 Negative values of
-\fIpminrow\fR, \fIpmincol\fR, \fIsminrow\fR, or \fIsmincol\fR are treated as if
+\fIpminrow\fP, \fIpmincol\fP, \fIsminrow\fP, or \fIsmincol\fP are treated as if
 they were zero.
 .SS pechochar
 .PP
-The \fBpechochar\fR routine is functionally equivalent to a call to \fBaddch\fR
-followed by a call to \fBrefresh\fR(3X),
-a call to \fBwaddch\fR followed by a call
-to \fBwrefresh\fR, or a call to \fBwaddch\fR followed by a call to
-\fBprefresh\fR.
+The \fBpechochar\fP routine is functionally equivalent to a call to \fBaddch\fP
+followed by a call to \fBrefresh\fP(3X),
+a call to \fBwaddch\fP followed by a call
+to \fBwrefresh\fP, or a call to \fBwaddch\fP followed by a call to
+\fBprefresh\fP.
 The knowledge that only a single character is being output is
 taken into consideration and, for non-control characters, a considerable
 performance gain might be seen by using these routines instead of their
 equivalents.
-In the case of \fBpechochar\fR, the last location of the pad on
-the screen is reused for the arguments to \fBprefresh\fR.
+In the case of \fBpechochar\fP, the last location of the pad on
+the screen is reused for the arguments to \fBprefresh\fP.
 .SS pecho_wchar
 .PP
-The \fBpecho_wchar\fR function is the analogous wide-character
-form of \fBpechochar\fR.
+The \fBpecho_wchar\fP function is the analogous wide-character
+form of \fBpechochar\fP.
 It outputs one character to a pad and immediately refreshes the pad.
-It does this by a call to \fBwadd_wch\fR followed by a call to \fBprefresh\fR.
+It does this by a call to \fBwadd_wch\fP followed by a call to \fBprefresh\fP.
 .SH RETURN VALUE
-Routines that return an integer return \fBERR\fR upon failure and \fBOK\fR
-(SVr4 only specifies "an integer value other than \fBERR\fR") upon successful
+Routines that return an integer return \fBERR\fP upon failure and \fBOK\fP
+(SVr4 only specifies "an integer value other than \fBERR\fP") upon successful
 completion.
 .PP
-Routines that return pointers return \fBNULL\fR on error, and set \fBerrno\fR
-to \fBENOMEM\fR.
+Routines that return pointers return \fBNULL\fP on error, and set \fBerrno\fP
+to \fBENOMEM\fP.
 .PP
 X/Open does not define any error conditions.
 In this implementation
@@ -165,7 +165,7 @@ if the window is not really a pad, and the associated call
 to \fBwecho_wchar\fP returns an error.
 .RE
 .SH NOTES
-Note that \fBpechochar\fR may be a macro.
+Note that \fBpechochar\fP may be a macro.
 .SH PORTABILITY
 BSD curses has no \fIpad\fP feature.
 .PP
@@ -236,7 +236,7 @@ that pads and windows are handled distinctly, and
 ensures that \fBdupwin\fP and \fBgetwin\fP treat
 pads versus windows consistently.
 .SH SEE ALSO
-\fBcurses\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBcurs_touch\fR(3X),
-\fBcurs_addch\fR(3X).
+\fBcurses\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBcurs_touch\fP(3X),
+\fBcurs_addch\fP(3X).

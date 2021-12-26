@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: scr_dump.5,v 1.17 2021/06/17 21:26:02 tom Exp $
+.\" $Id: scr_dump.5,v 1.20 2021/12/25 21:13:38 tom Exp $
 .TH scr_dump 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -139,15 +139,15 @@ Refer to \fIX/Open Curses, Issue 7\fP (2009).
 X/Open's documentation for \fIenhanced curses\fP says only:
 .RS 3
 .PP
-The \fIgetwin(\ ) \fPfunction reads window-related data
+The \fBgetwin(\ ) \fPfunction reads window-related data
 stored in the file by \fIputwin(\ )\fP.
 The function
 then creates and initializes a new window using that data.
 .PP
-The \fIputwin(\ )\fP function writes all data associated
-with \fIwin\fP into the \fIstdio\fP stream to which \fIfilep\fP
+The \fBputwin(\ )\fP function writes all data associated
+with \fIwin\fP into the \fBstdio\fP(3) stream to which \fIfilep\fP
 points, using an \fBunspecified format\fP.
-This information can be retrieved later using \fIgetwin(\ )\fP.
+This information can be retrieved later using \fBgetwin(\ )\fP.
 .RE
 .PP
 In the mid-1990s when the X/Open Curses document was written,
@@ -416,8 +416,8 @@ Here is the corresponding dump (using \*(``od -t x1\*(''):
 .NE
 .SH SEE ALSO
 .PP
-\fBcurs_scr_dump\fR(3X),
-\fBcurs_util\fR(3X).
+\fBcurs_scr_dump\fP(3X),
+\fBcurs_util\fP(3X).
 .SH AUTHORS
 .PP
 Thomas E. Dickey

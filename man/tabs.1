@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tabs.1,v 1.32 2021/10/16 13:37:43 tom Exp $
+.\" $Id: tabs.1,v 1.35 2021/12/25 19:04:39 tom Exp $
 .TH @TABS@ 1 ""
 .ds n 5
 .ie \n(.g .ds `` \(lq
@@ -53,22 +53,22 @@
 .el    .in -2
 ..
 .SH NAME
-\fB@TABS@\fR \- set tabs on a terminal
+\fB@TABS@\fP \- set tabs on a terminal
 .SH SYNOPSIS
-\fB@TABS@\fR [\fIoptions\fR]] \fI[tabstop-list]\fR
+\fB@TABS@\fP [\fIoptions\fP]] \fI[tabstop-list]\fP
 .SH DESCRIPTION
 .PP
 The \fB@TABS@\fP program clears and sets tab-stops on the terminal.
-This uses the terminfo \fIclear_all_tabs\fP and \fIset_tab\fP capabilities.
+This uses the terminfo \fBclear_all_tabs\fP and \fBset_tab\fP capabilities.
 If either is absent, \fB@TABS@\fP is unable to clear/set tab-stops.
 The terminal should be configured to use hard tabs, e.g.,
 .NS
 stty tab0
 .NE
 .PP
-Like \fB@CLEAR@\fR(1), \fB@TABS@\fR writes to the standard output.
+Like \fB@CLEAR@\fP(1), \fB@TABS@\fP writes to the standard output.
 You can redirect the standard output to a file (which prevents
-\fB@TABS@\fR from actually changing the tabstops),
+\fB@TABS@\fP from actually changing the tabstops),
 and later \fBcat\fP the file to the screen, setting tabstops at that point.
 .PP
 These are hardware tabs, which cannot be queried rapidly by applications
@@ -104,7 +104,7 @@ The second data line shows the actual tab-stops, marked with asterisks.
 This option tells \fB@TABS@\fP to check the options and run any debugging
 option, but not to modify the terminal settings.
 .TP
-\fB\-V\fR
+\fB\-V\fP
 reports the version of ncurses which was used in this program, and exits.
 .PP
 The \fB@TABS@\fP program processes a single list of tab stops.
@@ -190,7 +190,7 @@ UNIVAC 1100 Assembler
 A few terminals provide the capability for changing their left/right margins.
 The @TABS@ program has an option to use this feature:
 .TP 5
-.BI \+m \ margin
+.BI +m \ margin
 The effect depends on whether the terminal has the margin capabilities:
 .RS
 .bP
@@ -204,7 +204,7 @@ The terminal's left-margin is not modified.
 .RE
 .IP
 If the \fImargin\fP parameter is omitted, the default is 10.
-Use \fB\+m0\fP to reset the left margin,
+Use \fB+m0\fP to reset the left margin,
 i.e., to the left edge of the terminal's display.
 Before setting a left-margin,
 @TABS@ resets the margin to reduce problems which might arise
@@ -250,7 +250,7 @@ In an earlier development effort,
 the tab-stop initialization provided by \fBtset\fP (1982)
 and incorporated into \fBtput\fP uses the terminal database,
 .PP
-The \fB\+m\fP option was documented
+The \fB+m\fP option was documented
 in the Base Specifications Issue 5 (Unix98, 1997),
 and omitted in Issue 6 (Unix03, 2004) without documenting the rationale,
 though an introductory comment
@@ -258,7 +258,7 @@ though an introductory comment
 overlooked in the removal.
 The documented \fBtabs\fP utility in Issues 6 and later has no mechanism
 for setting margins.
-The \fB\+m\fP option in this implementation differs from the feature
+The \fB+m\fP option in this implementation differs from the feature
 in SVr4 by using terminal capabilities rather than built-in tables.
 .PP
 POSIX documents no limits on the number of tab stops.
@@ -284,10 +284,10 @@ However, the \fIExplicit Lists\fP described in this manual page
 were implemented in PWB/Unix.
 Those provide the capability of setting abitrary tab stops.
 .SH SEE ALSO
-\fB@INFOCMP@\fR(1M),
-\fB@TSET@\fR(1),
-\fBcurses\fR(3X),
-\fBterminfo\fR(\*n).
+\fB@INFOCMP@\fP(1M),
+\fB@TSET@\fP(1),
+\fBcurses\fP(3X),
+\fBterminfo\fP(\*n).
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

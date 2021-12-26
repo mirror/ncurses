@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_memleaks.3x,v 1.11 2021/01/02 23:47:51 tom Exp $
+.\" $Id: curs_memleaks.3x,v 1.12 2021/12/25 17:39:16 tom Exp $
 .TH curs_memleaks 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -37,25 +37,25 @@
 .hy 0
 .SH NAME
 \fBexit_curses\fP,
-\fBexit_terminfo\fP \- \fBcurses\fR memory-leak checking
+\fBexit_terminfo\fP \- \fBcurses\fP memory-leak checking
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .br
-\fBvoid exit_curses(int \fP\fIcode\fP\fB);\fR
+\fBvoid exit_curses(int \fP\fIcode\fP\fB);\fP
 .sp
-\fB#include <term.h>\fR
+\fB#include <term.h>\fP
 .br
-\fBvoid exit_terminfo(int \fP\fIcode\fP\fB);\fR
+\fBvoid exit_terminfo(int \fP\fIcode\fP\fB);\fP
 .sp
 /* deprecated (intentionally not declared in curses.h or term.h) */
 .br
-\fBvoid _nc_freeall(void);\fR
+\fBvoid _nc_freeall(void);\fP
 .br
-\fBvoid _nc_free_and_exit(int \fP\fIcode\fP\fB);\fR
+\fBvoid _nc_free_and_exit(int \fP\fIcode\fP\fB);\fP
 .br
-\fBvoid _nc_free_tinfo(int \fP\fIcode\fP\fB);\fR
+\fBvoid _nc_free_tinfo(int \fP\fIcode\fP\fB);\fP
 .SH DESCRIPTION
 These functions are used to simplify analysis of memory leaks in the ncurses
 library.
@@ -103,4 +103,4 @@ These functions do not return a value.
 These functions are not part of X/Open Curses;
 nor do other implementations of curses provide a similar feature.
 .SH SEE ALSO
-\fBcurses\fR(3X).
+\fBcurses\fP(3X).

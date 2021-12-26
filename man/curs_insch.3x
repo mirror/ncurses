@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,37 +27,37 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insch.3x,v 1.19 2020/10/18 00:21:39 tom Exp $
+.\" $Id: curs_insch.3x,v 1.21 2021/12/25 21:49:32 tom Exp $
 .TH curs_insch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
 .SH NAME
-\fBinsch\fR,
-\fBwinsch\fR,
-\fBmvinsch\fR,
-\fBmvwinsch\fR \- insert a character before cursor in a \fBcurses\fR window
+\fBinsch\fP,
+\fBwinsch\fP,
+\fBmvinsch\fP,
+\fBmvwinsch\fP \- insert a character before cursor in a \fBcurses\fP window
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint insch(chtype \fP\fIch\fP\fB);\fR
+\fBint insch(chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint winsch(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBint winsch(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .sp
-\fBint mvinsch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBint mvinsch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .br
-\fBint mvwinsch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fR
+\fBint mvwinsch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fP
 .br
 .SH DESCRIPTION
-These routines insert the character \fIch\fR before the character under the
+These routines insert the character \fIch\fP before the character under the
 cursor.
 All characters to the right of the cursor are moved one space to the
 right, with the possibility of the rightmost character on the line being lost.
 The insertion operation does not change the cursor position.
 .SH RETURN VALUE
-All routines that return an integer return \fBERR\fR upon failure and \fBOK\fP
-(SVr4 specifies only "an integer value other than \fBERR\fR")
+All routines that return an integer return \fBERR\fP upon failure and \fBOK\fP
+(SVr4 specifies only "an integer value other than \fBERR\fP")
 upon successful completion,
 unless otherwise noted in the preceding routine descriptions.
 .PP
@@ -68,12 +68,12 @@ or if the window pointer is null.
 These routines do not necessarily imply use of a hardware insert character
 feature.
 .PP
-Note that \fBinsch\fR, \fBmvinsch\fR, and \fBmvwinsch\fR may be macros.
+Note that \fBinsch\fP, \fBmvinsch\fP, and \fBmvwinsch\fP may be macros.
 .SH PORTABILITY
 These functions are described in the XSI Curses standard, Issue 4.
 .SH SEE ALSO
-\fBcurses\fR(3X).
+\fBcurses\fP(3X).
 .PP
 Comparable functions in the wide-character (ncursesw) library are
 described in
-\fBcurs_ins_wch\fR(3X).
+\fBcurs_ins_wch\fP(3X).

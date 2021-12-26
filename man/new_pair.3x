@@ -29,7 +29,7 @@
 .\"
 .\" Author: Thomas E. Dickey
 .\"
-.\" $Id: new_pair.3x,v 1.16 2021/06/17 21:26:02 tom Exp $
+.\" $Id: new_pair.3x,v 1.18 2021/12/25 20:10:40 tom Exp $
 .TH new_pair 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -127,7 +127,7 @@ If the table fills up, \fBalloc_pair\fP discards the least-recently
 allocated entry using \fBfree_pair\fP and allocates a new color pair.
 .PP
 All of the color pairs are allocated from a table of possible color pairs.
-The size of the table is determined by the terminfo \fIpairs\fP capability.
+The size of the table is determined by the terminfo \fBpairs\fP capability.
 The table is shared with \fBinit_pair\fP;
 in fact \fBalloc_pair\fP calls \fBinit_pair\fP after
 updating the ncurses library's fast index to the colors versus color pairs.
@@ -161,6 +161,6 @@ Version 7, BSD or System V implementations.
 It is recommended that
 any code depending on them be conditioned using NCURSES_VERSION.
 .SH SEE ALSO
-\fBcurs_color\fR(3X).
+\fBcurs_color\fP(3X).
 .SH AUTHOR
 Thomas Dickey.

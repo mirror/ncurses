@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2019,2020 Thomas E. Dickey                                     *
+  * Copyright 2019-2020,2021 Thomas E. Dickey                                *
   * Copyright 2001-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.28 2020/10/17 23:10:38 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.31 2021/12/25 21:37:49 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_add_wch 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_add_wch 3x</H1>
@@ -226,8 +226,8 @@
 
        <STRONG>o</STRONG>   NetBSD curses defines the symbols as a <STRONG>wchar_t</STRONG> within a <STRONG>cchar_t</STRONG>.
 
-       <STRONG>o</STRONG>   HPUX curses equates some of the <EM>ACS</EM><STRONG>_</STRONG> symbols to the analogous <EM>WACS</EM><STRONG>_</STRONG>
-           symbols  as  if  the  <EM>ACS</EM><STRONG>_</STRONG>  symbols  were  wide  characters.    The
+       <STRONG>o</STRONG>   HPUX curses equates some of the <STRONG>ACS_</STRONG> symbols to the analogous <STRONG>WACS_</STRONG>
+           symbols  as  if  the  <STRONG>ACS_</STRONG>  symbols  were  wide  characters.    The
            misdefined  symbols  are the arrows and other symbols which are not
            used for line-drawing.
 

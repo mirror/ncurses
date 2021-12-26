@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2019,2020 Thomas E. Dickey                                     *
+  * Copyright 2019-2020,2021 Thomas E. Dickey                                *
   * Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wchstr.3x,v 1.15 2020/12/19 21:39:06 tom Exp @
+  * @Id: curs_add_wchstr.3x,v 1.18 2021/12/25 21:41:58 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_add_wchstr 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_add_wchstr 3x</H1>
@@ -87,7 +87,7 @@
        <STRONG>o</STRONG>   they truncate the string if it crosses  the  right  margin,  rather
            than wrapping it around to the new line.
 
-       These  functions  end  successfully  on encountering a null <EM>cchar</EM><STRONG>_</STRONG><EM>t</EM>, or
+       These  functions  end  successfully  on encountering a null <STRONG>cchar_t</STRONG>, or
        when they have filled the current line.  If a complex character  cannot
        completely  fit  at  the end of the current line, the remaining columns
        are filled with the background character and rendition.

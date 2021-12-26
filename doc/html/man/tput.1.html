@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tput.1,v 1.72 2021/10/02 21:41:00 tom Exp @
+  * @Id: tput.1,v 1.75 2021/12/25 21:31:59 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -37,7 +37,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>tput 1</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">tput 1</H1>
@@ -399,14 +399,14 @@
            incorporated  from  the  <STRONG>reset</STRONG>  feature of BSD <STRONG>tset</STRONG> written by Eric
            Allman.
 
-       <STRONG>o</STRONG>   SVr4  added  color  initialization  using   the   <EM>orig</EM><STRONG>_</STRONG><EM>colors</EM>   and
-           <EM>orig</EM><STRONG>_</STRONG><EM>pairs</EM> capabilities in the <STRONG>init</STRONG> subcommand.
+       <STRONG>o</STRONG>   SVr4 added color initialization using the <STRONG>orig_colors</STRONG> and <STRONG>orig_pair</STRONG>
+           capabilities in the <STRONG>init</STRONG> subcommand.
 
        Keith  Bostic  replaced  the  BSD  <STRONG>tput</STRONG>  command  in  1989  with  a new
        implementation based on the AT&amp;T System V program <STRONG>tput</STRONG>.  Like the  AT&amp;T
        program,  Bostic's  version accepted some parameters named for <EM>terminfo</EM>
-       <EM>capabilities</EM> (<STRONG>clear</STRONG>, <STRONG>init</STRONG>, <STRONG>longname</STRONG> and <STRONG>reset</STRONG>).   However  (because  he
-       had  only  termcap  available),  it  accepted  <EM>termcap</EM>  <EM>names</EM> for other
+       capabilities (<STRONG>clear</STRONG>, <STRONG>init</STRONG>, <STRONG>longname</STRONG> and <STRONG>reset</STRONG>).   However  (because  he
+       had  only  <EM>termcap</EM>  available),  it  accepted  <EM>termcap</EM>  names for other
        capabilities.  Also, Bostic's BSD <STRONG>tput</STRONG> did not modify the terminal  I/O
        modes as the earlier BSD <STRONG>tset</STRONG> had done.
 
@@ -443,14 +443,14 @@
            Until  changes made after ncurses 6.0, <STRONG>tput</STRONG> did not modify terminal
            modes.  <STRONG>tput</STRONG> now uses a similar scheme, using functions shared with
            <STRONG>tset</STRONG>  (and ultimately based on the 4.4BSD <STRONG>tset</STRONG>).  If it is not able
-           to open a terminal, e.g., when running in <STRONG>cron</STRONG>, <STRONG>tput</STRONG> will return an
-           error.
+           to open a terminal, e.g., when running in <STRONG>cron(1)</STRONG>, <STRONG>tput</STRONG> will return
+           an error.
 
        <STRONG>o</STRONG>   AT&amp;T <STRONG>tput</STRONG> guesses the type of its <EM>capname</EM> operands by seeing if all
            of the characters are numeric, or not.
 
            Most implementations which provide support for <EM>capname</EM> operands use
-           the  <EM>tparm</EM>  function  to  expand  parameters  in it.  That function
+           the  <STRONG>tparm</STRONG>  function  to  expand  parameters  in it.  That function
            expects a mixture of numeric and string parameters, requiring  <STRONG>tput</STRONG>
            to know which type to use.
 
@@ -545,7 +545,7 @@
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
        <STRONG><A HREF="clear.1.html">clear(1)</A></STRONG>, <STRONG>stty(1)</STRONG>, <STRONG><A HREF="tabs.1.html">tabs(1)</A></STRONG>, <STRONG><A HREF="tset.1.html">tset(1)</A></STRONG>, <STRONG><A HREF="curs_termcap.3x.html">curs_termcap(3x)</A></STRONG>, <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211021).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211225).
 
 
 

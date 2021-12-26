@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: ncurses.3x,v 1.153 2021/08/22 17:17:16 tom Exp @
+  * @Id: ncurses.3x,v 1.156 2021/12/25 21:19:26 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -37,7 +37,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>ncurses 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">ncurses 3x</H1>
@@ -60,15 +60,15 @@
        method of updating  character  screens  with  reasonable  optimization.
        This  implementation  is  "new  curses"  (ncurses)  and is the approved
        replacement for 4.4BSD classic curses,  which  has  been  discontinued.
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211021).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20211225).
 
        The  <STRONG>ncurses</STRONG>  library emulates the curses library of System V Release 4
        UNIX, and XPG4 (X/Open Portability Guide) curses  (also  known  as  XSI
        curses).   XSI  stands  for  X/Open  System  Interfaces Extension.  The
        <STRONG>ncurses</STRONG> library is freely redistributable in source form.   Differences
-       from   the   SVr4  curses  are  summarized  under  the  <STRONG>EXTENSIONS</STRONG>  and
-       <STRONG>PORTABILITY</STRONG> sections below and described in detail  in  the  respective
-       <STRONG>EXTENSIONS</STRONG>, <STRONG>PORTABILITY</STRONG> and <STRONG>BUGS</STRONG> sections of individual man pages.
+       from   the   SVr4  curses  are  summarized  under  the  <EM>EXTENSIONS</EM>  and
+       <EM>PORTABILITY</EM> sections below and described in detail  in  the  respective
+       <EM>EXTENSIONS</EM>, <EM>PORTABILITY</EM> and <EM>BUGS</EM> sections of individual man pages.
 
        The  <STRONG>ncurses</STRONG>  library  also  provides  many  useful  extensions,  i.e.,
        features which cannot be implemented by a  simple  add-on  library  but
@@ -91,7 +91,7 @@
 
 </PRE><H3><a name="h3-Initialization">Initialization</a></H3><PRE>
        The  library uses the locale which the calling program has initialized.
-       That is normally done with <STRONG>setlocale</STRONG>:
+       That is normally done with <STRONG>setlocale(3)</STRONG>:
 
            <STRONG>setlocale(LC_ALL,</STRONG> <STRONG>"");</STRONG>
 
@@ -204,7 +204,7 @@
 
 </PRE><H3><a name="h3-Routine-and-Argument-Names">Routine and Argument Names</a></H3><PRE>
        Many  <STRONG>curses</STRONG> routines have two or more versions.  The routines prefixed
-       with <STRONG>w</STRONG> require a window argument.  The routines prefixed with <STRONG>p</STRONG> require
+       with <EM>w</EM> require a window argument.  The routines prefixed with <EM>p</EM> require
        a pad argument.  Those without a prefix generally use <STRONG>stdscr</STRONG>.
 
        The  routines  prefixed with <STRONG>mv</STRONG> require a <EM>y</EM> and <EM>x</EM> coordinate to move to
@@ -912,7 +912,7 @@
        <STRONG>Ncurses</STRONG> may use tabs as part of the cursor movement  optimization.   In
        some  cases,  your  terminal driver may not handle these properly.  Set
        this environment variable to disable the feature.  You can also  adjust
-       your <STRONG>stty</STRONG> settings to avoid the problem.
+       your <STRONG>stty(1)</STRONG> settings to avoid the problem.
 
 
 </PRE><H3><a name="h3-NCURSES_NO_MAGIC_COOKIE">NCURSES_NO_MAGIC_COOKIE</a></H3><PRE>
@@ -942,7 +942,7 @@
 
        Set  the  NCURSES_NO_PADDING  environment  variable  to disable all but
        mandatory padding.  Mandatory padding is used  as  a  part  of  special
-       control sequences such as <EM>flash</EM>.
+       control sequences such as <STRONG>flash</STRONG>.
 
 
 </PRE><H3><a name="h3-NCURSES_NO_SETBUF">NCURSES_NO_SETBUF</a></H3><PRE>
@@ -1030,10 +1030,10 @@
 
        If you set <STRONG>TERM</STRONG> in your environment, it has no effect on the  operation
        of  the  terminal  emulator.  It only affects the way applications work
-       within the terminal.  Likewise, as a general rule (<STRONG>xterm</STRONG> being  a  rare
-       exception),  terminal  emulators  which  allow you to specify <STRONG>TERM</STRONG> as a
-       parameter or configuration value do not change their behavior to  match
-       that setting.
+       within the terminal.  Likewise, as a general  rule  (<STRONG>xterm(1)</STRONG>  being  a
+       rare  exception), terminal emulators which allow you to specify <STRONG>TERM</STRONG> as
+       a parameter or configuration value do  not  change  their  behavior  to
+       match that setting.
 
 
 </PRE><H3><a name="h3-TERMCAP">TERMCAP</a></H3><PRE>
@@ -1471,7 +1471,7 @@
 
 
 </PRE><H2><a name="h2-AUTHORS">AUTHORS</a></H2><PRE>
-       Zeyd M. Ben-Halim, Eric S. Raymond, Thomas E. Dickey.  Based on pcurses
+       Zeyd M. Ben-Halim, Eric S. Raymond, Thomas E. Dickey.  Based on <EM>pcurses</EM>
        by Pavel Curtis.
 
 

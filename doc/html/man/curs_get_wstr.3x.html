@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
   * Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_get_wstr.3x,v 1.21 2020/10/17 23:17:24 tom Exp @
+  * @Id: curs_get_wstr.3x,v 1.25 2021/12/25 21:49:32 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_get_wstr 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_get_wstr 3x</H1>
@@ -135,13 +135,13 @@
        X/Open curses documented these functions to pass an array of <STRONG>wchar_t</STRONG> in
        1997, but that was an error because of this part of the description:
 
-              The effect of <EM>get</EM><STRONG>_</STRONG><EM>wstr()</EM> is as  though  a  series  of  calls  to
-              <EM>get</EM><STRONG>_</STRONG><EM>wch()</EM>  were  made,  until  a  newline character, end-of-line
-              character, or end-of-file character is processed.
+              The effect of <STRONG>get_wstr</STRONG> is as though a series of calls to <STRONG>get_wch</STRONG>
+              were  made, until a newline character, end-of-line character, or
+              end-of-file character is processed.
 
-       The latter function  <EM>get</EM><STRONG>_</STRONG><EM>wch()</EM>  can  return  a  negative  value,  while
-       <STRONG>wchar_t</STRONG>  is  a  unsigned type.  All of the vendors implement this using
-       <STRONG>wint_t</STRONG>, following the standard.
+       The latter function <EM>get</EM><STRONG>_</STRONG><EM>wch</EM> can return a negative value, while  <STRONG>wchar_t</STRONG>
+       is  a  unsigned  type.  All of the vendors implement this using <STRONG>wint_t</STRONG>,
+       following the standard.
 
        X/Open Curses, Issue 7 (2009) is unclear regarding whether  the  termi-
        nating <EM>null</EM> <STRONG>wchar_t</STRONG> value is counted in the length parameter <EM>n</EM>.  X/Open

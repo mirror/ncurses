@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scroll.3x,v 1.19 2020/10/24 09:45:48 tom Exp $
+.\" $Id: curs_scroll.3x,v 1.21 2021/12/25 21:49:32 tom Exp $
 .TH curs_scroll 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -36,39 +36,39 @@
 .na
 .hy 0
 .SH NAME
-\fBscroll\fR,
-\fBscrl\fR,
-\fBwscrl\fR \- scroll a \fBcurses\fR window
+\fBscroll\fP,
+\fBscrl\fP,
+\fBwscrl\fP \- scroll a \fBcurses\fP window
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBint scroll(WINDOW *\fP\fIwin\fP\fB);\fR
+\fBint scroll(WINDOW *\fP\fIwin\fP\fB);\fP
 .sp
-\fBint scrl(int \fP\fIn\fP\fB);\fR
+\fBint scrl(int \fP\fIn\fP\fB);\fP
 .br
-\fBint wscrl(WINDOW *\fP\fIwin\fP\fB, int \fP\fIn\fP\fB);\fR
+\fBint wscrl(WINDOW *\fP\fIwin\fP\fB, int \fP\fIn\fP\fB);\fP
 .br
 .SH DESCRIPTION
-The \fBscroll\fR routine scrolls the window up one line.
+The \fBscroll\fP routine scrolls the window up one line.
 This involves moving
 the lines in the window data structure.
 As an optimization, if the scrolling
 region of the window is the entire screen,
 the \fIphysical screen\fP may be scrolled at the same time.
 .PP
-For positive \fIn\fR, the \fBscrl\fR and \fBwscrl\fR routines scroll the
-window up \fIn\fR lines (line \fIi\fR+\fIn\fR becomes \fIi\fR); otherwise
-scroll the window down \fIn\fR lines.
+For positive \fIn\fP, the \fBscrl\fP and \fBwscrl\fP routines scroll the
+window up \fIn\fP lines (line \fIi\fP+\fIn\fP becomes \fIi\fP); otherwise
+scroll the window down \fIn\fP lines.
 This involves moving the lines in the
 window character image structure.
 The current cursor position is not changed.
 .PP
-For these functions to work, scrolling must be enabled via \fBscrollok\fR.
+For these functions to work, scrolling must be enabled via \fBscrollok\fP.
 .SH RETURN VALUE
-These routines return \fBERR\fR upon failure, and \fBOK\fR (SVr4 only specifies
-"an integer value other than \fBERR\fR") upon successful completion.
+These routines return \fBERR\fP upon failure, and \fBOK\fP (SVr4 only specifies
+"an integer value other than \fBERR\fP") upon successful completion.
 .PP
 X/Open defines no error conditions.
 .PP
@@ -76,7 +76,7 @@ This implementation returns an error
 if the window pointer is null, or
 if scrolling is not enabled in the window, e.g., with \fBscrollok\fP.
 .SH NOTES
-Note that \fBscrl\fR and \fBscroll\fR may be macros.
+Note that \fBscrl\fP and \fBscroll\fP may be macros.
 .PP
 The SVr4 documentation says that the optimization of physically scrolling
 immediately if the scroll region is the entire screen \*(``is\*('' performed, not
@@ -92,4 +92,4 @@ Under this implementation it is.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.
 .SH SEE ALSO
-\fBcurses\fR(3X), \fBcurs_outopts\fR(3X)
+\fBcurses\fP(3X), \fBcurs_outopts\fP(3X)

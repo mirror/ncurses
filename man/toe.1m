@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: toe.1m,v 1.34 2021/06/17 21:26:02 tom Exp $
+.\" $Id: toe.1m,v 1.35 2021/12/25 17:39:16 tom Exp $
 .TH @TOE@ 1M ""
 .de bP
 .ie n  .IP \(bu 4
@@ -54,41 +54,41 @@
 .ds n 5
 .ds d @TERMINFO@
 .SH NAME
-\fB@TOE@\fR \- table of (terminfo) entries
+\fB@TOE@\fP \- table of (terminfo) entries
 .SH SYNOPSIS
-\fB@TOE@\fR [\fB\-v\fR[\fIn\fR]] [\fB\-ahsuUV\fR] \fIfile...\fR
+\fB@TOE@\fP [\fB\-v\fP[\fIn\fP]] [\fB\-ahsuUV\fP] \fIfile...\fP
 .br
 .SH DESCRIPTION
 .PP
 With no options,
-\fB@TOE@\fR lists all available terminal types by primary name
+\fB@TOE@\fP lists all available terminal types by primary name
 with descriptions.
 File arguments specify the directories to be scanned; if no
 such arguments are given,
 your default terminfo directory is scanned.
-If you also specify the \fB\-h\fR option,
+If you also specify the \fB\-h\fP option,
 a directory header will be issued as each
 directory is entered.
 .PP
 There are other options intended for use by terminfo file maintainers:
 .TP
-\fB\-a\fR
+\fB\-a\fP
 report on all of the terminal databases which ncurses would search,
 rather than only the first one that it finds.
 .IP
-If the \fB\-s\fR is also given, \fB@TOE@\fR
+If the \fB\-s\fP is also given, \fB@TOE@\fP
 adds a column to the report,
 showing (like \fBconflict\fP(1)) which entries which
 belong to a given terminal database.
 An "*" marks entries which differ, and "+" marks equivalent entries.
 .IP
-Without the \fB\-s\fP option, \fB@TOE@\fR does not attempt to merge
+Without the \fB\-s\fP option, \fB@TOE@\fP does not attempt to merge
 duplicates in its report
 .TP
-\fB\-s\fR
+\fB\-s\fP
 sort the output by the entry names.
 .TP
-\fB\-u\fR \fIfile\fR
+\fB\-u\fP \fIfile\fP
 says to write a report to the standard output,
 listing dependencies in the given terminfo/termcap source file.
 The report condenses the \*(``use\*('' relation:
@@ -100,7 +100,7 @@ whitespace-separated primary names of all terminals which occur in those use
 capabilities,
 followed by a newline
 .TP
-\fB\-U\fR \fIfile\fR
+\fB\-U\fP \fIfile\fP
 says to write a report to the standard output,
 listing reverse dependencies in the given terminfo/termcap source file.
 The report reverses the \*(``use\*('' relation:
@@ -111,15 +111,15 @@ followed by the
 whitespace-separated primary names of all terminals which depend on it,
 followed by a newline.
 .TP
-\fB\-v\fR\fIn\fR
+\fB\-v\fP\fIn\fP
 specifies that (verbose) output be written to standard error,
-showing \fB@TOE@\fR's progress.
+showing \fB@TOE@\fP's progress.
 .IP
-The optional parameter \fIn\fR is a number from 1 to 10,
-interpreted as for \fB@TIC@\fR(1M).
+The optional parameter \fIn\fP is a number from 1 to 10,
+interpreted as for \fB@TIC@\fP(1M).
 If ncurses is built without tracing support, the optional parameter is ignored.
 .TP
-\fB\-V\fR
+\fB\-V\fP
 reports the version of ncurses which was used in this program,
 and exits.
 .SH EXAMPLES
@@ -163,7 +163,7 @@ description was found:
 .NE
 .SH FILES
 .TP 5
-\fB\*d/?/*\fR
+\fB\*d/?/*\fP
 Compiled terminal description database.
 .SH HISTORY
 This utility is not provided by other implementations.
@@ -181,14 +181,14 @@ It replaced a \fB\-T\fP option which was briefly supported by
 the ncurses \fBinfocmp\fP utility in 1995.
 .PP
 The \fB\-a\fP and \fB\-s\fP options were added to
-\fB@TOE@\fR several years later (2006 and 2011, respectively).
+\fB@TOE@\fP several years later (2006 and 2011, respectively).
 .SH SEE ALSO
-\fB@CAPTOINFO@\fR(1M),
-\fB@INFOCMP@\fR(1M),
-\fB@INFOTOCAP@\fR(1M),
-\fB@TIC@\fR(1M),
-\fBcurses\fR(3X),
-\fBterminfo\fR(\*n).
+\fB@CAPTOINFO@\fP(1M),
+\fB@INFOCMP@\fP(1M),
+\fB@INFOTOCAP@\fP(1M),
+\fB@TIC@\fP(1M),
+\fBcurses\fP(3X),
+\fBterminfo\fP(\*n).
 .PP
-This describes \fBncurses\fR
+This describes \fBncurses\fP
 version @NCURSES_MAJOR@.@NCURSES_MINOR@ (patch @NCURSES_PATCH@).

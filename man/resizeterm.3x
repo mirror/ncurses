@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2019,2020 Thomas E. Dickey                                *
+.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,72 +29,72 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.28 2020/10/17 23:55:41 tom Exp $
+.\" $Id: resizeterm.3x,v 1.30 2021/12/25 21:49:32 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
 ..
 .SH NAME
-\fBis_term_resized\fR,
-\fBresize_term\fR,
-\fBresizeterm\fR \- change the curses terminal size
+\fBis_term_resized\fP,
+\fBresize_term\fP,
+\fBresizeterm\fP \- change the curses terminal size
 .SH SYNOPSIS
-\fB#include <curses.h>\fR
+\fB#include <curses.h>\fP
 .sp
-\fBbool is_term_resized(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fR
+\fBbool is_term_resized(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
 .br
-\fBint resize_term(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fR
+\fBint resize_term(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
 .br
-\fBint resizeterm(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fR
+\fBint resizeterm(int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
 .SH DESCRIPTION
 .PP
 This is an extension to the curses library.
-It provides callers with a hook into the \fBncurses\fR data to resize windows,
+It provides callers with a hook into the \fBncurses\fP data to resize windows,
 primarily for use by programs running in an X Window terminal (e.g., xterm).
 .SS resizeterm
 .PP
-The function \fBresizeterm\fR resizes the standard and current windows
+The function \fBresizeterm\fP resizes the standard and current windows
 to the specified dimensions, and adjusts other bookkeeping data used by
-the \fBncurses\fR library that record the window dimensions
+the \fBncurses\fP library that record the window dimensions
 such as the \fBLINES\fP and \fBCOLS\fP variables.
 .SS resize_term
 .PP
-Most of the work is done by the inner function \fBresize_term\fR.
-The outer function \fBresizeterm\fR adds bookkeeping
+Most of the work is done by the inner function \fBresize_term\fP.
+The outer function \fBresizeterm\fP adds bookkeeping
 for the \fBSIGWINCH\fP handler,
 as well as repainting the soft-key area (see \fBslk_touch\fP(3X)).
 .PP
 When resizing the windows,
-\fBresize_term\fR blank-fills the areas that are extended.
+\fBresize_term\fP blank-fills the areas that are extended.
 The calling application should fill in these areas with appropriate data.
 .PP
-The \fBresize_term\fR function attempts to resize all windows.
+The \fBresize_term\fP function attempts to resize all windows.
 However, due to the calling convention of pads,
 it is not possible to resize these
 without additional interaction with the application.
 .PP
-When resizing windows, \fBresize_term\fR recursively adjusts subwindows,
+When resizing windows, \fBresize_term\fP recursively adjusts subwindows,
 keeping them within the updated parent window's limits.
 If a top-level window happens to extend to the screen's limits,
-then on resizing the window, \fBresize_term\fR will keep the window
+then on resizing the window, \fBresize_term\fP will keep the window
 extending to the corresponding limit, regardless of whether the
 screen has shrunk or grown.
 .SS is_term_resized
 .PP
-A support function \fBis_term_resized\fR is provided so that applications
-can check if the \fBresize_term\fR function would modify the window structures.
+A support function \fBis_term_resized\fP is provided so that applications
+can check if the \fBresize_term\fP function would modify the window structures.
 It returns \fBTRUE\fP if the windows would be modified,
 and \fBFALSE\fP otherwise.
 .SH RETURN VALUE
 Except as noted, these functions return
-the integer \fBERR\fR upon failure and \fBOK\fR on success.
+the integer \fBERR\fP upon failure and \fBOK\fP on success.
 They will fail if either of the dimensions are less than or equal to zero,
 or if an error occurs while (re)allocating memory for the windows.
 .SH NOTES
 While these functions are intended to be used to support a signal handler
 (i.e., for \fBSIGWINCH\fP), care should be taken to avoid invoking them in a
-context where \fBmalloc\fR or \fBrealloc\fR may have been interrupted,
+context where \fBmalloc\fP or \fBrealloc\fP may have been interrupted,
 since it uses those functions.
 .PP
 If ncurses is configured to supply its own \fBSIGWINCH\fP handler,
@@ -103,10 +103,10 @@ on receipt of a \fBSIGWINCH\fP, the handler sets a flag
 .bP
 which is tested in \fBwgetch\fP(3X) and \fBdoupdate\fP,
 .bP
-in turn, calling the \fBresizeterm\fR function,
+in turn, calling the \fBresizeterm\fP function,
 .bP
-which \fBungetch\fP's a \fBKEY_RESIZE\fR which
-will be read on the next call to \fBwgetch\fR.
+which \fBungetch\fP's a \fBKEY_RESIZE\fP which
+will be read on the next call to \fBwgetch\fP.
 .IP
 The \fBKEY_RESIZE\fP alerts an application that the screen size has changed,
 and that it should repaint special features such as pads that cannot
@@ -136,8 +136,8 @@ Doing that clears the screen and is visually distracting.
 This extension of ncurses was introduced in mid-1995.
 It was adopted in NetBSD curses (2001) and PDCurses (2003).
 .SH SEE ALSO
-\fBcurs_getch\fR(3X),
-\fBcurs_variables\fR(3X),
-\fBwresize\fR(3X).
+\fBcurs_getch\fP(3X),
+\fBcurs_variables\fP(3X),
+\fBwresize\fP(3X).
 .SH AUTHOR
 Thomas Dickey (from an equivalent function written in 1988 for BSD curses).

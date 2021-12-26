@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019,2020 Thomas E. Dickey                                     *
+.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
 .\" Copyright 2001-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_add_wch.3x,v 1.28 2020/10/17 23:10:38 tom Exp $
+.\" $Id: curs_add_wch.3x,v 1.31 2021/12/25 21:37:49 tom Exp $
 .TH curs_add_wch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,7 +43,7 @@
 \fBmvadd_wch\fP,
 \fBmvwadd_wch\fP,
 \fBecho_wchar\fP,
-\fBwecho_wchar\fP \- add a complex character and rendition to a \fBcurses\fR window, then advance the cursor
+\fBwecho_wchar\fP \- add a complex character and rendition to a \fBcurses\fP window, then advance the cursor
 .SH SYNOPSIS
 .PP
 \fB#include <curses.h>\fP
@@ -89,7 +89,7 @@ and the rendition specified by \fIwch\fP is ignored.
 .bP
 If the character part of \fIwch\fP is
 a tab, newline, backspace or other control character,
-the window is updated and the cursor moves as if \fBaddch\fR were called.
+the window is updated and the cursor moves as if \fBaddch\fP were called.
 .SS echo_wchar
 .PP
 The \fBecho_wchar\fP
@@ -119,8 +119,8 @@ l l l l l
 l l l l l
 _ _ _ _ _
 lw(1.5i) lw5 lw5 lw5 lw20.
-\fBACS\fR	\fBUnicode\fP	\fBASCII\fR	\fBacsc\fP	\fBGlyph\fR
-\fBName\fR	\fBDefault\fP	\fBDefault\fR	\fBchar\fP	\fBName\fR
+\fBACS\fP	\fBUnicode\fP	\fBASCII\fP	\fBacsc\fP	\fBGlyph\fP
+\fBName\fP	\fBDefault\fP	\fBDefault\fP	\fBchar\fP	\fBName\fP
 WACS_BLOCK	0x25ae 	#	0	solid square block
 WACS_BOARD	0x2592 	#	h	board of squares
 WACS_BTEE	0x2534 	+	v	bottom tee
@@ -162,8 +162,8 @@ l l l l l
 l l l l l
 _ _ _ _ _
 lw(1.5i) lw5 lw5 lw5 lw20.
-\fBACS\fR	\fBUnicode\fP	\fBASCII\fR	\fBacsc\fP	\fBGlyph\fR
-\fBName\fR	\fBDefault\fP	\fBDefault\fR	\fBchar\fP	\fBName\fR
+\fBACS\fP	\fBUnicode\fP	\fBASCII\fP	\fBacsc\fP	\fBGlyph\fP
+\fBName\fP	\fBDefault\fP	\fBDefault\fP	\fBchar\fP	\fBName\fP
 WACS_T_BTEE	0x253b	+	V	thick tee pointing up
 WACS_T_HLINE	0x2501	-	Q	thick horizontal line
 WACS_T_LLCORNER	0x2517	+	M	thick lower left corner
@@ -184,8 +184,8 @@ l l l l l
 l l l l l
 _ _ _ _ _
 lw(1.5i) lw5 lw5 lw5 lw20.
-\fBACS\fR	\fBUnicode\fP	\fBASCII\fR	\fBacsc\fP	\fBGlyph\fR
-\fBName\fR	\fBDefault\fP	\fBDefault\fR	\fBchar\fP	\fBName\fR
+\fBACS\fP	\fBUnicode\fP	\fBASCII\fP	\fBacsc\fP	\fBGlyph\fP
+\fBName\fP	\fBDefault\fP	\fBDefault\fP	\fBchar\fP	\fBName\fP
 WACS_D_BTEE	0x2569	+	H	double tee pointing up
 WACS_D_HLINE	0x2550	-	R	double horizontal line
 WACS_D_LLCORNER	0x255a	+	D	double lower left corner
@@ -210,7 +210,7 @@ U+2501 BOX DRAWINGS HEAVY HORIZONTAL
 U+2550 BOX DRAWINGS DOUBLE HORIZONTAL
 .SH RETURN VALUE
 .PP
-All routines return the integer \fBERR\fR upon failure and \fBOK\fR on success.
+All routines return the integer \fBERR\fP upon failure and \fBOK\fP on success.
 .PP
 X/Open does not define any error conditions.
 This implementation returns an error
@@ -221,7 +221,7 @@ if it is not possible to add a complete character in the window.
 .PP
 The latter may be due to different causes:
 .bP
-If \fBscrollok\fR is not enabled,
+If \fBscrollok\fP is not enabled,
 writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line
@@ -248,13 +248,13 @@ All of these functions are described in the XSI Curses standard, Issue 4.
 The defaults specified for line-drawing characters apply in the POSIX locale.
 .PP
 X/Open Curses makes it clear that the WACS_ symbols should be defined as
-a pointer to \fBcchar_t\fP data, e.g., in the discussion of \fBborder_set\fR.
+a pointer to \fBcchar_t\fP data, e.g., in the discussion of \fBborder_set\fP.
 A few implementations are problematic:
 .bP
 NetBSD curses defines the symbols as a \fBwchar_t\fP within a \fBcchar_t\fP.
 .bP
-HPUX curses equates some of the \fIACS_\fP symbols
-to the analogous \fIWACS_\fP symbols as if the \fIACS_\fP symbols were
+HPUX curses equates some of the \fBACS_\fP symbols
+to the analogous \fBWACS_\fP symbols as if the \fBACS_\fP symbols were
 wide characters.
 The misdefined symbols are the arrows
 and other symbols which are not used for line-drawing.
@@ -325,10 +325,10 @@ Others have suggested these alternatives:
 .SH SEE ALSO
 .na
 .PP
-\fBcurses\fR(3X),
-\fBcurs_addch\fR(3X),
-\fBcurs_attr\fR(3X),
-\fBcurs_clear\fR(3X),
-\fBcurs_outopts\fR(3X),
-\fBcurs_refresh\fR(3X),
-\fBputwc\fR(3)
+\fBcurses\fP(3X),
+\fBcurs_addch\fP(3X),
+\fBcurs_attr\fP(3X),
+\fBcurs_clear\fP(3X),
+\fBcurs_outopts\fP(3X),
+\fBcurs_refresh\fP(3X),
+\fBputwc\fP(3)

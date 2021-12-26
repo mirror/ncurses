@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getcchar.3x,v 1.25 2021/06/17 21:26:02 tom Exp @
+  * @Id: curs_getcchar.3x,v 1.27 2021/12/25 20:35:03 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -36,7 +36,7 @@
 <meta name="generator" content="Manpage converted by man2html - see https://invisible-island.net/scripts/readme.html#others_scripts">
 <TITLE>curs_getcchar 3x</TITLE>
 <link rel="author" href="mailto:bug-ncurses@gnu.org">
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
 </HEAD>
 <BODY>
 <H1 class="no-header">curs_getcchar 3x</H1>
@@ -174,7 +174,7 @@
        <STRONG>o</STRONG>   HP-UX 10  uses  an  opaque  structure with 28 bytes, which is large
            enough for the 6 <STRONG>wchar_t</STRONG> values.
 
-       <STRONG>o</STRONG>   Solaris xpg4 curses uses a single array of 6 <STRONG>wchar_t</STRONG> values.
+       <STRONG>o</STRONG>   Solaris <EM>xpg4</EM> curses uses a single array of 6 <STRONG>wchar_t</STRONG> values.
 
        This implementation's <STRONG>cchar_t</STRONG> was defined in 1995 using <STRONG>5</STRONG> for the total
        of  spacing and non-spacing characters (<STRONG>CCHARW_MAX</STRONG>).  That was probably
