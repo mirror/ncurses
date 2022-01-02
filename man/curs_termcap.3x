@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termcap.3x,v 1.52 2021/12/25 21:31:00 tom Exp $
+.\" $Id: curs_termcap.3x,v 1.55 2022/01/01 23:49:07 tom Exp $
 .TH curs_termcap 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -86,7 +86,7 @@ routines are emulated using the \fIterminfo\fP database.
 Thus, they
 can only be used to query the capabilities of entries for which a
 terminfo entry has been compiled.
-.SS INITIALIZATION
+.SS Initialization
 .PP
 The \fBtgetent\fP routine loads the entry for \fIname\fP.
 It returns:
@@ -118,7 +118,7 @@ The \fItermcap\fP library does not check if the terminal
 description is marked with the \fIgeneric\fP capability,
 or if the terminal description has cursor-addressing.
 .RE
-.SS CAPABILITY VALUES
+.SS Capability Values
 .PP
 The \fBtgetflag\fP routine gets the boolean entry for \fIid\fP,
 or zero if it is not available.
@@ -152,7 +152,7 @@ Only the first two characters of the \fBid\fP parameter of
 \fBtgetflag\fP,
 \fBtgetnum\fP and
 \fBtgetstr\fP are compared in lookups.
-.SS FORMATTING CAPABILITIES
+.SS Formatting Capabilities
 .PP
 The \fBtgoto\fP routine expands the given capability using the parameters.
 .bP
@@ -181,7 +181,7 @@ and portable \fItermcap\fP applications should not rely upon its availability.
 The \fBtputs\fP routine is described on the \fBcurs_terminfo\fP(3X) manual
 page.
 It can retrieve capabilities by either termcap or terminfo name.
-.SS GLOBAL VARIABLES
+.SS Global Variables
 .PP
 The variables
 \fBPC\fP,
@@ -197,6 +197,30 @@ respectively.
 \fBBC\fP is used in the \fBtgoto\fP emulation.
 The variable \fBospeed\fP is set by ncurses in a system-specific coding
 to reflect the terminal speed.
+.SS Releasing Memory
+The termcap functions provide no means for freeing memory,
+because legacy termcap implementations used only the buffer
+areas provided by the caller via \fBtgetent\fP and \fBtgetstr\fP.
+Those buffers are unused in terminfo.
+.PP
+On the other hand, terminfo allocates memory.
+It uses \fBsetupterm\fP to retrieve the data used by \fBtgetent\fP
+and the functions which return capability values such as \fBtgetstr\fP.
+One could use
+.sp
+	\fBdel_curterm(cur_term);\fP
+.sp
+.PP
+to free this memory, but there is an additional complication with ncurses.
+It uses a fixed-size \fIpool\fP of storage locations,
+one per setting of the \fBTERM\fP variable when \fBtgetent\fP is called.
+The \fBscreen\fP(1) program relies upon this arrangement,
+to improve its performance.
+.PP
+An application which uses only the low-level termcap functions could
+free the memory using \fBdel_curterm\fP,
+because the pool is freed using other functions
+(see \fBcurs_memleaks\fP(3X)).
 .
 .SH RETURN VALUE
 Except where explicitly noted,

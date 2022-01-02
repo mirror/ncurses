@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
   * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_termcap.3x,v 1.52 2021/12/25 21:31:00 tom Exp @
+  * @Id: curs_termcap.3x,v 1.55 2022/01/01 23:49:07 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -76,7 +76,7 @@
        been compiled.
 
 
-</PRE><H3><a name="h3-INITIALIZATION">INITIALIZATION</a></H3><PRE>
+</PRE><H3><a name="h3-Initialization">Initialization</a></H3><PRE>
        The <STRONG>tgetent</STRONG> routine loads the entry for <EM>name</EM>.  It returns:
 
           1  on success,
@@ -100,7 +100,7 @@
               ing.
 
 
-</PRE><H3><a name="h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></H3><PRE>
+</PRE><H3><a name="h3-Capability-Values">Capability Values</a></H3><PRE>
        The <STRONG>tgetflag</STRONG> routine gets the boolean entry for <EM>id</EM>, or zero  if  it  is
        not available.
 
@@ -129,7 +129,7 @@
        and <STRONG>tgetstr</STRONG> are compared in lookups.
 
 
-</PRE><H3><a name="h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></H3><PRE>
+</PRE><H3><a name="h3-Formatting-Capabilities">Formatting Capabilities</a></H3><PRE>
        The <STRONG>tgoto</STRONG> routine expands the given capability using the parameters.
 
        <STRONG>o</STRONG>   Because  the  capability may have padding characters, the output of
@@ -157,12 +157,35 @@
        It can retrieve capabilities by either termcap or terminfo name.
 
 
-</PRE><H3><a name="h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></H3><PRE>
+</PRE><H3><a name="h3-Global-Variables">Global Variables</a></H3><PRE>
        The  variables <STRONG>PC</STRONG>, <STRONG>UP</STRONG> and <STRONG>BC</STRONG> are set by <STRONG>tgetent</STRONG> to the terminfo entry's
        data for <STRONG>pad_char</STRONG>, <STRONG>cursor_up</STRONG> and <STRONG>backspace_if_not_bs</STRONG>, respectively.  <STRONG>UP</STRONG>
        is  not used by ncurses.  <STRONG>PC</STRONG> is used in the <STRONG>tdelay_output</STRONG> function.  <STRONG>BC</STRONG>
        is used in the <STRONG>tgoto</STRONG> emulation.  The variable <STRONG>ospeed</STRONG> is set by  ncurses
        in a system-specific coding to reflect the terminal speed.
+
+
+</PRE><H3><a name="h3-Releasing-Memory">Releasing Memory</a></H3><PRE>
+       The  termcap  functions  provide  no  means for freeing memory, because
+       legacy termcap implementations used only the buffer areas  provided  by
+       the  caller  via <STRONG>tgetent</STRONG> and <STRONG>tgetstr</STRONG>.  Those buffers are unused in ter-
+       minfo.
+
+       On the other hand, terminfo allocates memory.  It uses <STRONG>setupterm</STRONG> to re-
+       trieve the data used by <STRONG>tgetent</STRONG> and the functions which return capabil-
+       ity values such as <STRONG>tgetstr</STRONG>.  One could use
+
+            <STRONG>del_curterm(cur_term);</STRONG>
+
+
+       to free this memory, but  there  is  an  additional  complication  with
+       ncurses.   It uses a fixed-size <EM>pool</EM> of storage locations, one per set-
+       ting of the <STRONG>TERM</STRONG> variable when <STRONG>tgetent</STRONG> is called.  The  <STRONG>screen(1)</STRONG>  pro-
+       gram relies upon this arrangement, to improve its performance.
+
+       An  application  which  uses only the low-level termcap functions could
+       free the memory using <STRONG>del_curterm</STRONG>, because the pool is freed using oth-
+       er functions (see <STRONG><A HREF="curs_memleaks.3x.html">curs_memleaks(3x)</A></STRONG>).
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -322,10 +345,11 @@
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
 <li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
 <ul>
-<li><a href="#h3-INITIALIZATION">INITIALIZATION</a></li>
-<li><a href="#h3-CAPABILITY-VALUES">CAPABILITY VALUES</a></li>
-<li><a href="#h3-FORMATTING-CAPABILITIES">FORMATTING CAPABILITIES</a></li>
-<li><a href="#h3-GLOBAL-VARIABLES">GLOBAL VARIABLES</a></li>
+<li><a href="#h3-Initialization">Initialization</a></li>
+<li><a href="#h3-Capability-Values">Capability Values</a></li>
+<li><a href="#h3-Formatting-Capabilities">Formatting Capabilities</a></li>
+<li><a href="#h3-Global-Variables">Global Variables</a></li>
+<li><a href="#h3-Releasing-Memory">Releasing Memory</a></li>
 </ul>
 </li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>

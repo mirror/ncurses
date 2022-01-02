@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.79 2021/12/25 21:34:58 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.80 2022/01/01 21:50:06 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -407,6 +407,32 @@ for each of the predefined \fBterminfo\fP variables:
 .br
 \fBconst char *strnames[]\fP, \fB*strcodes[]\fP, \fB*strfnames[]\fP
 .RE
+.\" ***************************************************************************
+.SS Releasing Memory
+Each successful call to \fBsetupterm\fP allocates memory to hold the terminal
+description.  As a side-effect, it sets \fBcur_term\fP to point to this memory.
+If an application calls
+.sp
+	\fBdel_curterm(cur_term);\fP
+.sp
+the memory will be freed.
+.PP
+The formatting functions \fBtparm\fP and \fBtiparm\fP extend the storage
+allocated by \fBsetupterm\fP: 
+.bP
+the \*(``static\*('' terminfo variables [a-z].
+Before ncurses 6.3, those were shared by all screens.
+With ncurses 6.3, those are allocated per screen.
+See \fBterminfo\fP(\*n) for details.
+.bP
+to improve performance, ncurses 6.3 caches the result of analyzing terminfo
+strings for their parameter types.
+That is stored as a binary tree referenced from the \fBTERMINAL\fP structure.
+.PP
+The higher-level \fBinitscr\fP and \fBnewterm\fP functions use \fBsetupterm\fP.
+Normally they do not free this memory, but it is possible to do that using
+the \fBdelscreen\fP(3X) function.
+.\" ***************************************************************************
 .SH RETURN VALUE
 Routines that return an integer return \fBERR\fP upon failure and \fBOK\fP
 (SVr4 only specifies \*(``an integer value other than \fBERR\fP\*('')
@@ -675,6 +701,7 @@ In that case, the old location is unknown.
 \fBcurses\fP(3X),
 \fBcurs_initscr\fP(3X),
 \fBcurs_kernel\fP(3X),
+\fBcurs_memleaks\fP(3X),
 \fBcurs_termcap\fP(3X),
 \fBcurs_variables\fP(3X),
 \fBterm_variables\fP(3X),

@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2020,2021 Thomas E. Dickey                                 --
+-- Copyright 2018-2021,2022 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3761 2021/12/26 00:29:27 tom Exp $
+-- $Id: NEWS,v 1.3764 2022/01/01 23:59:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,10 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220101
+	+ add section on releasing memory to curs_termcap.3x and
+	  curs_terminfo.3x manpages.
 
 20211225
 	+ improve markup, e.g., for external manpage links in the manpages
