@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.57 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.58 2022/01/16 01:40:48 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -100,14 +100,19 @@ pseudo-key values in the \fBwgetch\fP(3X) input stream.
 .SS mousemask
 .PP
 To make mouse events visible, use the \fBmousemask\fP function.
-This will set
-the mouse events to be reported.
+This sets the mouse events to be reported.
 By default, no mouse events are reported.
-The function will return a mask to indicate which of the specified mouse events
-can be reported; on complete failure it returns 0.
-If oldmask is non-NULL,
-this function fills the indicated location with the previous value of the given
-window's mouse event mask.
+.bP
+The function returns an updated copy of \fInewmask\fP
+to indicate which of the specified mouse events can be reported.
+.IP
+If the screen has not been initialized,
+or if the terminal does not support mouse-events,
+this function returns 0.
+.bP
+If \fIoldmask\fP is non-NULL,
+this function fills the indicated location with the previous value of the
+current screen's mouse event mask.
 .PP
 As a side effect, setting a zero mousemask may turn off the mouse pointer;
 setting a nonzero mask may turn it on.
@@ -254,6 +259,9 @@ returns an error.
 .bP
 If no mouse driver was initialized, or
 if the mask parameter is zero,
+.bP
+It returns an error if a mouse event was detected which did not match the
+current \fImousemask\fP.
 .bP
 It also returns an error if no more events remain in the queue.
 .TP 5
@@ -411,6 +419,7 @@ allowing the use of newer xterm mouse protocols
 such as xterm's private mode 1006.
 .SH SEE ALSO
 \fBcurses\fP(3X),
+\fBcurs_inopts\fP(3X),
 \fBcurs_kernel\fP(3X),
 \fBcurs_slk\fP(3X),
 \fBcurs_variables\fP(3X).

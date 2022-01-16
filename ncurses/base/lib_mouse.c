@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.193 2021/03/20 12:56:32 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.194 2022/01/16 01:15:47 tom Exp $")
 
 #include <tic.h>
 
@@ -1569,7 +1569,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 		if (changed) {
 		    merge = FALSE;
 		    for (b = 1; b <= MAX_BUTTONS; ++b) {
-			if ((sp->_mouse_mask & MASK_CLICK(b))
+			if ((sp->_mouse_mask2 & MASK_CLICK(b))
 			    && (ep->bstate & MASK_PRESS(b))) {
 			    next->bstate &= ~MASK_RELEASE(b);
 			    next->bstate |= MASK_CLICK(b);
@@ -1650,7 +1650,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 		&& (next->bstate & BUTTON_CLICKED)) {
 		merge = FALSE;
 		for (b = 1; b <= MAX_BUTTONS; ++b) {
-		    if ((sp->_mouse_mask & MASK_DOUBLE_CLICK(b))
+		    if ((sp->_mouse_mask2 & MASK_DOUBLE_CLICK(b))
 			&& (ep->bstate & MASK_CLICK(b))
 			&& (next->bstate & MASK_CLICK(b))) {
 			next->bstate &= ~MASK_CLICK(b);
@@ -1668,7 +1668,7 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 		&& (next->bstate & BUTTON_CLICKED)) {
 		merge = FALSE;
 		for (b = 1; b <= MAX_BUTTONS; ++b) {
-		    if ((sp->_mouse_mask & MASK_TRIPLE_CLICK(b))
+		    if ((sp->_mouse_mask2 & MASK_TRIPLE_CLICK(b))
 			&& (ep->bstate & MASK_DOUBLE_CLICK(b))
 			&& (next->bstate & MASK_CLICK(b))) {
 			next->bstate &= ~MASK_CLICK(b);
@@ -1728,7 +1728,8 @@ _nc_mouse_parse(SCREEN *sp, int runcount)
 #endif /* TRACE */
 
     /* after all this, do we have a valid event? */
-    return ValidEvent(PREV(first_invalid));
+    ep = PREV(first_invalid);
+    return ValidEvent(ep) && ((ep->bstate & sp->_mouse_mask) != 0);
 }
 
 static void

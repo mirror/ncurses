@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2019-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2018 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -30,7 +30,7 @@
 #  Author:  Juergen Pfeifer, 1996
 #     and:  Thomas E. Dickey, 1997
 #
-#  $Id: Makefile.in,v 1.98 2021/12/25 22:34:44 tom Exp $
+#  $Id: Makefile.in,v 1.100 2022/01/15 18:20:17 tom Exp $
 #
 .SUFFIXES:
 
@@ -104,7 +104,6 @@ GENERATE	= $(PROG_GENERATE) '@USE_ARG_SUFFIX@'
 DEL_ADAMODE	= sed -e '/^\-\-\ \ \-\*\-\ ada\ \-\*\-.*/d'
 
 GNATHTML	= `type -p gnathtml || type -p gnathtml.pl 2>/dev/null`
-GNATHP          = www.gnat.com
 
 ################################################################################
 ALIB            = @cf_ada_package@
@@ -342,7 +341,7 @@ adahtml:
 	for f in html/$(ALIB)*.htm*; do \
 	   a=`basename $$f` ; \
 	   sed -e 's/You may also.*body.*//' <$$f |\
-	   sed -e 's%GNAT%<A HREF="http://$(GNATHP)">GNAT</A>%g' |\
+	   sed -e 's%\<GNAT\>%<strong>GNAT</strong>%g' |\
 	   sed -e 's%&lt;A HREF%<A HREF%g' |\
 	   sed -e 's%"&gt;%">%g' |\
 	   sed -e 's%#1A\([[:space:]]*NAME="[^"]*"\)#2%<A\1>%' |\

@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_mouse.3x,v 1.57 2021/12/25 21:49:32 tom Exp @
+  * @Id: curs_mouse.3x,v 1.58 2022/01/16 01:40:48 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -86,12 +86,18 @@
 
 
 </PRE><H3><a name="h3-mousemask">mousemask</a></H3><PRE>
-       To make mouse events visible, use the <STRONG>mousemask</STRONG>  function.   This  will
-       set  the  mouse events to be reported.  By default, no mouse events are
-       reported.  The function will return a mask to  indicate  which  of  the
-       specified  mouse events can be reported; on complete failure it returns
-       0.  If oldmask is non-NULL, this function fills the indicated  location
-       with the previous value of the given window's mouse event mask.
+       To make mouse events visible, use the <STRONG>mousemask</STRONG>  function.   This  sets
+       the  mouse  events to be reported.  By default, no mouse events are re-
+       ported.
+
+       <STRONG>o</STRONG>   The function returns an updated copy of <EM>newmask</EM> to  indicate  which
+           of the specified mouse events can be reported.
+
+           If the screen has not been initialized, or if the terminal does not
+           support mouse-events, this function returns 0.
+
+       <STRONG>o</STRONG>   If <EM>oldmask</EM> is non-NULL, this function fills the indicated  location
+           with the previous value of the current screen's mouse event mask.
 
        As  a  side  effect,  setting  a  zero mousemask may turn off the mouse
        pointer; setting a nonzero mask may turn it on.  Whether  this  happens
@@ -106,13 +112,13 @@
        BUTTON1_PRESSED          mouse button 1 down
        BUTTON1_RELEASED         mouse button 1 up
        BUTTON1_CLICKED          mouse button 1 clicked
+
        BUTTON1_DOUBLE_CLICKED   mouse button 1 double clicked
        BUTTON1_TRIPLE_CLICKED   mouse button 1 triple clicked
        ---------------------------------------------------------------------
        BUTTON2_PRESSED          mouse button 2 down
        BUTTON2_RELEASED         mouse button 2 up
        BUTTON2_CLICKED          mouse button 2 clicked
-
        BUTTON2_DOUBLE_CLICKED   mouse button 2 double clicked
        BUTTON2_TRIPLE_CLICKED   mouse button 2 triple clicked
        ---------------------------------------------------------------------
@@ -231,6 +237,9 @@
           <STRONG>o</STRONG>   If  no mouse driver was initialized, or if the mask parameter is
               zero,
 
+          <STRONG>o</STRONG>   It returns an error if a mouse event was detected which did  not
+              match the current <EM>mousemask</EM>.
+
           <STRONG>o</STRONG>   It also returns an error if no more events remain in the queue.
 
           <STRONG>ungetmouse</STRONG>
@@ -238,8 +247,8 @@
 
        <STRONG>mousemask</STRONG> returns the mask of reportable events.
 
-       <STRONG>mouseinterval</STRONG> returns the previous interval value, unless the  terminal
-       was  not  initialized.   In  that case, it returns the maximum interval
+       <STRONG>mouseinterval</STRONG>  returns the previous interval value, unless the terminal
+       was not initialized.  In that case, it  returns  the  maximum  interval
        value (166).
 
        <STRONG>wenclose</STRONG> and <STRONG>wmouse_trafo</STRONG> are boolean functions returning <STRONG>TRUE</STRONG> or <STRONG>FALSE</STRONG>
@@ -247,13 +256,13 @@
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
-       These  calls  were  designed for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, and are not found in SVr4
+       These calls were designed for <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, and are not  found  in  SVr4
        curses, 4.4BSD curses, or any other previous version of curses.
 
-       SVr4 curses had support for the mouse in a variant of <STRONG>xterm(1)</STRONG>.  It  is
+       SVr4  curses had support for the mouse in a variant of <STRONG>xterm(1)</STRONG>.  It is
        mentioned in a few places, but with no supporting documentation:
 
-       <STRONG>o</STRONG>   the  "libcurses" manual page lists functions for this feature which
+       <STRONG>o</STRONG>   the "libcurses" manual page lists functions for this feature  which
            are prototyped in <STRONG>curses.h</STRONG>:
 
                extern int mouse_set(long int);
@@ -272,40 +281,40 @@
                mouse_info        minfo   Mi       Mouse status information
                req_mouse_pos     reqmp   RQ       Request mouse position report
 
-       <STRONG>o</STRONG>   the interface made assumptions (as does ncurses) about  the  escape
+       <STRONG>o</STRONG>   the  interface  made assumptions (as does ncurses) about the escape
            sequences sent to and received from the terminal.
 
-           For  instance the SVr4 curses library used the <STRONG>get_mouse</STRONG> capability
-           to tell the terminal which mouse  button  events  it  should  send,
-           passing  the mouse-button bit-mask to the terminal.  Also, it could
-           ask the terminal where the mouse was using the <STRONG>req_mouse_pos</STRONG>  capa-
+           For instance the SVr4 curses library used the <STRONG>get_mouse</STRONG>  capability
+           to  tell  the  terminal  which  mouse button events it should send,
+           passing the mouse-button bit-mask to the terminal.  Also, it  could
+           ask  the terminal where the mouse was using the <STRONG>req_mouse_pos</STRONG> capa-
            bility.
 
-           Those  features required a terminal which had been modified to work
+           Those features required a terminal which had been modified to  work
            with curses.  They were not part of the X Consortium's xterm.
 
-       When developing the xterm mouse support for ncurses in September  1995,
-       Eric  Raymond  was  uninterested in using the same interface due to its
+       When  developing the xterm mouse support for ncurses in September 1995,
+       Eric Raymond was uninterested in using the same interface  due  to  its
        lack of documentation.  Later, in 1998, Mark Hesseling provided support
-       in  PDCurses 2.3 using the SVr4 interface.  PDCurses, however, does not
-       use video terminals, making it unnecessary to be concerned  about  com-
+       in PDCurses 2.3 using the SVr4 interface.  PDCurses, however, does  not
+       use  video  terminals, making it unnecessary to be concerned about com-
        patibility with the escape sequences.
 
        The feature macro <STRONG>NCURSES_MOUSE_VERSION</STRONG> is provided so the preprocessor
-       can be used to test whether these features are present.  If the  inter-
-       face  is changed, the value of <STRONG>NCURSES_MOUSE_VERSION</STRONG> will be increment-
-       ed.  These values for <STRONG>NCURSES_MOUSE_VERSION</STRONG> may be specified when  con-
+       can  be used to test whether these features are present.  If the inter-
+       face is changed, the value of <STRONG>NCURSES_MOUSE_VERSION</STRONG> will be  increment-
+       ed.   These values for <STRONG>NCURSES_MOUSE_VERSION</STRONG> may be specified when con-
        figuring ncurses:
 
           1  has definitions for reserved events.  The mask uses 28 bits.
 
-          2  adds  definitions  for  button 5, removes the definitions for re-
+          2  adds definitions for button 5, removes the  definitions  for  re-
              served events.  The mask uses 29 bits.
 
        The order of the <STRONG>MEVENT</STRONG> structure members is not guaranteed.  Addition-
        al fields may be added to the structure in the future.
 
-       Under  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>,  these  calls  are implemented using either xterm's
+       Under <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG>, these calls are  implemented  using  either  xterm's
        built-in mouse-tracking API or platform-specific drivers including
 
           <STRONG>o</STRONG>   Alessandro Rubini's gpm server
@@ -315,12 +324,12 @@
           <STRONG>o</STRONG>   OS/2 EMX
 
        If you are using an unsupported configuration, mouse events will not be
-       visible  to  <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> (and the <STRONG>mousemask</STRONG> function will always return
+       visible to <STRONG><A HREF="ncurses.3x.html">ncurses(3x)</A></STRONG> (and the <STRONG>mousemask</STRONG> function will  always  return
        <STRONG>0</STRONG>).
 
-       If the terminfo entry contains a <STRONG>XM</STRONG> string, this is used in  the  xterm
-       mouse  driver  to control the way the terminal is initialized for mouse
-       operation.  The default, if <STRONG>XM</STRONG> is not  found,  corresponds  to  private
+       If  the  terminfo entry contains a <STRONG>XM</STRONG> string, this is used in the xterm
+       mouse driver to control the way the terminal is initialized  for  mouse
+       operation.   The  default,  if  <STRONG>XM</STRONG> is not found, corresponds to private
        mode 1000 of xterm:
 
           \E[?1000%?%p1%{1}%=%th%el%;
@@ -329,39 +338,40 @@
 
           \E[?1006;1000%?%p1%{1}%=%th%el%;
 
-       The  <EM>z</EM>  member in the event structure is not presently used.  It is in-
-       tended for use with touch screens (which may be pressure-sensitive)  or
+       The <EM>z</EM> member in the event structure is not presently used.  It  is  in-
+       tended  for use with touch screens (which may be pressure-sensitive) or
        with 3D-mice/trackballs/power gloves.
 
-       The  <STRONG>ALL_MOUSE_EVENTS</STRONG>  class  does  not  include <STRONG>REPORT_MOUSE_POSITION</STRONG>.
-       They are distinct.  For example, in xterm,  wheel/scrolling  mice  send
-       position  reports  as  a  sequence of presses of buttons 4 or 5 without
+       The <STRONG>ALL_MOUSE_EVENTS</STRONG>  class  does  not  include  <STRONG>REPORT_MOUSE_POSITION</STRONG>.
+       They  are  distinct.   For example, in xterm, wheel/scrolling mice send
+       position reports as a sequence of presses of buttons  4  or  5  without
        matching button-releases.
 
 
 </PRE><H2><a name="h2-BUGS">BUGS</a></H2><PRE>
-       Mouse events under xterm will not in  fact  be  ignored  during  cooked
+       Mouse  events  under  xterm  will  not in fact be ignored during cooked
        mode, if they have been enabled by <STRONG>mousemask</STRONG>.  Instead, the xterm mouse
        report sequence will appear in the string read.
 
-       Mouse events under xterm will not be detected  correctly  in  a  window
-       with  its  keypad  bit  off, since they are interpreted as a variety of
-       function key.  Your terminfo  description  should  have  <STRONG>kmous</STRONG>  set  to
-       "\E[M"  (the  beginning  of  the response from xterm for mouse clicks).
-       Other values for <STRONG>kmous</STRONG> are permitted, but under  the  same  assumption,
+       Mouse  events  under  xterm  will not be detected correctly in a window
+       with its keypad bit off, since they are interpreted  as  a  variety  of
+       function  key.   Your  terminfo  description  should  have <STRONG>kmous</STRONG> set to
+       "\E[M" (the beginning of the response from  xterm  for  mouse  clicks).
+       Other  values  for  <STRONG>kmous</STRONG> are permitted, but under the same assumption,
        i.e., it is the beginning of the response.
 
-       Because  there  are  no standard terminal responses that would serve to
-       identify terminals which support the xterm mouse protocol, <STRONG>ncurses</STRONG>  as-
-       sumes  that  if <STRONG>kmous</STRONG> is defined in the terminal description, or if the
-       terminal description's primary  name  or  aliases  contain  the  string
+       Because there are no standard terminal responses that  would  serve  to
+       identify  terminals which support the xterm mouse protocol, <STRONG>ncurses</STRONG> as-
+       sumes that if <STRONG>kmous</STRONG> is defined in the terminal description, or  if  the
+       terminal  description's  primary  name  or  aliases  contain the string
        "xterm", then the terminal may send mouse events.  The <STRONG>kmous</STRONG> capability
-       is checked first, allowing the use of newer xterm mouse protocols  such
+       is  checked first, allowing the use of newer xterm mouse protocols such
        as xterm's private mode 1006.
 
 
 </PRE><H2><a name="h2-SEE-ALSO">SEE ALSO</a></H2><PRE>
-       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>, <STRONG><A HREF="curs_variables.3x.html">curs_variables(3x)</A></STRONG>.
+       <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>, <STRONG><A HREF="curs_inopts.3x.html">curs_inopts(3x)</A></STRONG>, <STRONG><A HREF="curs_kernel.3x.html">curs_kernel(3x)</A></STRONG>, <STRONG><A HREF="curs_slk.3x.html">curs_slk(3x)</A></STRONG>,  <STRONG>curs_vari-</STRONG>
+       <STRONG><A HREF="curs_variables.3x.html">ables(3x)</A></STRONG>.
 
 
 
