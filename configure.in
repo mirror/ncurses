@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2020,2021 Thomas E. Dickey                                *
+dnl Copyright 2018-2021,2022 Thomas E. Dickey                                *
 dnl Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.738 2021/12/04 23:10:01 tom Exp $
+dnl $Id: configure.in,v 1.741 2022/01/23 00:11:08 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.738 $)
+AC_REVISION($Revision: 1.741 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1050,7 +1050,11 @@ AC_ARG_WITH(caps,
 	[  --with-caps=alt         compile with alternate Caps file],
 	[TERMINFO_CAPS=Caps.$withval],
 	[TERMINFO_CAPS=Caps])
-test -f "${srcdir}/include/${TERMINFO_CAPS}" || TERMINFO_CAPS=Caps
+if test ! -f "${srcdir}/include/${TERMINFO_CAPS}"
+then
+	AC_MSG_WARN(file not found: "${srcdir}/include/${TERMINFO_CAPS}")
+	TERMINFO_CAPS=Caps
+fi
 AC_MSG_RESULT($TERMINFO_CAPS)
 AC_SUBST(TERMINFO_CAPS)
 
@@ -1084,7 +1088,7 @@ AC_MSG_CHECKING(for size CCHARW_MAX)
 AC_ARG_WITH(ccharw-max,
 	[  --with-ccharw-max=XXX   override size CCHARW_MAX],
 	[NCURSES_CCHARW_MAX="$withval"],
-	[NCURSES_CCHARW_MAX=5])
+	[NCURSES_CCHARW_MAX=$cf_dft_ccharw_max])
 AC_MSG_RESULT($NCURSES_CCHARW_MAX)
 AC_SUBST(NCURSES_CCHARW_MAX)
 
@@ -1098,7 +1102,7 @@ AC_MSG_CHECKING(if you want to use signed Boolean array in term.h)
 AC_ARG_ENABLE(signed-char,
 	[  --enable-signed-char    compile using signed Boolean's in term.h],
 	[with_signed_char=$enableval],
-	[with_signed_char=no])
+	[with_signed_char=$cf_dft_signed_char])
 AC_MSG_RESULT($with_signed_char)
 test "x$with_signed_char" != xyes && NCURSES_SBOOL="char"
 AC_SUBST(NCURSES_SBOOL)
@@ -1234,11 +1238,22 @@ AC_ARG_ENABLE(ext-mouse,
 	[with_ext_mouse=$enableval],
 	[with_ext_mouse=$cf_dft_ext_mouse])
 AC_MSG_RESULT($with_ext_mouse)
-NCURSES_MOUSE_VERSION=1
 if test "x$with_ext_mouse" = xyes ; then
-	NCURSES_MOUSE_VERSION=2
 	CF_NCURSES_ABI_6
 fi
+
+case $cf_cv_abi_version in
+(5)
+	NCURSES_MOUSE_VERSION=1
+	;;
+(6)
+	NCURSES_MOUSE_VERSION=2
+	;;
+([789])
+	NCURSES_MOUSE_VERSION=3
+	;;
+esac
+
 AC_SUBST(NCURSES_MOUSE_VERSION)
 
 ###   use option --enable-ext-putwin to turn on extended screendumps
@@ -1367,7 +1382,7 @@ if test "x$with_reentrant" = xyes ; then
 else
 	cf_cv_enable_reentrant=0
 	cf_cv_enable_opaque="NCURSES_OPAQUE"
-	NCURSES_SIZE_T=short
+	NCURSES_SIZE_T=$cf_dft_ordinate_type
 fi
 AC_SUBST(cf_cv_enable_reentrant)
 AC_SUBST(cf_cv_enable_opaque)
@@ -1379,7 +1394,7 @@ CF_ARG_ENABLE(opaque-curses,
 	[  --enable-opaque-curses  make curses WINDOW, etc., "opaque"],
 	[enable_opaque_curses=yes],[
 	 test "$cf_cv_enable_reentrant" = 1 && enable_opaque_curses=yes
-	 test "$cf_cv_enable_reentrant" = 1 || enable_opaque_curses=no
+	 test "$cf_cv_enable_reentrant" = 1 || enable_opaque_curses=$cf_dft_opaque_curses
 	])
 AC_MSG_RESULT($enable_opaque_curses)
 

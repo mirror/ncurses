@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.189 2021/09/04 10:29:59 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.190 2022/01/22 21:23:58 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -859,7 +859,6 @@ fmt_complex(TERMTYPE2 *tterm, const char *capability, char *src, int level)
 		indent_DYN(&tmpbuf, level + 1);
 		strncpy_DYN(&tmpbuf, "%", (size_t) 1);
 	    }
-	    params = FALSE;
 	    percent = FALSE;
 	    break;
 	case ' ':

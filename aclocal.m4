@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2020,2021 Thomas E. Dickey                                *
+dnl Copyright 2018-2021,2022 Thomas E. Dickey                                *
 dnl Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.999 2021/12/04 23:30:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.1001 2022/01/23 00:15:35 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -65,37 +65,55 @@ AC_CACHE_CHECK([for nl_langinfo and CODESET], am_cv_langinfo_codeset,
 	fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_ABI_DEFAULTS version: 2 updated: 2015/06/06 13:49:58
+dnl CF_ABI_DEFAULTS version: 3 updated: 2022/01/22 19:13:38
 dnl ---------------
 dnl Provide configure-script defaults for different ncurses ABIs.
 AC_DEFUN([CF_ABI_DEFAULTS],[
 AC_REQUIRE([CF_NCURSES_WITH_ABI_VERSION])
+
+# ABI 5 defaults:
+cf_dft_ccharw_max=5
+cf_dft_chtype=auto
+cf_dft_ext_colors=no
+cf_dft_ext_const=no
+cf_dft_ext_mouse=no
+cf_dft_ext_putwin=no
+cf_dft_ext_spfuncs=no
+cf_dft_filter_syms=no
+cf_dft_interop=no
+cf_dft_mmask_t=auto
+cf_dft_opaque_curses=no
+cf_dft_ordinate_type=short
+cf_dft_signed_char=no
+cf_dft_tparm_arg=long
+cf_dft_with_lp64=no
+
+# ABI 6 defaults:
 case x$cf_cv_abi_version in
 (x[[6789]])
+	cf_dft_chtype=uint32_t
 	cf_dft_ext_colors=yes
 	cf_dft_ext_const=yes
 	cf_dft_ext_mouse=yes
 	cf_dft_ext_putwin=yes
 	cf_dft_ext_spfuncs=yes
 	cf_dft_filter_syms=yes
-	cf_dft_chtype=uint32_t
-	cf_dft_mmask_t=uint32_t
 	cf_dft_interop=yes
+	cf_dft_mmask_t=uint32_t
 	cf_dft_tparm_arg=intptr_t
 	cf_dft_with_lp64=yes
 	;;
-(*)
-	cf_dft_ext_colors=no
-	cf_dft_ext_const=no
-	cf_dft_ext_mouse=no
-	cf_dft_ext_putwin=no
-	cf_dft_ext_spfuncs=no
-	cf_dft_filter_syms=no
-	cf_dft_chtype=auto
-	cf_dft_mmask_t=auto
-	cf_dft_interop=no
-	cf_dft_tparm_arg=long
-	cf_dft_with_lp64=no
+esac
+
+# ABI 7 defaults:
+case x$cf_cv_abi_version in
+(x[[789]])
+	cf_dft_ccharw_max=6
+	cf_dft_mmask_t=uint64_t
+	cf_dft_opaque_curses=yes
+	cf_dft_ordinate_type=int
+	cf_dft_signed_char=yes
+	# also: remove the wgetch-events feature in ABI 7
 	;;
 esac
 ])dnl
@@ -2423,7 +2441,7 @@ AC_DEFUN([CF_FIXUP_ADAFLAGS],[
 	AC_MSG_RESULT($ADAFLAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_FIX_WARNINGS version: 3 updated: 2020/12/31 18:40:20
+dnl CF_FIX_WARNINGS version: 4 updated: 2021/12/16 18:22:31
 dnl ---------------
 dnl Warning flags do not belong in CFLAGS, CPPFLAGS, etc.  Any of gcc's
 dnl "-Werror" flags can interfere with configure-checks.  Those go into
@@ -2435,11 +2453,13 @@ if test "$GCC" = yes || test "$GXX" = yes
 then
 	case [$]$1 in
 	(*-Werror=*)
-		CF_VERBOSE(repairing $1: [$]$1)
 		cf_temp_flags=
 		for cf_temp_scan in [$]$1
 		do
 			case "x$cf_temp_scan" in
+			(x-Werror=format*)
+				CF_APPEND_TEXT(cf_temp_flags,$cf_temp_scan)
+				;;
 			(x-Werror=*)
 				CF_APPEND_TEXT(EXTRA_CFLAGS,$cf_temp_scan)
 				;;
@@ -2448,9 +2468,13 @@ then
 				;;
 			esac
 		done
-		$1="$cf_temp_flags"
-		CF_VERBOSE(... fixed [$]$1)
-		CF_VERBOSE(... extra $EXTRA_CFLAGS)
+		if test "x[$]$1" != "x$cf_temp_flags"
+		then
+			CF_VERBOSE(repairing $1: [$]$1)
+			$1="$cf_temp_flags"
+			CF_VERBOSE(... fixed [$]$1)
+			CF_VERBOSE(... extra $EXTRA_CFLAGS)
+		fi
 		;;
 	esac
 fi
