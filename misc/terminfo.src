@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.970 $
-#	$Date: 2021/11/27 21:53:31 $
+#	$Revision: 1.974 $
+#	$Date: 2022/01/23 22:33:01 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -7531,7 +7531,26 @@ alacritty+common|base fragment for alacritty,
 #	http://lists.gnu.org/archive/html/bug-ncurses/2018-09/msg00005.html
 #	https://github.com/kovidgoyal/kitty/issues/879
 #
-# Version 0.19.1
+# Version 0.21.2 (June 28, 2021)
+# changes since 0.19.1
+# Notes:
+#	Repeatable tests with tack and vttest assume a standard screensize --
+#	measured in characters.  However, kitty uses pixel-measurements and
+#	does not readily use characters.
+#	Resizing with twm shows only pixel-based hint rather than characters
+#	manual page states that it is possible to override initial window size,
+#	but configuration file has no effect on initial window size.
+#	The same problem with XFCE4, but editing the cached json file works
+#	for setting the window size (the "c" suffix for cells does not):
+#		{"window-size": [720, 440]}
+#	though the values depend upon the font in use.
+# vttest
+# tack
+#	flash works
+#	invisible text still does not work
+#	function/special key modifiers finally work
+#
+# Version 0.19.1 (October 6, 2020)
 # changes since 0.13.3:
 # vttest
 #	ISO-6429
@@ -7547,7 +7566,7 @@ alacritty+common|base fragment for alacritty,
 #	rs1 adds an empty string for resetting title- and other OSC-strings.
 #	italics work
 #
-# Version 0.13.3
+# Version 0.13.3 (January 19, 2019)
 # Notes:
 #	initial screensize 71x22
 #	does not respond to "resize -s"
@@ -7625,30 +7644,31 @@ kitty+common|KovId's TTY common properties,
 	dl1=\E[M, ech=\E[%p1%dX, ed=\E[J, el=\E[K, el1=\E[1K,
 	flash=\E[?5h$<100/>\E[?5l, home=\E[H, hpa=\E[%i%p1%dG,
 	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
-	ind=\n, kbs=^?, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB,
-	kcuf1=\EOC, kcuu1=\EOA, kdch1=\E[3~, kend=\EOF, kf1=\EOP,
-	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[1;2P,
-	kf14=\E[1;2Q, kf15=\E[1;2R, kf16=\E[1;2S, kf17=\E[15;2~,
-	kf18=\E[17;2~, kf19=\E[18;2~, kf2=\EOQ, kf20=\E[19;2~,
-	kf21=\E[20;2~, kf22=\E[21;2~, kf23=\E[23;2~,
-	kf24=\E[24;2~, kf25=\E[1;5P, kf26=\E[1;5Q, kf27=\E[1;5R,
-	kf28=\E[1;5S, kf29=\E[15;5~, kf3=\EOR, kf30=\E[17;5~,
-	kf31=\E[18;5~, kf32=\E[19;5~, kf33=\E[20;5~,
-	kf34=\E[21;5~, kf35=\E[23;5~, kf36=\E[24;5~, kf4=\EOS,
-	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
-	khome=\EOH, kich1=\E[2~, kind=\E[1;2B, knp=\E[6~,
-	kpp=\E[5~, kri=\E[1;2A, op=\E[39;49m, rc=\E8, rev=\E[7m,
-	ri=\EM, rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l,
+	ind=\n, kBEG=\E[1;2E, kbeg=\EOE, kbs=^?, kcbt=\E[Z,
+	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA,
+	kdch1=\E[3~, kend=\EOF, kf1=\EOP, kf10=\E[21~, kf11=\E[23~,
+	kf12=\E[24~, kf13=\E[1;2P, kf14=\E[1;2Q, kf15=\E[1;2R,
+	kf16=\E[1;2S, kf17=\E[15;2~, kf18=\E[17;2~,
+	kf19=\E[18;2~, kf2=\EOQ, kf20=\E[19;2~, kf21=\E[20;2~,
+	kf22=\E[21;2~, kf23=\E[23;2~, kf24=\E[24;2~,
+	kf25=\E[1;5P, kf26=\E[1;5Q, kf27=\E[1;5R, kf28=\E[1;5S,
+	kf29=\E[15;5~, kf3=\EOR, kf30=\E[17;5~, kf31=\E[18;5~,
+	kf32=\E[19;5~, kf33=\E[20;5~, kf34=\E[21;5~,
+	kf35=\E[23;5~, kf36=\E[24;5~, kf4=\EOS, kf5=\E[15~,
+	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, khome=\EOH,
+	kich1=\E[2~, kind=\E[1;2B, knp=\E[6~, kpp=\E[5~,
+	kri=\E[1;2A, op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM,
+	rmacs=\E(B, rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l,
 	rmso=\E[27m, rmul=\E[24m, rs1=\E]\E\\\Ec, sc=\E7,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
 	    %?%p1%p3%|%t;7%;m,
 	sgr0=\E(B\E[m, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	vpa=\E[%i%p1%dd, use=ansi+enq, use=ansi+rep,
-	use=xterm+sm+1006, use=ecma+index, use=xterm+sl-twm,
-	use=ecma+strikeout, use=xterm+pce2, use=xterm+pcc2,
-	use=ecma+italics, use=xterm+alt1049, use=att610+cvis,
-	use=xterm+tmux,
+	vpa=\E[%i%p1%dd, Smulx=\E[4:%p1%dm, use=ansi+enq,
+	use=ansi+rep, use=xterm+sm+1006, use=ecma+index,
+	use=xterm+pcfkeys, use=xterm+sl-twm,
+	use=ecma+strikeout, use=ecma+italics,
+	use=xterm+alt1049, use=att610+cvis, use=xterm+tmux,
 
 ######## WAYLAND CLIENTS
 
@@ -27319,5 +27339,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2021-11-27
 #	+ fix errata in description fields (report by Eric Lindblad) -TD
 #	+ add x10term+sl, aixterm+sl, ncr260vp+sl, ncr260vp+vt, wyse+sl -TD
+#
+# 2022-01-23
+#	+ update kitty -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

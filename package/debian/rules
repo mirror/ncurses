@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# $Id: rules,v 1.42 2021/11/20 15:51:09 tom Exp $
+# $Id: rules,v 1.44 2022/01/30 01:09:39 tom Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -254,6 +254,13 @@ ifneq ($(PACKAGES.arch),)
 	rm -f $(PACKAGES.arch:%=install-%-stamp)
 	dh_testdir
 	dh_testroot
+
+	version=`set -x; awk 'BEGIN{major=minor=0} /^NCURSES_MAJOR/{major=$$3} /^NCURSES_MINOR/{minor=$$3} END{print major "." minor}' < dist.mk`; \
+	sed -i \
+		-e "s, usr/lib, usr/lib/$(DEB_HOST_MULTIARCH)," \
+		-e "s,6\.1,$${version}," \
+		debian/*.lintian-overrides
+
 	dh_lintian           $(verbose) $(PACKAGES.arch:%=-p%)
 	dh_installdocs       $(verbose) $(PACKAGES.arch:%=-p%)
 	dh_installchangelogs $(verbose) $(PACKAGES.arch:%=-p%)  NEWS
