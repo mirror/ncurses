@@ -1,7 +1,7 @@
 #! /bin/sh
-# $Id: MKkeys_list.sh,v 1.7 2020/02/02 23:34:34 tom Exp $
+# $Id: MKkeys_list.sh,v 1.8 2022/02/05 20:40:20 tom Exp $
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2022 Thomas E. Dickey                                  #
 # Copyright 2001-2003,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -44,7 +44,8 @@ else
 fi
 
 data=data$$
-trap 'rm -f $data' EXIT INT QUIT TERM HUP
+trap 'rm -f $data; exit 1' 1 2 3 15
+trap 'rm -f $data' 0
 cat $DATA | sed -e 's/[	][	]*/	/g' >$data
 
 cat <<EOF

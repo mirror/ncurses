@@ -1,7 +1,7 @@
 #! /bin/sh
-# $Id: MKkey_defs.sh,v 1.21 2020/08/17 10:45:33 tom Exp $
+# $Id: MKkey_defs.sh,v 1.22 2022/02/05 20:38:31 tom Exp $
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2022 Thomas E. Dickey                                  #
 # Copyright 2001-2013,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -44,7 +44,8 @@ pass1=pass1_$$
 pass2=pass2_$$
 pass3=pass3_$$
 pass4=pass4_$$
-trap 'rm -f $data pass[1234]_$$' EXIT INT QUIT TERM HUP
+trap 'rm -f $data pass[1234]_$$; exit 1' 1 2 3 15
+trap 'rm -f $data pass[1234]_$$' 0
 
 # change repeated tabs (used for readability) to single tabs (needed to make
 # awk see the right field alignment of the corresponding columns):

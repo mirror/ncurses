@@ -1,7 +1,7 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.18 2021/10/12 21:12:16 tom Exp $
+# $Id: make-tar.sh,v 1.19 2022/02/05 17:57:45 tom Exp $
 ##############################################################################
-# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2019-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2010-2015,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -84,7 +84,8 @@ fi
 SOURCE=`cd ..;pwd`
 
 BUILD=$TMPDIR/make-tar$$
-trap "cd /; rm -rf $BUILD; exit 0" EXIT INT QUIT TERM HUP
+trap "cd /; rm -rf $BUILD; exit 0" 1 2 3 15
+trap "cd /; rm -rf $BUILD; exit 0" 0
 
 umask 077
 if ! ( mkdir $BUILD )

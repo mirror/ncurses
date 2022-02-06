@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2019-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2011,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -27,7 +27,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: capconvert,v 1.10 2021/09/04 10:55:04 tom Exp $
+# $Id: capconvert,v 1.11 2022/02/05 20:39:49 tom Exp $
 #
 # capconvert -- automated conversion from termcap to terminfo
 #
@@ -206,7 +206,8 @@ echo "OK, now I will make your private terminfo tree.  This may take a bit..."
 #
 # Kluge alert: we compile terminfo.src in two pieces because a lot of machines
 # with < 16MB RAM choke on tic's core-hog habits.
-trap "rm -f tsplit$$.*" EXIT INT QUIT TERM HUP
+trap "rm -f tsplit$$.*; exit 1" 1 2 3 15
+trap "rm -f tsplit$$.*" 0
 sed -n $master \
 	-e '1,/SPLIT HERE/w 'tsplit$$.01 \
 	-e '/SPLIT HERE/,$w 'tsplit$$.02 \

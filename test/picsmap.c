@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2017,2018 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.139 2021/05/08 15:56:05 tom Exp $
+ * $Id: picsmap.c,v 1.142 2022/02/06 01:44:34 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -797,6 +797,7 @@ match_c(const char *source, const char *pattern, ...)
     int ch;
     int *ip;
     char *cp;
+    float *fp;
     long lv;
 
     va_start(ap, pattern);
@@ -810,10 +811,13 @@ match_c(const char *source, const char *pattern, ...)
 	    continue;
 	}
 	/* %c, %d, %s are like sscanf except for special treatment of blanks */
-	if (ch == '%' && *pattern != '\0' && strchr("cdnsx", *pattern)) {
+	if (ch == '%' && *pattern != '\0' && strchr("%cdnfsx", *pattern)) {
 	    bool found = FALSE;
 	    ch = *pattern++;
 	    switch (ch) {
+	    case '%':
+		source++;
+		break;
 	    case 'c':
 		cp = va_arg(ap, char *);
 		do {
@@ -830,6 +834,29 @@ match_c(const char *source, const char *pattern, ...)
 		    source = cp;
 		} else {
 		    goto finish;
+		}
+		break;
+	    case 'f':
+		/* floating point for pixels... */
+		fp = va_arg(ap, float *);
+		lv = strtol(source, &cp, 10);
+		if (cp == 0 || cp == source)
+		    goto finish;
+		*fp = (float) lv;
+		source = cp;
+		if (*source == '.') {
+		    lv = strtol(++source, &cp, 10);
+		    if (cp == 0 || cp == source)
+			goto finish;
+		    {
+			float scale = 1.0f;
+			int digits = (int) (cp - source);
+			while (digits-- > 0) {
+			    scale *= 10.0f;
+			}
+			*fp += (float) lv / scale;
+		    }
+		    source = cp;
 		}
 		break;
 	    case 'n':
@@ -1346,11 +1373,17 @@ parse_img(const char *filename)
 		    break;
 		}
 	    } else {
-		/* subsequent lines begin "col,row: (r,g,b,a) #RGB" */
+		/*
+		 * subsequent lines begin "col,row: (r,g,b,a) #RGB".
+		 * Those r/g/b could be integers (0..255) or float-percentages.
+		 */
 		int r, g, b, nocolor;
+		float rf, gf, bf;
 		unsigned check;
 		char *t;
 		char *s = t = strchr(buffer, '#');
+		bool matched = FALSE;
+		bool blurred = FALSE;
 
 		if (s != 0) {
 		    /* after the "#RGB", there are differences - just ignore */
@@ -1363,14 +1396,30 @@ parse_img(const char *filename)
 			    &col, &row,
 			    &r, &g, &b, &nocolor,
 			    &check)) {
+		    matched = TRUE;
+		} else if (match_c(buffer,
+				   "%d,%d: (%f%%,%f%%,%f%%,%d) #%x ",
+				   &col, &row,
+				   &rf, &gf, &bf, &nocolor,
+				   &check)) {
+		    matched = TRUE;
+		    blurred = TRUE;	/* 6.9.11 scaling is broken... */
+#define fp_fix(n) (int) (MaxRGB * (((n) > 100.0 ? 100.0 : (n)) / 100.0))
+		    r = fp_fix(rf);
+		    g = fp_fix(gf);
+		    b = fp_fix(bf);
+		}
+		if (matched) {
 		    int which, c;
 
 		    if ((s - t) > 8)	/* 6 hex digits vs 8 */
 			check /= 256;
-		    if (r > MaxRGB ||
-			g > MaxRGB ||
-			b > MaxRGB ||
-			check != (unsigned) ((r << 16) | (g << 8) | b)) {
+		    if (blurred) {
+			/* revisit this when ImageMagick is fixed */
+		    } else if (r > MaxRGB ||
+			       g > MaxRGB ||
+			       b > MaxRGB ||
+			       check != (unsigned) ((r << 16) | (g << 8) | b)) {
 			okay = FALSE;
 			break;
 		    }
