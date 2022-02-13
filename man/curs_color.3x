@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_color.3x,v 1.67 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_color.3x,v 1.68 2022/02/12 20:06:41 tom Exp $
 .TH curs_color 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -66,33 +66,33 @@
 .br
 \fBbool can_change_color(void);\fP
 .sp
-\fBint init_pair(short \fP\fIpair\fP\fB, short \fP\fIf\fP\fB, short \fP\fIb\fP\fB);\fP
+\fBint init_pair(short \fIpair\fB, short \fIf\fB, short \fIb\fB);\fR
 .br
-\fBint init_color(short \fP\fIcolor\fP\fB, short \fP\fIr\fP\fB, short \fP\fIg\fP\fB, short \fP\fIb\fP\fB);\fP
+\fBint init_color(short \fIcolor\fB, short \fIr\fB, short \fIg\fB, short \fIb\fB);\fR
 .br
 /* extensions */
 .br
-\fBint init_extended_pair(int \fP\fIpair\fP\fB, int \fP\fIf\fP\fB, int \fP\fIb\fP\fB);\fP
+\fBint init_extended_pair(int \fIpair\fB, int \fIf\fB, int \fIb\fB);\fR
 .br
-\fBint init_extended_color(int \fP\fIcolor\fP\fB, int \fP\fIr\fP\fB, int \fP\fIg\fP\fB, int \fP\fIb\fP\fB);\fP
+\fBint init_extended_color(int \fIcolor\fB, int \fIr\fB, int \fIg\fB, int \fIb\fB);\fR
 .sp
-\fBint color_content(short \fP\fIcolor\fP\fB, short *\fP\fIr\fP\fB, short *\fP\fIg\fP\fB, short *\fP\fIb\fP\fB);\fP
+\fBint color_content(short \fIcolor\fB, short *\fIr\fB, short *\fIg\fB, short *\fIb\fB);\fR
 .br
-\fBint pair_content(short \fP\fIpair\fP\fB, short *\fP\fIf\fP\fB, short *\fP\fIb\fP\fB);\fP
+\fBint pair_content(short \fIpair\fB, short *\fIf\fB, short *\fIb\fB);\fR
 .br
 /* extensions */
 .br
-\fBint extended_color_content(int \fP\fIcolor\fP\fB, int *\fP\fIr\fP\fB, int *\fP\fIg\fP\fB, int *\fP\fIb\fP\fB);\fP
+\fBint extended_color_content(int \fIcolor\fB, int *\fIr\fB, int *\fIg\fB, int *\fIb\fB);\fR
 .br
-\fBint extended_pair_content(int \fP\fIpair\fP\fB, int *\fP\fIf\fP\fB, int *\fP\fIb\fP\fB);\fP
+\fBint extended_pair_content(int \fIpair\fB, int *\fIf\fB, int *\fIb\fB);\fR
 .sp
 /* extensions */
 .br
 \fBvoid reset_color_pairs(void);\fP
 .sp
-\fBint COLOR_PAIR(int \fP\fIn\fP\fB);\fP
+\fBint COLOR_PAIR(int \fIn\fB);\fR
 .br
-\fBPAIR_NUMBER(\fP\fIattrs\fP\fB);\fP
+\fBPAIR_NUMBER(\fIattrs\fB);\fR
 .br
 .SH DESCRIPTION
 .SS Overview
@@ -385,10 +385,10 @@ It also touches the current- and standard-screens, allowing an application to
 switch color palettes rapidly.
 .SS PAIR_NUMBER
 .PP
-\fBPAIR_NUMBER(\fP\fIattrs\fP) extracts the color
+\fBPAIR_NUMBER(\fIattrs\fR) extracts the color
 value from its \fIattrs\fP parameter and returns it as a color pair number.
 .SS COLOR_PAIR
-Its inverse \fBCOLOR_PAIR(\fP\fIn\fP\fB)\fP converts a color pair number
+Its inverse \fBCOLOR_PAIR(\fIn\fB)\fR converts a color pair number
 to an attribute.
 Attributes can hold color pairs in the range 0 to 255.
 If you need a color pair larger than that, you must use functions

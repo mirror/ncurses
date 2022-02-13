@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addchstr.3x,v 1.24 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_addchstr.3x,v 1.25 2022/02/12 20:07:29 tom Exp $
 .TH curs_addchstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -54,21 +54,21 @@
 .nf
 \fB#include <curses.h>\fP
 .PP
-\fBint addchstr(const chtype *\fP\fIchstr\fP\fB);\fP
+\fBint addchstr(const chtype *\fIchstr\fB);\fR
 .br
-\fBint addchnstr(const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint addchnstr(const chtype *\fIchstr\fB, int \fIn\fB);\fR
 .br
-\fBint waddchstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
+\fBint waddchstr(WINDOW *\fIwin\fB, const chtype *\fIchstr\fB);\fR
 .br
-\fBint waddchnstr(WINDOW *\fP\fIwin\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint waddchnstr(WINDOW *\fIwin\fB, const chtype *\fIchstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvaddchstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
+\fBint mvaddchstr(int \fIy\fB, int \fIx\fB, const chtype *\fIchstr\fB);\fR
 .br
-\fBint mvaddchnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvaddchnstr(int \fIy\fB, int \fIx\fB, const chtype *\fIchstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwaddchstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB);\fP
+\fBint mvwaddchstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const chtype *\fIchstr\fB);\fR
 .br
-\fBint mvwaddchnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwaddchnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const chtype *\fIchstr\fB, int \fIn\fB);\fR
 .fi
 .SH DESCRIPTION
 These functions copy the (null-terminated)

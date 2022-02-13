@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_mouse.3x,v 1.58 2022/01/16 01:40:48 tom Exp $
+.\" $Id: curs_mouse.3x,v 1.59 2022/02/12 20:05:11 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -69,28 +69,28 @@
 .PP
 .nf
 \fBtypedef struct {\fP
-\fB    short id;         \fP\fI/* ID to distinguish multiple devices */\fP
-\fB    int x, y, z;      \fP\fI/* event coordinates */\fP
-\fB    mmask_t bstate;   \fP\fI/* button state bits */\fP
+\fB    short id;         \fI/* ID to distinguish multiple devices */\fR
+\fB    int x, y, z;      \fI/* event coordinates */\fR
+\fB    mmask_t bstate;   \fI/* button state bits */\fR
 \fB} MEVENT;\fP
 .fi
 .PP
 \fBbool has_mouse(void);\fP
 .sp
-\fBint getmouse(MEVENT *\fP\fIevent\fP\fB);\fP
+\fBint getmouse(MEVENT *\fIevent\fB);\fR
 .br
-\fBint ungetmouse(MEVENT *\fP\fIevent\fP\fB);\fP
+\fBint ungetmouse(MEVENT *\fIevent\fB);\fR
 .sp
-\fBmmask_t mousemask(mmask_t \fP\fInewmask\fP\fB, mmask_t *\fP\fIoldmask\fP\fB);\fP
+\fBmmask_t mousemask(mmask_t \fInewmask\fB, mmask_t *\fIoldmask\fB);\fR
 .sp
-\fBbool wenclose(const WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBbool wenclose(const WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .sp
-\fBbool mouse_trafo(int* \fP\fIpY\fP\fB, int* \fP\fIpX\fP\fB, bool \fP\fIto_screen\fP\fB);\fP
+\fBbool mouse_trafo(int* \fIpY\fB, int* \fIpX\fB, bool \fIto_screen\fB);\fR
 .br
-\fBbool wmouse_trafo(const WINDOW* \fP\fIwin\fP\fB,\fP
-                  \fBint* \fP\fIpY\fP\fB, int* \fP\fIpX\fP\fB, bool \fP\fIto_screen\fP\fB);\fP
+\fBbool wmouse_trafo(const WINDOW* \fIwin\fB,\fR
+                  \fBint* \fIpY\fB, int* \fIpX\fB, bool \fIto_screen\fB);\fR
 .sp
-\fBint mouseinterval(int \fP\fIerval\fP\fB);\fP
+\fBint mouseinterval(int \fIerval\fB);\fR
 .br
 .SH DESCRIPTION
 These functions provide an interface to mouse events from

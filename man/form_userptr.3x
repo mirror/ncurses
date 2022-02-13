@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_userptr.3x,v 1.21 2021/12/25 21:41:58 tom Exp $
+.\" $Id: form_userptr.3x,v 1.22 2022/02/12 20:03:40 tom Exp $
 .TH form_userptr 3X ""
 .SH NAME
 \fBset_form_userptr\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_form_userptr(FORM *\fP\fIform\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
+\fBint set_form_userptr(FORM *\fIform\fB, void *\fIuserptr\fB);\fR
 .br
-\fBvoid* form_userptr(const FORM *\fP\fIform\fP\fB);\fP
+\fBvoid* form_userptr(const FORM *\fIform\fB);\fR
 .br
 .SH DESCRIPTION
 Every form and every form item has a field that can be used to hold

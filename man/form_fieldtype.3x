@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_fieldtype.3x,v 1.30 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_fieldtype.3x,v 1.31 2022/02/12 20:03:40 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -40,24 +40,24 @@
 \fB#include <form.h>\fP
 .sp
 \fBFIELDTYPE *new_fieldtype(\fP
-    \fBbool (* const \fP\fIfield_check\fP\fB)(FIELD *, const void *),\fP
-    \fBbool (* const \fP\fIchar_check\fP\fB)(int, const void *));\fP
+    \fBbool (* const \fIfield_check\fB)(FIELD *, const void *),\fR
+    \fBbool (* const \fIchar_check\fB)(int, const void *));\fR
 .br
-\fBint free_fieldtype(FIELDTYPE *\fP\fIfieldtype\fP\fB);\fP
+\fBint free_fieldtype(FIELDTYPE *\fIfieldtype\fB);\fR
 .sp
 \fBint set_fieldtype_arg(\fP
-    \fBFIELDTYPE *\fP\fIfieldtype\fP\fB,\fP
-    \fBvoid *(* const \fP\fImake_arg\fP\fB)(va_list *),\fP
-    \fBvoid *(* const \fP\fIcopy_arg\fP\fB)(const void *),\fP
-    \fBvoid  (* const \fP\fIfree_arg\fP\fB)(void *));\fP
+    \fBFIELDTYPE *\fIfieldtype\fB,\fR
+    \fBvoid *(* const \fImake_arg\fB)(va_list *),\fR
+    \fBvoid *(* const \fIcopy_arg\fB)(const void *),\fR
+    \fBvoid  (* const \fIfree_arg\fB)(void *));\fR
 .br
 \fBint set_fieldtype_choice(\fP
-    \fBFIELDTYPE *\fP\fIfieldtype\fP\fB,\fP
-    \fBbool (* const \fP\fInext_choice\fP\fB)(FIELD *, const void *),\fP
-    \fBbool (* const \fP\fIprev_choice\fP\fB)(FIELD *, const void *));\fP
+    \fBFIELDTYPE *\fIfieldtype\fB,\fR
+    \fBbool (* const \fInext_choice\fB)(FIELD *, const void *),\fR
+    \fBbool (* const \fIprev_choice\fB)(FIELD *, const void *));\fR
 .sp
-\fBFIELDTYPE *link_fieldtype(FIELDTYPE *\fP\fItype1\fP\fB,\fP
-                          \fBFIELDTYPE *\fP\fItype2\fP\fB);\fP
+\fBFIELDTYPE *link_fieldtype(FIELDTYPE *\fItype1\fB,\fR
+                          \fBFIELDTYPE *\fItype2\fB);\fR
 .SH DESCRIPTION
 .SS new_fieldtype
 The function \fBnew_fieldtype\fP creates a new field type usable for data

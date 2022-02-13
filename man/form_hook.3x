@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,28 +28,28 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_hook.3x,v 1.18 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_hook.3x,v 1.19 2022/02/12 20:03:40 tom Exp $
 .TH form_hook 3X ""
 .SH NAME
 \fBform_hook\fP \- set hooks for automatic invocation by applications
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_field_init(FORM *\fP\fIform\fP\fB, Form_Hook \fP\fIfunc\fP\fB);\fP
+\fBint set_field_init(FORM *\fIform\fB, Form_Hook \fIfunc\fB);\fR
 .br
-\fBForm_Hook field_init(const FORM *\fP\fIform\fP\fB);\fP
+\fBForm_Hook field_init(const FORM *\fIform\fB);\fR
 .sp
-\fBint set_field_term(FORM *\fP\fIform\fP\fB, Form_Hook \fP\fIfunc\fP\fB);\fP
+\fBint set_field_term(FORM *\fIform\fB, Form_Hook \fIfunc\fB);\fR
 .br
-\fBForm_Hook field_term(const FORM *\fP\fIform\fP\fB);\fP
+\fBForm_Hook field_term(const FORM *\fIform\fB);\fR
 .sp
-\fBint set_form_init(FORM *\fP\fIform\fP\fB, Form_Hook \fP\fIfunc\fP\fB);\fP
+\fBint set_form_init(FORM *\fIform\fB, Form_Hook \fIfunc\fB);\fR
 .br
-\fBForm_Hook form_init(const FORM *\fP\fIform\fP\fB);\fP
+\fBForm_Hook form_init(const FORM *\fIform\fB);\fR
 .sp
-\fBint set_form_term(FORM *\fP\fIform\fP\fB, Form_Hook \fP\fIfunc\fP\fB);\fP
+\fBint set_form_term(FORM *\fIform\fB, Form_Hook \fIfunc\fB);\fR
 .br
-\fBForm_Hook form_term(const FORM *\fP\fIform\fP\fB);\fP
+\fBForm_Hook form_term(const FORM *\fIform\fB);\fR
 .br
 .SH DESCRIPTION
 These functions make it possible to set hook functions to be called at various

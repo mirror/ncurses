@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getch.3x,v 1.61 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_getch.3x,v 1.63 2022/02/12 20:07:45 tom Exp $
 .TH curs_getch 3X ""
 .na
 .hy 0
@@ -50,21 +50,21 @@
 .ad
 .hy
 .SH SYNOPSIS
-\fB#include <curses.h>\fP
+.B #include <curses.h>
 .PP
-\fBint getch(void);\fP
+.B int getch(void);
 .br
-\fBint wgetch(WINDOW *\fP\fIwin);\fP
+.B int wgetch(WINDOW *\fIwin\fB);
 .sp
-\fBint mvgetch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+.B int mvgetch(int \fIy\fB, int \fIx\fB);
 .br
-\fBint mvwgetch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+.B int mvwgetch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);
 .sp
-\fBint ungetch(int \fP\fIch\fP\fB);\fP
+.B int ungetch(int \fIch\fB);
 .sp
 /* extension */
 .br
-\fBint has_key(int \fP\fIch\fP\fB);\fP
+.B int has_key(int \fIch\fB);
 .br
 .SH DESCRIPTION
 .SS Reading characters
@@ -210,7 +210,7 @@ KEY_FIND/Find key
 KEY_HELP/Help key
 KEY_MARK/Mark key
 KEY_MESSAGE/Message key
-KEY_MOUSE/Mouse event read
+KEY_MOUSE/Mouse event occurred
 KEY_MOVE/Move key
 KEY_NEXT/Next object key
 KEY_OPEN/Open key
@@ -238,7 +238,7 @@ KEY_SEXIT/Shifted exit key
 KEY_SFIND/Shifted find key
 KEY_SHELP/Shifted help key
 KEY_SHOME/Shifted home key
-KEY_SIC/Shifted input key
+KEY_SIC/Shifted insert key
 KEY_SLEFT/Shifted left arrow key
 KEY_SMESSAGE/Shifted message key
 KEY_SMOVE/Shifted move key
@@ -248,7 +248,7 @@ KEY_SPREVIOUS/Shifted prev key
 KEY_SPRINT/Shifted print key
 KEY_SREDO/Shifted redo key
 KEY_SREPLACE/Shifted replace key
-KEY_SRIGHT/Shifted right arrow
+KEY_SRIGHT/Shifted right arrow key
 KEY_SRSUME/Shifted resume key
 KEY_SSAVE/Shifted save key
 KEY_SSUSPEND/Shifted suspend key

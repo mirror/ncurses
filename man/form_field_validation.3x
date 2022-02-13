@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_validation.3x,v 1.35 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_field_validation.3x,v 1.36 2022/02/12 20:03:40 tom Exp $
 .TH form_field_validation 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -42,11 +42,11 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBvoid *field_arg(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBvoid *field_arg(const FIELD *\fIfield\fB);\fR
 .br
-\fBFIELDTYPE *field_type(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBFIELDTYPE *field_type(const FIELD *\fIfield\fB);\fR
 .br
-\fBint set_field_type(FIELD *\fP\fIfield\fP\fB, FIELDTYPE *\fP\fItype\fP\fB, ...);\fP
+\fBint set_field_type(FIELD *\fIfield\fB, FIELDTYPE *\fItype\fB, ...);\fR
 .sp
 /* predefined field types */
 .br

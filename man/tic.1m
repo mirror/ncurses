@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.81 2021/12/25 17:39:16 tom Exp $
+.\" $Id: tic.1m,v 1.82 2022/02/12 20:02:20 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -206,7 +206,7 @@ according to the rules summarized above,
 it will print a diagnostic and exit with an error rather than
 printing a list of database locations.
 .TP
-\fB\-e \fP\fInames\fP
+\fB\-e \fInames\fR
 Limit writes and translations to the following comma-separated list of
 terminals.
 If any name or alias of a terminal matches one of the names in
@@ -253,11 +253,11 @@ normally suppresses output of obsolete termcap capabilities such as \fBbs\fP.
 This option forces a more literal translation that also preserves the
 obsolete capabilities.
 .TP
-\fB\-o\fP\fIdir\fP
+\fB\-o\fIdir\fR
 Write compiled entries to given database location.
 Overrides the TERMINFO environment variable.
 .TP
-\fB\-Q\fP\fIn\fP
+\fB\-Q\fIn\fR
 Rather than show source in terminfo (text) format,
 print the compiled (binary) format in hexadecimal or base64 form,
 depending on the option's value:
@@ -276,7 +276,7 @@ hexadecimal and base64
 \fB\-q\fP
 Suppress comments and blank lines when showing translated source.
 .TP
-\fB\-R\fP\fIsubset\fP
+\fB\-R\fIsubset\fR
 Restrict output to a given subset.
 This option is for use with archaic
 versions of terminfo like those on SVr1, Ultrix, or HP-UX that do not support
@@ -316,7 +316,7 @@ or in termcaps.
 \fB\-V\fP
 reports the version of ncurses which was used in this program, and exits.
 .TP
-\fB\-v\fP\fIn\fP
+\fB\-v\fIn\fR
 specifies that (verbose) output be written to standard error trace
 information showing \fB@TIC@\fP's progress.
 .IP
@@ -361,7 +361,7 @@ Use the \fB\-W\fP option to do this.
 If you specify both \fB\-f\fP and \fB\-W\fP options,
 the latter is ignored when \fB\-f\fP has already split the line.
 .TP
-\fB\-w\fP\fIn\fP
+\fB\-w\fIn\fR
 specifies the width of the output.
 The parameter is optional.
 If it is omitted, it defaults to 60.
@@ -399,7 +399,7 @@ from \fB\*d\fP to complete the entry.
 those capabilities that explicitly are defined in the current entry.
 .PP
 When an entry, e.g., \fBentry_name_1\fP, contains a
-\fBuse=\fP\fIentry\fR_\fIname\fR_\fI2\fP field, any canceled
+\fBuse=\fIentry\fR_\fIname\fR_\fI2\fR field, any canceled
 capabilities in \fIentry\fR_\fIname\fR_\fI2\fP must also appear in
 \fBentry_name_1\fP before \fBuse=\fP for these capabilities to be
 canceled in \fBentry_name_1\fP.

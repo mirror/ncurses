@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2017 Free Software Foundation, Inc.                            *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@
 .\"
 .\" Author: Thomas E. Dickey
 .\"
-.\" $Id: new_pair.3x,v 1.18 2021/12/25 20:10:40 tom Exp $
+.\" $Id: new_pair.3x,v 1.19 2022/02/12 20:03:40 tom Exp $
 .TH new_pair 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -60,11 +60,11 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint alloc_pair(int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint alloc_pair(int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint find_pair(int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint find_pair(int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint free_pair(int \fP\fIpair\fP\fB);\fP
+\fBint free_pair(int \fIpair\fB);\fR
 .SH DESCRIPTION
 These functions are an extension to the curses library.
 They permit an application to dynamically allocate a color pair using
@@ -90,14 +90,14 @@ with only a few dozen color combinations,
 it is convenient to use the maximum number of combinations
 as the limit on color pairs:
 .NS
-\fBCOLORS\fP\fI * \fP\fBCOLORS\fP
+\fBCOLORS\fI * \fBCOLORS\fR
 .NE
 .bP
 Terminals which support \fIdefault colors\fP distinct
 from \*(``ANSI colors\*(''
 add to the possible combinations, producing this total:
 .NS
-\fI( \fP\fBCOLORS\fP\fI + 1 ) * ( \fP\fBCOLORS\fP\fI + 1 )\fP
+\fI( \fBCOLORS\fI + 1 ) * ( \fBCOLORS\fI + 1 )\fR
 .NE
 .bP
 An application might use up to a few dozen color pairs to

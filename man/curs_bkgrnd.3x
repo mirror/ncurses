@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgrnd.3x,v 1.14 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_bkgrnd.3x,v 1.15 2022/02/12 20:06:41 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -44,17 +44,17 @@
 .PP
 .B #include <curses.h>
 .sp
-\fBint bkgrnd(\fP\fB const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint bkgrnd(\fB const cchar_t *\fIwch\fB);\fR
 .br
-\fBint wbkgrnd(\fP\fB WINDOW *\fP\fIwin\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint wbkgrnd(\fB WINDOW *\fIwin\fB, const cchar_t *\fIwch\fB);\fR
 .sp
-\fBvoid bkgrndset(const cchar_t *\fP\fIwch\fP \fB);\fP
+\fBvoid bkgrndset(const cchar_t *\fIwch\fR \fB);\fR
 .br
-\fBvoid wbkgrndset(WINDOW *\fP\fIwin\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBvoid wbkgrndset(WINDOW *\fIwin\fB, const cchar_t *\fIwch\fB);\fR
 .sp
-\fBint getbkgrnd(cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint getbkgrnd(cchar_t *\fIwch\fB);\fR
 .br
-\fBint wgetbkgrnd(WINDOW *\fP\fIwin\fP\fB, cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint wgetbkgrnd(WINDOW *\fIwin\fB, cchar_t *\fIwch\fB);\fR
 .br
 .SH DESCRIPTION
 .SS bkgrndset

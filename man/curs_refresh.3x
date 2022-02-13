@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.24 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.25 2022/02/12 20:05:11 tom Exp $
 .TH curs_refresh 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -53,15 +53,15 @@
 .sp
 \fBint refresh(void);\fP
 .br
-\fBint wrefresh(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint wrefresh(WINDOW *\fIwin\fB);\fR
 .br
-\fBint wnoutrefresh(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint wnoutrefresh(WINDOW *\fIwin\fB);\fR
 .br
 \fBint doupdate(void);\fP
 .sp
-\fBint redrawwin(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint redrawwin(WINDOW *\fIwin\fB);\fR
 .br
-\fBint wredrawln(WINDOW *\fP\fIwin\fP\fB, int \fP\fIbeg_line\fP\fB, int \fP\fInum_lines\fP\fB);\fP
+\fBint wredrawln(WINDOW *\fIwin\fB, int \fIbeg_line\fB, int \fInum_lines\fB);\fR
 .br
 .SH DESCRIPTION
 .SS refresh/wrefresh

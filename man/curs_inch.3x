@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inch.3x,v 1.27 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_inch.3x,v 1.28 2022/02/12 20:07:29 tom Exp $
 .TH curs_inch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -48,11 +48,11 @@
 .sp
 \fBchtype inch(void);\fP
 .br
-\fBchtype winch(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBchtype winch(WINDOW *\fIwin\fB);\fR
 .sp
-\fBchtype mvinch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBchtype mvinch(int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBchtype mvwinch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBchtype mvwinch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
 .SH DESCRIPTION
 These routines return the character, of type \fBchtype\fP, at the current

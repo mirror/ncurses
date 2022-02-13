@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tput.1,v 1.75 2021/12/25 21:31:59 tom Exp $
+.\" $Id: tput.1,v 1.76 2022/02/12 20:02:20 tom Exp $
 .TH @TPUT@ 1 ""
 .ds d @TERMINFO@
 .ds n 1
@@ -43,15 +43,15 @@
 .SH NAME
 \fB@TPUT@\fP, \fBreset\fP \- initialize a terminal or query terminfo database
 .SH SYNOPSIS
-\fB@TPUT@\fP [\fB\-T\fP\fItype\fP] \fIcapname\fP [\fIparameters\fP]
+\fB@TPUT@\fR [\fB\-T\fItype\fR] \fIcapname\fR [\fIparameters\fR]
 .br
-\fB@TPUT@\fP [\fB\-T\fP\fItype\fP] [\fB\-x\fP] \fBclear\fP
+\fB@TPUT@\fR [\fB\-T\fItype\fR] [\fB\-x\fR] \fBclear\fR
 .br
-\fB@TPUT@\fP [\fB\-T\fP\fItype\fP] \fBinit\fP
+\fB@TPUT@\fR [\fB\-T\fItype\fR] \fBinit\fR
 .br
-\fB@TPUT@\fP [\fB\-T\fP\fItype\fP] \fBreset\fP
+\fB@TPUT@\fR [\fB\-T\fItype\fR] \fBreset\fR
 .br
-\fB@TPUT@\fP [\fB\-T\fP\fItype\fP] \fBlongname\fP
+\fB@TPUT@\fR [\fB\-T\fItype\fR] \fBlongname\fR
 .br
 \fB@TPUT@ \-S\fP  \fB<<\fP
 .br
@@ -103,7 +103,7 @@ Because some capabilities may use
 to decide whether to use \fBtparm\fP(3X),
 and how to interpret the parameters.
 .TP
-\fB\-T\fP\fItype\fP
+\fB\-T\fItype\fR
 indicates the \fItype\fP of terminal.
 Normally this option is
 unnecessary, because the default is taken from the environment
@@ -140,7 +140,7 @@ If no parameters are given for the capability,
 .TP
 \fBinit\fP
 If the terminal database is present and an entry for the user's
-terminal exists (see \fB\-T\fP\fItype\fP, above), the following will
+terminal exists (see \fB\-T\fItype\fR, above), the following will
 occur:
 .RS
 .TP 5
@@ -226,7 +226,7 @@ Otherwise, \fBreset\fP acts identically to \fBinit\fP.
 .TP
 \fBlongname\fP
 If the terminal database is present and an entry for the
-user's terminal exists (see \fB\-T\fP\fItype\fP above), then the long name
+user's terminal exists (see \fB\-T\fItype\fR above), then the long name
 of the terminal will be put out.
 The long name is the last
 name in the first line of the terminal's description in the

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_printw.3x,v 1.31 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_printw.3x,v 1.32 2022/02/12 20:05:11 tom Exp $
 .TH curs_printw 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -50,19 +50,19 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint printw(const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint printw(const char *\fIfmt\fB, ...);\fR
 .br
-\fBint wprintw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint wprintw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, ...);\fR
 .br
-\fBint mvprintw(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint mvprintw(int \fIy\fB, int \fIx\fB, const char *\fIfmt\fB, ...);\fR
 .br
-\fBint mvwprintw(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint mvwprintw(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIfmt\fB, ...);\fR
 .br
-\fBint vw_printw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
+\fBint vw_printw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, va_list \fIvarglist\fB);\fR
 .sp
 /* obsolete */
 .br
-\fBint vwprintw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
+\fBint vwprintw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, va_list \fIvarglist\fB);\fR
 .SH DESCRIPTION
 The \fBprintw\fP, \fBwprintw\fP, \fBmvprintw\fP and \fBmvwprintw\fP
 routines are analogous to \fBprintf\fP [see \fBprintf\fP(3)].

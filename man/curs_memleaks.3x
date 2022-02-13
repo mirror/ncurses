@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2008-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_memleaks.3x,v 1.12 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_memleaks.3x,v 1.13 2022/02/12 20:05:11 tom Exp $
 .TH curs_memleaks 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,19 +43,19 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .br
-\fBvoid exit_curses(int \fP\fIcode\fP\fB);\fP
+\fBvoid exit_curses(int \fIcode\fB);\fR
 .sp
 \fB#include <term.h>\fP
 .br
-\fBvoid exit_terminfo(int \fP\fIcode\fP\fB);\fP
+\fBvoid exit_terminfo(int \fIcode\fB);\fR
 .sp
 /* deprecated (intentionally not declared in curses.h or term.h) */
 .br
 \fBvoid _nc_freeall(void);\fP
 .br
-\fBvoid _nc_free_and_exit(int \fP\fIcode\fP\fB);\fP
+\fBvoid _nc_free_and_exit(int \fIcode\fB);\fR
 .br
-\fBvoid _nc_free_tinfo(int \fP\fIcode\fP\fB);\fP
+\fBvoid _nc_free_tinfo(int \fIcode\fB);\fR
 .SH DESCRIPTION
 These functions are used to simplify analysis of memory leaks in the ncurses
 library.

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2012 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,20 +28,20 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field.3x,v 1.19 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_field.3x,v 1.20 2022/02/12 20:03:40 tom Exp $
 .TH form_field 3X ""
 .SH NAME
 \fBform_field\fP \- make and break connections between fields and forms
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_form_fields(FORM *\fP\fIform\fP\fB, FIELD **\fP\fIfields\fP\fB);\fP
+\fBint set_form_fields(FORM *\fIform\fB, FIELD **\fIfields\fB);\fR
 .br
-\fBFIELD **form_fields(const FORM *\fP\fIform\fP\fB);\fP
+\fBFIELD **form_fields(const FORM *\fIform\fB);\fR
 .br
-\fBint field_count(const FORM *\fP\fIform\fP\fB);\fP
+\fBint field_count(const FORM *\fIform\fB);\fR
 .br
-\fBint move_field(FIELD *\fP\fIfield\fP\fB, int \fP\fIfrow\fP\fB, int \fP\fIfcol\fP\fB);\fP
+\fBint move_field(FIELD *\fIfield\fB, int \fIfrow\fB, int \fIfcol\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_form_fields\fP changes the field pointer array of

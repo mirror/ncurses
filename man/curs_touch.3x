@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_touch.3x,v 1.25 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_touch.3x,v 1.26 2022/02/12 20:05:11 tom Exp $
 .TH curs_touch 3X ""
 .na
 .hy 0
@@ -43,17 +43,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint touchline(WINDOW *\fP\fIwin\fP\fB, int \fP\fIstart\fP\fB, int \fP\fIcount\fP\fB);\fP
+\fBint touchline(WINDOW *\fIwin\fB, int \fIstart\fB, int \fIcount\fB);\fR
 .sp
-\fBint touchwin(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint touchwin(WINDOW *\fIwin\fB);\fR
 .br
-\fBint wtouchln(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIn\fP\fB, int \fP\fIchanged\fP\fB);\fP
+\fBint wtouchln(WINDOW *\fIwin\fB, int \fIy\fB, int \fIn\fB, int \fIchanged\fB);\fR
 .sp
-\fBint untouchwin(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint untouchwin(WINDOW *\fIwin\fB);\fR
 .sp
-\fBbool is_linetouched(WINDOW *\fP\fIwin\fP\fB, int \fP\fIline\fP\fB);\fP
+\fBbool is_linetouched(WINDOW *\fIwin\fB, int \fIline\fB);\fR
 .br
-\fBbool is_wintouched(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_wintouched(WINDOW *\fIwin\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBtouchwin\fP and \fBtouchline\fP routines throw away all
@@ -71,8 +71,8 @@ The \fBuntouchwin\fP routine marks all lines in the window as unchanged since
 the last call to \fBwrefresh\fP.
 .PP
 The \fBwtouchln\fP routine makes \fIn\fP lines in the window, starting
-at line \fIy\fP, look as if they have (\fIchanged\fP\fB=1\fP) or have
-not (\fIchanged\fP\fB=0\fP) been changed since the last call to
+at line \fIy\fR, look as if they have (\fIchanged\fB=1\fR) or have
+not (\fIchanged\fB=0\fR) been changed since the last call to
 \fBwrefresh\fP.
 .PP
 The \fBis_linetouched\fP and \fBis_wintouched\fP routines return

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.70 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_attr.3x,v 1.71 2022/02/12 20:07:29 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -92,56 +92,56 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint attr_get(attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint attr_get(attr_t *\fIattrs\fB, short *\fIpair\fB, void *\fIopts\fB);\fR
 .br
-\fBint wattr_get(WINDOW *\fP\fIwin\fP\fB, attr_t *\fP\fIattrs\fP\fB, short *\fP\fIpair\fP\fB,\fP \fBvoid *\fP\fIopts\fP\fB);\fP
+\fBint wattr_get(WINDOW *\fIwin\fB, attr_t *\fIattrs\fB, short *\fIpair\fB,\fR \fBvoid *\fIopts\fB);\fR
 .br
-\fBint attr_set(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint attr_set(attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB);\fR
 .br
-\fBint wattr_set(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint wattr_set(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB);\fR
 .sp
-\fBint attr_off(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint attr_off(attr_t \fIattrs\fB, void *\fIopts\fB);\fR
 .br
-\fBint wattr_off(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint wattr_off(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, void *\fIopts\fB);\fR
 .br
-\fBint attr_on(attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint attr_on(attr_t \fIattrs\fB, void *\fIopts\fB);\fR
 .br
-\fBint wattr_on(WINDOW *\fP\fIwin\fP\fB, attr_t \fP\fIattrs\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint wattr_on(WINDOW *\fIwin\fB, attr_t \fIattrs\fB, void *\fIopts\fB);\fR
 .sp
-\fBint attroff(int \fP\fIattrs);\fP
+\fBint attroff(int \fIattrs);\fR
 .br
-\fBint wattroff(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
+\fBint wattroff(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
 .br
-\fBint attron(int \fP\fIattrs\fP\fB);\fP
+\fBint attron(int \fIattrs\fB);\fR
 .br
-\fBint wattron(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
+\fBint wattron(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
 .br
-\fBint attrset(int \fP\fIattrs\fP\fB);\fP
+\fBint attrset(int \fIattrs\fB);\fR
 .br
-\fBint wattrset(WINDOW *\fP\fIwin\fP\fB, int \fP\fIattrs\fP\fB);\fP
+\fBint wattrset(WINDOW *\fIwin\fB, int \fIattrs\fB);\fR
 .sp
-\fBint chgat(int \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB,\fP \fBconst void *\fP\fIopts\fP\fB);\fP
+\fBint chgat(int \fIn\fB, attr_t \fIattr\fB, short \fIpair\fB,\fR \fBconst void *\fIopts\fB);\fR
 .br
-\fBint wchgat(WINDOW *\fP\fIwin\fP\fB,\fP
-      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fP \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
+\fBint wchgat(WINDOW *\fIwin\fB,\fR
+      \fBint \fIn\fB, attr_t \fIattr\fB,\fR \fBshort \fIpair\fB, const void *\fIopts\fB);\fR
 .br
-\fBint mvchgat(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB,\fP
-      \fBint \fP\fIn\fP\fB, attr_t \fP\fIattr\fP\fB,\fP \fBshort \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
+\fBint mvchgat(int \fIy\fB, int \fIx\fB,\fR
+      \fBint \fIn\fB, attr_t \fIattr\fB,\fR \fBshort \fIpair\fB, const void *\fIopts\fB);\fR
 .br
-\fBint mvwchgat(WINDOW *\fP\fIwin, int \fP\fIy, int \fP\fIx\fP\fB,\fP
-      \fBint \fP\fIn,\fP \fBattr_t \fP\fIattr\fP\fB, short \fP\fIpair\fP\fB, const void *\fP\fIopts\fP\fB);\fP
+\fBint mvwchgat(WINDOW *\fIwin, int \fIy, int \fIx\fB,\fR
+      \fBint \fIn,\fR \fBattr_t \fIattr\fB, short \fIpair\fB, const void *\fIopts\fB);\fR
 .sp
-\fBint color_set(short \fP\fIpair\fP\fB, void* \fP\fIopts\fP\fB);\fP
+\fBint color_set(short \fIpair\fB, void* \fIopts\fB);\fR
 .br
-\fBint wcolor_set(WINDOW *\fP\fIwin\fP\fB, short \fP\fIpair\fP\fB,\fP \fBvoid* \fP\fIopts);\fP
+\fBint wcolor_set(WINDOW *\fIwin\fB, short \fIpair\fB,\fR \fBvoid* \fIopts);\fR
 .sp
 \fBint standend(void);\fP
 .br
-\fBint wstandend(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint wstandend(WINDOW *\fIwin\fB);\fR
 .br
 \fBint standout(void);\fP
 .br
-\fBint wstandout(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint wstandout(WINDOW *\fIwin\fB);\fR
 .\" ---------------------------------------------------------------------------
 .SH DESCRIPTION
 .PP
@@ -212,7 +212,7 @@ attr_set(A_BOLD, \fIpair\fP, NULL);
 However, if the value does not fit, then the \fBCOLOR_PAIR\fP macro
 uses only the bits that fit.
 For example, because in ncurses \fBA_COLOR\fP has eight (8) bits,
-then \fBCOLOR_PAIR(\fP\fI259\fP\fB)\fP is 4
+then \fBCOLOR_PAIR(\fI259\fB)\fR is 4
 (i.e., 259 is 4 more than the limit 255).
 .PP
 The \fBPAIR_NUMBER\fP macro extracts a pair number from an \fBint\fP

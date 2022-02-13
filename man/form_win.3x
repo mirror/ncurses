@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,22 +28,22 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_win.3x,v 1.20 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_win.3x,v 1.21 2022/02/12 20:03:40 tom Exp $
 .TH form_win 3X ""
 .SH NAME
 \fBform_win\fP \- make and break form window and subwindow associations
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_form_win(FORM *\fP\fIform\fP\fB, WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint set_form_win(FORM *\fIform\fB, WINDOW *\fIwin\fB);\fR
 .br
-\fBWINDOW *form_win(const FORM *\fP\fIform\fP\fB);\fP
+\fBWINDOW *form_win(const FORM *\fIform\fB);\fR
 .sp
-\fBint set_form_sub(FORM *\fP\fIform\fP\fB, WINDOW *\fP\fIsub\fP\fB);\fP
+\fBint set_form_sub(FORM *\fIform\fB, WINDOW *\fIsub\fB);\fR
 .br
-\fBWINDOW *form_sub(const FORM *\fP\fIform\fP\fB);\fP
+\fBWINDOW *form_sub(const FORM *\fIform\fB);\fR
 .sp
-\fBint scale_form(const FORM *\fP\fIform\fP\fB, int *\fP\fIrows\fP\fB, int *\fP\fIcolumns\fP\fB);\fP
+\fBint scale_form(const FORM *\fIform\fB, int *\fIrows\fB, int *\fIcolumns\fB);\fR
 .br
 .SH DESCRIPTION
 Every form has an associated pair of \fBcurses\fP windows.

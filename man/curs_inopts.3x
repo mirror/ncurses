@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inopts.3x,v 1.35 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_inopts.3x,v 1.36 2022/02/12 20:07:29 tom Exp $
 .TH curs_inopts 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -68,15 +68,15 @@
 .br
 \fBint noecho(void);\fP
 .sp
-\fBint intrflush(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint intrflush(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBint keypad(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint keypad(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBint meta(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint meta(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBint nodelay(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint nodelay(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBint notimeout(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint notimeout(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .sp
 \fBint nl(void);\fP
 .br
@@ -90,13 +90,13 @@
 .br
 \fBvoid noqiflush(void);\fP
 .sp
-\fBint halfdelay(int \fP\fItenths\fP\fB);\fP
+\fBint halfdelay(int \fItenths\fB);\fR
 .br
-\fBvoid timeout(int \fP\fIdelay\fP\fB);\fP
+\fBvoid timeout(int \fIdelay\fB);\fR
 .br
-\fBvoid wtimeout(WINDOW *\fP\fIwin\fP\fB, int \fP\fIdelay\fP\fB);\fP
+\fBvoid wtimeout(WINDOW *\fIwin\fB, int \fIdelay\fB);\fR
 .sp
-\fBint typeahead(int \fP\fIfd\fP\fB);\fP
+\fBint typeahead(int \fIfd\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBncurses\fP library provides several functions which let an application
@@ -215,7 +215,7 @@ If disabled
 .PP
 When interpreting an escape sequence, \fBwgetch\fP(3X) sets a timer
 while waiting for the next character.
-If \fBnotimeout(\fP\fIwin\fP,
+If \fBnotimeout(\fIwin\fR,
 \fBTRUE\fP) is called, then \fBwgetch\fP does not set a timer.
 The
 purpose of the timeout is to differentiate between sequences received

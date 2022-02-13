@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020,2021 Thomas E. Dickey                                     *
+.\" Copyright 2021,2022 Thomas E. Dickey                                     *
 .\" Copyright 2008-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_threads.3x,v 1.30 2021/12/25 21:50:36 tom Exp $
+.\" $Id: curs_threads.3x,v 1.31 2022/02/12 20:05:11 tom Exp $
 .TH curs_threads 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -48,13 +48,13 @@
 .sp
 \fBint get_escdelay(void);\fP
 .br
-\fBint set_escdelay(int \fP\fIms\fP\fB);\fP
+\fBint set_escdelay(int \fIms\fB);\fR
 .br
-\fBint set_tabsize(int \fP\fIcols\fP\fB);\fP
+\fBint set_tabsize(int \fIcols\fB);\fR
 .sp
-\fBint use_screen(SCREEN *\fP\fIscr\fP\fB, NCURSES_SCREEN_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fP
+\fBint use_screen(SCREEN *\fIscr\fB, NCURSES_SCREEN_CB \fIfunc\fB, void *\fIdata\fB);\fR
 .br
-\fBint use_window(WINDOW *\fP\fIwin\fP\fB, NCURSES_WINDOW_CB \fP\fIfunc\fP\fB, void *\fP\fIdata\fP\fB);\fP
+\fBint use_window(WINDOW *\fIwin\fB, NCURSES_WINDOW_CB \fIfunc\fB, void *\fIdata\fB);\fR
 .br
 .SH DESCRIPTION
 This implementation can be configured to provide rudimentary support

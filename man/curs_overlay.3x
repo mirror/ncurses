@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020,2021 Thomas E. Dickey                                     *
+.\" Copyright 2020-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2013,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_overlay.3x,v 1.21 2021/12/25 21:50:36 tom Exp $
+.\" $Id: curs_overlay.3x,v 1.22 2022/02/12 20:05:11 tom Exp $
 .TH curs_overlay 3X ""
 .na
 .hy 0
@@ -40,13 +40,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint overlay(const WINDOW *\fP\fIsrcwin\fP\fB, WINDOW *\fP\fIdstwin\fP\fB);\fP
+\fBint overlay(const WINDOW *\fIsrcwin\fB, WINDOW *\fIdstwin\fB);\fR
 .br
-\fBint overwrite(const WINDOW *\fP\fIsrcwin\fP\fB, WINDOW *\fP\fIdstwin\fP\fB);\fP
+\fBint overwrite(const WINDOW *\fIsrcwin\fB, WINDOW *\fIdstwin\fB);\fR
 .br
-\fBint copywin(const WINDOW *\fP\fIsrcwin\fP\fB, WINDOW *\fP\fIdstwin\fP\fB, int \fP\fIsminrow\fP\fB,\fP
-      \fBint \fP\fIsmincol\fP\fB, int \fP\fIdminrow\fP\fB, int \fP\fIdmincol\fP\fB, int \fP\fIdmaxrow\fP\fB,\fP
-      \fBint \fP\fIdmaxcol\fP\fB, int \fP\fIoverlay\fP\fB);\fP
+\fBint copywin(const WINDOW *\fIsrcwin\fB, WINDOW *\fIdstwin\fB, int \fIsminrow\fB,\fR
+      \fBint \fIsmincol\fB, int \fIdminrow\fB, int \fIdmincol\fB, int \fIdmaxrow\fB,\fR
+      \fBint \fIdmaxcol\fB, int \fIoverlay\fB);\fR
 .SH DESCRIPTION
 .SS overlay, overwrite
 The \fBoverlay\fP and \fBoverwrite\fP routines overlay \fIsrcwin\fP on

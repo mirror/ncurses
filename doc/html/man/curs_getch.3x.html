@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
   * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_getch.3x,v 1.61 2021/12/25 21:49:32 tom Exp @
+  * @Id: curs_getch.3x,v 1.63 2022/02/12 20:07:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -56,7 +56,7 @@
        <STRONG>#include</STRONG> <STRONG>&lt;curses.h&gt;</STRONG>
 
        <STRONG>int</STRONG> <STRONG>getch(void);</STRONG>
-       <STRONG>int</STRONG> <STRONG>wgetch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win);</EM>
+       <STRONG>int</STRONG> <STRONG>wgetch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>);</STRONG>
 
        <STRONG>int</STRONG> <STRONG>mvgetch(int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>mvwgetch(WINDOW</STRONG> <STRONG>*</STRONG><EM>win</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>y</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>x</EM><STRONG>);</STRONG>
@@ -201,7 +201,7 @@
                   KEY_HELP        Help key
                   KEY_MARK        Mark key
                   KEY_MESSAGE     Message key
-                  KEY_MOUSE       Mouse event read
+                  KEY_MOUSE       Mouse event occurred
                   KEY_MOVE        Move key
                   KEY_NEXT        Next object key
                   KEY_OPEN        Open key
@@ -229,7 +229,7 @@
                   KEY_SFIND       Shifted find key
                   KEY_SHELP       Shifted help key
                   KEY_SHOME       Shifted home key
-                  KEY_SIC         Shifted input key
+                  KEY_SIC         Shifted insert key
                   KEY_SLEFT       Shifted left arrow key
                   KEY_SMESSAGE    Shifted message key
                   KEY_SMOVE       Shifted move key
@@ -239,7 +239,7 @@
                   KEY_SPRINT      Shifted print key
                   KEY_SREDO       Shifted redo key
                   KEY_SREPLACE    Shifted replace key
-                  KEY_SRIGHT      Shifted right arrow
+                  KEY_SRIGHT      Shifted right arrow key
                   KEY_SRSUME      Shifted resume key
                   KEY_SSAVE       Shifted save key
                   KEY_SSUSPEND    Shifted suspend key

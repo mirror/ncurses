@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_termattrs.3x,v 1.18 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_termattrs.3x,v 1.19 2022/02/12 20:05:11 tom Exp $
 .TH curs_termattrs 3X ""
 .SH NAME
 \fBbaudrate\fP,
@@ -48,7 +48,7 @@
 .br
 \fBchar erasechar(void);\fP
 .br
-\fBint erasewchar(wchar_t *\fP\fIch\fP\fB);\fP
+\fBint erasewchar(wchar_t *\fIch\fB);\fR
 .br
 \fBbool has_ic(void);\fP
 .br
@@ -56,7 +56,7 @@
 .br
 \fBchar killchar(void);\fP
 .br
-\fBint killwchar(wchar_t *\fP\fIch\fP\fB);\fP
+\fBint killwchar(wchar_t *\fIch\fB);\fR
 .br
 \fBchar *longname(void);\fP
 .br

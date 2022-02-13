@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: panel.3x,v 1.41 2021/12/25 21:49:32 tom Exp $
+.\" $Id: panel.3x,v 1.42 2022/02/12 20:03:40 tom Exp $
 .TH panel 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -44,41 +44,41 @@ panel \- panel stack extension for curses
 .P
 \fBcc [flags] sourcefiles \-lpanel \-lncurses\fP
 .P
-\fBPANEL *new_panel(WINDOW *\fIwin\fP\fB);\fP
+\fBPANEL *new_panel(WINDOW *\fIwin\fB);\fR
 .sp
-\fBint bottom_panel(PANEL *\fP\fIpan\fP\fB);\fP
+\fBint bottom_panel(PANEL *\fIpan\fB);\fR
 .br
-\fBint top_panel(PANEL *\fP\fIpan\fP\fB);\fP
+\fBint top_panel(PANEL *\fIpan\fB);\fR
 .br
-\fBint show_panel(PANEL *\fP\fIpan\fP\fB);\fP
+\fBint show_panel(PANEL *\fIpan\fB);\fR
 .br
 \fBvoid update_panels(void);\fP
 .br
-\fBint hide_panel(PANEL *\fP\fIpan\fP\fB);\fP
+\fBint hide_panel(PANEL *\fIpan\fB);\fR
 .sp
-\fBWINDOW *panel_window(const PANEL *\fIpan\fP\fB);\fP
+\fBWINDOW *panel_window(const PANEL *\fIpan\fB);\fR
 .br
-\fBint replace_panel(PANEL *\fIpan\fP\fB, WINDOW *\fIwindow\fP\fB);\fP
+\fBint replace_panel(PANEL *\fIpan\fB, WINDOW *\fIwindow\fB);\fR
 .br
-\fBint move_panel(PANEL *\fIpan\fP\fB, int \fIstarty\fP\fB, int \fIstartx\fP\fB);\fP
+\fBint move_panel(PANEL *\fIpan\fB, int \fIstarty\fB, int \fIstartx\fB);\fR
 .br
-\fBint panel_hidden(const PANEL *\fIpan\fP\fB);\fP
+\fBint panel_hidden(const PANEL *\fIpan\fB);\fR
 .sp
-\fBPANEL *panel_above(const PANEL *\fIpan\fP\fB);\fP
+\fBPANEL *panel_above(const PANEL *\fIpan\fB);\fR
 .br
-\fBPANEL *panel_below(const PANEL *\fIpan\fP\fB);\fP
+\fBPANEL *panel_below(const PANEL *\fIpan\fB);\fR
 .sp
-\fBint set_panel_userptr(PANEL *\fIpan\fP\fB, const void *\fIptr\fP\fB);\fP
+\fBint set_panel_userptr(PANEL *\fIpan\fB, const void *\fIptr\fB);\fR
 .br
-\fBconst void *panel_userptr(const PANEL *\fIpan\fP\fB);\fP
+\fBconst void *panel_userptr(const PANEL *\fIpan\fB);\fR
 .sp
-\fBint del_panel(PANEL *\fIpan\fP\fB);\fP
+\fBint del_panel(PANEL *\fIpan\fB);\fR
 .sp
 \fR/* ncurses-extensions */\fP
 .br
-\fBPANEL *ground_panel(SCREEN *\fIsp\fP\fB);\fP
+\fBPANEL *ground_panel(SCREEN *\fIsp\fB);\fR
 .br
-\fBPANEL *ceiling_panel(SCREEN *\fIsp\fP\fB);\fP
+\fBPANEL *ceiling_panel(SCREEN *\fIsp\fB);\fR
 .br
 .SH DESCRIPTION
 Panels are \fBcurses\fP(3X) windows with the added feature of
@@ -101,69 +101,69 @@ high-level curses calls, and work anywhere terminfo curses does.
 .SH FUNCTIONS
 .\" ---------
 .SS bottom_panel
-\fBbottom_panel(\fIpan\fP\fB)\fR
+\fBbottom_panel(\fIpan\fB)\fR
 puts panel \fIpan\fP at the bottom of all panels.
 .\" ---------
 .SS ceiling_panel
-\fBceiling_panel(\fIsp\fP\fB)\fR
+\fBceiling_panel(\fIsp\fB)\fR
 acts like \fBpanel_below(NULL)\fP, for the given \fBSCREEN\fP \fIsp\fP.
 .\" ---------
 .SS del_panel
-\fBdel_panel(\fIpan\fP\fB)\fR
+\fBdel_panel(\fIpan\fB)\fR
 removes the given panel \fIpan\fP from the  stack and deallocates the
 \fBPANEL\fP structure (but not its associated window).
 .\" ---------
 .SS ground_panel
-\fBground_panel(\fIsp\fP\fB)\fR
+\fBground_panel(\fIsp\fB)\fR
 acts like \fBpanel_above(NULL)\fP, for the given \fBSCREEN\fP \fIsp\fP.
 .\" ---------
 .SS hide_panel
-\fBhide_panel(\fIpan\fP\fB)\fR
+\fBhide_panel(\fIpan\fB)\fR
 removes the given panel \fIpan\fP from the panel stack
 and thus hides it from view.
 The \fBPANEL\fP structure is not lost, merely removed from the stack.
 .\" ---------
 .SS move_panel
-\fBmove_panel(\fIpan\fP\fB,\fIstarty\fP\fB,\fIstartx\fP\fB)\fR
+\fBmove_panel(\fIpan\fB,\fIstarty\fB,\fIstartx\fB)\fR
 moves the given panel \fIpan\fP's window so that its upper-left corner is at
 \fIstarty\fP, \fIstartx\fP.
 It does not change the position of the panel in the stack.
 Be sure to use this function, not \fBmvwin\fP(3X), to move a panel window.
 .\" ---------
 .SS new_panel
-\fBnew_panel(\fIwin\fP\fB)\fR allocates a \fBPANEL\fP structure,
+\fBnew_panel(\fIwin\fB)\fR allocates a \fBPANEL\fR structure,
 associates it with \fIwin\fP, places the panel on the top of the stack
 (causes  it to  be  displayed above any other panel) and returns a
 pointer to the new panel.
 .\" ---------
 .SS panel_above
-\fBpanel_above(\fIpan\fP\fB)\fR
+\fBpanel_above(\fIpan\fB)\fR
 returns a pointer to the panel above \fIpan\fP.
 If the panel argument is
 \fB(PANEL *)0\fP, it returns a pointer to the bottom panel in the stack.
 .\" ---------
 .SS panel_below
-\fBpanel_below(\fIpan\fP\fB)\fR
+\fBpanel_below(\fIpan\fB)\fR
 returns a pointer to the panel just below \fIpan\fP.
 If the panel argument
 is \fB(PANEL *)0\fP, it returns a pointer to the top panel in the stack.
 .\" ---------
 .SS panel_hidden
-\fBpanel_hidden(\fIpan\fP\fB)\fR
+\fBpanel_hidden(\fIpan\fB)\fR
 returns \fBTRUE\fP if the panel \fIpan\fP is in the panel stack,
 \fBFALSE\fP if it is not.
 If the panel is a null pointer, return \fBERR\fP.
 .\" ---------
 .SS panel_userptr
-\fBpanel_userptr(\fIpan\fP\fB)\fR
+\fBpanel_userptr(\fIpan\fB)\fR
 returns the user pointer for a given panel \fIpan\fP.
 .\" ---------
 .SS panel_window
-\fBpanel_window(\fIpan\fP\fB)\fR
+\fBpanel_window(\fIpan\fB)\fR
 returns a pointer to the window of the given panel \fIpan\fP.
 .\" ---------
 .SS replace_panel
-\fBreplace_panel(\fIpan\fP\fB,\fIwindow\fP\fB)\fR
+\fBreplace_panel(\fIpan\fB,\fIwindow\fB)\fR
 replaces the current window of panel \fIpan\fP with \fIwindow\fP
 This is useful, for example if you want to resize a panel.
 In \fBncurses\fP, you can call \fBreplace_panel\fP
@@ -171,17 +171,17 @@ to resize a panel using a window resized with \fBwresize\fP(3X).
 It does not change the position of the panel in the stack.
 .\" ---------
 .SS set_panel_userptr
-\fBset_panel_userptr(\fIpan\fP\fB,\fIptr\fP\fB)\fR
+\fBset_panel_userptr(\fIpan\fB,\fIptr\fB)\fR
 sets the panel's user pointer.
 .\" ---------
 .SS show_panel
-\fBshow_panel(\fIpan\fP\fB)\fR
+\fBshow_panel(\fIpan\fB)\fR
 makes a hidden panel visible by placing it on top of the panels in the
 panel stack.
 See \fBCOMPATIBILITY\fP below.
 .\" ---------
 .SS top_panel
-\fBtop_panel(\fIpan\fP\fB)\fR
+\fBtop_panel(\fIpan\fB)\fR
 puts the given visible panel \fIpan\fP on top of all panels in the stack.
 See \fBCOMPATIBILITY\fP below.
 .\" ---------

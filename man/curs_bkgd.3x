@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_bkgd.3x,v 1.33 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_bkgd.3x,v 1.34 2022/02/12 20:06:41 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -40,15 +40,15 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .PP
-\fBvoid bkgdset(chtype \fP\fIch\fP\fB);\fP
+\fBvoid bkgdset(chtype \fIch\fB);\fR
 .br
-\fBvoid wbkgdset(WINDOW *\fP\fIwin, chtype \fP\fIch\fP\fB);\fP
+\fBvoid wbkgdset(WINDOW *\fIwin, chtype \fIch\fB);\fR
 .sp
-\fBint bkgd(chtype \fP\fIch\fP\fB);\fP
+\fBint bkgd(chtype \fIch\fB);\fR
 .br
-\fBint wbkgd(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBint wbkgd(WINDOW *\fIwin\fB, chtype \fIch\fB);\fR
 .sp
-\fBchtype getbkgd(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBchtype getbkgd(WINDOW *\fIwin\fB);\fR
 .br
 .SH DESCRIPTION
 .SS bkgdset

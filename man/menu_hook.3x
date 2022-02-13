@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,28 +28,28 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_hook.3x,v 1.17 2021/12/25 21:49:32 tom Exp $
+.\" $Id: menu_hook.3x,v 1.18 2022/02/12 20:05:11 tom Exp $
 .TH menu_hook 3X ""
 .SH NAME
 \fBmenu_hook\fP \- set hooks for automatic invocation by applications
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_item_init(MENU *\fP\fImenu\fP\fB, Menu_Hook \fP\fIfunc);\fP
+\fBint set_item_init(MENU *\fImenu\fB, Menu_Hook \fIfunc);\fR
 .br
-\fBMenu_Hook item_init(const MENU *\fP\fImenu);\fP
+\fBMenu_Hook item_init(const MENU *\fImenu);\fR
 .sp
-\fBint set_item_term(MENU *\fP\fImenu\fP\fB, Menu_Hook \fP\fIfunc);\fP
+\fBint set_item_term(MENU *\fImenu\fB, Menu_Hook \fIfunc);\fR
 .br
-\fBMenu_Hook item_term(const MENU *\fP\fImenu);\fP
+\fBMenu_Hook item_term(const MENU *\fImenu);\fR
 .sp
-\fBint set_menu_init(MENU *\fP\fImenu\fP\fB, Menu_Hook \fP\fIfunc);\fP
+\fBint set_menu_init(MENU *\fImenu\fB, Menu_Hook \fIfunc);\fR
 .br
-\fBMenu_Hook menu_init(const MENU *\fP\fImenu);\fP
+\fBMenu_Hook menu_init(const MENU *\fImenu);\fR
 .sp
-\fBint set_menu_term(MENU *\fP\fImenu\fP\fB, Menu_Hook \fP\fIfunc);\fP
+\fBint set_menu_term(MENU *\fImenu\fB, Menu_Hook \fIfunc);\fR
 .br
-\fBMenu_Hook menu_term(const MENU *\fP\fImenu);\fP
+\fBMenu_Hook menu_term(const MENU *\fImenu);\fR
 .br
 .SH DESCRIPTION
 These functions make it possible to set hook functions to be called at various

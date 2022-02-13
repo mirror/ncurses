@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wch.3x,v 1.16 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_get_wch.3x,v 1.17 2022/02/12 20:07:29 tom Exp $
 .TH curs_get_wch 3X ""
 .na
 .hy 0
@@ -50,15 +50,15 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint get_wch(wint_t *\fP\fIwch\fP\fB);\fP
+\fBint get_wch(wint_t *\fIwch\fB);\fR
 .br
-\fBint wget_wch(WINDOW *\fP\fIwin\fP\fB, wint_t *\fP\fIwch\fP\fB);\fP
+\fBint wget_wch(WINDOW *\fIwin\fB, wint_t *\fIwch\fB);\fR
 .br
-\fBint mvget_wch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwch\fP\fB);\fP
+\fBint mvget_wch(int \fIy\fB, int \fIx\fB, wint_t *\fIwch\fB);\fR
 .br
-\fBint mvwget_wch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwch\fP\fB);\fP
+\fBint mvwget_wch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, wint_t *\fIwch\fB);\fR
 .sp
-\fBint unget_wch(const wchar_t \fP\fIwch\fP\fB);\fP
+\fBint unget_wch(const wchar_t \fIwch\fB);\fR
 .SH DESCRIPTION
 .SS wget_wch
 The

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_attributes.3x,v 1.20 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_field_attributes.3x,v 1.21 2022/02/12 20:03:40 tom Exp $
 .TH form_field_attributes 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -39,17 +39,17 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_field_fore(FIELD *\fP\fIfield\fP\fB, chtype \fP\fIattr\fP\fB);\fP
+\fBint set_field_fore(FIELD *\fIfield\fB, chtype \fIattr\fB);\fR
 .br
-\fBchtype field_fore(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBchtype field_fore(const FIELD *\fIfield\fB);\fR
 .sp
-\fBint set_field_back(FIELD *\fP\fIfield\fP\fB, chtype \fP\fIattr\fP\fB);\fP
+\fBint set_field_back(FIELD *\fIfield\fB, chtype \fIattr\fB);\fR
 .br
-\fBchtype field_back(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBchtype field_back(const FIELD *\fIfield\fB);\fR
 .sp
-\fBint set_field_pad(FIELD *\fP\fIfield\fP\fB, int \fP\fIpad\fP\fB);\fP
+\fBint set_field_pad(FIELD *\fIfield\fB, int \fIpad\fB);\fR
 .br
-\fBint field_pad(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBint field_pad(const FIELD *\fIfield\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_field_fore\fP sets the foreground attribute of

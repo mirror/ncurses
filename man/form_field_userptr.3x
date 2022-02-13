@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_userptr.3x,v 1.18 2021/12/25 21:41:58 tom Exp $
+.\" $Id: form_field_userptr.3x,v 1.19 2022/02/12 20:03:40 tom Exp $
 .TH form_field_userptr 3X ""
 .SH NAME
 \fBset_field_userptr\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_field_userptr(FIELD *\fP\fIfield\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
+\fBint set_field_userptr(FIELD *\fIfield\fB, void *\fIuserptr\fB);\fR
 .br
-\fBvoid *field_userptr(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBvoid *field_userptr(const FIELD *\fIfield\fB);\fR
 .SH DESCRIPTION
 Every form field has a field that can be used to hold application-specific data
 (that is, the form-driver code leaves it alone).

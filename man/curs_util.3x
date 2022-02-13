@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_util.3x,v 1.64 2021/12/25 22:05:53 tom Exp $
+.\" $Id: curs_util.3x,v 1.65 2022/02/12 20:06:41 tom Exp $
 .TH curs_util 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -58,27 +58,27 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBconst char *unctrl(chtype \fP\fIc\fP\fB);\fP
+\fBconst char *unctrl(chtype \fIc\fB);\fR
 .br
-\fBwchar_t *wunctrl(cchar_t *\fP\fIc\fP\fB);\fP
+\fBwchar_t *wunctrl(cchar_t *\fIc\fB);\fR
 .sp
-\fBconst char *keyname(int \fP\fIc\fP\fB);\fP
+\fBconst char *keyname(int \fIc\fB);\fR
 .br
-\fBconst char *key_name(wchar_t \fP\fIw\fP\fB);\fP
+\fBconst char *key_name(wchar_t \fIw\fB);\fR
 .sp
 \fBvoid filter(void);\fP
 .br
 \fBvoid nofilter(void);\fP
 .sp
-\fBvoid use_env(bool \fP\fIf\fP\fB);\fP
+\fBvoid use_env(bool \fIf\fB);\fR
 .br
-\fBvoid use_tioctl(bool \fP\fIf\fP\fB);\fP
+\fBvoid use_tioctl(bool \fIf\fB);\fR
 .sp
-\fBint putwin(WINDOW *\fP\fIwin\fP\fB, FILE *\fP\fIfilep\fP\fB);\fP
+\fBint putwin(WINDOW *\fIwin\fB, FILE *\fIfilep\fB);\fR
 .br
-\fBWINDOW *getwin(FILE *\fP\fIfilep\fP\fB);\fP
+\fBWINDOW *getwin(FILE *\fIfilep\fB);\fR
 .sp
-\fBint delay_output(int \fP\fIms\fP\fB);\fP
+\fBint delay_output(int \fIms\fB);\fR
 .br
 \fBint flushinp(void);\fP
 .br
@@ -87,7 +87,7 @@
 .PP
 The \fBunctrl\fP routine returns a character string which is a printable
 representation of the character \fIc\fP, ignoring attributes.
-Control characters are displayed in the \fB^\fP\fIX\fP notation.
+Control characters are displayed in the \fB^\fIX\fR notation.
 Printing characters are displayed as is.
 The corresponding \fBwunctrl\fP returns a printable representation of
 a wide character.
@@ -99,14 +99,14 @@ corresponding to the key \fIc\fP:
 Printable characters are displayed as themselves,
 e.g., a one-character string containing the key.
 .bP
-Control characters are displayed in the \fB^\fP\fIX\fP notation.
+Control characters are displayed in the \fB^\fIX\fR notation.
 .bP
 DEL (character 127) is displayed as \fB^?\fP.
 .bP
 Values above 128 are either meta characters
 (if the screen has not been initialized,
 or if \fBmeta\fP(3X) has been called with a \fBTRUE\fP parameter),
-shown in the \fBM\-\fP\fIX\fP notation,
+shown in the \fBM\-\fIX\fR notation,
 or are displayed as themselves.
 In the latter case, the values may not be printable;
 this follows the X/Open specification.

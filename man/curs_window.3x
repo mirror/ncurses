@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020,2021 Thomas E. Dickey                                     *
+.\" Copyright 2020-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_window.3x,v 1.24 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_window.3x,v 1.25 2022/02/12 20:06:41 tom Exp $
 .TH curs_window 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -53,32 +53,32 @@
 \fB#include <curses.h>\fP
 .sp
 \fBWINDOW *newwin(\fP
-      \fBint \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fP
-      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
+      \fBint \fInlines\fB, int \fIncols\fB,\fR
+      \fBint \fIbegin_y\fB, int \fIbegin_x\fB);\fR
 .br
-\fBint delwin(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint delwin(WINDOW *\fIwin\fB);\fR
 .br
-\fBint mvwin(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBint mvwin(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBWINDOW *subwin(WINDOW *\fP\fIorig\fP\fB,\fP
-      \fBint \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fP
-      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
+\fBWINDOW *subwin(WINDOW *\fIorig\fB,\fR
+      \fBint \fInlines\fB, int \fIncols\fB,\fR
+      \fBint \fIbegin_y\fB, int \fIbegin_x\fB);\fR
 .br
-\fBWINDOW *derwin(WINDOW *\fP\fIorig\fP\fB,\fP
-      \fBint \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fP
-      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
+\fBWINDOW *derwin(WINDOW *\fIorig\fB,\fR
+      \fBint \fInlines\fB, int \fIncols\fB,\fR
+      \fBint \fIbegin_y\fB, int \fIbegin_x\fB);\fR
 .br
-\fBint mvderwin(WINDOW *\fP\fIwin\fP\fB, int \fP\fIpar_y\fP\fB, int \fP\fIpar_x\fP\fB);\fP
+\fBint mvderwin(WINDOW *\fIwin\fB, int \fIpar_y\fB, int \fIpar_x\fB);\fR
 .br
-\fBWINDOW *dupwin(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBWINDOW *dupwin(WINDOW *\fIwin\fB);\fR
 .br
-\fBvoid wsyncup(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBvoid wsyncup(WINDOW *\fIwin\fB);\fR
 .br
-\fBint syncok(WINDOW *\fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint syncok(WINDOW *\fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBvoid wcursyncup(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBvoid wcursyncup(WINDOW *\fIwin\fB);\fR
 .br
-\fBvoid wsyncdown(WINDOW *\fP\fIwin\fP\fB);\fP
+\fBvoid wsyncdown(WINDOW *\fIwin\fB);\fR
 .br
 .SH DESCRIPTION
 .SS newwin

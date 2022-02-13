@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_new.3x,v 1.26 2021/12/25 21:41:58 tom Exp $
+.\" $Id: form_field_new.3x,v 1.27 2022/02/12 20:03:40 tom Exp $
 .TH form_field_new 3X ""
 .SH NAME
 \fBnew_field\fP,
@@ -38,15 +38,15 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBFIELD *new_field(int \fP\fIheight\fP\fB, int \fP\fIwidth\fP\fB,\fP
-                 \fBint \fP\fItoprow\fP\fB, int \fP\fIleftcol\fP\fB,\fP
-                 \fBint \fP\fIoffscreen\fP\fB, int \fP\fInbuffers\fP\fB);\fP
+\fBFIELD *new_field(int \fIheight\fB, int \fIwidth\fB,\fR
+                 \fBint \fItoprow\fB, int \fIleftcol\fB,\fR
+                 \fBint \fIoffscreen\fB, int \fInbuffers\fB);\fR
 .br
-\fBFIELD *dup_field(FIELD *\fP\fIfield\fP\fB, int \fP\fItoprow\fP\fB, int \fP\fIleftcol\fP\fB);\fP
+\fBFIELD *dup_field(FIELD *\fIfield\fB, int \fItoprow\fB, int \fIleftcol\fB);\fR
 .br
-\fBFIELD *link_field(FIELD *\fP\fIfield\fP\fB, int \fP\fItoprow\fP\fB, int \fP\fIleftcol\fP\fB);\fP
+\fBFIELD *link_field(FIELD *\fIfield\fB, int \fItoprow\fB, int \fIleftcol\fB);\fR
 .br
-\fBint free_field(FIELD *\fP\fIfield\fP\fB);\fP
+\fBint free_field(FIELD *\fIfield\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBnew_field\fP allocates a new field and initializes it from the

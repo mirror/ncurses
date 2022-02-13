@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addstr.3x,v 1.25 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_addstr.3x,v 1.26 2022/02/12 20:07:29 tom Exp $
 .TH curs_addstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -54,21 +54,21 @@
 .nf
 \fB#include <curses.h>\fP
 .PP
-\fBint addstr(const char *\fP\fIstr\fP\fB);\fP
+\fBint addstr(const char *\fIstr\fB);\fR
 .br
-\fBint addnstr(const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint addnstr(const char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint waddstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint waddstr(WINDOW *\fIwin\fB, const char *\fIstr\fB);\fR
 .br
-\fBint waddnstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint waddnstr(WINDOW *\fIwin\fB, const char *\fIstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvaddstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint mvaddstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
 .br
-\fBint mvaddnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvaddnstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwaddstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint mvwaddstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
 .br
-\fBint mvwaddnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr, int \fP\fIn\fP\fB);\fP
+\fBint mvwaddnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr, int \fIn\fB);\fR
 .fi
 .SH DESCRIPTION
 These functions write the (null-terminated) character string

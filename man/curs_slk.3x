@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.39 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_slk.3x,v 1.40 2022/02/12 20:05:11 tom Exp $
 .TH curs_slk 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -59,15 +59,15 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint slk_init(int \fP\fIfmt\fP\fB);\fP
+\fBint slk_init(int \fIfmt\fB);\fR
 .sp
-\fBint slk_set(int \fP\fIlabnum\fP\fB, const char *\fP\fIlabel\fP\fB, int \fP\fIfmt\fP\fB);\fP
+\fBint slk_set(int \fIlabnum\fB, const char *\fIlabel\fB, int \fIfmt\fB);\fR
 .br
 /* extension */
 .br
-\fBint slk_wset(int \fP\fIlabnum\fP\fB, const wchar_t *\fP\fIlabel\fP\fB, int \fP\fIfmt\fP\fB);\fP
+\fBint slk_wset(int \fIlabnum\fB, const wchar_t *\fIlabel\fB, int \fIfmt\fB);\fR
 .sp
-\fBchar *slk_label(int \fP\fIlabnum\fP\fB);\fP
+\fBchar *slk_label(int \fIlabnum\fB);\fR
 .sp
 \fBint slk_refresh(void);\fP
 .br
@@ -79,25 +79,25 @@
 .br
 \fBint slk_touch(void);\fP
 .sp
-\fBint slk_attron(const chtype \fP\fIattrs\fP\fB);\fP
+\fBint slk_attron(const chtype \fIattrs\fB);\fR
 .br
-\fBint slk_attroff(const chtype \fP\fIattrs\fP\fB);\fP
+\fBint slk_attroff(const chtype \fIattrs\fB);\fR
 .br
-\fBint slk_attrset(const chtype \fP\fIattrs\fP\fB);\fP
+\fBint slk_attrset(const chtype \fIattrs\fB);\fR
 .br
-\fBint slk_attr_on(attr_t \fP\fIattrs\fP\fB, void* \fP\fIopts\fP\fB);\fP
+\fBint slk_attr_on(attr_t \fIattrs\fB, void* \fIopts\fB);\fR
 .br
-\fBint slk_attr_off(const attr_t \fP\fIattrs\fP\fB, void * \fP\fIopts\fP\fB);\fP
+\fBint slk_attr_off(const attr_t \fIattrs\fB, void * \fIopts\fB);\fR
 .br
-\fBint slk_attr_set(const attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void* \fP\fIopts\fP\fB);\fP
+\fBint slk_attr_set(const attr_t \fIattrs\fB, short \fIpair\fB, void* \fIopts\fB);\fR
 .sp
 \fBattr_t slk_attr(void);\fP
 .sp
-\fBint slk_color(short \fP\fIpair\fP\fB);\fP
+\fBint slk_color(short \fIpair\fB);\fR
 .br
 /* extension */
 .br
-\fBint extended_slk_color(int \fP\fIpair\fP\fB);\fP
+\fBint extended_slk_color(int \fIpair\fB);\fR
 .SH DESCRIPTION
 The slk* functions manipulate the set of soft function-key labels that exist on
 many terminals.

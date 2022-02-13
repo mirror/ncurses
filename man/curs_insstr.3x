@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insstr.3x,v 1.28 2021/12/25 17:39:16 tom Exp $
+.\" $Id: curs_insstr.3x,v 1.29 2022/02/12 20:05:11 tom Exp $
 .TH curs_insstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -45,21 +45,21 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .br
-\fBint insstr(const char *\fP\fIstr\fP\fB);\fP
+\fBint insstr(const char *\fIstr\fB);\fR
 .br
-\fBint insnstr(const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint insnstr(const char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint winsstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint winsstr(WINDOW *\fIwin\fB, const char *\fIstr\fB);\fR
 .br
-\fBint winsnstr(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint winsnstr(WINDOW *\fIwin\fB, const char *\fIstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvinsstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint mvinsstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
 .br
-\fBint mvinsnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvinsnstr(int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwinsstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint mvwinsstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB);\fR
 .br
-\fBint mvwinsnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwinsnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIstr\fB, int \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 These routines insert a character string

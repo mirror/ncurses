@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getstr.3x,v 1.35 2021/12/25 20:14:56 tom Exp $
+.\" $Id: curs_getstr.3x,v 1.36 2022/02/12 20:07:29 tom Exp $
 .TH curs_getstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -53,21 +53,21 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint getstr(char *\fP\fIstr\fP\fB);\fP
+\fBint getstr(char *\fIstr\fB);\fR
 .br
-\fBint getnstr(char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint getnstr(char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint wgetstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint wgetstr(WINDOW *\fIwin\fB, char *\fIstr\fB);\fR
 .br
-\fBint wgetnstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint wgetnstr(WINDOW *\fIwin\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvgetstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint mvgetstr(int \fIy\fB, int \fIx\fB, char *\fIstr\fB);\fR
 .br
-\fBint mvwgetstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint mvwgetstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, char *\fIstr\fB);\fR
 .br
-\fBint mvgetnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvgetnstr(int \fIy\fB, int \fIx\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwgetnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwgetnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBgetstr\fP is equivalent to a series of calls to \fBgetch\fP,

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020,2021 Thomas E. Dickey                                     *
+.\" Copyright 2020-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2007-2014,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_opaque.3x,v 1.17 2021/12/25 21:50:36 tom Exp $
+.\" $Id: curs_opaque.3x,v 1.18 2022/02/12 20:05:11 tom Exp $
 .TH curs_opaque 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -56,35 +56,35 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBbool is_cleared(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_cleared(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_idcok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_idcok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_idlok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_idlok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_immedok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_immedok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_keypad(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_keypad(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_leaveok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_leaveok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_nodelay(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_nodelay(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_notimeout(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_notimeout(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_pad(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_pad(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_scrollok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_scrollok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_subwin(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_subwin(const WINDOW *\fIwin\fB);\fR
 .br
-\fBbool is_syncok(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBbool is_syncok(const WINDOW *\fIwin\fB);\fR
 .br
-\fBWINDOW * wgetparent(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBWINDOW * wgetparent(const WINDOW *\fIwin\fB);\fR
 .br
-\fBint wgetdelay(const WINDOW *\fP\fIwin\fP\fB);\fP
+\fBint wgetdelay(const WINDOW *\fIwin\fB);\fR
 .br
-\fBint wgetscrreg(const WINDOW *\fP\fIwin\fP\fB, int *\fP\fItop\fP\fB, int *\fP\fIbottom\fP\fB);\fP
+\fBint wgetscrreg(const WINDOW *\fIwin\fB, int *\fItop\fB, int *\fIbottom\fB);\fR
 .br
 .SH DESCRIPTION
 This implementation provides functions which return properties

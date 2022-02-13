@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_just.3x,v 1.20 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_field_just.3x,v 1.21 2022/02/12 20:03:40 tom Exp $
 .TH form_field_just 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -40,9 +40,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_field_just(FIELD *\fP\fIfield\fP\fB, int \fP\fIjustification\fP\fB);\fP
+\fBint set_field_just(FIELD *\fIfield\fB, int \fIjustification\fB);\fR
 .br
-\fBint field_just(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBint field_just(const FIELD *\fIfield\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_field_just\fP sets the justification attribute of

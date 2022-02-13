@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_mark.3x,v 1.20 2021/12/25 21:49:32 tom Exp $
+.\" $Id: menu_mark.3x,v 1.21 2022/02/12 20:02:20 tom Exp $
 .TH menu_mark 3X ""
 .SH NAME
 \fBset_menu_mark\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_menu_mark(MENU *\fP\fImenu\fP\fB, const char *\fP\fImark\fP\fB);\fP
+\fBint set_menu_mark(MENU *\fImenu\fB, const char *\fImark\fB);\fR
 .br
-\fBconst char *menu_mark(const MENU *\fP\fImenu\fP\fB);\fP
+\fBconst char *menu_mark(const MENU *\fImenu\fB);\fR
 .br
 .SH DESCRIPTION
 In order to make menu selections visible on older terminals without

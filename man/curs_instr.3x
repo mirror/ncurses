@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_instr.3x,v 1.24 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_instr.3x,v 1.25 2022/02/12 20:05:11 tom Exp $
 .TH curs_instr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -49,21 +49,21 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint instr(char *\fP\fIstr\fP\fB);\fP
+\fBint instr(char *\fIstr\fB);\fR
 .br
-\fBint innstr(char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint innstr(char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint winstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint winstr(WINDOW *\fIwin\fB, char *\fIstr\fB);\fR
 .br
-\fBint winnstr(WINDOW *\fP\fIwin\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint winnstr(WINDOW *\fIwin\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvinstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint mvinstr(int \fIy\fB, int \fIx\fB, char *\fIstr\fB);\fR
 .br
-\fBint mvinnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvinnstr(int \fIy\fB, int \fIx\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwinstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB);\fP
+\fBint mvwinstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, char *\fIstr\fB);\fR
 .br
-\fBint mvwinnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, char *\fP\fIstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwinnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, char *\fIstr\fB, int \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 These routines return a string of characters in \fIstr\fP, extracted starting

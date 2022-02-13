@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.58 2021/12/25 20:18:06 tom Exp $
+.\" $Id: curs_addch.3x,v 1.59 2022/02/12 20:07:29 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -48,17 +48,17 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .PP
-\fBint addch(const chtype \fP\fIch\fP\fB);\fP
+\fBint addch(const chtype \fIch\fB);\fR
 .br
-\fBint waddch(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fP
+\fBint waddch(WINDOW *\fIwin\fB, const chtype \fIch\fB);\fR
 .br
-\fBint mvaddch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fP
+\fBint mvaddch(int \fIy\fB, int \fIx\fB, const chtype \fIch\fB);\fR
 .br
-\fBint mvwaddch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const chtype \fP\fIch\fP\fB);\fP
+\fBint mvwaddch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const chtype \fIch\fB);\fR
 .sp
-\fBint echochar(const chtype \fP\fIch\fP\fB);\fP
+\fBint echochar(const chtype \fIch\fB);\fR
 .br
-\fBint wechochar(WINDOW *\fP\fIwin\fP\fB, const chtype \fP\fIch\fP\fB);\fP
+\fBint wechochar(WINDOW *\fIwin\fB, const chtype \fIch\fB);\fR
 .br
 .SH DESCRIPTION
 .SS Adding characters
@@ -96,7 +96,7 @@ The tab interval may be altered by setting the \fBTABSIZE\fP variable.
 .PP
 If \fIch\fP is any other nonprintable character,
 it is drawn in printable form,
-i.e., the \fB^\fP\fIX\fP notation used by \fBunctrl\fP(3X).
+i.e., the \fB^\fIX\fR notation used by \fBunctrl\fR(3X).
 Calling \fBwinch\fP after adding a
 nonprintable character does not return the character itself,
 but instead returns the printable representation of the character.

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_userptr.3x,v 1.18 2021/12/25 21:42:57 tom Exp $
+.\" $Id: menu_userptr.3x,v 1.19 2022/02/12 20:02:20 tom Exp $
 .TH menu_userptr 3X ""
 .SH NAME
 \fBset_menu_userptr\fP,
@@ -36,9 +36,9 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_menu_userptr(MENU *\fP\fImenu\fP\fB, void *\fP\fIuserptr\fP\fB);\fP
+\fBint set_menu_userptr(MENU *\fImenu\fB, void *\fIuserptr\fB);\fR
 .br
-\fBvoid *menu_userptr(const MENU *\fP\fImenu\fP\fB);\fP
+\fBvoid *menu_userptr(const MENU *\fImenu\fB);\fR
 .br
 .SH DESCRIPTION
 Every menu and every menu item has a field that can be used to hold

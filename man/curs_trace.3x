@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2000-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_trace.3x,v 1.24 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_trace.3x,v 1.25 2022/02/12 20:06:41 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -58,33 +58,33 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBunsigned curses_trace(const unsigned \fP\fIparam\fP\fB);\fP
+\fBunsigned curses_trace(const unsigned \fIparam\fB);\fR
 .sp
-\fBvoid _tracef(const char *\fP\fIformat\fP\fB, ...);\fP
+\fBvoid _tracef(const char *\fIformat\fB, ...);\fR
 .sp
-\fBchar *_traceattr(attr_t \fP\fIattr\fP\fB);\fP
+\fBchar *_traceattr(attr_t \fIattr\fB);\fR
 .br
-\fBchar *_traceattr2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBchar *_traceattr2(int \fIbuffer\fB, chtype \fIch\fB);\fR
 .br
-\fBchar *_tracecchar_t(const cchar_t *\fP\fIstring\fP\fB);\fP
+\fBchar *_tracecchar_t(const cchar_t *\fIstring\fB);\fR
 .br
-\fBchar *_tracecchar_t2(int \fP\fIbuffer\fP\fB, const cchar_t *\fP\fIstring\fP\fB);\fP
+\fBchar *_tracecchar_t2(int \fIbuffer\fB, const cchar_t *\fIstring\fB);\fR
 .br
-\fBchar *_tracechar(int \fP\fIch\fP\fB);\fP
+\fBchar *_tracechar(int \fIch\fB);\fR
 .br
-\fBchar *_tracechtype(chtype \fP\fIch\fP\fB);\fP
+\fBchar *_tracechtype(chtype \fIch\fB);\fR
 .br
-\fBchar *_tracechtype2(int \fP\fIbuffer\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBchar *_tracechtype2(int \fIbuffer\fB, chtype \fIch\fB);\fR
 .sp
-\fBvoid _tracedump(const char *\fP\fIlabel\fP\fB, WINDOW *\fP\fIwin\fP\fB);\fP
+\fBvoid _tracedump(const char *\fIlabel\fB, WINDOW *\fIwin\fB);\fR
 .br
 \fBchar *_nc_tracebits(void);\fP
 .br
-\fBchar *_tracemouse(const MEVENT *\fP\fIevent\fP\fB);\fP
+\fBchar *_tracemouse(const MEVENT *\fIevent\fB);\fR
 .sp
 /* deprecated */
 .br
-\fBvoid trace(const unsigned int \fP\fIparam\fP\fB);\fP
+\fBvoid trace(const unsigned int \fIparam\fB);\fR
 .SH DESCRIPTION
 The \fIcurses trace\fP routines are used for debugging the ncurses libraries,
 as well as applications which use the ncurses libraries.
@@ -131,7 +131,7 @@ If the file already exists, no tracing is done.
 If tracing is not available, \fBcurses_trace\fP returns zero (0).
 .SS Trace Parameter
 The trace parameter is formed by OR'ing
-values from the list of \fBTRACE_\fP\fIxxx\fP definitions in \fB<curses.h>\fP.
+values from the list of \fBTRACE_\fIxxx\fR definitions in \fB<curses.h>\fR.
 These include:
 .TP 5
 .B TRACE_DISABLE

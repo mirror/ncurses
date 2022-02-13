@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scr_dump.3x,v 1.19 2021/12/25 21:12:41 tom Exp $
+.\" $Id: curs_scr_dump.3x,v 1.20 2022/02/12 20:05:11 tom Exp $
 .TH curs_scr_dump 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -49,13 +49,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint scr_dump(const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_dump(const char *\fIfilename\fB);\fR
 .br
-\fBint scr_restore(const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_restore(const char *\fIfilename\fB);\fR
 .br
-\fBint scr_init(const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_init(const char *\fIfilename\fB);\fR
 .br
-\fBint scr_set(const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_set(const char *\fIfilename\fB);\fR
 .br
 .SH DESCRIPTION
 .SS scr_dump

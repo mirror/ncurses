@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,24 +28,24 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_page.3x,v 1.21 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_page.3x,v 1.22 2022/02/12 20:03:40 tom Exp $
 .TH form_page 3X ""
 .SH NAME
 \fBform_page\fP \- set and get form page number
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_current_field(FORM *\fP\fIform\fP\fB, FIELD *\fP\fIfield\fP\fB);\fP
+\fBint set_current_field(FORM *\fIform\fB, FIELD *\fIfield\fB);\fR
 .br
-\fBFIELD *current_field(const FORM *\fP\fIform\fP\fB);\fP
+\fBFIELD *current_field(const FORM *\fIform\fB);\fR
 .sp
-\fBint unfocus_current_field(FORM *\fP\fIform\fP\fB);\fP
+\fBint unfocus_current_field(FORM *\fIform\fB);\fR
 .sp
-\fBint set_form_page(FORM *\fP\fIform\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint set_form_page(FORM *\fIform\fB, int \fIn\fB);\fR
 .br
-\fBint form_page(const FORM *\fP\fIform\fP\fB);\fP
+\fBint form_page(const FORM *\fIform\fB);\fR
 .sp
-\fBint field_index(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBint field_index(const FIELD *\fIfield\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_current_field\fP sets the current field of the given

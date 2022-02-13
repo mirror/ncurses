@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addwstr.3x,v 1.17 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_addwstr.3x,v 1.18 2022/02/12 20:07:29 tom Exp $
 .TH curs_addwstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -54,21 +54,21 @@
 .nf
 \fB#include <curses.h>\fP
 .PP
-\fBint addwstr(const wchar_t *\fP\fIwstr\fP\fB);\fP
+\fBint addwstr(const wchar_t *\fIwstr\fB);\fR
 .br
-\fBint addnwstr(const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint addnwstr(const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
 .br
-\fBint waddwstr(WINDOW *\fP\fIwin\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
+\fBint waddwstr(WINDOW *\fIwin\fB, const wchar_t *\fIwstr\fB);\fR
 .br
-\fBint waddnwstr(WINDOW *\fP\fIwin\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint waddnwstr(WINDOW *\fIwin\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvaddwstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
+\fBint mvaddwstr(int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB);\fR
 .br
-\fBint mvaddnwstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvaddnwstr(int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwaddwstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB);\fP
+\fBint mvwaddwstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB);\fR
 .br
-\fBint mvwaddnwstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const wchar_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwaddnwstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const wchar_t *\fIwstr\fB, int \fIn\fB);\fR
 .fi
 .SH DESCRIPTION
 These functions write the characters of the

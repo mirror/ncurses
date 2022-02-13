@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_inchstr.3x,v 1.23 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_inchstr.3x,v 1.24 2022/02/12 20:07:29 tom Exp $
 .TH curs_inchstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -53,21 +53,21 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint inchstr(chtype *\fP\fIchstr\fP\fB);\fP
+\fBint inchstr(chtype *\fIchstr\fB);\fR
 .br
-\fBint inchnstr(chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint inchnstr(chtype *\fIchstr\fB, int \fIn\fB);\fR
 .br
-\fBint winchstr(WINDOW *\fP\fIwin\fP\fB, chtype *\fP\fIchstr\fP\fB);\fP
+\fBint winchstr(WINDOW *\fIwin\fB, chtype *\fIchstr\fB);\fR
 .br
-\fBint winchnstr(WINDOW *\fP\fIwin\fP\fB, chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint winchnstr(WINDOW *\fIwin\fB, chtype *\fIchstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvinchstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype *\fP\fIchstr\fP\fB);\fP
+\fBint mvinchstr(int \fIy\fB, int \fIx\fB, chtype *\fIchstr\fB);\fR
 .br
-\fBint mvinchnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvinchnstr(int \fIy\fB, int \fIx\fB, chtype *\fIchstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwinchstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype *\fP\fIchstr\fP\fB);\fP
+\fBint mvwinchstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype *\fIchstr\fB);\fR
 .br
-\fBint mvwinchnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype *\fP\fIchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwinchnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype *\fIchstr\fB, int \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 These routines return a NULL-terminated array of \fBchtype\fP quantities,

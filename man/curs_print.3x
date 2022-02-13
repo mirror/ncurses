@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,14 +27,14 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_print.3x,v 1.18 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_print.3x,v 1.19 2022/02/12 20:05:11 tom Exp $
 .TH curs_print 3X ""
 .SH NAME
 \fBmcprint\fP \- ship binary data to printer
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint mcprint(char *\fP\fIdata\fP\fB, int \fP\fIlen\fP\fB);\fP
+\fBint mcprint(char *\fIdata\fB, int \fIlen\fB);\fR
 .SH DESCRIPTION
 This function uses the \fBmc5p\fP or \fBmc4\fP and \fBmc5\fP capabilities,
 if they are present, to ship given data to a printer attached to the terminal.

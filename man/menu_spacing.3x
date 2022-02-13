@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_spacing.3x,v 1.19 2021/12/25 21:49:32 tom Exp $
+.\" $Id: menu_spacing.3x,v 1.20 2022/02/12 20:02:20 tom Exp $
 .TH menu_spacing 3X ""
 .SH NAME
 \fBset_menu_spacing\fP,
@@ -36,15 +36,15 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_menu_spacing(MENU *\fP\fImenu\fP\fB,\fP
-                     \fBint \fP\fIspc_description\fP\fB,\fP
-                     \fBint \fP\fIspc_rows\fP\fB,\fP
-                     \fBint \fP\fIspc_columns\fP\fB);\fP
+\fBint set_menu_spacing(MENU *\fImenu\fB,\fR
+                     \fBint \fIspc_description\fB,\fR
+                     \fBint \fIspc_rows\fB,\fR
+                     \fBint \fIspc_columns\fB);\fR
 .br
-\fBint menu_spacing(const MENU *\fP\fImenu\fP\fB,\fP
-                 \fBint* \fP\fIspc_description\fP\fB,\fP
-                 \fBint* \fP\fIspc_rows\fP\fB,\fP
-                 \fBint* \fP\fIspc_columns\fP\fB);\fP
+\fBint menu_spacing(const MENU *\fImenu\fB,\fR
+                 \fBint* \fIspc_description\fB,\fR
+                 \fBint* \fIspc_rows\fB,\fR
+                 \fBint* \fIspc_columns\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_menu_spacing\fP sets the spacing information for the menu.

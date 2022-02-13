@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_pad.3x,v 1.28 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_pad.3x,v 1.29 2022/02/12 20:05:11 tom Exp $
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -47,20 +47,20 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBWINDOW *newpad(int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB);\fP
+\fBWINDOW *newpad(int \fInlines\fB, int \fIncols\fB);\fR
 .br
-\fBWINDOW *subpad(WINDOW *\fP\fIorig\fP\fB, int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB,\fP
-      \fBint \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
+\fBWINDOW *subpad(WINDOW *\fIorig\fB, int \fInlines\fB, int \fIncols\fB,\fR
+      \fBint \fIbegin_y\fB, int \fIbegin_x\fB);\fR
 .br
-\fBint prefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fP
-      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fP
+\fBint prefresh(WINDOW *\fIpad\fB, int \fIpminrow\fB, int \fIpmincol\fB,\fR
+      \fBint \fIsminrow\fB, int \fIsmincol\fB, int \fIsmaxrow\fB, int \fIsmaxcol\fB);\fR
 .br
-\fBint pnoutrefresh(WINDOW *\fP\fIpad\fP\fB, int \fP\fIpminrow\fP\fB, int \fP\fIpmincol\fP\fB,\fP
-      \fBint \fP\fIsminrow\fP\fB, int \fP\fIsmincol\fP\fB, int \fP\fIsmaxrow\fP\fB, int \fP\fIsmaxcol\fP\fB);\fP
+\fBint pnoutrefresh(WINDOW *\fIpad\fB, int \fIpminrow\fB, int \fIpmincol\fB,\fR
+      \fBint \fIsminrow\fB, int \fIsmincol\fB, int \fIsmaxrow\fB, int \fIsmaxcol\fB);\fR
 .br
-\fBint pechochar(WINDOW *\fP\fIpad\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBint pechochar(WINDOW *\fIpad\fB, chtype \fIch\fB);\fR
 .br
-\fBint pecho_wchar(WINDOW *\fP\fIpad\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint pecho_wchar(WINDOW *\fIpad\fB, const cchar_t *\fIwch\fB);\fR
 .SH DESCRIPTION
 .SS newpad
 The \fBnewpad\fP routine creates and returns a pointer to a new pad data
@@ -85,7 +85,7 @@ displayed and the location on the screen to be used for the display.
 The \fBsubpad\fP routine creates and returns a pointer to a subwindow within a
 pad with the given number of lines, \fInlines\fP, and columns, \fIncols\fP.
 Unlike \fBsubwin\fP, which uses screen coordinates, the window is at position
-(\fIbegin\fR_\fIx\fP\fB,\fP \fIbegin\fR_\fIy\fP) on the pad.
+(\fIbegin\fR_\fIx\fB,\fR \fIbegin\fR_\fIy\fR) on the pad.
 The window is
 made in the middle of the window \fIorig\fP, so that changes made to one window
 affect both windows.

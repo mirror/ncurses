@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_in_wchstr.3x,v 1.16 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_in_wchstr.3x,v 1.17 2022/02/12 20:07:29 tom Exp $
 .TH curs_in_wchstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -50,21 +50,21 @@
 .nf
 \fB#include <curses.h>\fP
 .sp
-\fBint in_wchstr(cchar_t *\fP\fIwchstr\fP\fB);\fP
+\fBint in_wchstr(cchar_t *\fIwchstr\fB);\fR
 .br
-\fBint in_wchnstr(cchar_t *\fP\fIwchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint in_wchnstr(cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
 .br
-\fBint win_wchstr(WINDOW *\fP\fIwin\fP\fB, cchar_t *\fP\fIwchstr\fP\fB);\fP
+\fBint win_wchstr(WINDOW *\fIwin\fB, cchar_t *\fIwchstr\fB);\fR
 .br
-\fBint win_wchnstr(WINDOW *\fP\fIwin\fP\fB, cchar_t *\fP\fIwchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint win_wchnstr(WINDOW *\fIwin\fB, cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvin_wchstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwchstr\fP\fB);\fP
+\fBint mvin_wchstr(int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB);\fR
 .br
-\fBint mvin_wchnstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwchstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvin_wchnstr(int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwin_wchstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwchstr\fP\fB);\fP
+\fBint mvwin_wchstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fB);\fR
 .br
-\fBint mvwin_wchnstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, cchar_t *\fP\fIwchstr\fP, int \fIn\fP\fB);\fP
+\fBint mvwin_wchnstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, cchar_t *\fIwchstr\fR, int \fIn\fB);\fR
 .fi
 .SH DESCRIPTION
 These functions return an array of complex characters in \fIwchstr\fP,

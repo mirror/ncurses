@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_field_buffer.3x,v 1.29 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_field_buffer.3x,v 1.30 2022/02/12 20:03:40 tom Exp $
 .TH form_field_buffer 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,15 +43,15 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint set_field_buffer(FIELD *\fP\fIfield\fP\fB, int \fP\fIbuf\fP\fB, const char *\fP\fIvalue\fP\fB);\fP
+\fBint set_field_buffer(FIELD *\fIfield\fB, int \fIbuf\fB, const char *\fIvalue\fB);\fR
 .br
-\fBchar *field_buffer(const FIELD *\fP\fIfield\fP\fB, int \fP\fIbuffer\fP\fB);\fP
+\fBchar *field_buffer(const FIELD *\fIfield\fB, int \fIbuffer\fB);\fR
 .sp
-\fBint set_field_status(FIELD *\fP\fIfield\fP\fB, bool \fP\fIstatus\fP\fB);\fP
+\fBint set_field_status(FIELD *\fIfield\fB, bool \fIstatus\fB);\fR
 .br
-\fBbool field_status(const FIELD *\fP\fIfield\fP\fB);\fP
+\fBbool field_status(const FIELD *\fIfield\fB);\fR
 .sp
-\fBint set_max_field(FIELD *\fP\fIfield\fP\fB, int \fP\fImax\fP\fB);\fP
+\fBint set_max_field(FIELD *\fIfield\fB, int \fImax\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_field_buffer\fP sets the numbered buffer of the given field

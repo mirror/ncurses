@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: form_driver.3x,v 1.38 2021/12/25 21:49:32 tom Exp $
+.\" $Id: form_driver.3x,v 1.39 2022/02/12 20:03:40 tom Exp $
 .TH form_driver 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -39,9 +39,9 @@
 .SH SYNOPSIS
 \fB#include <form.h>\fP
 .sp
-\fBint form_driver(FORM *\fP\fIform\fP\fB, int \fP\fIc\fP\fB);\fP
+\fBint form_driver(FORM *\fIform\fB, int \fIc\fB);\fR
 .br
-\fBint form_driver_w(FORM *\fP\fIform\fP\fB, int \fP\fIc\fP\fB, wchar_t \fP\fIwch\fP\fB);\fP
+\fBint form_driver_w(FORM *\fIform\fB, int \fIc\fB, wchar_t \fIwch\fB);\fR
 .br
 .SH DESCRIPTION
 .SS form_driver

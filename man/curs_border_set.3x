@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2011,2012 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border_set.3x,v 1.15 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_border_set.3x,v 1.16 2022/02/12 20:06:41 tom Exp $
 .TH curs_border_set 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -54,55 +54,55 @@
 \fB#include <curses.h>\fP
 .sp
 \fBint border_set(\fP
-   \fBconst cchar_t *\fP\fIls\fP, \fBconst cchar_t *\fP\fIrs\fP,
-   \fBconst cchar_t *\fP\fIts\fP, \fBconst cchar_t *\fP\fIbs\fP,
-   \fBconst cchar_t *\fP\fItl\fP, \fBconst cchar_t *\fP\fItr\fP,
-   \fBconst cchar_t *\fP\fIbl\fP, \fBconst cchar_t *\fP\fIbr\fP
+   \fBconst cchar_t *\fIls\fR, \fBconst cchar_t *\fIrs\fR,
+   \fBconst cchar_t *\fIts\fR, \fBconst cchar_t *\fIbs\fR,
+   \fBconst cchar_t *\fItl\fR, \fBconst cchar_t *\fItr\fR,
+   \fBconst cchar_t *\fIbl\fR, \fBconst cchar_t *\fIbr\fR
 \fB);\fP
 .br
 \fBint wborder_set(\fP
    \fBWINDOW *win\fP,
-   \fBconst cchar_t *\fP\fIls\fP, \fBconst cchar_t *\fP\fIrs\fP,
-   \fBconst cchar_t *\fP\fIts\fP, \fBconst cchar_t *\fP\fIbs\fP,
-   \fBconst cchar_t *\fP\fItl\fP, \fBconst cchar_t *\fP\fItr\fP,
-   \fBconst cchar_t *\fP\fIbl\fP, \fBconst cchar_t *\fP\fIbr\fP\fB);\fP
+   \fBconst cchar_t *\fIls\fR, \fBconst cchar_t *\fIrs\fR,
+   \fBconst cchar_t *\fIts\fR, \fBconst cchar_t *\fIbs\fR,
+   \fBconst cchar_t *\fItl\fR, \fBconst cchar_t *\fItr\fR,
+   \fBconst cchar_t *\fIbl\fR, \fBconst cchar_t *\fIbr\fB);\fR
 .br
 \fBint box_set(\fP
    \fBWINDOW *win\fP,
-   \fBconst cchar_t *\fP\fIverch\fP,
-   \fBconst cchar_t *\fP\fIhorch\fP\fB);\fP
+   \fBconst cchar_t *\fIverch\fR,
+   \fBconst cchar_t *\fIhorch\fB);\fR
 .br
 \fBint hline_set(\fP
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint whline_set(\fP
-   \fBWINDOW *\fP\fIwin\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBWINDOW *\fIwin\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint mvhline_set(\fP
-   \fBint \fP\fIy\fP, \fBint \fP\fIx\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBint \fIy\fR, \fBint \fIx\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint mvwhline_set(\fP
-   \fBWINDOW *\fP\fIwin\fP,
-   \fBint \fP\fIy\fP, \fBint \fP\fIx\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBWINDOW *\fIwin\fR,
+   \fBint \fIy\fR, \fBint \fIx\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint vline_set(\fP
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint wvline_set(\fP
-   \fBWINDOW *\fP\fIwin\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBWINDOW *\fIwin\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint mvvline_set(\fP
-   \fBint \fP\fIy\fP, \fBint \fP\fIx\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBint \fIy\fR, \fBint \fIx\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 \fBint mvwvline_set(\fP
-   \fBWINDOW *\fP\fIwin\fP,
-   \fBint \fP\fIy\fP, \fBint \fP\fIx\fP,
-   \fBconst cchar_t *\fP\fIwch\fP, \fBint \fP\fIn\fP\fB);\fP
+   \fBWINDOW *\fIwin\fR,
+   \fBint \fIy\fR, \fBint \fIx\fR,
+   \fBconst cchar_t *\fIwch\fR, \fBint \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 .PP
@@ -152,11 +152,11 @@ default values (defined in \fBcurses.h\fP) are used instead:
 \fBWACS_LRCORNER\fP.
 .RE
 .PP
-\fBbox_set(\fP\fIwin\fP, \fIverch\fP\fB, \fP\fIhorch\fP\fB);\fP
+\fBbox_set(\fIwin\fR, \fIverch\fB, \fIhorch\fB);\fR
 is a shorthand for the following call:
 .PP
-\fBwborder_set(\fP\fIwin\fP\fB, \fP\fIverch\fP\fB, \fP\fIverch\fP\fB,\fP
-    \fIhorch\fP\fB, \fP\fIhorch\fP\fB, NULL, NULL, NULL, NULL);\fP
+\fBwborder_set(\fIwin\fB, \fIverch\fB, \fIverch\fB,\fR
+    \fIhorch\fB, \fIhorch\fB, NULL, NULL, NULL, NULL);\fR
 .PP
 The
 \fB*line_set\fP

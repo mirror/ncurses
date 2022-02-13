@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2010-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_sp_funcs.3x,v 1.26 2021/12/25 17:54:00 tom Exp $
+.\" $Id: curs_sp_funcs.3x,v 1.27 2022/02/12 20:05:11 tom Exp $
 .TH curs_sp_funcs 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -43,279 +43,279 @@ curs_sp_funcs \- \fBcurses\fP screen-pointer extension
 \fB#include <curses.h>\fP
 .nf
 .sp
-\fBint alloc_pair_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint alloc_pair_sp(SCREEN* \fIsp\fB, int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint assume_default_colors_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint assume_default_colors_sp(SCREEN* \fIsp\fB, int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint baudrate_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint baudrate_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint beep_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint beep_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBbool can_change_color_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool can_change_color_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint cbreak_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint cbreak_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint color_content_sp(SCREEN* \fP\fIsp\fP\fB, short \fP\fIcolor\fP\fB, short* \fP\fIr\fP\fB, short* \fP\fIg\fP\fB, short* \fP\fIb\fP\fB);\fP
+\fBint color_content_sp(SCREEN* \fIsp\fB, short \fIcolor\fB, short* \fIr\fB, short* \fIg\fB, short* \fIb\fB);\fR
 .br
-\fBint curs_set_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIvisibility\fP);\fP
+\fBint curs_set_sp(SCREEN* \fIsp\fB, int \fIvisibility\fR);\fR
 .br
-\fBint def_prog_mode_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint def_prog_mode_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint def_shell_mode_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint def_shell_mode_sp(SCREEN* \fIsp\fB);\fR
 .sp
-\fBint define_key_sp(SCREEN* \fP\fIsp\fP\fB, const char * \fP\fIdefinition\fP\fB, int \fP\fIkeycode\fP\fB);\fP
+\fBint define_key_sp(SCREEN* \fIsp\fB, const char * \fIdefinition\fB, int \fIkeycode\fB);\fR
 .br
-\fBint delay_output_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIms\fP\fB);\fP
+\fBint delay_output_sp(SCREEN* \fIsp\fB, int \fIms\fB);\fR
 .br
-\fBint doupdate_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint doupdate_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint echo_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint echo_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint endwin_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint endwin_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBchar erasechar_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBchar erasechar_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint erasewchar_sp(SCREEN* \fP\fIsp\fP\fB, wchar_t *\fP\fIch\fP\fB);\fP
+\fBint erasewchar_sp(SCREEN* \fIsp\fB, wchar_t *\fIch\fB);\fR
 .br
-\fBint extended_color_content_sp(SCREEN * \fP\fIsp\fP\fB, int \fP\fIcolor\fP\fB, int * \fP\fIr\fP\fB, int * \fP\fIg\fP\fB, int * \fP\fIb\fP\fB);\fP
+\fBint extended_color_content_sp(SCREEN * \fIsp\fB, int \fIcolor\fB, int * \fIr\fB, int * \fIg\fB, int * \fIb\fB);\fR
 .br
-\fBint extended_pair_content_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIpair\fP\fB, int * \fP\fIfg\fP\fB, int * \fP\fIbg\fP\fB);\fP
+\fBint extended_pair_content_sp(SCREEN* \fIsp\fB, int \fIpair\fB, int * \fIfg\fB, int * \fIbg\fB);\fR
 .br
-\fBint extended_slk_color_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIpair\fP\fB);\fP
+\fBint extended_slk_color_sp(SCREEN* \fIsp\fB, int \fIpair\fB);\fR
 .sp
-\fBvoid filter_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid filter_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint find_pair_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint find_pair_sp(SCREEN* \fIsp\fB, int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint flash_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint flash_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint flushinp_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint flushinp_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint free_pair_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIpair\fP\fB);\fP
+\fBint free_pair_sp(SCREEN* \fIsp\fB, int \fIpair\fB);\fR
 .br
-\fBint get_escdelay_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint get_escdelay_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint getmouse_sp(SCREEN* \fP\fIsp\fP\fB, MEVENT* \fP\fBevent\fP\fB);\fP
+\fBint getmouse_sp(SCREEN* \fIsp\fB, MEVENT* \fBevent\fB);\fR
 .br
-\fBWINDOW* getwin_sp(SCREEN* \fP\fIsp\fP\fB, FILE* \fP\fIfilep\fP\fB);\fP
+\fBWINDOW* getwin_sp(SCREEN* \fIsp\fB, FILE* \fIfilep\fB);\fR
 .br
-\fBint halfdelay_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fItenths\fP\fB);\fP
+\fBint halfdelay_sp(SCREEN* \fIsp\fB, int \fItenths\fB);\fR
 .br
-\fBbool has_colors_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool has_colors_sp(SCREEN* \fIsp\fB);\fR
 .sp
-\fBbool has_ic_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool has_ic_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBbool has_il_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool has_il_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint has_key_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIch\fP\fB);\fP
+\fBint has_key_sp(SCREEN* \fIsp\fB, int \fIch\fB);\fR
 .br
-\fBbool has_mouse_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool has_mouse_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint init_color_sp(SCREEN* \fP\fIsp\fP\fB, short \fP\fIcolor\fP\fB, short \fP\fIr\fP\fB, short \fP\fIg\fP\fB, short \fP\fIb\fP\fB);\fP
+\fBint init_color_sp(SCREEN* \fIsp\fB, short \fIcolor\fB, short \fIr\fB, short \fIg\fB, short \fIb\fB);\fR
 .br
-\fBint init_extended_color_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIcolor\fP\fB, int \fP\fIr\fP\fB, int \fP\fIg\fP\fB, int \fP\fIb\fP\fB);\fP
+\fBint init_extended_color_sp(SCREEN* \fIsp\fB, int \fIcolor\fB, int \fIr\fB, int \fIg\fB, int \fIb\fB);\fR
 .br
-\fBint init_extended_pair_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIpair\fP\fB, int \fP\fIfg\fP\fB, int \fP\fIbg\fP\fB);\fP
+\fBint init_extended_pair_sp(SCREEN* \fIsp\fB, int \fIpair\fB, int \fIfg\fB, int \fIbg\fB);\fR
 .br
-\fBint init_pair_sp(SCREEN* \fP\fIsp\fP\fB, short \fP\fIpair\fP\fB, short \fP\fIfg\fP\fB, short \fP\fIbg\fP\fB);\fP
+\fBint init_pair_sp(SCREEN* \fIsp\fB, short \fIpair\fB, short \fIfg\fB, short \fIbg\fB);\fR
 .br
-\fBint intrflush_sp(SCREEN* \fP\fIsp\fP\fB, WINDOW* \fP\fIwin\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBint intrflush_sp(SCREEN* \fIsp\fB, WINDOW* \fIwin\fB, bool \fIbf\fB);\fR
 .br
-\fBbool is_term_resized_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
+\fBbool is_term_resized_sp(SCREEN* \fIsp\fB, int \fIlines\fB, int \fIcolumns\fB);\fR
 .sp
-\fBbool isendwin_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBbool isendwin_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint key_defined_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIdefinition\fP\fB);\fP
+\fBint key_defined_sp(SCREEN* \fIsp\fB, const char *\fIdefinition\fB);\fR
 .br
-\fBchar* keybound_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIkeycode\fP\fB, int \fP\fIcount\fP\fB);\fP
+\fBchar* keybound_sp(SCREEN* \fIsp\fB, int \fIkeycode\fB, int \fIcount\fB);\fR
 .br
-\fBNCURSES_CONST char * keyname_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIc\fP\fB);\fP
+\fBNCURSES_CONST char * keyname_sp(SCREEN* \fIsp\fB, int \fIc\fB);\fR
 .br
-\fBint keyok_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIkeycode\fP\fB, bool \fP\fIenable\fP\fB);\fP
+\fBint keyok_sp(SCREEN* \fIsp\fB, int \fIkeycode\fB, bool \fIenable\fB);\fR
 .br
-\fBchar killchar_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBchar killchar_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint killwchar_sp(SCREEN* \fP\fIsp\fP\fB, wchar_t *\fP\fIch\fP\fB);\fP
+\fBint killwchar_sp(SCREEN* \fIsp\fB, wchar_t *\fIch\fB);\fR
 .br
-\fBchar* longname_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBchar* longname_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint mcprint_sp(SCREEN* \fP\fIsp\fP\fB, char *\fP\fIdata\fP\fB, int \fP\fIlen\fP\fB);\fP
+\fBint mcprint_sp(SCREEN* \fIsp\fB, char *\fIdata\fB, int \fIlen\fB);\fR
 .br
-\fBint mouseinterval_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIerval\fP\fB);\fP
+\fBint mouseinterval_sp(SCREEN* \fIsp\fB, int \fIerval\fB);\fR
 .sp
-\fBmmask_t mousemask_sp(SCREEN* \fP\fIsp\fP\fB, mmask_t \fP\fInewmask\fP\fB, mmask_t *\fP\fIoldmask\fP\fB);\fP
+\fBmmask_t mousemask_sp(SCREEN* \fIsp\fB, mmask_t \fInewmask\fB, mmask_t *\fIoldmask\fB);\fR
 .br
-\fBint mvcur_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIoldrow\fP\fB, int \fP\fIoldcol\fP\fB, int \fP\fInewrow\fP\fB, int \fP\fInewcol\fP\fB);\fP
+\fBint mvcur_sp(SCREEN* \fIsp\fB, int \fIoldrow\fB, int \fIoldcol\fB, int \fInewrow\fB, int \fInewcol\fB);\fR
 .br
-\fBint napms_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIms\fP\fB);\fP
+\fBint napms_sp(SCREEN* \fIsp\fB, int \fIms\fB);\fR
 .br
-\fBWINDOW* newpad_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fInrows\fP\fB, int \fP\fIncols\fP\fB);\fP
+\fBWINDOW* newpad_sp(SCREEN* \fIsp\fB, int \fInrows\fB, int \fIncols\fB);\fR
 .br
 \fBSCREEN* new_prescr(void);\fP
 .br
-\fBSCREEN* newterm_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fItype\fP\fB, FILE *\fP\fIoutfd\fP\fB, FILE *\fP\fIinfd\fP\fB);\fP
+\fBSCREEN* newterm_sp(SCREEN* \fIsp\fB, const char *\fItype\fB, FILE *\fIoutfd\fB, FILE *\fIinfd\fB);\fR
 .br
-\fBWINDOW* newwin_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fInlines\fP\fB, int \fP\fIncols\fP\fB, int \fP\fIbegin_y\fP\fB, int \fP\fIbegin_x\fP\fB);\fP
+\fBWINDOW* newwin_sp(SCREEN* \fIsp\fB, int \fInlines\fB, int \fIncols\fB, int \fIbegin_y\fB, int \fIbegin_x\fB);\fR
 .br
-\fBint nl_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint nl_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint nocbreak_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint nocbreak_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint noecho_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint noecho_sp(SCREEN* \fIsp\fB);\fR
 .sp
-\fBvoid nofilter_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid nofilter_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint nonl_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint nonl_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBvoid noqiflush_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid noqiflush_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint noraw_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint noraw_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint pair_content_sp(SCREEN* \fP\fIsp\fP\fB, short \fP\fIpair\fP\fB, short* \fP\fIfg\fP\fB, short* \fP\fIbg\fP\fB);\fP
+\fBint pair_content_sp(SCREEN* \fIsp\fB, short \fIpair\fB, short* \fIfg\fB, short* \fIbg\fB);\fR
 .br
-\fBvoid qiflush_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid qiflush_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint raw_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint raw_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint reset_prog_mode_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint reset_prog_mode_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBvoid reset_color_pairs_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid reset_color_pairs_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint reset_shell_mode_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint reset_shell_mode_sp(SCREEN* \fIsp\fB);\fR
 .sp
-\fBint resetty_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint resetty_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint resize_term_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
+\fBint resize_term_sp(SCREEN* \fIsp\fB, int \fIlines\fB, int \fIcolumns\fB);\fR
 .br
-\fBint resizeterm_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlines\fP\fB, int \fP\fIcolumns\fP\fB);\fP
+\fBint resizeterm_sp(SCREEN* \fIsp\fB, int \fIlines\fB, int \fIcolumns\fB);\fR
 .br
-\fBint ripoffline_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIline\fP\fB, int (*\fP\fIinit\fP\fB)(WINDOW* \fP\fIwin\fP\fB, int \fP\fIfmt\fP\fB));\fP
+\fBint ripoffline_sp(SCREEN* \fIsp\fB, int \fIline\fB, int (*\fIinit\fB)(WINDOW* \fIwin\fB, int \fIfmt\fB));\fR
 .br
-\fBint savetty_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint savetty_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint scr_init_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_init_sp(SCREEN* \fIsp\fB, const char *\fIfilename\fB);\fR
 .br
-\fBint scr_restore_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_restore_sp(SCREEN* \fIsp\fB, const char *\fIfilename\fB);\fR
 .br
-\fBint scr_set_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIfilename\fP\fB);\fP
+\fBint scr_set_sp(SCREEN* \fIsp\fB, const char *\fIfilename\fB);\fR
 .br
-\fBint set_escdelay_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIms\fP\fB);\fP
+\fBint set_escdelay_sp(SCREEN* \fIsp\fB, int \fIms\fB);\fR
 .br
-\fBint set_tabsize_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIcols\fP\fB);\fP
+\fBint set_tabsize_sp(SCREEN* \fIsp\fB, int \fIcols\fB);\fR
 .sp
-\fBint slk_attr_set_sp(SCREEN* \fP\fIsp\fP\fB, const attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void*\fP\fIopts\fP\fB);\fP
+\fBint slk_attr_set_sp(SCREEN* \fIsp\fB, const attr_t \fIattrs\fB, short \fIpair\fB, void*\fIopts\fB);\fR
 .br
-\fBint slk_attrset_sp(SCREEN* \fP\fIsp\fP\fB, const chtype \fP\fIa\fP\fB);\fP
+\fBint slk_attrset_sp(SCREEN* \fIsp\fB, const chtype \fIa\fB);\fR
 .br
-\fBint slk_attroff_sp(SCREEN* \fP\fIsp\fP\fB, const chtype \fP\fIa\fP\fB);\fP
+\fBint slk_attroff_sp(SCREEN* \fIsp\fB, const chtype \fIa\fB);\fR
 .br
-\fBint slk_attron_sp(SCREEN* \fP\fIsp\fP\fB, const chtype \fP\fIa\fP\fB);\fP
+\fBint slk_attron_sp(SCREEN* \fIsp\fB, const chtype \fIa\fB);\fR
 .br
-\fBattr_t slk_attr_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBattr_t slk_attr_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint slk_clear_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint slk_clear_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint slk_color_sp(SCREEN* \fP\fIsp\fP\fB, short \fP\fIpair\fP\fB);\fP
+\fBint slk_color_sp(SCREEN* \fIsp\fB, short \fIpair\fB);\fR
 .br
-\fBint slk_init_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIfmt\fP\fB);\fP
+\fBint slk_init_sp(SCREEN* \fIsp\fB, int \fIfmt\fB);\fR
 .br
-\fBchar* slk_label_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlabnum\fP\fB);\fP
+\fBchar* slk_label_sp(SCREEN* \fIsp\fB, int \fIlabnum\fB);\fR
 .br
-\fBint slk_noutrefresh_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint slk_noutrefresh_sp(SCREEN* \fIsp\fB);\fR
 .sp
-\fBint slk_refresh_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint slk_refresh_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint slk_restore_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint slk_restore_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint slk_set_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlabnum\fP\fB, const char * \fP\fIlabel\fP\fB, int \fP\fIfmt\fP\fB);\fP
+\fBint slk_set_sp(SCREEN* \fIsp\fB, int \fIlabnum\fB, const char * \fIlabel\fB, int \fIfmt\fB);\fR
 .br
-\fBint slk_touch_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint slk_touch_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint start_color_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint start_color_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBattr_t term_attrs_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBattr_t term_attrs_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBchtype termattrs_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBchtype termattrs_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBchar* termname_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBchar* termname_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBint typeahead_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIfd\fP\fB);\fP
+\fBint typeahead_sp(SCREEN* \fIsp\fB, int \fIfd\fB);\fR
 .br
-\fBint unget_wch_sp(SCREEN* \fP\fIsp\fP\fB, const wchar_t \fP\fIwch\fP\fB);\fP
+\fBint unget_wch_sp(SCREEN* \fIsp\fB, const wchar_t \fIwch\fB);\fR
 .sp
-\fBint ungetch_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIch\fP\fB);\fP
+\fBint ungetch_sp(SCREEN* \fIsp\fB, int \fIch\fB);\fR
 .br
-\fBint ungetmouse_sp(SCREEN* \fP\fIsp\fP\fB,MEVENT * \fP\fBevent\fP\fB);\fP
+\fBint ungetmouse_sp(SCREEN* \fIsp\fB,MEVENT * \fBevent\fB);\fR
 .br
-\fBint use_default_colors_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBint use_default_colors_sp(SCREEN* \fIsp\fB);\fR
 .br
-\fBvoid use_env_sp(SCREEN* \fP\fIsp\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBvoid use_env_sp(SCREEN* \fIsp\fB, bool \fIbf\fB);\fR
 .br
-\fBint use_legacy_coding_sp(SCREEN* \fP\fIsp\fP\fB, int \fP\fIlevel\fP\fB);\fP
+\fBint use_legacy_coding_sp(SCREEN* \fIsp\fB, int \fIlevel\fB);\fR
 .br
-\fBvoid use_tioctl_sp(SCREEN *\fP\fIsp\fP\fB, bool \fP\fIbf\fP\fB);\fP
+\fBvoid use_tioctl_sp(SCREEN *\fIsp\fB, bool \fIbf\fB);\fR
 .br
-\fBint vid_attr_sp(SCREEN* \fP\fIsp\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void * \fP\fIopts\fP\fB);\fP
+\fBint vid_attr_sp(SCREEN* \fIsp\fB, attr_t \fIattrs\fB, short \fIpair\fB, void * \fIopts\fB);\fR
 .br
-\fBint vid_puts_sp(SCREEN* \fP\fIsp\fP\fB, attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void * \fP\fIopts\fP\fB, NCURSES_SP_OUTC \fP\fIputc\fP\fB);\fP
+\fBint vid_puts_sp(SCREEN* \fIsp\fB, attr_t \fIattrs\fB, short \fIpair\fB, void * \fIopts\fB, NCURSES_SP_OUTC \fIputc\fB);\fR
 .br
-\fBint vidattr_sp(SCREEN* \fP\fIsp\fP\fB, chtype \fP\fIattrs\fP\fB);\fP
+\fBint vidattr_sp(SCREEN* \fIsp\fB, chtype \fIattrs\fB);\fR
 .br
-\fBint vidputs_sp(SCREEN* \fP\fIsp\fP\fB, chtype \fP\fIattrs\fP\fB, NCURSES_SP_OUTC \fP\fIputc\fP\fB);\fP
+\fBint vidputs_sp(SCREEN* \fIsp\fB, chtype \fIattrs\fB, NCURSES_SP_OUTC \fIputc\fB);\fR
 .br
-\fBwchar_t* wunctrl_sp(SCREEN* \fP\fIsp\fP\fB, cchar_t *\fP\fIch\fP\fB);\fP
+\fBwchar_t* wunctrl_sp(SCREEN* \fIsp\fB, cchar_t *\fIch\fB);\fR
 .sp
 \fB#include <form.h>\fP
 .sp
-\fBFORM* new_form_sp(SCREEN* \fP\fIsp\fP\fB, FIELD **\fP\fIfields\fP\fB);\fP
+\fBFORM* new_form_sp(SCREEN* \fIsp\fB, FIELD **\fIfields\fB);\fR
 .sp
 \fB#include <menu.h>\fP
 .sp
-\fBMENU* new_menu_sp(SCREEN* \fP\fIsp\fP\fB, ITEM **\fP\fIitems\fP\fB);\fP
+\fBMENU* new_menu_sp(SCREEN* \fIsp\fB, ITEM **\fIitems\fB);\fR
 .sp
 \fB#include <panel.h>\fP
 .sp
-\fBPANEL* ceiling_panel(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBPANEL* ceiling_panel(SCREEN* \fIsp\fB);\fR
 .br
-\fBPANEL* ground_panel(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBPANEL* ground_panel(SCREEN* \fIsp\fB);\fR
 .br
-\fBvoid update_panels_sp(SCREEN* \fP\fIsp\fP\fB);\fP
+\fBvoid update_panels_sp(SCREEN* \fIsp\fB);\fR
 .sp
 \fB#include <term.h>\fP
 .sp
-\fBint del_curterm_sp(SCREEN* \fP\fIsp\fP\fB, TERMINAL *\fP\fIoterm\fP\fB);\fP
+\fBint del_curterm_sp(SCREEN* \fIsp\fB, TERMINAL *\fIoterm\fB);\fR
 .br
-\fBint putp_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIstr\fP\fB);\fP
+\fBint putp_sp(SCREEN* \fIsp\fB, const char *\fIstr\fB);\fR
 .br
-\fBint restartterm_sp(SCREEN* \fP\fIsp\fP\fB, NCURSES_CONST char*\fP\fIterm\fP\fB, int \fP\fIfiledes\fP\fB, int *\fP\fIerrret\fP\fB);\fP
+\fBint restartterm_sp(SCREEN* \fIsp\fB, NCURSES_CONST char*\fIterm\fB, int \fIfiledes\fB, int *\fIerrret\fB);\fR
 .br
-\fBTERMINAL* set_curterm_sp(SCREEN* \fP\fIsp\fP\fB, TERMINAL*\fP\fInterm\fP\fB);\fP
+\fBTERMINAL* set_curterm_sp(SCREEN* \fIsp\fB, TERMINAL*\fInterm\fB);\fR
 .br
-\fBint tgetent_sp(SCREEN* \fP\fIsp\fP\fB, char *\fP\fIbp\fP\fB, const char *\fP\fIname\fP\fB);\fP
+\fBint tgetent_sp(SCREEN* \fIsp\fB, char *\fIbp\fB, const char *\fIname\fB);\fR
 .br
-\fBint tgetflag_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB);\fP
+\fBint tgetflag_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB);\fR
 .br
-\fBint tgetnum_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB);\fP
+\fBint tgetnum_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB);\fR
 .br
-\fBchar* tgetstr_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB, char **\fP\fIarea\fP\fB);\fP
+\fBchar* tgetstr_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB, char **\fIarea\fB);\fR
 .br
-\fBchar* tgoto_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB, int \fP\fIcol\fP\fB, int \fP\fIrow\fP\fB);\fP
+\fBchar* tgoto_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB, int \fIcol\fB, int \fIrow\fB);\fR
 .br
-\fBint tigetflag_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB);\fP
+\fBint tigetflag_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB);\fR
 .br
-\fBint tigetnum_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB);\fP
+\fBint tigetnum_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB);\fR
 .br
-\fBchar* tigetstr_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIcapname\fP\fB);\fP
+\fBchar* tigetstr_sp(SCREEN* \fIsp\fB, const char *\fIcapname\fB);\fR
 .br
 \fR/* may instead use 9 long parameters */\fP
 .br
-\fBchar* tparm_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIstr\fP\fB, ...);\fP
+\fBchar* tparm_sp(SCREEN* \fIsp\fB, const char *\fIstr\fB, ...);\fR
 .br
-\fBint tputs_sp(SCREEN* \fP\fIsp\fP\fB, const char *\fP\fIstr\fP\fB, int \fP\fIaffcnt\fP\fB, NCURSES_SP_OUTC \fP\fIputc\fP\fB);\fP
+\fBint tputs_sp(SCREEN* \fIsp\fB, const char *\fIstr\fB, int \fIaffcnt\fB, NCURSES_SP_OUTC \fIputc\fB);\fR
 .sp
 \fB#include <unctrl.h>\fP
 .sp
-\fBNCURSES_CONST char* unctrl_sp(SCREEN* \fP\fIsp\fP\fB, chtype \fP\fIc\fP\fB);\fP
+\fBNCURSES_CONST char* unctrl_sp(SCREEN* \fIsp\fB, chtype \fIc\fB);\fR
 .ad
 .br
 .SH DESCRIPTION

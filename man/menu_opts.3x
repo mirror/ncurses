@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: menu_opts.3x,v 1.20 2021/12/25 21:49:32 tom Exp $
+.\" $Id: menu_opts.3x,v 1.21 2022/02/12 20:02:20 tom Exp $
 .TH menu_opts 3X ""
 .SH NAME
 \fBset_menu_opts\fP,
@@ -38,13 +38,13 @@
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_menu_opts(MENU *\fP\fImenu\fP\fB, Menu_Options \fP\fIopts\fP\fB);\fP
+\fBint set_menu_opts(MENU *\fImenu\fB, Menu_Options \fIopts\fB);\fR
 .br
-\fBMenu_Options menu_opts(const MENU *\fP\fImenu\fP\fB);\fP
+\fBMenu_Options menu_opts(const MENU *\fImenu\fB);\fR
 .sp
-\fBint menu_opts_on(MENU *\fP\fImenu\fP\fB, Menu_Options \fP\fIopts\fP\fB);\fP
+\fBint menu_opts_on(MENU *\fImenu\fB, Menu_Options \fIopts\fB);\fR
 .br
-\fBint menu_opts_off(MENU *\fP\fImenu\fP\fB, Menu_Options \fP\fIopts\fP\fB);\fP
+\fBint menu_opts_off(MENU *\fImenu\fB, Menu_Options \fIopts\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_menu_opts\fP sets all the given menu's option bits (menu

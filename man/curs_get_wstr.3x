@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2012,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_get_wstr.3x,v 1.25 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_get_wstr.3x,v 1.26 2022/02/12 20:07:29 tom Exp $
 .TH curs_get_wstr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -54,21 +54,21 @@
 .nf
 \fB#include <curses.h>\fP
 .sp
-\fBint get_wstr(wint_t *\fP\fIwstr\fP\fB);\fP
+\fBint get_wstr(wint_t *\fIwstr\fB);\fR
 .br
-\fBint getn_wstr(wint_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint getn_wstr(wint_t *\fIwstr\fB, int \fIn\fB);\fR
 .br
-\fBint wget_wstr(WINDOW *\fP\fIwin\fP\fB, wint_t *\fP\fIwstr\fP\fB);\fP
+\fBint wget_wstr(WINDOW *\fIwin\fB, wint_t *\fIwstr\fB);\fR
 .br
-\fBint wgetn_wstr(WINDOW *\fP\fIwin\fP\fB, wint_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint wgetn_wstr(WINDOW *\fIwin\fB, wint_t *\fIwstr\fB, int \fIn\fB);\fR
 .sp
-\fBint mvget_wstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwstr\fP\fB);\fP
+\fBint mvget_wstr(int \fIy\fB, int \fIx\fB, wint_t *\fIwstr\fB);\fR
 .br
-\fBint mvgetn_wstr(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvgetn_wstr(int \fIy\fB, int \fIx\fB, wint_t *\fIwstr\fB, int \fIn\fB);\fR
 .br
-\fBint mvwget_wstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwstr\fP\fB);\fP
+\fBint mvwget_wstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, wint_t *\fIwstr\fB);\fR
 .br
-\fBint mvwgetn_wstr(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, wint_t *\fP\fIwstr\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwgetn_wstr(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, wint_t *\fIwstr\fB, int \fIn\fB);\fR
 .fi
 .SH DESCRIPTION
 The effect of
@@ -195,7 +195,7 @@ while \fBwchar_t\fP is a unsigned type.
 All of the vendors implement this using \fBwint_t\fP, following the standard.
 .PP
 X/Open Curses, Issue 7 (2009) is unclear regarding whether
-the terminating \fInull \fP\fBwchar_t\fP
+the terminating \fInull \fBwchar_t\fR
 value is counted in the length parameter \fIn\fP.
 X/Open Curses, Issue 7 revised the corresponding description
 of \fBwgetnstr\fP to address this issue.

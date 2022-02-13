@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.80 2021/12/25 18:55:27 tom Exp $
+.\" $Id: infocmp.1m,v 1.81 2022/02/12 20:02:20 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -86,7 +86,7 @@ u\
 x\
 \fP]
 .br
-      [\fB\-v\fP \fIn\fP] [\fB\-s d\fP| \fBi\fP| \fBl\fP| \fBc\fP] [\fB\-Q\fP \fIn\fP] [\fB\-R \fP\fBsubset\fP]
+      [\fB\-v\fR \fIn\fR] [\fB\-s d\fR| \fBi\fR| \fBl\fR| \fBc\fR] [\fB\-Q\fR \fIn\fR] [\fB\-R \fBsubset\fR]
 .br
       [\fB\-w\fP\ \fIwidth\fP] [\fB\-A\fP\ \fIdirectory\fP] [\fB\-B\fP\ \fIdirectory\fP]
 .br
@@ -473,7 +473,7 @@ However, show differences between absent and cancelled capabilities.
 Omit the \*(``Reconstructed from\*('' comment for source listings.
 .RE
 .TP 5
-\fB\-R\fP\fIsubset\fP
+\fB\-R\fIsubset\fR
 Restrict output to a given subset.
 This option is for use with archaic
 versions of terminfo like those on SVr1, Ultrix, or HP-UX that do not support
@@ -494,7 +494,7 @@ it is the same as no subset, i.e., all capabilities are used.
 The \fB\-I\fP option likewise selects no subset as a side-effect.
 .RE
 .TP
-\fB\-s \fP\fI[d|i|l|c]\fP
+\fB\-s \fI[d|i|l|c]\fR
 The \fB\-s\fP option sorts the fields within each type according to the argument
 below:
 .br

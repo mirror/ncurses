@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2019-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2019-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 2002-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_ins_wch.3x,v 1.12 2021/12/25 21:41:58 tom Exp $
+.\" $Id: curs_ins_wch.3x,v 1.13 2022/02/12 20:05:11 tom Exp $
 .TH curs_ins_wch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -41,13 +41,13 @@
 .SH SYNOPSIS
 #include <curses.h>
 .sp
-\fBint ins_wch(const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint ins_wch(const cchar_t *\fIwch\fB);\fR
 .br
-\fBint wins_wch(WINDOW *\fP\fIwin\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint wins_wch(WINDOW *\fIwin\fB, const cchar_t *\fIwch\fB);\fR
 .sp
-\fBint mvins_wch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint mvins_wch(int \fIy\fB, int \fIx\fB, const cchar_t *\fIwch\fB);\fR
 .br
-\fBint mvwins_wch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const cchar_t *\fP\fIwch\fP\fB);\fP
+\fBint mvwins_wch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const cchar_t *\fIwch\fB);\fR
 .SH DESCRIPTION
 These routines, insert the complex character \fIwch\fP with rendition
 before the character under the cursor.

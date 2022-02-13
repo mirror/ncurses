@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.80 2022/01/01 21:50:06 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.81 2022/02/12 20:05:11 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -76,37 +76,37 @@
 \fBconst char * const strcodes[];\fP
 \fBconst char * const strfnames[];\fP
 .sp
-\fBint setupterm(const char *\fP\fIterm\fP\fB, int \fP\fIfiledes\fP\fB, int *\fP\fIerrret\fP\fB);\fP
+\fBint setupterm(const char *\fIterm\fB, int \fIfiledes\fB, int *\fIerrret\fB);\fR
 .br
-\fBTERMINAL *set_curterm(TERMINAL *\fP\fInterm\fP\fB);\fP
+\fBTERMINAL *set_curterm(TERMINAL *\fInterm\fB);\fR
 .br
-\fBint del_curterm(TERMINAL *\fP\fIoterm\fP\fB);\fP
+\fBint del_curterm(TERMINAL *\fIoterm\fB);\fR
 .br
-\fBint restartterm(const char *\fP\fIterm\fP\fB, int \fP\fIfiledes\fP\fB, int *\fP\fIerrret\fP\fB);\fP
+\fBint restartterm(const char *\fIterm\fB, int \fIfiledes\fB, int *\fIerrret\fB);\fR
 .sp
-\fBchar *tparm(const char *\fP\fIstr\fP\fB, ...);\fP
+\fBchar *tparm(const char *\fIstr\fB, ...);\fR
 .br
-\fBint tputs(const char *\fP\fIstr\fP\fB, int \fP\fIaffcnt\fP\fB, int (*\fP\fIputc\fP\fB)(int));\fP
+\fBint tputs(const char *\fIstr\fB, int \fIaffcnt\fB, int (*\fIputc\fB)(int));\fR
 .br
-\fBint putp(const char *\fP\fIstr\fP\fB);\fP
+\fBint putp(const char *\fIstr\fB);\fR
 .sp
-\fBint vidputs(chtype \fP\fIattrs\fP\fB, int (*\fP\fIputc\fP\fB)(int));\fP
+\fBint vidputs(chtype \fIattrs\fB, int (*\fIputc\fB)(int));\fR
 .br
-\fBint vidattr(chtype \fP\fIattrs\fP\fB);\fP
+\fBint vidattr(chtype \fIattrs\fB);\fR
 .br
-\fBint vid_puts(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB, int (*\fP\fIputc\fP\fB)(int));\fP
+\fBint vid_puts(attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB, int (*\fIputc\fB)(int));\fR
 .br
-\fBint vid_attr(attr_t \fP\fIattrs\fP\fB, short \fP\fIpair\fP\fB, void *\fP\fIopts\fP\fB);\fP
+\fBint vid_attr(attr_t \fIattrs\fB, short \fIpair\fB, void *\fIopts\fB);\fR
 .sp
-\fBint mvcur(int \fP\fIoldrow\fP\fB, int \fP\fIoldcol\fP\fB, int \fP\fInewrow\fP, int \fP\fInewcol\fP\fB);\fP
+\fBint mvcur(int \fIoldrow\fB, int \fIoldcol\fB, int \fInewrow\fR, int \fInewcol\fB);\fR
 .sp
-\fBint tigetflag(const char *\fP\fIcapname\fP\fB);\fP
+\fBint tigetflag(const char *\fIcapname\fB);\fR
 .br
-\fBint tigetnum(const char *\fP\fIcapname\fP\fB);\fP
+\fBint tigetnum(const char *\fIcapname\fB);\fR
 .br
-\fBchar *tigetstr(const char *\fP\fIcapname\fP\fB);\fP
+\fBchar *tigetstr(const char *\fIcapname\fB);\fR
 .sp
-\fBchar *tiparm(const char *\fP\fIstr\fP\fB, ...);\fP
+\fBchar *tiparm(const char *\fIstr\fB, ...);\fR
 .br
 .fi
 .SH DESCRIPTION
@@ -313,7 +313,7 @@ not applicable.
 \fIputc\fP is a \fBputchar\fP-like routine to which
 the characters are passed, one at a time.
 .PP
-The \fBputp\fP routine calls \fBtputs(\fP\fIstr\fP\fB, 1, putchar)\fP.
+The \fBputp\fR routine calls \fBtputs(\fIstr\fB, 1, putchar)\fR.
 The output of \fBputp\fP always goes to \fBstdout\fP, rather than
 the \fIfiledes\fP specified in \fBsetupterm\fP.
 .PP
@@ -487,9 +487,9 @@ The one function, \fBsetterm\fP, is mentioned in the manual page.
 The manual page notes that the \fBsetterm\fP routine
 was replaced by \fBsetupterm\fP, stating that the call:
 .sp
-      \fBsetupterm(\fP\fIterm\fP\fB, 1, (int *)0)\fP
+      \fBsetupterm(\fIterm\fB, 1, (int *)0)\fR
 .sp
-provides the same functionality as \fBsetterm(\fP\fIterm\fP\fB)\fP,
+provides the same functionality as \fBsetterm(\fIterm\fB)\fR,
 and is not recommended for new programs.
 This implementation provides each of those symbols
 as macros for BSD compatibility,

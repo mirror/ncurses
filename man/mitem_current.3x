@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2006,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,22 +28,22 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: mitem_current.3x,v 1.22 2021/12/25 21:49:32 tom Exp $
+.\" $Id: mitem_current.3x,v 1.23 2022/02/12 20:02:20 tom Exp $
 .TH mitem_current 3X ""
 .SH NAME
 \fBmitem_current\fP \- set and get current_menu_item
 .SH SYNOPSIS
 \fB#include <menu.h>\fP
 .sp
-\fBint set_current_item(MENU *\fP\fImenu\fP\fB, ITEM *\fP\fIitem\fP\fB);\fP
+\fBint set_current_item(MENU *\fImenu\fB, ITEM *\fIitem\fB);\fR
 .br
-\fBITEM *current_item(const MENU *\fP\fImenu\fP\fB);\fP
+\fBITEM *current_item(const MENU *\fImenu\fB);\fR
 .sp
-\fBint set_top_row(MENU *\fP\fImenu\fP\fB, int \fP\fIrow\fP\fB);\fP
+\fBint set_top_row(MENU *\fImenu\fB, int \fIrow\fB);\fR
 .br
-\fBint top_row(const MENU *\fP\fImenu\fP\fB);\fP
+\fBint top_row(const MENU *\fImenu\fB);\fR
 .sp
-\fBint item_index(const ITEM *\fP\fIitem\fP\fB);\fP
+\fBint item_index(const ITEM *\fIitem\fB);\fR
 .br
 .SH DESCRIPTION
 The function \fBset_current_item\fP sets the current item (the item on which

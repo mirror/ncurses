@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,14 +29,14 @@
 .\"
 .\" Author: Thomas E. Dickey 1997
 .\"
-.\" $Id: define_key.3x,v 1.20 2021/12/25 21:41:58 tom Exp $
+.\" $Id: define_key.3x,v 1.21 2022/02/12 20:03:40 tom Exp $
 .TH define_key 3X ""
 .SH NAME
 \fBdefine_key\fP \- define a keycode
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint define_key(const char *\fP\fIdefinition\fP\fB, int \fP\fIkeycode\fP\fB);\fP
+\fBint define_key(const char *\fIdefinition\fB, int \fIkeycode\fB);\fR
 .SH DESCRIPTION
 This is an extension to the curses library.
 It permits an application to define keycodes with their corresponding control

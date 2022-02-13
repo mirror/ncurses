@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020,2021 Thomas E. Dickey                                     *
+.\" Copyright 2020-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_getyx.3x,v 1.22 2021/12/25 21:50:36 tom Exp $
+.\" $Id: curs_getyx.3x,v 1.23 2022/02/12 20:07:29 tom Exp $
 .TH curs_getyx 3X ""
 .SH NAME
 \fBgetyx\fP,
@@ -37,13 +37,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBvoid getyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid getyx(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBvoid getparyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid getparyx(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBvoid getbegyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid getbegyx(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBvoid getmaxyx(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid getmaxyx(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBgetyx\fP macro places the current cursor position of the given window in

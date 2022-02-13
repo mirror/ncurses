@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2007,2010 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_border.3x,v 1.29 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_border.3x,v 1.30 2022/02/12 20:06:41 tom Exp $
 .TH curs_border 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -52,30 +52,30 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint border(chtype \fP\fIls\fP\fB, chtype \fP\fIrs\fP\fB, chtype \fP\fIts\fP\fB, chtype \fP\fIbs\fP\fB,\fP
-           \fBchtype \fP\fItl\fP\fB, chtype \fP\fItr\fP\fB, chtype \fP\fIbl\fP\fB, chtype \fP\fIbr\fP\fB);\fP
+\fBint border(chtype \fIls\fB, chtype \fIrs\fB, chtype \fIts\fB, chtype \fIbs\fB,\fR
+           \fBchtype \fItl\fB, chtype \fItr\fB, chtype \fIbl\fB, chtype \fIbr\fB);\fR
 .br
-\fBint wborder(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIls\fP\fB, chtype \fP\fIrs\fP\fB,\fP
-            \fBchtype \fP\fIts\fP\fB, chtype \fP\fIbs\fP\fB, chtype \fP\fItl\fP\fB, chtype \fP\fItr\fP\fB,\fP
-            \fBchtype \fP\fIbl\fP\fB, chtype \fP\fIbr\fP\fB);\fP
+\fBint wborder(WINDOW *\fIwin\fB, chtype \fIls\fB, chtype \fIrs\fB,\fR
+            \fBchtype \fIts\fB, chtype \fIbs\fB, chtype \fItl\fB, chtype \fItr\fB,\fR
+            \fBchtype \fIbl\fB, chtype \fIbr\fB);\fR
 .sp
-\fBint box(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIverch\fP\fB, chtype \fP\fIhorch\fP\fB);\fP
+\fBint box(WINDOW *\fIwin\fB, chtype \fIverch\fB, chtype \fIhorch\fB);\fR
 .sp
-\fBint hline(chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint hline(chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint whline(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint whline(WINDOW *\fIwin\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint vline(chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint vline(chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint wvline(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint wvline(WINDOW *\fIwin\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .sp
-\fBint mvhline(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvhline(int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint mvwhline(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwhline(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint mvvline(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvvline(int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .br
-\fBint mvwvline(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB, int \fP\fIn\fP\fB);\fP
+\fBint mvwvline(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB, int \fIn\fB);\fR
 .br
 .SH DESCRIPTION
 The \fBborder\fP, \fBwborder\fP and \fBbox\fP routines
@@ -121,9 +121,9 @@ default values (defined in \fBcurses.h\fP) are used instead:
 \fBACS_LRCORNER\fP.
 .RE
 .PP
-\fBbox(\fP\fIwin\fP\fB, \fP\fIverch\fP\fB, \fP\fIhorch\fP\fB)\fP is a shorthand
-for the following call: \fBwborder(\fP\fIwin\fP\fB,\fP \fIverch\fP\fB,\fP
-\fIverch\fP\fB,\fP \fIhorch\fP\fB,\fP \fIhorch\fP\fB, 0, 0, 0, 0)\fP.
+\fBbox(\fIwin\fB, \fIverch\fB, \fIhorch\fB)\fR is a shorthand
+for the following call: \fBwborder(\fIwin\fB,\fR \fIverch\fB,\fR
+\fIverch\fB,\fR \fIhorch\fB,\fR \fIhorch\fB, 0, 0, 0, 0)\fR.
 .PP
 The \fBhline\fP and \fBwhline\fP functions draw a horizontal (left to right)
 line using \fIch\fP starting at the current cursor position in the window.

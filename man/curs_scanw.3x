@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_scanw.3x,v 1.31 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_scanw.3x,v 1.32 2022/02/12 20:05:11 tom Exp $
 .TH curs_scanw 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -46,19 +46,19 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint scanw(const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint scanw(const char *\fIfmt\fB, ...);\fR
 .br
-\fBint wscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint wscanw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, ...);\fR
 .br
-\fBint mvscanw(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint mvscanw(int \fIy\fB, int \fIx\fB, const char *\fIfmt\fB, ...);\fR
 .br
-\fBint mvwscanw(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, const char *\fP\fIfmt\fP\fB, ...);\fP
+\fBint mvwscanw(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, const char *\fIfmt\fB, ...);\fR
 .sp
-\fBint vw_scanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
+\fBint vw_scanw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, va_list \fIvarglist\fB);\fR
 .sp
 /* obsolete */
 .br
-\fBint vwscanw(WINDOW *\fP\fIwin\fP\fB, const char *\fP\fIfmt\fP\fB, va_list \fP\fIvarglist\fP\fB);\fP
+\fBint vwscanw(WINDOW *\fIwin\fB, const char *\fIfmt\fB, va_list \fIvarglist\fB);\fR
 .SH DESCRIPTION
 The \fBscanw\fP, \fBwscanw\fP and \fBmvscanw\fP routines are analogous to
 \fBscanf\fP [see \fBscanf\fP(3)].

@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_kernel.3x,v 1.31 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_kernel.3x,v 1.32 2022/02/12 20:05:11 tom Exp $
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
@@ -68,15 +68,15 @@
 .br
 \fBint savetty(void);\fP
 .sp
-\fBvoid getsyx(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid getsyx(int \fIy\fB, int \fIx\fB);\fR
 .br
-\fBvoid setsyx(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB);\fP
+\fBvoid setsyx(int \fIy\fB, int \fIx\fB);\fR
 .sp
-\fBint ripoffline(int \fP\fIline\fP\fB, int (*\fP\fIinit\fP\fB)(WINDOW *, int));\fP
+\fBint ripoffline(int \fIline\fB, int (*\fIinit\fB)(WINDOW *, int));\fR
 .br
-\fBint curs_set(int \fP\fIvisibility\fP\fB);\fP
+\fBint curs_set(int \fIvisibility\fB);\fR
 .br
-\fBint napms(int \fP\fIms\fP\fB);\fP
+\fBint napms(int \fIms\fB);\fR
 .br
 .SH DESCRIPTION
 The following routines give low-level access

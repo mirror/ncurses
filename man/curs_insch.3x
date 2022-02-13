@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_insch.3x,v 1.21 2021/12/25 21:49:32 tom Exp $
+.\" $Id: curs_insch.3x,v 1.22 2022/02/12 20:05:11 tom Exp $
 .TH curs_insch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -41,13 +41,13 @@
 .SH SYNOPSIS
 \fB#include <curses.h>\fP
 .sp
-\fBint insch(chtype \fP\fIch\fP\fB);\fP
+\fBint insch(chtype \fIch\fB);\fR
 .br
-\fBint winsch(WINDOW *\fP\fIwin\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBint winsch(WINDOW *\fIwin\fB, chtype \fIch\fB);\fR
 .sp
-\fBint mvinsch(int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBint mvinsch(int \fIy\fB, int \fIx\fB, chtype \fIch\fB);\fR
 .br
-\fBint mvwinsch(WINDOW *\fP\fIwin\fP\fB, int \fP\fIy\fP\fB, int \fP\fIx\fP\fB, chtype \fP\fIch\fP\fB);\fP
+\fBint mvwinsch(WINDOW *\fIwin\fB, int \fIy\fB, int \fIx\fB, chtype \fIch\fB);\fR
 .br
 .SH DESCRIPTION
 These routines insert the character \fIch\fP before the character under the
