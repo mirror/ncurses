@@ -28,7 +28,7 @@
   * authorization.                                                           *
   ****************************************************************************
   * Author: Thomas E. Dickey 1996-on
-  * @Id: resizeterm.3x,v 1.31 2022/02/12 20:07:29 tom Exp @
+  * @Id: resizeterm.3x,v 1.32 2022/02/20 00:32:18 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -63,28 +63,60 @@
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
        This is an extension to the curses library.  It provides callers with a
        hook  into  the  <STRONG>ncurses</STRONG>  data  to resize windows, primarily for use by
-       programs running in an X Window terminal (e.g., xterm).
+       programs running in  an  X  Window  terminal  (e.g.,  xterm)  when  the
+       terminal's screen size is changed by the user:
 
+       <STRONG>o</STRONG>   Curses  windows  cannot extend outside the screen.  If the terminal
+           is shrunk, curses windows must be shrunk to fit.
+
+       <STRONG>o</STRONG>   If the terminal is stretched, rows and/or columns can be  added  to
+           existing  windows.   The  added  cells  should  match  the  current
+           attributes of the windows.
+
+       If the calling program has not set up a handler for  <STRONG>SIGWINCH</STRONG>  when  it
+       initializes  <STRONG>ncurses</STRONG>  (e.g.,  using  <STRONG><A HREF="curs_initscr.3x.html">initscr(3x)</A></STRONG>  or <STRONG><A HREF="curs_initscr.3x.html">newterm(3x)</A></STRONG>), then
+       <STRONG>ncurses</STRONG> sets a handler for <STRONG>SIGWINCH</STRONG> which notifies the library  when  a
+       window-size   event   has   occurred.   The  library  checks  for  this
+       notification
+
+       <STRONG>o</STRONG>   when reading input data,
+
+       <STRONG>o</STRONG>   when implicitly resuming program mode (e.g., between <STRONG><A HREF="curs_initscr.3x.html">endwin(3x)</A></STRONG> and
+           <STRONG><A HREF="curs_refresh.3x.html">wrefresh(3x)</A></STRONG>), and
+
+       <STRONG>o</STRONG>   when explicitly resuming program mode in <STRONG><A HREF="curs_terminfo.3x.html">restartterm(3x)</A></STRONG>.
+
+       When the library has found that the terminal's window-size has changed,
+       it calls <STRONG>resizeterm</STRONG> to update its data structures.
+
+       An application which establishes its  own  <STRONG>SIGWINCH</STRONG>  handler  can  call
+       <STRONG>resizeterm</STRONG>,  but  in  that case, the library will not see <STRONG>SIGWINCH</STRONG>, and
+       proper layout will rely upon the application.
+
+
+</PRE><H2><a name="h2-FUNCTIONS">FUNCTIONS</a></H2><PRE>
 
 </PRE><H3><a name="h3-resizeterm">resizeterm</a></H3><PRE>
-       The function <STRONG>resizeterm</STRONG> resizes the standard and current windows to the
-       specified  dimensions,  and  adjusts other bookkeeping data used by the
-       <STRONG>ncurses</STRONG> library that record the window dimensions such as the <STRONG>LINES</STRONG> and
-       <STRONG>COLS</STRONG> variables.
+       The function <STRONG>resizeterm</STRONG> resizes the standard and current windows (i.e.,
+       <STRONG>stdscr</STRONG>  and  <STRONG>curscr</STRONG>)  to  the  specified  dimensions, and adjusts other
+       bookkeeping data used by the <STRONG>ncurses</STRONG> library  that  record  the  window
+       dimensions such as the <STRONG>LINES</STRONG> and <STRONG>COLS</STRONG> variables.
 
 
 </PRE><H3><a name="h3-resize_term">resize_term</a></H3><PRE>
-       Most  of the work is done by the inner function <STRONG>resize_term</STRONG>.  The outer
-       function <STRONG>resizeterm</STRONG> adds bookkeeping for the <STRONG>SIGWINCH</STRONG> handler, as  well
-       as repainting the soft-key area (see <STRONG><A HREF="curs_slk.3x.html">slk_touch(3x)</A></STRONG>).
+       Most  of  the  work  for  <STRONG>resizeterm</STRONG>  is  done  by  the  inner function
+       <STRONG>resize_term</STRONG>.  The outer function <STRONG>resizeterm</STRONG> adds  bookkeeping  for  the
+       <STRONG>SIGWINCH</STRONG>  handler,  as  well  as  repainting  the  soft-key  area  (see
+       <STRONG><A HREF="curs_slk.3x.html">slk_touch(3x)</A></STRONG>).
 
-       When  resizing  the windows, <STRONG>resize_term</STRONG> blank-fills the areas that are
-       extended.  The calling application should  fill  in  these  areas  with
-       appropriate data.
+       The <STRONG>resize_term</STRONG> function attempts to resize all  windows.   This  helps
+       with simple applications.  However:
 
-       The  <STRONG>resize_term</STRONG> function attempts to resize all windows.  However, due
-       to the calling convention of pads, it is not possible to  resize  these
-       without additional interaction with the application.
+       <STRONG>o</STRONG>   It is not possible to automatically resize pads.
+
+       <STRONG>o</STRONG>   Applications  which  have  complicated  layouts  should  check  for
+           <STRONG>KEY_RESIZE</STRONG> returned from <STRONG>wgetch</STRONG>, and  adjust  their  layout,  e.g.,
+           using <STRONG>wresize</STRONG> and <STRONG>mvwin</STRONG>, or by recreating the windows.
 
        When  resizing  windows,  <STRONG>resize_term</STRONG>  recursively  adjusts subwindows,
        keeping them within the updated parent window's limits.  If a top-level
@@ -116,7 +148,7 @@
 
        <STRONG>o</STRONG>   on receipt of a <STRONG>SIGWINCH</STRONG>, the handler sets a flag
 
-       <STRONG>o</STRONG>   which is tested in <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG> and <STRONG>doupdate</STRONG>,
+       <STRONG>o</STRONG>   which is tested in <STRONG><A HREF="curs_getch.3x.html">wgetch(3x)</A></STRONG>, <STRONG><A HREF="curs_refresh.3x.html">doupdate(3x)</A></STRONG> and <STRONG><A HREF="curs_terminfo.3x.html">restartterm(3x)</A></STRONG>,
 
        <STRONG>o</STRONG>   in turn, calling the <STRONG>resizeterm</STRONG> function,
 
@@ -166,7 +198,8 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-FUNCTIONS">FUNCTIONS</a>
 <ul>
 <li><a href="#h3-resizeterm">resizeterm</a></li>
 <li><a href="#h3-resize_term">resize_term</a></li>

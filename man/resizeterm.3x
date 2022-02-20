@@ -29,7 +29,7 @@
 .\"
 .\" Author: Thomas E. Dickey 1996-on
 .\"
-.\" $Id: resizeterm.3x,v 1.31 2022/02/12 20:07:29 tom Exp $
+.\" $Id: resizeterm.3x,v 1.32 2022/02/20 00:32:18 tom Exp $
 .TH resizeterm 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -51,28 +51,63 @@
 .PP
 This is an extension to the curses library.
 It provides callers with a hook into the \fBncurses\fP data to resize windows,
-primarily for use by programs running in an X Window terminal (e.g., xterm).
+primarily for use by programs running in an X Window terminal (e.g., xterm)
+when the terminal's screen size is changed by the user:
+.bP
+Curses windows cannot extend outside the screen.
+If the terminal is shrunk, curses windows must be shrunk to fit.
+.bP
+If the terminal is stretched,
+rows and/or columns can be added to existing windows.
+The added cells should match the current attributes of the windows.
+.PP
+If the calling program has not set up a handler for \fBSIGWINCH\fP
+when it initializes \fBncurses\fP
+(e.g., using \fBinitscr\fP(3X) or \fBnewterm\fP(3X)),
+then \fBncurses\fP sets a handler for \fBSIGWINCH\fP which notifies
+the library when a window-size event has occurred.
+The library checks for this notification
+.bP
+when reading input data,
+.bP
+when implicitly resuming program mode
+(e.g., between \fBendwin\fP(3X) and \fBwrefresh\fP(3X)),
+and
+.bP
+when explicitly resuming program mode in \fBrestartterm\fP(3X).
+.PP
+When the library has found that the terminal's window-size has
+changed, it calls \fBresizeterm\fP to update its data structures.
+.PP
+An application which establishes its own \fBSIGWINCH\fP handler
+can call \fBresizeterm\fP, but in that case, the library will not
+see \fBSIGWINCH\fP, and proper layout will rely upon the application.
+.SH FUNCTIONS
 .SS resizeterm
 .PP
 The function \fBresizeterm\fP resizes the standard and current windows
+(i.e., \fBstdscr\fP and \fBcurscr\fP)
 to the specified dimensions, and adjusts other bookkeeping data used by
 the \fBncurses\fP library that record the window dimensions
 such as the \fBLINES\fP and \fBCOLS\fP variables.
 .SS resize_term
 .PP
-Most of the work is done by the inner function \fBresize_term\fP.
+Most of the work for \fBresizeterm\fP is
+done by the inner function \fBresize_term\fP.
 The outer function \fBresizeterm\fP adds bookkeeping
 for the \fBSIGWINCH\fP handler,
 as well as repainting the soft-key area (see \fBslk_touch\fP(3X)).
 .PP
-When resizing the windows,
-\fBresize_term\fP blank-fills the areas that are extended.
-The calling application should fill in these areas with appropriate data.
-.PP
 The \fBresize_term\fP function attempts to resize all windows.
-However, due to the calling convention of pads,
-it is not possible to resize these
-without additional interaction with the application.
+This helps with simple applications.
+However:
+.bP
+It is not possible to automatically resize pads.
+.bP
+Applications which have complicated layouts should check for
+\fBKEY_RESIZE\fP returned from \fBwgetch\fP,
+and adjust their layout, e.g., using \fBwresize\fP and \fBmvwin\fP,
+or by recreating the windows.
 .PP
 When resizing windows, \fBresize_term\fP recursively adjusts subwindows,
 keeping them within the updated parent window's limits.
@@ -101,7 +136,10 @@ If ncurses is configured to supply its own \fBSIGWINCH\fP handler,
 .bP
 on receipt of a \fBSIGWINCH\fP, the handler sets a flag
 .bP
-which is tested in \fBwgetch\fP(3X) and \fBdoupdate\fP,
+which is tested in
+\fBwgetch\fP(3X),
+\fBdoupdate\fP(3X) and
+\fBrestartterm\fP(3X),
 .bP
 in turn, calling the \fBresizeterm\fP function,
 .bP

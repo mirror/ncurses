@@ -1,6 +1,6 @@
-# $Id: manhtml.aliases,v 1.19 2020/12/12 14:45:55 tom Exp $
+# $Id: manhtml.aliases,v 1.20 2022/02/20 00:39:41 tom Exp $
 #***************************************************************************
-# Copyright 2019,2020 Thomas E. Dickey                                     *
+# Copyright 2019-2020,2022 Thomas E. Dickey                                *
 # Copyright 2013,2017 Free Software Foundation, Inc.                       *
 #                                                                          *
 # Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -50,6 +50,7 @@ mvwin(3X)		curs_window(3X)
 newterm(3X)		curs_initscr(3X)
 refresh(3X)		curs_refresh(3X)
 reset_shell_mode(3X)	curs_kernel(3X)
+restartterm(3X)		curs_terminfo(3X)
 set_term(3X)		curs_initscr(3X)
 setcchar(3X)		curs_getcchar(3X)
 setupterm(3X)		curs_terminfo(3X)

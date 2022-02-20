@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.142 2022/02/06 01:44:34 tom Exp $
+ * $Id: picsmap.c,v 1.144 2022/02/19 21:30:04 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1383,7 +1383,6 @@ parse_img(const char *filename)
 		char *t;
 		char *s = t = strchr(buffer, '#');
 		bool matched = FALSE;
-		bool blurred = FALSE;
 
 		if (s != 0) {
 		    /* after the "#RGB", there are differences - just ignore */
@@ -1391,6 +1390,7 @@ parse_img(const char *filename)
 			++s;
 		    *++s = '\0';
 		}
+
 		if (match_c(buffer,
 			    "%d,%d: (%d,%d,%d,%d) #%x ",
 			    &col, &row,
@@ -1401,25 +1401,33 @@ parse_img(const char *filename)
 				   "%d,%d: (%f%%,%f%%,%f%%,%d) #%x ",
 				   &col, &row,
 				   &rf, &gf, &bf, &nocolor,
+				   &check) ||
+			   match_c(buffer,
+				   "%d,%d: (%f%%,%f%%,%f%%) #%x ",
+				   &col, &row,
+				   &rf, &gf, &bf,
 				   &check)) {
 		    matched = TRUE;
-		    blurred = TRUE;	/* 6.9.11 scaling is broken... */
+
 #define fp_fix(n) (int) (MaxRGB * (((n) > 100.0 ? 100.0 : (n)) / 100.0))
+
 		    r = fp_fix(rf);
 		    g = fp_fix(gf);
 		    b = fp_fix(bf);
 		}
+		if ((s - t) > 8)	/* 6 hex digits vs 8 */
+		    check /= 256;
 		if (matched) {
 		    int which, c;
+		    int want_r = (check >> 16) & 0xff;
+		    int want_g = (check >> 8) & 0xff;
+		    int want_b = (check >> 0) & 0xff;
 
-		    if ((s - t) > 8)	/* 6 hex digits vs 8 */
-			check /= 256;
-		    if (blurred) {
-			/* revisit this when ImageMagick is fixed */
-		    } else if (r > MaxRGB ||
-			       g > MaxRGB ||
-			       b > MaxRGB ||
-			       check != (unsigned) ((r << 16) | (g << 8) | b)) {
+#define fp_err(tst,ref) ((tst > MaxRGB) || ((tst - ref)*(tst - ref)) > 4)
+
+		    if (fp_err(r, want_r) ||
+			fp_err(g, want_g) ||
+			fp_err(b, want_b)) {
 			okay = FALSE;
 			break;
 		    }
