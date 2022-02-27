@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.527 2021/09/04 10:31:03 tom Exp $
+$Id: ncurses.c,v 1.528 2022/02/26 22:41:02 tom Exp $
 
 ***************************************************************************/
 
@@ -2885,6 +2885,10 @@ init_all_colors(bool xterm_colors, char *palette_file)
 	    while (fgets(buffer, sizeof(buffer), fp) != 0) {
 		if (sscanf(buffer, "scale:%d", &c) == 1) {
 		    scale = c;
+		    if (scale < 100)
+			scale = 100;
+		    if (scale > 1000)
+			scale = 1000;
 		} else if (sscanf(buffer, "%d:%d %d %d",
 				  &c,
 				  &red,

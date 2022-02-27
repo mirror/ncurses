@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.118 2021/08/15 20:07:11 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.119 2022/02/26 20:59:58 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -145,7 +145,7 @@ make_db_path(char *dst, const char *src, size_t limit)
 	    rc = 0;
 	}
     } else {
-	if (strlen(top) + strlen(src) + 2 <= limit) {
+	if ((strlen(top) + strlen(src) + 6) <= limit) {
 	    _nc_SPRINTF(dst, _nc_SLIMIT(limit) "%s/%s", top, src);
 	    rc = 0;
 	}

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -47,7 +47,7 @@
 #include <transform.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tput.c,v 1.97 2021/10/02 18:09:23 tom Exp $")
+MODULE_ID("$Id: tput.c,v 1.99 2022/02/26 23:19:31 tom Exp $")
 
 #define PUTS(s)		fputs(s, stdout)
 
@@ -160,7 +160,7 @@ tput_cmd(int fd, TTY * settings, bool opt_x, int argc, char **argv, int *used)
     name = check_aliases(argv[0], FALSE);
     *used = 1;
     if (is_reset || is_init) {
-	TTY oldmode;
+	TTY oldmode = *settings;
 
 	int terasechar = -1;	/* new erase character */
 	int intrchar = -1;	/* new interrupt character */
@@ -180,6 +180,7 @@ tput_cmd(int fd, TTY * settings, bool opt_x, int argc, char **argv, int *used)
 #endif
 	set_control_chars(settings, terasechar, intrchar, tkillchar);
 	set_conversions(settings);
+
 	if (send_init_strings(fd, &oldmode)) {
 	    reset_flush();
 	}
@@ -336,6 +337,7 @@ main(int argc, char **argv)
     int result = 0;
     int fd;
     int used;
+    TTY old_settings;
     TTY tty_settings;
     bool opt_x = FALSE;		/* clear scrollback if possible */
     bool is_alias;
@@ -391,6 +393,7 @@ main(int argc, char **argv)
 	quit(ErrUsage, "No value for $TERM and no -T specified");
 
     fd = save_tty_settings(&tty_settings, need_tty);
+    old_settings = tty_settings;
 
     if (setupterm(term, fd, &errret) != OK && errret <= 0)
 	quit(ErrTermType, "unknown terminal \"%s\"", term);
@@ -400,6 +403,7 @@ main(int argc, char **argv)
 	if ((argc <= 0) && !is_alias)
 	    usage(NULL);
 	while (argc > 0) {
+	    tty_settings = old_settings;
 	    code = tput_cmd(fd, &tty_settings, opt_x, argc, argv, &used);
 	    if (code != 0)
 		break;
@@ -433,7 +437,9 @@ main(int argc, char **argv)
 
 	argnow = argvec;
 	while (argnum > 0) {
-	    int code = tput_cmd(fd, &tty_settings, opt_x, argnum, argnow, &used);
+	    int code;
+	    tty_settings = old_settings;
+	    code = tput_cmd(fd, &tty_settings, opt_x, argnum, argnow, &used);
 	    if (code != 0) {
 		if (result == 0)
 		    result = ErrSystem(0);	/* will return value >4 */

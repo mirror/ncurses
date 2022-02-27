@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -39,7 +39,7 @@
 #include <progs.priv.h>
 #include <tty_settings.h>
 
-MODULE_ID("$Id: tabs.c,v 1.50 2021/10/10 00:54:41 tom Exp $")
+MODULE_ID("$Id: tabs.c,v 1.51 2022/02/26 22:44:44 tom Exp $")
 
 static GCC_NORETURN void usage(void);
 
@@ -128,7 +128,7 @@ decode_tabs(const char *tab_list, int margin)
     int prior = 0;
     int ch;
 
-    if (result == 0)
+    if (result == NULL)
 	failed("decode_tabs");
 
     if (margin < 0)
@@ -138,6 +138,8 @@ decode_tabs(const char *tab_list, int margin)
 	if (isdigit(UChar(ch))) {
 	    value *= 10;
 	    value += (ch - '0');
+	    if (value > max_cols)
+		value = max_cols;
 	} else if (ch == ',') {
 	    result[n] = value + prior + margin;
 	    if (n > 0 && result[n] <= result[n - 1]) {

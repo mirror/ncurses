@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3780 2022/02/20 00:40:32 tom Exp $
+-- $Id: NEWS,v 1.3782 2022/02/26 23:50:53 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,17 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220226
+	+ fix issues found with coverity:
+	  + rewrite canonical_name() function of infocmp to ensure buffer size
+	  + corrected use of original tty-modes in tput init/reset subcommands
+	  + modify tabs program to limit tab-stop values to max-columns
+	  + add limit-checks for palette rgb values in test/ncurses.c
+	+ add a few null-pointer checks to help with static-analysis.
+	+ enforce limit on number of soft-keys used in c++ binding.
+	+ adjust a buffer-limit in write_entry.c to quiet a bogus warning from
+	  gcc 12.0.1
 
 20220219
 	+ expanded description in man/resizeterm.3x

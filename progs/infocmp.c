@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.151 2021/06/17 21:11:08 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.152 2022/02/26 23:25:55 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -125,16 +125,20 @@ failed(const char *s)
 }
 
 static char *
-canonical_name(char *ptr, char *buf)
+canonical_name(char *source, char *target)
 /* extract the terminal type's primary name */
 {
-    char *bp;
+    int limit = NAMESIZE;
 
-    _nc_STRCPY(buf, ptr, NAMESIZE);
-    if ((bp = strchr(buf, '|')) != 0)
-	*bp = '\0';
+    while (--limit > 0) {
+	char ch = *source++;
+	if (ch == '|')
+	    break;
+	*target++ = ch;
+    }
+    *target = '\0';
 
-    return (buf);
+    return (target);
 }
 
 static bool
