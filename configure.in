@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.741 2022/01/23 00:11:08 tom Exp $
+dnl $Id: configure.in,v 1.742 2022/03/05 22:13:12 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.741 $)
+AC_REVISION($Revision: 1.742 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1640,7 +1640,7 @@ AC_SUBST(INSTALL_OPT_P)
 CF_ENABLE_WARNINGS(Wno-unknown-pragmas Wswitch-enum,yes)
 
 if test "x$enable_warnings" = "xyes"; then
- 	CF_ADD_ADAFLAGS(-gnatg)
+ 	CF_ADD_ADAFLAGS(-gnatwa -gnatyg)
 	if test "x$cf_with_cxx" = xyes ; then
 		CF_GXX_WARNINGS(Wno-unused)
 	fi

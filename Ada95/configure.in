@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2020,2021 Thomas E. Dickey                                *
+dnl Copyright 2018-2021,2022 Thomas E. Dickey                                *
 dnl Copyright 2010-2016,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.84 2021/10/30 20:47:52 tom Exp $
+dnl $Id: configure.in,v 1.85 2022/03/05 22:20:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210509)
-AC_REVISION($Revision: 1.84 $)
+AC_REVISION($Revision: 1.85 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -356,7 +356,7 @@ CF_DISABLE_ECHO
 
 CF_ENABLE_WARNINGS(Wno-unknown-pragmas Wswitch-enum,yes)
 if test "x$enable_warnings" = "xyes"; then
- 	CF_ADD_ADAFLAGS(-gnatg)
+ 	CF_ADD_ADAFLAGS(-gnatwa -gnatyg)
 fi
 
 ###	use option --enable-assertions to turn on generation of assertion code

@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.152 2022/02/26 23:25:55 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.153 2022/03/05 16:15:48 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -124,7 +124,7 @@ failed(const char *s)
     ExitProgram(EXIT_FAILURE);
 }
 
-static char *
+static void
 canonical_name(char *source, char *target)
 /* extract the terminal type's primary name */
 {
@@ -137,8 +137,6 @@ canonical_name(char *source, char *target)
 	*target++ = ch;
     }
     *target = '\0';
-
-    return (target);
 }
 
 static bool
@@ -1136,8 +1134,8 @@ file_comparison(int argc, char *argv[])
 	    if (entryeq(&qp->tterm, &rp->tterm) && useeq(qp, rp)) {
 		char name1[NAMESIZE], name2[NAMESIZE];
 
-		(void) canonical_name(qp->tterm.term_names, name1);
-		(void) canonical_name(rp->tterm.term_names, name2);
+		canonical_name(qp->tterm.term_names, name1);
+		canonical_name(rp->tterm.term_names, name2);
 
 		(void) printf("%s = %s\n", name1, name2);
 	    }
@@ -1165,8 +1163,8 @@ file_comparison(int argc, char *argv[])
 		entries[0] = *qp;
 		entries[1] = *rp;
 
-		(void) canonical_name(qp->tterm.term_names, name1);
-		(void) canonical_name(rp->tterm.term_names, name2);
+		canonical_name(qp->tterm.term_names, name1);
+		canonical_name(rp->tterm.term_names, name2);
 
 		switch (compare) {
 		case C_DIFFERENCE:

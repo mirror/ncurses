@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3782 2022/02/26 23:50:53 tom Exp $
+-- $Id: NEWS,v 1.3784 2022/03/05 22:15:20 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220305
+	+ replace obsolescent "-gnatg" option with "-gnatwa" and "-gnatyg", to
+	  work around build problems with gnat 12.
+	+ update external links in Ada95.html
+	+ trim unused return-value from canonical_name().
 
 20220226
 	+ fix issues found with coverity:
