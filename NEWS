@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3784 2022/03/05 22:15:20 tom Exp $
+-- $Id: NEWS,v 1.3786 2022/03/12 19:32:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220312
+	+ add xterm+acs building-block -TD
+	+ add xterm-p370, for use in older terminals -TD
+	+ add dec+sl to xterm-new, per patch #371 -TD
+	+ add mosh and mosh-256color -TD
 
 20220305
 	+ replace obsolescent "-gnatg" option with "-gnatwa" and "-gnatyg", to
