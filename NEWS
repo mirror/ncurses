@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3786 2022/03/12 19:32:10 tom Exp $
+-- $Id: NEWS,v 1.3788 2022/03/20 00:18:08 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220319
+	+ add xgterm -TD
+	+ correct setal in mintty/tmux entries, add to vte-2018 (report by
+	  Robert Lange)
+	+ add blink to vte-2018 (report by Robert Lange)
+	+ improve tic warning about XT versus redundant tsl, etc.
 
 20220312
 	+ add xterm+acs building-block -TD

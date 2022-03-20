@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.308 2021/12/12 00:00:33 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.309 2022/03/19 20:38:50 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -1741,6 +1741,8 @@ check_screen(TERMTYPE2 *tp)
 	} else if (have_XT && screen_base) {
 	    _nc_warning("screen's \"screen\" entries should not have XT set");
 	} else if (have_XT) {
+	    char *s;
+
 	    if (!have_kmouse && is_screen) {
 		if (VALID_STRING(key_mouse)) {
 		    _nc_warning("value of kmous inconsistent with screen's usage");
@@ -1756,7 +1758,9 @@ check_screen(TERMTYPE2 *tp)
 				"to have 39/49 parameters", name_39_49);
 		}
 	    }
-	    if (VALID_STRING(to_status_line))
+	    if (VALID_STRING(to_status_line)
+		&& (s = strchr(to_status_line, ';')) != NULL
+		&& *++s == '\0')
 		_nc_warning("\"tsl\" capability is redundant, given XT");
 	} else {
 	    if (have_kmouse

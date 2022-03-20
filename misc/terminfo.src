@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.981 $
-#	$Date: 2022/03/12 19:04:55 $
+#	$Revision: 1.985 $
+#	$Date: 2022/03/20 00:10:41 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4233,9 +4233,7 @@ mintty|Cygwin Terminal,
 	setal=\E[5%p1%dm, use=xterm+256color,
 	use=mintty+common,
 mintty-direct|Cygwin Terminal direct-color,
-	setal=\E[%?%p1%{8}%<%t5%p1%d%e58:2::%p1%{65536}%/%d:%p1
-	      %{256}%/%{255}%&%d:%p1%{255}%&%d%;m,
-	use=xterm+direct, use=mintty+common,
+	use=kitty+setal, use=xterm+direct, use=mintty+common,
 mintty+common|shared capabilities for mintty,
 	km@, npc,
 	kcbt=\E[Z, kent=\EOM, rmm@, rmpch=\E[10m,
@@ -4659,6 +4657,7 @@ xterm-r5|xterm R5 version,
 	sgr0=\E[m, smir=\E[4h, smkx=\E[?1h\E=, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, use=vt220+pcedit, use=vt100+enq,
 	use=xterm+kbs,
+
 # Compatible with the R6 xterm
 # (from XFree86 3.2 distribution, <acsc> and <it> added, <blink@> removed)
 # added khome/kend, hts based on the R6 xterm code - TD
@@ -5813,6 +5812,30 @@ color_xterm|cx|cx100|color_xterm color terminal emulator for X,
 	smcup=\E[?1;41s\E[?1;41h\E=, smir=\E[4h, smso=\E[7m,
 	smul=\E[4m, use=ecma+color, use=vt220+keypad,
 
+# The IRAF source has a terminfo using "xterm-r5", but line-drawing does not
+# work in that case.  This entry uses xterm+acs, to work around that problem.
+#
+# Home/end keys do not work, due to a bug in the X Consortium xterm on which
+# this is based:
+#
+#	https://invisible-island.net/xterm/xterm.faq.html#bug_xterm_r6
+#
+# Comparing to the X11R5 source, xgterm has dynamic and ANSI colors (probably
+# not bce).  It interchanges mouse buttons 2/3 for menus.
+#
+# It also has a few features found in later versions of xterm:
+# - vi-button and dired-button,
+# - i18n stuff like X11R6.
+# - colorBD, colorUL
+# - scrollBarRight
+#
+# Debian provides a package for xgterm (and iraf).  Although the source for
+# xgterm implements the control-sequences for ANSI color, the packaged xgterm
+# does nothing with those, even after installing the app-defaults file which
+# was overlooked by the Debian packager.
+xgterm|graphic terminal for IRAF,
+	use=xterm+acs, use=xterm-r5, use=xterm+keypad,
+
 # The 'nxterm' distributed with Redhat Linux 5.2 is a slight rehack of
 # xterm-sb_right-ansi-3d, which implements ANSI colors, but does not support
 # SGR 39 or 49.  SGR 0 does reset colors (along with everything else).  This
@@ -6031,8 +6054,11 @@ vte-2017|VTE 0.50.2,
 # 2018, respectively. Overline (Smol/Rmol) has been supported since December
 # 2017.
 vte-2018|VTE 0.51.2,
+	blink=\E[5m, enacs=\E(B\E)0,
+	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;
+	    8%;%?%p1%p3%|%t;7%;m%?%p9%t\016%e\017%;,
 	Rmol=\E[55m, Smol=\E[53m, Smulx=\E[4:%p1%dm,
-	use=vte-2017,
+	use=kitty+setal, use=vte-2017,
 
 vte|VTE aka GNOME Terminal,
 	use=vte-2018,
@@ -7677,6 +7703,10 @@ kitty+common|KovId's TTY common properties,
 	use=ecma+strikeout, use=ecma+italics,
 	use=xterm+alt1049, use=att610+cvis, use=xterm+tmux,
 
+kitty+setal|set underline colors (nonstandard),
+	setal=\E[58:2::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1
+	      %{255}%&%dm,
+
 ######## WAYLAND CLIENTS
 
 #### Foot
@@ -8235,9 +8265,7 @@ tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
 
 tmux-direct|tmux with direct-color indexing,
-	setal=\E[%?%p1%{8}%<%t5%p1%d%e58:2::%p1%{65536}%/%d:%p1
-	      %{256}%/%{255}%&%d:%p1%{255}%&%d%;m,
-	use=xterm+direct, use=tmux,
+	use=kitty+setal, use=xterm+direct, use=tmux,
 
 #### Mosh
 # https://mosh.org/
@@ -27402,5 +27430,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add xterm-p370, for use in older terminals -TD
 #	+ add dec+sl to xterm-new, per patch #371 -TD
 #	+ add mosh and mosh-256color -TD
+#
+# 2022-03-19
+#	+ add xgterm -TD
+#	+ correct setal in mintty/tmux entries, add to vte-2018 (report by
+#	  Robert Lange)
+#	+ add blink to vte-2018 (report by Robert Lange)
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
