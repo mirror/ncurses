@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.985 $
-#	$Date: 2022/03/20 00:10:41 $
+#	$Revision: 1.997 $
+#	$Date: 2022/03/26 21:59:51 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2082,6 +2082,32 @@ cons60l1-m|cons60-iso-m|FreeBSD console w/iso 8859-1 chars (60-line mono),
 #	http://svnweb.freebsd.org/base/stable/8/sys/dev/syscons/
 # in particular scterm-teken.c
 #
+# For FreeBSD 12 and 13:
+# ---------------------
+# In newer releases, it is no longer possible to boot into a configuration that
+# works with syscons.  teken's "cons25" configuration supports only the first
+# 12 function keys.  One may switch at runtime between the two flavors of
+# function keys using vidcontrol:
+#	vidcontrol -T cons25
+#	vidcontrol -T xterm
+# But for each, teken implements only about a quarter of the imitated terminal's
+# terminal descriptions.
+#
+# tack:
+#	VT100 line-drawing does not work (UTF-8 equivalents do).
+#	Shift/control modifiers have no effect on special keys.
+#	Meta does not work.
+# vttest:
+#	supports REP (repeat).
+#	still does not support left/right margins
+#	SU/SD work, but not SL/SR
+#	alternate screen does not work
+#	ENQ/DA1 is unimplemented (the terminal does not identify itself)
+#	CPR, XCPR are unimplemented (i.e., vttest and resize are broken)
+#	implements X11 (original) xterm-mouse.
+# ncurses:
+#	UTF-8 line-drawing works, including some double/thick lines
+#
 # For FreeBSD 9 and 10:
 # --------------------
 # The /etc/ttys entries for console and other ttys are all configured to set
@@ -2111,7 +2137,7 @@ cons60l1-m|cons60-iso-m|FreeBSD console w/iso 8859-1 chars (60-line mono),
 #
 # Those are removed from this entry's acsc string to avoid confusion.
 # The resulting description provides correct line-drawing and function-keys -TD
-teken|syscons with teken,
+teken-2018|teken as of 2018,
 	bw@, mir, xenl,
 	acsc=0\333a\260f\370g\361h\261j\331k\277l\332m\300n\305q
 	     \304t\303u\264v\301w\302x\263y\363z\362~\371,
@@ -2123,6 +2149,42 @@ teken|syscons with teken,
 	kpp=\E[5~, rmir=\E[4l, smir=\E[4h, tbc=\E[3g,
 	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
 	vpa=\E[%i%p1%dd, use=vt220+cvis, use=cons25,
+
+teken-2022|teken as of 2022,
+	am, bce, eo, mir, msgr, npc,
+	colors#8, cols#80, it#8, lines#25, ncv#21, pairs#64, U8#1,
+	bold=\E[1m, cr=\r, cub1=^H, dim=\E[30;1m, ech=\E[%p1%dX,
+	ind=\E[S, kbs=^H, kent=\r, nel=\E[E, op=\E[x, rev=\E[7m,
+	ri=\E[T, rmso=\E[27m, rs2=\E[x\E[m\Ec, setab=\E[4%p1%dm,
+	setaf=\E[3%p1%dm,
+	sgr=\E[0%?%p1%t;2;7%;%?%p3%t;7%;%?%p5%t;30;1%;%?%p6%t;1%;m,
+	sgr0=\E[m, use=vt220+cvis, use=ecma+index,
+	use=ansi+arrows, use=ansi+csr, use=ansi+cup,
+	use=ansi+erase, use=ansi+idc, use=ansi+idl,
+	use=ansi+local, use=ansi+rca2, use=ansi+sgrso,
+	use=ansi+tabs,
+
+teken-vt+fkeys|teken's xterm special keys,
+	kdch1=\E[3~, kend=\E[F, kf1=\EOP, kf10=\E[21~, kf11=\E[23~,
+	kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS, kf5=\E[15~,
+	kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~, khome=\E[H,
+	kich1=\E[2~, knp=\E[6~, kpp=\E[5~,
+
+teken-sc+fkeys|teken's syscons special keys,
+	kdch1=^?, kend=\E[F, kf1=\E[M, kf10=\E[V, kf11=\E[W,
+	kf12=\E[X, kf2=\E[N, kf3=\E[O, kf4=\E[P, kf5=\E[Q, kf6=\E[R,
+	kf7=\E[S, kf8=\E[T, kf9=\E[U, khome=\E[H, kich1=\E[L,
+	knp=\E[G, kpp=\E[I,
+
+teken-sc|teken imitating syscons,
+	use=teken-sc+fkeys, use=teken-2022,
+
+teken|teken-vt|teken imitating xterm,
+	xenl, use=teken-vt+fkeys, use=xterm+x11mouse,
+	use=teken-2022,
+
+teken-16color|teken using 16 colors,
+	use=ibm+16color, use=teken,
 
 #### 386BSD and BSD/OS Consoles
 #
@@ -6054,12 +6116,24 @@ vte-2017|VTE 0.50.2,
 # 2018, respectively. Overline (Smol/Rmol) has been supported since December
 # 2017.
 vte-2018|VTE 0.51.2,
-	blink=\E[5m, enacs=\E(B\E)0,
+	AX,
+	blink=\E[5m, enacs=\E(B\E)0, nel=\EE,
+	rep=%p1%c\E[%p2%{1}%-%db,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;
 	    8%;%?%p1%p3%|%t;7%;m%?%p9%t\016%e\017%;,
-	Rmol=\E[55m, Smol=\E[53m, Smulx=\E[4:%p1%dm,
-	use=kitty+setal, use=vte-2017,
+	Rmol=\E[55m, Se=\E[1 q, Smol=\E[53m, Smulx=\E[4:%p1%dm,
+	use=xterm+alt+title, use=xterm+tmux, use=kitty+setal,
+	use=vte-2017,
 
+# Summarizing as of March 2022, these terminfo-capabilities of xterm are
+# absent from VTE:
+# - DEC application keypad mode
+# - DEC-compatible status-line
+# - DEC left/right margin support
+# - DEC printer controls
+# - AT&T cursor-blinking
+# - meta mode, as documented in terminfo(5)
+# - xterm's extension to clear scrollback
 vte|VTE aka GNOME Terminal,
 	use=vte-2018,
 
@@ -27200,7 +27274,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add/use xterm+keypad in xterm-new (report by Alain D D Williams) -TD
 #	+ update terminator entry -TD
 #	+ remove hard-tabs from ti703 (report by Robert Clausecker)
-#	+ add Smol/Rmol for tmux, vte-2018 -Nicholas Marriott
+#	+ add Smol/Rmol for mintty, vte-2018 -Nicholas Marriott
 #
 # 2019-06-01
 #	+ add rs1 to konsole, mlterm -TD
@@ -27436,5 +27510,10 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ correct setal in mintty/tmux entries, add to vte-2018 (report by
 #	  Robert Lange)
 #	+ add blink to vte-2018 (report by Robert Lange)
+#
+# 2022-03-26
+#	+ update teken -TD
+#	+ add teken-16color, teken-vt and teken-sc -TD
+#	+ add a few missing details for vte-2018 (report by Robert Lange) -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

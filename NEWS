@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3788 2022/03/20 00:18:08 tom Exp $
+-- $Id: NEWS,v 1.3790 2022/03/26 22:01:51 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -46,6 +46,11 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20220326
+	+ update teken -TD
+	+ add teken-16color, teken-vt and teken-sc -TD
+	+ add a few missing details for vte-2018 (report by Robert Lange) -TD
+
 20220319
 	+ add xgterm -TD
 	+ correct setal in mintty/tmux entries, add to vte-2018 (report by
@@ -56,7 +61,7 @@ it is not possible to add this information.
 20220312
 	+ add xterm+acs building-block -TD
 	+ add xterm-p370, for use in older terminals -TD
-	+ add dec+sl to xterm-new, per patch #371 -TD
+	+ add dec+sl to xterm-new, per xterm patch #371 -TD
 	+ add mosh and mosh-256color -TD
 
 20220305
