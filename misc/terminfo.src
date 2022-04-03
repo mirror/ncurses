@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.997 $
-#	$Date: 2022/03/26 21:59:51 $
+#	$Revision: 1.1001 $
+#	$Date: 2022/03/27 19:32:34 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -349,7 +349,7 @@ ansi+inittabs|ANSI initial tab-stops,
 	it#8, use=ansi+tabs,
 ansi+erase|ANSI clear screen/line,
 	clear=\E[H\E[J, ed=\E[J, el=\E[K,
-ansi+rca|ANSI relative cursor-addressing,
+ansi+rca|ANSI relative cursor-addressing (1-based),
 	hpa=\E[%p1%{1}%+%dG, vpa=\E[%p1%{1}%+%dd,
 ansi+rca2|ANSI relative cursor-addressing,
 	hpa=\E[%i%p1%dG, vpa=\E[%i%p1%dd,
@@ -365,7 +365,7 @@ ansi+idc1|ANSI insert/delete one character,
 	dch1=\E[P, ich1=\E[@, rmir=\E[4l, smir=\E[4h,
 ansi+idc|ANSI insert/delete characters,
 	dch=\E[%p1%dP, ich=\E[%p1%d@, use=ansi+idc1,
-ansi+arrows|ANSI normal-mode cursor-keys,
+ansi+arrows|ANSI normal-mode home and cursor-keys,
 	kbs=^H, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C, kcuu1=\E[A,
 	khome=\E[H,
 ansi+sgr|ANSI graphic renditions,
@@ -427,7 +427,7 @@ klone+sgr|attribute control for ansi.sys displays,
 	use=klone+acs,
 
 # Most Intel boxes do not treat "invis" (invisible) text.
-klone+sgr8|attribute control for ansi.sys displays,
+klone+sgr8|attribute control for ansi.sys displays with invis,
 	invis=\E[8m,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p6
 	    %t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
@@ -526,7 +526,7 @@ ansi-mini|any ANSI terminal with pessimistic assumptions,
 	use=ansi+erase,
 
 # ansi-mtabs adds relative addressing and minimal tab support
-ansi-mtabs|any ANSI terminal with pessimistic assumptions,
+ansi-mtabs|any ANSI terminal with pessimistic assumptions (relative addressing),
 	it#8,
 	ht=^I, use=ansi-mini, use=ansi+local1,
 
@@ -954,7 +954,7 @@ beterm|BeOS Terminal,
 # All linux kernels since 1.2.13 (at least) set the screen size
 # themselves; this entry assumes that capability.
 #
-linux-basic|Linux console,
+linux-basic|Linux console (basic),
 	am, bce, eo, mir, msgr, xenl, xon,
 	it#8, ncv#18, U8#1,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i
@@ -1250,7 +1250,7 @@ mach-gnu|GNU Mach,
 	    2%;%?%p6%t;1%;%?%p7%t;8%;m,
 	use=ecma+index, use=mach,
 
-mach-gnu-color|Mach console with ANSI color,
+mach-gnu-color|GNU Mach console with ANSI color,
 	colors#8, pairs#64,
 	op=\E[37;40m, rmso=\E[27m, setab=\E[4%p1%dm,
 	setaf=\E[3%p1%dm, use=mach-gnu,
@@ -2405,10 +2405,10 @@ vt52-basic|VT52 for emulators,
 # support:
 vt100+keypad|DEC VT100 numeric keypad no fkeys,
 	ka1=\EOq, ka3=\EOs, kb2=\EOr, kc1=\EOp, kc3=\EOn,
-vt100+pfkeys|DEC VT100 numeric keypad,
+vt100+pfkeys|DEC VT100 numeric keypad (kf1-kf4),
 	kent=\EOM, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
 	use=vt100+keypad,
-vt100+fnkeys|DEC VT100 numeric keypad,
+vt100+fnkeys|DEC VT100 numeric keypad (kf0-kf10),
 	kf0=\EOy, kf10=\EOx, kf5=\EOt, kf6=\EOu, kf7=\EOv, kf8=\EOl,
 	kf9=\EOw, use=vt100+pfkeys,
 #
@@ -4366,7 +4366,7 @@ mintty+common|shared capabilities for mintty,
 # retrieving the window title, and for setting the window size (i.e., using
 # "resize -s"), though it does not pass SIGWINCH to the application if the
 # user resizes the window with the mouse.
-teraterm2.3|Tera Term Pro,
+teraterm2.3|Tera Term Pro 2.3,
 	km,
 	ncv#43, vt@,
 	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260i
@@ -4400,7 +4400,7 @@ teraterm2.3|Tera Term Pro,
 #	- it recognizes the dtterm window controls for reporting size in
 #	  characters and pixels.
 #	- it passes SIGWINCH.
-teraterm4.59|Tera Term Pro,
+teraterm4.59|Tera Term Pro 4.59,
 	bce, xenl@,
 	ncv#41,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
@@ -4430,7 +4430,7 @@ teraterm4.59|Tera Term Pro,
 #	+ recognizes xterm's original direct-colors sequences, but result is
 #	  poor.
 #	+ no UTF-8 apparent when UTF-8 is set, with font Lucida Control
-teraterm4.97|Tera Term Pro,
+teraterm4.97|Tera Term Pro 4.97,
 	XT, use=ecma+color, use=xterm+sm+1006, use=teraterm4.59,
 teraterm-256color|TeraTerm with xterm 256-colors,
 	use=xterm+256setaf, use=teraterm,
@@ -4908,7 +4908,7 @@ xterm+kbs|fragment for backspace key,
 #  ---------------------------------
 # The meta key may also be used as a modifier in this scheme, adding another
 # bit to the parameter.
-xterm+pcfkeys|fragment for PC-style fkeys,
+xterm+pcfkeys|xterm fragment for PC-style fkeys,
 	use=xterm+app, use=xterm+pcf2, use=xterm+pcc2,
 	use=xterm+pce2,
 
@@ -5051,7 +5051,7 @@ xterm+pcf2|fragment with modifyFunctionKeys:2,
 	kf8=\E[19~, kf9=\E[20~,
 #
 # Chunks from xterm #230:
-xterm+pce2|fragment with modifyCursorKeys:2,
+xterm+pce2|fragment with modifyCursorKeys:2 editing-keys,
 	kDC=\E[3;2~, kEND=\E[1;2F, kHOM=\E[1;2H, kIC=\E[2;2~,
 	kNXT=\E[6;2~, kPRV=\E[5;2~, kich1=\E[2~, knp=\E[6~,
 	kpp=\E[5~, kDC3=\E[3;3~, kDC4=\E[3;4~, kDC5=\E[3;5~,
@@ -5283,7 +5283,7 @@ xterm-88color|xterm with 88 colors,
 # is of interest only to the numerically illiterate), is compatible with other
 # terminal descriptions written for curses.  It relies upon the extended range
 # for numeric capabilities provided in ncurses 6.1:
-xterm+direct2|xterm with direct-color indexing,
+xterm+direct2|xterm with direct-color indexing (old building-block),
 	RGB,
 	colors#0x1000000, pairs#0x10000, CO#8,
 	initc@, op=\E[39;49m,
@@ -5298,7 +5298,7 @@ xterm-direct2|xterm with direct-color indexing (old),
 # That in turn had a problem: in the original patch submitted for KDE konsole
 # in 2006, the submitter and the developer alike overlooked a "color space
 # identifier" parameter.  This version provides for that parameter:
-xterm+direct|xterm with direct-color indexing,
+xterm+direct|xterm with direct-color indexing (building-block),
 	RGB,
 	colors#0x1000000, pairs#0x10000, CO#8,
 	initc@, op=\E[39;49m,
@@ -5320,7 +5320,7 @@ mlterm-direct|mlterm with direct-color indexing,
 # that xterm's original implementation should have used colons for the
 # subparameter separators, but chose not to correct this in konsole.  As of
 # late 2017, konsole still accepts only the nonstandard semicolon delimiters.
-xterm+indirect|xterm with direct-color indexing (old),
+xterm+indirect|xterm with direct-color indexing (old legacy building-block),
 	RGB,
 	colors#0x1000000, pairs#0x10000,
 	initc@, op=\E[39;49m,
@@ -5364,7 +5364,7 @@ nsterm-direct|nsterm with direct-color indexing,
 # palette, though the intrusion of indexed colors on the direct-color space
 # would be more noticeable.
 
-xterm+direct16|xterm with direct-color indexing,
+xterm+direct16|xterm with direct-color indexing (16-color building-block),
 	CO#16,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%?%p1%{16}%<%t%p1%{92}%+%d%e48
 	      :2::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1%{255}%&
@@ -5377,7 +5377,7 @@ xterm+direct16|xterm with direct-color indexing,
 xterm-direct16|xterm with direct-colors and 16 indexed colors,
 	use=xterm+direct16, use=xterm,
 
-xterm+direct256|xterm with direct-color indexing,
+xterm+direct256|xterm with direct-color indexing (256-color building-block),
 	CO#0x100,
 	setab=\E[%?%p1%{8}%<%t4%p1%d%e%p1%{16}%<%t10%p1%{8}%-%d%e%?
 	      %p1%{256}%<%t48;5;%p1%d%e48:2::%p1%{65536}%/%d:%p1
@@ -5410,7 +5410,7 @@ xterm-direct256|xterm with direct-colors and 256 indexed colors,
 # Se resets the cursor style to the terminal power-on default.
 #
 # Cs and Cr set and reset the cursor colour.
-xterm+tmux|advanced xterm features used in tmux,
+xterm+tmux|advanced xterm features used in tmux (cursor style 2),
 	Cr=\E]112\007, Cs=\E]12;%p1%s\007,
 	Ms=\E]52;%p1%s;%p2%s\007, Se=\E[2 q, Ss=\E[%p1%d q,
 xterm+tmux2|advanced xterm features used in tmux,
@@ -5545,7 +5545,7 @@ xterm-noapp|xterm with cursor keys in normal mode,
 	rmcup@, rmkx=\E>, smcup@, smkx=\E=, use=xterm+noapp,
 	use=xterm,
 
-xterm-24|vs100|xterms|xterm terminal emulator (X Window System),
+xterm-24|vs100|xterms|xterm terminal emulator 24-line (X Window System),
 	lines#24, use=xterm-old,
 
 # This is xterm for ncurses.
@@ -5724,15 +5724,15 @@ xterm-x11hilite|X11 mouse with highlight,
 
 # xterm patch #83 (1998/10/7), added Jason Bacon's changes to provide an
 # "any-event" mouse mode.
-xterm+sm+1002|xterm any-event mouse,
+xterm+sm+1002|xterm any-event mouse (building-block),
 	kmous=\E[M, XM=\E[?1002%?%p1%{1}%=%th%el%;,
 xterm-1002|xterm any-event mouse,
 	use=xterm+sm+1002, use=xterm,
 
-xterm+sm+1003|testing xterm-mouse,
+xterm+sm+1003|xterm any-button mouse (building-block),
 	kmous=\E[M, XM=\E[?1003%?%p1%{1}%=%th%el%;,
 
-xterm-1003|testing xterm-mouse,
+xterm-1003|xterm any-button mouse,
 	use=xterm+sm+1003, use=xterm,
 
 # xterm patch #116 (1999/9/25) added Stephen P Wall's changes to support DEC
@@ -5748,7 +5748,7 @@ xterm-1003|testing xterm-mouse,
 # where the coordinates in the mouse response would be encoded in UTF-8,
 # thereby extending the range of coordinates past 222=(255-33).  This is the
 # "1005" mouse mode.
-xterm+sm+1005|xterm UTF-8 mouse,
+xterm+sm+1005|xterm UTF-8 mouse (building block),
 	kmous=\E[M, XM=\E[?1005;1000%?%p1%{1}%=%th%el%;,
 	xm=\E[M%?%p4%t3%e%p3%'\s'%+%c%;%p2%'!'%+%u%p1%'!'%+%u,
 xterm-1005|xterm UTF-8 mouse,
@@ -5765,7 +5765,7 @@ xterm-1005|xterm UTF-8 mouse,
 # As an alternative (and fixing the longstanding limitation of X11 mouse
 # protocol regarding button-releases), I provided the 1006 mode, referring
 # to it as "SGR 1006" since the replies resemble the SGR control string:
-xterm+sm+1006|xterm SGR-mouse,
+xterm+sm+1006|xterm SGR-mouse (building block),
 	kmous=\E[<, XM=\E[?1006;1000%?%p1%{1}%=%th%el%;,
 	xm=\E[<%i%p3%d;%p1%d;%p2%d;%?%p4%tM%em%;,
 xterm-1006|xterm SGR-mouse,
@@ -5962,7 +5962,7 @@ gnome-rh62|GNOME terminal,
 #	vt100 TBC (tab reset) is not implemented.
 #	xterm alternate screen controls do not restore cursor position properly
 #	it hangs in tack after running function-keys test.
-gnome-rh72|GNOME Terminal,
+gnome-rh72|GNOME Terminal in RedHat 7,
 	bce, km@,
 	kdch1=\E[3~, kf1=\EOP, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
 	rmam=\E[?7l,
@@ -5984,7 +5984,7 @@ gnome-rh72|GNOME Terminal,
 # kf1 and kf10 are not tested since they're assigned (hardcoded?) to menu
 # operations.  Shift-tab generates a distinct sequence so it can be argued
 # that it implements kcbt.
-gnome-rh80|GNOME Terminal,
+gnome-rh80|GNOME Terminal in RedHat 8,
 	bce@, msgr@,
 	ech=\E[%p1%dX, flash=\E[?5h$<100/>\E[?5l, kbs=^?,
 	kcbt=\E^I, op=\E[39;49m, use=gnome-rh72,
@@ -5992,7 +5992,7 @@ gnome-rh80|GNOME Terminal,
 # GNOME Terminal 2.2.1 (Redhat 9.0)
 #
 # bce and msgr are repaired.
-gnome-rh90|GNOME Terminal,
+gnome-rh90|GNOME Terminal in RedHat 9,
 	bce, msgr, XT,
 	hpa=\E[%i%p1%dG, kDC=\E[3;2~, kLFT=\EO2D, kRIT=\EO2C,
 	kb2=\E[E, kcbt=\E[Z, kend=\EOF, khome=\EOH, tbc=\E[3g,
@@ -6001,7 +6001,7 @@ gnome-rh90|GNOME Terminal,
 
 # GNOME Terminal 2.14.2 (Fedora Core 5)
 # Ed Catmur notes that gnome-terminal has recognized soft-reset since May 2002.
-gnome-fc5|GNOME Terminal,
+gnome-fc5|GNOME Terminal in Fedora Core 5,
 	rs1=\Ec,
 	rs2=\E7\E[r\E8\E[m\E[?7h\E[!p\E[?1;3;4;6l\E[4l\E>\E[?1000l
 	    \E[?25h,
@@ -6065,7 +6065,7 @@ gnome-2012|GNOME Terminal 3.6.0,
 #
 # The parameters with \EO (SS3) are technically an error, since SS3 should have
 # no parameters.  This appears to be rote copying based on xterm+pcc0.
-vte+pcfkeys|VTE's variation on xterm+pcfkeys,
+vte+pcfkeys|VTE's variation on xterm+pcfkeys (building block),
 	kf1=\EOP, kf13=\EO1;2P, kf14=\EO1;2Q, kf15=\EO1;2R,
 	kf16=\EO1;2S, kf2=\EOQ, kf25=\EO1;5P, kf26=\EO1;5Q,
 	kf27=\EO1;5R, kf28=\EO1;5S, kf3=\EOR, kf37=\EO1;6P,
@@ -6073,7 +6073,7 @@ vte+pcfkeys|VTE's variation on xterm+pcfkeys,
 	kf49=\EO1;3P, kf50=\EO1;3Q, kf51=\EO1;3R, kf52=\EO1;3S,
 	kf61=\EO1;4P, kf62=\EO1;4Q, kf63=\EO1;4R,
 	use=xterm+pcfkeys,
-gnome+pcfkeys|VTE's variation on xterm+pcfkeys,
+gnome+pcfkeys|GHOME Terminal's variation on xterm+pcfkeys (building block),
 	use=vte+pcfkeys,
 
 # deprecated - use "vte" for newer versions
@@ -6283,7 +6283,7 @@ kvt|KDE terminal,
 #
 # Re-enable "bel", since it is latent in the source-code even though KDE config
 # often hides the feature (2020/5/30)
-konsole-base|KDE console window,
+konsole-base|KDE console window (base),
 	bce, km@, npc, XT,
 	ncv@,
 	blink=\E[5m, dim=\E[2m, ech=\E[%p1%dX,
@@ -6447,7 +6447,7 @@ mlterm|multi lingual terminal emulator,
 # mlterm 3.x made further changes, but they were not reflected in the included
 # mlterm.ti (which was dropped in 2015).  This entry has been based on testing
 # with ncurses, tack and vttest -TD
-mlterm3|multi lingual terminal emulator,
+mlterm3|multi lingual terminal emulator 3.x,
 	bce, AX,
 	blink=\E[5m, flash=\E[?5h$<100/>\E[?5l, invis=\E[8m,
 	is2=\E[!p\E[?3;4l\E>, rs2=\E[!p\E[?3;4l\E>,
@@ -6478,7 +6478,7 @@ mlterm3|multi lingual terminal emulator,
 #	control/alt		kf1 to kf12	\E[11;7~ to \E[24;7~
 #	control/shift/alt	kf1 to kf12	\E[11;8~ to \E[24;8~
 #
-mlterm2|multi lingual terminal emulator,
+mlterm2|multi lingual terminal emulator 2.x,
 	am, eslok, km, mc5i, mir, msgr, npc, xenl, XT,
 	colors#8, cols#80, it#8, lines#24, pairs#64,
 	acsc=00``aaffgghhjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
@@ -6510,7 +6510,7 @@ mlterm2|multi lingual terminal emulator,
 # The insert/delete/home/end keys do not respond to modifiers because mlterm
 # looks in its termcap to decide which string to send.  If it used terminfo
 # (when available), it could use the extended names introduced for xterm.
-mlterm+pcfkeys|fragment for PC-style fkeys,
+mlterm+pcfkeys|mlterm fragment for PC-style fkeys,
 	kLFT=\EO1;2D, kNXT=\E[6;2~, kPRV=\E[5;2~, kRIT=\EO1;2C,
 	kDN=\EO1;2B, kDN3=\EO1;3B, kDN4=\EO1;4B, kDN5=\EO1;5B,
 	kDN6=\EO1;6B, kDN7=\EO1;7B, kIC5=\E[2;5~, kIC6=\E[2;6~,
@@ -6651,7 +6651,7 @@ rxvt-basic|rxvt terminal base (X Window System),
 #
 # kDN, kDN5, kDN6, etc are extensions based on the names from xterm+pcfkeys -TD
 # Removed kDN6, etc (control+shift) since rxvt does not implement this -TD
-rxvt+pcfkeys|fragment for PC-style fkeys,
+rxvt+pcfkeys|rxvt fragment for PC-style fkeys,
 	kDC=\E[3$, kEND=\E[8$, kHOM=\E[7$, kIC=\E[2$, kLFT=\E[d,
 	kNXT=\E[6$, kPRV=\E[5$, kRIT=\E[c, kcub1=\E[D, kcud1=\E[B,
 	kcuf1=\E[C, kcuu1=\E[A, kel=\E[8\^, kend=\E[8~, kf1=\E[11~,
@@ -6721,17 +6721,15 @@ rxvt+pcfkeys|fragment for PC-style fkeys,
 # Olesen (or possibly Davis) diverged in one respect from Linux's bce color
 # behavior: inserting/deleting characters does not fill the newly empty cell
 # with the default background color.
-rxvt|rxvt terminal emulator (X Window System),
+rxvt|rxvt-color|rxvt terminal emulator (X Window System),
 	ncv@,
 	hpa=\E[%i%p1%dG, kf0=\E[21~, sgr0=\E[m\017,
 	vpa=\E[%i%p1%dd, use=rxvt-basic, use=ecma+color,
-rxvt-color|rxvt terminal emulator (X Window System),
-	use=rxvt,
 rxvt-256color|rxvt 2.7.9 with xterm 256-colors,
 	use=xterm+256color, use=rxvt,
 rxvt-88color|rxvt 2.7.9 with xterm 88-colors,
 	use=xterm+88color, use=rxvt,
-rxvt-xpm|rxvt terminal emulator (X Window System),
+rxvt-xpm|rxvt terminal emulator (X Window System with xpm),
 	use=rxvt,
 rxvt-cygwin|rxvt terminal emulator (X Window System) on cygwin,
 	acsc=+\257\,\256-\^0\333`\004a\261f\370g\361h\260j\331k
@@ -6850,7 +6848,7 @@ xiterm|internationalized terminal emulator for X,
 # HP ships this (HPUX 9 and 10), except for the pb#9600 which was merged in
 # from BSD termcap.  (hpterm:  added empty <acsc>, we have no idea what ACS
 # chars look like --esr)
-hpterm|X-hpterm|HP X11 terminal emulator,
+hpterm|X-hpterm|HP X11 terminal emulator (old),
 	am, da, db, mir, xhp, xon,
 	cols#80, lh#2, lines#24, lm#0, lw#8, nlab#8, pb#9600, xmc#0,
 	acsc=, bel=^G, bold=\E&dB, cbt=\Ei, clear=\E&a0y0C\EJ, cr=\r,
@@ -6894,7 +6892,7 @@ hpterm-color|HP X11 terminal emulator with color,
 #
 # This version, which came from Martin Trusler, was tested with lynx using
 # ncurses 5.4
-hpterm-color2|X-hpterm-color2|HP X11 terminal emulator with color,
+hpterm-color2|X-hpterm-color2|HP X11 terminal emulator with color (new),
 	OTbs, am, ccc, da, db, km, mir, xhp,
 	colors#8, cols#80, it#8, lh#2, lines#24, lm#0, lw#8, nlab#8,
 	pairs#8, xmc#0,
@@ -7094,7 +7092,7 @@ decansi|ANSI emulation with DEC compatibility hacks,
 # VWM 2.0.2 (2009-05-01)
 # vwmterm is a terminal emulator written for the VWM console window manager.
 # This version is obsolete, replaced by libvterm in 2.1.0 (2009-10-23).
-vwmterm|(vwm term),
+vwmterm|VWM terminal,
 	am, bce, ccc, mir, msgr, npc, xenl, xon,
 	colors#8, pairs#64,
 	acsc=``aaffggjjkkllmmnnooppqqrrssttuuvvwwxxyyzz{{||}}~~,
@@ -7486,7 +7484,7 @@ terminator|Terminator no line wrap,
 # This description uses xterm+pcf0, which is misleading because the program
 # does not handle combinations of modifiers - but listing them all would
 # involve more effort than its developers spent -TD
-terminology-0.6.1|EFL-based terminal emulator,
+terminology-0.6.1|EFL-based terminal emulator (0.6.1),
 	mc5i@,
 	blink@, ed@, el@, el1@, invis=\E[8m, kLFT=\E[1;2D,
 	kRIT=\E[1;2C, kf10=\E[21~, kf11=\E[23~, kf12=\E[24~,
@@ -7504,7 +7502,7 @@ terminology-0.6.1|EFL-based terminal emulator,
 	kRIT7=\E[1;7C, kUP=\E[1;2A, use=xterm+pcf0, use=vt100,
 	use=xterm+256setaf,
 
-# 2017-11-11
+# 2017-11-11:
 # Tested terminology 1.0.0
 #
 # tack -
@@ -7518,7 +7516,7 @@ terminology-0.6.1|EFL-based terminal emulator,
 #
 # Aside from the partial fixes for function/cursor/editing keys, no improvement
 # in other tests versus 0.6.1
-terminology-1.0.0|EFL-based terminal emulator,
+terminology-1.0.0|EFL-based terminal emulator (1.0.0),
 	dim=\E[2m, flash=\E[?5h$<100/>\E[?5l, kend=\E[OF,
 	khome=\E[OH, rmacs=\E(B,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p5%t;2%;%?%p2%t;4%;
@@ -7541,7 +7539,7 @@ terminology-1.0.0|EFL-based terminal emulator,
 #	left/right margins do not work
 #	most of DECSCUSR works
 #	most problems with bce are fixed.
-terminology-1.8.1|EFL-based terminal emulator,
+terminology-1.8.1|EFL-based terminal emulator (1.8.1),
 	km@,
 	cvvis@, flash@, initc@, kcbt=\E[Z, rmm@, smm@, Ms@,
 	use=ecma+index, use=xterm+256setaf, use=ansi+rep,
@@ -8048,7 +8046,7 @@ dumb-emacs-ansi|Emacs dumb terminal with ANSI color codes,
 # since 1994 (i.e., screen 3.0.5), stating that it was an obscure code used by
 # the (Siemens Nixdorf) 97801 terminal.  It was not shown in the termcap or
 # terminfo entries (which list about 60% of the control sequences).
-screen|VT 100/ANSI X3.64 virtual terminal,
+screen|VT 100/ANSI X3.64 virtual terminal (base),
 	OTbs, OTpt, am, km, mir, msgr, xenl, G0,
 	colors#8, cols#80, it#8, lines#24, ncv@, pairs#64, U8#1,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
@@ -8262,7 +8260,7 @@ screen-bce.linux|screen optimized for Linux console,
 screen-w|VT 100/ANSI X3.64 virtual terminal with 132 cols,
 	cols#132, use=screen4,
 
-screen2|VT 100/ANSI X3.64 virtual terminal (old),
+screen2|VT 100/ANSI X3.64 virtual terminal (old 2.x),
 	cols#80, it#8, lines#24,
 	cbt=\E[Z, clear=\E[2J\E[H, cr=\r, cub=\E[%p1%dD, cub1=^H,
 	cud=\E[%p1%dB, cud1=\E[B, cuf=\E[%p1%dC, cuf1=\E[C,
@@ -8276,7 +8274,7 @@ screen2|VT 100/ANSI X3.64 virtual terminal (old),
 	rmul=\E[24m, rs1=\Ec, sc=\E7, sgr0=\E[m, smir=\E[4h,
 	smso=\E[3m, smul=\E[4m, tbc=\E[3g,
 # (screen3: removed unknown ":xv:LP:G0:" -- esr)
-screen3|VT 100/ANSI X3.64 virtual terminal (old),
+screen3|VT 100/ANSI X3.64 virtual terminal (old 3.x),
 	km, mir, msgr,
 	cols#80, it#8, lines#24,
 	bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z, clear=\E[H\E[J,
@@ -8295,7 +8293,7 @@ screen3|VT 100/ANSI X3.64 virtual terminal (old),
 # screen 4.0 was released 2003-07-21, and as of March 2019, its terminfo file
 # was last updated in 2009 to include 256-color support.  The most recent
 # release is 4.6.2 (October 2017).
-screen4|VT 100/ANSI X3.64 virtual terminal,
+screen4|VT 100/ANSI X3.64 virtual terminal (4.x),
 	use=ecma+index, use=screen,
 
 # As of March 2019, screen 5.0 has not been released.
@@ -8519,12 +8517,12 @@ ncsa-m|ncsa-vt220-8|NCSA Telnet 2.6 for Macintosh in VT220-8 mode,
 	smir=\E[4h, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
 	u8=\E[?62;1;6c, use=vt220+cvis, use=xterm+sl,
 	use=ansi+enq,
-ncsa|NCSA Telnet 2.7 for Macintosh in VT220-8 mode,
+ncsa|NCSA Telnet 2.7 for Macintosh in VT220-8 mode (color),
 	use=ncsa-m, use=klone+color,
-ncsa-ns|NCSA Telnet 2.7 for Macintosh in VT220-8 mode,
+ncsa-ns|NCSA Telnet 2.7 for Macintosh in VT220-8 mode (color w/o status line),
 	hs@,
 	dsl@, fsl@, tsl@, use=ncsa,
-ncsa-m-ns|NCSA Telnet 2.6 for Macintosh in VT220-8 mode,
+ncsa-m-ns|NCSA Telnet 2.6 for Macintosh in VT220-8 mode (no status line),
 	hs@,
 	dsl@, fsl@, tsl@, use=ncsa-m,
 # alternate -TD:
@@ -8848,7 +8846,7 @@ news-42-sjis|Sony NEWS VT100 with 42 lines and SJIS,
 #	NEWS-OS old termcap entry
 #
 # (news-old-unk: this had :KB=news:TY=sjis: --esr)
-news-old-unk|Sony NEWS VT100 emulator common entry,
+news-old-unk|old Sony NEWS VT100 emulator common entry,
 	OTbs, OTpt, am, xenl,
 	cols#80, vt#3,
 	OTnl=\n, bel=^G, blink=\E[5m, bold=\E[1m, clear=\E[;H\E[2J,
@@ -8862,7 +8860,7 @@ news-old-unk|Sony NEWS VT100 emulator common entry,
 	sgr0=\E[m, smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m,
 #
 # (nwp512: this had :DE=^H:, which I think means <OTbs> --esr)
-nwp512|news|nwp514|news40|vt100-bm|old Sony VT100 emulator 40 lines,
+nwp512|news|nwp514|news40|vt100-bm|nwp512-o|nwp514-o|news-o|news40-o|vt100-bm-o|old Sony VT100 emulator 40 lines,
 	OTbs,
 	lines#40,
 	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;40
@@ -8870,21 +8868,13 @@ nwp512|news|nwp514|news40|vt100-bm|old Sony VT100 emulator 40 lines,
 	use=news-old-unk,
 #
 # (nwp512-a: this had :TY=ascii: and the alias vt100-bm --esr)
-nwp512-a|nwp514-a|news-a|news42|news40-a|Sony VT100 emulator 42 line,
+nwp512-a|nwp514-a|news-a|news42|news40-a|old Sony VT100 emulator 42 line,
 	lines#42,
 	is2=\E[?7h\E[?1l\E[?3l\E7\E[1;42r\E8,
 	use=news-old-unk,
 #
-# (nwp-512-o: this had :KB=nwp410:DE=^H:  I interpret the latter as <OTbs>. --esr)
-nwp512-o|nwp514-o|news-o|news40-o|vt100-bm-o|Sony VT100 emulator 40 lines,
-	OTbs,
-	lines#40,
-	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;40
-	    r\E8,
-	use=news-old-unk,
-#
 # (nwp513: this had :DE=^H: and the alias vt100-bm --esr)
-nwp513|nwp518|nwe501|newscbm|news31|Sony VT100 emulator 33 lines,
+nwp513|nwp518|nwe501|newscbm|news31|nwp513-o|nwp518-o|nwe501-o|nwp251-o|newscbm-o|news31-o|old Sony VT100 emulator 31 lines,
 	OTbs,
 	lines#31,
 	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;31
@@ -8900,16 +8890,8 @@ nwp513-a|nwp518-a|nwe501-a|nwp251-a|newscbm-a|news31-a|newscbm33|news33|old Sony
 	    r\E8,
 	use=news-old-unk,
 #
-# (nwp513-o: had :DE=^H:, I think that's <OTbs>; also the alias vt100-bm --esr)
-nwp513-o|nwp518-o|nwe501-o|nwp251-o|newscbm-o|news31-o|old Sony VT100 emulator 33 lines,
-	OTbs,
-	lines#31,
-	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;31
-	    r\E8,
-	use=news-old-unk,
-#
 # (news28: this had :DE=^H:, I think that's <OTbs>, and :KB=nws1200: --esr)
-news28|Sony VT100 emulator 28 lines,
+news28|old Sony VT100 emulator 28 lines,
 	OTbs,
 	lines#28,
 	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;28
@@ -8917,7 +8899,7 @@ news28|Sony VT100 emulator 28 lines,
 	use=news-old-unk,
 #
 # (news29: this had :TY=ascii:KB=nws1200:\ --esr)
-news29|news28-a|Sony VT100 emulator 29 lines,
+news29|news28-a|old Sony VT100 emulator 29 lines,
 	lines#29,
 	is2=\E7\E[r\E8\EE\EE\EE\EM\EM\EM\E[?7h\E[?1l\E[?3l\E7\E[1;29
 	    r\E8,
@@ -10192,7 +10174,7 @@ hp98550|hp98550a|HP 9000 Series 300 color console,
 	vpa=\E&a%p1%dY, use=hp+pfk-cr, use=hp+arrows,
 
 # From: Martin Trusler
-hp98550-color|hp98550a-color|HP 9000 Series 300 color console,
+hp98550-color|hp98550a-color|HP 9000 Series 300 color console (Trusler),
 	OTbs, am, ccc, da, db, km, mir, xhp,
 	colors#8, cols#128, it#8, lh#2, lines#49, lm#0, lw#8, nlab#8,
 	pairs#8, xmc#0,
@@ -13319,7 +13301,7 @@ wy520-36w|wyse520-36w|Wyse 520 with 132 columns and 36 data lines,
 	use=wy520-36,
 #
 #       Wyse 520 in 132-column, 48 lines
-wy520-48w|wyse520-48w|Wyse 520 with 48 data lines,
+wy520-48w|wyse520-48w|Wyse 520 with 48 data lines (132 column),
 	cols#132, wsl#132,
 	rs2=\E[?3h,
 	rs3=\E[?5l\E[48*|\E[48t\E[40l\E[1;48r\E[132$|,
@@ -13341,14 +13323,14 @@ wy520-48pc|wyse520-48pc|Wyse 520 with 48 data lines and EPC keyboard,
 	use=wy520-epc,
 #
 #       Wyse 520 in 132-column, 36 lines with EPC keyboard
-wy520-36wpc|wyse520-36wpc|Wyse 520 with 36 data lines and EPC keyboard,
+wy520-36wpc|wyse520-36wpc|Wyse 520 with 36 data lines and EPC keyboard (132 column),
 	cols#132, wsl#132,
 	rs2=\E[?3h,
 	rs3=\E[?5l\E[36*|\E[36t\E[40l\E[1;36r\E[132$|,
 	use=wy520-36pc,
 #
 #       Wyse 520 in 132-column, 48 lines with EPC keyboard
-wy520-48wpc|wyse520-48wpc|Wyse 520 with 48 data lines and EPC keyboard,
+wy520-48wpc|wyse520-48wpc|Wyse 520 with 48 data lines and EPC keyboard (132 column),
 	cols#132, wsl#132,
 	rs2=\E[?3h,
 	rs3=\E[?5l\E[48*|\E[48t\E[40l\E[1;48r\E[132$|,
@@ -14230,7 +14212,7 @@ att500|att513|AT&T 513 using page mode,
 	smkx=\E[19;1|\E[21;4|\Eent, smln=\E?, smso=\E[7m,
 	smul=\E[4m, tbc=\E[3g, vpa=\E[%p1%{1}%+%dd, use=ansi+rep,
 
-# 01-07-88
+# 01-07-88:
 # printer must be set to EMUL ANSI to accept ESC codes
 # <cuu1> stops at top margin
 # <is1> sets cpi 10,lpi 6,form 66,left 1,right 132,top 1,bottom 66,font
@@ -17632,7 +17614,7 @@ sbi|superbee|Beehive SuperBee at Indiana U.,
 # the other two if you want to try to hit that tiny escape key.
 # This description is tricky: being able to use cup depends on there being
 # 2048 bytes of memory and the hairy <nl> string.
-superbee-xsb|Beehive SuperBee,
+superbee-xsb|Beehive SuperBee (improved),
 	am, da, db, xsb,
 	cols#80, it#8, lines#25,
 	clear=\EH\EJ$<3>, cnorm=\n, cr=\r$<1000>, cub1=^H, cud1=\n,
@@ -17799,7 +17781,7 @@ hz1520|Hazeltine 1520,
 	rmso=\E^Y, rs1=\E$\E\005\E?\E\031, sgr0=\E^Y, smso=\E^_,
 # This version works with the escape switch off
 # (h1520: removed incorrect and overridden ":do=^J:" -- esr)
-hz1520-noesc|Hazeltine 1520,
+hz1520-noesc|Hazeltine 1520 (no escape),
 	am, hz,
 	cols#80, lines#24,
 	bel=^G, clear=~^\, cr=\r, cub1=^H, cud1=~^K, cuf1=^P,
@@ -18059,10 +18041,10 @@ ibm6153|IBM 6153 Black & White display,
 	sgr=\E[%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p7%t;8%;%?%p6%t;1
 	    2%;m,
 	sgr0=\E[0;10m, use=ibm5151,
-ibm6153-90|IBM 6153 Black & White display,
+ibm6153-90|IBM 6153 Black & White display (36-line),
 	cols#90, lines#36,
 	blink@, bold@, use=ibm5151,
-ibm6153-40|IBM 6153 Black & White display,
+ibm6153-40|IBM 6153 Black & White display (12-line),
 	cols#40, lines#12, use=ibm6153-90,
 ibm8512|ibm8513|IBM color VGA Terminal,
 	am, mir, msgr,
@@ -19153,7 +19135,7 @@ ncr260intan|NCR Intecolor emulation of the 2900/260C with an ANSI keyboard,
 	use=ncr260vt300an,
 # The Intecolor emulation of the NCR 2900/260C color terminal is basically a
 # DEC VT200/300 with color capabilities added.
-ncr260intwan|NCR Intecolor emulation of the 2900/260C with an ANSI keyboard,
+ncr260intwan|NCR Intecolor emulation of the 2900/260C with an ANSI keyboard (132 column),
 	colors#8, pairs#64,
 	op=\E[0m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	use=ncr260vt300wan,
@@ -19165,7 +19147,7 @@ ncr260intpp|NCR Intecolor emulation of the 2900/260C with a PC+ keyboard,
 	use=ncr260vt300pp,
 # The Intecolor emulation of the NCR 2900/260C color terminal is basically a
 # DEC VT200/300 with color capabilities added.
-ncr260intwpp|NCR Intecolor emulation of the 2900/260C with a PC+ keyboard in 132 column mode,
+ncr260intwpp|NCR Intecolor emulation of the 2900/260C with a PC+ keyboard (132 column),
 	colors#8, pairs#64,
 	op=\E[0m, setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	use=ncr260vt300wpp,
@@ -19208,7 +19190,7 @@ ncr260vppp|NCR 2900/260 viewpoint,
 	sgr0=\EG0\EH\003, smacs=\EcB1\EH\002, smir=\Eq,
 	smso=\EG4, smul=\EG8, smxon=\Ec21, use=ncr260vp+sl,
 
-ncr260vp+sl|NCR 2900/260 viewpoint,
+ncr260vp+sl|NCR 2900/260 viewpoint with status-line,
 	hs,
 	dsl=\E`c, fsl=\r, tsl=\EF,
 
@@ -20212,7 +20194,7 @@ tek4105-30|Tektronix 4015 emulating 30 line VT100,
 # delays are specified; use "stty ixon -ixany" to enable DC3/DC1 flow control!
 # "IC" cannot be used in combination with "im" & "ei".
 # "tek4105a" is just a guess:
-tek4105a|Tektronix 4105,
+tek4105a|Tektronix 4105 (BRL),
 	OTbs, OTpt, msgr, xon,
 	OTkn#8, cols#80, it#8, lines#30, vt#3,
 	acsc=, bel=^G, blink=\E[5m, bold=\E[1m, cbt=\E[Z,
@@ -21747,7 +21729,7 @@ putty-m2|Putty Minitel 2 "like" Couleurs (Vert/Blanc/Noir),
 	use=putty+screen, use=xterm+sl-twm, use=ecma+index,
 	use=linux-m2,
 
-putty+screen|PuTTY with screen resizing extensions,
+putty+screen|PuTTY with screen resizing extensions (building-block),
 	.WS=\E[8;%p1%d;%p2%dt, Z0=\E[?3h, Z1=\E[?3l,
 
 putty-screen|PuTTY with screen resizing extensions,
@@ -23561,7 +23543,7 @@ ti703|ti707|Texas Instruments Silent 703/707,
 	am, xenl,
 	it#8,
 	cuf1=\s, is2=\EPC\\, nel=\r\n, use=ti700,
-ti703-w|ti707-w|Texas Instruments Silent 703/707,
+ti703-w|ti707-w|Texas Instruments Silent 703/707 (132 column),
 	cols#132,
 	is2=\EPD\\, use=ti703,
 
@@ -27515,5 +27497,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ update teken -TD
 #	+ add teken-16color, teken-vt and teken-sc -TD
 #	+ add a few missing details for vte-2018 (report by Robert Lange) -TD
+#
+# 2022-03-27
+#	+ make description-fields distinct -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.113 2021/05/08 15:03:42 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.114 2022/04/02 22:13:54 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -298,7 +298,9 @@ extended_captype(TERMTYPE2 *p, unsigned which)
 	} else {
 	    limit += p->ext_Strings;
 	    if (limit != 0 && which < limit) {
-		result = STRING;
+		result = ((p->Strings[STRCOUNT + which] != CANCELLED_STRING)
+			  ? STRING
+			  : CANCEL);
 	    } else if (which >= limit) {
 		result = CANCEL;
 	    }
@@ -354,24 +356,19 @@ invalid_merge(TERMTYPE2 *to, TERMTYPE2 *from)
 		&& tf <= STRING
 		&& (tt == STRING) != (tf == STRING)) {
 		if (from_name != 0 && strcmp(to_name, from_name)) {
-		    DEBUG(2,
-			  ("merge of %s to %s changes type of %s from %s to %s",
-			   from_name,
-			   to_name,
-			   from->ext_Names[n],
-			   name_of_captype(tf),
-			   name_of_captype(tt)));
+		    _nc_warning("merge of %s to %s changes type of %s from %s to %s",
+				from_name,
+				to_name,
+				from->ext_Names[n],
+				name_of_captype(tf),
+				name_of_captype(tt));
 		} else {
-		    DEBUG(2, ("merge of %s changes type of %s from %s to %s",
-			      to_name,
-			      from->ext_Names[n],
-			      name_of_captype(tf),
-			      name_of_captype(tt)));
+		    _nc_warning("merge of %s changes type of %s from %s to %s",
+				to_name,
+				from->ext_Names[n],
+				name_of_captype(tf),
+				name_of_captype(tt));
 		}
-		_nc_warning("merge changes type of %s from %s to %s",
-			    from->ext_Names[n],
-			    name_of_captype(tf),
-			    name_of_captype(tt));
 		rc = TRUE;
 	    }
 	}
