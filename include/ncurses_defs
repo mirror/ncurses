@@ -1,6 +1,6 @@
-# $Id: ncurses_defs,v 1.98 2021/12/04 23:01:31 tom Exp $
+# $Id: ncurses_defs,v 1.99 2022/04/09 21:34:05 tom Exp $
 ##############################################################################
-# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2000-2016,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -192,6 +192,7 @@ HAVE_TYPEINFO
 HAVE_TYPE_ATTR_T
 HAVE_TYPE_SIGACTION
 HAVE_UNCTRL_H	1
+HAVE_UNGET_WCH	1
 HAVE_UNISTD_H
 HAVE_UNLINK
 HAVE_USE_DEFAULT_COLORS

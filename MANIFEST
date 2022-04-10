@@ -1225,6 +1225,7 @@
 ./test/test_sgr.c
 ./test/test_termattrs.c
 ./test/test_tparm.c
+./test/test_unget_wch.c
 ./test/test_vid_puts.c
 ./test/test_vidputs.c
 ./test/testaddch.c

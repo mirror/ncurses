@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.198 2021/12/18 18:55:10 tom Exp $ */
+/* $Id: test.priv.h,v 1.199 2022/04/09 21:32:05 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -301,6 +301,10 @@
 
 #ifndef HAVE_WINSSTR
 #define HAVE_WINSSTR 0
+#endif
+
+#ifndef HAVE_UNGET_WCH
+#define HAVE_UNGET_WCH 0
 #endif
 
 #ifndef HAVE_USE_DEFAULT_COLORS

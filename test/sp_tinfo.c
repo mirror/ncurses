@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2022 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.23 2020/02/02 23:34:34 tom Exp $
+ * $Id: sp_tinfo.c,v 1.24 2022/04/09 22:56:28 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -279,9 +279,6 @@ cleanup(MYDATA * data)
 {
     set_curterm(data->term);
     del_curterm(data->term);
-#if !NO_LEAKS
-    free(data->sp);		/* cannot use delscreen in tinfo */
-#endif
     free(data);
 }
 

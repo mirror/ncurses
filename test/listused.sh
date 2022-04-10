@@ -1,6 +1,6 @@
 #!/bin/sh
 ##############################################################################
-# Copyright 2020,2021 Thomas E. Dickey                                       #
+# Copyright 2020-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2003-2006,2010 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -27,14 +27,16 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: listused.sh,v 1.10 2021/06/17 21:20:30 tom Exp $
+# $Id: listused.sh,v 1.11 2022/04/09 23:03:25 tom Exp $
 # A very simple script to list all entrypoints that are used by either a test
 # program, or within the libraries.  This relies on the output format of 'nm',
 # and assumes that the libraries are configured with TRACE defined, and using
 # these options:
 #	--disable-macros
+#	--enable-opaque-curses
 #	--enable-sp-funcs
 #	--enable-widec
+#	--without-gpm
 # Static libraries are used, to provide some filtering based on internal usage
 # of the different symbols.
 

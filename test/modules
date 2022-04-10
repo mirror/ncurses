@@ -1,6 +1,6 @@
-# $Id: modules,v 1.75 2021/12/11 17:41:34 tom Exp $
+# $Id: modules,v 1.76 2022/04/09 21:27:31 tom Exp $
 ##############################################################################
-# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2016,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -110,6 +110,7 @@ test_setupterm	progs		$(srcdir)	$(HEADER_DEPS)
 test_sgr	progs		$(srcdir)	$(HEADER_DEPS)
 test_termattrs	progs		$(srcdir)	$(HEADER_DEPS)
 test_tparm	progs		$(srcdir)	$(HEADER_DEPS)
+test_unget_wch	progs		$(srcdir)	$(HEADER_DEPS)
 test_vid_puts	progs		$(srcdir)	$(HEADER_DEPS)
 test_vidputs	progs		$(srcdir)	$(HEADER_DEPS)
 testaddch	progs		$(srcdir)	$(HEADER_DEPS)

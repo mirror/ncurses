@@ -1,6 +1,6 @@
-# $Id: programs,v 1.51 2021/12/18 18:46:56 tom Exp $
+# $Id: programs,v 1.52 2022/04/09 21:27:24 tom Exp $
 ##############################################################################
-# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2006-2016,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -105,6 +105,7 @@ test_setupterm	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_setupterm
 test_sgr	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	test_sgr
 test_termattrs	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_termattrs
 test_tparm	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	test_tparm
+test_unget_wch	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_unget_wch
 test_vid_puts	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vid_puts
 test_vidputs	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_vidputs
 testaddch	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	testaddch
