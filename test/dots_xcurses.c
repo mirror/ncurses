@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.24 2020/08/29 16:22:03 juergen Exp $
+ * $Id: dots_xcurses.c,v 1.25 2022/04/16 18:27:24 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -193,6 +193,7 @@ main(int argc, char *argv[])
 	}
     }
 
+    setlocale(LC_ALL, "");
     srand((unsigned) time(0));
 
     SetupAlarm(r_option);

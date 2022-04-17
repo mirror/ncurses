@@ -48,12 +48,10 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.68 2022/02/26 22:19:31 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.69 2022/04/16 22:46:53 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
-
-#define MAX_STRTAB	4096	/* documented maximum entry size */
 
 static char *stringbuf;		/* buffer for string capabilities */
 static size_t next_free;	/* next free character in stringbuf */
@@ -74,7 +72,7 @@ _nc_init_entry(ENTRY * const tp)
     }
 
     if (stringbuf == NULL)
-	TYPE_MALLOC(char, (size_t) MAX_STRTAB, stringbuf);
+	TYPE_MALLOC(char, (size_t) MAX_ENTRY_SIZE, stringbuf);
 
     next_free = 0;
 
@@ -111,11 +109,11 @@ _nc_save_str(const char *string)
 	     * Cheat a little by making an empty string point to the end of the
 	     * previous string.
 	     */
-	    if (next_free < MAX_STRTAB) {
+	    if (next_free < MAX_ENTRY_SIZE) {
 		result = (stringbuf + next_free - 1);
 	    }
-	} else if (next_free + len < MAX_STRTAB) {
-	    _nc_STRCPY(&stringbuf[next_free], string, MAX_STRTAB);
+	} else if (next_free + len < MAX_ENTRY_SIZE) {
+	    _nc_STRCPY(&stringbuf[next_free], string, MAX_ENTRY_SIZE);
 	    DEBUG(7, ("Saved string %s", _nc_visbuf(string)));
 	    DEBUG(7, ("at location %d", (int) next_free));
 	    next_free += len;

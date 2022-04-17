@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_attr.3x,v 1.71 2022/02/12 20:07:29 tom Exp $
+.\" $Id: curs_attr.3x,v 1.72 2022/04/16 19:18:32 tom Exp $
 .TH curs_attr 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -484,7 +484,7 @@ This implementation uses that parameter in ABI 6 for the functions which
 have a color-pair parameter to support \fIextended color pairs\fP:
 .bP
 For functions which modify the color, e.g.,
-\fBwattr_set\fP,
+\fBwattr_set\fP and \fBwattr_on\fP,
 if \fIopts\fP is set it is treated as a pointer to \fBint\fP,
 and used to set the color pair instead of the \fBshort\fP \fIpair\fP parameter.
 .bP
@@ -492,13 +492,13 @@ For functions which retrieve the color, e.g.,
 \fBwattr_get\fP,
 if \fIopts\fP is set it is treated as a pointer to \fBint\fP,
 and used to retrieve the color pair as an \fBint\fP value,
-in addition
+in addition to
 retrieving it via the standard pointer to \fBshort\fP parameter.
-.PP
-The remaining functions which have \fIopts\fP,
-but do not manipulate color,
-e.g., \fBwattr_on\fP and \fBwattr_off\fP
-are not used by this implementation except to check that they are \fBNULL\fP.
+.bP
+For functions which turn attributes off, e.g.,
+\fBwattr_off\fP,
+the \fIopts\fP parameter is ignored except
+except to check that it is \fBNULL\fP.
 .\" ---------------------------------------------------------------------------
 .SH PORTABILITY
 These functions are supported in the XSI Curses standard, Issue 4.
@@ -568,6 +568,19 @@ represent \fBA_CHARTEXT\fP or \fBA_COLOR\fP.
 In this implementation (as in many others), the values happen to be
 the same because it simplifies copying information between
 \fBchtype\fP and \fBcchar_t\fP variables.
+.bP
+Because ncurses's \fBattr_t\fP can hold a color pair
+(in the \fBA_COLOR\fP field),
+a call to
+\fBwattr_on\fP,
+\fBwattr_off\fP, or
+\fBwattr_set\fP
+may alter the window's color.
+If the color pair information in the attribute parameter is zero,
+no change is made to the window's color.
+.IP
+This is consistent with SVr4 curses;
+X/Open Curses does not specify this.
 .PP
 The XSI standard extended conformance level adds new highlights
 \fBA_HORIZONTAL\fP, \fBA_LEFT\fP, \fBA_LOW\fP, \fBA_RIGHT\fP, \fBA_TOP\fP,

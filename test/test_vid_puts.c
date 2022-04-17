@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 2013-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_vid_puts.c,v 1.12 2021/04/25 00:10:43 tom Exp $
+ * $Id: test_vid_puts.c,v 1.13 2022/04/16 18:27:24 tom Exp $
  *
  * Demonstrate the vid_puts and vid_attr functions.
  * Thomas Dickey - 2013/01/12
@@ -138,6 +138,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     if (optind < argc)
 	usage();
 
+    setlocale(LC_ALL, "");
     if (no_init) {
 	START_TRACE();
     } else {

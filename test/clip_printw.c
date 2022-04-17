@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2022 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: clip_printw.c,v 1.19 2020/05/10 00:40:23 tom Exp $
+ * $Id: clip_printw.c,v 1.20 2022/04/16 18:26:05 tom Exp $
  *
  * demonstrate how to use printw without wrapping.
  */
@@ -361,6 +361,7 @@ test_clipping(WINDOW *win)
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();

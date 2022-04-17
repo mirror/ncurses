@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_unget_wch.c,v 1.2 2022/04/09 23:47:04 tom Exp $
+ * $Id: test_unget_wch.c,v 1.3 2022/04/16 17:04:04 tom Exp $
  *
  * Demonstrate the unget_wch and unget functions.
  */
@@ -39,6 +39,7 @@ main(void)
 {
     int step = 0;
 
+    setlocale(LC_ALL, "");
     initscr();
     keypad(stdscr, TRUE);
     cbreak();

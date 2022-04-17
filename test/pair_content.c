@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: pair_content.c,v 1.14 2020/02/02 23:34:34 tom Exp $
+ * $Id: pair_content.c,v 1.15 2022/04/16 18:27:24 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -115,6 +115,7 @@ random_color(void)
 static void
 setup_test(void)
 {
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();

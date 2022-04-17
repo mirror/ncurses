@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.15 2020/02/02 23:34:34 tom Exp $
+ * $Id: extended_color.c,v 1.16 2022/04/16 18:27:24 tom Exp $
  */
 
 #include <test.priv.h>
@@ -175,6 +175,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	}
     }
 
+    setlocale(LC_ALL, "");
     slk_init(1);
     sp = newterm(NULL, stdout, stdin);
     cbreak();

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2020,2020,2022 Thomas E. Dickey                                *
  * Copyright 2003-2012,2014 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_set.c,v 1.10 2020/02/02 23:34:34 tom Exp $
+ * $Id: color_set.c,v 1.11 2022/04/16 18:26:40 tom Exp $
  */
 
 #include <test.priv.h>
@@ -41,6 +41,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
     NCURSES_COLOR_T f, b;
 
+    setlocale(LC_ALL, "");
     initscr();
     cbreak();
     noecho();

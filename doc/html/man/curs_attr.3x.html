@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_attr.3x,v 1.71 2022/02/12 20:07:29 tom Exp @
+  * @Id: curs_attr.3x,v 1.72 2022/04/16 19:18:32 tom Exp @
   * ---------------------------------------------------------------------------
   * attr_get
   * .br
@@ -410,35 +410,34 @@
        tion uses that parameter in ABI 6 for the functions which have a color-
        pair parameter to support <EM>extended</EM> <EM>color</EM> <EM>pairs</EM>:
 
-       <STRONG>o</STRONG>   For  functions  which modify the color, e.g., <STRONG>wattr_set</STRONG>, if <EM>opts</EM> is
-           set it is treated as a pointer to <STRONG>int</STRONG>, and used to  set  the  color
-           pair instead of the <STRONG>short</STRONG> <EM>pair</EM> parameter.
+       <STRONG>o</STRONG>   For functions which modify the color, e.g., <STRONG>wattr_set</STRONG> and <STRONG>wattr_on</STRONG>,
+           if <EM>opts</EM> is set it is treated as a pointer to <STRONG>int</STRONG>, and used  to  set
+           the color pair instead of the <STRONG>short</STRONG> <EM>pair</EM> parameter.
 
        <STRONG>o</STRONG>   For functions which retrieve the color, e.g., <STRONG>wattr_get</STRONG>, if <EM>opts</EM> is
            set it is treated as a pointer to <STRONG>int</STRONG>, and  used  to  retrieve  the
-           color pair as an <STRONG>int</STRONG> value, in addition retrieving it via the stan-
-           dard pointer to <STRONG>short</STRONG> parameter.
+           color  pair  as  an <STRONG>int</STRONG> value, in addition to retrieving it via the
+           standard pointer to <STRONG>short</STRONG> parameter.
 
-       The remaining functions which have <EM>opts</EM>, but do not  manipulate  color,
-       e.g., <STRONG>wattr_on</STRONG> and <STRONG>wattr_off</STRONG> are not used by this implementation except
-       to check that they are <STRONG>NULL</STRONG>.
+       <STRONG>o</STRONG>   For functions which turn attributes off, e.g., <STRONG>wattr_off</STRONG>, the  <EM>opts</EM>
+           parameter is ignored except except to check that it is <STRONG>NULL</STRONG>.
 
 
 </PRE><H2><a name="h2-PORTABILITY">PORTABILITY</a></H2><PRE>
        These functions are supported in the XSI Curses standard, Issue 4.  The
-       standard  defined  the dedicated type for highlights, <STRONG>attr_t</STRONG>, which was
+       standard defined the dedicated type for highlights, <STRONG>attr_t</STRONG>,  which  was
        not defined in SVr4 curses.  The functions taking <STRONG>attr_t</STRONG> arguments were
        not supported under SVr4.
 
        Very old versions of this library did not force an update of the screen
-       when changing the attributes.  Use <STRONG>touchwin</STRONG>  to  force  the  screen  to
+       when  changing  the  attributes.   Use  <STRONG>touchwin</STRONG> to force the screen to
        match the updated attributes.
 
-       The  XSI  Curses standard states that whether the traditional functions
-       <STRONG>attron</STRONG>/<STRONG>attroff</STRONG>/<STRONG>attrset</STRONG> can manipulate attributes  other  than  <STRONG>A_BLINK</STRONG>,
-       <STRONG>A_BOLD</STRONG>,  <STRONG>A_DIM</STRONG>, <STRONG>A_REVERSE</STRONG>, <STRONG>A_STANDOUT</STRONG>, or <STRONG>A_UNDERLINE</STRONG> is "unspecified".
-       Under this implementation as well as SVr4 curses, these functions  cor-
-       rectly  manipulate  all  other  highlights (specifically, <STRONG>A_ALTCHARSET</STRONG>,
+       The XSI Curses standard states that whether the  traditional  functions
+       <STRONG>attron</STRONG>/<STRONG>attroff</STRONG>/<STRONG>attrset</STRONG>  can  manipulate  attributes other than <STRONG>A_BLINK</STRONG>,
+       <STRONG>A_BOLD</STRONG>, <STRONG>A_DIM</STRONG>, <STRONG>A_REVERSE</STRONG>, <STRONG>A_STANDOUT</STRONG>, or <STRONG>A_UNDERLINE</STRONG> is  "unspecified".
+       Under  this implementation as well as SVr4 curses, these functions cor-
+       rectly manipulate all  other  highlights  (specifically,  <STRONG>A_ALTCHARSET</STRONG>,
        <STRONG>A_PROTECT</STRONG>, and <STRONG>A_INVIS</STRONG>).
 
        XSI Curses added these entry points:
@@ -446,7 +445,7 @@
               <STRONG>attr_get</STRONG>, <STRONG>attr_on</STRONG>, <STRONG>attr_off</STRONG>, <STRONG>attr_set</STRONG>, <STRONG>wattr_on</STRONG>, <STRONG>wattr_off</STRONG>, <STRONG>wat-</STRONG>
               <STRONG>tr_get</STRONG>, <STRONG>wattr_set</STRONG>
 
-       The  new  functions are intended to work with a new series of highlight
+       The new functions are intended to work with a new series  of  highlight
        macros prefixed with <STRONG>WA_</STRONG>.  The older macros have direct counterparts in
        the newer set of names:
 
@@ -461,11 +460,11 @@
               <STRONG>WA_BOLD</STRONG>         Extra bright or bold
               <STRONG>WA_ALTCHARSET</STRONG>   Alternate character set
 
-       XSI  curses  does not assign values to these symbols, nor does it state
+       XSI curses does not assign values to these symbols, nor does  it  state
        whether or not they are related to the similarly-named A_NORMAL, etc.:
 
-       <STRONG>o</STRONG>   The XSI curses standard specifies that each pair  of  corresponding
-           <STRONG>A_</STRONG>  and  <STRONG>WA_</STRONG>-using functions operates on the same current-highlight
+       <STRONG>o</STRONG>   The  XSI  curses standard specifies that each pair of corresponding
+           <STRONG>A_</STRONG> and <STRONG>WA_</STRONG>-using functions operates on the  same  current-highlight
            information.
 
        <STRONG>o</STRONG>   However, in some implementations, those symbols have unrelated val-
@@ -473,17 +472,25 @@
 
            For example, the Solaris <EM>xpg4</EM> (X/Open) curses declares <STRONG>attr_t</STRONG> to be
            an unsigned short integer (16-bits), while <STRONG>chtype</STRONG> is a unsigned in-
-           teger  (32-bits).   The <STRONG>WA_</STRONG> symbols in this case are different from
-           the <STRONG>A_</STRONG> symbols because they are used for a smaller  datatype  which
+           teger (32-bits).  The <STRONG>WA_</STRONG> symbols in this case are  different  from
+           the  <STRONG>A_</STRONG>  symbols because they are used for a smaller datatype which
            does not represent <STRONG>A_CHARTEXT</STRONG> or <STRONG>A_COLOR</STRONG>.
 
            In this implementation (as in many others), the values happen to be
-           the same because it simplifies copying information  between  <STRONG>chtype</STRONG>
+           the  same  because it simplifies copying information between <STRONG>chtype</STRONG>
            and <STRONG>cchar_t</STRONG> variables.
 
+       <STRONG>o</STRONG>   Because ncurses's <STRONG>attr_t</STRONG> can hold a  color  pair  (in  the  <STRONG>A_COLOR</STRONG>
+           field),  a  call to <STRONG>wattr_on</STRONG>, <STRONG>wattr_off</STRONG>, or <STRONG>wattr_set</STRONG> may alter the
+           window's color.  If the color pair information in the attribute pa-
+           rameter is zero, no change is made to the window's color.
+
+           This is consistent with SVr4 curses; X/Open Curses does not specify
+           this.
+
        The XSI standard extended conformance level adds new highlights <STRONG>A_HORI-</STRONG>
-       <STRONG>ZONTAL</STRONG>, <STRONG>A_LEFT</STRONG>, <STRONG>A_LOW</STRONG>, <STRONG>A_RIGHT</STRONG>, <STRONG>A_TOP</STRONG>,  <STRONG>A_VERTICAL</STRONG>  (and  corresponding
-       <STRONG>WA_</STRONG>  macros  for  each).  As of August 2013, no known terminal provides
+       <STRONG>ZONTAL</STRONG>,  <STRONG>A_LEFT</STRONG>,  <STRONG>A_LOW</STRONG>,  <STRONG>A_RIGHT</STRONG>, <STRONG>A_TOP</STRONG>, <STRONG>A_VERTICAL</STRONG> (and corresponding
+       <STRONG>WA_</STRONG> macros for each).  As of August 2013, no  known  terminal  provides
        these highlights (i.e., via the <STRONG>sgr1</STRONG> capability).
 
 
@@ -499,10 +506,10 @@
        <STRONG>o</STRONG>   returns an error if the color pair parameter for <STRONG>wcolor_set</STRONG> is out-
            side the range 0..COLOR_PAIRS-1.
 
-       <STRONG>o</STRONG>   does  not  return an error if either of the parameters of <STRONG>wattr_get</STRONG>
+       <STRONG>o</STRONG>   does not return an error if either of the parameters  of  <STRONG>wattr_get</STRONG>
            used for retrieving attribute or color-pair values is <STRONG>NULL</STRONG>.
 
-       Functions with a "mv" prefix first  perform  a  cursor  movement  using
+       Functions  with  a  "mv"  prefix  first perform a cursor movement using
        <STRONG>wmove</STRONG>, and return an error if the position is outside the window, or if
        the window pointer is null.
 

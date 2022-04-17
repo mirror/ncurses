@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.144 2022/02/19 21:30:04 tom Exp $
+ * $Id: picsmap.c,v 1.145 2022/04/16 18:21:05 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -1527,6 +1527,7 @@ init_display(const char *palette_path, int opt_d)
     (void) opt_d;
     if (isatty(fileno(stdout))) {
 	in_curses = TRUE;
+	setlocale(LC_ALL, "");
 	initscr();
 	cbreak();
 	noecho();

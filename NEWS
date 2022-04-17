@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3794 2022/04/09 23:04:59 tom Exp $
+-- $Id: NEWS,v 1.3796 2022/04/16 23:31:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220416
+	+ add a limit-check to guard against corrupt terminfo data
+	  (report/testcase by NCNIPC of China).
+	+ add check/warning in configure script if option --with-xterm-kbs is
+	  missing or inconsistent (Arch #74379).
+	+ add setlocale call to several test-programs.
+	+ allow extended-color number in opts parameter of wattr_on.
 
 20220409
 	+ add test/test_unget_wch.c

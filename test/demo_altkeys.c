@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2005-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.14 2020/02/02 23:34:34 tom Exp $
+ * $Id: demo_altkeys.c,v 1.15 2022/04/16 18:26:57 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -82,6 +82,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     unlink(MY_LOGFILE);
 
+    setlocale(LC_ALL, "");
     if (newterm(0, stdout, stdin) == 0) {
 	fprintf(stderr, "Cannot initialize terminal\n");
 	ExitProgram(EXIT_FAILURE);

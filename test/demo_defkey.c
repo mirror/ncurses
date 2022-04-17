@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_defkey.c,v 1.31 2020/12/26 17:55:13 tom Exp $
+ * $Id: demo_defkey.c,v 1.32 2022/04/16 18:26:57 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2002/11/23
@@ -224,6 +224,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     unlink(MY_LOGFILE);
 
+    setlocale(LC_ALL, "");
     initscr();
     (void) cbreak();		/* take input chars one at a time, no wait for \n */
     (void) noecho();		/* don't echo input */
