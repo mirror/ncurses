@@ -51,7 +51,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.119 2022/02/26 20:59:58 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.120 2022/04/23 19:59:10 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -248,7 +248,7 @@ _nc_set_writedir(const char *dir)
 	|| getcwd(actual, sizeof(actual)) == 0)
 	_nc_err_abort("%s: not a directory", destination);
 #endif
-    _nc_keep_tic_dir(strdup(actual));
+    _nc_keep_tic_dir(actual);
 }
 
 /*

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2006-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -44,7 +44,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: db_iterator.c,v 1.48 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: db_iterator.c,v 1.49 2022/04/23 20:03:15 tom Exp $")
 
 #define HaveTicDirectory _nc_globals.have_tic_directory
 #define KeepTicDirectory _nc_globals.keep_tic_directory
@@ -202,6 +202,13 @@ free_cache(void)
     FreeAndNull(my_list);
 }
 
+static void
+update_tic_dir(const char *update)
+{
+    free((char *) TicDirectory);
+    TicDirectory = update;
+}
+
 /*
  * Record the "official" location of the terminfo directory, according to
  * the place where we're writing to, or the normal default, if not.
@@ -211,8 +218,9 @@ _nc_tic_dir(const char *path)
 {
     T(("_nc_tic_dir %s", NonNull(path)));
     if (!KeepTicDirectory) {
-	if (path != 0) {
-	    TicDirectory = path;
+	if (path != NULL) {
+	    if (path != TicDirectory)
+		update_tic_dir(strdup(path));
 	    HaveTicDirectory = TRUE;
 	} else if (HaveTicDirectory == 0) {
 	    if (use_terminfo_vars()) {
@@ -444,5 +452,6 @@ _nc_db_iterator_leaks(void)
 	FreeIfNeeded(my_vars[which].value);
 	my_vars[which].value = 0;
     }
+    update_tic_dir(NULL);
 }
 #endif

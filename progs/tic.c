@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.310 2022/04/09 22:17:45 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.311 2022/04/23 19:47:57 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -644,7 +644,7 @@ show_databases(const char *outdir)
     const char *tried = 0;
 
     if (outdir == NULL) {
-	outdir = _nc_tic_dir(0);
+	outdir = _nc_tic_dir(NULL);
     }
     if ((result = valid_db_path(outdir)) != 0) {
 	printf("%s\n", result);
@@ -1081,7 +1081,7 @@ main(int argc, char *argv[])
 	if (total != 0)
 	    fprintf(log_fp, "%d entries written to %s\n",
 		    total,
-		    _nc_tic_dir((char *) 0));
+		    _nc_tic_dir(NULL));
 	else
 	    fprintf(log_fp, "No entries written\n");
     }

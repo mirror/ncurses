@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.114 2022/04/02 22:13:54 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.116 2022/04/23 23:23:38 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -266,7 +266,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
     _nc_suppress_warnings = oldsuppress;
 }
 
-#if NCURSES_XNAMES
+#if 0 && NCURSES_XNAMES
 static unsigned
 find_capname(TERMTYPE2 *p, const char *name)
 {
@@ -630,6 +630,14 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		set_curterm(&fake_tm);
 
 		_nc_check_termtype2(&qp->tterm, literal);
+
+		/*
+		 * Checking calls tparm, which can allocate memory.  Fix leaks.
+		 */
+#define TPS(name) fake_tm.tparm_state.name
+		FreeAndNull(TPS(out_buff));
+		FreeAndNull(TPS(fmt_buff));
+#undef TPS
 
 		_nc_set_screen(save_SP);
 		set_curterm(save_tm);
