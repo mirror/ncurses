@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.649 2022/04/30 18:32:29 tom Exp $
+ * $Id: curses.priv.h,v 1.650 2022/05/01 14:41:33 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1702,6 +1702,8 @@ extern NCURSES_EXPORT(const char *) _nc_viscbuf (const NCURSES_CH_T *, int);
 #define returnWin(code)		return code
 
 #define returnDB(code)		return code
+#define returnPtrDB(rc)		return rc
+#define returnVoidDB		return
 
 #endif /* TRACE/!TRACE */
 
