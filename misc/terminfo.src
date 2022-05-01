@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1001 $
-#	$Date: 2022/03/27 19:32:34 $
+#	$Revision: 1.1002 $
+#	$Date: 2022/04/30 23:24:59 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5724,16 +5724,27 @@ xterm-x11hilite|X11 mouse with highlight,
 
 # xterm patch #83 (1998/10/7), added Jason Bacon's changes to provide an
 # "any-event" mouse mode.
-xterm+sm+1002|xterm any-event mouse (building-block),
-	kmous=\E[M, XM=\E[?1002%?%p1%{1}%=%th%el%;,
-xterm-1002|xterm any-event mouse,
+#
+# These building blocks incorporate later features as well:
+# xterm patch #224 (2007/2/11 added private mode 1004, for enabling/disabling
+# focus in/out event reporting.
+# xterm patch #277 (2012/01/07 added private mode 1006
+
+xterm+sm+1002|xterm any-button mouse,
+	kmous=\E[<, XM=\E[?1006;1004;1002%?%p1%{1}%=%th%el%;,
+	xm=\E[<%i%p3%d;%p1%d;%p2%d;%?%p4%tM%em%;,
+	use=xterm+focus,
+xterm-1002|example of xterm any-button mouse,
 	use=xterm+sm+1002, use=xterm,
 
-xterm+sm+1003|xterm any-button mouse (building-block),
-	kmous=\E[M, XM=\E[?1003%?%p1%{1}%=%th%el%;,
-
-xterm-1003|xterm any-button mouse,
+xterm+sm+1003|xterm any-event mouse,
+	XM=\E[?1006;1004;1003%?%p1%{1}%=%th%el%;,
+	use=xterm+sm+1002,
+xterm-1003|example of xterm any-event mouse,
 	use=xterm+sm+1003, use=xterm,
+
+xterm+focus|xterm focus-in/out event "keys",
+	kxIN=\E[I, kxOUT=\E[O,
 
 # xterm patch #116 (1999/9/25) added Stephen P Wall's changes to support DEC
 # locator mode.
@@ -27500,5 +27511,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2022-03-27
 #	+ make description-fields distinct -TD
+#
+# 2022-04-30
+#	+ modify samples for xterm mouse 1002/1003 modes to use 1006 mode, and
+#	  also provide for focus in/out responses -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

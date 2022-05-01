@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.69 2022/04/16 22:46:53 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.71 2022/04/30 18:36:01 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -60,6 +60,8 @@ NCURSES_EXPORT(void)
 _nc_init_entry(ENTRY * const tp)
 /* initialize a terminal type data block */
 {
+    DEBUG(2, (T_CALLED("_nc_init_entry(tp=%p)"), tp));
+
     if (tp == NULL) {
 #if NO_LEAKS
 	if (stringbuf != NULL) {
@@ -72,23 +74,30 @@ _nc_init_entry(ENTRY * const tp)
     }
 
     if (stringbuf == NULL)
-	TYPE_MALLOC(char, (size_t) MAX_ENTRY_SIZE, stringbuf);
+	TYPE_CALLOC(char, (size_t) MAX_ENTRY_SIZE, stringbuf);
 
     next_free = 0;
 
     _nc_init_termtype(&(tp->tterm));
+
+    DEBUG(2, (T_RETURN("")));
 }
 
 NCURSES_EXPORT(ENTRY *)
 _nc_copy_entry(ENTRY * oldp)
 {
-    ENTRY *newp = typeCalloc(ENTRY, 1);
+    ENTRY *newp;
 
+    DEBUG(2, (T_CALLED("_nc_copy_entry(oldp=%p)"), oldp));
+
+    newp = typeCalloc(ENTRY, 1);
     if (newp != NULL) {
 	*newp = *oldp;
 	_nc_copy_termtype2(&(newp->tterm), &(oldp->tterm));
     }
-    return newp;
+
+    DEBUG(2, (T_RETURN("%p"), newp));
+    return (newp);
 }
 
 /* save a copy of string in the string buffer */

@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.194 2022/01/16 01:15:47 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.196 2022/04/30 23:21:34 tom Exp $")
 
 #include <tic.h>
 
@@ -969,6 +969,17 @@ handle_wheel(SCREEN *sp, MEVENT * eventp, int button, int wheel)
 	PRESS_POSITION(3);
 	break;
     default:
+	/*
+	 * case 3 is sent when the mouse buttons are released.
+	 *
+	 * If the terminal uses xterm mode 1003, a continuous series of
+	 * button-release events is sent as the mouse moves around the screen,
+	 * or as the wheel mouse is rotated.
+	 *
+	 * Return false in this case, so that when running in X10 mode, we will
+	 * recalculate bstate.
+	 */
+	eventp->bstate = REPORT_MOUSE_POSITION;
 	result = FALSE;
 	break;
     }

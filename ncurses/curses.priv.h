@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.647 2021/10/23 16:13:16 tom Exp $
+ * $Id: curses.priv.h,v 1.649 2022/04/30 18:32:29 tom Exp $
  *
  *	curses.priv.h
  *
@@ -1506,6 +1506,13 @@ extern NCURSES_EXPORT_VAR(SIG_ATOMIC_T) _nc_have_sigwinch;
 		_nc_err_abort(MSG_NO_MEMORY); \
 	} while (0)
 
+#define TYPE_CALLOC(type, size, name) \
+	do { \
+	    name = typeCalloc(type, size); \
+	    if (name == 0) \
+		_nc_err_abort(MSG_NO_MEMORY); \
+	} while (0)
+
 #define TYPE_REALLOC(type, size, name) \
 	do { \
 	    name = typeRealloc(type, size, name); \
@@ -1619,6 +1626,8 @@ typedef void VoidFunc(void);
 #define returnWin(code)		TRACE_RETURN1(code,win)
 
 #define returnDB(rc)		do { TR(TRACE_DATABASE,(T_RETURN("code %d"), (rc))); return (rc); } while (0)
+#define returnPtrDB(rc)		do { TR(TRACE_DATABASE,(T_RETURN("%p"), (rc))); return (rc); } while (0)
+#define returnVoidDB		do { TR(TRACE_DATABASE,(T_RETURN(""))); return; } while (0)
 
 extern NCURSES_EXPORT(NCURSES_BOOL)     _nc_retrace_bool (int);
 extern NCURSES_EXPORT(NCURSES_CONST void *) _nc_retrace_cvoid_ptr (NCURSES_CONST void *);

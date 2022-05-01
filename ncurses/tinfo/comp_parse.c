@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.116 2022/04/23 23:23:38 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.117 2022/04/30 15:57:27 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -59,8 +59,11 @@ static void
 enqueue(ENTRY * ep)
 /* add an entry to the in-core list */
 {
-    ENTRY *newp = _nc_copy_entry(ep);
+    ENTRY *newp;
 
+    DEBUG(1, (T_CALLED("enqueue(ep=%p)"), ep));
+
+    newp = _nc_copy_entry(ep);
     if (newp == 0)
 	_nc_err_abort(MSG_NO_MEMORY);
 
@@ -217,6 +220,10 @@ _nc_read_entry_source(FILE *fp, char *buf,
     bool oldsuppress = _nc_suppress_warnings;
     int immediate = 0;
 
+    DEBUG(1,
+	  (T_CALLED("_nc_read_entry_source(file=%p, buf=%p, literal=%d, silent=%d, hook=%p)"),
+	   fp, buf, literal, silent, hook));
+
     if (silent)
 	_nc_suppress_warnings = TRUE;	/* shut the lexer up, too */
 
@@ -255,12 +262,12 @@ _nc_read_entry_source(FILE *fp, char *buf,
 	for (_nc_head = _nc_tail; _nc_head->last; _nc_head = _nc_head->last)
 	    continue;
 
-	DEBUG(1, ("head = %s", _nc_head->tterm.term_names));
-	DEBUG(1, ("tail = %s", _nc_tail->tterm.term_names));
+	DEBUG(2, ("head = %s", _nc_head->tterm.term_names));
+	DEBUG(2, ("tail = %s", _nc_tail->tterm.term_names));
     }
 #ifdef TRACE
     else if (!immediate)
-	DEBUG(1, ("no entries parsed"));
+	DEBUG(2, ("no entries parsed"));
 #endif
 
     _nc_suppress_warnings = oldsuppress;
@@ -392,7 +399,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
     unsigned i, j;
     int unresolved, total_unresolved, multiples;
 
-    DEBUG(2, ("RESOLUTION BEGINNING"));
+    DEBUG(2, (T_CALLED("_nc_resolve_uses2")));
 
     /*
      * Check for multiple occurrences of the same name.
@@ -417,8 +424,10 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	    }
 	}
     }
-    if (multiples > 0)
+    if (multiples > 0) {
+	DEBUG(2, (T_RETURN("false")));
 	return (FALSE);
+    }
 
     DEBUG(2, ("NO MULTIPLE NAME OCCURRENCES"));
 
@@ -509,6 +518,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
     if (total_unresolved) {
 	/* free entries read in off disk */
 	_nc_free_entries(lastread);
+	DEBUG(2, (T_RETURN("false")));
 	return (FALSE);
     }
 
@@ -648,6 +658,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	DEBUG(2, ("SANITY CHECK FINISHED"));
     }
 
+    DEBUG(2, (T_RETURN("true")));
     return (TRUE);
 }
 

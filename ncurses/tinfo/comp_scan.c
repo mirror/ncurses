@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+,* Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.112 2021/10/04 23:56:28 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.115 2022/04/30 16:21:01 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -112,6 +112,9 @@ static FILE *yyin;		/* scanner's input file descriptor */
 NCURSES_EXPORT(void)
 _nc_reset_input(FILE *fp, char *buf)
 {
+    TR(TRACE_DATABASE,
+       (T_CALLED("_nc_reset_input(fp=%p, buf=%p)"), fp, buf));
+
     pushtype = NO_PUSHBACK;
     if (pushname != 0)
 	pushname[0] = '\0';
@@ -121,6 +124,8 @@ _nc_reset_input(FILE *fp, char *buf)
     if (fp != 0)
 	_nc_curr_line = 0;
     _nc_curr_col = 0;
+
+    returnVoidDB;
 }
 
 /*
@@ -367,6 +372,8 @@ _nc_get_token(bool silent)
     int old_col;
 #endif
 
+    DEBUG(3, (T_CALLED("_nc_get_token(silent=%d)"), silent));
+
     if (pushtype != NO_PUSHBACK) {
 	int retval = pushtype;
 
@@ -379,6 +386,7 @@ _nc_get_token(bool silent)
 	    pushname[0] = '\0';
 
 	/* currtok wasn't altered by _nc_push_token() */
+	DEBUG(3, (T_RETURN("%d"), retval));
 	return (retval);
     }
 
@@ -389,6 +397,7 @@ _nc_get_token(bool silent)
 	    if (_nc_curr_token.tk_name == tok_buf)
 		_nc_curr_token.tk_name = 0;
 	}
+	DEBUG(3, (T_RETURN("%d"), EOF));
 	return (EOF);
     }
 
@@ -595,7 +604,7 @@ _nc_get_token(bool silent)
 		}
 	    } else {
 		after_list = tok_buf + strlen(tok_buf);
-		DEBUG(1, ("missing description"));
+		DEBUG(2, ("missing description"));
 	    }
 
 	    /*
@@ -770,6 +779,7 @@ _nc_get_token(bool silent)
 	       : "<null>"),
 	      type));
 
+    DEBUG(3, (T_RETURN("%d"), type));
     return (type);
 }
 

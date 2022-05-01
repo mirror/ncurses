@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1999-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.35 2021/06/17 21:11:08 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.37 2022/04/30 17:00:05 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -377,6 +377,9 @@ adjust_cancels(TERMTYPE2 *to, TERMTYPE2 *from)
     int last = first + to->ext_Strings;
     int j, k;
 
+    DEBUG(3, (T_CALLED("adjust_cancels(%s), from(%s)"),
+	      to ? NonNull(to->term_names) : "?",
+	      from ? NonNull(from->term_names) : "?"));
     for (j = first; j < last;) {
 	char *name = to->ext_Names[j];
 	int j_str = to->num_Strings - first - to->ext_Strings;
@@ -413,6 +416,7 @@ adjust_cancels(TERMTYPE2 *to, TERMTYPE2 *from)
 	    j++;
 	}
     }
+    DEBUG(3, (T_RETURN("")));
 }
 
 NCURSES_EXPORT(void)
@@ -425,7 +429,7 @@ _nc_align_termtype(TERMTYPE2 *to, TERMTYPE2 *from)
     na = to ? ((int) NUM_EXT_NAMES(to)) : 0;
     nb = from ? ((int) NUM_EXT_NAMES(from)) : 0;
 
-    DEBUG(2, ("align_termtype to(%d:%s), from(%d:%s)",
+    DEBUG(2, (T_CALLED("align_termtype to(%d:%s), from(%d:%s)"),
 	      na, to ? NonNull(to->term_names) : "?",
 	      nb, from ? NonNull(from->term_names) : "?"));
 
@@ -507,6 +511,7 @@ _nc_align_termtype(TERMTYPE2 *to, TERMTYPE2 *from)
 	if (!used_ext_Names)
 	    free(ext_Names);
     }
+    DEBUG(2, (T_RETURN("")));
 }
 #endif
 
@@ -520,15 +525,15 @@ _nc_align_termtype(TERMTYPE2 *to, TERMTYPE2 *from)
 static void
 copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 {
-#if NCURSES_XNAMES || NCURSES_EXT_NUMBERS
     unsigned i;
-#endif
+    int pass;
+    char *new_table;
 #if NCURSES_EXT_NUMBERS
     short *oldptr = 0;
     int *newptr = 0;
 #endif
 
-    DEBUG(2, ("copy_termtype"));
+    DEBUG(2, (T_CALLED("copy_termtype(dst=%p, src=%p, mode=%d)"), dst, src, mode));
     *dst = *src;		/* ...to copy the sizes and string-tables */
 
     TYPE_MALLOC(NCURSES_SBOOL, NUM_BOOLEANS(dst), dst->Booleans);
@@ -540,6 +545,26 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
     memcpy(dst->Strings,
 	   src->Strings,
 	   NUM_STRINGS(dst) * sizeof(dst->Strings[0]));
+
+    new_table = NULL;
+    for (pass = 0; pass < 2; ++pass) {
+	size_t str_size = 0;
+	for (i = 0; i < NUM_STRINGS(dst); ++i) {
+	    if (VALID_STRING(src->Strings[i])) {
+		if (pass) {
+		    strcpy(new_table + str_size, src->Strings[i]);
+		    dst->Strings[i] = new_table + str_size;
+		}
+		str_size += strlen(src->Strings[i]) + 1;
+	    }
+	}
+	if (pass) {
+	    dst->str_table = new_table;
+	} else {
+	    ++str_size;
+	    new_table = malloc(str_size);
+	}
+    }
 
 #if NCURSES_EXT_NUMBERS
     if ((mode & dstINT) == 0) {
@@ -584,18 +609,35 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 	   NUM_NUMBERS(dst) * sizeof(dst->Numbers[0]));
 #endif
 
-    /* FIXME: we probably should also copy str_table and ext_str_table,
-     * but tic and infocmp are not written to exploit that (yet).
-     */
-
 #if NCURSES_XNAMES
     if ((i = NUM_EXT_NAMES(src)) != 0) {
 	TYPE_MALLOC(char *, i, dst->ext_Names);
 	memcpy(dst->ext_Names, src->ext_Names, i * sizeof(char *));
+
+	new_table = NULL;
+	for (pass = 0; pass < 2; ++pass) {
+	    size_t str_size = 0;
+	    for (i = 0; i < NUM_EXT_NAMES(dst); ++i) {
+		if (VALID_STRING(src->ext_Names[i])) {
+		    if (pass) {
+			strcpy(new_table + str_size, src->ext_Names[i]);
+			dst->ext_Names[i] = new_table + str_size;
+		    }
+		    str_size += strlen(src->ext_Names[i]) + 1;
+		}
+	    }
+	    if (pass) {
+		dst->ext_str_table = new_table;
+	    } else {
+		++str_size;
+		new_table = malloc(str_size);
+	    }
+	}
     } else {
 	dst->ext_Names = 0;
     }
 #endif
+    DEBUG(2, (T_RETURN("")));
 }
 
 /*
@@ -604,16 +646,18 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 NCURSES_EXPORT(void)
 _nc_copy_termtype(TERMTYPE *dst, const TERMTYPE *src)
 {
-    DEBUG(2, ("_nc_copy_termtype..."));
+    DEBUG(2, (T_CALLED("_nc_copy_termtype(dst=%p, src=%p)"), dst, src));
     copy_termtype((TERMTYPE2 *) dst, (const TERMTYPE2 *) src, 0);
+    DEBUG(2, (T_RETURN("")));
 }
 
 #if NCURSES_EXT_NUMBERS
 NCURSES_EXPORT(void)
 _nc_copy_termtype2(TERMTYPE2 *dst, const TERMTYPE2 *src)
 {
-    DEBUG(2, ("_nc_copy_termtype2..."));
+    DEBUG(2, (T_CALLED("_nc_copy_termtype2(dst=%p, src=%p)"), dst, src));
     copy_termtype(dst, src, srcINT | dstINT);
+    DEBUG(2, (T_RETURN("")));
 }
 
 /*
@@ -623,7 +667,8 @@ _nc_copy_termtype2(TERMTYPE2 *dst, const TERMTYPE2 *src)
 NCURSES_EXPORT(void)
 _nc_export_termtype2(TERMTYPE *dst, const TERMTYPE2 *src)
 {
-    DEBUG(2, ("_nc_export_termtype2..."));
+    DEBUG(2, (T_CALLED("_nc_export_termtype2(dst=%p, src=%p)"), dst, src));
     copy_termtype((TERMTYPE2 *) dst, src, srcINT);
+    DEBUG(2, (T_RETURN("")));
 }
 #endif /* NCURSES_EXT_NUMBERS */

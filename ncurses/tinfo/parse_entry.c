@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.102 2021/09/04 10:54:35 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.106 2022/04/30 20:50:06 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -214,16 +214,39 @@ expected_type(const char *name, int token_type, bool silent)
 }
 #endif /* NCURSES_XNAMES */
 
+/*
+ * A valid entry name uses characters from the "portable character set"
+ * (more commonly referred to as US-ASCII), and disallows some of the
+ * punctuation characters:
+ *
+ * '/' is a pathname separator
+ * '\' may be a pathname separator, but more important, is an escape
+ * '|' delimits names and description
+ * '#' denotes a numeric value
+ * '=' denotes a string value
+ * '@' denotes a cancelled symbol
+ * ',' separates terminfo capabilities
+ * ':' separates termcap capabilities
+ *
+ * Termcap capability names may begin with a '#' or '@' (since they have
+ * exactly two characters).
+ */
 static bool
 valid_entryname(const char *name)
 {
     bool result = TRUE;
+    bool first = TRUE;
     int ch;
     while ((ch = UChar(*name++)) != '\0') {
-	if (ch <= ' ' || ch > '~' || ch == '/') {
+	if (ch <= ' ' || ch > '~' || strchr("/\\|=,:", ch) != NULL) {
 	    result = FALSE;
 	    break;
 	}
+	if (!first && strchr("#@", ch) != NULL) {
+	    result = FALSE;
+	    break;
+	}
+	first = FALSE;
     }
     return result;
 }
@@ -262,10 +285,14 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
     const char *name;
     bool bad_tc_usage = FALSE;
 
+    TR(TRACE_DATABASE,
+       (T_CALLED("_nc_parse_entry(entry=%p, literal=%d, silent=%d)"),
+	entryp, literal, silent));
+
     token_type = _nc_get_token(silent);
 
     if (token_type == EOF)
-	return (EOF);
+	returnDB(EOF);
     if (token_type != NAMES)
 	_nc_err_abort("Entry does not start with terminal names in column one");
 
@@ -301,9 +328,9 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
     entryp->tterm.str_table = entryp->tterm.term_names = _nc_save_str(ptr);
 
     if (entryp->tterm.str_table == 0)
-	return (ERR);
+	returnDB(ERR);
 
-    DEBUG(1, ("Starting '%s'", ptr));
+    DEBUG(2, ("Starting '%s'", ptr));
 
     /*
      * We do this because the one-token lookahead in the parse loop
@@ -605,7 +632,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
     }
     _nc_wrap_entry(entryp, FALSE);
 
-    return (OK);
+    returnDB(OK);
 }
 
 NCURSES_EXPORT(int)
@@ -736,6 +763,10 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 {
     char buf[MAX_LINE * 2 + 2];
     string_desc result;
+
+    TR(TRACE_DATABASE,
+       (T_CALLED("postprocess_termcap(tp=%p, has_base=%d)"),
+	tp, has_base));
 
     /*
      * TERMCAP DEFAULTS AND OBSOLETE-CAPABILITY TRANSLATIONS
@@ -1023,11 +1054,16 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 	       && PRESENT(exit_alt_charset_mode)) {
 	acs_chars = _nc_save_str(VT_ACSC);
     }
+    returnVoidDB;
 }
 
 static void
 postprocess_terminfo(TERMTYPE2 *tp)
 {
+    TR(TRACE_DATABASE,
+       (T_CALLED("postprocess_terminfo(tp=%p)"),
+	tp));
+
     /*
      * TERMINFO-TO-TERMINFO MAPPINGS FOR SOURCE TRANSLATION
      * ----------------------------------------------------------------------
@@ -1064,6 +1100,7 @@ postprocess_terminfo(TERMTYPE2 *tp)
     /*
      * ----------------------------------------------------------------------
      */
+    returnVoidDB;
 }
 
 /*
