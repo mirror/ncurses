@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.71 2022/04/30 18:36:01 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.73 2022/05/08 00:11:44 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -60,7 +60,7 @@ NCURSES_EXPORT(void)
 _nc_init_entry(ENTRY * const tp)
 /* initialize a terminal type data block */
 {
-    DEBUG(2, (T_CALLED("_nc_init_entry(tp=%p)"), tp));
+    DEBUG(2, (T_CALLED("_nc_init_entry(tp=%p)"), (void *) tp));
 
     if (tp == NULL) {
 #if NO_LEAKS
@@ -88,7 +88,7 @@ _nc_copy_entry(ENTRY * oldp)
 {
     ENTRY *newp;
 
-    DEBUG(2, (T_CALLED("_nc_copy_entry(oldp=%p)"), oldp));
+    DEBUG(2, (T_CALLED("_nc_copy_entry(oldp=%p)"), (void *) oldp));
 
     newp = typeCalloc(ENTRY, 1);
     if (newp != NULL) {
@@ -96,7 +96,7 @@ _nc_copy_entry(ENTRY * oldp)
 	_nc_copy_termtype2(&(newp->tterm), &(oldp->tterm));
     }
 
-    DEBUG(2, (T_RETURN("%p"), newp));
+    DEBUG(2, (T_RETURN("%p"), (void *) newp));
     return (newp);
 }
 
@@ -144,6 +144,8 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
     unsigned nuses;
     TERMTYPE2 *tp;
 
+    DEBUG(2, (T_CALLED("_nc_wrap_entry(ep=%p, copy_strings=%d)"), (void *)
+	      ep, copy_strings));
     if (ep == NULL || stringbuf == NULL)
 	_nc_err_abort("_nc_wrap_entry called without initialization");
 
@@ -236,6 +238,7 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 	else
 	    ep->uses[i].name = (tp->str_table + useoffsets[i]);
     }
+    DEBUG(2, (T_RETURN("")));
 }
 
 NCURSES_EXPORT(void)

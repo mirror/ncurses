@@ -48,7 +48,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: parse_entry.c,v 1.106 2022/04/30 20:50:06 tom Exp $")
+MODULE_ID("$Id: parse_entry.c,v 1.107 2022/05/08 00:11:44 tom Exp $")
 
 #ifdef LINT
 static short const parametrized[] =
@@ -287,7 +287,7 @@ _nc_parse_entry(ENTRY * entryp, int literal, bool silent)
 
     TR(TRACE_DATABASE,
        (T_CALLED("_nc_parse_entry(entry=%p, literal=%d, silent=%d)"),
-	entryp, literal, silent));
+	(void *) entryp, literal, silent));
 
     token_type = _nc_get_token(silent);
 
@@ -766,7 +766,7 @@ postprocess_termcap(TERMTYPE2 *tp, bool has_base)
 
     TR(TRACE_DATABASE,
        (T_CALLED("postprocess_termcap(tp=%p, has_base=%d)"),
-	tp, has_base));
+	(void *) tp, has_base));
 
     /*
      * TERMCAP DEFAULTS AND OBSOLETE-CAPABILITY TRANSLATIONS
@@ -1062,7 +1062,7 @@ postprocess_terminfo(TERMTYPE2 *tp)
 {
     TR(TRACE_DATABASE,
        (T_CALLED("postprocess_terminfo(tp=%p)"),
-	tp));
+	(void *) tp));
 
     /*
      * TERMINFO-TO-TERMINFO MAPPINGS FOR SOURCE TRANSLATION

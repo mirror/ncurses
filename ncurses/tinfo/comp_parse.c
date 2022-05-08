@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.117 2022/04/30 15:57:27 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.122 2022/05/08 00:11:44 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -61,7 +61,7 @@ enqueue(ENTRY * ep)
 {
     ENTRY *newp;
 
-    DEBUG(1, (T_CALLED("enqueue(ep=%p)"), ep));
+    DEBUG(1, (T_CALLED("enqueue(ep=%p)"), (void *) ep));
 
     newp = _nc_copy_entry(ep);
     if (newp == 0)
@@ -73,6 +73,7 @@ enqueue(ENTRY * ep)
     newp->next = 0;
     if (newp->last)
 	newp->last->next = newp;
+    DEBUG(1, (T_RETURN("")));
 }
 
 #define NAMEBUFFER_SIZE (MAX_NAME_SIZE + 2)
@@ -222,7 +223,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
 
     DEBUG(1,
 	  (T_CALLED("_nc_read_entry_source(file=%p, buf=%p, literal=%d, silent=%d, hook=%p)"),
-	   fp, buf, literal, silent, hook));
+	   (void *) fp, buf, literal, silent, (void *) hook));
 
     if (silent)
 	_nc_suppress_warnings = TRUE;	/* shut the lexer up, too */
@@ -253,6 +254,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
 	    FreeIfNeeded(thisentry.tterm.Strings);
 #if NCURSES_XNAMES
 	    FreeIfNeeded(thisentry.tterm.ext_Names);
+	    FreeIfNeeded(thisentry.tterm.ext_str_table);
 #endif
 	}
     }
@@ -583,8 +585,10 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		    FreeIfNeeded(qp->tterm.Booleans);
 		    FreeIfNeeded(qp->tterm.Numbers);
 		    FreeIfNeeded(qp->tterm.Strings);
+		    FreeIfNeeded(qp->tterm.str_table);
 #if NCURSES_XNAMES
 		    FreeIfNeeded(qp->tterm.ext_Names);
+		    FreeIfNeeded(qp->tterm.ext_str_table);
 #endif
 		    qp->tterm = merged.tterm;
 		    _nc_wrap_entry(qp, TRUE);
@@ -745,7 +749,7 @@ sanity_check2(TERMTYPE2 *tp, bool literal)
 NCURSES_EXPORT(void)
 _nc_leaks_tic(void)
 {
-    T((T_CALLED("_nc_free_tic()")));
+    T((T_CALLED("_nc_leaks_tic()")));
     _nc_globals.leak_checking = TRUE;
     _nc_alloc_entry_leaks();
     _nc_captoinfo_leaks();
@@ -755,11 +759,13 @@ _nc_leaks_tic(void)
     _nc_codes_leaks();
 #endif
     _nc_tic_expand(0, FALSE, 0);
+    T((T_RETURN("")));
 }
 
 NCURSES_EXPORT(void)
 _nc_free_tic(int code)
 {
+    T((T_CALLED("_nc_free_tic(%d)"), code));
     _nc_leaks_tic();
     exit_terminfo(code);
 }

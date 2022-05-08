@@ -42,7 +42,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: read_entry.c,v 1.163 2022/04/30 18:35:46 tom Exp $")
+MODULE_ID("$Id: read_entry.c,v 1.164 2022/05/08 00:11:44 tom Exp $")
 
 #define MyNumber(n) (short) LOW_MSB(n)
 
@@ -214,7 +214,7 @@ _nc_init_termtype(TERMTYPE2 *const tp)
 {
     unsigned i;
 
-    DEBUG(2, (T_CALLED("_nc_init_termtype(tp=%p)"), tp));
+    DEBUG(2, (T_CALLED("_nc_init_termtype(tp=%p)"), (void *) tp));
 
 #if NCURSES_XNAMES
     tp->num_Booleans = BOOLCOUNT;

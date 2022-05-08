@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.115 2022/04/30 16:21:01 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.116 2022/05/08 00:11:44 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -113,7 +113,7 @@ NCURSES_EXPORT(void)
 _nc_reset_input(FILE *fp, char *buf)
 {
     TR(TRACE_DATABASE,
-       (T_CALLED("_nc_reset_input(fp=%p, buf=%p)"), fp, buf));
+       (T_CALLED("_nc_reset_input(fp=%p, buf=%p)"), (void *) fp, buf));
 
     pushtype = NO_PUSHBACK;
     if (pushname != 0)

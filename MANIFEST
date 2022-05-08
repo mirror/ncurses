@@ -1220,6 +1220,7 @@
 ./test/test_getstr.c
 ./test/test_instr.c
 ./test/test_inwstr.c
+./test/test_mouse.c
 ./test/test_opaque.c
 ./test/test_setupterm.c
 ./test/test_sgr.c
