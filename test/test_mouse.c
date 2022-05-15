@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.8 2022/05/08 00:36:07 tom Exp $
+ * $Id: test_mouse.c,v 1.18 2022/05/15 00:20:27 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -47,7 +47,7 @@ raw_loop(void)
 
     setupterm(NULL, 0, 0);
     xtermcap = tigetstr("XM");
-    if (xtermcap == 0 || xtermcap == (char *) -1) {
+    if (!VALID_STRING(xtermcap)) {
 	fprintf(stderr, "couldn't get XM terminfo");
 	return 1;
     }
@@ -61,16 +61,16 @@ raw_loop(void)
 	int c = getc(stdin);
 	const char *pretty;
 
-	if (c == ERR || c == '\003') {
+	if (c == -1 || c == '\003') {
 	    break;
 	} else if (c == '\033') {
-	    printf("\r\n");
+	    printf("\r\n\\E");
 	} else if ((pretty = unctrl((chtype) c)) != NULL) {
 	    printf("%s", pretty);
 	} else if (isprint(c)) {
 	    printf("%c", c);
 	} else {
-	    printf("{%x}", c);
+	    printf("{%x}", UChar(c));
 	}
     }
 
@@ -80,26 +80,27 @@ raw_loop(void)
     return 0;
 }
 
-static int logw(int line, const char *fmt, ...) GCC_PRINTFLIKE(2, 3);
+static void logw(const char *fmt, ...) GCC_PRINTFLIKE(1, 2);
 
-static int
-logw(int line, const char *fmt, ...)
+static void
+logw(const char *fmt, ...)
 {
+    int row = getcury(stdscr);
+
     va_list args;
     va_start(args, fmt);
-    wmove(stdscr, line++, 0);
+    wmove(stdscr, row++, 0);
     vw_printw(stdscr, fmt, args);
     clrtoeol();
 
-    line %= (getmaxy(stdscr) - logoffset);
-    if (line < logoffset) {
-	line = logoffset;
+    row %= (getmaxy(stdscr) - logoffset);
+    if (row < logoffset) {
+	row = logoffset;
     }
 
-    wmove(stdscr, line, 0);
+    wmove(stdscr, row, 0);
     wprintw(stdscr, ">");
     clrtoeol();
-    return line;
 }
 
 static void
@@ -117,7 +118,7 @@ usage(void)
 	"",
 	"Options:",
 	" -r       show raw input stream, injecting a new line before every ESC",
-	" -i n     set mouse interval to n; default is 0",
+	" -i n     set mouse interval to n; default is 0 (no double-clicks)",
 	" -h       show this message",
 	" -T term  use terminal description other than $TERM"
     };
@@ -132,10 +133,9 @@ main(int argc, char *argv[])
 {
     bool rawmode = FALSE;
     int interval = 0;
-    int curline;
     int c;
     MEVENT event;
-    char *my_environ;
+    char *my_environ = NULL;
     const char *term_format = "TERM=%s";
 
     while ((c = getopt(argc, argv, "hi:rT:")) != -1) {
@@ -170,7 +170,6 @@ main(int argc, char *argv[])
     }
 
     initscr();
-    clear();
     noecho();
     cbreak();			/* Line buffering disabled; pass everything */
     nonl();
@@ -180,10 +179,11 @@ main(int argc, char *argv[])
     mousemask(ALL_MOUSE_EVENTS | REPORT_MOUSE_POSITION, NULL);
     mouseinterval(interval);
 
-    logoffset = logw(logoffset, "Ctrl-c to quit");
-    logoffset = logw(logoffset, "--------------");
-
-    curline = logoffset;
+    logw("Ctrl-c to quit");
+    logw("--------------");
+    if (my_environ)
+	logw("%s", my_environ);
+    logoffset = getcury(stdscr);
 
     while (1) {
 	c = getch();
@@ -198,35 +198,63 @@ main(int argc, char *argv[])
 #else
 		const int max_btn = 4;
 #endif
+		const mmask_t btn_mask = (NCURSES_BUTTON_RELEASED |
+					  NCURSES_BUTTON_PRESSED |
+					  NCURSES_BUTTON_CLICKED |
+					  NCURSES_DOUBLE_CLICKED |
+					  NCURSES_TRIPLE_CLICKED);
+		bool found = FALSE;
 		for (btn = 1; btn <= max_btn; btn++) {
 		    events = (mmask_t) (event.bstate
-					& NCURSES_MOUSE_MASK(btn,
-							     NCURSES_BUTTON_RELEASED |
-							     NCURSES_BUTTON_PRESSED |
-							     NCURSES_BUTTON_CLICKED |
-							     NCURSES_DOUBLE_CLICKED |
-							     NCURSES_TRIPLE_CLICKED));
+					& NCURSES_MOUSE_MASK(btn, btn_mask));
 		    if (events == 0)
 			continue;
-#define Show(btn,name) ((event.bstate & NCURSES_MOUSE_MASK(btn, name)) != 0) ? #name : ""
-		    curline = logw(curline,
-				   "button %d %s %s %s %s %s %d[%x] @ %d, %d",
-				   btn,
-				   Show(btn, NCURSES_BUTTON_RELEASED),
-				   Show(btn, NCURSES_BUTTON_PRESSED),
-				   Show(btn, NCURSES_BUTTON_CLICKED),
-				   Show(btn, NCURSES_DOUBLE_CLICKED),
-				   Show(btn, NCURSES_TRIPLE_CLICKED),
-				   (event.bstate & REPORT_MOUSE_POSITION) != 0,
-				   events,
-				   event.y, event.x);
+#define ShowQ(btn,name) \
+	(((event.bstate & NCURSES_MOUSE_MASK(btn, NCURSES_ ## name)) != 0) \
+	 ? (" " #name) \
+	 : "")
+#define ShowM(name) \
+	(((event.bstate & NCURSES_MOUSE_MASK(btn, BUTTON_ ## name)) != 0) \
+	 ? (" " #name) \
+	 : "")
+#define ShowP() \
+	 ((event.bstate & REPORT_MOUSE_POSITION) != 0 \
+	  ? " position" \
+	  : "")
+		    logw("[%08lX] button %d%s%s%s%s%s%s%s%s%s @ %d, %d",
+			 (unsigned long) events,
+			 btn,
+			 ShowQ(btn, BUTTON_RELEASED),
+			 ShowQ(btn, BUTTON_PRESSED),
+			 ShowQ(btn, BUTTON_CLICKED),
+			 ShowQ(btn, DOUBLE_CLICKED),
+			 ShowQ(btn, TRIPLE_CLICKED),
+			 ShowM(SHIFT),
+			 ShowM(CTRL),
+			 ShowM(ALT),
+			 ShowP(),
+			 event.y, event.x);
+		    found = TRUE;
+		}
+		/*
+		 * A position report need not have a button associated with it.
+		 * The modifiers probably are unused.
+		 */
+		if (!found && (event.bstate & REPORT_MOUSE_POSITION)) {
+		    logw("[%08lX]%s%s%s%s @ %d, %d",
+			 (unsigned long) events,
+			 ShowM(SHIFT),
+			 ShowM(CTRL),
+			 ShowM(ALT),
+			 ShowP(),
+			 event.y, event.x);
 		}
 	    }
 	    break;
 	case '\003':
 	    goto end;
 	default:
-	    curline = logw(curline, "got another char: 0x%x", c);
+	    logw("got another char: 0x%x", UChar(c));
 	}
 	refresh();
     }
