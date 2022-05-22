@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.199 2022/04/09 21:32:05 tom Exp $ */
+/* $Id: test.priv.h,v 1.201 2022/05/21 20:37:38 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -553,8 +553,12 @@ extern int optind;
 /* workaround, to build against NetBSD's variant of the form library */
 #ifdef HAVE_NETBSD_FORM_H
 #define form_getyx(form, y, x) y = (int)current_field(form)->cursor_ypos, x = (int)current_field(form)->cursor_xpos
-#else
+#define form_field_row(field) (field)->form_row
+#define form_field_col(field) (field)->form_col
+#else /* e.g., SVr4, ncurses */
 #define form_getyx(form, y, x) y = (int)(form)->currow, x = (int)(form)->curcol
+#define form_field_row(field) (field)->frow
+#define form_field_col(field) (field)->fcol
 #endif
 
 /* workaround, to build against NetBSD's variant of the form library */
@@ -928,7 +932,7 @@ extern int TABSIZE;
 
 #if defined(NCURSES_VERSION) && HAVE_NC_ALLOC_H
 #include <nc_alloc.h>
-#if HAVE_EXIT_TERMINFO && (defined(USE_TERMINFO) || defined(USE_TINFO))
+#if HAVE_EXIT_TERMINFO && !defined(USE_CURSES) && (defined(USE_TERMINFO) || defined(USE_TINFO))
 #undef ExitProgram
 #define ExitProgram(code) exit_terminfo(code)
 #elif HAVE_EXIT_CURSES

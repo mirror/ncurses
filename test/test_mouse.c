@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.18 2022/05/15 00:20:27 tom Exp $
+ * $Id: test_mouse.c,v 1.19 2022/05/15 16:41:20 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -194,9 +194,9 @@ main(int argc, char *argv[])
 		unsigned btn;
 		mmask_t events;
 #if NCURSES_MOUSE_VERSION > 1
-		const int max_btn = 5;
+		const unsigned max_btn = 5;
 #else
-		const int max_btn = 4;
+		const unsigned max_btn = 4;
 #endif
 		const mmask_t btn_mask = (NCURSES_BUTTON_RELEASED |
 					  NCURSES_BUTTON_PRESSED |

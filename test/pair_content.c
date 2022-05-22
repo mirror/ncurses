@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: pair_content.c,v 1.15 2022/04/16 18:27:24 tom Exp $
+ * $Id: pair_content.c,v 1.16 2022/05/15 15:46:28 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -63,12 +63,19 @@ static struct timeval finish_time;
 #endif
 
 static void
+finish(int code)
+{
+    free(expected);
+    ExitProgram(code);
+}
+
+static void
 failed(const char *msg)
 {
     printw("%s", msg);
     getch();
     endwin();
-    ExitProgram(EXIT_FAILURE);
+    finish(EXIT_FAILURE);
 }
 
 #if USE_EXTENDED_COLOR
@@ -231,7 +238,7 @@ usage(void)
     size_t n;
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
-    ExitProgram(EXIT_FAILURE);
+    finish(EXIT_FAILURE);
 }
 
 int
@@ -314,5 +321,5 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	finish_test();
     }
 
-    ExitProgram(EXIT_SUCCESS);
+    finish(EXIT_SUCCESS);
 }

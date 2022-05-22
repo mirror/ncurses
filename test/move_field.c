@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: move_field.c,v 1.9 2021/06/12 21:30:34 tom Exp $
+ * $Id: move_field.c,v 1.13 2022/05/21 20:59:46 tom Exp $
  *
  * Demonstrate move_field().
  */
@@ -37,14 +37,6 @@
 
 #include <edit_field.h>
 #include <popup_msg.h>
-
-#ifdef HAVE_NETBSD_FORM_H
-#define form_field_row(field) (field)->form_row
-#define form_field_col(field) (field)->form_col
-#else /* e.g., SVr4, ncurses */
-#define form_field_row(field) (field)->frow
-#define form_field_col(field) (field)->fcol
-#endif
 
 #define DO_DEMO	CTRL('F')	/* actual key for toggling demo-mode */
 #define MY_DEMO	EDIT_FIELD('f')	/* internal request-code */
@@ -151,7 +143,6 @@ erase_form(FORM *f)
     werase(w);
     wrefresh(w);
     delwin(s);
-    delwin(w);
 }
 
 static FieldAttrs *
@@ -277,7 +268,7 @@ my_edit_field(FORM *form, int *result)
 static FIELD **
 copy_fields(FIELD **source, size_t length)
 {
-    FIELD **target = calloc(length + 1, sizeof(FIELD *));
+    FIELD **target = typeCalloc(FIELD *, length + 1);
     memcpy(target, source, length * sizeof(FIELD *));
     return target;
 }
@@ -309,13 +300,13 @@ do_demo(FORM *form)
 {
     int count = field_count(form);
     FIELD *my_field = current_field(form);
+    FIELD **old_fields = form_fields(form);
 
-    if (count > 0 && my_field != NULL) {
+    if (count > 0 && old_fields != NULL && my_field != NULL) {
 	size_t needed = (size_t) count;
-	FIELD **old_fields = copy_fields(form_fields(form), needed);
-	FIELD **new_fields = copy_fields(form_fields(form), needed);
+	FIELD **new_fields = copy_fields(old_fields, needed);
 
-	if (old_fields != NULL && new_fields != NULL) {
+	if (new_fields != NULL) {
 	    bool found = FALSE;
 	    int ch;
 
@@ -395,7 +386,6 @@ do_demo(FORM *form)
 		refresh();
 	    }
 	}
-	free(old_fields);
 	free(new_fields);
     }
 }

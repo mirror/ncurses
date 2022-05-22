@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2021 Thomas E. Dickey                                          *
+ * Copyright 2021,2022 Thomas E. Dickey                                     *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,13 +26,14 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: combine.c,v 1.17 2021/12/18 21:04:00 tom Exp $
+ * $Id: combine.c,v 1.19 2022/05/21 23:19:31 tom Exp $
  */
 
 #include <test.priv.h>
 
 #if USE_WIDEC_SUPPORT
 
+#include <wctype.h>
 #include <dump_window.h>
 #include <popup_msg.h>
 
@@ -252,8 +253,10 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'd':
 	    if (log_option)
 		dump_window(stdscr);
+#if HAVE_SCR_DUMP
 	    else
 		scr_dump(dump_log);
+#endif
 	    break;
 	case 'h':
 	    if (left_at > ' ')

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2022 Thomas E. Dickey                                     *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,11 +27,12 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_termattrs.c,v 1.3 2020/02/02 23:34:34 tom Exp $
+ * $Id: test_termattrs.c,v 1.4 2022/05/15 15:55:30 tom Exp $
  *
  * Demonstrate the termattrs and term_attrs functions.
  */
 
+#define USE_CURSES
 #define USE_TINFO
 #include <test.priv.h>
 

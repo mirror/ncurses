@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2004-2009,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -41,7 +41,7 @@
 #include <curses.priv.h>
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_insnstr.c,v 1.7 2020/02/02 23:34:34 tom Exp $")
+MODULE_ID("$Id: lib_insnstr.c,v 1.8 2022/05/21 17:35:15 tom Exp $")
 
 NCURSES_EXPORT(int)
 winsnstr(WINDOW *win, const char *s, int n)
@@ -70,6 +70,7 @@ winsnstr(WINDOW *win, const char *s, int n)
 		init_mb(state);
 		n3 = mbstowcs(buffer, s, nn);
 		if (n3 != (size_t) (-1)) {
+		    buffer[n3] = '\0';
 		    code = wins_nwstr(win, buffer, (int) n3);
 		}
 		free(buffer);

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_content.c,v 1.13 2022/04/16 18:26:40 tom Exp $
+ * $Id: color_content.c,v 1.14 2022/05/21 20:00:04 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -328,5 +328,6 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	finish_test();
     }
 
+    free(expected);
     ExitProgram(EXIT_SUCCESS);
 }

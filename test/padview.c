@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 2017 Free Software Foundation, Inc.                            *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@
 /*
  * clone of view.c, using pads
  *
- * $Id: padview.c,v 1.18 2021/06/12 23:16:31 tom Exp $
+ * $Id: padview.c,v 1.19 2022/05/15 14:36:23 tom Exp $
  */
 
 #include <test.priv.h>
@@ -45,6 +45,7 @@ static GCC_NORETURN void finish(int sig);
 
 #define my_pair 1
 
+static WINDOW *global_pad;
 static int shift = 0;
 static bool try_color = FALSE;
 
@@ -69,6 +70,8 @@ static void
 finish(int sig)
 {
     endwin();
+    if (global_pad != NULL)
+	delwin(global_pad);
     ExitProgram(sig != 0 ? EXIT_FAILURE : EXIT_SUCCESS);
 }
 
@@ -372,7 +375,8 @@ main(int argc, char *argv[])
      * Do this after starting color, otherwise the pad's background will be
      * uncolored after the ncurses 6.1.20181208 fixes.
      */
-    my_pad = read_file(fname = argv[optind]);
+    global_pad =
+	my_pad = read_file(fname = argv[optind]);
 
     my_row = 0;
     while (!done) {

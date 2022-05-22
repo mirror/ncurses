@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 2003-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.73 2021/05/08 19:41:08 tom Exp $
+ * $Id: demo_menus.c,v 1.76 2022/05/15 13:54:48 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -308,7 +308,7 @@ menu_create(ITEM ** items, int count, int ncols, MenuNo number)
 }
 
 static void
-menu_destroy(MENU * m)
+menu_destroy(MENU * m, int itemsToo)
 {
     Trace(("menu_destroy %p", (void *) m));
     if (m != 0) {
@@ -331,18 +331,18 @@ menu_destroy(MENU * m)
 		Trace(("freeing blob %p", blob));
 		free((void *) blob);
 	    }
-	    free(items);
-	    items = 0;
 	}
-#ifdef TRACE
-	if ((count > 0) && (m == mpTrace)) {
-	    ITEM **ip = items;
-	    if (ip != 0) {
-		while (*ip)
-		    free(*ip++);
+	if (count > 0 && itemsToo) {
+	    if (itemsToo & 1) {
+		ITEM **ip = items;
+		if (ip != 0) {
+		    while (*ip)
+			free_item(*ip++);
+		}
 	    }
+	    if (itemsToo & 2)
+		free(items);
 	}
-#endif
     }
 }
 
@@ -932,12 +932,12 @@ perform_menus(void)
 static void
 destroy_menus(void)
 {
-    menu_destroy(mpFile);
-    menu_destroy(mpSelect);
+    menu_destroy(mpFile, 1);
+    menu_destroy(mpSelect, 3);
 #ifdef TRACE
-    menu_destroy(mpTrace);
+    menu_destroy(mpTrace, 1);
 #endif
-    menu_destroy(mpBanner);
+    menu_destroy(mpBanner, 1);
 }
 
 #if HAVE_RIPOFFLINE
@@ -1004,6 +1004,7 @@ main(int argc, char *argv[])
     int c;
 
     setlocale(LC_ALL, "");
+    START_TRACE();
 
     while ((c = getopt(argc, argv, "fht:")) != -1) {
 	switch (c) {

@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2022 Thomas E. Dickey                                     *
  * Copyright 2015,2016 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_setupterm.c,v 1.10 2020/02/02 23:34:34 tom Exp $
+ * $Id: test_setupterm.c,v 1.12 2022/05/15 16:36:00 tom Exp $
  *
  * A simple demo of setupterm/restartterm.
  */
@@ -42,6 +42,46 @@ static bool a_opt = FALSE;
 static bool f_opt = FALSE;
 static bool n_opt = FALSE;
 static bool r_opt = FALSE;
+
+#if NO_LEAKS
+static TERMINAL **saved_terminals;
+static size_t num_saved;
+static size_t max_saved;
+
+static void
+finish(int code)
+{
+    size_t n;
+    for (n = 0; n < num_saved; ++n)
+	del_curterm(saved_terminals[n]);
+    free(saved_terminals);
+    ExitProgram(code);
+}
+
+static void
+save_curterm(void)
+{
+    size_t n;
+    bool found = FALSE;
+    for (n = 0; n < num_saved; ++n) {
+	if (saved_terminals[n] == cur_term) {
+	    found = TRUE;
+	    break;
+	}
+    }
+    if (!found) {
+	if (num_saved + 1 >= max_saved) {
+	    max_saved += 100;
+	    saved_terminals = typeRealloc(TERMINAL *, max_saved, saved_terminals);
+	}
+	saved_terminals[num_saved++] = cur_term;
+    }
+}
+
+#else
+#define finish(code) ExitProgram(code)
+#define save_curterm()		/* nothing */
+#endif
 
 static void
 test_rc(NCURSES_CONST char *name, int actual_rc, int actual_err)
@@ -104,6 +144,7 @@ test_setupterm(NCURSES_CONST char *name)
 #endif
 	rc = setupterm(name, 0, f_opt ? NULL : &err);
     test_rc(name, rc, err);
+    save_curterm();
 }
 
 static void
@@ -128,7 +169,7 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    finish(EXIT_FAILURE);
 }
 
 int
@@ -182,6 +223,7 @@ main(int argc, char *argv[])
     if (r_opt) {
 	newterm("ansi", stdout, stdin);
 	reset_shell_mode();
+	save_curterm();
     }
 
     if (a_opt) {
@@ -203,7 +245,7 @@ main(int argc, char *argv[])
 	}
     }
 
-    ExitProgram(EXIT_SUCCESS);
+    finish(EXIT_SUCCESS);
 }
 
 #else /* !HAVE_TIGETSTR */
