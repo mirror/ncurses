@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.40 2022/05/08 00:11:44 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.43 2022/05/29 17:56:55 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -557,7 +557,7 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 	    strcpy(dst->term_names + str_size, src->term_names);
 	}
 	str_size += strlen(src->term_names) + 1;
-	for (i = 0; i < NUM_STRINGS(dst); ++i) {
+	for (i = 0; i < STRCOUNT; ++i) {
 	    if (VALID_STRING(src->Strings[i])) {
 		if (pass) {
 		    strcpy(new_table + str_size, src->Strings[i]);
@@ -625,6 +625,19 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 	new_table = NULL;
 	for (pass = 0; pass < 2; ++pass) {
 	    size_t str_size = 0;
+	    char *raw_data = src->ext_str_table;
+	    if (raw_data != NULL) {
+		for (i = 0; i < src->ext_Strings; ++i) {
+		    size_t skip = strlen(raw_data) + 1;
+		    if (skip != 1) {
+			if (pass) {
+			    strcpy(new_table + str_size, raw_data);
+			}
+			str_size += skip;
+			raw_data += skip;
+		    }
+		}
+	    }
 	    for (i = 0; i < NUM_EXT_NAMES(dst); ++i) {
 		if (VALID_STRING(src->ext_Names[i])) {
 		    if (pass) {
@@ -638,7 +651,7 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 		dst->ext_str_table = new_table;
 	    } else {
 		++str_size;
-		new_table = malloc(str_size);
+		new_table = calloc(str_size, 1);
 	    }
 	}
     } else {

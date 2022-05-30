@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: free_ttype.c,v 1.20 2022/05/15 12:42:13 tom Exp $")
+MODULE_ID("$Id: free_ttype.c,v 1.21 2022/05/28 18:02:33 tom Exp $")
 
 static void
 really_free_termtype(TERMTYPE2 *ptr, bool freeStrings)
@@ -67,12 +67,21 @@ really_free_termtype(TERMTYPE2 *ptr, bool freeStrings)
 }
 
 /*
- * This entrypoint is used by tack 1.07
+ * This entrypoint was used by tack 1.07; deprecated with ncurses 6.2
  */
 NCURSES_EXPORT(void)
 _nc_free_termtype(TERMTYPE *ptr)
 {
     really_free_termtype((TERMTYPE2 *) ptr, !NCURSES_EXT_NUMBERS);
+}
+
+/*
+ * These similar entrypoints are not used outside of ncurses.
+ */
+NCURSES_EXPORT(void)
+_nc_free_termtype1(TERMTYPE *ptr)
+{
+    really_free_termtype((TERMTYPE2 *) ptr, TRUE);
 }
 
 #if NCURSES_EXT_NUMBERS

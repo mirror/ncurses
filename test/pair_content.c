@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: pair_content.c,v 1.16 2022/05/15 15:46:28 tom Exp $
+ * $Id: pair_content.c,v 1.17 2022/05/28 20:15:06 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -62,7 +62,7 @@ static struct timeval initial_time;
 static struct timeval finish_time;
 #endif
 
-static void
+static GCC_NORETURN void
 finish(int code)
 {
     free(expected);

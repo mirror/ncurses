@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1002 $
-#	$Date: 2022/04/30 23:24:59 $
+#	$Revision: 1.1003 $
+#	$Date: 2022/05/28 20:05:41 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -1953,6 +1953,8 @@ mgterm|MGL/MGL2 MobileGear Graphic Library,
 	vpa=\E[%i%p1%dd, use=ecma+index,
 
 #### FreeBSD console entries
+
+# Originally from termcap:
 #
 # From: Andrey Chernov <ache@astral.msk.su> 29 Mar 1996
 # Andrey Chernov maintains the FreeBSD termcap distributions.
@@ -1964,8 +1966,9 @@ mgterm|MGL/MGL2 MobileGear Graphic Library,
 # I have seen FreeBSD-2.1.5R... The old el1 bug changed, but it is still there.
 # Now el1 clears not only to the line beginning, but also a large chunk
 # of previous line. But there is another bug - ech does not work at all.
-#
 
+# syscons, sc - the console driver
+#
 # for syscons
 # common entry without semigraphics
 # Bug: The <op> capability resets attributes.
@@ -1976,7 +1979,7 @@ mgterm|MGL/MGL2 MobileGear Graphic Library,
 # Setting colors turns off reverse; we cannot guarantee order, so use ncv.
 # Note that this disables standout with color.
 #
-# The emulator sends difference strings based on shift- and control-keys,
+# The emulator sends different strings based on shift- and control-keys,
 # like scoansi:
 #	F13-F24 are shifted F1-F12
 #	F25-F36 are control F1-F12
@@ -2077,21 +2080,50 @@ cons60l1|cons60-iso|FreeBSD console w/iso 8859-1 chars (60 lines),
 cons60l1-m|cons60-iso-m|FreeBSD console w/iso 8859-1 chars (60-line mono),
 	lines#60, use=cons25l1-m,
 
+# vt - virtual terminal console driver
+#
 # Starting with FreeBSD 8, an alternative configuration for syscons is provided,
 # which is intended to be xterm-compatible.  See for example
 #	http://svnweb.freebsd.org/base/stable/8/sys/dev/syscons/
 # in particular scterm-teken.c
 #
+# Some of the documentation refers to this as "vt"; its proper name is "teken".
+#
+# The sc(4) manual page states that it is possible to switch between the two
+# by editing /boot/loader.conf, adding
+#	kern.vty=sc
+# Doing that does not change the default TERM variable.  That is hard-coded in
+# /etc/ttys, rather than deriving it from the kernel state.
+#
 # For FreeBSD 12 and 13:
 # ---------------------
 # In newer releases, it is no longer possible to boot into a configuration that
-# works with syscons.  teken's "cons25" configuration supports only the first
-# 12 function keys.  One may switch at runtime between the two flavors of
-# function keys using vidcontrol:
+# works with syscons.  According to efi(4),
+# "The vt(4) system console is automatically selected when booting via UEFI."
+# See FreeBSD #264226.
+#
+# FreeBSD 13 supports 64-bit machines which boot with UEFI:
+#	https://www.freebsd.org/platforms/
+# The i386 platform does not use UEFI (and modifying the loader configuration
+# does load sysconf); however because no updates (fixes) are available, most
+# developers will regard that as unsupported.
+#
+# With FreeBSD 13, even when syscons is loaded (e.g., with the i386 platform),
+# its function-keys are not configured.  Using
+#	vidcontrol -T cons25
+# repairs this.
+#
+# When teken is loaded, vidcontrol can switch at runtime between the
+# teken/cons25 function keys:
 #	vidcontrol -T cons25
 #	vidcontrol -T xterm
-# But for each, teken implements only about a quarter of the imitated terminal's
-# terminal descriptions.
+# However due to a limitation in the implementation, only the first 12 function
+# keys are available.  The real syscons supports 48 function keys (using the
+# shift and control modifiers), while xterm supports more than twice as many.
+#
+# vidcontrol does not change the emulation. As a result, the quarter (17/73) of
+# non-function key capabilities which differ between syscons and teken are
+# unsupported in the UEFI-based configurations.
 #
 # tack:
 #	VT100 line-drawing does not work (UTF-8 equivalents do).
@@ -27515,5 +27547,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2022-04-30
 #	+ modify samples for xterm mouse 1002/1003 modes to use 1006 mode, and
 #	  also provide for focus in/out responses -TD
+#
+# 2022-05-28
+#	+ expanded notes for teken/syscons -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

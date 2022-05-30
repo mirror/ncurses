@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -33,7 +33,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.61 2021/09/04 10:52:55 tom Exp $ */
+/* $Id: term_entry.h,v 1.62 2022/05/28 17:59:42 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -176,6 +176,7 @@ extern NCURSES_EXPORT(void) _nc_wrap_entry (ENTRY *const, bool);
 extern NCURSES_EXPORT(void) _nc_align_termtype (TERMTYPE2 *, TERMTYPE2 *);
 
 /* free_ttype.c: elementary allocation code */
+extern NCURSES_EXPORT(void) _nc_free_termtype1 (TERMTYPE *);
 extern NCURSES_EXPORT(void) _nc_free_termtype2 (TERMTYPE2 *);
 
 /* lib_termcap.c: trim sgr0 string for termcap users */

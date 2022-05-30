@@ -41,7 +41,7 @@
 #include <termcap.h>		/* ospeed */
 #include <tic.h>		/* VALID_STRING */
 
-MODULE_ID("$Id: lib_cur_term.c,v 1.48 2022/05/21 22:58:20 tom Exp $")
+MODULE_ID("$Id: lib_cur_term.c,v 1.49 2022/05/28 17:56:55 tom Exp $")
 
 #undef CUR
 #define CUR TerminalType(termp).
@@ -148,7 +148,7 @@ NCURSES_SP_NAME(del_curterm) (NCURSES_SP_DCLx TERMINAL *termp)
 
 #if NCURSES_EXT_NUMBERS
 #if NCURSES_EXT_COLORS
-	_nc_free_termtype(&termp->type);
+	_nc_free_termtype1(&termp->type);
 #else
 	_nc_free_termtype2(&termp->type);
 #endif
