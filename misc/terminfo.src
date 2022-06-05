@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1003 $
-#	$Date: 2022/05/28 20:05:41 $
+#	$Revision: 1.1005 $
+#	$Date: 2022/06/04 23:14:19 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -2179,7 +2179,6 @@ teken-2018|teken as of 2018,
 	kf3=\EOR, kf4=\EOS, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~,
 	kf8=\E[19~, kf9=\E[20~, khome=\E[H, kich1=\E[2~, knp=\E[6~,
 	kpp=\E[5~, rmir=\E[4l, smir=\E[4h, tbc=\E[3g,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
 	vpa=\E[%i%p1%dd, use=vt220+cvis, use=cons25,
 
 teken-2022|teken as of 2022,
@@ -4916,9 +4915,12 @@ xterm-p370|xterm patch #370,
 	use=ansi+rep, use=ecma+strikeout, use=xterm+pcfkeys,
 	use=xterm+nofkeys,
 
+xterm-p371|xterm patch #371,
+	use=dec+sl, use=xterm-p370,
+
 # This version reflects the current xterm features.
 xterm-new|modern xterm terminal emulator,
-	use=dec+sl, use=xterm-p370,
+	use=xterm-p370,
 
 # This fragment is for people who cannot agree on what the backspace key
 # should send.
@@ -27550,5 +27552,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # 2022-05-28
 #	+ expanded notes for teken/syscons -TD
+#
+# 2022-06-04
+#	+ remove u6-u9 from teken-2018 -TD
+#	+ set "xterm-new" to "xterm-p370", add "xterm-p371" -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

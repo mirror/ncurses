@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_terminfo.3x,v 1.81 2022/02/12 20:05:11 tom Exp $
+.\" $Id: curs_terminfo.3x,v 1.82 2022/06/04 22:47:05 tom Exp $
 .TH curs_terminfo 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -410,7 +410,8 @@ for each of the predefined \fBterminfo\fP variables:
 .\" ***************************************************************************
 .SS Releasing Memory
 Each successful call to \fBsetupterm\fP allocates memory to hold the terminal
-description.  As a side-effect, it sets \fBcur_term\fP to point to this memory.
+description.
+As a side-effect, it sets \fBcur_term\fP to point to this memory.
 If an application calls
 .sp
 	\fBdel_curterm(cur_term);\fP

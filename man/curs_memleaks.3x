@@ -27,12 +27,16 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_memleaks.3x,v 1.13 2022/02/12 20:05:11 tom Exp $
+.\" $Id: curs_memleaks.3x,v 1.15 2022/06/04 23:33:48 tom Exp $
 .TH curs_memleaks 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
 .ie \n(.g .ds '' \(rq
 .el       .ds '' ''
+.de bP
+.ie n  .IP \(bu 4
+.el    .IP \(bu 2
+..
 .na
 .hy 0
 .SH NAME
@@ -102,5 +106,22 @@ These functions do not return a value.
 .SH PORTABILITY
 These functions are not part of X/Open Curses;
 nor do other implementations of curses provide a similar feature.
+.PP
+In any implementation of X/Open Curses, an application can free part
+of the memory allocated by curses:
+.bP
+The portable part of \fBexit_curses\fP can be freed using \fBdelscreen\fP,
+passing the \fBSCREEN*\fP pointer returned by \fBnewterm\fP.
+.IP
+In some implementations, there is a global variable \fBsp\fP
+which could be used, e.g., if the screen were only initialized
+using \fBinitscr\fP.
+.bP
+The portable part of \fBexit_terminfo\fP can be freed using \fBdel_curterm\fP.
+.IP
+In this case, there is a global variable \fBcur_term\fP which can be
+used as parameter.
 .SH SEE ALSO
+\fBcurs_initscr\fP(3X),
+\fBcurs_terminfo\fP(3X).
 \fBcurses\fP(3X).
