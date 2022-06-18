@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.43 2022/05/29 17:56:55 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.44 2022/06/18 20:40:54 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -552,11 +552,13 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
     new_table = NULL;
     for (pass = 0; pass < 2; ++pass) {
 	size_t str_size = 0;
-	if (pass) {
-	    dst->term_names = new_table + str_size;
-	    strcpy(dst->term_names + str_size, src->term_names);
+	if (src->term_names != NULL) {
+	    if (pass) {
+		dst->term_names = new_table + str_size;
+		strcpy(dst->term_names + str_size, src->term_names);
+	    }
+	    str_size += strlen(src->term_names) + 1;
 	}
-	str_size += strlen(src->term_names) + 1;
 	for (i = 0; i < STRCOUNT; ++i) {
 	    if (VALID_STRING(src->Strings[i])) {
 		if (pass) {

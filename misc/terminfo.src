@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1005 $
-#	$Date: 2022/06/04 23:14:19 $
+#	$Revision: 1.1010 $
+#	$Date: 2022/06/18 19:10:35 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -931,6 +931,8 @@ beterm|BeOS Terminal,
 #### Linux consoles
 #
 
+# release 1.2.13: 1995/03
+#
 # This entry is good for the 1.2.13 or later version of the Linux console.
 #
 # ***************************************************************************
@@ -991,6 +993,8 @@ linux-m|Linux console no color,
 	colors@, pairs@,
 	setab@, setaf@, setb@, setf@, use=linux,
 
+# release 1.3: 1995/06
+#
 # The 1.3.x kernels add color-change capabilities; if yours doesn't have this
 # and it matters, turn off <ccc>.  The %02x escape used to implement this is
 # not supposedly back-portable to older SV curses (although it has worked fine
@@ -1015,6 +1019,8 @@ linux-c|Linux console 1.3.6+ for older ncurses,
 	      %d%;,
 	oc=\E]R, use=linux-basic,
 
+# release 2.2: 1999/01
+#
 # The 2.2.x kernels add a private mode that sets the cursor type; use that to
 # get a block cursor for cvvis.
 # reported by Frank Heckenbach <frank@g-n-u.de>.
@@ -1022,6 +1028,8 @@ linux2.2|Linux 2.2.x console,
 	civis=\E[?25l\E[?1c, cnorm=\E[?25h\E[?0c,
 	cvvis=\E[?25h\E[?8c, use=linux-c-nc,
 
+# release 2.6: 2003/12 - 2004/12
+#
 # Linux 2.6.x has a fix for SI/SO to work with UTF-8 encoding added here:
 #	http://lkml.iu.edu/hypermail/linux/kernel/0602.2/0738.html
 # Although the kernel has mappings for these, they were not in the default
@@ -1119,6 +1127,8 @@ linux-vt|Linux console using VT codes for graphics,
 	rmacs=\E(K, rmpch@, sgr@, sgr0=\E[0m\E(K\017, smacs=\E(0,
 	smpch@, use=linux,
 
+# release: 0.3.9b 1997/01 to 2000/05
+#
 # This is based on the Linux console (relies on the console to perform some
 # of the functionality), but does not recognize as many control sequences.
 # The program comes bundled with an old (circa 1998) copy of the Linux
@@ -1129,11 +1139,46 @@ linux-vt|Linux console using VT codes for graphics,
 #	\E[y,xf	same as \E[y,xH
 #
 # Note: The status-line support is buggy (dsl does not work).
-kon|kon2|jfbterm|Kanji ON Linux console,
-	ccc@, hs,
-	civis@, cnorm@, cvvis@, dsl=\E[?H, flash@, fsl=\E[?F, initc@,
-	initp@, kcbt@, oc@, op=\E[37;40m, rs1=\Ec, tsl=\E[?T,
-	use=linux,
+kon|kon2|Kanji ON Linux console,
+	am, bce, ccc, eo, eslok, hs, mir, msgr, xenl, xon,
+	colors#8, it#8, ncv#18, pairs#64,
+	acsc=+\020\,\021-\030.^Y0\333`\004a\261f\370g\361h\260j
+	     \331k\277l\332m\300n\305o~p\304q\304r\304s_t\303u\264v
+	     \301w\302x\263y\363z\362{\343|\330}\234~\376,
+	bel=^G, blink=\E[5m, bold=\E[1m, civis=\E[?25l,
+	clear=\E[H\E[J, cnorm=\E[?25h, cr=\r,
+	csr=\E[%i%p1%d;%p2%dr, cub=\E[%p1%dD, cub1=^H,
+	cud=\E[%p1%dB, cud1=\n, cuf=\E[%p1%dC, cuf1=\E[C,
+	cup=\E[%i%p1%d;%p2%dH, cuu=\E[%p1%dA, cuu1=\E[A,
+	dch=\E[%p1%dP, dch1=\E[P, dim=\E[2m, dl=\E[%p1%dM,
+	dl1=\E[M, dsl=\E[?H\E[?E, ed=\E[J, el=\E[K, el1=\E[1K,
+	fsl=\E[?F, home=\E[H, hpa=\E[%i%p1%dG, ht=^I, hts=\EH,
+	ich=\E[%p1%d@, ich1=\E[@, il=\E[%p1%dL, il1=\E[L, ind=\n,
+	initc=\E]P%p1%x%p2%02x%p3%02x%p4%02x, invis=\E[8m,
+	kb2=\E[G, kbs=^?, kcub1=\E[D, kcud1=\E[B, kcuf1=\E[C,
+	kcuu1=\E[A, kdch1=\E[3~, kend=\E[4~, kf1=\E[[A,
+	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf13=\E[25~,
+	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~,
+	kf18=\E[32~, kf19=\E[33~, kf2=\E[[B, kf20=\E[34~,
+	kf3=\E[[C, kf4=\E[[D, kf5=\E[[E, kf6=\E[17~, kf7=\E[18~,
+	kf8=\E[19~, kf9=\E[20~, khome=\E[1~, kich1=\E[2~,
+	knp=\E[6~, kpp=\E[5~, kspd=^Z, nel=\r\n, op=\E[37;40m,
+	rc=\E8, rev=\E[7m, ri=\EM, rmacs=\E[10m, rmir=\E[4l,
+	rmpch=\E[10m, rmso=\E[27m, rmul=\E[24m, rs1=\Ec, sc=\E7,
+	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
+	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5
+	    %t;2%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
+	sgr0=\E[0;10m, smacs=\E[11m, smir=\E[4h, smpch=\E[11m,
+	smso=\E[7m, smul=\E[4m, tbc=\E[3g, tsl=\E[?T,
+	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\E[c,
+	vpa=\E[%i%p1%dd,
+
+# release: 0.4.7 2005/05
+#
+jfbterm|japanese framebuffer terminal,
+	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
+	     yzz{{||}}~~,
+	sgr0=\E[0m, use=kon,
 
 # FbTerm
 # Another variant.  There are two parts (src, src/lib) with the latter
@@ -4886,13 +4931,10 @@ vt220+cvis|DECTCEM VT220 cursor-visibility,
 	civis=\E[?25l, cnorm=\E[?25h,
 vt220+cvis8|8-bit DECTCEM VT220 cursor-visibility,
 	civis=\233?25l, cnorm=\233?25h,
-# The cvvis capability was unused in the SVr4 terminal descriptions for the
-# AT&T terminals, and there are no available documents as of 2021 which can
-# provide that it would have worked.  The first block is used for those 1980s
-# terminals; the second is used for terminals whose behavior can be verified.
+# The first block is for terminals which did not support blinking cursor.
 att610+cvis0|AT&T 610 cursor-visibility,
-	civis=\E[?25l, cnorm=\E[?25h\E[?12l,
-att610+cvis|xterm cursor-visibility in XFree86 4.4,
+	civis=\E[?25l, cnorm=\E[?12l\E[?25h,
+att610+cvis|AT&T 610 cursor-visibility with blink,
 	civis=\E[?25l, cnorm=\E[?12l\E[?25h, cvvis=\E[?12;25h,
 
 # This version was released in XFree86 4.4.
@@ -14434,7 +14476,7 @@ att610|AT&T 610; 80 column; 98key keyboard,
 	    %|%t;7%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smir=\E[4h,
 	smln=\E[p, smso=\E[7m, smul=\E[4m, tsl=\E7\E[25;%i%p1%dx,
-	use=ecma+index, use=att610+cvis0,
+	use=ecma+index, use=att610+cvis,
 att610-w|AT&T 610; 132 column; 98key keyboard,
 	cols#132, wsl#132,
 	is1=\E[8;0|\E[?4;5;13;15l\E[13;20l\E[?3;7h\E[12h,
@@ -14515,8 +14557,7 @@ att620|AT&T 620; 80 column; 98key keyboard,
 	    %|%t;7%;%?%p7%t;8%;m%?%p9%t\E)0\016%e\E(B\017%;,
 	sgr0=\E[m\E(B\017, smacs=\E)0\016, smam=\E[?7h,
 	smir=\E[4h, smln=\E[p, smso=\E[7m, smul=\E[4m,
-	tsl=\E7\E[25;%i%p1%dx, use=ecma+index,
-	use=att610+cvis0,
+	tsl=\E7\E[25;%i%p1%dx, use=ecma+index, use=att610+cvis,
 att620-w|AT&T 620; 132 column; 98key keyboard,
 	cols#132, wsl#132,
 	is1=\E[8;0|\E[?4;5;13;15l\E[13;20l\E[?3;7h\E[12h,
@@ -14750,17 +14791,18 @@ att730|AT&T 730 windowing terminal,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smir=\E[4h,
 	smln=\E[?13l, smso=\E[7m, smul=\E[4m, smxon=\E[?21h,
 	swidm=\E#6, tsl=\E7\E[;%i%p1%dx, use=ansi+rep,
-	use=att610+cvis0,
-att730-41|730MTG-41|AT&T 730-41 windowing terminal Version,
+	use=att610+cvis,
+# "MGT" is "Multi-Tasking Graphics Terminal"
+att730-41|730MTG-41|AT&T 730-41 windowing terminal,
 	lines#41, use=att730,
-att730-24|730MTG-24|AT&T 730-24 windowing terminal Version,
+att730-24|730MTG-24|AT&T 730-24 windowing terminal,
 	lines#24, use=att730,
-att730r|730MTGr|AT&T 730 rev video windowing terminal Version,
+att730r|730MTGr|AT&T 730 rev video windowing terminal,
 	flash=\E[?5l$<200>\E[?5h,
 	is1=\E[8;0|\E[?3;4;13;15l\E[?5h\E[13;20l\E[?7h\E[12h\E(B\E)B, use=att730,
-att730r-41|730MTG-41r|AT&T 730r-41 rev video windowing terminal Version,
+att730r-41|730MTG-41r|AT&T 730r-41 rev video windowing terminal,
 	lines#41, use=att730r,
-att730r-24|730MTGr-24|AT&T 730r-24 rev video windowing terminal Version,
+att730r-24|730MTGr-24|AT&T 730r-24 rev video windowing terminal,
 	lines#24, use=att730r,
 
 # The following represents the screen layout along with the associated
@@ -14952,7 +14994,7 @@ att505|pt505|att5430|gs5430|AT&T Personal Terminal 505 or 5430 GETSET terminal,
 att505-24|pt505-24|gs5430-24|AT&T PT505 or 5430 GETSET version 1 24 lines,
 	lines#24,
 	mc4@, mc5@, rc@, rmam@, sc@, smam@, use=att505,
-tt505-22|pt505-22|gs5430-22|AT&T PT505 or 5430 GETSET version 1 22 lines,
+att505-22|pt505-22|gs5430-22|AT&T PT505 or 5430 GETSET version 1 22 lines,
 	lines#22, use=att505,
 #
 #### ------------------ TERMINFO FILE CAN BE SPLIT HERE ---------------------
@@ -27556,5 +27598,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2022-06-04
 #	+ remove u6-u9 from teken-2018 -TD
 #	+ set "xterm-new" to "xterm-p370", add "xterm-p371" -TD
+#
+# 2022-06-18
+#	+ revise kon/kon2/jfbterm to undo "linux2.6" change to
+#	  smacs/rmacs/enacs (Debian #1012800) -TD
+#	+ amended note for att610+cvis0, as per documentation for att610,
+#	  att620, att730 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
