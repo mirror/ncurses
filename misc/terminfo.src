@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1010 $
-#	$Date: 2022/06/18 19:10:35 $
+#	$Revision: 1.1014 $
+#	$Date: 2022/06/25 14:43:14 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -619,9 +619,45 @@ ansi-m|ansi-mono|ANSI X3.64-1979 terminal with ANSI.SYS compatible attributes,
 	s0ds=\E(B, s1ds=\E)B, s2ds=\E*B, s3ds=\E+B, tbc=\E[3g,
 	vpa=\E[%i%p1%dd, use=ecma+index, use=pcansi-m,
 
+# ECMA-48 addresses three of the four capabilities here:
+#
+# u6 -
+#	8.3.14 CPR - ACTIVE POSITION REPORT
+#	Notation: (Pn1;Pn2) Representation: CSI Pn1;Pn2 05/02
+#	Parameter default values: Pn1 = 1; Pn2 = 1
+#
+# u7
+#	8.3.35 DSR - DEVICE ST A TUS REPORT
+#	Notation: (Ps) Representation: CSI Ps 06/14
+#	Parameter default value: Ps = 0
+#	DSR is used either to report the status of the sending device or to
+#	request a status report from the receiving device, depending on the
+#	parameter values:
+#	6 a report of the active presentation position or of the active data
+#	  position in the form of ACTIVE POSITION REPORT (CPR) is requested
+#
+# u9 -
+#	8.3.24 DA - DEVICE ATTRIBUTES
+#	Notation: (Ps) Representation: CSI Ps 06/03
+#	Parameter default value: Ps = 0
+#	With a parameter value not equal to 0, DA is used to identify the
+#	device which sends the DA.  The parameter value is a device type
+#	identification code according to a register which is to be established. 
+#	If the parameter value is 0, DA is used to request an identifying DA
+#	from a device.
+#
+# DEC (and most "ANSI") terminals reply with a private-mode ("?") sequence,
+# but that register "which is to be" in ECMA-48 was never established.
+# For terminals that support DA1, a more specific u8 capability is preferred,
+# except for those (such as xterm) which can be configured to return different
+# responses.
+ansi+cpr|ncurses extension for ANSI CPR,
+	u6=\E[%i%d;%dR, u7=\E[6n,
 ansi+enq|ncurses extension for ANSI ENQ,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?%[;0123456789]c,
-	u9=\E[c,
+	u8=\E[?%[;0123456789]c, u9=\E[c, use=ansi+cpr,
+# DEC terminals provided DECID, subsumed into DA1:
+decid+cpr|ncurses extension for DECID,
+	u8=\E[?%[;0123456789]c, u9=\EZ, use=ansi+cpr,
 
 # ansi -- this terminfo expresses the largest subset of X3.64 that will fit in
 # standard terminfo.  Assumes ANSI.SYS-compatible attributes and color.
@@ -661,8 +697,8 @@ ansi.sys-old|ANSI.SYS under PC-DOS 2.0,
 	cup=\E[%i%p1%d;%p2%dH, cuu1=\E[A, el=\E[k, home=\E[H,
 	is2=\E[m\E[?7h, kcub1=^H, kcud1=\n, kcuf1=^L, kcuu1=^K,
 	khome=^^, pfkey=\E[0;%p1%{58}%+%d;%p2"%s"p, rc=\E[u,
-	rmam=\E[?7l, sc=\E[s, smam=\E[?7h, u6=\E[%i%d;%dR,
-	u7=\E[6n, use=klone+color, use=klone+sgr8,
+	rmam=\E[?7l, sc=\E[s, smam=\E[?7h, use=ansi+cpr,
+	use=klone+color, use=klone+sgr8,
 
 # Keypad:	Home=\0G	Up=\0H	PrPag=\0I
 #		ka1,kh		kcuu1		kpp,ka3
@@ -983,7 +1019,7 @@ linux-basic|Linux console (basic),
 	use=klone+sgr, use=ecma+color, use=linux+sfkeys,
 
 linux+decid|ncurses extension for Linux console DECID,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\EZ,
+	u8=\E[?6c, use=decid+cpr,
 
 linux+sfkeys|shifted function-keys for Linux console,
 	kf13=\E[25~, kf14=\E[26~, kf15=\E[28~, kf16=\E[29~,
@@ -1169,9 +1205,8 @@ kon|kon2|Kanji ON Linux console,
 	sgr=\E[0;10%?%p1%t;7%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;5%;%?%p5
 	    %t;2%;%?%p6%t;1%;%?%p7%t;8%;%?%p9%t;11%;m,
 	sgr0=\E[0;10m, smacs=\E[11m, smir=\E[4h, smpch=\E[11m,
-	smso=\E[7m, smul=\E[4m, tbc=\E[3g, tsl=\E[?T,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?6c, u9=\E[c,
-	vpa=\E[%i%p1%dd,
+	smso=\E[7m, smul=\E[4m, tbc=\E[3g, tsl=\E[?T, u8=\E[?6c,
+	vpa=\E[%i%p1%dd, use=ansi+enq,
 
 # release: 0.4.7 2005/05
 #
@@ -1736,7 +1771,7 @@ pccon+base|base capabilities for OpenBSD PC console,
 	el1=\E[1K, home=\E[H, ht=^I, hts=\EH, ich=\E[%p1%d@,
 	il=\E[%p1%dL, il1=\E[L, ind=\ED, nel=\EE, rc=\E8, ri=\EM,
 	rmam=\E[?7l, rmul=\E[24m, rs2=\Ec, sc=\E7, smam=\E[?7h,
-	smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
+	smul=\E[4m, tbc=\E[3g, use=ansi+cpr,
 pccon0-m|OpenBSD PC console without colors & with simple ASCII pseudographics,
 	use=pccon+sgr+acs0, use=pccon+base, use=pccon+keys,
 pccon0|OpenBSD PC console with simple ASCII pseudographics,
@@ -5545,8 +5580,8 @@ xterm-8bit|xterm terminal emulator 8-bit controls (X Window System),
 	sgr0=\2330m\E(B, smacs=\E(0, smam=\233?7h,
 	smcup=\233?1049h, smir=\2334h, smkx=\233?1h\E=,
 	smso=\2337m, smul=\2334m, tbc=\2333g, u6=\233[%i%d;%dR,
-	u7=\E[6n, u8=\233[?%[;0123456789]c, u9=\E[c,
-	vpa=\233%i%p1%dd, use=xterm+kbs,
+	u8=\233[?%[;0123456789]c, vpa=\233%i%p1%dd,
+	use=ansi+enq, use=xterm+kbs,
 
 # Note: normally xterm supports modified function-keys as described in
 #	XTerm - "Other" modified keys
@@ -5701,7 +5736,7 @@ xterm+sl-alt|alternate access X title line,
 #
 dec+sl|DEC VTxx status line,
 	eslok, hs,
-	dsl=\E[1$~, fsl=\E[0$}, tsl=\E[2$~\E[1$}\E[%i%p1%d`,
+	dsl=\E[0$~, fsl=\E[0$}, tsl=\E[2$~\E[1$}\E[%i%p1%d`,
 
 #
 # The following xterm variants don't depend on your base version
@@ -6589,10 +6624,9 @@ mlterm2|multi lingual terminal emulator 2.x,
 	    \E(B%;,
 	sgr0=\E[m\E(B, smacs=\E(0, smam=\E[?7h, smir=\E[4h,
 	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, tbc=\E[3g,
-	u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\E[c,
-	vpa=\E[%i%p1%dd, use=vt220+vtedit, use=xterm+alt1049,
-	use=ecma+index, use=mlterm+pcfkeys, use=vt220+cvis,
-	use=xterm+r6f2,
+	u8=\E[?1;2c, vpa=\E[%i%p1%dd, use=ansi+enq,
+	use=vt220+vtedit, use=xterm+alt1049, use=ecma+index,
+	use=mlterm+pcfkeys, use=vt220+cvis, use=xterm+r6f2,
 
 # The insert/delete/home/end keys do not respond to modifiers because mlterm
 # looks in its termcap to decide which string to send.  If it used terminfo
@@ -7169,9 +7203,9 @@ decansi|ANSI emulation with DEC compatibility hacks,
 	sgr=\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5%;%?
 	    %p5%t;2%;%?%p7%t;8%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smir=\E[4h,
-	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, u6=\E[%i%d;%dR,
-	u7=\E[6n, vpa=\E[%i%p1%dd, use=vt220+vtedit,
-	use=ecma+index, use=vt220+cvis,
+	smkx=\E[?1h\E=, smso=\E[7m, smul=\E[4m, vpa=\E[%i%p1%dd,
+	use=ansi+cpr, use=vt220+vtedit, use=ecma+index,
+	use=vt220+cvis,
 
 #### VWM
 # http://vwm.sourceforge.net/
@@ -7363,11 +7397,11 @@ st-0.6|simpleterm 0.6,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p6%t;1%;%?%p2%t;4%;%?%p1%p3%|
 	    %t;7%;%?%p4%t;5%;%?%p5%t;2%;%?%p7%t;8%;m,
 	sgr0=\E[0m, smacs=\E(0, smir=\E[4h, smkx=\E[?1h\E=,
-	smso=\E[7m, smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR,
-	u7=\E[6n, u8=\E[?1;2c, u9=\E[c, vpa=\E[%i%p1%dd, Se=\E[2 q,
-	Ss=\E[%p1%d q, use=vt220+pcedit, use=ecma+index,
-	use=xterm+alt1049, use=vt220+cvis, use=xterm+sl,
-	use=ecma+italics, use=ecma+strikeout,
+	smso=\E[7m, smul=\E[4m, tbc=\E[3g, u8=\E[?1;2c,
+	vpa=\E[%i%p1%dd, Se=\E[2 q, Ss=\E[%p1%d q, use=ansi+enq,
+	use=vt220+pcedit, use=ecma+index, use=xterm+alt1049,
+	use=vt220+cvis, use=xterm+sl, use=ecma+italics,
+	use=ecma+strikeout,
 #
 # st-0.1.1
 #
@@ -8039,7 +8073,7 @@ eterm-color|Emacs term.el terminal emulator term-protocol-version 0.96,
 	sgr=\E[0%?%p1%p3%|%t;7%;%?%p2%t;4%;%?%p4%t;5%;%?%p6%t;1%;%?
 	    %p7%t;8%;m,
 	sgr0=\E[m, smir=\E[4h, smso=\E[7m, smul=\E[4m,
-	u6=\E[%i%d;%dR, u7=\E[6n, use=vt220+pcedit,
+	use=ansi+cpr, use=vt220+pcedit,
 
 # shell.el can "do" color, though not nearly as well.
 #
@@ -9434,8 +9468,7 @@ uwin|U/Win 3.2 console,
 	rmso=\E[27m, rmul=\E[m, rs1=\Ec\E]R, sc=\E7,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm, sgr0=\E[0;10m,
 	smacs=\E[11m, smir=\E[4h, smpch=\E[11m, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, u6=\E[%i%d;%dR, u7=\E[6n,
-	use=vt220+cvis,
+	smul=\E[4m, tbc=\E[3g, use=ansi+cpr, use=vt220+cvis,
 
 #### Microsoft (miscellaneous)
 
@@ -15727,8 +15760,8 @@ cit101e-rv|C. Itoh CIT-101e (sets reverse video),
 	rev=\E[7m, ri=\EM, rmcup=, rmir=\E[4l, rmso=\E[m, rmul=\E[m,
 	rs1=\Ec\E[?7h\E[>5g, sc=\E7, sgr0=\E[m,
 	smcup=\E[>5g\E[?7h\E[?5h, smir=\E[4h, smso=\E[7m,
-	smul=\E[4m, tbc=\E[3g, u6=\E[%i%p1%d;%p2%dR, u7=\E[6n,
-	u8=\E[?6c, u9=\E[c, use=ecma+index,
+	smul=\E[4m, tbc=\E[3g, u6=\E[%i%p1%d;%p2%dR, u8=\E[?6c,
+	use=ansi+enq, use=ecma+index,
 cit101e-n|CIT-101e w/o am,
 	am@,
 	cvvis=\E[?1l\E[?4l\E[?7l, kbs=^H, kcub1=^H, kcud1=\n,
@@ -16714,8 +16747,8 @@ dg460-ansi|Data General Dasher 460 in ANSI-mode,
 	rev=\E[7m, ri=\E[T, rmso=\E[m, rmul=\E[05,
 	sgr=%?%p9%t\E(0%e\E(B%;\E[0%?%p5%t;2%;%?%p2%t;4%;%?%p4%t;5%;
 	    %?%p1%p3%|%t;7%;m,
-	sgr0=\E(B\E[m, smso=\E[7m, smul=\E[4m, u6=\E[%d;%dR,
-	u7=\E[6n, u8=\E[5n, u9=\E[0n,
+	sgr0=\E(B\E[m, smso=\E[7m, smul=\E[4m, u8=\E[5n, u9=\E[0n,
+	use=ansi+cpr,
 # From: Wayne Throop <mcnc!rti-sel!rtp47!throopw> (not official)
 # Data General 605x
 # Ought to work for a Model 6242, Type D210 as well as a 605x.
@@ -21426,7 +21459,7 @@ m2-nam|minitel|minitel-2|minitel-2-nam|France Telecom Minitel 2 mode te'le'infor
 	rmir=\E[4l, rmso=\E[27m, rmul=\E[24m,
 	rs1=\Ec\E[?4l\E[12h, rs2=\Ec\E)0, sc=\E7, sgr0=\E[m,
 	smacs=^N, smir=\E[4h, smso=\E[7m, smul=\E[4m, tsl=^_@A,
-	u6=\E[%i%d;%dR, u7=\E[6n,
+	use=ansi+cpr,
 
 # From: Alexandre Montaron <canal@mygale.org>, 18 Jun 1998, updated 19 Sep 2016
 #
@@ -21640,7 +21673,7 @@ screen.minitel1|Screen specific for minitel1,
 	acsc=++\,\,--..00``aaffgghhiijjkkllmmnnooppqqrrssttuuvvwwxxy
 	     yzz||}}~~,
 	bel=\007\E\^ \E\\, bold@, csr@, flash=\Eg\E\^ \E\\, kmous@,
-	rmul@, smul@, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\EZ,
+	rmul@, smul@, u8=\E[?1;2c, use=decid+cpr,
 	use=xterm+x11mouse, use=screen4,
 
 screen.minitel1b|Screen specific for minitel1b,
@@ -21768,7 +21801,7 @@ screen.linux-m1|Linux m1 specific for screen,
 	dim=\E[2m, kbs=^?, kclr=\E\r, kdl1=\E\E[A, kf13=\E[25~,
 	kf14=\E[26~, kf15=\E[28~, kf16=\E[29~, kf17=\E[31~,
 	kf18=\E[32~, kf19=\E[33~, kf20=\E[34~, kil1=\E\E[B, rmul@,
-	smul@, u6=\E[%i%d;%dR, u7=\E[6n, u8=\E[?1;2c, u9=\EZ,
+	smul@, u8=\E[?1;2c,
 	E3=\E[99H\E[2J\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
@@ -21777,7 +21810,7 @@ screen.linux-m1|Linux m1 specific for screen,
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 	   \n\n\n\n\n\n\n\n\n\n,
-	use=xterm+x11mouse, use=screen4,
+	use=decid+cpr, use=xterm+x11mouse, use=screen4,
 
 screen.linux-m1b|Linux m1b specific for screen,
 	colors@, pairs@,
@@ -27604,5 +27637,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  smacs/rmacs/enacs (Debian #1012800) -TD
 #	+ amended note for att610+cvis0, as per documentation for att610,
 #	  att620, att730 -TD
+#
+# 2022-06-25
+#	+ correct dsl in dec+sl (report by Rajeev Pillai) -TD
+#	+ add/use ansi+cpr, decid+cpr -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
