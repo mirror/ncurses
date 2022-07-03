@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3822 2022/06/25 22:45:37 tom Exp $
+-- $Id: NEWS,v 1.3826 2022/07/03 22:22:14 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220703
+	+ add consistency check in tic for u6/u7/u8/u9 and NQ capabilities.
+	+ use NQ to flag entries where the terminal does not support query and
+	  response -TD
+	+ use ansi+enq and decid+cpr in cases where the terminal probably
+	  supported the u6-u9 extension -TD
+	+ add/use apollo+vt132, xterm+alt47 -TD
 
 20220625
 	+ improve man/curs_bkgd.3x, explaining that bkgdset can affect results

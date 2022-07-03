@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: user_caps.5,v 1.20 2021/12/25 21:09:22 tom Exp $
+.\" $Id: user_caps.5,v 1.21 2022/07/03 20:01:04 tom Exp $
 .TH user_caps 5
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -207,9 +207,15 @@ the terminal.
 .IP
 The command \*(``\fBtput clear\fP\*('' does the same thing.
 .TP 3
+NQ
+used to suppress a consistency check in @TIC@ for the ncurses capabilities
+in user6 through user9 (u6, u7, u8 and u9)
+which tell how to query the terminal's cursor position
+and its device attributes.
+.TP 3
 RGB
 \fIboolean\fP, \fInumber\fP \fBor\fP \fIstring\fP,
-to assert that the
+used to assert that the
 \fBset_a_foreground\fP and
 \fBset_a_background\fP capabilities correspond to \fIdirect colors\fP,
 using an RGB (red/green/blue) convention.

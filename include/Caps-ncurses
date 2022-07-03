@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2019-2021,2022 Thomas E. Dickey                                  #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: Caps-ncurses,v 1.11 2021/11/27 20:58:18 tom Exp $
+# $Id: Caps-ncurses,v 1.12 2022/07/03 19:53:44 tom Exp $
 #
 #############################################################################
 #
@@ -344,6 +344,7 @@ infoalias	ksel	kslt	IBM	key_select
 used_by ncurses
 userdef	CO 	num	n	number of indexed colors overlaying RGB space
 userdef	E3	str	-	clears the terminal's scrollback buffer.
+userdef	NQ	bool	-	terminal does not support query/response
 userdef	RGB	bool	-	use direct colors with 1/3 of color-pair bits per color.
 userdef	RGB	num	n	use direct colors with given number of bits per color.
 userdef	RGB	str	-	use direct colors with given bit-layout.
