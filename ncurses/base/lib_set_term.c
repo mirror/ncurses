@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.179 2021/05/08 21:48:34 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.180 2022/07/09 18:58:58 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -819,10 +819,13 @@ NCURSES_EXPORT(int)
 _nc_ripoffline(int line, int (*init) (WINDOW *, int))
 {
     int rc;
+
+    _nc_init_pthreads();
     _nc_lock_global(prescreen);
     START_TRACE();
     rc = NCURSES_SP_NAME(_nc_ripoffline) (CURRENT_SCREEN_PRE, line, init);
     _nc_unlock_global(prescreen);
+
     return rc;
 }
 #endif
@@ -843,10 +846,13 @@ NCURSES_EXPORT(int)
 ripoffline(int line, int (*init) (WINDOW *, int))
 {
     int rc;
+
+    _nc_init_pthreads();
     _nc_lock_global(prescreen);
     START_TRACE();
     rc = NCURSES_SP_NAME(ripoffline) (CURRENT_SCREEN_PRE, line, init);
     _nc_unlock_global(prescreen);
+
     return rc;
 }
 #endif

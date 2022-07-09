@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -43,7 +43,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_data.c,v 1.86 2021/11/20 23:14:34 tom Exp $")
+MODULE_ID("$Id: lib_data.c,v 1.87 2022/07/09 22:03:21 tom Exp $")
 
 /*
  * OS/2's native linker complains if we don't initialize public data when
@@ -363,25 +363,28 @@ _nc_mutex_init(pthread_mutex_t * obj)
 NCURSES_EXPORT(int)
 _nc_mutex_lock(pthread_mutex_t * obj)
 {
-    if (_nc_use_pthreads == 0)
-	return 0;
-    return pthread_mutex_lock(obj);
+    int rc = 0;
+    if (_nc_use_pthreads != 0)
+	rc = pthread_mutex_lock(obj);
+    return rc;
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_trylock(pthread_mutex_t * obj)
 {
-    if (_nc_use_pthreads == 0)
-	return 0;
-    return pthread_mutex_trylock(obj);
+    int rc = 0;
+    if (_nc_use_pthreads != 0)
+	rc = pthread_mutex_trylock(obj);
+    return rc;
 }
 
 NCURSES_EXPORT(int)
 _nc_mutex_unlock(pthread_mutex_t * obj)
 {
-    if (_nc_use_pthreads == 0)
-	return 0;
-    return pthread_mutex_unlock(obj);
+    int rc = 0;
+    if (_nc_use_pthreads != 0)
+	rc = pthread_mutex_unlock(obj);
+    return rc;
 }
 #endif /* USE_PTHREADS */
 

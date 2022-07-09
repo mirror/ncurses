@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -53,7 +53,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.82 2020/02/02 23:34:34 tom Exp $
+  $Id: worm.c,v 1.83 2022/07/09 20:51:25 tom Exp $
 */
 
 #include <test.priv.h>
@@ -350,11 +350,7 @@ start_worm(void *arg)
     while (!quit_worm((int) (((struct worm *) arg) - worm))) {
 	while (compare < sequence) {
 	    ++compare;
-#if HAVE_USE_WINDOW
-	    use_window(stdscr, draw_worm, arg);
-#else
-	    draw_worm(stdscr, arg);
-#endif
+	    USING_WINDOW2(stdscr, draw_worm, arg);
 	}
     }
     Trace(("...start_worm (done)"));
@@ -379,13 +375,7 @@ draw_all_worms(void)
     }
 #else
     for (n = 0, w = &worm[0]; n < number; n++, w++) {
-	if (
-#if HAVE_USE_WINDOW
-	       USING_WINDOW2(stdscr, draw_worm, w)
-#else
-	       draw_worm(stdscr, w)
-#endif
-	    )
+	if (USING_WINDOW2(stdscr, draw_worm, w))
 	    done = TRUE;
     }
 #endif

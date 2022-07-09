@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.215 2021/11/20 23:11:31 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.216 2022/07/09 18:58:58 tom Exp $")
 
 /****************************************************************************
  *
@@ -990,6 +990,7 @@ _nc_setupterm(const char *tname,
     int rc = ERR;
     TERMINAL *termp = 0;
 
+    _nc_init_pthreads();
     _nc_lock_global(prescreen);
     START_TRACE();
     if (TINFO_SETUP_TERM(&termp, tname, Filedes, errret, reuse) == OK) {
@@ -999,6 +1000,7 @@ _nc_setupterm(const char *tname,
 	}
     }
     _nc_unlock_global(prescreen);
+
     return rc;
 }
 #endif
