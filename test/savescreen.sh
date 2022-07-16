@@ -27,13 +27,13 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: savescreen.sh,v 1.7 2022/02/05 17:58:06 tom Exp $
+# $Id: savescreen.sh,v 1.8 2022/07/16 16:34:34 tom Exp $
 #
 # Use this script to exercise "savescreen".
 # It starts by generating a series of temporary-filenames, which are passed
 # to the test-program.  Loop as long as the first file named exists.
 
-: ${TMPDIR:=/tmp}
+: "${TMPDIR:=/tmp}"
 
 # "mktemp -d" would be preferable, but is not standard.
 MY_DIR=$TMPDIR/savescreen$$
@@ -59,7 +59,7 @@ if test -f $BEGINS
 then
 	while test -f $BEGINS
 	do
-		${0%.sh} -r $PARAMS
+		"${0%.sh}" -r $PARAMS
 		test $? != 0 && break
 	done
 else

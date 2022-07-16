@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.201 2022/05/21 20:37:38 tom Exp $ */
+/* $Id: test.priv.h,v 1.202 2022/07/16 18:49:01 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -67,16 +67,8 @@
 #define HAVE_ASSUME_DEFAULT_COLORS 0
 #endif
 
-#ifndef HAVE_BSD_STRING_H
-#define HAVE_BSD_STRING_H 0
-#endif
-
-#ifndef HAVE_CURSES_VERSION
-#define HAVE_CURSES_VERSION 0
-#endif
-
-#ifndef HAVE_CURSCR
-#define HAVE_CURSCR 0
+#ifndef HAVE_CFMAKERAW
+#define HAVE_CFMAKERAW 0
 #endif
 
 #ifndef HAVE_CHGAT
@@ -93,6 +85,18 @@
 
 #ifndef HAVE_COLOR_SET
 #define HAVE_COLOR_SET 0
+#endif
+
+#ifndef HAVE_BSD_STRING_H
+#define HAVE_BSD_STRING_H 0
+#endif
+
+#ifndef HAVE_CURSES_VERSION
+#define HAVE_CURSES_VERSION 0
+#endif
+
+#ifndef HAVE_CURSCR
+#define HAVE_CURSCR 0
 #endif
 
 #ifndef HAVE_DELSCREEN
@@ -121,6 +125,10 @@
 
 #ifndef HAVE_GETMAXX
 #define HAVE_GETMAXX 0
+#endif
+
+#ifndef HAVE_GETTIMEOFDAY
+#define HAVE_GETTIMEOFDAY 0
 #endif
 
 #ifndef HAVE_GETOPT_H
@@ -726,8 +734,16 @@ extern int optind;
 #define HAVE_SNPRINTF 0
 #endif
 
+#ifndef HAVE_STRDUP
+#define HAVE_STRDUP 0
+#endif
+
 #ifndef USE_STRING_HACKS
 #define USE_STRING_HACKS 0
+#endif
+
+#ifndef HAVE_STRSTR
+#define HAVE_STRSTR 0
 #endif
 
 #ifndef NCURSES_CAST

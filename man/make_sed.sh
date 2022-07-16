@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make_sed.sh,v 1.14 2022/02/05 20:38:54 tom Exp $
+# $Id: make_sed.sh,v 1.15 2022/07/16 20:20:00 tom Exp $
 ##############################################################################
 # Copyright 2020-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -48,7 +48,7 @@ RESULT=result$$
 rm -f $UPPER $SCRIPT $RESULT
 trap "rm -f $COL.* $INPUT $UPPER $SCRIPT $RESULT; exit 1" 1 2 3 15
 trap "rm -f $COL.* $INPUT $UPPER $SCRIPT $RESULT" 0
-fgrep -v \# $1 | \
+fgrep -v \# "$1" | \
 sed	-e 's/[	][	]*/	/g' >$INPUT
 
 for F in 1 2 3 4
@@ -65,27 +65,29 @@ paste $COL.* | \
 sed	-e 's/^/s\/\\</' \
 	-e 's/$/\//' >$UPPER
 
-echo "# Do the TH lines" >>$RESULT
+{
+echo "# Do the TH lines"
 sed	-e 's/\//\/TH /' \
 	-e 's/	/ /' \
 	-e 's/	/ ""\/TH /' \
 	-e 's/	/ /' \
 	-e 's/\/$/ ""\//' \
-	$UPPER >>$RESULT
+	$UPPER
 
-echo "# Do the embedded references" >>$RESULT
+echo "# Do the embedded references"
 sed	-e 's/</<fB/' \
 	-e 's/	/\\\\fP(/' \
 	-e 's/	/)\/fB/' \
 	-e 's/	/\\\\fP(/' \
 	-e 's/\/$/)\//' \
-	$UPPER >>$RESULT
+	$UPPER
 
-echo "# Do the \fBxxx\fP references in the .NAME section" >>$RESULT
+echo '# Do the \\fBxxx\\fP references in the .NAME section'
 sed	-e 's/\\</^\\\\fB/' \
 	-e 's/	[^	]*	/\\\\f[RP] -\/\\\\fB/' \
 	-e 's/	.*$/\\\\fP -\//' \
-	$UPPER >>$RESULT
+	$UPPER
+} >>$RESULT
 
 # Finally, send the result to standard output
 cat $RESULT

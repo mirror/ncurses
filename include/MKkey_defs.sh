@@ -1,5 +1,5 @@
 #! /bin/sh
-# $Id: MKkey_defs.sh,v 1.22 2022/02/05 20:38:31 tom Exp $
+# $Id: MKkey_defs.sh,v 1.23 2022/07/16 16:54:02 tom Exp $
 ##############################################################################
 # Copyright 2019-2020,2022 Thomas E. Dickey                                  #
 # Copyright 2001-2013,2017 Free Software Foundation, Inc.                    #
@@ -35,7 +35,7 @@
 #
 # Extract function-key definitions from the Caps file
 #
-: ${AWK-awk}
+: "${AWK-awk}"
 
 test $# = 0 && set Caps
 
@@ -67,7 +67,7 @@ cat >>$data <<EOF
 key_resize	kr1	str	R1	KEY_RESIZE	+	NCURSES_EXT_FUNCS 	Terminal resize event
 EOF
 
-THIS=./`basename $0`
+THIS=./`basename "$0"`
 
 cat <<EOF
 /*

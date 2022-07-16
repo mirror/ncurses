@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: edit_cfg.sh,v 1.15 2022/02/05 20:38:40 tom Exp $
+# $Id: edit_cfg.sh,v 1.16 2022/07/16 18:02:32 tom Exp $
 ##############################################################################
 # Copyright 2020,2022 Thomas E. Dickey                                       #
 # Copyright 1998-2001,2017 Free Software Foundation, Inc.                    #
@@ -47,8 +47,8 @@ for name in \
 	HAVE_TERMIO_H \
 	BROKEN_LINKER
 do
-	mv $2 $BAK
-	if ( grep "[ 	]$name[ 	]" $1 2>&1 >$TMP )
+	mv "$2" "$BAK"
+	if ( grep "[ 	]${name}[ 	]" "$1" >$TMP 2>&1 )
 	then
 		value=1
 	else
@@ -59,11 +59,11 @@ do
 		-e "s@#define ${name}.*\$@#define $name $value@" \
 		-e "s@#if $name\$@#if $value /* $name */@" \
 		-e "s@#if !$name\$@#if $value /* !$name */@" \
-		$BAK >$2
-	if (cmp -s $2 $BAK)
+		"$BAK" >"$2"
+	if (cmp -s "$2" "$BAK")
 	then
-		mv $BAK $2
+		mv "$BAK" "$2"
 	else
-		rm -f $BAK
+		rm -f "$BAK"
 	fi
 done

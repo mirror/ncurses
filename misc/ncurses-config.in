@@ -1,7 +1,7 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.50 2021/08/07 21:36:14 tom Exp $
+# $Id: ncurses-config.in,v 1.51 2022/07/16 17:07:38 tom Exp $
 ##############################################################################
-# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2006-2015,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -170,7 +170,7 @@ do
 	lib_flags="$lib_flags $opt"
 done
 
-[ $# = 0 ] && exec @SHELL@ $0 --error
+[ $# = 0 ] && exec @SHELL@ "$0" --error
 
 while [ $# -gt 0 ]; do
 	case "$1" in
@@ -201,7 +201,7 @@ ENDECHO
 			[ -n "$OPTS" ] && OPTS="$OPTS "
 			OPTS="${OPTS}${opt}"
 		done
-		printf "%s\n" "$OPTS"
+		printf '%s\n' "$OPTS"
 		;;
 	--libs-only-L)
 		OPTS=
@@ -214,7 +214,7 @@ ENDECHO
 				;;
 			esac
 		done
-		printf "%s\n" "$OPTS"
+		printf '%s\n' "$OPTS"
 		;;
 	--libs-only-l)
 		OPTS=
@@ -227,7 +227,7 @@ ENDECHO
 				;;
 			esac
 		done
-		printf "%s\n" "$OPTS"
+		printf '%s\n' "$OPTS"
 		;;
 	--libs-only-other)
 		OPTS=
@@ -242,7 +242,7 @@ ENDECHO
 				;;
 			esac
 		done
-		printf "%s\n" "$OPTS"
+		printf '%s\n' "$OPTS"
 		;;
 	# identification
 	--version)
@@ -268,7 +268,7 @@ ENDECHO
 		elif [ "${includedir}" != /usr/include ]; then
 			INCS="${includedir}"
 		fi
-		echo $INCS
+		echo "$INCS"
 		;;
 	--libdir)
 		echo "${libdir}"
@@ -288,7 +288,7 @@ ENDECHO
 	# general info
 	--help)
 		cat <<ENDHELP
-Usage: `basename $0` [options]
+Usage: `basename "$0"` [options]
 
 Options:
   --prefix           echos the package-prefix of ${THIS}
@@ -318,7 +318,7 @@ Options:
 ENDHELP
 		;;
 	--error|*)
-		@SHELL@ $0 --help 1>&2
+		@SHELL@ "$0" --help 1>&2
 		exit 1
 		;;
 	esac

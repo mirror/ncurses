@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.19 2022/05/15 16:41:20 tom Exp $
+ * $Id: test_mouse.c,v 1.20 2022/07/16 18:52:09 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -43,7 +43,18 @@ raw_loop(void)
     char *xtermcap;
 
     tcgetattr(0, &old);
+#if HAVE_CFMAKERAW
     cfmakeraw(&tty);
+#else
+    tty = old;
+    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
+		     | INLCR | IGNCR | ICRNL | IXON);
+    tty.c_oflag &= ~OPOST;
+    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
+    tty.c_cflag &= ~(CSIZE | PARENB);
+    tty.c_cflag |= CS8;
+    tcsetattr(0, TCSANOW, &tty);
+#endif
 
     setupterm(NULL, 0, 0);
     xtermcap = tigetstr("XM");
@@ -57,7 +68,7 @@ raw_loop(void)
 
     tcsetattr(0, TCSANOW, &tty);
 
-    while (true) {
+    while (1) {
 	int c = getc(stdin);
 	const char *pretty;
 
