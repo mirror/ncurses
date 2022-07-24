@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.20 2022/07/16 18:52:09 tom Exp $
+ * $Id: test_mouse.c,v 1.22 2022/07/24 15:18:53 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -47,11 +47,11 @@ raw_loop(void)
     cfmakeraw(&tty);
 #else
     tty = old;
-    tty.c_iflag &= ~(IGNBRK | BRKINT | PARMRK | ISTRIP
-		     | INLCR | IGNCR | ICRNL | IXON);
-    tty.c_oflag &= ~OPOST;
-    tty.c_lflag &= ~(ECHO | ECHONL | ICANON | ISIG | IEXTEN);
-    tty.c_cflag &= ~(CSIZE | PARENB);
+    tty.c_iflag &= (unsigned) (~(IGNBRK | BRKINT | PARMRK | ISTRIP
+				 | INLCR | IGNCR | ICRNL | IXON));
+    tty.c_oflag &= (unsigned) (~OPOST);
+    tty.c_lflag &= (unsigned) (~(ECHO | ECHONL | ICANON | ISIG | IEXTEN));
+    tty.c_cflag &= (unsigned) (~(CSIZE | PARENB));
     tty.c_cflag |= CS8;
     tcsetattr(0, TCSANOW, &tty);
 #endif
@@ -121,7 +121,7 @@ usage(void)
     {
 	"Usage: test_mouse [options]",
 	"",
-	"Test mouse events.  These examples for $TERM demonstrate xterm"
+	"Test mouse events.  These examples for $TERM demonstrate xterm",
 	"features:",
 	"    xterm",
 	"    xterm-1002",

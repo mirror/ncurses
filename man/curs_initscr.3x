@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_initscr.3x,v 1.37 2022/02/12 20:07:29 tom Exp $
+.\" $Id: curs_initscr.3x,v 1.39 2022/07/24 15:46:49 tom Exp $
 .TH curs_initscr 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -176,10 +176,35 @@ to restore the screen after \fBendwin\fP.
 .bP
 This implementation allows using \fBinitscr\fP after \fBendwin\fP.
 .PP
-Old versions of curses, e.g., BSD 4.4, may have returned a null pointer
+Old versions of curses, e.g., BSD 4.4, would return a null pointer
 from \fBinitscr\fP when an error is detected, rather than exiting.
 It is safe but redundant to check the return value of \fBinitscr\fP
 in XSI Curses.
+.PP
+Calling \fBendwin\fP does not dispose of the memory allocated in \fBinitscr\fP
+or \fBnewterm\fP.
+Deleting a \fBSCREEN\fP provides a way to do this:
+.bP
+X/Open Curses does not say what happens to \fBWINDOW\fPs when \fBdelscreen\fP
+\*(``frees storage associated with the \fBSCREEN\fP\*(''
+nor does the SVr4 documentation help,
+adding that it should be called after \fBendwin\fP if a \fBSCREEN\fP
+is no longer needed.
+.bP
+However, \fBWINDOW\fPs are implicitly associated with a \fBSCREEN\fP.
+so that it is reasonable to expect \fBdelscreen\fP to deal with these.
+.bP
+SVr4 curses deletes the standard \fBWINDOW\fP structures
+\fBstdscr\fP and \fBcurscr\fP as well as a work area \fBnewscr\fP.
+SVr4 curses ignores other windows.
+.bP
+Since version 4.0 (1996), ncurses has maintained a list of all windows
+for each screen,
+using that information to delete those windows when \fBdelscreen\fP is called.
+.bP
+NetBSD copied this feature of ncurses in 2001.
+PDCurses follows the SVr4 model,
+deleting only the standard \fBWINDOW\fP structures.
 .SS Unset TERM Variable
 .PP
 If the TERM variable is missing or empty, \fBinitscr\fP uses the

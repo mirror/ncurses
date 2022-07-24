@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.52 2020/08/29 16:22:03 juergen Exp $
+ * $Id: rain.c,v 1.54 2022/07/23 22:47:38 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -57,6 +57,7 @@ typedef struct DATA {
 
 #ifdef USE_PTHREADS
 pthread_cond_t cond_next_drop;
+pthread_mutex_t mutex_drop_data;
 pthread_mutex_t mutex_next_drop;
 static int used_threads;
 
@@ -200,7 +201,7 @@ draw_part(void (*func) (DATA *), int state, DATA * data)
 static int
 put_next_drop(void)
 {
-    pthread_cond_signal(&cond_next_drop);
+    pthread_cond_broadcast(&cond_next_drop);
     pthread_mutex_unlock(&mutex_next_drop);
 
     return 0;
@@ -246,7 +247,9 @@ draw_drop(void *arg)
 	 * to the data which it uses for setting up this thread (but it has
 	 * been modified to use different coordinates).
 	 */
+	pthread_mutex_lock(&mutex_drop_data);
 	mydata = *(DATA *) arg;
+	pthread_mutex_unlock(&mutex_drop_data);
 
 	draw_part(part1, 0, &mydata);
 	draw_part(part2, 1, &mydata);
@@ -254,6 +257,7 @@ draw_drop(void *arg)
 	draw_part(part4, 3, &mydata);
 	draw_part(part5, 4, &mydata);
 	draw_part(part6, 0, &mydata);
+
     } while (get_next_drop());
 
     return NULL;
@@ -374,7 +378,9 @@ main(int argc, char *argv[])
     curs_set(0);
     timeout(0);
 
-#ifndef USE_PTHREADS
+#ifdef USE_PTHREADS
+    pthread_mutex_init(&mutex_drop_data, NULL);
+#else /* !USE_PTHREADS */
     for (j = MAX_DROP; --j >= 0;) {
 	last[j].x = random_x();
 	last[j].y = random_y();
@@ -383,14 +389,21 @@ main(int argc, char *argv[])
 #endif
 
     while (!done) {
+#ifdef USE_PTHREADS
+	pthread_mutex_lock(&mutex_drop_data);
+
 	drop.x = random_x();
 	drop.y = random_y();
 
-#ifdef USE_PTHREADS
 	if (start_drop(&drop) != 0) {
 	    beep();
 	}
+
+	pthread_mutex_unlock(&mutex_drop_data);
 #else
+	drop.x = random_x();
+	drop.y = random_y();
+
 	/*
 	 * The non-threaded code draws parts of each drop on each loop.
 	 */

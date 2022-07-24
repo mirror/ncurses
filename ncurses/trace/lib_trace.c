@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.99 2021/06/26 20:44:59 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.100 2022/07/23 20:08:45 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -94,12 +94,22 @@ NCURSES_EXPORT_VAR(long) _nc_outchars = 0;
 #define MyNested	_nc_globals.nested_tracef
 #endif /* TRACE */
 
+#if USE_REENTRANT
+#define Locked(statement) { \
+	_nc_lock_global(tst_tracef); \
+	statement; \
+	_nc_unlock_global(tst_tracef); \
+    }
+#else
+#define Locked(statement) statement
+#endif
+
 NCURSES_EXPORT(unsigned)
 curses_trace(unsigned tracelevel)
 {
     unsigned result;
 #if defined(TRACE)
-    result = _nc_tracing;
+    Locked(result = _nc_tracing);
     if ((MyFP == 0) && tracelevel) {
 	MyInit = TRUE;
 	if (MyFD >= 0) {
@@ -125,7 +135,7 @@ curses_trace(unsigned tracelevel)
 		;		/* EMPTY */
 	    }
 	}
-	_nc_tracing = tracelevel;
+	Locked(_nc_tracing = tracelevel);
 	/* Try to set line-buffered mode, or (failing that) unbuffered,
 	 * so that the trace-output gets flushed automatically at the
 	 * end of each line.  This is useful in case the program dies.
@@ -147,9 +157,9 @@ curses_trace(unsigned tracelevel)
 	    fclose(MyFP);
 	    MyFP = 0;
 	}
-	_nc_tracing = tracelevel;
+	Locked(_nc_tracing = tracelevel);
     } else if (_nc_tracing != tracelevel) {
-	_nc_tracing = tracelevel;
+	Locked(_nc_tracing = tracelevel);
 	_tracef("tracelevel=%#x", tracelevel);
     }
 #else

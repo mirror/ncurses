@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -85,7 +85,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: tty_update.c,v 1.312 2021/09/04 10:29:59 tom Exp $")
+MODULE_ID("$Id: tty_update.c,v 1.314 2022/07/23 22:12:59 tom Exp $")
 
 /*
  * This define controls the line-breakout optimization.  Every once in a
@@ -757,14 +757,20 @@ TINFO_DOUPDATE(NCURSES_SP_DCL0)
      * We do not allow applications to assign new values in the reentrant
      * model.
      */
+#if NCURSES_SP_FUNCS
+    if (SP_PARM == CURRENT_SCREEN) {
+#endif
 #define SyncScreens(internal,exported) \
 	if (internal == 0) internal = exported; \
 	if (internal != exported) exported = internal
 
-    SyncScreens(CurScreen(SP_PARM), curscr);
-    SyncScreens(NewScreen(SP_PARM), newscr);
-    SyncScreens(StdScreen(SP_PARM), stdscr);
+	SyncScreens(CurScreen(SP_PARM), curscr);
+	SyncScreens(NewScreen(SP_PARM), newscr);
+	SyncScreens(StdScreen(SP_PARM), stdscr);
+#if NCURSES_SP_FUNCS
+    }
 #endif
+#endif /* !USE_REENTRANT */
 
     if (CurScreen(SP_PARM) == 0
 	|| NewScreen(SP_PARM) == 0

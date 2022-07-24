@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_window.3x,v 1.25 2022/02/12 20:06:41 tom Exp $
+.\" $Id: curs_window.3x,v 1.27 2022/07/24 15:35:15 tom Exp $
 .TH curs_window 3X ""
 .de bP
 .ie n  .IP \(bu 4
@@ -256,8 +256,27 @@ is patterned on the XPG4 curses standard.
 The weaker XPG4 spec may result in slower updates.
 .SH PORTABILITY
 The XSI Curses standard, Issue 4 describes these functions.
+.PP
+X/Open Curses states regarding \fBdelwin\fP:
+.bP
+It must delete subwindows before deleting their parent.
+.bP
+If \fBdelwin\fP is asked to delete a parent window,
+it can only succeed if the curses library keeps a list of the subwindows.
+SVr4 curses kept a count of the number of subwindows rather than a list.
+It simply returned \fBERR\fP when asked to delete a subwindow.
+Solaris X/Open curses does not even make that check,
+and will delete a parent window which still has subwindows.
+.bP
+Since release 4.0 (1996), ncurses maintains a list of windows for each screen,
+and is able to recursively delete subwindows when asked to delete their parent.
+.bP
+NetBSD copied this feature of ncurses in 2003.
+.br
+PDCurses follows the scheme used in Solaris X/Open curses.
 .SH SEE ALSO
 \fBcurses\fP(3X),
+\fBcurs_initscr\fP(3X),
 \fBcurs_refresh\fP(3X),
 \fBcurs_touch\fP(3X),
 \fBcurs_variables\fP(3X)

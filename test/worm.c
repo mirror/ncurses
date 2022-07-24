@@ -53,7 +53,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.83 2022/07/09 20:51:25 tom Exp $
+  $Id: worm.c,v 1.84 2022/07/23 17:06:16 tom Exp $
 */
 
 #include <test.priv.h>
@@ -107,6 +107,18 @@ static int length = 16, number = 3;
 static chtype trail = ' ';
 
 static unsigned pending;
+
+#ifdef USE_PTHREADS
+#define Locked(statement) { \
+	pthread_mutex_lock(&pending_mutex); \
+	statement; \
+	pthread_mutex_unlock(&pending_mutex); \
+    }
+pthread_mutex_t pending_mutex;
+#else
+#define Locked(statement) statement
+#endif
+
 #ifdef TRACE
 static int generation, trace_start, trace_end;
 #endif /* TRACE */
@@ -248,13 +260,18 @@ draw_worm(WINDOW *win, void *data)
     WORM *w = (WORM *) data;
     const struct options *op;
     unsigned mask = (unsigned) (~(1 << (w - worm)));
-    chtype attrs = w->attrs | ((mask & pending) ? A_REVERSE : 0);
+    chtype attrs;
 
     int x;
     int y;
     int h;
 
     bool done = FALSE;
+    bool is_pending;
+
+    Locked(is_pending = ((mask & pending) != 0));
+
+    attrs = w->attrs | (is_pending ? A_REVERSE : 0);
 
     if ((x = w->xpos[h = w->head]) < 0) {
 	wmove(win, y = w->ypos[h] = last_y, x = w->xpos[h] = 0);
@@ -336,9 +353,12 @@ draw_worm(WINDOW *win, void *data)
 static bool
 quit_worm(int bitnum)
 {
-    pending = (pending | (unsigned) (1 << bitnum));
+    Locked(pending = (pending | (unsigned) (1 << bitnum)));
+
     napms(10);			/* let the other thread(s) have a chance */
-    pending = (pending & (unsigned) ~(1 << bitnum));
+
+    Locked(pending = (pending & (unsigned) ~(1 << bitnum)));
+
     return quitting;
 }
 
@@ -593,8 +613,12 @@ main(int argc, char *argv[])
     USING_WINDOW1(stdscr, wrefresh, safe_wrefresh);
     nodelay(stdscr, TRUE);
 
+#ifdef USE_PTHREADS
+    pthread_mutex_init(&pending_mutex, NULL);
+#endif
+
     while (!done) {
-	++sequence;
+	Locked(++sequence);
 	if ((ch = get_input()) > 0) {
 #ifdef TRACE
 	    if (trace_start || trace_end) {

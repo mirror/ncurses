@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.180 2022/07/09 18:58:58 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.181 2022/07/21 23:35:21 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -146,6 +146,8 @@ delscreen(SCREEN *sp)
 
     _nc_lock_global(curses);
     if (delink_screen(sp)) {
+	bool is_current = (sp == CURRENT_SCREEN);
+
 #ifdef USE_SP_RIPOFF
 	if (safe_ripoff_sp && safe_ripoff_sp != safe_ripoff_stack) {
 	    ripoff_t *rop;
@@ -219,7 +221,7 @@ delscreen(SCREEN *sp)
 	 * application might try to use (except cur_term, which may have
 	 * multiple references in different screens).
 	 */
-	if (sp == CURRENT_SCREEN) {
+	if (is_current) {
 #if !USE_REENTRANT
 	    curscr = 0;
 	    newscr = 0;
@@ -234,6 +236,8 @@ delscreen(SCREEN *sp)
 		_nc_wacs = 0;
 	    }
 #endif
+	} else {
+	    set_term(CURRENT_SCREEN);
 	}
     }
     _nc_unlock_global(curses);

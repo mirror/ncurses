@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_initscr.3x,v 1.37 2022/02/12 20:07:29 tom Exp @
+  * @Id: curs_initscr.3x,v 1.39 2022/07/24 15:46:49 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -174,9 +174,31 @@
 
        <STRONG>o</STRONG>   This implementation allows using <STRONG>initscr</STRONG> after <STRONG>endwin</STRONG>.
 
-       Old versions of curses, e.g., BSD 4.4, may have returned a null pointer
-       from <STRONG>initscr</STRONG> when an error is detected, rather  than  exiting.   It  is
-       safe but redundant to check the return value of <STRONG>initscr</STRONG> in XSI Curses.
+       Old versions of curses, e.g., BSD 4.4, would return a null pointer from
+       <STRONG>initscr</STRONG> when an error is detected, rather than exiting.  It is safe but
+       redundant to check the return value of <STRONG>initscr</STRONG> in XSI Curses.
+
+       Calling  <STRONG>endwin</STRONG>  does not dispose of the memory allocated in <STRONG>initscr</STRONG> or
+       <STRONG>newterm</STRONG>.  Deleting a <STRONG>SCREEN</STRONG> provides a way to do this:
+
+       <STRONG>o</STRONG>   X/Open Curses does not say what happens to <STRONG>WINDOW</STRONG>s  when  <STRONG>delscreen</STRONG>
+           "frees  storage associated with the <STRONG>SCREEN</STRONG>" nor does the SVr4 docu-
+           mentation help, adding that it should be called after <STRONG>endwin</STRONG>  if  a
+           <STRONG>SCREEN</STRONG> is no longer needed.
+
+       <STRONG>o</STRONG>   However,  <STRONG>WINDOW</STRONG>s are implicitly associated with a <STRONG>SCREEN</STRONG>.  so that
+           it is reasonable to expect <STRONG>delscreen</STRONG> to deal with these.
+
+       <STRONG>o</STRONG>   SVr4 curses deletes  the  standard  <STRONG>WINDOW</STRONG>  structures  <STRONG>stdscr</STRONG>  and
+           <STRONG>curscr</STRONG>  as  well  as a work area <STRONG>newscr</STRONG>.  SVr4 curses ignores other
+           windows.
+
+       <STRONG>o</STRONG>   Since version 4.0 (1996), ncurses has maintained a list of all win-
+           dows  for  each screen, using that information to delete those win-
+           dows when <STRONG>delscreen</STRONG> is called.
+
+       <STRONG>o</STRONG>   NetBSD copied this feature of ncurses in  2001.   PDCurses  follows
+           the SVr4 model, deleting only the standard <STRONG>WINDOW</STRONG> structures.
 
 
 </PRE><H3><a name="h3-Unset-TERM-Variable">Unset TERM Variable</a></H3><PRE>

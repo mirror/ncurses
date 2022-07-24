@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3831 2022/07/16 18:43:58 tom Exp $
+-- $Id: NEWS,v 1.3836 2022/07/24 10:06:18 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220724
+	+ add portability notes for delscreen and delwin in manual.
+	+ improve pthread-configuration for test/worm.c, test/rain.c
+	+ improve pointer/limit checks associated with deleting a screen
+	  (Debian #1015756).
 
 20220716
 	+ build-fix for test_mouse.c, for non-standard cfmakeraw.
