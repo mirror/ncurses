@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -42,7 +42,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.42 2021/05/08 20:44:44 tom Exp $
+ * $Id: hanoi.c,v 1.44 2022/07/28 00:31:22 tom Exp $
  */
 
 #include <test.priv.h>
@@ -125,6 +125,15 @@ InitTiles(void)
     Pegs[2].Count = 0;
 }
 
+static int
+two2n(int n)
+{
+    int result = 1;
+    while (n-- > 0)
+	result *= 2;
+    return result;
+}
+
 static void
 DisplayTiles(void)
 {
@@ -134,7 +143,7 @@ DisplayTiles(void)
     erase();
     MvAddStr(1, 24, "T O W E R S   O F   H A N O I");
     MvAddStr(3, 34, "SJR 1990");
-    MvPrintw(19, 5, "Moves : %d of %.0f", NMoves, pow(2.0, (float) NTiles) - 1);
+    MvPrintw(19, 5, "Moves : %d of %d", NMoves, two2n(NTiles) - 1);
     (void) attrset(A_REVERSE);
     MvAddStr(BASELINE, 8,
 	     "                                                               ");

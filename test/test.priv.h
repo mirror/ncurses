@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.202 2022/07/16 18:49:01 tom Exp $ */
+/* $Id: test.priv.h,v 1.203 2022/07/27 08:26:39 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -169,6 +169,10 @@
 
 #ifndef HAVE_LOCALE_H
 #define HAVE_LOCALE_H 0
+#endif
+
+#ifndef HAVE_MATH_FUNCS
+#define HAVE_MATH_FUNCS 0
 #endif
 
 #ifndef HAVE_MATH_H

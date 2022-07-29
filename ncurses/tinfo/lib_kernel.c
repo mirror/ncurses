@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2022 Thomas E. Dickey                                     *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -49,7 +49,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_kernel.c,v 1.34 2020/11/21 22:05:58 tom Exp $")
+MODULE_ID("$Id: lib_kernel.c,v 1.35 2022/07/28 20:14:51 tom Exp $")
 
 #ifdef TERMIOS
 static int
@@ -59,7 +59,7 @@ _nc_vdisable(void)
 #if defined(_POSIX_VDISABLE) && HAVE_UNISTD_H
     value = _POSIX_VDISABLE;
 #endif
-#if defined(_PC_VDISABLE)
+#if defined(_PC_VDISABLE) && HAVE_FPATHCONF
     if (value == -1) {
 	value = (int) fpathconf(0, _PC_VDISABLE);
 	if (value == -1) {

@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.99 2022/04/09 21:34:05 tom Exp $
+# $Id: ncurses_defs,v 1.101 2022/07/28 20:15:27 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2000-2016,2017 Free Software Foundation, Inc.                    #
@@ -68,6 +68,7 @@ HAVE_EXIT_TERMINFO	1
 HAVE_FCNTL_H
 HAVE_FILTER	1
 HAVE_FORM_H
+HAVE_FPATHCONF
 HAVE_GETBEGX	1
 HAVE_GETCURX	1
 HAVE_GETCWD
@@ -105,6 +106,7 @@ HAVE_LINK
 HAVE_LOCALECONV
 HAVE_LOCALE_H
 HAVE_LONG_FILE_NAMES
+HAVE_MATH_FUNCS
 HAVE_MATH_H
 HAVE_MBLEN
 HAVE_MBRLEN
@@ -212,6 +214,7 @@ HAVE_WCSTOMBS
 HAVE_WCTOB
 HAVE_WCTOMB
 HAVE_WCTYPE_H
+HAVE_WMEMCHR
 HAVE_WINSDELLN	1
 HAVE_WINSSTR	1
 HAVE_WORKING_POLL

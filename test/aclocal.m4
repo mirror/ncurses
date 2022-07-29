@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.203 2022/01/23 00:22:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.205 2022/07/27 23:35:25 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -2488,7 +2488,7 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MATH_LIB version: 10 updated: 2020/12/31 18:40:20
+dnl CF_MATH_LIB version: 11 updated: 2022/07/27 19:01:48
 dnl -----------
 dnl Checks for libraries.  At least one UNIX system, Apple Macintosh
 dnl Rhapsody 5.5, does not have -lm.  We cannot use the simpler
@@ -2498,18 +2498,42 @@ AC_DEFUN([CF_MATH_LIB],
 AC_CACHE_CHECK(if -lm needed for math functions,
 	cf_cv_need_libm,[
 	AC_TRY_LINK([
-	#include <stdio.h>
-	#include <stdlib.h>
-	#include <math.h>
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include <math.h>
 	],
 	[double x = rand(); printf("result = %g\\n", ]ifelse([$2],,sin(x),$2)[)],
 	[cf_cv_need_libm=no],
 	[cf_cv_need_libm=yes])])
+
 if test "$cf_cv_need_libm" = yes
 then
-ifelse($1,,[
-	CF_ADD_LIB(m)
-],[$1=-lm])
+
+	cf_save_LIBS="$LIBS"
+	LIBS="$LIBS -lm"
+	AC_CACHE_CHECK(if -lm is available for math functions,
+	cf_cv_have_libm,[
+	AC_TRY_LINK([
+		#include <stdio.h>
+		#include <stdlib.h>
+		#include <math.h>
+	],
+	[double x = rand(); printf("result = %g\\n", ]ifelse([$2],,sin(x),$2)[)],
+	[cf_cv_have_libm=yes],
+	[cf_cv_have_libm=no])])
+	LIBS="$cf_save_LIBS"
+
+	if test "$cf_cv_have_libm" = yes
+	then
+		ifelse($1,,[CF_ADD_LIB(m)],[$1=-lm])
+	fi
+else
+	cf_cv_have_libm=yes
+fi
+
+if test "$cf_cv_have_libm" = yes
+then
+	AC_DEFINE(HAVE_MATH_FUNCS,1,[Define to 1 if math functions are available])
 fi
 ])
 dnl ---------------------------------------------------------------------------

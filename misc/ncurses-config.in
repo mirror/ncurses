@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: ncurses-config.in,v 1.51 2022/07/16 17:07:38 tom Exp $
+# $Id: ncurses-config.in,v 1.52 2022/07/26 21:36:28 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2006-2015,2017 Free Software Foundation, Inc.                    #
@@ -111,6 +111,9 @@ do
 		continue
 		;;
 	-Wl,--dynamic-linker*) # ignore ELF interpreter
+		continue
+		;;
+	-Wl,--as-needed|-Wl,--build-id=*|-Wl,-dT,*|-Wl,-T,*)
 		continue
 		;;
 	-L*)

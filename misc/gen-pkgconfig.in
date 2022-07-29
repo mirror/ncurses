@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.53 2022/07/16 17:07:38 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.54 2022/07/26 20:19:50 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
@@ -96,6 +96,9 @@ do
 		continue
 		;;
 	-Wl,--dynamic-linker*) # ignore ELF interpreter
+		continue
+		;;
+	-Wl,--as-needed|-Wl,--build-id=*|-Wl,-dT,*|-Wl,-T,*)
 		continue
 		;;
 	-L*)

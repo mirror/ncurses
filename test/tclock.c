@@ -1,9 +1,9 @@
-/* $Id: tclock.c,v 1.42 2020/12/26 17:56:36 tom Exp $ */
+/* $Id: tclock.c,v 1.43 2022/07/27 19:23:01 tom Exp $ */
 
 #define NEED_TIME_H
 #include <test.priv.h>
 
-#if HAVE_MATH_H
+#if HAVE_MATH_H && HAVE_MATH_FUNCS
 
 #include <math.h>
 
@@ -289,7 +289,7 @@ main(int argc, char *argv[])
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
-    printf("This program requires the development header math.h\n");
+    printf("This program requires the header math.h and trignometric functions\n");
     ExitProgram(EXIT_FAILURE);
 }
 #endif
