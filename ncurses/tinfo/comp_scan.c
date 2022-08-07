@@ -51,7 +51,7 @@
 #include <ctype.h>
 #include <tic.h>
 
-MODULE_ID("$Id: comp_scan.c,v 1.116 2022/05/08 00:11:44 tom Exp $")
+MODULE_ID("$Id: comp_scan.c,v 1.119 2022/08/07 00:20:26 tom Exp $")
 
 /*
  * Maximum length of string capability we'll accept before raising an error.
@@ -150,6 +150,32 @@ last_char(int from_end)
 }
 
 /*
+ * Read, like fgets(), but error-out if the input contains nulls.
+ */
+static int
+get_text(char *buffer, int length)
+{
+    int count = 0;
+    int limit = length - 1;
+
+    while (limit-- > 0) {
+	int ch = fgetc(yyin);
+
+	if (ch == '\0') {
+	    _nc_err_abort("This is not a text-file");
+	} else if (ch == EOF) {
+	    break;
+	}
+	++count;
+	*buffer++ = (char) ch;
+	if (ch == '\n')
+	    break;
+    }
+    *buffer = '\0';
+    return count;
+}
+
+/*
  *	int next_char()
  *
  *	Returns the next character in the input stream.  Comments and leading
@@ -214,7 +240,7 @@ next_char(void)
 		if (used == 0)
 		    _nc_curr_file_pos = ftell(yyin);
 
-		if (fgets(result + used, (int) (allocated - used), yyin) != 0) {
+		if (get_text(result + used, (int) (allocated - used))) {
 		    bufstart = result;
 		    if (used == 0) {
 			if (_nc_curr_line == 0
@@ -292,7 +318,9 @@ static bool
 end_of_stream(void)
 /* are we at end of input? */
 {
-    return ((yyin ? feof(yyin) : (bufptr && *bufptr == '\0'))
+    return ((yyin
+	     ? (feof(yyin) && (bufptr == NULL || *bufptr == '\0'))
+	     : (bufptr && *bufptr == '\0'))
 	    ? TRUE : FALSE);
 }
 
