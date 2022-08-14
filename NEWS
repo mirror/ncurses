@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3841 2022/08/06 19:13:14 tom Exp $
+-- $Id: NEWS,v 1.3846 2022/08/13 23:42:30 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,16 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220813
+	+ modify delscreen to more effectively delete all windows on the given
+	  screen.
+	+ amend portability note for delwin in manual page.
+	+ adapt test/test_delwin.c from example by Bill Gray.
+	+ account for prescreen data if freeing leaks in pthread-configuration
+	+ split-out _nc_set_read_thread(), to reduce compiler warnings about
+	  pthread_self(), which may/may not be a weak symbol.
+	+ improve pthread-configuration for test/worm.c
 
 20220806
 	+ amend end_of_stream() to allow for input files without a final

@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_window.3x,v 1.27 2022/07/24 15:35:15 tom Exp @
+  * @Id: curs_window.3x,v 1.28 2022/08/13 23:24:22 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -241,8 +241,8 @@
            ent window which still has subwindows.
 
        <STRONG>o</STRONG>   Since release 4.0 (1996), ncurses maintains a list of  windows  for
-           each  screen,  and  is  able  to recursively delete subwindows when
-           asked to delete their parent.
+           each  screen,  to ensure that a window has no subwindows before al-
+           lowing deletion.
 
        <STRONG>o</STRONG>   NetBSD copied this feature of ncurses in 2003.
            PDCurses follows the scheme used in Solaris X/Open curses.

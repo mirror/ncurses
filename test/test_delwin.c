@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2022 Thomas E. Dickey                                *
+ * Copyright 2022 Thomas E. Dickey                                          *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -27,94 +27,91 @@
  ****************************************************************************/
 
 /*
- * Author: Thomas E. Dickey
- *
- * $Id: demo_tabs.c,v 1.7 2022/08/13 21:02:25 tom Exp $
- *
- * A simple demo of tabs in curses.
+ * $Id: test_delwin.c,v 1.3 2022/08/14 00:12:52 tom Exp $
  */
-#define USE_CURSES
-#define USE_TINFO
 #include <test.priv.h>
 
+#define STATUS 10
+
+static SCREEN *my_screen;
+
 static void
-usage(void)
+show_rc(const char *what, const char *explain, int rc)
 {
-    static const char *msg[] =
-    {
-	"Usage: demo_tabs [options]",
-	"",
-	"Print a grid to test tab-stops with the curses interface",
-	"",
-	"Options:",
-	" -l COUNT total number of lines to show",
-	" -t NUM   set TABSIZE variable to the given value",
-    };
-    unsigned n;
-    for (n = 0; n < SIZEOF(msg); ++n) {
-	fprintf(stderr, "%s\n", msg[n]);
+    printw("%s : %d (%s)\n", what, rc, explain);
+}
+
+static void
+next_step(WINDOW *win)
+{
+    int ch = wgetch(win);
+    if (ch == QUIT || ch == ESCAPE) {
+	endwin();
+	/* use this to verify if delscreen frees all memory */
+	delscreen(my_screen);
+	exit(EXIT_FAILURE);
     }
-    ExitProgram(EXIT_FAILURE);
 }
 
 int
-main(int argc, char *argv[])
+main(void)
 {
-    int tabstop;
-    int n, col, row, step;
-    int line_limit = -1;
-    int curses_stops = -1;
+    WINDOW *parent, *child1;
+    int rc;
 
-    while ((n = getopt(argc, argv, "l:t:")) != -1) {
-	switch (n) {
-	case 'l':
-	    line_limit = atoi(optarg);
-	    break;
-	case 't':
-	    curses_stops = atoi(optarg);
-	    break;
-	default:
-	    usage();
-	    break;
-	}
-    }
+    if ((my_screen = newterm(NULL, stdout, stdin)) == NULL)
+	ExitProgram(EXIT_FAILURE);
 
-    initscr();
     noecho();
     cbreak();
-    if (curses_stops > 0)
-	set_tabsize(curses_stops);
-#if HAVE_TIGETNUM
-    tabstop = tigetnum("it");
-    if (tabstop <= 0)
-#endif
-	tabstop = 8;
-    for (row = 0; row < LINES; ++row) {
-	move(row, 0);
-	for (col = step = 0; col < COLS - 1; ++col) {
-	    if (row == 0) {
-		chtype ch = '-';
-		if ((col % tabstop) == 0)
-		    ch = '+';
-		addch(ch);
-	    } else if (col + 1 < row) {
-		addch('*');
-	    } else {
-		printw("%x", step);
-		col = (row + (tabstop * ++step));
-		col /= tabstop;
-		col *= tabstop;
-		col -= 1;
-		if ((col + tabstop) < COLS)
-		    addch('\t');
-		refresh();
-	    }
-	}
-	addch('\n');
-	if (line_limit > 0 && row >= line_limit)
-	    break;
+
+    refresh();
+    wsetscrreg(stdscr, 0, STATUS - 1);
+    scrollok(stdscr, TRUE);
+
+    parent = newwin(0, 0, STATUS, 0);
+    box(parent, 0, 0);
+    wrefresh(parent);
+    next_step(parent);
+
+    printw("New window %p    %s\n", (void *) parent, "Top window");
+    mvwprintw(parent, 1, 1, "Top window");
+    wrefresh(parent);
+    next_step(stdscr);
+
+    child1 = derwin(parent, LINES - STATUS - 4, COLS - 4, 2, 2);
+    box(child1, 0, 0);
+    mvwprintw(child1, 1, 1, "Sub window");
+    wrefresh(child1);
+
+    printw("Sub window %p    %s\n", (void *) child1, "Hello world!");
+    next_step(stdscr);
+
+    show_rc("Deleted parent",
+	    "should fail, it still has a subwindow",
+	    rc = delwin(parent));
+    next_step(stdscr);
+    show_rc("Deleted child1",
+	    "should succeed",
+	    rc = delwin(child1));
+    next_step(stdscr);
+    if (rc == OK) {
+	wclrtobot(parent);
+	box(parent, 0, 0);
+	next_step(parent);
     }
-    getch();
+    show_rc("Deleted parent",
+	    "should succeed, it has no subwindow now",
+	    rc = delwin(parent));
+    next_step(stdscr);
+    if (rc == OK) {
+	touchwin(stdscr);
+	next_step(stdscr);
+    }
+    show_rc("Deleted parent",
+	    "should fail, may dump core",
+	    delwin(parent));
+    next_step(stdscr);
     endwin();
     ExitProgram(EXIT_SUCCESS);
 }

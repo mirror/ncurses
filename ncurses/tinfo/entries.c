@@ -38,7 +38,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: entries.c,v 1.33 2022/05/07 17:08:11 tom Exp $")
+MODULE_ID("$Id: entries.c,v 1.34 2022/08/13 16:57:35 tom Exp $")
 
 /****************************************************************************
  *
@@ -125,6 +125,22 @@ _nc_leaks_tinfo(void)
     _nc_free_tparm(cur_term);
     _nc_tgetent_leaks();
 
+#ifdef USE_PTHREADS
+    /*
+     * Discard any prescreen data which is not used for the current screen.
+     */
+    _nc_lock_global(screen);
+    {
+	PRESCREEN_LIST *p;
+	pthread_t id = GetThreadID();
+	for (p = _nc_prescreen.allocated; p != 0; p = p->next) {
+	    if (p->id == id && p->sp != CURRENT_SCREEN) {
+		FreeAndNull(p->sp);
+	    }
+	}
+    }
+    _nc_unlock_global(screen);
+#endif
     if (TerminalOf(CURRENT_SCREEN) != 0) {
 	del_curterm(TerminalOf(CURRENT_SCREEN));
     }

@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.181 2022/07/21 23:35:21 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.182 2022/08/13 23:14:26 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -146,6 +146,7 @@ delscreen(SCREEN *sp)
 
     _nc_lock_global(curses);
     if (delink_screen(sp)) {
+	WINDOWLIST *wl;
 	bool is_current = (sp == CURRENT_SCREEN);
 
 #ifdef USE_SP_RIPOFF
@@ -162,9 +163,13 @@ delscreen(SCREEN *sp)
 	}
 #endif
 
-	(void) _nc_freewin(CurScreen(sp));
-	(void) _nc_freewin(NewScreen(sp));
-	(void) _nc_freewin(StdScreen(sp));
+	/* delete all of the windows in this screen */
+      rescan:
+	for (each_window(sp, wl)) {
+	    if (_nc_freewin(&(wl->win)) == OK) {
+		goto rescan;
+	    }
+	}
 
 	if (sp->_slk != 0) {
 

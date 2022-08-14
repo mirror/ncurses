@@ -1,4 +1,4 @@
-# $Id: programs,v 1.53 2022/05/07 22:39:49 tom Exp $
+# $Id: programs,v 1.55 2022/08/13 23:37:10 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2006-2016,2017 Free Software Foundation, Inc.                    #
@@ -96,6 +96,7 @@ test_addchstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addchstr
 test_addstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addstr
 test_addwstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_addwstr
 test_arrays	$(LDFLAGS_TINFO)	$(LOCAL_LIBS)	test_arrays
+test_delwin	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_delwin
 test_get_wstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_get_wstr popup_msg
 test_getstr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_getstr popup_msg
 test_instr	$(LDFLAGS_CURSES)	$(LOCAL_LIBS)	test_instr

@@ -53,7 +53,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.84 2022/07/23 17:06:16 tom Exp $
+  $Id: worm.c,v 1.85 2022/08/13 13:28:01 tom Exp $
 */
 
 #include <test.priv.h>
@@ -663,6 +663,15 @@ main(int argc, char *argv[])
 
     Trace(("Cleanup"));
     cleanup();
+#ifdef USE_PTHREADS
+    /*
+     * Do this just in case one of the threads did not really exit.
+     */
+    Trace(("join all threads"));
+    for (n = 0; n < number; n++) {
+	pthread_join(worm[n].thread, NULL);
+    }
+#endif
 #if NO_LEAKS
     for (y = 0; y < max_refs; y++) {
 	free(refs[y]);
@@ -671,15 +680,6 @@ main(int argc, char *argv[])
     for (n = number, w = &worm[0]; --n >= 0; w++) {
 	free(w->xpos);
 	free(w->ypos);
-    }
-#endif
-#ifdef USE_PTHREADS
-    /*
-     * Do this just in case one of the threads did not really exit.
-     */
-    Trace(("join all threads"));
-    for (n = 0; n < number; n++) {
-	pthread_join(worm[n].thread, NULL);
     }
 #endif
     ExitProgram(EXIT_SUCCESS);

@@ -1216,6 +1216,7 @@
 ./test/test_addstr.c
 ./test/test_addwstr.c
 ./test/test_arrays.c
+./test/test_delwin.c
 ./test/test_get_wstr.c
 ./test/test_getstr.c
 ./test/test_instr.c

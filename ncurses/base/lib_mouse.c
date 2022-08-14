@@ -85,7 +85,7 @@
 #define CUR SP_TERMTYPE
 #endif
 
-MODULE_ID("$Id: lib_mouse.c,v 1.196 2022/04/30 23:21:34 tom Exp $")
+MODULE_ID("$Id: lib_mouse.c,v 1.197 2022/08/13 14:13:12 tom Exp $")
 
 #include <tic.h>
 
@@ -1085,12 +1085,7 @@ decode_xterm_X10(SCREEN *sp, MEVENT * eventp)
     int res;
     bool result;
 
-# if USE_PTHREADS_EINTR
-#  if USE_WEAK_SYMBOLS
-    if ((pthread_self) && (pthread_kill) && (pthread_equal))
-#  endif
-	_nc_globals.read_thread = pthread_self();
-# endif
+    _nc_set_read_thread(TRUE);
     for (grabbed = 0; grabbed < MAX_KBUF; grabbed += (size_t) res) {
 
 	/* For VIO mouse we add extra bit 64 to disambiguate button-up. */
@@ -1104,9 +1099,7 @@ decode_xterm_X10(SCREEN *sp, MEVENT * eventp)
 	if (res == -1)
 	    break;
     }
-#if USE_PTHREADS_EINTR
-    _nc_globals.read_thread = 0;
-#endif
+    _nc_set_read_thread(FALSE);
     kbuf[MAX_KBUF] = '\0';
 
     TR(TRACE_IEVENT,
@@ -1140,12 +1133,7 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
     coords[0] = 0;
     coords[1] = 0;
 
-# if USE_PTHREADS_EINTR
-#  if USE_WEAK_SYMBOLS
-    if ((pthread_self) && (pthread_kill) && (pthread_equal))
-#  endif
-	_nc_globals.read_thread = pthread_self();
-# endif
+    _nc_set_read_thread(TRUE);
     for (grabbed = 0; grabbed < limit;) {
 	int res;
 
@@ -1178,9 +1166,7 @@ decode_xterm_1005(SCREEN *sp, MEVENT * eventp)
 		break;
 	}
     }
-#if USE_PTHREADS_EINTR
-    _nc_globals.read_thread = 0;
-#endif
+    _nc_set_read_thread(FALSE);
 
     TR(TRACE_IEVENT,
        ("_nc_mouse_inline sees the following xterm data: %s",
@@ -1224,12 +1210,7 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
     int marker = 1;
 
     memset(result, 0, sizeof(*result));
-# if USE_PTHREADS_EINTR
-#  if USE_WEAK_SYMBOLS
-    if ((pthread_self) && (pthread_kill) && (pthread_equal))
-#  endif
-	_nc_globals.read_thread = pthread_self();
-# endif
+    _nc_set_read_thread(TRUE);
 
     do {
 	int res;
@@ -1294,9 +1275,7 @@ read_SGR(SCREEN *sp, SGR_DATA * result)
 	}
 	++grabbed;
     } while (!isFinal(ch));
-#if USE_PTHREADS_EINTR
-    _nc_globals.read_thread = 0;
-#endif
+    _nc_set_read_thread(FALSE);
 
     kbuf[++grabbed] = 0;
     TR(TRACE_IEVENT,

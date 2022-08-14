@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.650 2022/05/01 14:41:33 tom Exp $
+ * $Id: curses.priv.h,v 1.651 2022/08/13 14:35:01 tom Exp $
  *
  *	curses.priv.h
  *
@@ -672,8 +672,13 @@ extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 #define _nc_lock_global(name)	/* nothing */
 #define _nc_try_global(name)    0
 #define _nc_unlock_global(name)	/* nothing */
-
 #endif /* USE_PTHREADS */
+
+#if USE_PTHREADS_EINTR || defined(EXP_WIN32_DRIVER)
+extern NCURSES_EXPORT(void) _nc_set_read_thread(bool);
+#else
+#define _nc_set_read_thread(enable)	/* nothing */
+#endif
 
 /*
  * When using sp-funcs, locks are targeted to SCREEN-level granularity.

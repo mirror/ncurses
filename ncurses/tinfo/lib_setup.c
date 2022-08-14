@@ -49,7 +49,7 @@
 #include <locale.h>
 #endif
 
-MODULE_ID("$Id: lib_setup.c,v 1.217 2022/07/21 08:24:50 tom Exp $")
+MODULE_ID("$Id: lib_setup.c,v 1.218 2022/08/13 18:12:22 tom Exp $")
 
 /****************************************************************************
  *
@@ -831,7 +831,7 @@ TINFO_SETUP_TERM(TERMINAL **tp,
 	if (NC_ISATTY(Filedes)) {
 	    NCURSES_SP_NAME(def_shell_mode) (NCURSES_SP_ARG);
 	    NCURSES_SP_NAME(def_prog_mode) (NCURSES_SP_ARG);
-	    NCURSES_SP_NAME(baudrate)(NCURSES_SP_ARG);
+	    NCURSES_SP_NAME(baudrate) (NCURSES_SP_ARG);
 	}
 	code = OK;
 #endif
@@ -908,6 +908,7 @@ _nc_forget_prescr(void)
 {
     PRESCREEN_LIST *p, *q;
     pthread_t id = GetThreadID();
+    _nc_lock_global(screen);
     for (p = _nc_prescreen.allocated, q = 0; p != 0; q = p, p = p->next) {
 	if (p->id == id) {
 	    if (q) {
@@ -919,6 +920,7 @@ _nc_forget_prescr(void)
 	    break;
 	}
     }
+    _nc_unlock_global(screen);
 }
 #endif /* USE_PTHREADS */
 

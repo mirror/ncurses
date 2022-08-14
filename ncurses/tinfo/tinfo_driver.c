@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -52,7 +52,7 @@
 # endif
 #endif
 
-MODULE_ID("$Id: tinfo_driver.c,v 1.72 2021/06/17 21:30:22 tom Exp $")
+MODULE_ID("$Id: tinfo_driver.c,v 1.73 2022/08/13 14:36:43 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -1282,10 +1282,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
     assert(buf);
     SetSP();
 
-# if USE_PTHREADS_EINTR
-    if ((pthread_self) && (pthread_kill) && (pthread_equal))
-	_nc_globals.read_thread = pthread_self();
-# endif
+    _nc_set_read_thread(TRUE);
 #ifdef EXP_WIN32_DRIVER
     n = _nc_console_read(sp,
 			 _nc_console_handle(sp->_ifd),
@@ -1293,9 +1290,7 @@ drv_read(TERMINAL_CONTROL_BLOCK * TCB, int *buf)
 #else
     n = (int) read(sp->_ifd, &c2, (size_t) 1);
 #endif
-#if USE_PTHREADS_EINTR
-    _nc_globals.read_thread = 0;
-#endif
+    _nc_set_read_thread(FALSE);
 #ifndef EXP_WIN32_DRIVER
     *buf = (int) c2;
 #endif
