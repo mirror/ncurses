@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.203 2022/07/27 08:26:39 tom Exp $ */
+/* $Id: test.priv.h,v 1.204 2022/08/20 16:34:24 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -1208,7 +1208,7 @@ extern char *tgoto(char *, int, int);	/* available, but not prototyped */
 #define WANT_USE_SCREEN() extern void _nc_want_use_screen(void)
 #endif
 
-#if defined(TRACE) && HAVE__TRACEF
+#if defined(TRACE) && HAVE__TRACEF && HAVE_CURSES_TRACE
 #define Trace(p) _tracef p
 #define USE_TRACE 1
 #define START_TRACE() \

@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.22 2022/07/24 15:18:53 tom Exp $
+ * $Id: test_mouse.c,v 1.23 2022/08/20 18:12:16 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -97,11 +97,13 @@ static void
 logw(const char *fmt, ...)
 {
     int row = getcury(stdscr);
-
     va_list args;
+
     va_start(args, fmt);
     wmove(stdscr, row++, 0);
     vw_printw(stdscr, fmt, args);
+    va_end(args);
+
     clrtoeol();
 
     row %= (getmaxy(stdscr) - logoffset);

@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1007 2022/07/27 23:34:31 tom Exp $
+dnl $Id: aclocal.m4,v 1.1008 2022/08/20 20:07:55 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -1729,6 +1729,42 @@ case "$cf_cv_const_x_string" in
 esac
 
 ])
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_CPP_OVERRIDE version: 1 updated: 2022/08/20 16:07:10
+dnl ---------------
+dnl Check if the C++ compiler accepts the override keyword.  This is a C++-11
+dnl feature.
+AC_DEFUN([CF_CPP_OVERRIDE],
+[
+if test -n "$CXX"; then
+AC_CACHE_CHECK(if $CXX accepts override keyword,cf_cv_cpp_override,[
+	AC_LANG_SAVE
+	AC_LANG_CPLUSPLUS
+	AC_TRY_RUN([
+
+class base
+{
+public:
+	virtual int foo(float x) = 0; 
+};
+
+
+class derived: public base
+{
+public:
+	int foo(float x) override { return x != 0.0 ? 1 : 0; }
+};
+
+int main(void) { }
+],
+	[cf_cv_cpp_override=yes],
+	[cf_cv_cpp_override=no],
+	[cf_cv_cpp_override=unknown])
+	AC_LANG_RESTORE
+])
+fi
+test "$cf_cv_cpp_override" = yes && AC_DEFINE(CPP_HAS_OVERRIDE,1,[Define to 1 if C++ has override keyword])
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_CPP_PARAM_INIT version: 7 updated: 2017/01/21 11:06:25
@@ -6869,7 +6905,7 @@ fi
 AC_SUBST(LDCONFIG)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 4 updated: 2019/11/20 18:55:37
+dnl CF_PROG_LINT version: 5 updated: 2022/08/20 15:44:13
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
@@ -6880,6 +6916,7 @@ case "x$LINT" in
 	;;
 esac
 AC_SUBST(LINT_OPTS)
+AC_SUBST(LINT_LIBS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PROG_LN_S version: 2 updated: 2010/08/14 18:25:37

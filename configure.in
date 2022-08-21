@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.746 2022/07/28 20:14:30 tom Exp $
+dnl $Id: configure.in,v 1.747 2022/08/20 19:54:19 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.746 $)
+AC_REVISION($Revision: 1.747 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1940,6 +1940,7 @@ if test -n "$CXX" ; then
 	CF_BOOL_DECL
 	CF_BOOL_SIZE
 	CF_ETIP_DEFINES
+	CF_CPP_OVERRIDE
 	CF_CPP_PARAM_INIT
 	CF_CPP_STATIC_CAST
 	CF_CXX_AR_FLAGS

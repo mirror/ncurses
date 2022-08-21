@@ -1,7 +1,7 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 // vile:cppmode
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2012,2014 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -36,7 +36,7 @@
 #ifndef NCURSES_CURSESP_H_incl
 #define NCURSES_CURSESP_H_incl 1
 
-// $Id: cursesp.h,v 1.35 2021/04/17 18:11:08 tom Exp $
+// $Id: cursesp.h,v 1.36 2022/08/20 20:52:15 tom Exp $
 
 #include <cursesw.h>
 
@@ -162,7 +162,7 @@ public:
   // N.B.: The panel associated with ::stdscr is always on the bottom. So
   // actually bottom() makes the panel the first above ::stdscr.
 
-  virtual int mvwin(int y, int x)
+  virtual int mvwin(int y, int x) NCURSES_OVERRIDE
   {
     OnError(::move_panel(p, y, x));
     return OK;
@@ -195,11 +195,11 @@ public:
 
   // Those two are rewrites of the corresponding virtual members of
   // NCursesWindow
-  virtual int refresh();
+  virtual int refresh() NCURSES_OVERRIDE;
   // Propagate all panel changes to the virtual screen and update the
   // physical screen.
 
-  virtual int noutrefresh();
+  virtual int noutrefresh() NCURSES_OVERRIDE;
   // Propagate all panel changes to the virtual screen.
 
   static void redraw();

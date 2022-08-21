@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3846 2022/08/13 23:42:30 tom Exp $
+-- $Id: NEWS,v 1.3848 2022/08/20 18:30:07 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220820
+	+ fix some cppcheck warnings, mostly style, in ncurses and c++
+	  libraries and progs directory.
+	+ add curses_trace to ifdef's for START_TRACE in test/test.priv.h
+	+ update config.guess
 
 20220813
 	+ modify delscreen to more effectively delete all windows on the given

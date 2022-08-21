@@ -1,6 +1,6 @@
 // * This makes emacs happy -*-Mode: C++;-*-
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -32,7 +32,7 @@
  *   Author: Juergen Pfeifer, 1997                                          *
  ****************************************************************************/
 
-// $Id: etip.h.in,v 1.48 2021/06/17 21:11:08 tom Exp $
+// $Id: etip.h.in,v 1.50 2022/08/20 20:50:00 tom Exp $
 
 #ifndef NCURSES_ETIP_H_incl
 #define NCURSES_ETIP_H_incl 1
@@ -68,6 +68,10 @@
 
 #ifndef ETIP_NEEDS_MATH_EXCEPTION
 #define ETIP_NEEDS_MATH_EXCEPTION 0
+#endif
+
+#ifndef CPP_HAS_OVERRIDE
+#define CPP_HAS_OVERRIDE 0
 #endif
 
 #ifndef CPP_HAS_PARAM_INIT
@@ -127,6 +131,12 @@ extern "C" {
 }
 
 // Language features
+#if CPP_HAS_OVERRIDE
+#define NCURSES_OVERRIDE override
+#else
+#define NCURSES_OVERRIDE /*nothing*/
+#endif
+
 #if CPP_HAS_PARAM_INIT
 #define NCURSES_PARAM_INIT(value) = value
 #else
@@ -225,7 +235,7 @@ public:
   {
   }
 
-  virtual const char *classname() const {
+  virtual const char *classname() const NCURSES_OVERRIDE {
     return "NCursesPanel";
   }
 
@@ -276,7 +286,7 @@ public:
   {
   }
 
-  virtual const char *classname() const {
+  virtual const char *classname() const NCURSES_OVERRIDE {
     return "NCursesMenu";
   }
 
@@ -327,7 +337,7 @@ public:
   {
   }
 
-  virtual const char *classname() const {
+  virtual const char *classname() const NCURSES_OVERRIDE {
     return "NCursesForm";
   }
 

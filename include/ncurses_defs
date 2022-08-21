@@ -1,4 +1,4 @@
-# $Id: ncurses_defs,v 1.101 2022/07/28 20:15:27 tom Exp $
+# $Id: ncurses_defs,v 1.102 2022/08/20 16:36:11 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2000-2016,2017 Free Software Foundation, Inc.                    #
@@ -58,6 +58,7 @@ HAVE_COPYWIN	1
 HAVE_CURSCR	1
 HAVE_CURSES_DATA_TABSIZE	1
 HAVE_CURSES_DATA_TTYTYPE	1
+HAVE_CURSES_TRACE	1
 HAVE_DELSCREEN	1
 HAVE_DERWIN	1
 HAVE_DIRENT_H

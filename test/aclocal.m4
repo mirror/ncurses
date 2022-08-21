@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.205 2022/07/27 23:35:25 tom Exp $
+dnl $Id: aclocal.m4,v 1.206 2022/08/20 20:13:23 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -3414,7 +3414,7 @@ case $INSTALL in
 esac
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_PROG_LINT version: 4 updated: 2019/11/20 18:55:37
+dnl CF_PROG_LINT version: 5 updated: 2022/08/20 15:44:13
 dnl ------------
 AC_DEFUN([CF_PROG_LINT],
 [
@@ -3425,6 +3425,7 @@ case "x$LINT" in
 	;;
 esac
 AC_SUBST(LINT_OPTS)
+AC_SUBST(LINT_LIBS)
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_REMOVE_CFLAGS version: 3 updated: 2021/09/05 17:25:40
