@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1008 2022/08/20 20:07:55 tom Exp $
+dnl $Id: aclocal.m4,v 1.1009 2022/08/27 19:47:35 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -4309,7 +4309,7 @@ then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_LD_SEARCHPATH version: 3 updated: 2021/03/05 19:13:35
+dnl CF_LD_SEARCHPATH version: 4 updated: 2022/08/27 15:43:08
 dnl ----------------
 dnl Try to obtain the linker's search-path, for use in scripts.
 dnl
@@ -4320,7 +4320,7 @@ AC_CACHE_CHECK(for linker search path,cf_cv_ld_searchpath,[
 if test "$cross_compiling" != yes ; then
 
 # GNU binutils' ld does not involve permissions which may stop ldconfig.
-cf_pathlist=`ld --verbose 2>/dev/null | grep SEARCH_DIR | sed -e 's,SEARCH_DIR[[("=]][[("=]]*,,g' -e 's/"[[)]];//gp' | sort -u`
+cf_pathlist=`${LD:-ld} --verbose 2>/dev/null | grep SEARCH_DIR | sed -e 's,SEARCH_DIR[[("=]][[("=]]*,,g' -e 's/"[[)]];//gp' | sort -u`
 
 # The -NX options tell newer versions of Linux ldconfig to not attempt to
 # update the cache, which makes it run faster.

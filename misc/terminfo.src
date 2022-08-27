@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1029 $
-#	$Date: 2022/07/03 21:39:22 $
+#	$Revision: 1.1032 $
+#	$Date: 2022/08/27 18:44:46 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -3691,9 +3691,12 @@ nsterm-build400|Terminal.app in OS X 10.13,
 	rmso=\E[27m, rmul=\E[24m, use=xterm+sm+1006,
 	use=ecma+italics, use=nsterm-build361,
 
+nsterm-build440|Terminal.app in MacOS 11.6.8,
+	use=xterm+alt1049, use=nsterm-build400,
+
 # This is an alias which should always point to the "current" version
 nsterm|nsterm-256color|Apple_Terminal|AppKit Terminal.app,
-	use=nsterm-build400,
+	use=nsterm-build440,
 
 #### iTerm, iTerm2
 
@@ -4276,20 +4279,20 @@ putty|PuTTY terminal emulator,
 	kbs=^?, kcbt=\E[Z, kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC,
 	kcuu1=\EOA, kind=\E[B, kri=\E[A, kspd=^Z, nel=\r\n, oc=\E]R,
 	op=\E[39;49m, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
-	rmam=\E[?7l, rmcup=\E[2J\E[?47l, rmir=\E[4l,
-	rmkx=\E[?1l\E>, rmpch=\E[10m, rmso=\E[27m, rmul=\E[24m,
+	rmam=\E[?7l, rmir=\E[4l, rmkx=\E[?1l\E>, rmpch=\E[10m,
+	rmso=\E[27m, rmul=\E[24m,
 	rs2=\E<\E["p\E[50;6"p\Ec\E[?3l\E]R\E[?1000l,
 	s0ds=\E[10m, s1ds=\E[11m, s2ds=\E[12m, sc=\E7,
 	setab=\E[4%p1%dm, setaf=\E[3%p1%dm,
 	sgr=\E[0%?%p1%p6%|%t;1%;%?%p2%t;4%;%?%p1%p3%|%t;7%;%?%p4%t;5
 	    %;m%?%p9%t\016%e\017%;,
-	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smcup=\E[?47h,
-	smir=\E[4h, smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m,
-	smul=\E[4m, vpa=\E[%i%p1%dd, E3=\E[3J, use=vt220+pcedit,
+	sgr0=\E[m\017, smacs=^N, smam=\E[?7h, smir=\E[4h,
+	smkx=\E[?1h\E=, smpch=\E[11m, smso=\E[7m, smul=\E[4m,
+	vpa=\E[%i%p1%dd, E3=\E[3J, use=vt220+pcedit,
 	use=ansi+tabs, use=ansi+rep, use=ecma+index,
-	use=xterm+sm+1006, use=putty+fnkeys, use=vt102+enq,
-	use=xterm+sl, use=vt100+fnkeys, use=putty+keypad,
-	use=vt220+cvis,
+	use=xterm+alt1049, use=xterm+sm+1006, use=putty+fnkeys,
+	use=vt102+enq, use=xterm+sl, use=vt100+fnkeys,
+	use=putty+keypad, use=vt220+cvis,
 putty+keypad|PuTTY numeric keypad,
 	kp1=\EOq, kp2=\EOr, kp3=\EOs, kp4=\EOt, kp5=\EOu, kp6=\EOv,
 	kp7=\EOw, kp8=\EOx, kp9=\EOy, kpADD=\EOl, kpDIV=\EOQ,
@@ -27648,5 +27651,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ use ansi+enq and decid+cpr in cases where the terminal probably
 #	  supported the u6-u9 extension -TD
 #	+ add/use apollo+vt132, xterm+alt47 -TD
+#
+# 2022-08-27
+#	+ modify nsterm to use xterm+alt1049 (report by Paul Handly) -TD
+#	+ modify putty to use xterm+alt1049 -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

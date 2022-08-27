@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3848 2022/08/20 18:30:07 tom Exp $
+-- $Id: NEWS,v 1.3851 2022/08/27 19:29:31 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,12 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220827
+	+ modify configure scripts to use overlooked cases for LD and
+	  PKG_CONFIG variables (report by Alan Webb, Gentoo #866398).
+	+ modify nsterm to use xterm+alt1049 (report by Paul Handly) -TD
+	+ modify putty to use xterm+alt1049 -TD
 
 20220820
 	+ fix some cppcheck warnings, mostly style, in ncurses and c++

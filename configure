@@ -29084,7 +29084,7 @@ else
 if test "$cross_compiling" != yes ; then
 
 # GNU binutils' ld does not involve permissions which may stop ldconfig.
-cf_pathlist=`ld --verbose 2>/dev/null | grep SEARCH_DIR | sed -e 's,SEARCH_DIR[("=][("=]*,,g' -e 's/"[)];//gp' | sort -u`
+cf_pathlist=`${LD:-ld} --verbose 2>/dev/null | grep SEARCH_DIR | sed -e 's,SEARCH_DIR[("=][("=]*,,g' -e 's/"[)];//gp' | sort -u`
 
 # The -NX options tell newer versions of Linux ldconfig to not attempt to
 # update the cache, which makes it run faster.
