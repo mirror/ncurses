@@ -43,7 +43,7 @@
 
 #include <dump_entry.h>
 
-MODULE_ID("$Id: infocmp.c,v 1.153 2022/03/05 16:15:48 tom Exp $")
+MODULE_ID("$Id: infocmp.c,v 1.155 2022/09/03 23:28:48 tom Exp $")
 
 #define MAX_STRING	1024	/* maximum formatted string */
 
@@ -1727,7 +1727,7 @@ main(int argc, char *argv[])
 
 	case 'v':
 	    itrace = (unsigned) optarg_to_number();
-	    set_trace_level(itrace);
+	    use_verbosity(itrace);
 	    break;
 
 	case 'W':

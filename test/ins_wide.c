@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020 Thomas E. Dickey                                          *
+ * Copyright 2020,2022 Thomas E. Dickey                                     *
  * Copyright 2002-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.25 2020/02/02 23:34:34 tom Exp $
+ * $Id: ins_wide.c,v 1.26 2022/09/03 21:40:27 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -106,7 +106,7 @@ legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
 }
 
 static int
-ColOf(wchar_t *buffer, int length, int margin)
+ColOf(const wchar_t *buffer, int length, int margin)
 {
     int n;
     int result;

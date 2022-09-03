@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.315 2022/07/02 20:40:22 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.318 2022/09/03 23:29:16 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -775,7 +775,7 @@ main(int argc, char *argv[])
 	    break;
 	case 'D':
 	    debug_level = VtoTrace(v_opt);
-	    set_trace_level(debug_level);
+	    use_verbosity(debug_level);
 	    show_databases(outdir);
 	    ExitProgram(EXIT_SUCCESS);
 	    break;
@@ -864,7 +864,7 @@ main(int argc, char *argv[])
     }
 
     debug_level = VtoTrace(v_opt);
-    set_trace_level(debug_level);
+    use_verbosity(debug_level);
 
     if (_nc_tracing) {
 	save_check_termtype = _nc_check_termtype2;

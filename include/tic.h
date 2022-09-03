@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -34,7 +34,7 @@
  ****************************************************************************/
 
 /*
- * $Id: tic.h,v 1.84 2021/08/21 00:24:45 tom Exp $
+ * $Id: tic.h,v 1.85 2022/09/03 19:11:20 tom Exp $
  *	tic.h - Global variables and structures for the terminfo compiler.
  */
 
@@ -135,8 +135,7 @@ extern "C" {
 #define DEBUG_LEVEL(n)	((n) << TRACE_SHIFT)
 
 #define set_trace_level(n) \
-	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL) \
-		     + DEBUG_LEVEL(MAX_DEBUG_LEVEL) - 1, \
+	_nc_tracing &= DEBUG_LEVEL(MAX_DEBUG_LEVEL + 1) - 1, \
 	_nc_tracing |= DEBUG_LEVEL(n)
 
 #ifdef TRACE

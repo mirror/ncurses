@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 2009-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.29 2021/05/08 20:04:10 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.30 2022/09/03 21:40:27 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -191,7 +191,7 @@ legend(WINDOW *win, int level, Options state, wchar_t *buffer, int length)
 }
 
 static int
-ColOf(wchar_t *buffer, int length, int margin)
+ColOf(const wchar_t *buffer, int length, int margin)
 {
     int n;
     int result;

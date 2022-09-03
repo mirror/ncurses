@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.53 2021/06/26 20:43:19 tom Exp $
+ * $Id: progs.priv.h,v 1.54 2022/09/03 23:28:26 tom Exp $
  *
  *	progs.priv.h
  *
@@ -233,6 +233,12 @@ extern int optind;
 #define UChar(c)    ((unsigned char)(c))
 
 #define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
+
+#ifdef TRACE
+#define use_verbosity(level) do { set_trace_level(level); if (_nc_tracing) _nc_tracing |= TRACE_MAXIMUM; } while (0)
+#else
+#define use_verbosity(level) do { set_trace_level(level); } while (0)
+#endif
 
 #define NCURSES_EXT_NUMBERS (NCURSES_EXT_COLORS && HAVE_INIT_EXTENDED_COLOR)
 

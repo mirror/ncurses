@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -45,7 +45,7 @@
 #include <hashed_db.h>
 #endif
 
-MODULE_ID("$Id: toe.c,v 1.86 2021/10/10 00:55:32 tom Exp $")
+MODULE_ID("$Id: toe.c,v 1.88 2022/09/03 23:29:32 tom Exp $")
 
 #define isDotname(name) (!strcmp(name, ".") || !strcmp(name, ".."))
 
@@ -658,7 +658,7 @@ main(int argc, char *argv[])
 	    usage();
 	}
     }
-    set_trace_level(v_opt);
+    use_verbosity(v_opt);
 
     if (report_file != 0) {
 	if (freopen(report_file, "r", stdin) == 0) {

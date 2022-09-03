@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.122 2022/05/08 00:11:44 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.123 2022/09/03 20:02:45 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -61,7 +61,7 @@ enqueue(ENTRY * ep)
 {
     ENTRY *newp;
 
-    DEBUG(1, (T_CALLED("enqueue(ep=%p)"), (void *) ep));
+    DEBUG(2, (T_CALLED("enqueue(ep=%p)"), (void *) ep));
 
     newp = _nc_copy_entry(ep);
     if (newp == 0)
@@ -73,7 +73,7 @@ enqueue(ENTRY * ep)
     newp->next = 0;
     if (newp->last)
 	newp->last->next = newp;
-    DEBUG(1, (T_RETURN("")));
+    DEBUG(2, (T_RETURN("")));
 }
 
 #define NAMEBUFFER_SIZE (MAX_NAME_SIZE + 2)
@@ -221,7 +221,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
     bool oldsuppress = _nc_suppress_warnings;
     int immediate = 0;
 
-    DEBUG(1,
+    DEBUG(2,
 	  (T_CALLED("_nc_read_entry_source(file=%p, buf=%p, literal=%d, silent=%d, hook=%p)"),
 	   (void *) fp, buf, literal, silent, (void *) hook));
 
@@ -273,6 +273,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
 #endif
 
     _nc_suppress_warnings = oldsuppress;
+    DEBUG(2, (T_RETURN("")));
 }
 
 #if 0 && NCURSES_XNAMES
@@ -457,8 +458,8 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	    for_entry_list(rp) {
 		if (rp != qp
 		    && _nc_name_match(rp->tterm.term_names, lookfor, "|")) {
-		    DEBUG(2, ("%s: resolving use=%s (in core)",
-			      child, lookfor));
+		    DEBUG(2, ("%s: resolving use=%s %p (in core)",
+			      child, lookfor, lookfor));
 
 		    qp->uses[i].link = rp;
 		    foundit = TRUE;
@@ -539,20 +540,22 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 
 	    for_entry_list(qp) {
 		if (qp->nuses > 0) {
-		    DEBUG(2, ("%s: attempting merge",
-			      _nc_first_name(qp->tterm.term_names)));
+		    DEBUG(2, ("%s: attempting merge of %d entries",
+			      _nc_first_name(qp->tterm.term_names),
+			      qp->nuses));
 		    /*
 		     * If any of the use entries we're looking for is
 		     * incomplete, punt.  We'll catch this entry on a
 		     * subsequent pass.
 		     */
-		    for (i = 0; i < qp->nuses; i++)
+		    for (i = 0; i < qp->nuses; i++) {
 			if (qp->uses[i].link
 			    && qp->uses[i].link->nuses) {
 			    DEBUG(2, ("%s: use entry %d unresolved",
 				      _nc_first_name(qp->tterm.term_names), i));
 			    goto incomplete;
 			}
+		    }
 
 		    /*
 		     * First, make sure there is no garbage in the
