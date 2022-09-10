@@ -31,7 +31,7 @@
  *  Author: Thomas E. Dickey                    1997-on                     *
  ****************************************************************************/
 /*
- * $Id: progs.priv.h,v 1.54 2022/09/03 23:28:26 tom Exp $
+ * $Id: progs.priv.h,v 1.55 2022/09/10 21:47:39 tom Exp $
  *
  *	progs.priv.h
  *
@@ -235,7 +235,7 @@ extern int optind;
 #define SIZEOF(v) (sizeof(v)/sizeof(v[0]))
 
 #ifdef TRACE
-#define use_verbosity(level) do { set_trace_level(level); if (_nc_tracing) _nc_tracing |= TRACE_MAXIMUM; } while (0)
+#define use_verbosity(level) do { set_trace_level(level); if (_nc_tracing > DEBUG_LEVEL(2)) _nc_tracing |= TRACE_MAXIMUM; } while (0)
 #else
 #define use_verbosity(level) do { set_trace_level(level); } while (0)
 #endif

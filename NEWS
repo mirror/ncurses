@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3853 2022/09/03 21:13:43 tom Exp $
+-- $Id: NEWS,v 1.3856 2022/09/10 22:31:34 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220910
+	+ amend verbose-option change to make this affect level 3, e.g., using
+	  "tic -cv3 terminfo".
+	+ work around musl's nonstandard use of feature test macros by adding
+	  a definition for NCURSES_WIDECHAR to the generated ".pc" and *-config
+	  files (report by Sam James).
 
 20220903
 	+ modify verbose-option of infocmp, tic, toe to enable debug-tracing

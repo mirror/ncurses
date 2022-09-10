@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.747 2022/08/20 19:54:19 tom Exp $
+dnl $Id: configure.in,v 1.748 2022/09/10 18:17:55 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.747 $)
+AC_REVISION($Revision: 1.748 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -960,6 +960,15 @@ if test "x$with_widec" = xyes ; then
 	fi
 	AC_DEFINE(USE_WIDEC_SUPPORT,1,[Define to 1 to compile with wide-char/UTF-8 code])
 	AC_DEFINE(NCURSES_WIDECHAR,1,[Define to 1 to compile with wide-char/UTF-8 code])
+	case "$CPPFLAGS" in
+	(*_XOPEN_SOURCE=*)
+		;;
+	(*)
+		AC_MSG_WARN(_XOPEN_SOURCE feature test macro appears to be predefined)
+		# CPPFLAGS="$CPPFLAGS -DNCURSES_WIDECHAR"
+		CPPFLAGS_after_XOPEN="$CPPFLAGS_after_XOPEN -DNCURSES_WIDECHAR"
+		;;
+	esac
 
 	CF_CHECK_WCHAR_H
 	CF_CHECK_WCWIDTH_GRAPHICS
