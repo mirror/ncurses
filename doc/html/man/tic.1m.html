@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: tic.1m,v 1.82 2022/02/12 20:02:20 tom Exp @
+  * @Id: tic.1m,v 1.84 2022/09/17 19:01:24 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -260,29 +260,37 @@
        <STRONG>-v</STRONG><EM>n</EM>  specifies that (verbose) output be written to standard error trace
             information showing <STRONG>tic</STRONG>'s progress.
 
-            The optional parameter <EM>n</EM> is a number  from  1  to  10,  inclusive,
-            indicating the desired level of detail of information.  If ncurses
-            is built  without  tracing  support,  the  optional  parameter  is
-            ignored.   If  <EM>n</EM>  is  omitted,  the  default  level is 1.  If <EM>n</EM> is
-            specified and greater than 1, the level of detail is increased.
+            The optional parameter <EM>n</EM> is a  number  from  1  to  9,  inclusive,
+            indicating the desired level of detail of information.
+
+            <STRONG>o</STRONG>   If  ncurses  is  built  without  tracing support, the optional
+                parameter is ignored.
+
+            <STRONG>o</STRONG>   If <EM>n</EM> is omitted, the default level is 1.
+
+            <STRONG>o</STRONG>   If <EM>n</EM> is specified and greater than 1, the level of  detail  is
+                increased,   and   the   output   is   written  (with  tracing
+                information) to the "trace" file.
 
             The debug flag levels are as follows:
 
-            1      Names of files created and linked
+            1   Names of files created and linked
 
-            2      Information related to the "use" facility
+            2   Information related to the "use" facility
 
-            3      Statistics from the hashing algorithm
+            3   Statistics from the hashing algorithm
 
-            5      String-table memory allocations
+            4   Details of extended capabilities
 
-            7      Entries into the string-table
+            5   (unused)
 
-            8      List of tokens encountered by scanner
+            6   (unused)
 
-            9      All values computed in construction of the hash table
+            7   Entries into the string-table
 
-            If the debug level <EM>n</EM> is not given, it is taken to be one.
+            8   List of tokens encountered by scanner
+
+            9   All values computed in construction of the hash table
 
        <STRONG>-W</STRONG>   By itself, the <STRONG>-w</STRONG>  option  will  not  force  long  strings  to  be
             wrapped.  Use the <STRONG>-W</STRONG> option to do this.
@@ -461,7 +469,7 @@
        <STRONG><A HREF="captoinfo.1m.html">captoinfo(1m)</A></STRONG>,   <STRONG><A HREF="infocmp.1m.html">infocmp(1m)</A></STRONG>,   <STRONG><A HREF="infotocap.1m.html">infotocap(1m)</A></STRONG>,   <STRONG><A HREF="toe.1m.html">toe(1m)</A></STRONG>,   <STRONG><A HREF="ncurses.3x.html">curses(3x)</A></STRONG>,
        <STRONG><A HREF="term.5.html">term(5)</A></STRONG>.  <STRONG><A HREF="terminfo.5.html">terminfo(5)</A></STRONG>.  <STRONG><A HREF="user_caps.5.html">user_caps(5)</A></STRONG>.
 
-       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20220813).
+       This describes <STRONG>ncurses</STRONG> version 6.3 (patch 20220917).
 
 
 </PRE><H2><a name="h2-AUTHOR">AUTHOR</a></H2><PRE>

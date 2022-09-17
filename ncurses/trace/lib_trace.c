@@ -48,7 +48,7 @@
 
 #include <ctype.h>
 
-MODULE_ID("$Id: lib_trace.c,v 1.100 2022/07/23 20:08:45 tom Exp $")
+MODULE_ID("$Id: lib_trace.c,v 1.101 2022/09/17 14:57:02 tom Exp $")
 
 NCURSES_EXPORT_VAR(unsigned) _nc_tracing = 0; /* always define this */
 
@@ -108,8 +108,33 @@ NCURSES_EXPORT(unsigned)
 curses_trace(unsigned tracelevel)
 {
     unsigned result;
+
 #if defined(TRACE)
+    int bit;
+
+#define DATA(name) { name, #name }
+    static struct {
+	unsigned mask;
+	const char *name;
+    } trace_names[] = {
+	DATA(TRACE_TIMES),
+	    DATA(TRACE_TPUTS),
+	    DATA(TRACE_UPDATE),
+	    DATA(TRACE_MOVE),
+	    DATA(TRACE_CHARPUT),
+	    DATA(TRACE_CALLS),
+	    DATA(TRACE_VIRTPUT),
+	    DATA(TRACE_IEVENT),
+	    DATA(TRACE_BITS),
+	    DATA(TRACE_ICALLS),
+	    DATA(TRACE_CCALLS),
+	    DATA(TRACE_DATABASE),
+	    DATA(TRACE_ATTRS)
+    };
+#undef DATA
+
     Locked(result = _nc_tracing);
+
     if ((MyFP == 0) && tracelevel) {
 	MyInit = TRUE;
 	if (MyFD >= 0) {
@@ -151,6 +176,24 @@ curses_trace(unsigned tracelevel)
 		NCURSES_VERSION,
 		NCURSES_VERSION_PATCH,
 		tracelevel);
+
+#define SPECIAL_MASK(mask) \
+	    if ((tracelevel & mask) == mask) \
+		_tracef("- %s (%u)", #mask, mask)
+
+	for (bit = 0; bit < TRACE_SHIFT; ++bit) {
+	    unsigned mask = (1U << bit) & tracelevel;
+	    if ((mask & trace_names[bit].mask) != 0) {
+		_tracef("- %s (%u)", trace_names[bit].name, mask);
+	    }
+	}
+	SPECIAL_MASK(TRACE_MAXIMUM);
+	else
+	SPECIAL_MASK(TRACE_ORDINARY);
+
+	if (tracelevel > TRACE_MAXIMUM) {
+	    _tracef("- DEBUG_LEVEL(%u)", tracelevel >> TRACE_SHIFT);
+	}
     } else if (tracelevel == 0) {
 	if (MyFP != 0) {
 	    MyFD = dup(MyFD);	/* allow reopen of same file */

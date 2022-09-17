@@ -43,7 +43,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_ttype.c,v 1.44 2022/06/18 20:40:54 tom Exp $")
+MODULE_ID("$Id: alloc_ttype.c,v 1.46 2022/09/17 21:44:35 tom Exp $")
 
 #if NCURSES_XNAMES
 /*
@@ -559,7 +559,7 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 	    }
 	    str_size += strlen(src->term_names) + 1;
 	}
-	for (i = 0; i < STRCOUNT; ++i) {
+	for_each_string(i, src) {
 	    if (VALID_STRING(src->Strings[i])) {
 		if (pass) {
 		    strcpy(new_table + str_size, src->Strings[i]);
@@ -572,7 +572,8 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 	    dst->str_table = new_table;
 	} else {
 	    ++str_size;
-	    new_table = malloc(str_size);
+	    if ((new_table = malloc(str_size)) == NULL)
+		_nc_err_abort(MSG_NO_MEMORY);
 	}
     }
 
@@ -653,7 +654,8 @@ copy_termtype(TERMTYPE2 *dst, const TERMTYPE2 *src, int mode)
 		dst->ext_str_table = new_table;
 	    } else {
 		++str_size;
-		new_table = calloc(str_size, 1);
+		if ((new_table = calloc(str_size, 1)) == NULL)
+		    _nc_err_abort(MSG_NO_MEMORY);
 	    }
 	}
     } else {

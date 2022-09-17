@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: alloc_entry.c,v 1.74 2022/08/20 18:03:14 tom Exp $")
+MODULE_ID("$Id: alloc_entry.c,v 1.76 2022/09/17 21:45:44 tom Exp $")
 
 #define ABSENT_OFFSET    -1
 #define CANCELLED_OFFSET -2
@@ -234,10 +234,11 @@ _nc_wrap_entry(ENTRY * const ep, bool copy_strings)
 #endif
 
     for (i = 0; i < nuses; i++) {
-	if (useoffsets[i] == ABSENT_OFFSET)
+	if (useoffsets[i] == ABSENT_OFFSET) {
 	    ep->uses[i].name = 0;
-	else
-	    ep->uses[i].name = (tp->str_table + useoffsets[i]);
+	} else {
+	    ep->uses[i].name = strdup(tp->str_table + useoffsets[i]);
+	}
     }
     DEBUG(2, (T_RETURN("")));
 }
@@ -250,6 +251,8 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
     TERMTYPE2 *from = &(source->tterm);
 #if NCURSES_XNAMES
     TERMTYPE2 copy;
+    size_t str_size = 0;
+    char *str_table = NULL;
 #endif
     unsigned i;
 
@@ -260,6 +263,46 @@ _nc_merge_entry(ENTRY * const target, ENTRY * const source)
     _nc_copy_termtype2(&copy, from);
     from = &copy;
     _nc_align_termtype(to, from);
+    str_size += strlen(to->term_names) + 1;
+    for_each_string(i, from) {
+	if (VALID_STRING(from->Strings[i]))
+	    str_size += strlen(from->Strings[i]) + 1;
+    }
+    for_each_string(i, to) {
+	if (VALID_STRING(to->Strings[i]))
+	    str_size += strlen(to->Strings[i]) + 1;
+    }
+    /* allocate a string-table large enough for both source/target, and
+     * copy all of the strings into that table.  In the merge, we will
+     * select from the original source/target lists to construct a new
+     * target list.
+     */
+    if (str_size != 0) {
+	char *str_copied;
+	if ((str_table = malloc(str_size)) == NULL)
+	    _nc_err_abort(MSG_NO_MEMORY);
+	str_copied = str_table;
+	strcpy(str_copied, to->term_names);
+	to->term_names = str_copied;
+	str_copied += strlen(str_copied) + 1;
+	for_each_string(i, from) {
+	    if (VALID_STRING(from->Strings[i])) {
+		strcpy(str_copied, from->Strings[i]);
+		from->Strings[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	for_each_string(i, to) {
+	    if (VALID_STRING(to->Strings[i])) {
+		strcpy(str_copied, to->Strings[i]);
+		to->Strings[i] = str_copied;
+		str_copied += strlen(str_copied) + 1;
+	    }
+	}
+	free(to->str_table);
+	to->str_table = str_table;
+	free(from->str_table);
+    }
 #endif
     for_each_boolean(i, from) {
 	if (to->Booleans[i] != (NCURSES_SBOOL) CANCELLED_BOOLEAN) {

@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3856 2022/09/10 22:31:34 tom Exp $
+-- $Id: NEWS,v 1.3858 2022/09/17 20:49:10 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,14 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20220917
+	+ reduce memory-leak in tic by separating allocations for struct entry
+	  from TERMTYPE2 (cf: 20220430).
+	+ improve interaction between tic -v option and NCURSES_TRACE, by
+	  processing the latter only when -v option does not set _nc_tracing.
+	+ modify curses_trace() to show the trace-mask as symbols, e.g.,
+	  TRACE_ORDINARY, DEBUG_LEVEL(3).
 
 20220910
 	+ amend verbose-option change to make this affect level 3, e.g., using

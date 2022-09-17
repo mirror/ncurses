@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.123 2022/09/03 20:02:45 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.124 2022/09/10 19:54:59 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -252,6 +252,7 @@ _nc_read_entry_source(FILE *fp, char *buf,
 	    FreeIfNeeded(thisentry.tterm.Booleans);
 	    FreeIfNeeded(thisentry.tterm.Numbers);
 	    FreeIfNeeded(thisentry.tterm.Strings);
+	    FreeIfNeeded(thisentry.tterm.str_table);
 #if NCURSES_XNAMES
 	    FreeIfNeeded(thisentry.tterm.ext_Names);
 	    FreeIfNeeded(thisentry.tterm.ext_str_table);
@@ -412,7 +413,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 	int matchcount = 0;
 
 	for_entry_list(rp) {
-	    if (qp > rp
+	    if (qp > rp // FIXME - pointer-comparison is wrong...
 		&& check_collisions(qp->tterm.term_names,
 				    rp->tterm.term_names,
 				    matchcount + 1)) {

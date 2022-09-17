@@ -49,7 +49,7 @@
 #include <parametrized.h>
 #include <transform.h>
 
-MODULE_ID("$Id: tic.c,v 1.318 2022/09/03 23:29:16 tom Exp $")
+MODULE_ID("$Id: tic.c,v 1.320 2022/09/17 18:55:28 tom Exp $")
 
 #define STDIN_NAME "<stdin>"
 
@@ -722,7 +722,8 @@ main(int argc, char *argv[])
 	sortmode = S_TERMCAP;
     }
 #if NCURSES_XNAMES
-    use_extended_names(FALSE);
+    /* set this directly to avoid interaction with -v and -D options */
+    _nc_user_definable = FALSE;
 #endif
     _nc_strict_bsd = 0;
 
@@ -853,7 +854,6 @@ main(int argc, char *argv[])
 	    _nc_disable_period = TRUE;
 	    /* FALLTHRU */
 	case 'x':
-	    use_extended_names(TRUE);
 	    using_extensions = TRUE;
 	    break;
 #endif
@@ -863,8 +863,23 @@ main(int argc, char *argv[])
 	last_opt = this_opt;
     }
 
+    /*
+     * If the -v option is set, it may override the $NCURSES_TRACE environment
+     * variable, e.g., for -v3 and up.
+     */
     debug_level = VtoTrace(v_opt);
     use_verbosity(debug_level);
+
+    /*
+     * Do this after setting debug_level, since the function calls START_TRACE,
+     * which uses the $NCURSES_TRACE environment variable if _nc_tracing bits
+     * for tracing are zero.
+     */
+#if NCURSES_XNAMES
+    if (using_extensions) {
+	use_extended_names(TRUE);
+    }
+#endif
 
     if (_nc_tracing) {
 	save_check_termtype = _nc_check_termtype2;

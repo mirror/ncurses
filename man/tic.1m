@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: tic.1m,v 1.82 2022/02/12 20:02:20 tom Exp $
+.\" $Id: tic.1m,v 1.84 2022/09/17 19:01:24 tom Exp $
 .TH @TIC@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -320,16 +320,22 @@ reports the version of ncurses which was used in this program, and exits.
 specifies that (verbose) output be written to standard error trace
 information showing \fB@TIC@\fP's progress.
 .IP
-The optional parameter \fIn\fP is a number from 1 to 10, inclusive,
+The optional parameter \fIn\fP is a number from 1 to 9, inclusive,
 indicating the desired level of detail of information.
+.RS
+.bP
 If ncurses is built without tracing support, the optional parameter is ignored.
+.bP
 If \fIn\fP is omitted, the default level is 1.
+.bP
 If \fIn\fP is specified and greater than 1, the level of
-detail is increased.
+detail is increased, and the output is written (with tracing information)
+to the \*(``trace\*('' file.
+.RE
 .RS
 .PP
 The debug flag levels are as follows:
-.TP
+.TP 4
 1
 Names of files created and linked
 .TP
@@ -339,8 +345,14 @@ Information related to the \*(``use\*('' facility
 3
 Statistics from the hashing algorithm
 .TP
+4
+Details of extended capabilities
+.TP
 5
-String-table memory allocations
+(unused)
+.TP
+6
+(unused)
 .TP
 7
 Entries into the string-table
@@ -350,8 +362,6 @@ List of tokens encountered by scanner
 .TP
 9
 All values computed in construction of the hash table
-.LP
-If the debug level \fIn\fP is not given, it is taken to be one.
 .RE
 .TP
 \fB\-W\fP
