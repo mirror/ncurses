@@ -38,7 +38,7 @@
 
 #include "menu.priv.h"
 
-MODULE_ID("$Id: m_post.c,v 1.37 2022/09/03 21:40:27 tom Exp $")
+MODULE_ID("$Id: m_post.c,v 1.38 2022/09/24 09:38:44 tom Exp $")
 
 /*---------------------------------------------------------------------------
 |   Facility      :  libnmenu
@@ -216,9 +216,10 @@ _nc_Draw_Menu(const MENU *menu)
 
   if (item != NULL)
     {
+      int y = 0;
+
       do
 	{
-	  int y = 0;
 	  ITEM *lasthor;
 
 	  wmove(menu->win, y, 0);

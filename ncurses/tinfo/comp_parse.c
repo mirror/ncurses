@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.124 2022/09/10 19:54:59 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.127 2022/09/24 15:24:15 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -412,8 +412,8 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
     for_entry_list(qp) {
 	int matchcount = 0;
 
-	for_entry_list(rp) {
-	    if (qp > rp // FIXME - pointer-comparison is wrong...
+	for_entry_list2(rp, qp->next) {
+	    if (qp > rp
 		&& check_collisions(qp->tterm.term_names,
 				    rp->tterm.term_names,
 				    matchcount + 1)) {
@@ -575,6 +575,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 				       qp->uses[qp->nuses - 1].link);
 			_nc_merge_entry(&merged,
 					qp->uses[qp->nuses - 1].link);
+			free(qp->uses[qp->nuses - 1].name);
 		    }
 
 		    /*
@@ -611,13 +612,6 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 
 	DEBUG(2, ("MERGES COMPLETED OK"));
     }
-
-    /*
-     * We'd like to free entries read in off disk at this point, but can't.
-     * The merge_entry() code doesn't copy the strings in the use entries,
-     * it just aliases them.  If this ever changes, do a
-     * free_entries(lastread) here.
-     */
 
     DEBUG(2, ("RESOLUTION FINISHED"));
 

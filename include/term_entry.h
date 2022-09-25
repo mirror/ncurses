@@ -33,7 +33,7 @@
  *     and: Thomas E. Dickey                        1998-on                 *
  ****************************************************************************/
 
-/* $Id: term_entry.h,v 1.62 2022/05/28 17:59:42 tom Exp $ */
+/* $Id: term_entry.h,v 1.63 2022/09/24 15:04:59 tom Exp $ */
 
 /*
  *	term_entry.h -- interface to entry-manipulation code
@@ -135,6 +135,7 @@ struct entry {
 extern NCURSES_EXPORT_VAR(ENTRY *) _nc_head;
 extern NCURSES_EXPORT_VAR(ENTRY *) _nc_tail;
 #define for_entry_list(qp)	for (qp = _nc_head; qp; qp = qp->next)
+#define for_entry_list2(qp,q0)	for (qp = q0; qp; qp = qp->next)
 
 #define MAX_LINE	132
 
