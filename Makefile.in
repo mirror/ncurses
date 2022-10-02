@@ -1,6 +1,6 @@
-# $Id: Makefile.in,v 1.45 2021/08/07 22:06:59 tom Exp $
+# $Id: Makefile.in,v 1.46 2022/10/01 22:53:36 tom Exp $
 ##############################################################################
-# Copyright 2018-2020,2021 Thomas E. Dickey                                  #
+# Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2014,2015 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -62,6 +62,8 @@ pkgdir		= @PKG_CONFIG_LIBDIR@
 
 include_dir	= ${includedir}${includesubdir}
 
+FGREP		= @FGREP@
+
 INSTALL		= @INSTALL@
 INSTALL_DATA	= @INSTALL_DATA@
 
@@ -103,10 +105,10 @@ preinstall :
 	@ test "$(include_dir)" = "$(prefix)/include" || \
 		echo '** Include-directory is not in a standard location'
 	@ test ! -f $(include_dir)/termcap.h || \
-		fgrep NCURSES_VERSION $(include_dir)/termcap.h >/dev/null || \
+		$(FGREP) NCURSES_VERSION $(include_dir)/termcap.h >/dev/null || \
 		echo '** Will overwrite non-ncurses termcap.h'
 	@ test ! -f $(include_dir)/curses.h || \
-		fgrep NCURSES_VERSION $(include_dir)/curses.h >/dev/null || \
+		$(FGREP) NCURSES_VERSION $(include_dir)/curses.h >/dev/null || \
 		echo '** Will overwrite non-ncurses curses.h'
 
 distclean \

@@ -2,7 +2,7 @@
 #
 # MKlib_gen.sh -- generate sources from curses.h macro definitions
 #
-# ($Id: MKlib_gen.sh,v 1.72 2022/02/05 20:39:10 tom Exp $)
+# ($Id: MKlib_gen.sh,v 1.73 2022/10/01 13:14:20 tom Exp $)
 #
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
@@ -83,7 +83,7 @@ USE="$3"
 #	https://gcc.gnu.org/gcc-5/porting_to.html
 
 PRG=`echo "$1" | "$AWK" '{ sub(/^[ 	]*/,""); sub(/[ 	].*$/, ""); print; }' || exit 0`
-FSF=`("$PRG" --version 2>/dev/null || exit 0) | fgrep "Free Software Foundation" | head -n 1`
+FSF=`("$PRG" --version 2>/dev/null || exit 0) | ${FGREP-grep -F} "Free Software Foundation" | head -n 1`
 ALL=`"$PRG" -dumpversion 2>/dev/null || exit 0`
 ONE=`echo "$ALL" | sed -e 's/[^0-9].*$//'`
 if test -n "$FSF" && test -n "$ALL" && test -n "$ONE" ; then

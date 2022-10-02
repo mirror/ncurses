@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make_sed.sh,v 1.15 2022/07/16 20:20:00 tom Exp $
+# $Id: make_sed.sh,v 1.16 2022/10/01 13:14:07 tom Exp $
 ##############################################################################
 # Copyright 2020-2021,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2005,2017 Free Software Foundation, Inc.                    #
@@ -29,7 +29,7 @@
 # authorization.                                                             #
 ##############################################################################
 #
-# Author: Thomas E. Dickey 1997-2005
+# Author: Thomas E. Dickey 1997
 #
 # Construct a sed-script to perform renaming within man-pages.  Originally
 # written in much simpler form, this one accounts for the common cases of
@@ -48,7 +48,7 @@ RESULT=result$$
 rm -f $UPPER $SCRIPT $RESULT
 trap "rm -f $COL.* $INPUT $UPPER $SCRIPT $RESULT; exit 1" 1 2 3 15
 trap "rm -f $COL.* $INPUT $UPPER $SCRIPT $RESULT" 0
-fgrep -v \# "$1" | \
+${FGREP-grep -F} -v \# "$1" | \
 sed	-e 's/[	][	]*/	/g' >$INPUT
 
 for F in 1 2 3 4

@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1012 2022/09/24 20:41:12 tom Exp $
+dnl $Id: aclocal.m4,v 1.1014 2022/10/01 13:24:04 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5690,7 +5690,7 @@ if test -n "$cf_unknown" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_RENAMES version: 12 updated: 2021/01/01 16:53:59
+dnl CF_MANPAGE_RENAMES version: 13 updated: 2022/10/01 09:13:09
 dnl ------------------
 dnl The Debian people have their own naming convention for manpages.  This
 dnl option lets us override the name of the file containing renaming, or
@@ -5729,7 +5729,7 @@ if test "$MANPAGE_RENAMES" != no ; then
 	# Construct a sed-script to perform renaming within man-pages
 	if test -n "$MANPAGE_RENAMES" ; then
 		test ! -d man && mkdir man
-		$SHELL "$srcdir/man/make_sed.sh" "$MANPAGE_RENAMES" >./edit_man.sed
+		FGREP="${FGREP-grep -F}" $SHELL "$srcdir/man/make_sed.sh" "$MANPAGE_RENAMES" >./edit_man.sed
 	fi
 fi
 
@@ -9873,7 +9873,7 @@ fi
 AC_SUBST(no_x11_rgb)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 60 updated: 2022/09/10 15:16:16
+dnl CF_XOPEN_SOURCE version: 61 updated: 2022/09/30 04:05:55
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -9924,7 +9924,7 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
+(linux*gnu|linux*gnueabi|linux*gnueabihf|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
 	CF_GNU_SOURCE($cf_XOPEN_SOURCE)
 	;;
 (minix*)
