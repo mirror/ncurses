@@ -1,5 +1,5 @@
 #!@SHELL@
-# $Id: gen-pkgconfig.in,v 1.55 2022/08/27 19:07:03 tom Exp $
+# $Id: gen-pkgconfig.in,v 1.56 2022/10/08 16:45:20 tom Exp $
 ##############################################################################
 # Copyright 2018-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2009-2015,2018 Free Software Foundation, Inc.                    #
@@ -103,7 +103,11 @@ do
 		;;
 	-L*)
 		lib_check=`echo "x$opt" | sed -e 's/^.-L//'`
-		[ -d "$lib_check" ] || continue
+		# on a new/nonstandard install, $libdir may not yet exist at this point
+		if [ "$libdir" != "$lib_check" ]
+		then
+			[ -d "$lib_check" ] || continue
+		fi
 		case "$lib_check" in
 		@LD_SEARCHPATH@) # skip standard libdir
 			if [ "$lib_check" = "$libdir" ]

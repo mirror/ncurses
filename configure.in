@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.749 2022/10/01 13:16:18 tom Exp $
+dnl $Id: configure.in,v 1.750 2022/10/08 15:54:35 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.749 $)
+AC_REVISION($Revision: 1.750 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1272,7 +1272,7 @@ case $cf_cv_abi_version in
 (6)
 	NCURSES_MOUSE_VERSION=2
 	;;
-([789])
+([[789]])
 	NCURSES_MOUSE_VERSION=3
 	;;
 esac
