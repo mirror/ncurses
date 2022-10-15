@@ -9989,7 +9989,7 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|linux*gnueabi|linux*gnueabihf|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
 
 cf_gnu_xopen_source=$cf_XOPEN_SOURCE
 

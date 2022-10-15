@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.651 2022/08/13 14:35:01 tom Exp $
+ * $Id: curses.priv.h,v 1.652 2022/10/15 13:09:05 Mikhail.Korolev Exp $
  *
  *	curses.priv.h
  *
@@ -674,7 +674,7 @@ extern NCURSES_EXPORT(int) _nc_sigprocmask(int, const sigset_t *, sigset_t *);
 #define _nc_unlock_global(name)	/* nothing */
 #endif /* USE_PTHREADS */
 
-#if USE_PTHREADS_EINTR || defined(EXP_WIN32_DRIVER)
+#if USE_PTHREADS_EINTR
 extern NCURSES_EXPORT(void) _nc_set_read_thread(bool);
 #else
 #define _nc_set_read_thread(enable)	/* nothing */

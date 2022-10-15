@@ -43,7 +43,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.52 2022/08/13 14:36:43 tom Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.53 2022/10/15 13:09:05 Mikhail.Korolev Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -283,8 +283,6 @@ handle_SIGINT(int sig)
     _exit(EXIT_FAILURE);
 }
 
-#if USE_SIGWINCH
-
 # ifndef _nc_set_read_thread
 NCURSES_EXPORT(void)
 _nc_set_read_thread(bool enable)
@@ -299,6 +297,8 @@ _nc_set_read_thread(bool enable)
     }
 }
 # endif
+
+#if USE_SIGWINCH
 
 static void
 handle_SIGWINCH(int sig GCC_UNUSED)

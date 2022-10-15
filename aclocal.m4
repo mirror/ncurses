@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1014 2022/10/01 13:24:04 tom Exp $
+dnl $Id: aclocal.m4,v 1.1015 2022/10/02 23:55:56 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -9873,7 +9873,7 @@ fi
 AC_SUBST(no_x11_rgb)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_XOPEN_SOURCE version: 61 updated: 2022/09/30 04:05:55
+dnl CF_XOPEN_SOURCE version: 62 updated: 2022/10/02 19:55:56
 dnl ---------------
 dnl Try to get _XOPEN_SOURCE defined properly that we can use POSIX functions,
 dnl or adapt to the vendor's definitions to get equivalent functionality,
@@ -9924,7 +9924,7 @@ case "$host_os" in
 	cf_xopen_source="-D_SGI_SOURCE"
 	cf_XOPEN_SOURCE=
 	;;
-(linux*gnu|linux*gnueabi|linux*gnueabihf|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
+(linux*gnu|linux*gnuabi64|linux*gnuabin32|linux*gnueabi|linux*gnueabihf|linux*gnux32|uclinux*|gnu*|mint*|k*bsd*-gnu|cygwin)
 	CF_GNU_SOURCE($cf_XOPEN_SOURCE)
 	;;
 (minix*)
