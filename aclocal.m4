@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1015 2022/10/02 23:55:56 tom Exp $
+dnl $Id: aclocal.m4,v 1.1021 2022/10/23 11:46:29 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5690,7 +5690,7 @@ if test -n "$cf_unknown" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_RENAMES version: 13 updated: 2022/10/01 09:13:09
+dnl CF_MANPAGE_RENAMES version: 16 updated: 2022/10/22 19:12:31
 dnl ------------------
 dnl The Debian people have their own naming convention for manpages.  This
 dnl option lets us override the name of the file containing renaming, or
@@ -5710,27 +5710,19 @@ case ".$MANPAGE_RENAMES" in
 (.|.yes)
 	# Debian 'man' program?
 	if test -f /etc/debian_version ; then
-		MANPAGE_RENAMES=`cd "$srcdir" && pwd`/man/man_db.renames
+		MANPAGE_RENAMES=man/man_db.renames
 	else
 		MANPAGE_RENAMES=no
 	fi
 	;;
 esac
 
-if test "$MANPAGE_RENAMES" != no ; then
-	if test -f "$srcdir/man/$MANPAGE_RENAMES" ; then
-		MANPAGE_RENAMES=`cd "$srcdir/man" && pwd`/$MANPAGE_RENAMES
-	elif test ! -f "$MANPAGE_RENAMES" ; then
-		AC_MSG_ERROR(not a filename: $MANPAGE_RENAMES)
-	fi
-
-	test ! -d man && mkdir man
-
-	# Construct a sed-script to perform renaming within man-pages
-	if test -n "$MANPAGE_RENAMES" ; then
-		test ! -d man && mkdir man
-		FGREP="${FGREP-grep -F}" $SHELL "$srcdir/man/make_sed.sh" "$MANPAGE_RENAMES" >./edit_man.sed
-	fi
+if test "$MANPAGE_RENAMES" = man/man_db.renames ; then
+	MANPAGE_RENAMES=`pwd`/$MANPAGE_RENAMES
+elif test "$MANPAGE_RENAMES" = no ; then
+	:
+elif test ! -f "$MANPAGE_RENAMES" ; then
+	AC_MSG_ERROR(not a filename: $MANPAGE_RENAMES)
 fi
 
 AC_MSG_RESULT($MANPAGE_RENAMES)
@@ -5799,7 +5791,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 52 updated: 2022/02/05 12:31:08
+dnl CF_MAN_PAGES version: 53 updated: 2022/10/23 07:30:26
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -5983,7 +5975,7 @@ cat >>$cf_edit_man <<CF_EOF
 	sed	-f "$cf_man_alias" \\
 CF_EOF
 
-if test -f "$MANPAGE_RENAMES" ; then
+if test "$MANPAGE_RENAMES" != no ; then
 cat >>$cf_edit_man <<CF_EOF
 		< "\$i" | sed -f `pwd`/edit_man.sed >\$TMP
 CF_EOF
@@ -6410,6 +6402,21 @@ AC_DEFUN([CF_OBJ_SUBDIR],
 			$2='obj_s' ;;
 		esac
 	esac
+])dnl
+dnl ---------------------------------------------------------------------------
+dnl CF_OUTPUT_MANPAGE_RENAMES version: 2 updated: 2022/10/22 19:12:31
+dnl -------------------------
+dnl This runs in the output step to config.status, after man_db.renames has
+dnl been generated.
+AC_DEFUN([CF_OUTPUT_MANPAGE_RENAMES],
+[
+AC_REQUIRE([CF_MANPAGE_RENAMES])
+if test "$MANPAGE_RENAMES" != no ; then
+	# Construct a sed-script to perform renaming within man-pages
+	test -n "$verbose" && echo "creating edit_man.sed"
+	test ! -d man && mkdir man
+	FGREP="${FGREP-grep -F}" $SHELL "$srcdir/man/make_sed.sh" "$MANPAGE_RENAMES" >./edit_man.sed
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_PATHSEP version: 8 updated: 2021/01/01 13:31:04

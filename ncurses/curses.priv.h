@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.652 2022/10/15 13:09:05 Mikhail.Korolev Exp $
+ * $Id: curses.priv.h,v 1.653 2022/10/23 13:29:26 tom Exp $
  *
  *	curses.priv.h
  *
@@ -139,6 +139,10 @@ extern int errno;
 # if HAVE_STDINT_H
 #  include <stdint.h>
 # endif
+#endif
+
+#ifndef PRIxPTR
+# define PRIxPTR	"lx"
 #endif
 
 /* include signal.h before curses.h to work-around defect in glibc 2.1.3 */

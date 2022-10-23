@@ -1,5 +1,5 @@
 #!/usr/bin/make -f
-# $Id: rules,v 1.44 2022/01/30 01:09:39 tom Exp $
+# $Id: rules,v 1.45 2022/10/22 18:35:38 tom Exp $
 
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
@@ -135,8 +135,8 @@ patch-ncurses6-stamp:
 		-e 's/\.3menu$$/.3menu6/' \
 		-e 's/\.3panel$$/.3panel6/' \
 		-e 's/\.\([157]\)$$/6.\1/' \
-		man/man_db.renames
-	diff -u man/man_db.renames.bak man/man_db.renames || true
+		man/man_db.renames.in
+	diff -u man/man_db.renames.in.bak man/man_db.renames.in || true
 	touch $@
 
 config-ncurses6-stamp: patch-ncurses6-stamp

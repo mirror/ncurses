@@ -54,7 +54,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.182 2022/08/13 23:14:26 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.183 2022/10/22 19:32:40 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -747,6 +747,7 @@ NCURSES_SP_NAME(_nc_setupscreen) (
     }
 
     T(("creating stdscr"));
+    (void) bottom_stolen;
     assert((sp->_lines_avail + sp->_topstolen + bottom_stolen) == slines);
     if ((StdScreen(sp) = NCURSES_SP_NAME(newwin) (NCURSES_SP_ARGx
 						  sp->_lines_avail,

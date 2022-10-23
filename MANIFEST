@@ -671,7 +671,7 @@
 ./man/keyok.3x
 ./man/legacy_coding.3x
 ./man/make_sed.sh
-./man/man_db.renames
+./man/man_db.renames.in
 ./man/manhtml.aliases
 ./man/manhtml.externs
 ./man/manlinks.sed

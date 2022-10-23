@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.750 2022/10/08 15:54:35 tom Exp $
+dnl $Id: configure.in,v 1.752 2022/10/22 19:19:52 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.750 $)
+AC_REVISION($Revision: 1.752 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -2547,12 +2547,14 @@ AC_OUTPUT( \
 	include/ncurses_dll.h \
 	include/termcap.h \
 	include/unctrl.h \
+	man/man_db.renames \
 	$SUB_MAKEFILES \
 	Makefile,[
 if test "x$cf_with_tests" != xno ; then
 	CF_PRG_RULES(["$srcdir/test/mk-test.awk" INSTALL=no ECHO_LINK="$ECHO_LD"], test)
 fi
 CF_LIB_RULES($SRC_SUBDIRS)
+CF_OUTPUT_MANPAGE_RENAMES
 
 if test "x$cf_with_ada" = "xyes" && test "x$cf_cv_prog_gnat_correct" = "xyes"; then
 if test -z "$USE_OLD_MAKERULES" ; then
@@ -2582,6 +2584,7 @@ LIB_SUFFIX="$LIB_SUFFIX"
 LIB_TRACING="$LIB_TRACING"
 LN_S="$LN_S"
 MAKE_TERMINFO="$MAKE_TERMINFO"
+MANPAGE_RENAMES="$MANPAGE_RENAMES"
 MENU_NAME="$MENU_NAME"
 NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
@@ -2635,6 +2638,7 @@ cf_with_manpages="$cf_with_manpages"
 cf_with_tests="$cf_with_tests"
 host="$host"
 target="$target"
+verbose="$verbose"
 with_shared_cxx="$with_shared_cxx"
 
 ],cat)dnl

@@ -48,7 +48,7 @@
 
 #include <tic.h>
 
-MODULE_ID("$Id: comp_parse.c,v 1.128 2022/10/15 19:31:00 tom Exp $")
+MODULE_ID("$Id: comp_parse.c,v 1.131 2022/10/23 13:15:58 tom Exp $")
 
 static void sanity_check2(TERMTYPE2 *, bool);
 NCURSES_IMPEXP void (NCURSES_API *_nc_check_termtype2) (TERMTYPE2 *, bool) = sanity_check2;
@@ -222,8 +222,10 @@ _nc_read_entry_source(FILE *fp, char *buf,
     int immediate = 0;
 
     DEBUG(2,
-	  (T_CALLED("_nc_read_entry_source(file=%p, buf=%p, literal=%d, silent=%d, hook=%p)"),
-	   (void *) fp, buf, literal, silent, (void *) hook));
+	  (T_CALLED("_nc_read_entry_source("
+		    "file=%p, buf=%p, literal=%d, silent=%d, hook=%#"
+		    PRIxPTR ")"),
+	   (void *) fp, buf, literal, silent, (intptr_t) hook));
 
     if (silent)
 	_nc_suppress_warnings = TRUE;	/* shut the lexer up, too */
@@ -571,7 +573,7 @@ _nc_resolve_uses2(bool fullresolve, bool literal)
 		     * (reverse) order.
 		     */
 		    for (; qp->nuses; qp->nuses--) {
-			int n = qp->nuses - 1;
+			int n = (int) (qp->nuses - 1);
 			validate_merge(&merged, qp->uses[n].link);
 			_nc_merge_entry(&merged, qp->uses[n].link);
 			free(qp->uses[n].name);
