@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_slk.3x,v 1.40 2022/02/12 20:05:11 tom Exp @
+  * @Id: curs_slk.3x,v 1.44 2022/10/29 22:44:14 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -59,7 +59,6 @@
        <STRONG>int</STRONG> <STRONG>slk_init(int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
 
        <STRONG>int</STRONG> <STRONG>slk_set(int</STRONG> <EM>labnum</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>char</STRONG> <STRONG>*</STRONG><EM>label</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
-       /* extension */
        <STRONG>int</STRONG> <STRONG>slk_wset(int</STRONG> <EM>labnum</EM><STRONG>,</STRONG> <STRONG>const</STRONG> <STRONG>wchar_t</STRONG> <STRONG>*</STRONG><EM>label</EM><STRONG>,</STRONG> <STRONG>int</STRONG> <EM>fmt</EM><STRONG>);</STRONG>
 
        <STRONG>char</STRONG> <STRONG>*slk_label(int</STRONG> <EM>labnum</EM><STRONG>);</STRONG>
@@ -76,7 +75,7 @@
        <STRONG>int</STRONG> <STRONG>slk_attr_on(attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>void*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_attr_off(const</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>void</STRONG> <STRONG>*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
        <STRONG>int</STRONG> <STRONG>slk_attr_set(const</STRONG> <STRONG>attr_t</STRONG> <EM>attrs</EM><STRONG>,</STRONG> <STRONG>short</STRONG> <EM>pair</EM><STRONG>,</STRONG> <STRONG>void*</STRONG> <EM>opts</EM><STRONG>);</STRONG>
-
+       /* extension */
        <STRONG>attr_t</STRONG> <STRONG>slk_attr(void);</STRONG>
 
        <STRONG>int</STRONG> <STRONG>slk_color(short</STRONG> <EM>pair</EM><STRONG>);</STRONG>
@@ -117,11 +116,11 @@
        library) has three parameters:
 
           <EM>labnum</EM>
-               is  the  label number, from <STRONG>1</STRONG> to <STRONG>8</STRONG> (12 for <EM>fmt</EM> in <STRONG>slk_init</STRONG> is <STRONG>2</STRONG>
-               or <STRONG>3</STRONG>);
+               is the label number, from <STRONG>1</STRONG> to <STRONG>8</STRONG> (12 if <EM>fmt</EM> in <STRONG>slk_init</STRONG> is <STRONG>2</STRONG> or
+               <STRONG>3</STRONG>);
 
           <EM>label</EM>
-               is be the string to put on the label, up to eight (five for <EM>fmt</EM>
+               is be the string to put on the label, up to eight (five if  <EM>fmt</EM>
                in  <STRONG>slk_init</STRONG> is <STRONG>2</STRONG> or <STRONG>3</STRONG>) characters in length.  A null string or
                a null pointer sets up a blank label.
 
@@ -263,15 +262,44 @@
 
        <STRONG>o</STRONG>   It added <STRONG>slk_color</STRONG>.
 
-       The  format  codes  <STRONG>2</STRONG>  and <STRONG>3</STRONG> for <STRONG>slk_init</STRONG> and the function <STRONG>slk_attr</STRONG> are
-       specific to ncurses.
+       Although  <STRONG>slk_start</STRONG>  is  declared in the curses header file, it was not
+       documented by SVr4 other than its presence in a list of libtermlib.so.1
+       symbols.  Reading the source code (i.e., Illumos):
 
-       X/Open Curses does not specify a limit for the  number  of  colors  and
+       <STRONG>o</STRONG>   <STRONG>slk_start</STRONG> has two parameters:
+
+           <STRONG>o</STRONG>   <EM>ng</EM> (number of groups) and
+
+           <STRONG>o</STRONG>   <EM>gp</EM> (group pointer).
+
+       <STRONG>o</STRONG>   Soft-key groups are an array of <EM>ng</EM> integers.
+
+       <STRONG>o</STRONG>   In  SVr4, <STRONG>slk_init</STRONG> calls <STRONG>slk_start</STRONG> passing a null for <EM>gp</EM>.  For this
+           case, <STRONG>slk_start</STRONG> uses the number of groups <EM>ng</EM> (3 for the 3-2-3  lay-
+           out, 2 for the 4-4 layout) which <STRONG>slk_init</STRONG> provided.
+
+           If  <EM>ng</EM>  is  neither  2 or 3, <STRONG>slk_start</STRONG> checks the terminfo <EM>fln</EM> (la-
+           bel_format) capability, interpreting that as a comma-separated list
+           of numbers, e.g., "3,2,3" for the 3-2-3 layout.
+
+           Finally, if there is no <EM>fln</EM> capability, <STRONG>slk_start</STRONG> returns ERR.
+
+       <STRONG>o</STRONG>   If  <STRONG>slk_start</STRONG>  is given a non-null <EM>gp</EM>, it copies the <EM>ng</EM> elements of
+           the group of soft-keys, up to 16.
+
+           If there are more than 16 elements, <STRONG>slk_start</STRONG> returns an error.
+
+       <STRONG>o</STRONG>   The format codes <STRONG>2</STRONG> and <STRONG>3</STRONG> for <STRONG>slk_init</STRONG>  were  added  by  ncurses  in
+           1996.  PDCurses 2.4 added this feature in 2001.
+
+       The function <STRONG>slk_attr</STRONG> was added by ncurses in 1996.
+
+       X/Open  Curses  does  not  specify a limit for the number of colors and
        color pairs which a terminal can support.  However, in its use of <STRONG>short</STRONG>
-       for the parameters, it carries over SVr4's  implementation  detail  for
+       for  the  parameters,  it carries over SVr4's implementation detail for
        the compiled terminfo database, which uses signed 16-bit numbers.  This
-       implementation provides extended versions of those functions which  use
-       <STRONG>short</STRONG>  parameters, allowing applications to use larger color- and pair-
+       implementation  provides extended versions of those functions which use
+       <STRONG>int</STRONG> parameters, allowing applications to use larger  color-  and  pair-
        numbers.
 
 

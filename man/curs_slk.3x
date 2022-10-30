@@ -27,8 +27,12 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_slk.3x,v 1.40 2022/02/12 20:05:11 tom Exp $
+.\" $Id: curs_slk.3x,v 1.44 2022/10/29 22:44:14 tom Exp $
 .TH curs_slk 3X ""
+.ie \n(.g .ds `` \(lq
+.el       .ds `` ``
+.ie \n(.g .ds '' \(rq
+.el       .ds '' ''
 .de bP
 .ie n  .IP \(bu 4
 .el    .IP \(bu 2
@@ -63,8 +67,6 @@
 .sp
 \fBint slk_set(int \fIlabnum\fB, const char *\fIlabel\fB, int \fIfmt\fB);\fR
 .br
-/* extension */
-.br
 \fBint slk_wset(int \fIlabnum\fB, const wchar_t *\fIlabel\fB, int \fIfmt\fB);\fR
 .sp
 \fBchar *slk_label(int \fIlabnum\fB);\fR
@@ -90,7 +92,9 @@
 \fBint slk_attr_off(const attr_t \fIattrs\fB, void * \fIopts\fB);\fR
 .br
 \fBint slk_attr_set(const attr_t \fIattrs\fB, short \fIpair\fB, void* \fIopts\fB);\fR
-.sp
+.br
+/* extension */
+.br
 \fBattr_t slk_attr(void);\fP
 .sp
 \fBint slk_color(short \fIpair\fB);\fR
@@ -147,12 +151,12 @@ has three parameters:
 .TP 5
 .I labnum
 is the label number, from \fB1\fP to \fB8\fP
-(12 for \fIfmt\fP in \fBslk_init\fP is \fB2\fP or \fB3\fP);
+(12 if \fIfmt\fP in \fBslk_init\fP is \fB2\fP or \fB3\fP);
 .TP
 .I label
 is be the string to put on the label,
 up to eight
-(five for \fIfmt\fP in \fBslk_init\fP is \fB2\fP or \fB3\fP)
+(five if \fIfmt\fP in \fBslk_init\fP is \fB2\fP or \fB3\fP)
 characters in length.
 A null string or a null pointer sets up a blank label.
 .TP
@@ -301,8 +305,42 @@ It added \fBconst\fP qualifiers to parameters (unnecessarily), and
 .bP
 It added \fBslk_color\fP.
 .PP
-The format codes \fB2\fP and \fB3\fP for \fBslk_init\fP and the
-function \fBslk_attr\fP are specific to ncurses.
+Although \fBslk_start\fP is declared in the curses header file,
+it was not documented by SVr4 other than its presence in a list
+of libtermlib.so.1 symbols.
+Reading the source code (i.e., Illumos):
+.bP
+\fBslk_start\fP has two parameters:
+.RS
+.bP
+\fIng\fP (number of groups) and
+.bP
+\fIgp\fP (group pointer).
+.RE
+.bP
+Soft-key groups are an array of \fIng\fP integers.
+.bP
+In SVr4, \fBslk_init\fP calls \fBslk_start\fP passing a null for \fIgp\fP. 
+For this case, \fBslk_start\fP uses the number of groups \fIng\fP
+(3 for the 3-2-3 layout, 2 for the 4-4 layout) which \fBslk_init\fP provided.
+.IP
+If \fIng\fP is neither 2 or 3,
+\fBslk_start\fP checks the terminfo \fIfln\fP (label_format) capability,
+interpreting that as a comma-separated list of numbers,
+e.g., \*(``3,2,3\*('' for the 3-2-3 layout.
+.IP
+Finally, if there is no \fIfln\fP capability, \fBslk_start\fP returns ERR.
+.bP
+If \fBslk_start\fP is given a non-null \fIgp\fP,
+it copies the \fIng\fP elements of the group of soft-keys, up to 16.
+.IP
+If there are more than 16 elements, \fBslk_start\fP returns an error.
+.bP
+The format codes \fB2\fP and \fB3\fP for \fBslk_init\fP
+were added by ncurses in 1996.
+PDCurses 2.4 added this feature in 2001.
+.PP
+The function \fBslk_attr\fP was added by ncurses in 1996.
 .PP
 X/Open Curses does not specify a limit for the number of colors and
 color pairs which a terminal can support.
@@ -310,7 +348,7 @@ However, in its use of \fBshort\fP for the parameters,
 it carries over SVr4's implementation detail for the compiled
 terminfo database, which uses signed 16-bit numbers.
 This implementation provides extended versions of those functions
-which use \fBshort\fP parameters,
+which use \fBint\fP parameters,
 allowing applications to use larger color- and pair-numbers.
 .SH SEE ALSO
 \fBcurses\fP(3X),
