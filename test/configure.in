@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1996-on
 dnl
-dnl $Id: configure.in,v 1.167 2022/10/01 14:13:34 tom Exp $
+dnl $Id: configure.in,v 1.168 2022/11/05 22:13:12 tom Exp $
 dnl This is a simple configuration-script for the ncurses test programs that
 dnl allows the test-directory to be separately configured against a reference
 dnl system (i.e., sysvr4 curses)
@@ -538,7 +538,5 @@ fi
 AWK="$AWK"
 ECHO_CC="$ECHO_CC"
 ECHO_LD="$ECHO_LD"
-EGREP="${EGREP-grep -E}"
-FGREP="${FGREP-grep -F}"
 SHOW_CC="$SHOW_LD"
 ],cat)

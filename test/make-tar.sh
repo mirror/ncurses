@@ -1,5 +1,5 @@
 #!/bin/sh
-# $Id: make-tar.sh,v 1.19 2022/02/05 17:57:45 tom Exp $
+# $Id: make-tar.sh,v 1.21 2022/11/05 19:41:33 tom Exp $
 ##############################################################################
 # Copyright 2019-2021,2022 Thomas E. Dickey                                  #
 # Copyright 2010-2015,2017 Free Software Foundation, Inc.                    #
@@ -42,6 +42,12 @@ TARGET=`pwd`
 : "${DESTDIR:=$TARGET}"
 : "${TMPDIR:=/tmp}"
 
+# make timestamps of generated files predictable
+same_timestamp() {
+	[ -f ../NEWS ] || echo "OOPS $1"
+	touch -r ../NEWS "$1"
+}
+
 grep_assign() {
 	grep_assign=`grep -E "^$2\>" "$1" | sed -e "s/^$2[ 	]*=[ 	]*//" -e 's/"//g'`
 	eval "$2"=\""$grep_assign"\"
@@ -62,6 +68,7 @@ edit_specfile() {
 		-e "s/\\<YYYYMMDD\\>/$NCURSES_PATCH/g" "$1" >"$1.new"
 	chmod u+w "$1"
 	mv "$1.new" "$1"
+	same_timestamp "$1"
 }
 
 make_changelog() {
@@ -73,6 +80,7 @@ make_changelog() {
 
  -- `head -n 1 "$HOME"/.signature`  `date -R`
 EOF
+	same_timestamp "$1"
 }
 
 # This can be run from either the subdirectory, or from the top-level
@@ -84,7 +92,7 @@ fi
 SOURCE=`cd ..;pwd`
 
 BUILD=$TMPDIR/make-tar$$
-trap "cd /; rm -rf $BUILD; exit 0" 1 2 3 15
+trap "cd /; rm -rf $BUILD; exit 1" 1 2 3 15
 trap "cd /; rm -rf $BUILD; exit 0" 0
 
 umask 077
@@ -124,6 +132,7 @@ cp -p "$SOURCE/NEWS" "$BUILD/$ROOTNAME"
 
 touch $BUILD/$ROOTNAME/MANIFEST
 ( cd $BUILD/$ROOTNAME && find . -type f -print | "$SOURCE/misc/csort" >MANIFEST )
+same_timestamp $BUILD/$ROOTNAME/MANIFEST
 
 cd $BUILD || exit
 
@@ -142,7 +151,10 @@ find . -name "*.gz" -exec rm -rf {} \;
 # Make the files writable...
 chmod -R u+w .
 
-tar cf - $ROOTNAME | gzip >"$DESTDIR/$ROOTNAME.tar.gz"
+# Cleanup timestamps
+[ -n "$TOUCH_DIRS" ] && "$TOUCH_DIRS" "$ROOTNAME"
+
+tar cf - $TAR_OPTIONS $ROOTNAME | gzip >"$DESTDIR/$ROOTNAME.tar.gz"
 cd "$DESTDIR" || exit
 
 pwd

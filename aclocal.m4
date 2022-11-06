@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1021 2022/10/23 11:46:29 tom Exp $
+dnl $Id: aclocal.m4,v 1.1023 2022/11/05 20:13:19 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5581,13 +5581,16 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_FORMAT version: 15 updated: 2021/09/04 06:35:04
+dnl CF_MANPAGE_FORMAT version: 16 updated: 2022/11/05 16:12:11
 dnl -----------------
 dnl Option to allow user to override automatic configuration of manpage format.
 dnl There are several special cases:
 dnl
-dnl	gzip - man checks for, can display gzip'd files
 dnl	compress - man checks for, can display compressed files
+dnl	bzip2 - man checks for, can display bzip2'd files
+dnl	gzip - man checks for, can display gzip'd files
+dnl	xz - man checks for, can display xz'd files
+dnl
 dnl	BSDI - files in the cat-directories are suffixed ".0"
 dnl	formatted - installer should format (put files in cat-directory)
 dnl	catonly - installer should only format, e.g., for a turnkey system.
@@ -5601,8 +5604,9 @@ AC_REQUIRE([CF_PATHSEP])
 AC_MSG_CHECKING(format of man-pages)
 
 AC_ARG_WITH(manpage-format,
-	[  --with-manpage-format   specify manpage-format: gzip/compress/BSDI/normal and
-                          optionally formatted/catonly, e.g., gzip,formatted],
+	[  --with-manpage-format   specify manpage-format: gzip/compress/bzip2/xz,
+                          BSDI/normal and optionally formatted/catonly,
+                          e.g., gzip,formatted],
 	[MANPAGE_FORMAT=$withval],
 	[MANPAGE_FORMAT=unknown])
 
@@ -5632,10 +5636,12 @@ case "$MANPAGE_FORMAT" in
 			if test "x$cf_test" = "x$cf_name" ; then
 
 				case "$cf_name" in
-				(*.gz) MANPAGE_FORMAT="$MANPAGE_FORMAT gzip";;
-				(*.Z)  MANPAGE_FORMAT="$MANPAGE_FORMAT compress";;
-				(*.0)  MANPAGE_FORMAT="$MANPAGE_FORMAT BSDI";;
-				(*)    MANPAGE_FORMAT="$MANPAGE_FORMAT normal";;
+				(*.bz2) MANPAGE_FORMAT="$MANPAGE_FORMAT bzip2";;
+				(*.xz)  MANPAGE_FORMAT="$MANPAGE_FORMAT xz";;
+				(*.gz)  MANPAGE_FORMAT="$MANPAGE_FORMAT gzip";;
+				(*.Z)   MANPAGE_FORMAT="$MANPAGE_FORMAT compress";;
+				(*.0)   MANPAGE_FORMAT="$MANPAGE_FORMAT BSDI";;
+				(*)     MANPAGE_FORMAT="$MANPAGE_FORMAT normal";;
 				esac
 
 				case "$cf_name" in
@@ -5674,7 +5680,7 @@ case "$MANPAGE_FORMAT" in
 (*)
 	for cf_option in $MANPAGE_FORMAT; do
 	case "$cf_option" in
-	(gzip|compress|BSDI|normal|formatted|catonly)
+	(xz|bzip2|gzip|compress|BSDI|normal|formatted|catonly)
 		;;
 	(*)
 		cf_unknown="$cf_unknown $cf_option"
@@ -5690,7 +5696,7 @@ if test -n "$cf_unknown" ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_RENAMES version: 16 updated: 2022/10/22 19:12:31
+dnl CF_MANPAGE_RENAMES version: 17 updated: 2022/10/23 07:46:29
 dnl ------------------
 dnl The Debian people have their own naming convention for manpages.  This
 dnl option lets us override the name of the file containing renaming, or
@@ -5791,7 +5797,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 53 updated: 2022/10/23 07:30:26
+dnl CF_MAN_PAGES version: 54 updated: 2022/11/05 16:12:11
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -5829,16 +5835,27 @@ test ! -d man && mkdir man
 
 cf_so_strip=
 cf_compress=
-case "$MANPAGE_FORMAT" in
-(*compress*)
+for cf_manpage_format in $MANPAGE_FORMAT
+do
+case "$cf_manpage_format" in
+(compress)
 	cf_so_strip="Z"
 	cf_compress=compress
 	;;
-(*gzip*)
+(gzip)
 	cf_so_strip="gz"
 	cf_compress=gzip
 	;;
+(bzip2)
+	cf_so_strip="bz2"
+	cf_compress=bzip2
+	;;
+(xz)
+	cf_so_strip="xz"
+	cf_compress=xz
+	;;
 esac
+done
 
 cf_edit_man=./edit_man.sh
 cf_man_alias=`pwd`/man_alias.sed
