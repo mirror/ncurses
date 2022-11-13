@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3875 2022/11/05 22:24:03 tom Exp $
+-- $Id: NEWS,v 1.3877 2022/11/13 00:20:41 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,9 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20221112
+	+ build-fixes for AdaCurses RPM test-package.
 
 20221105
 	+ regenerate configure scripts with autoconf 2.52.20221009
