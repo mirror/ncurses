@@ -2,7 +2,7 @@ Summary: Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.29 2022/11/13 00:35:00 tom Exp $
+# $Id: AdaCurses.spec,v 1.30 2022/11/19 21:21:16 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -26,7 +26,7 @@ In addition to a library, this package installs sample programs in
 
 %define debug_package %{nil}
 
-%define need_filter %(if grep -E -i '(mageia|red hat|fedora)' /etc/issue >/dev/null; then echo 1; elif test -f /etc/fedora-release; then echo 1; else echo 0; fi)
+%define need_filter %(if grep -E -i '(red hat|fedora)' /etc/issue >/dev/null; then echo 1; elif test -f /etc/fedora-release; then echo 1; else echo 0; fi)
 
 %if %{need_filter} == 1
 # http://fedoraproject.org/wiki/EPEL:Packaging_Autoprovides_and_Requires_Filtering
@@ -38,12 +38,15 @@ In addition to a library, this package installs sample programs in
 
 %build
 
-%define ada_libdir %{_prefix}/lib/ada/adalib
+%define ada_libdir %{_libdir}/ada/adalib
 %define ada_include %{_prefix}/share/ada/adainclude
 
 %if %{is_mandriva}
 # Mageia 8 lacks gprbuild, needed for building shared libraries.
+%define ada_model --without-shared --without-ada-sharedlib --with-ada-objects=%{_libdir}/adalib
 %else
+# OpenSUSE actually lacks gprbuild, but there is a workable "community" package.
+%define ada_model --with-shared --with-ada-sharedlib
 %if %{is_redhat}
 # Fedora 36 LTO does not work with gprbuild system configuration.
 unset CFLAGS
@@ -53,7 +56,7 @@ unset LT_SYS_LIBRARY_PATH
 %endif
 
 INSTALL_PROGRAM='${INSTALL}' \
-	./configure \
+	./configure %{ada_model} \
 		--target %{_target_platform} \
 		--prefix=%{_prefix} \
 		--bindir=%{_bindir} \
@@ -65,9 +68,7 @@ INSTALL_PROGRAM='${INSTALL}' \
 		--disable-rpath-link \
 		--disable-echo \
 		--verbose \
-		--enable-warnings \
-		--with-shared \
-		--with-ada-sharedlib
+		--enable-warnings
 
 make
 
@@ -107,6 +108,9 @@ exit 0
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Nov 19 2022 Thomas Dickey
+- use static libraries for Mageia.
 
 * Sat Nov 12 2022 Thomas Dickey
 - unset environment variables to work around Fedora LTO bugs.

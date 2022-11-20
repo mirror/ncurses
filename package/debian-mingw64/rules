@@ -111,7 +111,7 @@ install: install-stamp
 install-stamp: build-stamp
 	dh_testdir
 	dh_testroot
-	dh_clean -k
+	dh_prep
 	dh_installdirs      $(verbose)
 
 	$(MAKE) install.libs DESTDIR=$(MINGW_TMP)
