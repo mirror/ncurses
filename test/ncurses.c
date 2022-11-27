@@ -41,7 +41,7 @@ AUTHOR
    Author: Eric S. Raymond <esr@snark.thyrsus.com> 1993
            Thomas E. Dickey (beginning revision 1.27 in 1996).
 
-$Id: ncurses.c,v 1.528 2022/02/26 22:41:02 tom Exp $
+$Id: ncurses.c,v 1.529 2022/11/26 23:16:04 tom Exp $
 
 ***************************************************************************/
 
@@ -4417,7 +4417,7 @@ x_acs_test(bool recur GCC_UNUSED)
 	    if (pending_code) {
 		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%02x", digit);
 	    } else if (at_page[0] != '\0') {
-		_nc_SPRINTF(at_page, _nc_SLIMIT(sizeof(at_page)) "%x", digit);
+		sscanf(at_page, "%x", &digit);
 	    }
 	    break;
 	default:

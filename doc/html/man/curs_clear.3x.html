@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_clear.3x,v 1.23 2022/02/12 20:06:41 tom Exp @
+  * @Id: curs_clear.3x,v 1.27 2022/11/26 16:23:47 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -68,23 +68,31 @@
 
 
 </PRE><H2><a name="h2-DESCRIPTION">DESCRIPTION</a></H2><PRE>
+
+</PRE><H3><a name="h3-erase_werase">erase/werase</a></H3><PRE>
        The <STRONG>erase</STRONG> and <STRONG>werase</STRONG> routines copy blanks to every position in the win-
        dow, clearing the screen.
 
-       The  <STRONG>clear</STRONG> and <STRONG>wclear</STRONG> routines are like <STRONG>erase</STRONG> and <STRONG>werase</STRONG>, but they also
-       call <STRONG>clearok</STRONG>, so that the screen is cleared completely on the next call
-       to <STRONG>wrefresh</STRONG> for that window and repainted from scratch.
+       Blanks created by erasure have the current background rendition (as set
+       by <STRONG><A HREF="curs_bkgd.3x.html">wbkgdset(3x)</A></STRONG>) merged into them.
 
+
+</PRE><H3><a name="h3-clear_wclear">clear/wclear</a></H3><PRE>
+       The <STRONG>clear</STRONG> and <STRONG>wclear</STRONG> routines are like <STRONG>erase</STRONG> and <STRONG>werase</STRONG>, but they  also
+       call  <STRONG><A HREF="curs_outopts.3x.html">clearok(3x)</A></STRONG>, so that the screen is cleared completely on the next
+       call to <STRONG>wrefresh</STRONG> for that window and repainted from scratch.
+
+
+</PRE><H3><a name="h3-clrtobot_wclrtobot">clrtobot/wclrtobot</a></H3><PRE>
        The <STRONG>clrtobot</STRONG> and <STRONG>wclrtobot</STRONG> routines erase from the cursor to the end of
-       screen.  That is, they erase all lines below the cursor in the  window.
-       Also,  the  current  line  to  the  right  of the cursor, inclusive, is
+       screen.   That is, they erase all lines below the cursor in the window.
+       Also, the current line to  the  right  of  the  cursor,  inclusive,  is
        erased.
 
+
+</PRE><H3><a name="h3-clrtoeol_wclrtoeol">clrtoeol/wclrtoeol</a></H3><PRE>
        The <STRONG>clrtoeol</STRONG> and <STRONG>wclrtoeol</STRONG> routines erase the current line to the right
        of the cursor, inclusive, to the end of the current line.
-
-       Blanks created by erasure have the current background rendition (as set
-       by <STRONG>wbkgdset</STRONG>) merged into them.
 
 
 </PRE><H2><a name="h2-RETURN-VALUE">RETURN VALUE</a></H2><PRE>
@@ -109,8 +117,8 @@
        error conditions.
 
        The SVr4.0 manual says that these functions could return  "a  non-nega-
-       tive  integer if <STRONG>immedok</STRONG> is set", referring to the return-value of <STRONG>wre-</STRONG>
-       <STRONG>fresh</STRONG>.  In that implementation, <STRONG>wrefresh</STRONG> would return a  count  of  the
+       tive  integer  if <STRONG><A HREF="curs_outopts.3x.html">immedok(3x)</A></STRONG> is set", referring to the return-value of
+       <STRONG>wrefresh</STRONG>.  In that implementation, <STRONG>wrefresh</STRONG> would return a count of the
        number of characters written to the terminal.
 
        Some  historic  curses implementations had, as an undocumented feature,
@@ -138,7 +146,14 @@
 <ul>
 <li><a href="#h2-NAME">NAME</a></li>
 <li><a href="#h2-SYNOPSIS">SYNOPSIS</a></li>
-<li><a href="#h2-DESCRIPTION">DESCRIPTION</a></li>
+<li><a href="#h2-DESCRIPTION">DESCRIPTION</a>
+<ul>
+<li><a href="#h3-erase_werase">erase/werase</a></li>
+<li><a href="#h3-clear_wclear">clear/wclear</a></li>
+<li><a href="#h3-clrtobot_wclrtobot">clrtobot/wclrtobot</a></li>
+<li><a href="#h3-clrtoeol_wclrtoeol">clrtoeol/wclrtoeol</a></li>
+</ul>
+</li>
 <li><a href="#h2-RETURN-VALUE">RETURN VALUE</a></li>
 <li><a href="#h2-NOTES">NOTES</a></li>
 <li><a href="#h2-PORTABILITY">PORTABILITY</a></li>

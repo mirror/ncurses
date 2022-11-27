@@ -1,4 +1,4 @@
-# $Id: manhtml.aliases,v 1.20 2022/02/20 00:39:41 tom Exp $
+# $Id: manhtml.aliases,v 1.21 2022/11/26 13:57:22 tom Exp $
 #***************************************************************************
 # Copyright 2019-2020,2022 Thomas E. Dickey                                *
 # Copyright 2013,2017 Free Software Foundation, Inc.                       *
@@ -30,6 +30,7 @@
 # Items in this list will be linked to the corresponding manpages by man2html
 addch(3X)		curs_addch(3X)
 assume_default_colors(3X)	default_colors(3X)
+clearok(3X)		curs_outopts(3X)
 curs_set(3X)		curs_kernel(3X)
 delscreen(3X)		curs_initscr(3X)
 doupdate(3X)		curs_refresh(3X)
@@ -38,6 +39,7 @@ filter(3X)		curs_util(3X)
 get_wch(3X)		curs_get_wch(3X)
 getcchar(3X)		curs_getcchar(3X)
 getch(3X)		curs_getch(3X)
+immedok(3X)		curs_outopts(3X)
 inch(3X)		curs_inch(3X)
 infocmp(1)		infocmp(1M)
 initscr(3X)		curs_initscr(3X)
@@ -65,6 +67,7 @@ use_env(3X)		curs_util(3X)
 use_extended_names(3X)	curs_extend(3X)
 use_legacy_coding(3X)	legacy_coding(3X)
 vidputs(3X)		curs_terminfo(3X)
+wbkgdset(3X)		curs_bkgd(3X)
 wgetch(3X)		curs_getch(3X)
 wnoutrefresh(3X)	curs_refresh(3X)
 wrefresh(3X)		curs_refresh(3X)
