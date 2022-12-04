@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.52 2021/08/15 20:07:11 tom Exp $
+ * $Id: ditto.c,v 1.55 2022/12/04 00:40:55 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -102,20 +102,10 @@ typedef struct {
     DITTO *ditto;		/* data for all screens */
 } DDATA;
 
-static GCC_NORETURN void failed(const char *);
-static GCC_NORETURN void usage(void);
-
 static void
 failed(const char *s)
 {
     perror(s);
-    ExitProgram(EXIT_FAILURE);
-}
-
-static void
-usage(void)
-{
-    fprintf(stderr, "Usage: ditto [terminal1 ...]\n");
     ExitProgram(EXIT_FAILURE);
 }
 
@@ -381,78 +371,106 @@ handle_screen(void *arg)
 }
 #endif
 
-int
-main(int argc, char *argv[])
+static void
+usage(int ok)
 {
-    int j;
-    DITTO *data;
+    static const char *msg[] =
+    {
+	"Usage: ditto [terminal [terminal2 ...]]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+/* *INDENT-OFF* */}
+VERSION_COMMON()
+/* *INDENT-ON* */
+
+    int
+      main(int argc, char *argv[]) {
+	int j;
+	int ch;
+	DITTO *data;
 #ifndef USE_PTHREADS
-    int count;
+	int count;
 #endif
 
-    if (argc <= 1)
-	usage();
+	while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	    switch (ch) {
+	    case OPTS_VERSION:
+		show_version(argv);
+		ExitProgram(EXIT_SUCCESS);
+		default:
+		usage(ch == OPTS_USAGE);
+		/* NOTREACHED */
+	    }
+	} if (optind < argc)
+	      usage(FALSE);
 
-    if ((data = typeCalloc(DITTO, (size_t) argc)) == 0)
-	failed("calloc data");
+	if ((data = typeCalloc(DITTO, (size_t) argc)) == 0)
+	    failed("calloc data");
 
-    assert(data != 0);
+	assert(data != 0);
 
-    for (j = 0; j < argc; j++) {
-	open_screen(&data[j], argv, argc, j);
-    }
+	for (j = 0; j < argc; j++) {
+	    open_screen(&data[j], argv, argc, j);
+	}
 
 #ifdef USE_PTHREADS
-    /*
-     * For multi-threaded operation, set up a reader for each of the screens.
-     * That uses blocking I/O rather than polling for input, so no calls to
-     * napms() are needed.
-     */
-    for (j = 0; j < argc; j++) {
-	(void) pthread_create(&(data[j].thread), NULL, handle_screen, &data[j]);
-    }
-    pthread_join(data[1].thread, NULL);
-#else
-    /*
-     * Loop, reading characters from any of the inputs and writing to all
-     * of the screens.
-     */
-    for (count = 0;; ++count) {
-	DDATA ddata;
-	int ch;
-	int which = (count % argc);
-
-	napms(20);
-
-	ddata.source = which;
-	ddata.ditto = data;
-
-	ch = USING_SCREEN(data[which].screen, read_screen, &ddata);
-	if (ch == CTRL('D')) {
-	    break;
-	} else if (ch != ERR) {
-	    show_ditto(data, argc, &ddata);
+	/*
+	 * For multi-threaded operation, set up a reader for each of the screens.
+	 * That uses blocking I/O rather than polling for input, so no calls to
+	 * napms() are needed.
+	 */
+	for (j = 0; j < argc; j++) {
+	    (void) pthread_create(&(data[j].thread), NULL, handle_screen,
+				  &data[j]);
 	}
-    }
+	pthread_join(data[1].thread, NULL);
+#else
+	/*
+	 * Loop, reading characters from any of the inputs and writing to all
+	 * of the screens.
+	 */
+	for (count = 0;; ++count) {
+	    DDATA ddata;
+	    int which = (count % argc);
+
+	    napms(20);
+
+	    ddata.source = which;
+	    ddata.ditto = data;
+
+	    ch = USING_SCREEN(data[which].screen, read_screen, &ddata);
+	    if (ch == CTRL('D')) {
+		break;
+	    } else if (ch != ERR) {
+		show_ditto(data, argc, &ddata);
+	    }
+	}
 #endif
 
-    /*
-     * Cleanup and exit
-     */
-    for (j = argc - 1; j >= 0; j--) {
-	USING_SCREEN(data[j].screen, close_screen, 0);
-	fprintf(data[j].output, "**Closed\r\n");
-
 	/*
-	 * Closing before a delscreen() helps ncurses determine that there
-	 * is no valid output buffer, and can remove the setbuf() data.
+	 * Cleanup and exit
 	 */
-	fflush(data[j].output);
-	fclose(data[j].output);
-	delscreen(data[j].screen);
+	for (j = argc - 1; j >= 0; j--) {
+	    USING_SCREEN(data[j].screen, close_screen, 0);
+	    fprintf(data[j].output, "**Closed\r\n");
+
+	    /*
+	     * Closing before a delscreen() helps ncurses determine that there
+	     * is no valid output buffer, and can remove the setbuf() data.
+	     */
+	    fflush(data[j].output);
+	    fclose(data[j].output);
+	    delscreen(data[j].screen);
+	}
+	ExitProgram(EXIT_SUCCESS);
     }
-    ExitProgram(EXIT_SUCCESS);
-}
 #else
 int
 main(void)

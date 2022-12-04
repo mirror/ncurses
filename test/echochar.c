@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2022 Thomas E. Dickey                                *
  * Copyright 2006-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.21 2020/02/02 23:34:34 tom Exp $
+ * $Id: echochar.c,v 1.24 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -78,6 +78,28 @@ set_color(char *my_pairs, int fg, int bg)
     }
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: echochar"
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -r       use addch/refresh rather than echochar()"
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
 main(int argc GCC_UNUSED,
      char *argv[]GCC_UNUSED)
@@ -91,14 +113,17 @@ main(int argc GCC_UNUSED,
     int last_fg = 0;
     int last_bg = 0;
 
-    while ((ch = getopt(argc, argv, "r")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "r")) != -1) {
 	switch (ch) {
 	case 'r':
 	    opt_r = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    fprintf(stderr, "Usage: echochar [-r]\n");
-	    ExitProgram(EXIT_FAILURE);
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.16 2022/04/16 18:27:24 tom Exp $
+ * $Id: extended_color.c,v 1.19 2022/12/04 00:40:11 tom Exp $
  */
 
 #include <test.priv.h>
@@ -139,38 +139,45 @@ show_rgb(SCREEN *sp)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
-	"Usage: extended_color",
-	"",
-	"Options:",
-	" -s   use sp-funcs",
-	NULL
+	"Usage: extended_color"
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -s       use sp-funcs"
     };
     size_t n;
     for (n = 0; n < SIZEOF(tbl); ++n) {
 	fprintf(stderr, "%s\n", tbl[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 {
+    int ch;
     int i;
     SCREEN *sp;
 
-    while ((i = getopt(argc, argv, "s")) != -1) {
-	switch (i) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "s")) != -1) {
+	switch (ch) {
 #if USE_SP_FUNCS
 	case 's':
 	    opt_s = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
 	    /* NOTREACHED */
 	}
     }

@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_add_wchstr.c,v 1.30 2022/09/03 21:40:27 tom Exp $
+ * $Id: test_add_wchstr.c,v 1.33 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate the waddwchstr() and wadd_wch functions.
  * Thomas Dickey - 2009/9/12
@@ -542,24 +542,28 @@ recursive_test(int level)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
 	"Usage: test_add_wchstr [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
-	,"  -f FILE read data from given file"
-	,"  -n NUM  limit string-adds to NUM bytes on ^N replay"
-	,"  -m      perform wmove/move separately from add-functions"
-	,"  -p      pass-thru control characters without using unctrl()"
-	,"  -w      use window-parameter even when stdscr would be implied"
+	," -f FILE  read data from given file"
+	," -n NUM   limit string-adds to NUM bytes on ^N replay"
+	," -m       perform wmove/move separately from add-functions"
+	," -p       pass-thru control characters without using unctrl()"
+	," -w       use window-parameter even when stdscr would be implied"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(tbl); ++n)
 	fprintf(stderr, "%s\n", tbl[n]);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
@@ -568,7 +572,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "f:mn:pw")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "f:mn:pw")) != -1) {
 	switch (ch) {
 	case 'f':
 	    init_linedata(optarg);
@@ -587,13 +591,16 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'w':
 	    w_opt = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     recursive_test(0);
     endwin();

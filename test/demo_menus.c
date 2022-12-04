@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_menus.c,v 1.76 2022/05/15 13:54:48 tom Exp $
+ * $Id: demo_menus.c,v 1.79 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate a variety of functions from the menu library.
  * Thomas Dickey - 2005/4/9
@@ -977,42 +977,46 @@ call_files(int code)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *const tbl[] =
     {
 	"Usage: demo_menus [options] [menu-file]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 #if HAVE_RIPOFFLINE
-	,"  -f       rip-off footer line (can repeat)"
-	,"  -h       rip-off header line (can repeat)"
+	," -F       rip-off footer line (can repeat)"
+	," -H       rip-off header line (can repeat)"
 #endif
 #ifdef TRACE
-	,"  -t mask  specify default trace-level (may toggle with ^T)"
+	," -t mask  specify default trace-level (may toggle with ^T)"
 #endif
     };
     size_t n;
     for (n = 0; n < SIZEOF(tbl); n++)
 	fprintf(stderr, "%s\n", tbl[n]);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
-    int c;
+    int ch;
 
     setlocale(LC_ALL, "");
     START_TRACE();
 
-    while ((c = getopt(argc, argv, "fht:")) != -1) {
-	switch (c) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "FHt:")) != -1) {
+	switch (ch) {
 #if HAVE_RIPOFFLINE
-	case 'f':
+	case 'F':
 	    ripoffline(-1, rip_footer);
 	    break;
-	case 'h':
+	case 'H':
 	    ripoffline(1, rip_header);
 	    break;
 #endif /* HAVE_RIPOFFLINE */
@@ -1021,8 +1025,12 @@ main(int argc, char *argv[])
 	    curses_trace((unsigned) strtoul(optarg, 0, 0));
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

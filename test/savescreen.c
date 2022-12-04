@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2006-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.58 2021/03/27 23:41:21 tom Exp $
+ * $Id: savescreen.c,v 1.61 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -253,24 +253,28 @@ replay_help(void)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: savescreen [-r] files",
-	"",
-	"Options:",
-	" -f file  fill/initialize screen using text from this file",
-	" -i       use scr_init/scr_restore rather than scr_set",
-	" -k       keep the restored dump-files rather than removing them",
-	" -r       replay the screen-dump files"
+	"Usage: savescreen [-r] files"
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -f file  fill/initialize screen using text from this file"
+	," -i       use scr_init/scr_restore rather than scr_set"
+	," -k       keep the restored dump-files rather than removing them"
+	," -r       replay the screen-dump files"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -291,7 +295,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "f:ikr")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "f:ikr")) != -1) {
 	switch (ch) {
 	case 'f':
 	    fill_by = optarg;
@@ -305,9 +309,12 @@ main(int argc, char *argv[])
 	case 'r':
 	    replaying = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

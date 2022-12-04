@@ -42,7 +42,7 @@
  *
  *	Date: 05.Nov.90
  *
- * $Id: hanoi.c,v 1.44 2022/07/28 00:31:22 tom Exp $
+ * $Id: hanoi.c,v 1.47 2022/12/04 00:40:11 tom Exp $
  */
 
 #include <test.priv.h>
@@ -241,12 +241,13 @@ Solved(int NumTiles)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: hanoi [options] [[<No Of Tiles>] [a]]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors"
@@ -259,8 +260,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char **argv)
@@ -272,7 +276,7 @@ main(int argc, char **argv)
 #endif
 
     NTiles = DEFAULTTILES;
-    while ((ch = getopt(argc, argv, "dn:X")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "dn:X")) != -1) {
 	switch (ch) {
 #if HAVE_USE_DEFAULT_COLORS
 	case 'd':
@@ -285,8 +289,11 @@ main(int argc, char **argv)
 	case 'X':
 	    AutoFlag = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
 	    /* NOTREACHED */
 	}
     }
@@ -295,7 +302,7 @@ main(int argc, char **argv)
     switch (argc - optind) {
     case 2:
 	if (strcmp(argv[optind + 1], "a")) {
-	    usage();
+	    usage(FALSE);
 	}
 	AutoFlag = TRUE;
 	/* FALLTHRU */
@@ -305,12 +312,12 @@ main(int argc, char **argv)
     case 0:
 	break;
     default:
-	usage();
+	usage(FALSE);
     }
 
     if (NTiles > MAXTILES || NTiles < MINTILES) {
 	fprintf(stderr, "Range %d to %d\n", MINTILES, MAXTILES);
-	usage();
+	usage(FALSE);
     }
 
     initscr();

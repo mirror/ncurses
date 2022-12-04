@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2016,2017 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: list_keys.c,v 1.27 2021/03/27 23:41:21 tom Exp $
+ * $Id: list_keys.c,v 1.30 2022/12/04 00:40:11 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -417,37 +417,41 @@ list_keys(TERMINAL **terms, int count)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: list_keys [options] [terminal [terminal2 [...]]]",
-	"",
-	"Print capabilities for terminal special keys.",
-	"",
-	"Options:",
-	" -f       print full names",
-	" -m       print modifier-column for shift/control keys",
-	" -t       print result as CSV table",
+	"Usage: list_keys [options] [terminal [terminal2 [...]]]"
+	,""
+	,"Print capabilities for terminal special keys."
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -f       print full names"
+	," -m       print modifier-column for shift/control keys"
+	," -t       print result as CSV table"
 #ifdef NCURSES_VERSION
-	" -x       print extended capabilities",
+	," -x       print extended capabilities"
 #endif
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
-    int n;
+    int ch;
     TERMINAL **terms = typeCalloc(TERMINAL *, argc + 1);
 
-    while ((n = getopt(argc, argv, "fmtx")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "fmtx")) != -1) {
+	switch (ch) {
 	case 'f':
 	    f_opt = TRUE;
 	    break;
@@ -462,9 +466,12 @@ main(int argc, char *argv[])
 	    x_opt = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
@@ -475,6 +482,7 @@ main(int argc, char *argv[])
     if (optind < argc) {
 	int found = 0;
 	int status;
+	int n;
 	for (n = optind; n < argc; ++n) {
 	    setupterm((NCURSES_CONST char *) argv[n], 1, &status);
 	    if (status > 0 && cur_term != 0) {

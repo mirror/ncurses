@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: ins_wide.c,v 1.26 2022/09/03 21:40:27 tom Exp $
+ * $Id: ins_wide.c,v 1.29 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate the wins_wstr() and wins_wch functions.
  * Thomas Dickey - 2002/11/23
@@ -455,23 +455,27 @@ test_inserts(int level)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
 	"Usage: ins_wide [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
-	,"  -f FILE read data from given file"
-	,"  -n NUM  limit string-inserts to NUM bytes on ^N replay"
-	,"  -m      perform wmove/move separately from insert-functions"
-	,"  -w      use window-parameter even when stdscr would be implied"
+	," -f FILE  read data from given file"
+	," -n NUM   limit string-inserts to NUM bytes on ^N replay"
+	," -m       perform wmove/move separately from insert-functions"
+	," -w       use window-parameter even when stdscr would be implied"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(tbl); ++n)
 	fprintf(stderr, "%s\n", tbl[n]);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
@@ -480,7 +484,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "f:mn:w")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "f:mn:w")) != -1) {
 	switch (ch) {
 	case 'f':
 	    init_linedata(optarg);
@@ -496,13 +500,16 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'w':
 	    w_opt = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     test_inserts(0);
     endwin();

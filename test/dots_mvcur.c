@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019,2020 Thomas E. Dickey                                     *
+ * Copyright 2019-2020,2022 Thomas E. Dickey                                *
  * Copyright 2007-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.26 2020/05/29 23:04:02 tom Exp $
+ * $Id: dots_mvcur.c,v 1.29 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -112,12 +112,13 @@ get_number(NCURSES_CONST char *cap, int map)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: dots_termcap [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 	," -T TERM  override $TERM"
 #if HAVE_USE_ENV
@@ -133,8 +134,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED,
@@ -153,7 +157,7 @@ main(int argc GCC_UNUSED,
     size_t need;
     char *my_env;
 
-    while ((ch = getopt(argc, argv, "T:efm:r:s:")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "T:efm:r:s:")) != -1) {
 	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
@@ -178,9 +182,12 @@ main(int argc GCC_UNUSED,
 	case 's':
 	    s_option = atoi(optarg);
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

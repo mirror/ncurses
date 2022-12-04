@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 2015-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_sgr.c,v 1.17 2021/03/27 22:43:36 tom Exp $
+ * $Id: test_sgr.c,v 1.20 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of the sgr/sgr0 terminal capabilities.
  */
@@ -305,35 +305,39 @@ brute_force(const char *name)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: test_sgr [options] [terminal]",
-	"",
-	"Print all distinct combinations of sgr capability.",
-	"",
-	"Options:",
-	" -d LIST  colon-separated list of databases to use",
-	" -e NAME  environment variable to set with -d option",
-	" -n       do not initialize terminal, to test error-checking",
-	" -q       quiet (prints only counts)",
+	"Usage: test_sgr [options] [terminal]"
+	,""
+	,"Print all distinct combinations of sgr capability."
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -d LIST  colon-separated list of databases to use"
+	," -e NAME  environment variable to set with -d option"
+	," -n       do not initialize terminal, to test error-checking"
+	," -q       quiet (prints only counts)"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
-    int n;
+    int ch;
     char *name;
 
-    while ((n = getopt(argc, argv, "d:e:nq")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "d:e:nq")) != -1) {
+	switch (ch) {
 	case 'd':
 	    d_opt = optarg;
 	    break;
@@ -346,15 +350,19 @@ main(int argc, char *argv[])
 	case 'q':
 	    q_opt = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
     make_dblist();
 
     if (optind < argc) {
+	int n;
 	for (n = optind; n < argc; ++n) {
 	    brute_force(argv[n]);
 	}

@@ -92,7 +92,7 @@
 /******************************************************************************/
 
 /*
- * $Id: xmas.c,v 1.36 2021/03/27 22:40:53 tom Exp $
+ * $Id: xmas.c,v 1.39 2022/12/04 00:40:11 tom Exp $
  */
 #include <test.priv.h>
 
@@ -646,12 +646,13 @@ done(int sig GCC_UNUSED)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: xmas [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors"
@@ -663,8 +664,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -676,7 +680,7 @@ main(int argc, char *argv[])
 #endif
     bool opt_q = FALSE;
 
-    while ((ch = getopt(argc, argv, "dq")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "dq")) != -1) {
 	switch (ch) {
 #if HAVE_USE_DEFAULT_COLORS
 	case 'd':
@@ -686,8 +690,11 @@ main(int argc, char *argv[])
 	case 'q':
 	    opt_q = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
 	    /* NOTREACHED */
 	}
     }

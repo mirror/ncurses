@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: picsmap.c,v 1.145 2022/04/16 18:21:05 tom Exp $
+ * $Id: picsmap.c,v 1.148 2022/12/04 00:40:11 tom Exp $
  *
  * Author: Thomas E. Dickey
  *
@@ -487,27 +487,28 @@ read_file(const char *filename)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: picsmap [options] [imagefile [...]]"
 	,"Read/display one or more xbm/xpm files (possibly use \"convert\")"
 	,""
+	,USAGE_COMMON
 	,"Options:"
-	,"  -a ratio     aspect-ratio correction for ImageMagick"
+	," -a ratio aspect-ratio correction for ImageMagick"
 #if HAVE_USE_DEFAULT_COLORS
-	,"  -d           invoke use_default_colors"
+	," -d       invoke use_default_colors"
 #endif
-	,"  -L           add debugging information to logfile"
-	,"  -l logfile   write informational messages to logfile"
-	,"  -p palette   color-palette file (default \"$TERM.dat\")"
-	,"  -q           less verbose"
-	,"  -r rgb-path  xpm uses X rgb color-names (default \"" RGB_PATH "\")"
-	,"  -s SECS      pause for SECS seconds after display vs getch"
+	," -L       add debugging information to logfile"
+	," -l FILE  write informational messages to FILE"
+	," -p FILE  color-palette file (default \"$TERM.dat\")"
+	," -q       less verbose"
+	," -r FILE  xpm uses X rgb color-names in FILE (default \"" RGB_PATH "\")"
+	," -s SECS  pause for SECS seconds after display vs getch"
 #if USE_EXTENDED_COLORS
-	,"  -x [pc]      use extension (p=extended-pairs, c=extended-colors)"
-	,"               Either/both extension may be given"
+	," -x [pc]  use extension (p=extended-pairs, c=extended-colors)"
+	,"          Either/both extension may be given"
 #endif
     };
     size_t n;
@@ -517,7 +518,7 @@ usage(void)
     fflush(stdout);
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
-    cleanup(EXIT_FAILURE);
+    cleanup(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 static void
@@ -541,7 +542,7 @@ giveup(const char *fmt, ...)
 	fflush(logfp);
     }
 
-    usage();
+    usage(FALSE);
 }
 
 /*
@@ -1723,24 +1724,27 @@ report_colors(PICS_HEAD * pics)
 	}
     }
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
-    int n;
+    int ch;
     int opt_d = FALSE;
     char ignore_ch;
     const char *palette_path = 0;
     const char *rgb_path = RGB_PATH;
 
-    while ((n = getopt(argc, argv, "a:dLl:p:qr:s:x:")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "a:dLl:p:qr:s:x:")) != -1) {
+	switch (ch) {
 	case 'a':
 	    if (sscanf(optarg, "%lf%c", &aspect_ratio, &ignore_ch) != 1
 		|| aspect_ratio < 0.1
 		|| aspect_ratio > 10.) {
 		fprintf(stderr, "Expected a number in [0.1 to 10.]: %s\n", optarg);
-		usage();
+		usage(FALSE);
 	    }
 	    break;
 #if HAVE_USE_DEFAULT_COLORS
@@ -1780,21 +1784,25 @@ main(int argc, char *argv[])
 			use_extended_colors = TRUE;
 			break;
 		    default:
-			usage();
+			usage(FALSE);
 			break;
 		    }
 		}
 	    }
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
     if (optind < argc) {
 	char **rgb_data = read_file(rgb_path);
+	int n;
 
 	if (rgb_data)
 	    rgb_table = parse_rgb(rgb_data);
@@ -1827,7 +1835,7 @@ main(int argc, char *argv[])
 	free(rgb_table);
 	free(all_colors);
     } else {
-	usage();
+	usage(FALSE);
     }
 
     cleanup(EXIT_SUCCESS);

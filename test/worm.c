@@ -53,7 +53,7 @@
   traces will be dumped.  The program stops and waits for one character of
   input at the beginning and end of the interval.
 
-  $Id: worm.c,v 1.85 2022/08/13 13:28:01 tom Exp $
+  $Id: worm.c,v 1.88 2022/12/04 00:40:11 tom Exp $
 */
 
 #include <test.priv.h>
@@ -447,12 +447,13 @@ update_refs(WINDOW *win, void *data)
 #endif
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: worm [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors"
@@ -471,8 +472,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -489,7 +493,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "dfl:n:tT:N")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "dfl:n:tT:N")) != -1) {
 	switch (ch) {
 #if HAVE_USE_DEFAULT_COLORS
 	case 'd':
@@ -502,13 +506,13 @@ main(int argc, char *argv[])
 	case 'l':
 	    if ((length = atoi(optarg)) < 2 || length > MAX_LENGTH) {
 		fprintf(stderr, "%s: Invalid length\n", *argv);
-		usage();
+		usage(FALSE);
 	    }
 	    break;
 	case 'n':
 	    if ((number = atoi(optarg)) < 1 || number > MAX_WORMS) {
 		fprintf(stderr, "%s: Invalid number of worms\n", *argv);
-		usage();
+		usage(FALSE);
 	    }
 	    break;
 	case 't':
@@ -517,19 +521,22 @@ main(int argc, char *argv[])
 #ifdef TRACE
 	case 'T':
 	    if (sscanf(optarg, "%d,%d", &trace_start, &trace_end) != 2)
-		usage();
+		usage(FALSE);
 	    break;
 	case 'N':
 	    _nc_optimize_enable ^= OPTIMIZE_ALL;	/* declared by ncurses */
 	    break;
 #endif /* TRACE */
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
 	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     signal(SIGINT, onsig);
     initscr();

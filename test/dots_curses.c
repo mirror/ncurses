@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2014,2017 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_curses.c,v 1.21 2020/08/29 16:22:03 juergen Exp $
+ * $Id: dots_curses.c,v 1.24 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of the curses interface used for comparison with termcap.
  */
@@ -87,12 +87,13 @@ set_colors(int fg, int bg)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: dots_curses [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 	," -T TERM  override $TERM"
 #if HAVE_USE_DEFAULT_COLORS
@@ -110,8 +111,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -129,7 +133,7 @@ main(int argc, char *argv[])
     size_t need;
     char *my_env;
 
-    while ((ch = getopt(argc, argv, "T:dem:r:s:")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "T:dem:r:s:")) != -1) {
 	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
@@ -156,9 +160,12 @@ main(int argc, char *argv[])
 	case 's':
 	    s_option = atoi(optarg);
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

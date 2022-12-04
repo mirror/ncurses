@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_tparm.c,v 1.20 2021/03/20 15:58:32 tom Exp $
+ * $Id: test_tparm.c,v 1.23 2022/12/04 00:40:11 tom Exp $
  *
  * Exercise tparm, either for all possible capabilities with fixed parameters,
  * or one capability with all possible parameters.
@@ -178,38 +178,43 @@ test_tparm(const char *name, const char *format, int *number)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: test_tparm [options] [capability] [value1 [value2 [...]]]",
-	"",
-	"Use tparm/tputs for all distinct combinations of given capability.",
-	"",
-	"Options:",
-	" -T TERM  override $TERM; this may be a comma-separated list or \"-\"",
-	"          to read a list from standard-input",
-	" -a       test all combinations of parameters",
-	"          [value1...] forms a vector of maximum parameter-values.",
-	" -p       test capabilities with no parameters but having padding",
-	" -r NUM   repeat tests NUM times",
-	" -v       show values and results",
+	"Usage: test_tparm [options] [capability] [value1 [value2 [...]]]"
+	,""
+	,"Use tparm/tputs for all distinct combinations of given capability."
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -T TERM  override $TERM; this may be a comma-separated list or \"-\""
+	,"          to read a list from standard-input"
+	," -a       test all combinations of parameters"
+	,"          [value1...] forms a vector of maximum parameter-values."
+	," -p       test capabilities with no parameters but having padding"
+	," -r NUM   repeat tests NUM times"
+	," -v       show values and results"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
 
 #define PLURAL(n) n, (n != 1) ? "s" : ""
 #define COLONS(n) (n >= 1) ? ":" : ""
 
 #define NUMFORM "%10ld"
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
+    int ch;
     int n;
     int r_run, t_run, n_run;
     char *old_term = getenv("TERM");
@@ -239,8 +244,8 @@ main(int argc, char *argv[])
     if (all_caps == 0 || all_terms == 0 || num_parms == 0 || str_parms == 0)
 	failed("no memory");
 
-    while ((n = getopt(argc, argv, "T:apr:v")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "T:apr:v")) != -1) {
+	switch (ch) {
 	case 'T':
 	    t_opt = optarg;
 	    break;
@@ -256,9 +261,12 @@ main(int argc, char *argv[])
 	case 'v':
 	    ++v_opt;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

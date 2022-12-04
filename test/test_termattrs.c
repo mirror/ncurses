@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_termattrs.c,v 1.4 2022/05/15 15:55:30 tom Exp $
+ * $Id: test_termattrs.c,v 1.7 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate the termattrs and term_attrs functions.
  */
@@ -118,25 +118,29 @@ test_termattrs(unsigned long value)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
 	"Usage: test_termattrs [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
-	,"  -e      use stderr (default stdout)"
-	,"  -n      do not initialize terminal"
-	,"  -s      use setupterm rather than newterm"
+	," -e       use stderr (default stdout)"
+	," -n       do not initialize terminal"
+	," -s       use setupterm rather than newterm"
 #if USE_WIDEC_SUPPORT
-	,"  -w      use term_attrs rather than termattrs"
+	," -w       use term_attrs rather than termattrs"
 #endif
     };
     unsigned n;
     for (n = 0; n < SIZEOF(tbl); ++n)
 	fprintf(stderr, "%s\n", tbl[n]);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
@@ -150,7 +154,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
     my_fp = stdout;
 
-    while ((ch = getopt(argc, argv, "ensw")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "ensw")) != -1) {
 	switch (ch) {
 	case 'e':
 	    my_fp = stderr;
@@ -166,13 +170,16 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	    w_opt = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     if (no_init) {
 	START_TRACE();

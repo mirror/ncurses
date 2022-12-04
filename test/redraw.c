@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 2006-2012,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: redraw.c,v 1.13 2021/06/17 21:26:02 tom Exp $
+ * $Id: redraw.c,v 1.16 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate the redrawwin() and wredrawln() functions.
  * Thomas Dickey - 2006/11/4
@@ -189,21 +189,25 @@ test_redraw(WINDOW *win)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
 	"Usage: redraw [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
-	,"  -e      use stderr (default stdout)"
-	,"  -n      do not initialize terminal"
+	," -e       use stderr (default stdout)"
+	," -n       do not initialize terminal"
     };
     unsigned n;
     for (n = 0; n < SIZEOF(tbl); ++n)
 	fprintf(stderr, "%s\n", tbl[n]);
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
@@ -212,7 +216,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
     bool no_init = FALSE;
     FILE *my_fp = stdout;
 
-    while ((ch = getopt(argc, argv, "en")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "en")) != -1) {
 	switch (ch) {
 	case 'e':
 	    my_fp = stderr;
@@ -220,13 +224,16 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 	case 'n':
 	    no_init = TRUE;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     if (no_init) {
 	START_TRACE();

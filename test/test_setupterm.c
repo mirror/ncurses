@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_setupterm.c,v 1.12 2022/05/15 16:36:00 tom Exp $
+ * $Id: test_setupterm.c,v 1.15 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of setupterm/restartterm.
  */
@@ -148,37 +148,42 @@ test_setupterm(NCURSES_CONST char *name)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: test_setupterm [options] [terminal]",
-	"",
-	"Demonstrate error-checking for setupterm and restartterm.",
-	"",
-	"Options:",
-	" -a       automatic test for each success/error code",
-	" -f       treat errors as fatal",
-	" -n       set environment to disable terminfo database, assuming",
-	"          the compiled-in paths for database also fail",
+	"Usage: test_setupterm [options] [terminal]"
+	,""
+	,USAGE_COMMON
+	,"Demonstrate error-checking for setupterm and restartterm."
+	,""
+	,"Options:"
+	," -a       automatic test for each success/error code"
+	," -f       treat errors as fatal"
+	," -n       set environment to disable terminfo database, assuming"
+	,"          the compiled-in paths for database also fail"
 #if HAVE_RESTARTTERM
-	" -r       test restartterm rather than setupterm",
+	," -r       test restartterm rather than setupterm"
 #endif
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    finish(EXIT_FAILURE);
+    finish(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
+    int ch;
     int n;
 
-    while ((n = getopt(argc, argv, "afnr")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "afnr")) != -1) {
+	switch (ch) {
 	case 'a':
 	    a_opt = TRUE;
 	    break;
@@ -193,9 +198,12 @@ main(int argc, char *argv[])
 	    r_opt = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
@@ -230,7 +238,7 @@ main(int argc, char *argv[])
 	static char predef[][9] =
 	{"vt100", "dumb", "lpr", "unknown", "none-such"};
 	if (optind < argc) {
-	    usage();
+	    usage(FALSE);
 	}
 	for (n = 0; n < 4; ++n) {
 	    test_setupterm(predef[n]);

@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_xcurses.c,v 1.25 2022/04/16 18:27:24 tom Exp $
+ * $Id: dots_xcurses.c,v 1.28 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of the wide-curses interface used for comparison with termcap.
  */
@@ -110,12 +110,13 @@ set_colors(int fg, int bg)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: dots_xcurses [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 	," -T TERM  override $TERM"
 #if HAVE_USE_DEFAULT_COLORS
@@ -136,8 +137,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -155,7 +159,7 @@ main(int argc, char *argv[])
     size_t need;
     char *my_env;
 
-    while ((ch = getopt(argc, argv, "T:dem:r:s:x")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "T:dem:r:s:x")) != -1) {
 	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
@@ -187,9 +191,12 @@ main(int argc, char *argv[])
 	    x_option = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 

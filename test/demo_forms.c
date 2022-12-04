@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2019,2020 Thomas E. Dickey                                *
+ * Copyright 2018-2020,2022 Thomas E. Dickey                                *
  * Copyright 2003-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_forms.c,v 1.58 2020/03/21 15:57:59 tom Exp $
+ * $Id: demo_forms.c,v 1.61 2022/12/04 00:40:11 tom Exp $
  *
  * Demonstrate a variety of functions from the form library.
  * Thomas Dickey - 2003/4/26
@@ -556,23 +556,28 @@ demo_forms(void)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *tbl[] =
     {
 	"Usage: demo_forms [options] [data file]"
 	,""
-	," -d        make fields dynamic"
-	," -j value  justify (1=left, 2=center, 3=right)"
-	," -m value  set maximum size of dynamic fields"
-	," -o value  specify number of offscreen rows in new_field()"
-	," -t value  specify text to fill fields initially"
+	,USAGE_COMMON
+	,"Options:"
+	," -d       make fields dynamic"
+	," -j NUM   justify (1=left, 2=center, 3=right)"
+	," -m NUM   set maximum size of dynamic fields"
+	," -o NUM   specify number of offscreen rows in new_field()"
+	," -t NUM   specify text to fill fields initially"
     };
     unsigned int j;
     for (j = 0; j < SIZEOF(tbl); ++j)
 	fprintf(stderr, "%s\n", tbl[j]);
-    exit(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -581,7 +586,7 @@ main(int argc, char *argv[])
 
     setlocale(LC_ALL, "");
 
-    while ((ch = getopt(argc, argv, "dj:m:o:t:")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "dj:m:o:t:")) != -1) {
 	switch (ch) {
 	case 'd':
 	    d_option = TRUE;
@@ -590,7 +595,7 @@ main(int argc, char *argv[])
 	    j_value = atoi(optarg);
 	    if (j_value < NO_JUSTIFICATION
 		|| j_value > JUSTIFY_RIGHT)
-		usage();
+		usage(FALSE);
 	    break;
 	case 'm':
 	    m_value = atoi(optarg);
@@ -601,9 +606,12 @@ main(int argc, char *argv[])
 	case 't':
 	    t_value = optarg;
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     while (optind < argc) {

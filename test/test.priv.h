@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.204 2022/08/20 16:34:24 tom Exp $ */
+/* $Id: test.priv.h,v 1.206 2022/12/04 00:08:15 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -714,6 +714,44 @@ extern int optind;
 
 #define HELP_KEY_1	'?'
 #define HELP_KEY_2	KEY_F(1)
+
+/* our "standard" options for getopt, needed for help2man */
+#define OPTS_USAGE	'h'
+#define OPTS_VERSION	'V'
+#define OPTS_COMMON	"hV"
+#define USAGE_COMMON	\
+ "Common options:"\
+," -h       show this message"\
+," -V       show version of curses"
+
+#if HAVE_CURSES_VERSION
+#define format_version(buffer) strcpy(buffer, curses_version())
+#elif defined(NCURSES_VERSION_MAJOR) && defined(NCURSES_VERSION_MINOR) && defined(NCURSES_VERSION_PATCH)
+#define format_version(buffer) sprintf(buffer, "ncurses %d.%d.%d", \
+	NCURSES_VERSION_MAJOR, \
+	NCURSES_VERSION_MINOR, \
+	NCURSES_VERSION_PATCH)
+#else
+#define format_version(buffer) strcpy(buffer, "ncurses-examples")
+#endif
+
+#define VERSION_COMMON() \
+static char *version_common(char **argv) { \
+	char *base = argv[0]; \
+	char *leaf = strrchr(base, '/'); \
+	char *result = malloc(strlen(base) + 80); \
+	if (leaf++ == NULL) leaf = base; \
+	sprintf(result, "%.20s: ", leaf); \
+	format_version(result + strlen(result)); \
+	return result; \
+} \
+static void show_version(char **argv) { \
+	char *value = version_common(argv); \
+	if (value != NULL) { \
+	    puts(value); \
+	    free(value); \
+	} \
+}
 
 /* from nc_string.h, to make this stand alone */
 #if HAVE_BSD_STRING_H

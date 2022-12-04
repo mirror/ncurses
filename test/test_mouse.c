@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.23 2022/08/20 18:12:16 tom Exp $
+ * $Id: test_mouse.c,v 1.26 2022/12/04 00:40:11 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -117,45 +117,46 @@ logw(const char *fmt, ...)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: test_mouse [options]",
-	"",
-	"Test mouse events.  These examples for $TERM demonstrate xterm",
-	"features:",
-	"    xterm",
-	"    xterm-1002",
-	"    xterm-1003",
-	"",
-	"Options:",
-	" -r       show raw input stream, injecting a new line before every ESC",
-	" -i n     set mouse interval to n; default is 0 (no double-clicks)",
-	" -h       show this message",
-	" -T term  use terminal description other than $TERM"
+	"Usage: test_mouse [options]"
+	,""
+	,"Test mouse events.  These examples for $TERM demonstrate xterm"
+	,"features:"
+	,"    xterm"
+	,"    xterm-1002"
+	,"    xterm-1003"
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -r       show raw input stream, injecting a new line before every ESC"
+	," -i n     set mouse interval to n; default is 0 (no double-clicks)"
+	," -T term  use terminal description other than $TERM"
     };
     unsigned n;
     for (n = 0; n < sizeof(msg) / sizeof(char *); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
     bool rawmode = FALSE;
     int interval = 0;
-    int c;
+    int ch;
     MEVENT event;
     char *my_environ = NULL;
     const char *term_format = "TERM=%s";
 
-    while ((c = getopt(argc, argv, "hi:rT:")) != -1) {
-	switch (c) {
-	case 'h':
-	    usage();
-	    ExitProgram(EXIT_SUCCESS);
+    while ((ch = getopt(argc, argv, OPTS_COMMON "i:rT:")) != -1) {
+	switch (ch) {
 	case 'i':
 	    interval = atoi(optarg);
 	    break;
@@ -167,13 +168,16 @@ main(int argc, char *argv[])
 	    sprintf(my_environ, term_format, optarg);
 	    putenv(my_environ);
 	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    ExitProgram(EXIT_FAILURE);
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
     if (optind < argc) {
-	usage();
+	usage(FALSE);
 	ExitProgram(EXIT_FAILURE);
     }
 
@@ -199,7 +203,7 @@ main(int argc, char *argv[])
     logoffset = getcury(stdscr);
 
     while (1) {
-	c = getch();
+	int c = getch();
 
 	switch (c) {
 	case KEY_MOUSE:

@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: rain.c,v 1.54 2022/07/23 22:47:38 tom Exp $
+ * $Id: rain.c,v 1.57 2022/12/04 00:40:11 tom Exp $
  */
 #include <test.priv.h>
 #include <popup_msg.h>
@@ -302,12 +302,13 @@ get_input(void)
 }
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
 	"Usage: rain [options]"
 	,""
+	,USAGE_COMMON
 	,"Options:"
 #if HAVE_USE_DEFAULT_COLORS
 	," -d       invoke use_default_colors"
@@ -318,8 +319,11 @@ usage(void)
     for (n = 0; n < SIZEOF(msg); n++)
 	fprintf(stderr, "%s\n", msg[n]);
 
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
@@ -345,20 +349,23 @@ main(int argc, char *argv[])
     bool d_option = FALSE;
 #endif
 
-    while ((ch = getopt(argc, argv, "d")) != -1) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "d")) != -1) {
 	switch (ch) {
 #if HAVE_USE_DEFAULT_COLORS
 	case 'd':
 	    d_option = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
+	    usage(ch == OPTS_USAGE);
 	    /* NOTREACHED */
 	}
     }
     if (optind < argc)
-	usage();
+	usage(FALSE);
 
     setlocale(LC_ALL, "");
 

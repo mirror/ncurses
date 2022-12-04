@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 2009-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.52 2021/03/20 16:07:29 tom Exp $
+ * $Id: demo_terminfo.c,v 1.55 2022/12/04 00:40:11 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -768,49 +768,54 @@ free_code_list(char **list)
 #endif /* USE_CODE_LISTS */
 
 static void
-usage(void)
+usage(int ok)
 {
     static const char *msg[] =
     {
-	"Usage: demo_terminfo [options] [terminal]",
-	"",
-	"If no options are given, print all (boolean, numeric, string)",
-	"capabilities for the given terminal, using short names.",
-	"",
-	"Options:",
-	" -a       try all names, print capabilities found",
-	" -b       print boolean-capabilities",
-	" -d LIST  colon-separated list of databases to use",
-	" -e NAME  environment variable to set with -d option",
-	" -f       print full names",
-	" -i NAME  terminal description to use as names for \"-a\" option",
-	" -n       print numeric-capabilities",
-	" -q       quiet (prints only counts)",
-	" -r COUNT repeat for given count",
-	" -s       print string-capabilities",
+	"Usage: demo_terminfo [options] [terminal]"
+	,""
+	,"If no options are given, print all (boolean, numeric, string)"
+	,"capabilities for the given terminal, using short names."
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -a       try all names, print capabilities found"
+	," -b       print boolean-capabilities"
+	," -d LIST  colon-separated list of databases to use"
+	," -e NAME  environment variable to set with -d option"
+	," -f       print full names"
+	," -i NAME  terminal description to use as names for \"-a\" option"
+	," -n       print numeric-capabilities"
+	," -q       quiet (prints only counts)"
+	," -r COUNT repeat for given count"
+	," -s       print string-capabilities"
 #ifdef NCURSES_VERSION
-	" -x       print extended capabilities",
-	" -y       direct-lookup names of extended capabilities",
+	," -x       print extended capabilities"
+	," -y       direct-lookup names of extended capabilities"
 #endif
     };
     unsigned n;
     for (n = 0; n < SIZEOF(msg); ++n) {
 	fprintf(stderr, "%s\n", msg[n]);
     }
-    ExitProgram(EXIT_FAILURE);
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
 }
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
 
 int
 main(int argc, char *argv[])
 {
+    int ch;
     int n;
     int repeat;
     char *name;
     int r_opt = 1;
     char *input_name = 0;
 
-    while ((n = getopt(argc, argv, "abd:e:fi:nqr:sxy")) != -1) {
-	switch (n) {
+    while ((ch = getopt(argc, argv, OPTS_COMMON "abd:e:fi:nqr:sxy")) != -1) {
+	switch (ch) {
 	case 'a':
 	    a_opt = TRUE;
 	    break;
@@ -837,7 +842,7 @@ main(int argc, char *argv[])
 	    break;
 	case 'r':
 	    if ((r_opt = atoi(optarg)) <= 0)
-		usage();
+		usage(FALSE);
 	    break;
 	case 's':
 	    s_opt = TRUE;
@@ -853,9 +858,12 @@ main(int argc, char *argv[])
 	    x_opt = TRUE;
 	    break;
 #endif
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
 	default:
-	    usage();
-	    break;
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
 	}
     }
 
