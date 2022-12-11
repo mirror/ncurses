@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: extended_color.c,v 1.19 2022/12/04 00:40:11 tom Exp $
+ * $Id: extended_color.c,v 1.20 2022/12/10 22:28:50 tom Exp $
  */
 
 #include <test.priv.h>
@@ -160,7 +160,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
     int i;

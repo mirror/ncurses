@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_arrays.c,v 1.12 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_arrays.c,v 1.13 2022/12/10 23:23:27 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -217,7 +217,7 @@ main(int argc, char *argv[])
 
 #else
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     printf("This program requires the terminfo arrays\n");
     ExitProgram(EXIT_FAILURE);
@@ -225,7 +225,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 #endif
 #else /* !HAVE_TIGETSTR */
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     printf("This program requires the terminfo functions such as tigetstr\n");
     ExitProgram(EXIT_FAILURE);

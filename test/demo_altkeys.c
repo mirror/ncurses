@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.15 2022/04/16 18:26:57 tom Exp $
+ * $Id: demo_altkeys.c,v 1.16 2022/12/10 23:31:31 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -71,14 +71,47 @@ log_last_line(WINDOW *win)
     }
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: demo_altkeys [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int n;
     int ch;
 #if HAVE_GETTIMEOFDAY
     struct timeval previous;
 #endif
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
 
     unlink(MY_LOGFILE);
 

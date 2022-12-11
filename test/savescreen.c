@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: savescreen.c,v 1.61 2022/12/04 00:40:11 tom Exp $
+ * $Id: savescreen.c,v 1.62 2022/12/10 23:23:27 tom Exp $
  *
  * Demonstrate save/restore functions from the curses library.
  * Thomas Dickey - 2007/7/14
@@ -655,7 +655,7 @@ main(int argc, char *argv[])
 
 #else
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     printf("This program requires the screen-dump functions\n");
     ExitProgram(EXIT_FAILURE);

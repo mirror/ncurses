@@ -27,7 +27,7 @@
  ****************************************************************************/
 
 /*
- * $Id: test_delwin.c,v 1.3 2022/08/14 00:12:52 tom Exp $
+ * $Id: test_delwin.c,v 1.4 2022/12/10 22:14:07 tom Exp $
  */
 #include <test.priv.h>
 
@@ -53,11 +53,45 @@ next_step(WINDOW *win)
     }
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: test_delwin [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
-main(void)
+main(int argc, char **argv)
 {
     WINDOW *parent, *child1;
     int rc;
+    int ch;
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
 
     if ((my_screen = newterm(NULL, stdout, stdin)) == NULL)
 	ExitProgram(EXIT_FAILURE);

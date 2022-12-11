@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_termcap.c,v 1.63 2022/12/04 00:40:11 tom Exp $
+ * $Id: demo_termcap.c,v 1.64 2022/12/10 23:22:09 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -923,8 +923,7 @@ main(int argc, char *argv[])
 
 #else
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(void)
 {
     failed("This program requires termcap");
 }

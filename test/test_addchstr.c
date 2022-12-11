@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_addchstr.c,v 1.28 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_addchstr.c,v 1.29 2022/12/10 22:28:50 tom Exp $
  *
  * Demonstrate the waddchstr() and waddch functions.
  * Thomas Dickey - 2009/9/12
@@ -484,7 +484,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
 

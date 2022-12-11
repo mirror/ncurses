@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2020,2021 Thomas E. Dickey                                *
+.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
 .\" Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: terminfo.tail,v 1.110 2021/12/25 20:14:56 tom Exp $
+.\" $Id: terminfo.tail,v 1.113 2022/12/10 19:51:10 tom Exp $
 .ps +1
 .SS User-Defined Capabilities
 .
@@ -470,7 +470,7 @@ push \fIi\fP'th parameter
 \fB%P\fP\fI[a\-z]\fP
 set dynamic variable \fI[a\-z]\fP to \fIpop()\fP
 .TP
-\fB%g\fP\fI[a\-z]/\fP
+\fB%g\fP\fI[a\-z]\fP
 get dynamic variable \fI[a\-z]\fP and push it
 .TP
 \fB%P\fP\fI[A\-Z]\fP
@@ -511,8 +511,17 @@ variables in persistent storage, initialized to zeros.
 .bP
 Beginning with version 6.3, ncurses stores \fIstatic\fP and \fIdynamic\fP
 variables in the same manner as SVr4.
+.RS
+.bP
 Unlike other implementations, ncurses zeros dynamic variables 
 before the first \fB%g\fP or \fB%P\fP operator.
+.bP
+Like SVr2,
+the scope of dynamic variables in ncurses
+is within the current call to
+\fBtparm\fP.
+Use static variables if persistent storage is needed.
+.RE
 .RE
 .TP
 \fB%\(aq\fP\fIc\fP\fB\(aq\fP

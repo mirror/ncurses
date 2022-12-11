@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey <dickey@clark.net> 1999
  *
- * $Id: dots.c,v 1.43 2022/12/04 00:40:11 tom Exp $
+ * $Id: dots.c,v 1.44 2022/12/10 23:22:09 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -140,8 +140,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc,
-     char *argv[])
+main(int argc, char *argv[])
 {
     int ch;
     double r;
@@ -243,8 +242,7 @@ main(int argc,
 }
 #else
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(void)
 {
     fprintf(stderr, "This program requires terminfo\n");
     exit(EXIT_FAILURE);

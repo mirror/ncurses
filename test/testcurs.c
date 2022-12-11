@@ -6,7 +6,7 @@
  *  wrs(5/28/93) -- modified to be consistent (perform identically) with either
  *                  PDCurses or under Unix System V, R4
  *
- * $Id: testcurs.c,v 1.56 2021/03/27 22:39:50 tom Exp $
+ * $Id: testcurs.c,v 1.57 2022/12/10 23:35:36 tom Exp $
  */
 
 #include <test.priv.h>
@@ -676,16 +676,48 @@ display_menu(int old_option, int new_option)
     refresh();
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: testcurs [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
-main(
-	int argc GCC_UNUSED,
-	char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     WINDOW *win;
     int old_option = (-1);
     int new_option = 0;
     bool quit = FALSE;
     int n;
+    int ch;
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
 
     setlocale(LC_ALL, "");
 

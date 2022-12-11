@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2006-2013,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: movewindow.c,v 1.52 2021/12/18 18:57:55 tom Exp $
+ * $Id: movewindow.c,v 1.53 2022/12/10 23:31:31 tom Exp $
  *
  * Demonstrate move functions for windows and derived windows from the curses
  * library.
@@ -671,12 +671,45 @@ show_help(WINDOW *current)
     free(msgs);
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: movewindow [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     WINDOW *current_win;
     int ch;
     bool done = FALSE;
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
 
     initscr();
     cbreak();

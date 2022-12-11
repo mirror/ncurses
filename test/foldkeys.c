@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 2006-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.10 2021/08/08 00:41:57 tom Exp $
+ * $Id: foldkeys.c,v 1.11 2022/12/10 23:31:31 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -193,13 +193,46 @@ demo_foldkeys(void)
     printw("Merged to %d key definitions\n", info_len - merged);
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: foldkeys [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
 #if HAVE_GETTIMEOFDAY
     struct timeval previous;
 #endif
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
 
     if (newterm(0, stdout, stdin) == 0) {
 	fprintf(stderr, "Cannot initialize terminal\n");

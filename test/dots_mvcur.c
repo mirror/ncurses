@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey - 2007
  *
- * $Id: dots_mvcur.c,v 1.29 2022/12/04 00:40:11 tom Exp $
+ * $Id: dots_mvcur.c,v 1.30 2022/12/10 23:22:09 tom Exp $
  *
  * A simple demo of the terminfo interface, and mvcur.
  */
@@ -141,8 +141,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int x0 = 1, y0 = 1;
     int ch;
@@ -260,8 +259,7 @@ main(int argc GCC_UNUSED,
 }
 #else
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(void)
 {
     fprintf(stderr, "This program requires terminfo\n");
     exit(EXIT_FAILURE);

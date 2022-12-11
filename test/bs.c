@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2022 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
  * v2.0 featuring strict ANSI/POSIX conformance, November 1993.
  * v2.1 with ncurses mouse support, September 1995
  *
- * $Id: bs.c,v 1.77 2021/06/17 21:11:08 tom Exp $
+ * $Id: bs.c,v 1.78 2022/12/11 00:18:37 tom Exp $
  */
 
 #include <test.priv.h>
@@ -1162,55 +1162,6 @@ playagain(void)
     return (sgetc("YN") == 'Y');
 }
 
-static void
-do_options(int c, char *op[])
-{
-    if (c > 1) {
-	int i;
-
-	for (i = 1; i < c; i++) {
-	    switch (op[i][0]) {
-	    default:
-	    case '?':
-		(void) fprintf(stderr, "Usage: bs [-s | -b] [-c]\n");
-		(void) fprintf(stderr, "\tWhere the options are:\n");
-		(void) fprintf(stderr, "\t-s : play a salvo game\n");
-		(void) fprintf(stderr, "\t-b : play a blitz game\n");
-		(void) fprintf(stderr, "\t-c : ships may be adjacent\n");
-		ExitProgram(EXIT_FAILURE);
-		break;
-	    case '-':
-		switch (op[i][1]) {
-		case 'b':
-		    blitz = 1;
-		    if (salvo == 1) {
-			(void) fprintf(stderr,
-				       "Bad Arg: -b and -s are mutually exclusive\n");
-			ExitProgram(EXIT_FAILURE);
-		    }
-		    break;
-		case 's':
-		    salvo = 1;
-		    if (blitz == 1) {
-			(void) fprintf(stderr,
-				       "Bad Arg: -s and -b are mutually exclusive\n");
-			ExitProgram(EXIT_FAILURE);
-		    }
-		    break;
-		case 'c':
-		    closepack = 1;
-		    break;
-		default:
-		    (void) fprintf(stderr,
-				   "Bad arg: type \"%s ?\" for usage message\n",
-				   op[0]);
-		    ExitProgram(EXIT_FAILURE);
-		}
-	    }
-	}
-    }
-}
-
 static int
 scount(int who)
 {
@@ -1231,12 +1182,68 @@ scount(int who)
     return (shots);
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: bs [options]"
+	,""
+	,USAGE_COMMON
+	,"Options:"
+	," -b       play a blitz game"
+	," -c       ships may be adjacent"
+	," -s       play a salvo game"
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
 main(int argc, char *argv[])
 {
-    setlocale(LC_ALL, "");
+    int ch;
 
-    do_options(argc, argv);
+    while ((ch = getopt(argc, argv, OPTS_COMMON "bcs")) != -1) {
+	switch (ch) {
+	case 'b':
+	    blitz = 1;
+	    if (salvo == 1) {
+		(void) fprintf(stderr,
+			       "Bad Arg: -b and -s are mutually exclusive\n");
+		ExitProgram(EXIT_FAILURE);
+	    }
+	    break;
+	case 's':
+	    salvo = 1;
+	    if (blitz == 1) {
+		(void) fprintf(stderr,
+			       "Bad Arg: -s and -b are mutually exclusive\n");
+		ExitProgram(EXIT_FAILURE);
+	    }
+	    break;
+	case 'c':
+	    closepack = 1;
+	    break;
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
+
+    setlocale(LC_ALL, "");
 
     intro();
     do {

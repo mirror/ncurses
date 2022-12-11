@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: dup_field.c,v 1.6 2022/05/21 20:59:26 tom Exp $
+ * $Id: dup_field.c,v 1.7 2022/12/10 23:31:31 tom Exp $
  *
  * Demonstrate dup_field().
  */
@@ -377,9 +377,44 @@ demo_forms(void)
     nl();
 }
 
-int
-main(void)
+static void
+usage(int ok)
 {
+    static const char *msg[] =
+    {
+	"Usage: dup_field [options]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
+int
+main(int argc, char *argv[])
+{
+    int ch;
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
+    if (optind < argc)
+	usage(FALSE);
+
     setlocale(LC_ALL, "");
 
     initscr();

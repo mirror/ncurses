@@ -41,8 +41,11 @@
 **
 */
 
+#define NEW_PAIR_INTERNAL 1
+
 #include <curses.priv.h>
 #include <tic.h>
+#include <new_pair.h>
 
 #if USE_GPM_SUPPORT
 #ifdef HAVE_LIBDL
@@ -54,7 +57,7 @@
 #undef CUR
 #define CUR SP_TERMTYPE
 
-MODULE_ID("$Id: lib_set_term.c,v 1.183 2022/10/22 19:32:40 tom Exp $")
+MODULE_ID("$Id: lib_set_term.c,v 1.184 2022/12/10 21:34:12 tom Exp $")
 
 #ifdef USE_TERM_DRIVER
 #define MaxColors      InfoOf(sp).maxcolors
@@ -194,6 +197,7 @@ delscreen(SCREEN *sp)
 
 	FreeIfNeeded(sp->_current_attr);
 
+	_nc_free_ordered_pairs(sp);
 	FreeIfNeeded(sp->_color_table);
 	FreeIfNeeded(sp->_color_pairs);
 

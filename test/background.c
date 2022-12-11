@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: background.c,v 1.23 2022/12/04 00:40:11 tom Exp $
+ * $Id: background.c,v 1.24 2022/12/10 22:28:50 tom Exp $
  */
 
 #define NEED_COLOR_CODE 1
@@ -159,7 +159,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
 #if HAVE_ASSUME_DEFAULT_COLORS
     int a_option = 0;

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: back_ground.c,v 1.8 2022/12/04 00:38:34 tom Exp $
+ * $Id: back_ground.c,v 1.9 2022/12/10 22:28:50 tom Exp $
  */
 
 #include <test.priv.h>
@@ -202,7 +202,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
 #if HAVE_ASSUME_DEFAULT_COLORS
     int a_option = 0;

@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: color_content.c,v 1.17 2022/12/04 00:40:11 tom Exp $
+ * $Id: color_content.c,v 1.18 2022/12/10 22:28:50 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -253,7 +253,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
 

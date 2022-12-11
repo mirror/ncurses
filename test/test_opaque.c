@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2022 Thomas E. Dickey                                *
  * Copyright 2007-2008,2009 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_opaque.c,v 1.14 2021/09/11 23:44:07 tom Exp $
+ * $Id: test_opaque.c,v 1.15 2022/12/11 00:03:10 tom Exp $
  *
  * Author: Thomas E Dickey
  *
@@ -454,18 +454,48 @@ test_set_tabsize(void)
     set_tabsize(save_tabsize);
 }
 
+static void
+usage(int ok)
+{
+    static const char *msg[] =
+    {
+	"Usage: test_opaque [options] file1 [file2 [...]]"
+	,""
+	,USAGE_COMMON
+    };
+    size_t n;
+
+    for (n = 0; n < SIZEOF(msg); n++)
+	fprintf(stderr, "%s\n", msg[n]);
+
+    ExitProgram(ok ? EXIT_SUCCESS : EXIT_FAILURE);
+}
+/* *INDENT-OFF* */
+VERSION_COMMON()
+/* *INDENT-ON* */
+
 int
 main(int argc, char *argv[])
 {
     WINDOW *stsbox;
     WINDOW *stswin;
+    int ch;
+
+    while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
+	switch (ch) {
+	case OPTS_VERSION:
+	    show_version(argv);
+	    ExitProgram(EXIT_SUCCESS);
+	default:
+	    usage(ch == OPTS_USAGE);
+	    /* NOTREACHED */
+	}
+    }
 
     setlocale(LC_ALL, "");
 
-    if (argc < 2) {
-	fprintf(stderr, "usage: %s file\n", argv[0]);
-	return EXIT_FAILURE;
-    }
+    if (optind + 1 > argc)
+	usage(FALSE);
 
     initscr();
 
@@ -479,7 +509,7 @@ main(int argc, char *argv[])
     stswin = derwin(stsbox, BASE_Y - 2, COLS - 2, 1, 1);
     keypad(stswin, TRUE);
 
-    test_opaque(1, argv, stswin);
+    test_opaque(optind, argv, stswin);
 
     endwin();
     ExitProgram(EXIT_SUCCESS);

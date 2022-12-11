@@ -29,7 +29,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_tparm.c,v 1.23 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_tparm.c,v 1.24 2022/12/10 23:23:27 tom Exp $
  *
  * Exercise tparm, either for all possible capabilities with fixed parameters,
  * or one capability with all possible parameters.
@@ -490,7 +490,7 @@ main(int argc, char *argv[])
 
 #else /* !HAVE_TIGETSTR */
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     failed("This program requires the terminfo functions such as tigetstr");
 }

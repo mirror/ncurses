@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: test_termattrs.c,v 1.7 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_termattrs.c,v 1.8 2022/12/10 23:23:27 tom Exp $
  *
  * Demonstrate the termattrs and term_attrs functions.
  */
@@ -143,7 +143,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
     bool no_init = FALSE;
@@ -199,8 +199,7 @@ main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
 
 #else
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(void)
 {
     fprintf(stderr, "This program requires terminfo\n");
     exit(EXIT_FAILURE);

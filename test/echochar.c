@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: echochar.c,v 1.24 2022/12/04 00:40:11 tom Exp $
+ * $Id: echochar.c,v 1.25 2022/12/10 22:28:50 tom Exp $
  *
  * Demonstrate the echochar function (compare to dots.c).
  * Thomas Dickey - 2006/11/4
@@ -101,8 +101,7 @@ VERSION_COMMON()
 /* *INDENT-ON* */
 
 int
-main(int argc GCC_UNUSED,
-     char *argv[]GCC_UNUSED)
+main(int argc, char *argv[])
 {
     int ch;
     double r;

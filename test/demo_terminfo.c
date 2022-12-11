@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: demo_terminfo.c,v 1.55 2022/12/04 00:40:11 tom Exp $
+ * $Id: demo_terminfo.c,v 1.56 2022/12/10 23:22:09 tom Exp $
  *
  * A simple demo of the terminfo interface.
  */
@@ -954,7 +954,7 @@ main(int argc, char *argv[])
 
 #else /* !HAVE_TIGETSTR */
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     failed("This program requires the terminfo functions such as tigetstr");
     ExitProgram(EXIT_FAILURE);

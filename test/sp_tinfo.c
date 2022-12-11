@@ -28,7 +28,7 @@
  ****************************************************************************/
 
 /*
- * $Id: sp_tinfo.c,v 1.27 2022/12/04 00:40:11 tom Exp $
+ * $Id: sp_tinfo.c,v 1.28 2022/12/10 23:23:27 tom Exp $
  *
  * TOTO: add option for non-sp-funcs interface
  */
@@ -346,7 +346,7 @@ main(int argc, char *argv[])
 }
 #else
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     fprintf(stderr,
 	    "This program requires the low-level ncurses sp-funcs tputs_sp\n");

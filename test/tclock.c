@@ -1,4 +1,4 @@
-/* $Id: tclock.c,v 1.46 2022/12/04 00:40:11 tom Exp $ */
+/* $Id: tclock.c,v 1.47 2022/12/10 23:23:27 tom Exp $ */
 
 #define NEED_TIME_H
 #include <test.priv.h>
@@ -294,7 +294,7 @@ main(int argc, char *argv[])
 }
 #else
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     printf("This program requires the header math.h and trignometric functions\n");
     ExitProgram(EXIT_FAILURE);

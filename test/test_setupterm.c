@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: test_setupterm.c,v 1.15 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_setupterm.c,v 1.16 2022/12/10 23:23:27 tom Exp $
  *
  * A simple demo of setupterm/restartterm.
  */
@@ -258,7 +258,7 @@ main(int argc, char *argv[])
 
 #else /* !HAVE_TIGETSTR */
 int
-main(int argc GCC_UNUSED, char *argv[]GCC_UNUSED)
+main(void)
 {
     printf("This program requires the terminfo functions such as tigetstr\n");
     ExitProgram(EXIT_FAILURE);
