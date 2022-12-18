@@ -12,7 +12,7 @@ DEB_HOST_GNU_TYPE   ?= $(shell dpkg-architecture -qDEB_HOST_GNU_TYPE)
 DEB_BUILD_GNU_TYPE  ?= $(shell dpkg-architecture -qDEB_BUILD_GNU_TYPE)
 
 TARGET_DIR = $(CURDIR)/debian/adacurses
-SAMPLE_DIR = $(TARGET_DIR)/usr/bin/AdaCurses
+SAMPLE_DIR = $(TARGET_DIR)/usr/libexec/AdaCurses
 
 CFLAGS   = $(shell dpkg-buildflags --get CFLAGS) $(CC_NORMAL)
 CPPFLAGS = $(shell dpkg-buildflags --get CPPFLAGS)

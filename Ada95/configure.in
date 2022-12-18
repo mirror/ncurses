@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.87 2022/11/05 22:13:52 tom Exp $
+dnl $Id: configure.in,v 1.88 2022/12/17 22:05:22 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,11 +38,13 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210509)
-AC_REVISION($Revision: 1.87 $)
+AC_REVISION($Revision: 1.88 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
 AC_DEFUN([AC_PATH_XTRA],[])dnl ignore dependencies on this
+
+PACKAGE="AdaCurses"		AC_SUBST(PACKAGE)
 
 CF_TOP_BUILDDIR
 
@@ -588,6 +590,7 @@ AC_OUTPUT( \
 	src/library.gpr:src/library.gpr.in \
 	doc/adacurses${DFT_ARG_SUFFIX}-config.1:doc/MKada_config.in \
 	Makefile,[
+$AWK -v PACKAGE=$PACKAGE -f $srcdir/mk-pkg.awk </dev/null >> Makefile
 if test -z "$USE_OLD_MAKERULES" ; then
 	$AWK -f $srcdir/mk-1st.awk <$srcdir/src/modules >>src/Makefile
 fi
@@ -605,6 +608,7 @@ LN_S="$LN_S"
 NCURSES_MAJOR="$NCURSES_MAJOR"
 NCURSES_MINOR="$NCURSES_MINOR"
 NCURSES_PATCH="$NCURSES_PATCH"
+PACKAGE="$PACKAGE"
 USE_OLD_MAKERULES="$USE_OLD_MAKERULES"
 cf_cv_VERSION_GNATMAKE=$cf_cv_VERSION_GNATMAKE
 cf_cv_VERSION_GPRBUILD=$cf_cv_VERSION_GPRBUILD

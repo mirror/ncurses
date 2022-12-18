@@ -33,6 +33,7 @@
 ./Ada95/include/ncurses_defs
 ./Ada95/make-tar.sh
 ./Ada95/mk-1st.awk
+./Ada95/mk-pkg.awk
 ./Ada95/package/AdaCurses-doc.spec
 ./Ada95/package/AdaCurses.spec
 ./Ada95/package/debian/compat

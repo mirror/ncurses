@@ -2,7 +2,7 @@ Summary: Ada95 binding for ncurses
 %define AppProgram AdaCurses
 %define AppVersion MAJOR.MINOR
 %define AppRelease YYYYMMDD
-# $Id: AdaCurses.spec,v 1.30 2022/11/19 21:21:16 tom Exp $
+# $Id: AdaCurses.spec,v 1.31 2022/12/18 00:08:17 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
@@ -61,6 +61,7 @@ INSTALL_PROGRAM='${INSTALL}' \
 		--prefix=%{_prefix} \
 		--bindir=%{_bindir} \
 		--libdir=%{_libdir} \
+		--libexecdir=%{_libexecdir} \
 		--with-ada-include=%{ada_include} \
 		--with-ada-objects=%{ada_libdir} \
 		--mandir=%{_mandir} \
@@ -76,12 +77,7 @@ make
 [ "$RPM_BUILD_ROOT" != "/" ] && rm -rf $RPM_BUILD_ROOT
 
 make install DESTDIR=$RPM_BUILD_ROOT
-
-( cd samples &&
-  make install.examples \
-    DESTDIR=$RPM_BUILD_ROOT \
-    BINDIR=$RPM_BUILD_ROOT%{_bindir}/%{AppProgram}
-)
+make install.examples DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 if rm -rf $RPM_BUILD_ROOT; then
@@ -93,8 +89,9 @@ exit 0
 
 %files
 %defattr(-,root,root)
+%{_bindir}/%{AppProgram}
 %{_bindir}/adacurses*-config
-%{_bindir}/%{AppProgram}/*
+%{_libexecdir}/%{AppProgram}/*
 %{ada_libdir}/
 %if %{need_filter} == 1
 %{_libdir}/lib%{AppProgram}.*
@@ -108,6 +105,9 @@ exit 0
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Dec 17 2022 Thomas Dickey
+- install sample programs in libexec
 
 * Sat Nov 19 2022 Thomas Dickey
 - use static libraries for Mageia.
