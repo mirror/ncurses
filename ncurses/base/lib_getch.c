@@ -44,7 +44,7 @@
 #define NEED_KEY_EVENT
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_getch.c,v 1.144 2022/08/13 14:36:43 tom Exp $")
+MODULE_ID("$Id: lib_getch.c,v 1.145 2022/12/24 22:38:38 tom Exp $")
 
 #include <fifo_defs.h>
 
@@ -380,7 +380,17 @@ recur_wrefresh(WINDOW *win)
 {
 #ifdef USE_PTHREADS
     SCREEN *sp = _nc_screen_of(win);
-    if (_nc_use_pthreads && sp != CURRENT_SCREEN) {
+    bool same_sp;
+
+    if (_nc_use_pthreads) {
+	_nc_lock_global(curses);
+	same_sp = (sp == CURRENT_SCREEN);
+	_nc_unlock_global(curses);
+    } else {
+	same_sp = (sp == CURRENT_SCREEN);
+    }
+
+    if (_nc_use_pthreads && !same_sp) {
 	SCREEN *save_SP;
 
 	/* temporarily switch to the window's screen to check/refresh */

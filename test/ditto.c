@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey (1998-on)
  *
- * $Id: ditto.c,v 1.56 2022/12/10 22:10:49 tom Exp $
+ * $Id: ditto.c,v 1.58 2022/12/24 23:53:08 tom Exp $
  *
  * The program illustrates how to set up multiple screens from a single
  * program.
@@ -91,6 +91,15 @@ typedef struct {
     pthread_t thread;
 #endif
 } DITTO;
+
+#ifdef USE_PTHREADS
+#define LockIt()                pthread_mutex_lock(&pending_mutex)
+#define UnlockIt()              pthread_mutex_unlock(&pending_mutex)
+pthread_mutex_t pending_mutex;
+#else
+#define LockIt()		/* nothing */
+#define UnlockIt()		/* nothing */
+#endif
 
 /*
  * Structure used to pass multiple parameters via the use_screen()
@@ -411,8 +420,6 @@ main(int argc, char *argv[])
 	    /* NOTREACHED */
 	}
     }
-    if (optind < argc)
-	usage(FALSE);
 
     if ((data = typeCalloc(DITTO, (size_t) argc)) == 0)
 	failed("calloc data");
@@ -424,6 +431,7 @@ main(int argc, char *argv[])
     }
 
 #ifdef USE_PTHREADS
+    pthread_mutex_init(&pending_mutex, NULL);
     /*
      * For multi-threaded operation, set up a reader for each of the screens.
      * That uses blocking I/O rather than polling for input, so no calls to
@@ -461,6 +469,7 @@ main(int argc, char *argv[])
      * Cleanup and exit
      */
     for (j = argc - 1; j >= 0; j--) {
+	LockIt();
 	USING_SCREEN(data[j].screen, close_screen, 0);
 	fprintf(data[j].output, "**Closed\r\n");
 
@@ -471,6 +480,7 @@ main(int argc, char *argv[])
 	fflush(data[j].output);
 	fclose(data[j].output);
 	delscreen(data[j].screen);
+	UnlockIt();
     }
     ExitProgram(EXIT_SUCCESS);
 }

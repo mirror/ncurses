@@ -43,7 +43,7 @@
 
 #include <SigAction.h>
 
-MODULE_ID("$Id: lib_tstp.c,v 1.53 2022/10/15 13:09:05 Mikhail.Korolev Exp $")
+MODULE_ID("$Id: lib_tstp.c,v 1.54 2022/12/24 22:22:10 tom Exp $")
 
 #if defined(SIGTSTP) && (HAVE_SIGACTION || HAVE_SIGVEC)
 #define USE_SIGTSTP 1
@@ -287,6 +287,7 @@ handle_SIGINT(int sig)
 NCURSES_EXPORT(void)
 _nc_set_read_thread(bool enable)
 {
+    _nc_lock_global(curses);
     if (enable) {
 #  if USE_WEAK_SYMBOLS
 	if ((pthread_self) && (pthread_kill) && (pthread_equal))
@@ -295,6 +296,7 @@ _nc_set_read_thread(bool enable)
     } else {
 	_nc_globals.read_thread = 0;
     }
+    _nc_unlock_global(curses);
 }
 # endif
 
