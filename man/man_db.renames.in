@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019,2020 Thomas E. Dickey                                       #
+# Copyright 2019-2020,2022 Thomas E. Dickey                                  #
 # Copyright 1998-2015,2017 Free Software Foundation, Inc.                    #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
@@ -26,7 +26,7 @@
 # use or other dealings in this Software without prior written               #
 # authorization.                                                             #
 ##############################################################################
-# $Id: man_db.renames.in,v 1.58 2022/10/22 16:41:43 tom Exp $
+# $Id: man_db.renames.in,v 1.59 2022/10/22 16:41:43 tom Exp $
 # Manual-page renamings for the man_db program
 #
 # Files:

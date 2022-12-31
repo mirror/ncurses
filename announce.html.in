@@ -1,7 +1,7 @@
 <!--
-  $Id: announce.html.in,v 1.102 2021/10/20 22:41:55 tom Exp $
+  $Id: announce.html.in,v 1.104 2022/12/31 20:35:34 tom Exp $
   ****************************************************************************
-  * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
   * copy of this software and associated documentation files (the            *
@@ -137,28 +137,27 @@
 
   <blockquote>
     <p><a href=
-    "ftp://ftp.invisible-island.net/ncurses/">ftp://ftp.invisible-island.net/ncurses/</a>
+    "https://invisible-island.net/archives/ncurses/">https://invisible-island.net/archives/ncurses/</a>
     or<br>
     <a href=
     "https://invisible-mirror.net/archives/ncurses/">https://invisible-mirror.net/archives/ncurses/</a>&nbsp;.</p>
   </blockquote>
 
-  <p>It is also available via anonymous FTP at the GNU distribution
-  site</p>
+  <p>It is also available at the GNU distribution site</p>
 
   <blockquote>
     <p><a href=
-    "ftp://ftp.gnu.org/gnu/ncurses/">ftp://ftp.gnu.org/gnu/ncurses/</a>&nbsp;.</p>
+    "https://ftp.gnu.org/gnu/ncurses/">https://ftp.gnu.org/gnu/ncurses/</a>&nbsp;.</p>
   </blockquote>
 
   <h2><a name="h2-release-notes" id="h2-release-notes">Release
   Notes</a></h2>
 
   <p>These notes are for <span class="main-name">ncurses</span>
-  @VERSION@, released <strong>October 21, 2021</strong>.</p>
+  @VERSION@, released <strong>December 31, 2022</strong>.</p>
 
   <p>This release is designed to be source-compatible with
-  <span class="main-name">ncurses</span> 5.0 through 6.2; providing
+  <span class="main-name">ncurses</span> 5.0 through 6.3; providing
   extensions to the application binary interface (ABI). Although
   the source can still be configured to support the <span class=
   "main-name">ncurses</span> 5 ABI, the reason for the release is
@@ -170,127 +169,73 @@
   this announcement.</p>
 
   <p>The most <a href="#h3-bug-fixes">important
-  bug-fixes/improvements</a> dealt with portability issues. The
+  bug-fixes/improvements</a> dealt with robustness issues. The
   release notes also mention some other bug-fixes, but are focused
   on new features and improvements to existing features since
-  <span class="main-name">ncurses</span> 6.2 release.</p>
+  <span class="main-name">ncurses</span> 6.3 release.</p>
 
   <h3><a name="h3-library" id="h3-library">Library improvements</a></h3>
 
   <h4><a name="h4-new-library" id="h4-new-library">New features</a></h4>
 
-  <p>There are a few new features:</p>
-
-  <ul>
-    <li>
-      <p>A new (experimental) driver, for the Windows Terminal
-      configuration is provided.</p>
-    </li>
-
-    <li>
-      <p>A script is provided which enables <a href=
-      "@HOMEPAGE@/ncurses-openbsd.html">OpenBSD</a> users to
-      upgrade their system to use ncurses 6.3 (OpenBSD developers
-      are also invited to do this).</p>
-    </li>
-  </ul>
-
-  <p>Additionally, to improve performance other changes (and
-  extensions) are provided in this release:</p>
-
-  <ul>
-    <li>
-      <p>modify lib_mouse.c to check for out-of-range button
-      numbers, convert those to position reports.</p>
-    </li>
-
-    <li>
-      <p>add sp-funcs for <a href=
-      "@HOMEPAGE@/man/curs_termattrs.3x.html#h3-erasechar_-erasewchar">
-      erasewchar</a>, <a href=
-      "@HOMEPAGE@/man/curs_termattrs.3x.html#h3-killchar_-killwchar">
-      killwchar</a>.</p>
-    </li>
-  </ul>
+  <p>There are no new features in this release.</p>
 
   <h4><a name="h4-fixes-library" id="h4-fixes-library">Other
   improvements</a></h4>
-
-  <p>These are revised features:</p>
-
-  <ul>
-    <li>modify wgetnstr, wgetn_wstr to improve compatibility with
-    SVr4 curses in its treatment of interrupt and quit
-    characters</li>
-  </ul>
-
-  <p>These were done to limit or ultimately deprecate features:</p>
-
-  <ul>
-    <li>
-      <p>mark wgetch-events feature as deprecated.</p>
-
-      <ul>
-        <li>
-          <p>prevent <tt>KEY_EVENT</tt> from appearing in
-          <tt>curses.h</tt> unless the configure option
-          <code>--enable-wgetch-events</code> is used.</p>
-        </li>
-
-        <li>
-          <p>modify <tt>MKkey_defs.sh</tt> to hide ncurses'
-          definition of <tt>KEY_EVENTS</tt> to reduce <em>Visual
-          Studio C++</em> redefinition warnings.</p>
-        </li>
-      </ul>
-    </li>
-
-    <li>
-      <p>reduce build-warnings by excluding ncurses-internals from
-      deprecation warnings.</p>
-    </li>
-  </ul>
 
   <p>These are improvements to existing features:</p>
 
   <ul>
     <li>
-      <p>drop symbols <em>GCC_PRINTF</em> and <em>GCC_SCANF</em>
-      from &lt;curses.h&gt;, to simplify use.</p>
+      <p>modify <tt>delscreen</tt> to more effectively delete all
+      windows on the given screen.</p>
     </li>
 
     <li>
-      <p>apply gcc format attribute to prototypes which use a
-      va_list parameter rather than a &ldquo;<tt>...</tt>&rdquo;
-      variable-length parameter list.</p>
+      <p>modify <tt>wnoutrefresh</tt> to call <tt>pnoutrefresh</tt>
+      if its parameter is a pad, rather than treating it as an
+      error, and modify new_panel to permit its window-parameter to
+      be a pad</p>
     </li>
 
     <li>
-      <p>modify &lt;term.h&gt; so that it is not necessary to
-      include &lt;curses.h&gt; before &lt;term.h&gt;.</p>
+      <p>modify curses_trace() to show the trace-mask as symbols,
+      e.g., <tt>TRACE_ORDINARY</tt>, <tt>DEBUG_LEVEL(3)</tt>.</p>
     </li>
 
     <li>
-      <p>provide for wide-characters as background character in
-      wbkgrnd</p>
+      <p>improve checks for valid mouse events when an intermediate
+      mouse state is not part of the mousemask specified by the
+      caller</p>
     </li>
 
     <li>
-      <p>improve parameter-checking for tparm, adding function
-      _nc_tiparm() to handle the most-used case, which accepts only
-      numeric parameters.</p>
+      <p>allow extended-color number in <em>opts</em> parameter of
+      <tt>wattr_on</tt>.</p>
     </li>
 
     <li>
-      <p>use return-value from <em>vsnprintf</em> to reallocate as
-      needed to allow for buffers larger than the screen size.</p>
+      <p>improve <tt>_tracecchar_t2</tt> formatting of
+      base+combining character.</p>
     </li>
 
     <li>
-      <p>add another <em>fflush(stdout)</em> in <em>_nc_flush</em>
-      to handle time-delays in the middle of strings such as flash
-      when the application uses low-level calls rather than
-      curses.</p>
+      <p>trim out some unwanted linker options from ncurses*config
+      and .pc files seen in Fedora 36+.</p>
+    </li>
+
+    <li>
+      <p>improve shell-scripts with <em>shellcheck</em></p>
+    </li>
+
+    <li>
+      <p>improve use of "trap" in shell scripts, using a
+      script.</p>
+    </li>
+
+    <li>
+      <p>modify <tt>make-tar.sh</tt> scripts to make timestamps
+      more predictable.</p>
     </li>
   </ul>
 
@@ -298,18 +243,19 @@
 
   <ul>
     <li>
-      <p>add a check to guard against <em>repeat_char</em> emitting
-      digits which could be interpreted as BSD-style padding when
-      <tt>--enable-bsdpad</tt> is configured.</p>
+      <p>modify <tt>misc/gen-pkgconfig.in</tt> to allow for the
+      case where the library directory does not yet exist, since
+      this is processed before doing an install</p>
     </li>
 
     <li>
-      <p>check for screen size-change in <a href=
-      "@HOMEPAGE@/man/curs_scr_dump.3x.html">scr_init</a> and
-      <a href=
-      "@HOMEPAGE@/man/curs_scr_dump.3x.html">scr_restore</a>, in
-      case a screen dump does not match the current screen
-      dimensions</p>
+      <p>set trailing null on string passed from <tt>winsnstr</tt>
+      to <tt>wins_nwstr</tt>.</p>
+    </li>
+
+    <li>
+      <p>modify <tt>waddch_literal</tt> to allow for double-width
+      base character when merging a combining character</p>
     </li>
   </ul>
 
@@ -321,134 +267,44 @@
 
   <dl>
     <dt><span class="part-name"><a href=
-    "@HOMEPAGE@/man/tabs.1.html">tabs</a></span>
+    "@HOMEPAGE@/man/infocmp.1m.html">infocmp</a></span>
     </dt>
 
     <dd>
       <ul>
-        <li>
-          <p>implement &ldquo;<tt>+m</tt>&rdquo; option</p>
-        </li>
+        <li>rewrite <tt>canonical_name</tt> function of
+        <tt>infocmp</tt> to ensure buffer size</li>
+
+        <li>improve readability of long parameterized expressions
+        with the infocmp &ldquo;<tt>-f</tt>&rdquo; option by
+        allowing split before a &ldquo;<tt>%p</tt>&rdquo;
+        marker.</li>
+
+        <li>modify verbose-option of <tt>infocmp</tt>,
+        <tt>tic</tt>, <tt>toe</tt> to enable debug-tracing if that
+        is configured.</li>
       </ul>
     </dd>
+
+    <dt><span class="part-name"><a href=
+    "@HOMEPAGE@/man/tabs.1.html">tabs</a></span>
+    </dt>
+
+    <dd>limit tab-stop values to max-columns</dd>
 
     <dt><span class="part-name"><a href=
     "@HOMEPAGE@/man/tic.1m.html">tic</a></span>
     </dt>
 
-    <dd>
-      <ul>
-        <li>
-          <p>add check for duplicate &ldquo;<tt>use=</tt>&rdquo;
-          clauses.</p>
-        </li>
-
-        <li>
-          <p>add check to report instances where <tt>tparm</tt>
-          would detect an error in an expression.</p>
-        </li>
-
-        <li>
-          <p>add user-defined capabilities from <em>mintty</em> to
-          <tt>Caps-ncurses</tt>, for checking consistency.</p>
-        </li>
-
-        <li>
-          <p>improve warning when oc/op do not mention SGR 39/49
-          for <em>xterm</em> compatible <code>XT</code> flag.</p>
-        </li>
-
-        <li>
-          <p>improve checks for number of parameters of
-          <code>smglp</code>, <code>smgrp</code>,
-          <code>smgtp</code>, and <code>smgbp</code>.</p>
-        </li>
-
-        <li>
-          <p>improve &ldquo;<tt>-c</tt>&rdquo; option to validate
-          the number and type of parameters and compare against
-          expected number/type before deciding which set of
-          parameter-lists to use in tparm calls.</p>
-        </li>
-
-        <li>
-          <p>improve check for errors detected in
-          <code>tparm</code>.</p>
-        </li>
-
-        <li>
-          <p>improve format of output, to ensure that the messages
-          contain only printable text.</p>
-        </li>
-
-        <li>
-          <p>modify to eliminate unnecessary
-          &ldquo;<code>\</code>&rdquo; to escape
-          &ldquo;<code>:</code>&rdquo; in terminfo format.</p>
-        </li>
-
-        <li>
-          <p>remove check that assumes that none or both
-          parameterized and non-parameterized margin-setting
-          capabilities are present.</p>
-        </li>
-      </ul>
-    </dd>
-
-    <dt><span class="part-name"><a href=
-    "@HOMEPAGE@/man/toe.1m.html">toe</a></span>
-    </dt>
-
-    <dd>
-      <ul>
-        <li>
-          <p>modify output of &ldquo;<tt>toe -as</tt>&rdquo; to
-          show first description found rather than the last.</p>
-        </li>
-
-        <li>
-          <p>add a check to ensure that a &ldquo;termcap
-          file&rdquo; is text rather than binary.</p>
-        </li>
-      </ul>
-    </dd>
+    <dd>add consistency check in tic for u6/u7/u8/u9 and NQ
+    capabilities.</dd>
 
     <dt><span class="part-name"><a href=
     "@HOMEPAGE@/man/tput.1.html">tput</a></span>
     </dt>
 
-    <dd>
-      <ul>
-        <li>
-          <p>modify to allow multiple commands per line.</p>
-        </li>
-
-        <li>
-          <p>improve parameter-checking by analyzing all extended
-          string capabilities, e.g., as used in the <code>Cs</code>
-          and <code>Ms</code> capabilities of the <em>tmux</em>
-          description.</p>
-        </li>
-
-        <li>
-          <p>make warning messages consistently using alias names
-          when those are used, rather than the underlying program's
-          name.</p>
-        </li>
-
-        <li>
-          <p>improve usage message for aliases such as
-          <em>clear</em>, by eliminating <em>tput</em>-specific
-          portions.</p>
-        </li>
-
-        <li>
-          <p>modify initialization to avoid opening
-          <tt>/dev/tty</tt> for cases other than
-          <em>reset/init</em>, e.g., for <em>clear</em>.</p>
-        </li>
-      </ul>
-    </dd>
+    <dd>corrected use of original tty-modes in <em>init/reset</em>
+    subcommands</dd>
   </dl>
 
   <h4><a name="h4-examples" id="h4-examples">Examples</a></h4>
@@ -456,42 +312,51 @@
   <p>Along with the library and utilities, improvements were made
   to the <a href=
   "@HOMEPAGE@/ncurses-examples.html">ncurses-examples</a>. Most of
-  this activity aimed at improving the test-packages. A few changes
-  are more generally useful, e.g., for the main ncurses
-  test-program, and for analyzing traces using the
-  <em>tracemunch</em> script:</p>
+  this activity aimed at improving the test-packages:</p>
 
   <ul>
     <li>
-      <p>add &ldquo;<tt>-r</tt>&rdquo; option to the <em>dots</em>
-      test-programs, to help with scripting a performance
-      comparison.</p>
+      <p>add minimal <tt>-h</tt> (usage) and <tt>-V</tt> (version)
+      getopt logic to all ncurses-examples programs.</p>
     </li>
 
     <li>
-      <p>build-fix for <em>test_opaque</em>, for configurations
-      without opaque curses structs, e.g., ncurses 5.7.</p>
+      <p>fix an error in "@" command in <tt>test/ncurses.c</tt>
+      F-menu</p>
     </li>
 
     <li>
-      <p>improve <em>tracemunch</em> logic for "RUN"
-      compaction.</p>
+      <p>add curses_trace to ifdef's for <tt>START_TRACE</tt> in
+      <tt>test/test.priv.h</tt></p>
     </li>
 
     <li>
-      <p>improve <em>tracemunch</em>'s coverage of form/menu/panel
-      libraries.</p>
+      <p>improve pthread-configuration for test/worm.c</p>
     </li>
 
     <li>
-      <p>improve <em>tracemunch</em>'s checking/reporting the type
-      for the first parameter, e.g., "WINDOW*" rather than
-      "#1".</p>
+      <p>add <tt>setlocale</tt> call to several test-programs.</p>
     </li>
 
     <li>
-      <p>modify <em>tracemunch</em> and the panel library to show
-      readable traces for panel- and user-pointers.</p>
+      <p>workaround in <tt>test/picsmap.c</tt> for use of floating
+      point for rgb values by ImageMagick 6.9.11, which appears to
+      use the wrong upper limit.</p>
+    </li>
+
+    <li>
+      <p>use static libraries for AdaCurses test-package for
+      Mageia, since no gprbuild package is available.</p>
+    </li>
+
+    <li>
+      <p>install Ada95 sample programs in libexecdir, adding a
+      wrapper script to invoke those.</p>
+    </li>
+
+    <li>
+      <p>install ncurses-examples programs in libexecdir, adding a
+      wrapper script to invoke those.</p>
     </li>
   </ul>
 
@@ -499,132 +364,120 @@
   examples:</p>
 
   <dl>
-    <dt><span class="part-name"><em>back_ground</em></span>
+    <dt><span class="part-name"><em>test/combine</em></span>
     </dt>
 
-    <dd>to exercise the wide-character background functions.</dd>
+    <dd>demonstrate combining characters</dd>
 
-    <dt><span class="part-name"><em>move_field</em></span>
+    <dt><span class="part-name"><em>test/test_delwin</em></span>
     </dt>
 
-    <dd>to demonstrate <a href=
-    "@HOMEPAGE@/man/form_field.3x.html">move_field</a>, and a stub
-    for a corresponding demo of <a href=
-    "@HOMEPAGE@/man/form_field_new.3x.html">dup_field</a>.</dd>
+    <dd>demonstrate deleting a window</dd>
 
-    <dt><span class="part-name"><em>test_tparm</em></span>
+    <dt><span class="part-name"><em>test/test_mouse</em></span>
     </dt>
 
-    <dd>for checking <em>tparm</em> changes.</dd>
+    <dd>observe mouse events in the raw terminal or parsed ncurses
+    modes</dd>
+
+    <dt><span class="part-name"><em>test/test_unget_wch</em></span>
+    </dt>
+
+    <dd>demonstrate the unget_wch and unget functions</dd>
   </dl>
 
   <h3><a name="h3-database" id="h3-database">Terminal database</a></h3>
 
   <p>There are several new terminal descriptions:</p>
 
-  <blockquote style="word-break:keep-all">
-    <p><tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-absolute">absolute</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-att610_cvis">att610+cvis</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-foot">foot</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-foot-direct">foot-direct</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hp98550-color">hp98550-color</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hpterm-color2">hpterm-color2</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hterm">hterm</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hterm-256color">hterm-256color</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-linux-s">linux-s</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-putty_keypad">putty+keypad</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-putty_screen">putty+screen</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-putty-screen">putty-screen</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-screen.linux-s">screen.linux-s</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-scrt/securecrt">scrt/securecrt</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-tmux-direct">tmux-direct</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220_cvis">vt220+cvis</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220_cvis8">vt220+cvis8</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220_pcedit">vt220+pcedit</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220_vtedit">vt220+vtedit</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220-base">vt220-base</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt52_keypad">vt52+keypad</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_256color2">xterm+256color2</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_88color2">xterm+88color2</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm-direct16">xterm-direct16</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm-direct256">xterm-direct256</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_nofkeys">xterm+nofkeys</a></tt>,
-    and <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_nopcfkeys">xterm+nopcfkeys</a></tt>.</p>
-  </blockquote>
+  <ul>
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-mosh">mosh</a></tt>
+    </li>
+
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-mosh-256color">mosh-256color</a></tt>
+    </li>
+
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-teken-16color">teken-16color</a></tt>
+    </li>
+
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-teken-sc">teken-sc</a></tt>
+    </li>
+
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-teken-vt">teken-vt</a></tt>
+    </li>
+
+    <li><tt><a href=
+    "@HOMEPAGE@/terminfo.src.html#tic-xgterm">xgterm</a></tt>
+    </li>
+  </ul>
 
   <p>There are many changes to existing terminal descriptions. Some
   were updates to several descriptions:</p>
 
   <ul>
-    <li>correct use-ordering in some <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm-direct">xterm-direct</a>
-    flavors</li>
+    <li>
+      <p>make description-fields distinct</p>
+    </li>
 
-    <li>fix some sgr inconsistencies in <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-d230c">d230c</a>, <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-ibm6153">ibm6153</a>,
-    <a href="@HOMEPAGE@/terminfo.src.html#tic-ibm6154">ibm6154</a>,
-    <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-ncrvt100an">ncrvt100an</a></li>
+    <li>
+      <p>fix errata in description fields</p>
+    </li>
 
-    <li>improve <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt50h">vt50h</a> and <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt52">vt52</a> based on
-    DECScope manual</li>
+    <li>
+      <p>add/use several building-blocks:</p>
 
-    <li>use <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hp_arrows">hp+arrows</a> in a
-    few places</li>
+      <ul>
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-aixterm_sl"><tt>aixterm+sl</tt></a></li>
 
-    <li>use <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-hp_pfk-cr">hp+pfk-cr</a> in a
-    few places</li>
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-ansi_cpr"><tt>ansi+cpr</tt></a></li>
 
-    <li>use <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt220_cvis">vt220+cvis</a> in
-    <tt>st</tt>, <tt>terminology</tt>, <tt>termite</tt> since they
-    ignore blinking-cursor detail in <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-att610_cvis">att610+cvis</a></li>
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-apollo_vt132"><tt>apollo+vt132</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-decid_cpr"><tt>decid+cpr</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-ncr260vp_sl"><tt>ncr260vp+sl</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-wyse_sl"><tt>wyse+sl</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-x10term_sl"><tt>x10term+sl</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-xterm_acs"><tt>xterm+acs</tt></a></li>
+
+        <li><a href=
+        "@HOMEPAGE@/terminfo.src.html#tic-xterm_alt47"><tt>xterm+alt47</tt></a></li>
+      </ul>
+    </li>
   </ul>
 
   <p>while others affected specific descriptions. These were
   retested, to take into account changes by their developers:</p>
 
-  <blockquote>
-    <p><tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-kitty_common">kitty+common</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-mlterm3">mlterm3</a></tt>,
-    <tt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-ms-terminal">ms-terminal</a></tt></p>
-  </blockquote>
+  <ul>
+    <li>
+      <p><tt><a href=
+      "@HOMEPAGE@/terminfo.src.html#tic-kitty">kitty</a></tt>
+      </p>
+    </li>
+
+    <li>
+      <p><tt><a href=
+      "@HOMEPAGE@/terminfo.src.html#tic-teken">teken</a></tt>
+      </p>
+    </li>
+  </ul>
 
   <p>while these are specific fixes based on reviewing
   documentation, user reports, or warnings from <span class=
@@ -632,133 +485,97 @@
 
   <dl>
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-aaa_dec">aaa+dec</a>,
-    aaa+rv</dt>
+    "@HOMEPAGE@/terminfo.src.html#tic-att610_cvis0">att610+cvis0</a>
+    </dt>
 
-    <dd>correct rmacs/smacs</dd>
+    <dd>amended note as per documentation for att610, att620,
+    att730</dd>
+
+    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-kon">kon</a>,
+    kon2, jfbterm</dt>
+
+    <dd>revise to undo "linux2.6" change to smacs/rmacs/enacs</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-aaa_rv">aaa+rv</a>
+    "@HOMEPAGE@/terminfo.src.html#tic-st-0_6">st-0.6</a>
     </dt>
 
-    <dd>correct sgr</dd>
+    <dd>add dim, ecma+strikeout</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-icl6404">icl6404</a>
+    "@HOMEPAGE@/terminfo.src.html#tic-foot_base">foot+base</a>
     </dt>
 
-    <dd>correct csr</dd>
-
-    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-kitty">kitty</a>
-    </dt>
-
-    <dd>use att610+cvis, xterm+tmux and ansi+enq</dd>
+    <dd>add xterm+sl-alt</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-konsole-base">konsole-base</a>
+    "@HOMEPAGE@/terminfo.src.html#tic-dec_sl">dec+sl</a>
     </dt>
 
-    <dd>re-enable "bel"</dd>
+    <dd>correct dsl in dec+sl</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-linux2.6">linux2.6</a>
-    </dt>
+    "@HOMEPAGE@/terminfo.src.html#tic-mintty">mintty</a> and
+    tmux</dt>
 
-    <dd>fix pound-sign mapping in acsc</dd>
-
-    <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-linux3.0">linux3.0</a>
-    </dt>
-
-    <dd>modify to reflect default mapping of shift-tab by kbd
-    1.14</dd>
+    <dd>correct setal in mintty/tmux entries, add to vte-2018</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-pccons">pccons</a>
+    "@HOMEPAGE@/terminfo.src.html#tic-nsterm">nsterm</a>
     </dt>
 
-    <dd>fill in some missing pieces, to make it comparable to the
-    vt220 entry</dd>
+    <dd>modify nsterm to use xterm+alt1049</dd>
 
     <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-putty">putty</a>
     </dt>
 
-    <dd>use vt100+fnkeys, add rep</dd>
+    <dd>modify putty to use xterm+alt1049</dd>
 
     <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-screen">screen</a>
+    "@HOMEPAGE@/terminfo.src.html#tic-vte-2018">vte-2018</a>
     </dt>
 
-    <dd>use vt100+enq</dd>
-
-    <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-terminator">terminator</a>
-    </dt>
-
-    <dd>corrected tsl capability</dd>
-
-    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-ti916">ti916</a>
-    </dt>
-
-    <dd>correct cup</dd>
-
-    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-tmux">tmux</a>
-    </dt>
-
-    <dd>change kbs to ^?</dd>
-
-    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-vt220">vt220</a>
-    </dt>
-
-    <dd>use vt220+cvis</dd>
-
-    <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-vt420_lrmm">vt420+lrmm</a>
-    </dt>
-
-    <dd>add smglp and smgrp</dd>
-
-    <dt><a href="@HOMEPAGE@/terminfo.src.html#tic-vt420">vt420</a>
-    </dt>
-
-    <dd>use vt420+lrmm</dd>
-
-    <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm-new">xterm-new</a>
-    </dt>
-
-    <dd>add nel</dd>
-
-    <dt><a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm-vt52">xterm-vt52</a>
-    </dt>
-
-    <dd>use vt52+keypad</dd>
+    <dd>add blink and setal</dd>
   </dl>
 
   <p>A few entries use extensions (user-defined terminal
   capabilities):</p>
 
   <ul>
-    <li>add shifted Linux console keys in <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-linux_sfkeys">linux+sfkeys</a>
-    entry for <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-screen.linux">screen.linux</a></li>
+    <li>
+      <p>use <tt>ansi+enq</tt> and <tt>decid+cpr</tt> in cases
+      where the terminal probably supported the u6-u9 extension</p>
+    </li>
 
-    <li>add Smulx to <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-alacritty">alacritty</a></li>
+    <li>
+      <p>remove u6-u9 from teken-2018</p>
+    </li>
 
-    <li>add kbeg to <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_keypad">xterm+keypad</a>
-    to accommodate termcap applications</li>
+    <li>
+      <p>use <tt>NQ</tt> to flag entries where the terminal does
+      not support query and response</p>
+    </li>
 
-    <li>add extensions in <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-xterm_tmux">xterm+tmux</a>
-    and <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-ecma_strikeout">ecma+strikeout</a>
-    to <a href=
-    "@HOMEPAGE@/terminfo.src.html#tic-ms-terminal">ms-terminal</a>,
-    but cancel the non-working Cr and Ms capabilities</li>
+    <li>
+      <p>add/use <a href=
+      "@HOMEPAGE@/terminfo.src.html#tic-bracketed_paste"><tt>bracketed+paste</tt></a>
+      to help identify terminals supporting this xterm feature</p>
+    </li>
+
+    <li>
+      <p>modify samples for xterm mouse 1002/1003 modes to use 1006
+      mode, and also provide for focus in/out responses</p>
+    </li>
+
+    <li>
+      <p>xterm patch #371 supports DEC-compatible status-line. add
+      <tt>dec+sl</tt> to xterm-new, per xterm #371, add <a href=
+      "@HOMEPAGE@/terminfo.src.html#tic-xterm-p371"><tt>xterm-p371</tt></a>,
+      add <a href=
+      "@HOMEPAGE@/terminfo.src.html#tic-xterm-p370"><tt>xterm-p370</tt></a>,
+      for use in older terminals, and set &ldquo;xterm-new&rdquo;
+      to &ldquo;xterm-p370&rdquo; (to ease adoption).</p>
+    </li>
   </ul>
 
   <h3><a name="h3-documentation" id=
@@ -793,18 +610,16 @@
 
       <ul>
         <li>
-          <p>make <em>opts</em> extension for <a href=
-          "@HOMEPAGE@/man/curs_getcchar.3x.html#h3-getcchar"><tt>getcchar</tt></a>
-          work as documented for <a href=
-          "@HOMEPAGE@/announce-6.1.htmll#h4-new-library">ncurses
-          6.1</a>, adding &ldquo;<tt>-g</tt>&rdquo; flag to
-          <em>demo_new_pair</em> to illustrate.</p>
+          <p>remove a stray '/' from description of <tt>%g</tt> in
+          <a href=
+          "@HOMEPAGE@/man/terminfo.5.html#h3-Parameterized-Strings">
+          terminfo(5)</a>.</p>
         </li>
 
         <li>
-          <p>modify <a href="@HOMEPAGE@/man/tset.1.html">tset</a>
-          &ldquo;-q&rdquo; option to refrain from modifying
-          terminal modes, to match the documentation.</p>
+          <p>correct/improve font-formatting in <a href=
+          "@HOMEPAGE@/man/curs_getch.3x.html">curs_getch.3x</a>, as
+          well as other manual pages.</p>
         </li>
       </ul>
     </li>
@@ -814,44 +629,17 @@
 
       <ul>
         <li>
-          <p>improve documentation for <a href=
-          "@HOMEPAGE@/man/terminfo.5.html#h3-Parameterized-Strings">
-          tparm</a> and static/dynamic variables.</p>
+          <p>add portability notes for <a href=
+          "@HOMEPAGE@/man/curs_initscr.3x.html#h2-PORTABILITY">delscreen</a>
+          and <a href=
+          "@HOMEPAGE@/man/curs_window.3x.html#h2-PORTABILITY">delwin</a>
+          in manual.</p>
         </li>
 
         <li>
-          <p>add history note to <a href=
-          "@HOMEPAGE@/man/curs_scanw.3x.html#h2-HISTORY">curs_scanw.3x</a>
-          for &lt;stdarg.h&gt; and &lt;varargs.h&gt;</p>
-        </li>
-
-        <li>
-          <p>add history note to <a href=
-          "@HOMEPAGE@/man/curs_printw.3x.html#h2-HISTORY">curs_printw.3x</a>
-          for &lt;stdarg.h&gt; and &lt;varargs.h&gt;</p>
-        </li>
-
-        <li>
-          <p>add portability note to <a href=
-          "@HOMEPAGE@/man/ncurses.3x.html#h3-Header-files">ncurses.3x</a>
-          regarding &lt;stdarg.h&gt;</p>
-        </li>
-
-        <li>
-          <p>add historical notes to <a href=
-          "@HOMEPAGE@/man/tput.1.html#h2-HISTORY">tput</a>,
-          <a href="@HOMEPAGE@/man/curs_terminfo.3x.html#h2-HISTORY">
-          curses-terminfo</a> and <a href=
-          "@HOMEPAGE@/man/curs_color.3x.html#h2-HISTORY">curses-color</a>
-          manpages based on source-code for SVr2, SVr3 and
-          SVr4.</p>
-        </li>
-
-        <li>
-          <p>improve history section for <a href=
-          "@HOMEPAGE@/man/tset.1.html#h2-HISTORY">tset</a> manpage
-          based on the 1BSD tarball, which preceded BSD's SCCS
-          checkins by more than three years.</p>
+          <p>improve <a href=
+          "@HOMEPAGE@/man/curs_slk.3x.html#h2-EXTENSIONS">curs_slk.3x</a>
+          discussion of extensions and portability</p>
         </li>
       </ul>
     </li>
@@ -861,64 +649,64 @@
 
       <ul>
         <li>
-          <p>explain in <a href=
-          "@HOMEPAGE@/man/ncurses.3x.html#h2-ALTERNATE-CONFIGURATIONS">
-          ncurses.3x</a> that functions in the tinfo library do not
-          rely upon wide-characters.</p>
+          <p>improve <a href=
+          "@HOMEPAGE@/man/curs_bkgd.3x.html">curs_bkgd.3x</a>,
+          explaining that <tt>bkgdset</tt> can affect results for
+          <tt>bkgd</tt></p>
         </li>
 
         <li>
-          <p>improve manual page for <a href=
-          "@HOMEPAGE@/man/panel.3x.html#h2-PORTABILITY">panel</a>
-          library, extending the portability section as well as
-          documenting error-returns.</p>
+          <p>add note on portable memory-leak checking in <a href=
+          "@HOMEPAGE@/man/curs_memleaks.3x.html#h2-PORTABILITY">curs_memleaks.3x</a></p>
         </li>
 
         <li>
-          <p>add section on margins to <a href=
-          "@HOMEPAGE@/man/terminfo.5.html#h3-Margins">terminfo.5</a>,
-          adapted from X/Open Curses.</p>
+          <p>expanded description in <a href=
+          "@HOMEPAGE@/man/resizeterm.3x.html">resizeterm.3x</a></p>
+        </li>
+
+        <li>
+          <p>add section on releasing memory to <a href=
+          "@HOMEPAGE@/man/curs_termcap.3x.html#h3-Releasing-Memory">
+          curs_termcap.3x</a> and <a href=
+          "@HOMEPAGE@/man/curs_terminfo.3x.html#h3-Releasing-Memory">
+          curs_terminfo.3x</a> manpages.</p>
+        </li>
+
+        <li>
+          <p>add clarification of the scope of dynamic variables in
+          <a href=
+          "@HOMEPAGE@/man/terminfo.5.html">terminfo(5)</a>.</p>
+        </li>
+
+        <li>
+          <p>improve formatting of <a href=
+          "@HOMEPAGE@/ncurses-intro.html">ncurses-intro.html</a>
+          and <a href=
+          "@HOMEPAGE@/hackguide.html">hackguide.html</a></p>
         </li>
 
         <li>
           <p>improve <a href=
-          "@HOMEPAGE@/man/term.5.html#h3-LEGACY-STORAGE-FORMAT">man/term.5</a>
-          section on legacy storage format.</p>
+          "@HOMEPAGE@/man/curs_clear.3x.html">curs_clear.3x</a>
+          links to other pages</p>
         </li>
 
         <li>
-          <p>add a note in <a href=
-          "@HOMEPAGE@/man/terminfo.5.html#h3-Predefined-Capabilities">
-          terminfo.5</a> explaining that no-parameter strings such
-          as <em><tt>sgr0</tt></em> or <em><tt>cnorm</tt></em>
-          should not be used with tparm.</p>
+          <p>update <a href=
+          "@HOMEPAGE@/howto/NCURSES-Programming-HOWTO.html">ncurses-howto</a>,
+          making documentation fixes along with corrections to
+          example programs.</p>
         </li>
 
         <li>
-          <p>improve description of BSD-style padding in <a href=
-          "@HOMEPAGE@/man/curs_termcap.3x.html#h2-BUGS">curs_termcap.3x</a></p>
+          <p>use newer version 1.36 of gnathtml for generating Ada
+          html files.</p>
         </li>
 
         <li>
-          <p>improve discussion of padding versus <tt>tparm</tt>
-          and <tt>tputs</tt> in <a href=
-          "@HOMEPAGE@/man/curs_terminfo.3x.html#h3-Formatting-Output">
-          man/curs_terminfo.3x</a></p>
-        </li>
-
-        <li>
-          <p>add a note in manual page to explain <a href=
-          "@HOMEPAGE@/man/curs_getch.3x.html#h3-Ungetting-characters">
-          ungetch</a> vs <a href=
-          "@HOMEPAGE@/man/curs_get_wch.3x.html#h3-unget_wch">unget_wch</a>.</p>
-        </li>
-
-        <li>
-          <p>improve description of error-returns in <a href=
-          "@HOMEPAGE@/man/curs_addch.3x.html#h2-RETURN-VALUE">waddch</a>
-          and <a href=
-          "@HOMEPAGE@/man/curs_addstr.3x.html#h2-RETURN-VALUE">waddnstr</a>
-          manual pages.</p>
+          <p>update external links in <a href=
+          "@HOMEPAGE@/Ada95.html">Ada95.html</a></p>
         </li>
       </ul>
     </li>
@@ -927,61 +715,49 @@
   <p>There are no new manual pages (all of the manual page updates
   are to existing pages).</p>
 
-  <p>Some of the improvements are more subtle, relating to the way
-  the information is presented. For instance, hyphenation is
-  suppressed in the HTML files generated from manual pages because
-  an upgrade to <em>groff</em> gave noticeably poorer results,
-  interfering with the process of creating links between the
-  resulting webpages.</p>
-
   <h3><a name="h3-bug-fixes" id="h3-bug-fixes">Interesting
   bug-fixes</a></h3>
 
   <p>While there were many bugs fixed during development of ncurses
-  6.3, only a few (the reason for this release) were both important
+  6.4, only a few (the reason for this release) were both important
   and interesting. Most of the bug-fixes were for local issues
   which did not affect compatibility across releases. Since those
   are detailed in the <a href=
-  "@HOMEPAGE@/NEWS.html#t20211018">NEWS</a> file no elaboration is
+  "@HOMEPAGE@/NEWS.html#t20221231">NEWS</a> file no elaboration is
   needed here.</p>
 
-  <p>The interesting bugs were:</p>
+  <p>The interesting bugs were those dealing with memory leaks and
+  buffer overflows. Although the utilities are designed for
+  <em>text</em> files (which they do properly), some choose to test
+  them with <strong>non-</strong><em>text</em> files.</p>
 
   <ul>
     <li>
-      <p>modify <a href=
-      "@HOMEPAGE@/man/curs_bkgd.3x.html#h3-bkgd">wbkgd</a> and
-      <a href=
-      "@HOMEPAGE@/man/curs_bkgrnd.3x.html#h3-bkgrnd">wbkgrnd</a> to
-      avoid storing a null in the background character, because it
-      may be used in cases where the corresponding 0x80 is not
-      treated as a null.</p>
-
-      <p>This was a regression introduced in ncurses 6.2 (<a href=
-      "https://lists.gnu.org/archive/html/bug-ncurses/2020-03/msg00000.html">reported</a>
-      on the mailing list), for which the workaround was to specify
-      a blank for the background character.</p>
+      <p>Text files contain no embedded nulls. Also, they end with
+      a newline. Feeding <strong>tic</strong> non-text files
+      exposed a few cases where the program did not check for those
+      issues. As a result, further processing of the input found
+      limit-checks whose assumptions were invalid.</p>
     </li>
 
     <li>
-      <p>remove output-related checks for <a href=
-      "@HOMEPAGE@/man/curs_outopts.3x.html">nl/nonl</a> (also
-      <a href=
-      "https://lists.gnu.org/archive/html/bug-ncurses/2020-09/msg00018.html">
-      reported</a> on the mailing list).</p>
+      <p>Fixing the limit-checks (first) found a problem with
+      <strong>tic</strong> managing the list of strings in a
+      terminal description. In merging two terminal descriptions
+      (i.e., the &ldquo;use=&rdquo; feature), <strong>tic</strong>
+      was not allocating a complete copy. A quick repair for that
+      introduced a memory leak.</p>
     </li>
 
     <li>
-      <p>improve tparm implementation of <tt>%P</tt> and
-      <tt>%g</tt>, more closely matching SVr4 terminfo. Those
-      denote <em>static</em> and <em>dynamic</em> variables in
-      terminfo expressions.</p>
+      <p>The checks for non-text files are improved (i.e., embedded
+      nulls in the input file will cause <strong>tic</strong> to
+      reject it rather than attempting to process it).</p>
+    </li>
 
-      <p>Exactly what those terms meant was never documented before
-      in any implementation of curses, aside from source code.
-      Unlike the other two fixes, the problem was discovered while
-      studying OpenBSD's version of <a href=
-      "@HOMEPAGE@/ncurses-openbsd.html#issue_tput">tset</a>.</p>
+    <li>
+      <p>The string allocations in <strong>tic</strong> are
+      likewise improved.</p>
     </li>
   </ul>
 
@@ -991,9 +767,7 @@
   <h4><a name="h4-config-major" id="h4-config-major">Major
   changes</a></h4>
 
-  <p>There are no major changes. Several new options were added to
-  ease integration of packages with systems using different
-  versions of <em>GNAT</em> and <em>ncurses</em>. Also,
+  <p>There are no major changes. No new options were added. Several
   improvements were made to configure checks.</p>
 
   <h4><a name="h4-config-options" id=
@@ -1002,73 +776,35 @@
   <p>There are a few new/modified configure options:</p>
 
   <dl>
-    <dt><tt>--enable-fvisibility</tt>
+    <dt><tt>--with-abi-version</tt>
     </dt>
 
     <dd>
-      <p>new configure option and check for <em>gcc</em>
-      <tt>-fvisibility=hidden</tt> feature</p>
+      <p>add ABI 7 defaults to configure script.</p>
     </dd>
 
-    <dt><tt>--enable-leaks</tt>
+    <dt><tt>--with-caps</tt>
     </dt>
 
     <dd>
-      <p>corrected to allow turning leak-checking off later in a
-      set of options.</p>
+      <p>add warning in configure script if file specified for
+      &ldquo;<tt>--with-caps</tt>&rdquo; does not exist.</p>
     </dd>
 
-    <dt><tt>--enable-stdnoreturn</tt>
+    <dt><tt>--with-manpage-format</tt>
     </dt>
 
     <dd>
-      <p>new configure option makes the <code>_Noreturn</code>
-      keyword optional to ease transition.</p>
+      <p>bzip2 and xz compression are now supported</p>
     </dd>
 
-    <dt><tt>--disable-pkg-ldflags</tt>
+    <dt><tt>--with-xterm-kbs</tt>
     </dt>
 
     <dd>
-      <p>revised option also controls whether <code>$LDFLAGS</code>
-      from the build is provided in &ldquo;<tt>-config</tt>&rdquo;
-      and &ldquo;<tt>.pc</tt>&rdquo; files.</p>
-    </dd>
-
-    <dt><tt>--disable-root-access</tt>
-    </dt>
-
-    <dd>
-      <p>add configure option which tells ncurses to disallow most
-      file-opens by setuid processes.</p>
-    </dd>
-
-    <dt><tt>--disable-wattr-macros</tt>
-    </dt>
-
-    <dd>
-      <p>changed default to help packagers who reuse wide ncursesw
-      header file with non-wide ncurses library.</p>
-    </dd>
-
-    <dt><tt>--with-pkg-config-libdir</tt>
-    </dt>
-
-    <dd>
-      <p>revised option uses the actual search path from
-      <em>pkg-config</em> or <em>pkgconf</em> using the output from
-      <tt>--debug</tt>.</p>
-    </dd>
-
-    <dt><tt>--with-ada-libname</tt><br>
-    <tt>--with-form-libname</tt><br>
-    <tt>--with-menu-libname</tt><br>
-    <tt>--with-panel-libname</tt>
-    </dt>
-
-    <dd>
-      <p>new several <tt>--with-<em>xxx</em>-libname</tt> options,
-      to help with pkgsrc</p>
+      <p>add check/warning in configure script if option
+      &ldquo;<tt>--with-xterm-kbs</tt>&rdquo; is missing or
+      inconsistent</p>
     </dd>
   </dl>
 
@@ -1079,55 +815,68 @@
 
   <ul>
     <li>
-      <p>add a special case in the configure script to work around
-      one of the build-time breakages reported for <a href=
-      "@HOMEPAGE@/ncurses-openbsd.html">OpenBSD 6</a> here:</p>
-
-      <blockquote>
-        <p><a href=
-        "https://www.mail-archive.com/bugs@openbsd.org/msg13200.html">
-        https://www.mail-archive.com/bugs@openbsd.org/msg13200.html</a></p>
-      </blockquote>
+      <p>amend configure option's auto-search to account for
+      systems where none of the directories known to
+      <em>pkg-config</em> exist</p>
     </li>
 
     <li>
-      <p>modify configure check for <em>libtool</em> to prevent
-      accidental use of an OpenBSD program which uses the same
-      name.</p>
+      <p>corrected regex needed for older <em>pkg-config</em> used
+      in Solaris 10</p>
     </li>
 
     <li>
-      <p>modify configuration checks for build-time tic/infocmp to
-      use <em>AC_CHECK_TOOL</em>. That can still be overridden by
-      <tt>--with-tic-path</tt> and <tt>--with-infocmp-path</tt>
-      when fallbacks are used, but even if not using fallbacks, the
-      improved check may help with cross-compiling.</p>
+      <p>improve handling of <tt>--with-pkg-config-libdir</tt>
+      option, allowing for the case where either
+      <tt>$PKG_CONFIG_LIBDIR</tt> or the option value has a
+      colon-separated list of directories</p>
     </li>
 
     <li>
-      <p>relax modification-time comparison in
-      <em>CF_LINK_FUNCS</em> to allow it to accept link() function
-      with NFS filesystems which change the mtime on the link
-      target, e.g., several BSD systems.</p>
+      <p>if the <tt>--with-pkg-config-libdir</tt> option is not
+      given, use <tt>${libdir}/pkgconfig</tt> as a default</p>
     </li>
 
     <li>
-      <p>modify configure check for c89/c99 aliases of
-      <em>clang</em> to use its <tt>-std</tt> option instead,
-      because some platforms, in particular macOS, do not provide
-      workable c89/c99 aliases.</p>
+      <p>improve search-path check for <em>pkg-config</em>, e.g.,
+      for Debian testing which installs <em>pkg-config</em> with
+      architecture-prefixes.</p>
     </li>
 
     <li>
-      <p>modify <em>CF_NCURSES_CONFIG</em> to work around
-      <em>Xcode</em>'s c99 "-W" option, which conflicts with
-      conventional use for passing linker options.</p>
+      <p>build-fix for cross-compiling to MingW, conditionally add
+      <tt>-lssp</tt></p>
     </li>
 
     <li>
-      <p>modify configure scripts to filter out redefinitions of
-      _XOPEN_SOURCE, e.g., for NetBSD which generally supports 500,
-      but 600 is needed for ncursesw.</p>
+      <p>improve configure check for <tt>getttynam</tt></p>
+    </li>
+
+    <li>
+      <p>fixes to build with <em>dietlibc</em>:</p>
+
+      <ul>
+        <li>add configure check for <tt>fpathconf</tt></li>
+
+        <li>add configure check for math sine/cosine, needed in
+        test/tclock, and eliminate <tt>pow()</tt> from
+        test/hanoi</li>
+
+        <li>use <tt>wcsnlen</tt> as an alternative to
+        <tt>wmemchr</tt> if it is not found</li>
+      </ul>
+    </li>
+
+    <li>
+      <p>modify configure macro <tt>CF_BUILD_CC</tt> to check if
+      the build-compiler works, rather than that it is different
+      from the cross-compiler, e.g., to accommodate a compiler
+      which can be used for either purpose with different flags</p>
+    </li>
+
+    <li>
+      <p>modify configure/scripts to work around interference by
+      GNU grep 3.8</p>
     </li>
   </ul>
 
@@ -1135,51 +884,31 @@
 
   <ul>
     <li>
-      <p>change configure-check and source-code for gcc's noreturn
-      attribute to assume it is a prefix rather than suffix,
-      matching c11's _Noreturn convention.</p>
+      <p>change <tt>man_db.renames</tt> to template, to handle
+      <em>ncurses*-config</em> script with the
+      <tt>--extra-suffix</tt> configure option.</p>
     </li>
 
     <li>
-      <p>modify mk-1st.awk to account for extra-suffix configure
-      option.</p>
+      <p>update <tt>CF_XOPEN_SOURCE</tt> macro, adding variants
+      &ldquo;gnueabi" and &ldquo;gnueabihf" to get
+      <tt>_DEFAULT_SOURCE</tt> special case, as well as adding GNU
+      libc suffixes for &ldquo;abi64&rdquo;, &ldquo;abin32&rdquo;,
+      &ldquo;x32&rdquo; to distinguish it from other libc
+      flavors.</p>
     </li>
 
     <li>
-      <p>build-fix for termsort module when configured with
-      termcap.</p>
+      <p>work around <em>musl</em>'s nonstandard use of feature
+      test macros by adding a definition for
+      <tt>NCURSES_WIDECHAR</tt> to the generated &ldquo;.pc&rdquo;
+      and <em><tt>*-config</tt></em> files.</p>
     </li>
 
     <li>
-      <p>modify configure script and makefiles to support ".PHONY"
-      make program feature.</p>
-    </li>
-
-    <li>
-      <p>amend <em>libtool</em> configuration to add dependency for
-      install.tic, etc., in ncurses/Makefile on the lower-level
-      libraries.</p>
-    </li>
-
-    <li>
-      <p>modify Ada95 source-generation utility to write to a file
-      given as parameter rather than to the standard output,
-      allowing builds with MinGW.</p>
-    </li>
-
-    <li>
-      <p>amend tic/infocmp check to allow for the respective tool's
-      absence.</p>
-    </li>
-
-    <li>
-      <p>build-fixes for gnat 10.1.1, whose gnatmake drops
-      integration with gprbuild.</p>
-    </li>
-
-    <li>
-      <p>correct configure version-check/warning for g++ to allow
-      for 10.x</p>
+      <p>use &ldquo;<tt>command -v</tt>&rdquo; rather than
+      &ldquo;<tt>type</tt>&rdquo; in <tt>Ada95/gen/Makefile.in</tt>
+      to fix a portability issue.</p>
     </li>
   </ul>
 
@@ -1693,7 +1422,7 @@
 
   <blockquote>
     <p><a href=
-    "ftp://ftp.invisible-island.net/ncurses/current/">ftp://ftp.invisible-island.net/ncurses/current/</a>
+    "https://invisible-island.net/archives/ncurses/current/">https://invisible-island.net/archives/ncurses/current/</a>
     and<br>
     <a href=
     "https://invisible-mirror.net/archives/ncurses/current/">https://invisible-mirror.net/archives/ncurses/current/</a>&nbsp;.</p>
@@ -1703,10 +1432,10 @@
 
   <blockquote>
     <p><a href=
-    "ftp://ftp.invisible-island.net/ncurses/6.2/">ftp://ftp.invisible-island.net/ncurses/6.2/</a>
+    "https://invisible-island.net/archives/ncurses/6.3/">https://invisible-island.net/archives/ncurses/6.3/</a>
     and<br>
     <a href=
-    "https://invisible-mirror.net/archives/ncurses/6.2/">https://invisible-mirror.net/archives/ncurses/6.2/</a>&nbsp;.</p>
+    "https://invisible-mirror.net/archives/ncurses/6.3/">https://invisible-mirror.net/archives/ncurses/6.3/</a>&nbsp;.</p>
   </blockquote>
 
   <p>There is an archive of the mailing list here:</p>

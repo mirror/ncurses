@@ -1,4 +1,4 @@
-                            Announcing ncurses 6.3
+                            Announcing ncurses 6.4
 
 Overview
 
@@ -40,19 +40,19 @@ Overview
 
    The ncurses distribution is available at ncurses' homepage:
 
-     ftp://ftp.invisible-island.net/ncurses/ or
+     https://invisible-island.net/archives/ncurses/ or
      https://invisible-mirror.net/archives/ncurses/ .
 
-   It is also available via anonymous FTP at the GNU distribution site
+   It is also available at the GNU distribution site
 
-     ftp://ftp.gnu.org/gnu/ncurses/ .
+     https://ftp.gnu.org/gnu/ncurses/ .
 
 Release Notes
 
-   These notes are for ncurses 6.3, released October 21, 2021.
+   These notes are for ncurses 6.4, released December 31, 2022.
 
    This  release  is  designed  to  be source-compatible with ncurses 5.0
-   through  6.2; providing extensions to the application binary interface
+   through  6.3; providing extensions to the application binary interface
    (ABI).  Although  the  source  can  still be configured to support the
    ncurses  5  ABI, the reason for the release is to reflect improvements
    to the ncurses 6 ABI and the supporting utility programs.
@@ -60,240 +60,179 @@ Release Notes
    There  are,  of  course,  numerous  other improvements, listed in this
    announcement.
 
-   The  most  important  bug-fixes/improvements  dealt  with  portability
+   The   most  important  bug-fixes/improvements  dealt  with  robustness
    issues.  The  release notes also mention some other bug-fixes, but are
    focused  on  new  features and improvements to existing features since
-   ncurses 6.2 release.
+   ncurses 6.3 release.
 
   Library improvements
 
     New features
 
-   There are a few new features:
-     * A   new   (experimental)   driver,   for   the   Windows  Terminal
-       configuration is provided.
-     * A  script is provided which enables OpenBSD users to upgrade their
-       system  to use ncurses 6.3 (OpenBSD developers are also invited to
-       do this).
-
-   Additionally,  to  improve  performance other changes (and extensions)
-   are provided in this release:
-     * modify  lib_mouse.c  to  check  for  out-of-range  button numbers,
-       convert those to position reports.
-     * add sp-funcs for erasewchar, killwchar.
+   There are no new features in this release.
 
     Other improvements
 
-   These are revised features:
-     * modify  wgetnstr,  wgetn_wstr  to  improve compatibility with SVr4
-       curses in its treatment of interrupt and quit characters
-
-   These were done to limit or ultimately deprecate features:
-     * mark wgetch-events feature as deprecated.
-          + prevent  KEY_EVENT  from  appearing  in  curses.h  unless the
-            configure option --enable-wgetch-events is used.
-          + modify   MKkey_defs.sh   to   hide   ncurses'  definition  of
-            KEY_EVENTS to reduce Visual Studio C++ redefinition warnings.
-     * reduce   build-warnings   by   excluding   ncurses-internals  from
-       deprecation warnings.
-
    These are improvements to existing features:
-     * drop symbols GCC_PRINTF and GCC_SCANF from <curses.h>, to simplify
-       use.
-     * apply  gcc  format  attribute  to  prototypes  which use a va_list
-       parameter rather than a "..." variable-length parameter list.
-     * modify  <term.h> so that it is not necessary to include <curses.h>
-       before <term.h>.
-     * provide for wide-characters as background character in wbkgrnd
-     * improve parameter-checking for tparm, adding function _nc_tiparm()
-       to   handle   the  most-used  case,  which  accepts  only  numeric
-       parameters.
-     * use  return-value  from vsnprintf to reallocate as needed to allow
-       for buffers larger than the screen size.
-     * add  another  fflush(stdout) in _nc_flush to handle time-delays in
-       the  middle  of  strings  such  as flash when the application uses
-       low-level calls rather than curses.
+     * modify  delscreen  to  more  effectively delete all windows on the
+       given screen.
+     * modify  wnoutrefresh  to  call  pnoutrefresh if its parameter is a
+       pad,  rather than treating it as an error, and modify new_panel to
+       permit its window-parameter to be a pad
+     * modify  curses_trace()  to  show  the trace-mask as symbols, e.g.,
+       TRACE_ORDINARY, DEBUG_LEVEL(3).
+     * improve  checks  for valid mouse events when an intermediate mouse
+       state is not part of the mousemask specified by the caller
+     * allow extended-color number in opts parameter of wattr_on.
+     * improve _tracecchar_t2 formatting of base+combining character.
+     * trim  out some unwanted linker options from ncurses*config and .pc
+       files seen in Fedora 36+.
+     * improve shell-scripts with shellcheck
+     * improve use of "trap" in shell scripts, using a script.
+     * modify make-tar.sh scripts to make timestamps more predictable.
 
    These are corrections to existing features:
-     * add  a  check  to  guard against repeat_char emitting digits which
-       could  be interpreted as BSD-style padding when --enable-bsdpad is
-       configured.
-     * check  for screen size-change in scr_init and scr_restore, in case
-       a screen dump does not match the current screen dimensions
+     * modify  misc/gen-pkgconfig.in  to  allow  for  the  case where the
+       library  directory  does  not  yet  exist, since this is processed
+       before doing an install
+     * set trailing null on string passed from winsnstr to wins_nwstr.
+     * modify  waddch_literal  to  allow  for double-width base character
+       when merging a combining character
 
   Program improvements
 
    Several improvements were made to the utility programs:
 
-   tabs
+   infocmp
 
-          + implement "+m" option
+          + rewrite  canonical_name  function of infocmp to ensure buffer
+            size
+          + improve  readability  of  long parameterized expressions with
+            the  infocmp  "-f"  option  by  allowing  split before a "%p"
+            marker.
+          + modify   verbose-option   of  infocmp,  tic,  toe  to  enable
+            debug-tracing if that is configured.
+
+   tabs
+          limit tab-stop values to max-columns
 
    tic
-
-          + add check for duplicate "use=" clauses.
-          + add  check  to  report  instances where tparm would detect an
-            error in an expression.
-          + add  user-defined  capabilities  from mintty to Caps-ncurses,
-            for checking consistency.
-          + improve warning when oc/op do not mention SGR 39/49 for xterm
-            compatible XT flag.
-          + improve  checks  for  number  of  parameters of smglp, smgrp,
-            smgtp, and smgbp.
-          + improve  "-c"  option  to  validate  the  number  and type of
-            parameters  and  compare  against expected number/type before
-            deciding which set of parameter-lists to use in tparm calls.
-          + improve check for errors detected in tparm.
-          + improve format of output, to ensure that the messages contain
-            only printable text.
-          + modify to eliminate unnecessary "\" to escape ":" in terminfo
-            format.
-          + remove check that assumes that none or both parameterized and
-            non-parameterized margin-setting capabilities are present.
-
-   toe
-
-          + modify  output  of  "toe -as" to show first description found
-            rather than the last.
-          + add  a  check  to ensure that a "termcap file" is text rather
-            than binary.
+          add   consistency   check   in   tic  for  u6/u7/u8/u9  and  NQ
+          capabilities.
 
    tput
-
-          + modify to allow multiple commands per line.
-          + improve  parameter-checking  by analyzing all extended string
-            capabilities,  e.g., as used in the Cs and Ms capabilities of
-            the tmux description.
-          + make  warning  messages  consistently  using alias names when
-            those are used, rather than the underlying program's name.
-          + improve   usage   message  for  aliases  such  as  clear,  by
-            eliminating tput-specific portions.
-          + modify  initialization  to  avoid  opening /dev/tty for cases
-            other than reset/init, e.g., for clear.
+          corrected use of original tty-modes in init/reset subcommands
 
     Examples
 
    Along  with  the  library and utilities, improvements were made to the
    ncurses-examples.  Most  of  this  activity  aimed  at  improving  the
-   test-packages.  A few changes are more generally useful, e.g., for the
-   main   ncurses  test-program,  and  for  analyzing  traces  using  the
-   tracemunch script:
-     * add  "-r" option to the dots test-programs, to help with scripting
-       a performance comparison.
-     * build-fix  for  test_opaque,  for  configurations  without  opaque
-       curses structs, e.g., ncurses 5.7.
-     * improve tracemunch logic for "RUN" compaction.
-     * improve tracemunch's coverage of form/menu/panel libraries.
-     * improve  tracemunch's  checking/reporting  the  type for the first
-       parameter, e.g., "WINDOW*" rather than "#1".
-     * modify  tracemunch  and  the panel library to show readable traces
-       for panel- and user-pointers.
+   test-packages:
+     * add  minimal  -h  (usage)  and  -V  (version)  getopt logic to all
+       ncurses-examples programs.
+     * fix an error in "@" command in test/ncurses.c F-menu
+     * add curses_trace to ifdef's for START_TRACE in test/test.priv.h
+     * improve pthread-configuration for test/worm.c
+     * add setlocale call to several test-programs.
+     * workaround  in  test/picsmap.c  for  use of floating point for rgb
+       values by ImageMagick 6.9.11, which appears to use the wrong upper
+       limit.
+     * use  static libraries for AdaCurses test-package for Mageia, since
+       no gprbuild package is available.
+     * install  Ada95  sample  programs  in  libexecdir, adding a wrapper
+       script to invoke those.
+     * install  ncurses-examples programs in libexecdir, adding a wrapper
+       script to invoke those.
 
    There are other new demo/test programs and reusable examples:
 
-   back_ground
-          to exercise the wide-character background functions.
+   test/combine
+          demonstrate combining characters
 
-   move_field
-          to  demonstrate move_field, and a stub for a corresponding demo
-          of dup_field.
+   test/test_delwin
+          demonstrate deleting a window
 
-   test_tparm
-          for checking tparm changes.
+   test/test_mouse
+          observe  mouse  events  in  the  raw terminal or parsed ncurses
+          modes
+
+   test/test_unget_wch
+          demonstrate the unget_wch and unget functions
 
   Terminal database
 
    There are several new terminal descriptions:
-
-     absolute,    att610+cvis,    foot,    foot-direct,   hp98550-color,
-     hpterm-color2,   hterm,   hterm-256color,   linux-s,  putty+keypad,
-     putty+screen,    putty-screen,    screen.linux-s,   scrt/securecrt,
-     tmux-direct,  vt220+cvis,  vt220+cvis8, vt220+pcedit, vt220+vtedit,
-     vt220-base,     vt52+keypad,    xterm+256color2,    xterm+88color2,
-     xterm-direct16,       xterm-direct256,      xterm+nofkeys,      and
-     xterm+nopcfkeys.
+     * mosh
+     * mosh-256color
+     * teken-16color
+     * teken-sc
+     * teken-vt
+     * xgterm
 
    There  are  many  changes to existing terminal descriptions. Some were
    updates to several descriptions:
-     * correct use-ordering in some xterm-direct flavors
-     * fix   some   sgr   inconsistencies  in  d230c,  ibm6153,  ibm6154,
-       ncrvt100an
-     * improve vt50h and vt52 based on DECScope manual
-     * use hp+arrows in a few places
-     * use hp+pfk-cr in a few places
-     * use  vt220+cvis  in  st,  terminology,  termite  since they ignore
-       blinking-cursor detail in att610+cvis
+     * make description-fields distinct
+     * fix errata in description fields
+     * add/use several building-blocks:
+          + aixterm+sl
+          + ansi+cpr
+          + apollo+vt132
+          + decid+cpr
+          + ncr260vp+sl
+          + wyse+sl
+          + x10term+sl
+          + xterm+acs
+          + xterm+alt47
 
    while  others  affected specific descriptions. These were retested, to
    take into account changes by their developers:
-
-     kitty+common, mlterm3, ms-terminal
+     * kitty
+     * teken
 
    while  these are specific fixes based on reviewing documentation, user
    reports, or warnings from tic:
 
-   aaa+dec, aaa+rv
-          correct rmacs/smacs
+   att610+cvis0
+          amended note as per documentation for att610, att620, att730
 
-   aaa+rv
-          correct sgr
+   kon, kon2, jfbterm
+          revise to undo "linux2.6" change to smacs/rmacs/enacs
 
-   icl6404
-          correct csr
+   st-0.6
+          add dim, ecma+strikeout
 
-   kitty
-          use att610+cvis, xterm+tmux and ansi+enq
+   foot+base
+          add xterm+sl-alt
 
-   konsole-base
-          re-enable "bel"
+   dec+sl
+          correct dsl in dec+sl
 
-   linux2.6
-          fix pound-sign mapping in acsc
+   mintty and tmux
+          correct setal in mintty/tmux entries, add to vte-2018
 
-   linux3.0
-          modify to reflect default mapping of shift-tab by kbd 1.14
-
-   pccons
-          fill in some missing pieces, to make it comparable to the vt220
-          entry
+   nsterm
+          modify nsterm to use xterm+alt1049
 
    putty
-          use vt100+fnkeys, add rep
+          modify putty to use xterm+alt1049
 
-   screen
-          use vt100+enq
-
-   terminator
-          corrected tsl capability
-
-   ti916
-          correct cup
-
-   tmux
-          change kbs to ^?
-
-   vt220
-          use vt220+cvis
-
-   vt420+lrmm
-          add smglp and smgrp
-
-   vt420
-          use vt420+lrmm
-
-   xterm-new
-          add nel
-
-   xterm-vt52
-          use vt52+keypad
+   vte-2018
+          add blink and setal
 
    A few entries use extensions (user-defined terminal capabilities):
-     * add   shifted   Linux  console  keys  in  linux+sfkeys  entry  for
-       screen.linux
-     * add Smulx to alacritty
-     * add kbeg to xterm+keypad to accommodate termcap applications
-     * add  extensions  in  xterm+tmux and ecma+strikeout to ms-terminal,
-       but cancel the non-working Cr and Ms capabilities
+     * use  ansi+enq  and  decid+cpr in cases where the terminal probably
+       supported the u6-u9 extension
+     * remove u6-u9 from teken-2018
+     * use  NQ  to flag entries where the terminal does not support query
+       and response
+     * add/use bracketed+paste to help identify terminals supporting this
+       xterm feature
+     * modify  samples  for xterm mouse 1002/1003 modes to use 1006 mode,
+       and also provide for focus in/out responses
+     * xterm  patch  #371 supports DEC-compatible status-line. add dec+sl
+       to  xterm-new, per xterm #371, add xterm-p371, add xterm-p370, for
+       use  in  older  terminals, and set "xterm-new" to "xterm-p370" (to
+       ease adoption).
 
   Documentation
 
@@ -308,164 +247,123 @@ Release Notes
    features   and   show   how   they  evolved,  there  are  corrections,
    clarifications, etc.:
      * Corrections:
-          + make  opts  extension  for  getcchar  work  as documented for
-            ncurses 6.1, adding "-g" flag to demo_new_pair to illustrate.
-          + modify  tset  "-q"  option to refrain from modifying terminal
-            modes, to match the documentation.
+          + remove a stray '/' from description of %g in terminfo(5).
+          + correct/improve  font-formatting in curs_getch.3x, as well as
+            other manual pages.
      * New/improved history and portability sections:
-          + improve documentation for tparm and static/dynamic variables.
-          + add   history   note  to  curs_scanw.3x  for  <stdarg.h>  and
-            <varargs.h>
-          + add   history  note  to  curs_printw.3x  for  <stdarg.h>  and
-            <varargs.h>
-          + add portability note to ncurses.3x regarding <stdarg.h>
-          + add   historical   notes   to   tput,   curses-terminfo   and
-            curses-color manpages based on source-code for SVr2, SVr3 and
-            SVr4.
-          + improve  history  section  for tset manpage based on the 1BSD
-            tarball,  which  preceded  BSD's  SCCS  checkins by more than
-            three years.
+          + add portability notes for delscreen and delwin in manual.
+          + improve curs_slk.3x discussion of extensions and portability
      * Other improvements:
-          + explain  in ncurses.3x that functions in the tinfo library do
-            not rely upon wide-characters.
-          + improve   manual   page  for  panel  library,  extending  the
-            portability section as well as documenting error-returns.
-          + add  section  on  margins  to terminfo.5, adapted from X/Open
-            Curses.
-          + improve man/term.5 section on legacy storage format.
-          + add a note in terminfo.5 explaining that no-parameter strings
-            such as sgr0 or cnorm should not be used with tparm.
-          + improve description of BSD-style padding in curs_termcap.3x
-          + improve  discussion  of  padding  versus  tparm  and tputs in
-            man/curs_terminfo.3x
-          + add a note in manual page to explain ungetch vs unget_wch.
-          + improve  description  of error-returns in waddch and waddnstr
-            manual pages.
+          + improve  curs_bkgd.3x,  explaining  that  bkgdset  can affect
+            results for bkgd
+          + add note on portable memory-leak checking in curs_memleaks.3x
+          + expanded description in resizeterm.3x
+          + add  section  on  releasing  memory  to  curs_termcap.3x  and
+            curs_terminfo.3x manpages.
+          + add  clarification  of  the  scope  of  dynamic  variables in
+            terminfo(5).
+          + improve formatting of ncurses-intro.html and hackguide.html
+          + improve curs_clear.3x links to other pages
+          + update  ncurses-howto,  making documentation fixes along with
+            corrections to example programs.
+          + use  newer  version  1.36 of gnathtml for generating Ada html
+            files.
+          + update external links in Ada95.html
 
    There  are  no new manual pages (all of the manual page updates are to
    existing pages).
 
-   Some  of  the  improvements  are  more subtle, relating to the way the
-   information  is  presented. For instance, hyphenation is suppressed in
-   the HTML files generated from manual pages because an upgrade to groff
-   gave  noticeably  poorer  results,  interfering  with  the  process of
-   creating links between the resulting webpages.
-
   Interesting bug-fixes
 
-   While  there  were  many bugs fixed during development of ncurses 6.3,
+   While  there  were  many bugs fixed during development of ncurses 6.4,
    only  a  few  (the  reason  for  this release) were both important and
    interesting. Most of the bug-fixes were for local issues which did not
    affect  compatibility across releases. Since those are detailed in the
    NEWS file no elaboration is needed here.
 
-   The interesting bugs were:
-     * modify wbkgd and wbkgrnd to avoid storing a null in the background
-       character, because it may be used in cases where the corresponding
-       0x80 is not treated as a null.
-       This  was  a regression introduced in ncurses 6.2 (reported on the
-       mailing list), for which the workaround was to specify a blank for
-       the background character.
-     * remove  output-related  checks  for  nl/nonl (also reported on the
-       mailing list).
-     * improve  tparm  implementation of %P and %g, more closely matching
-       SVr4  terminfo.  Those  denote  static  and  dynamic  variables in
-       terminfo expressions.
-       Exactly  what those terms meant was never documented before in any
-       implementation of curses, aside from source code. Unlike the other
-       two  fixes,  the  problem  was discovered while studying OpenBSD's
-       version of tset.
+   The  interesting  bugs were those dealing with memory leaks and buffer
+   overflows.  Although  the utilities are designed for text files (which
+   they do properly), some choose to test them with non-text files.
+     * Text  files  contain  no  embedded  nulls.  Also,  they end with a
+       newline.  Feeding tic non-text files exposed a few cases where the
+       program  did  not  check  for  those  issues. As a result, further
+       processing  of the input found limit-checks whose assumptions were
+       invalid.
+     * Fixing  the limit-checks (first) found a problem with tic managing
+       the  list  of  strings  in  a terminal description. In merging two
+       terminal  descriptions  (i.e.,  the  "use="  feature), tic was not
+       allocating  a  complete copy. A quick repair for that introduced a
+       memory leak.
+     * The  checks  for non-text files are improved (i.e., embedded nulls
+       in  the  input  file  will  cause  tic  to  reject  it rather than
+       attempting to process it).
+     * The string allocations in tic are likewise improved.
 
   Configuration changes
 
     Major changes
 
-   There  are  no  major  changes. Several new options were added to ease
-   integration  of packages with systems using different versions of GNAT
-   and ncurses. Also, improvements were made to configure checks.
+   There  are  no  major  changes.  No  new  options  were added. Several
+   improvements were made to configure checks.
 
     Configuration options
 
    There are a few new/modified configure options:
 
-   --enable-fvisibility
-          new  configure  option  and  check  for gcc -fvisibility=hidden
-          feature
+   --with-abi-version
+          add ABI 7 defaults to configure script.
 
-   --enable-leaks
-          corrected  to allow turning leak-checking off later in a set of
-          options.
+   --with-caps
+          add   warning   in  configure  script  if  file  specified  for
+          "--with-caps" does not exist.
 
-   --enable-stdnoreturn
-          new  configure  option  makes the _Noreturn keyword optional to
-          ease transition.
+   --with-manpage-format
+          bzip2 and xz compression are now supported
 
-   --disable-pkg-ldflags
-          revised option also controls whether $LDFLAGS from the build is
-          provided in "-config" and ".pc" files.
-
-   --disable-root-access
-          add  configure  option  which  tells  ncurses  to disallow most
-          file-opens by setuid processes.
-
-   --disable-wattr-macros
-          changed  default  to  help  packagers  who  reuse wide ncursesw
-          header file with non-wide ncurses library.
-
-   --with-pkg-config-libdir
-          revised  option  uses the actual search path from pkg-config or
-          pkgconf using the output from --debug.
-
-   --with-ada-libname
-          --with-form-libname
-          --with-menu-libname
-          --with-panel-libname
-          new several --with-xxx-libname options, to help with pkgsrc
+   --with-xterm-kbs
+          add    check/warning    in    configure    script   if   option
+          "--with-xterm-kbs" is missing or inconsistent
 
   Portability
 
    Many  of  the  portability  changes  are implemented via the configure
    script:
-     * add  a  special case in the configure script to work around one of
-       the build-time breakages reported for OpenBSD 6 here:
-
-     https://www.mail-archive.com/bugs@openbsd.org/msg13200.html
-     * modify configure check for libtool to prevent accidental use of an
-       OpenBSD program which uses the same name.
-     * modify  configuration  checks  for  build-time  tic/infocmp to use
-       AC_CHECK_TOOL. That can still be overridden by --with-tic-path and
-       --with-infocmp-path when fallbacks are used, but even if not using
-       fallbacks, the improved check may help with cross-compiling.
-     * relax modification-time comparison in CF_LINK_FUNCS to allow it to
-       accept link() function with NFS filesystems which change the mtime
-       on the link target, e.g., several BSD systems.
-     * modify  configure  check  for  c89/c99 aliases of clang to use its
-       -std  option instead, because some platforms, in particular macOS,
-       do not provide workable c89/c99 aliases.
-     * modify  CF_NCURSES_CONFIG  to work around Xcode's c99 "-W" option,
-       which conflicts with conventional use for passing linker options.
-     * modify   configure   scripts   to   filter  out  redefinitions  of
-       _XOPEN_SOURCE,  e.g., for NetBSD which generally supports 500, but
-       600 is needed for ncursesw.
+     * amend  configure option's auto-search to account for systems where
+       none of the directories known to pkg-config exist
+     * corrected regex needed for older pkg-config used in Solaris 10
+     * improve  handling of --with-pkg-config-libdir option, allowing for
+       the case where either $PKG_CONFIG_LIBDIR or the option value has a
+       colon-separated list of directories
+     * if   the   --with-pkg-config-libdir   option  is  not  given,  use
+       ${libdir}/pkgconfig as a default
+     * improve search-path check for pkg-config, e.g., for Debian testing
+       which installs pkg-config with architecture-prefixes.
+     * build-fix for cross-compiling to MingW, conditionally add -lssp
+     * improve configure check for getttynam
+     * fixes to build with dietlibc:
+          + add configure check for fpathconf
+          + add   configure   check   for  math  sine/cosine,  needed  in
+            test/tclock, and eliminate pow() from test/hanoi
+          + use wcsnlen as an alternative to wmemchr if it is not found
+     * modify  configure macro CF_BUILD_CC to check if the build-compiler
+       works,  rather  than that it is different from the cross-compiler,
+       e.g.,  to  accommodate  a  compiler  which  can be used for either
+       purpose with different flags
+     * modify  configure/scripts  to work around interference by GNU grep
+       3.8
 
    Here are some of the other portability fixes:
-     * change   configure-check   and   source-code  for  gcc's  noreturn
-       attribute  to  assume  it is a prefix rather than suffix, matching
-       c11's _Noreturn convention.
-     * modify mk-1st.awk to account for extra-suffix configure option.
-     * build-fix for termsort module when configured with termcap.
-     * modify  configure  script  and  makefiles to support ".PHONY" make
-       program feature.
-     * amend  libtool  configuration  to  add dependency for install.tic,
-       etc., in ncurses/Makefile on the lower-level libraries.
-     * modify Ada95 source-generation utility to write to a file given as
-       parameter rather than to the standard output, allowing builds with
-       MinGW.
-     * amend  tic/infocmp  check  to  allow  for  the  respective  tool's
-       absence.
-     * build-fixes for gnat 10.1.1, whose gnatmake drops integration with
-       gprbuild.
-     * correct configure version-check/warning for g++ to allow for 10.x
+     * change  man_db.renames  to  template,  to  handle  ncurses*-config
+       script with the --extra-suffix configure option.
+     * update   CF_XOPEN_SOURCE  macro,  adding  variants  "gnueabi"  and
+       "gnueabihf" to get _DEFAULT_SOURCE special case, as well as adding
+       GNU  libc  suffixes for "abi64", "abin32", "x32" to distinguish it
+       from other libc flavors.
+     * work  around  musl's  nonstandard  use  of  feature test macros by
+       adding  a  definition  for NCURSES_WIDECHAR to the generated ".pc"
+       and *-config files.
+     * use  "command  -v"  rather than "type" in Ada95/gen/Makefile.in to
+       fix a portability issue.
      _________________________________________________________________
 
 Features of ncurses
@@ -717,13 +615,13 @@ Development activities
 
    Beta versions of ncurses are made available at
 
-     ftp://ftp.invisible-island.net/ncurses/current/ and
+     https://invisible-island.net/archives/ncurses/current/ and
      https://invisible-mirror.net/archives/ncurses/current/ .
 
    Patches to the current release are made available at
 
-     ftp://ftp.invisible-island.net/ncurses/6.2/ and
-     https://invisible-mirror.net/archives/ncurses/6.2/ .
+     https://invisible-island.net/archives/ncurses/6.3/ and
+     https://invisible-mirror.net/archives/ncurses/6.3/ .
 
    There is an archive of the mailing list here:
 

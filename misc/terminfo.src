@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1039 $
-#	$Date: 2022/12/24 18:18:58 $
+#	$Revision: 1.1041 $
+#	$Date: 2022/12/29 20:11:56 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -5768,7 +5768,7 @@ xterm1|xterm terminal emulator ignoring the alternate screen buffer,
 # detail.  The names for the extended capabilities here were introduced by vim
 # in January 2017.
 bracketed+paste|xterm bracketed paste,
-	BD=\E[?2004l, BE=\E[?2004h, PD=\E[201~, PE=\E[200~,
+	BD=\E[?2004l, BE=\E[?2004h, PE=\E[201~, PS=\E[200~,
 
 #### XTERM Mouse
 # The xterm mouse protocol is used by other terminal emulators.
@@ -8210,7 +8210,7 @@ screen|VT 100/ANSI X3.64 virtual terminal,
 	use=screen4,
 
 no+brackets|cancel bracketed paste,
-	BD@, BE@, PD@, PE@,
+	BD@, BE@, PE@, PS@,
 
 # The bce and status-line entries are from screen 3.9.13 (and require some
 # changes to .screenrc).
@@ -25508,8 +25508,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #
 # BE enables bracketed paste
 # BD disables bracketed paste
-# PE is sent before the pasted text
-# PD is sent after the pasted text
+# PS is sent before the pasted text
+# PE is sent after the pasted text
 #
 # Here are the other xterm-related extensions which are used in this file:
 #
@@ -27712,5 +27712,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2022-12-24
 #	+ add/use bracketed+paste to help identify terminals supporting this
 #	  xterm feature (prompted by discussion with Bram Moolenaar) -TD
+#
+# 2022-12-29
+#	+ correct PS vs PE names in bracketed+paste (report by Bram Moolenaar)
+#	  -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

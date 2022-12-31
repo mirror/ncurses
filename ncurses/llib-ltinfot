@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2022 Thomas E. Dickey                                *
  * Copyright 2013-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -298,6 +298,11 @@ const TERMTYPE *_nc_fallback(
 
 #undef _nc_free_termtype
 void	_nc_free_termtype(
+		TERMTYPE *ptr)
+		{ /* void */ }
+
+#undef _nc_free_termtype1
+void	_nc_free_termtype1(
 		TERMTYPE *ptr)
 		{ /* void */ }
 
@@ -972,6 +977,11 @@ char	*tigetstr(
 
 #undef _nc_tparm_err
 int	_nc_tparm_err;
+
+#undef _nc_free_tparm
+void	_nc_free_tparm(
+		TERMINAL *termp)
+		{ /* void */ }
 
 #undef _nc_tparm_analyze
 int	_nc_tparm_analyze(
