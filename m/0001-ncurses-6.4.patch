@@ -1,0 +1,36 @@
+From d95c6f1429c30562ca4604482b1379776d594490 Mon Sep 17 00:00:00 2001
+From: "Thomas E. Dickey" <dickey@invisible-island.net>
+Date: Sat, 31 Dec 2022 23:49:40 +0000
+Subject: [PATCH] ncurses 6.4
+
+---
+ ncurses/tinfo/MKkeys_list.sh | 0
+ progs/MKtermsort.sh          | 0
+ test/savescreen.sh           | 0
+ test/tput-colorcube          | 0
+ test/tput-initc              | 0
+ 5 files changed, 0 insertions(+), 0 deletions(-)
+ mode change 100644 => 100755 ncurses/tinfo/MKkeys_list.sh
+ mode change 100644 => 100755 progs/MKtermsort.sh
+ mode change 100644 => 100755 test/savescreen.sh
+ mode change 100644 => 100755 test/tput-colorcube
+ mode change 100644 => 100755 test/tput-initc
+
+diff --git a/ncurses/tinfo/MKkeys_list.sh b/ncurses/tinfo/MKkeys_list.sh
+old mode 100644
+new mode 100755
+diff --git a/progs/MKtermsort.sh b/progs/MKtermsort.sh
+old mode 100644
+new mode 100755
+diff --git a/test/savescreen.sh b/test/savescreen.sh
+old mode 100644
+new mode 100755
+diff --git a/test/tput-colorcube b/test/tput-colorcube
+old mode 100644
+new mode 100755
+diff --git a/test/tput-initc b/test/tput-initc
+old mode 100644
+new mode 100755
+-- 
+2.30.2
+

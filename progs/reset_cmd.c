@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2019-2021,2023 Thomas E. Dickey                                *
  * Copyright 2016,2017 Free Software Foundation, Inc.                       *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -53,7 +53,7 @@
 #include <sys/ptem.h>
 #endif
 
-MODULE_ID("$Id: reset_cmd.c,v 1.28 2021/10/02 18:08:44 tom Exp $")
+MODULE_ID("$Id: reset_cmd.c,v 1.29 2023/01/07 21:50:34 tom Exp $")
 
 /*
  * SCO defines TIOCGSIZE and the corresponding struct.  Other systems (SunOS,
@@ -203,6 +203,9 @@ reset_tty_settings(int fd, TTY * tty_settings, int noset)
 #endif
     reset_char(VEOF, CEOF);
     reset_char(VERASE, CERASE);
+#if defined(VERASE2) && defined(CERASE2)
+    reset_char(VERASE2, CERASE2);
+#endif
 #if defined(VFLUSH) && defined(CFLUSH)
     reset_char(VFLUSH, CFLUSH);
 #endif

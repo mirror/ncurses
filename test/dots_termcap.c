@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 2013-2014,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.30 2022/12/10 23:22:09 tom Exp $
+ * $Id: dots_termcap.c,v 1.31 2023/01/07 17:21:48 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -228,9 +228,10 @@ main(int argc, char *argv[])
 	switch (ch) {
 	case 'T':
 	    need = 6 + strlen(optarg);
-	    my_env = malloc(need);
-	    _nc_SPRINTF(my_env, _nc_SLIMIT(need) "TERM=%s", optarg);
-	    putenv(my_env);
+	    if ((my_env = malloc(need)) != NULL) {
+		_nc_SPRINTF(my_env, _nc_SLIMIT(need) "TERM=%s", optarg);
+		putenv(my_env);
+	    }
 	    break;
 	case 'e':
 	    e_option = 1;

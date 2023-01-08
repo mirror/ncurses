@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.206 2022/12/04 00:08:15 tom Exp $ */
+/* $Id: test.priv.h,v 1.207 2023/01/07 17:15:50 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -740,9 +740,14 @@ static char *version_common(char **argv) { \
 	char *base = argv[0]; \
 	char *leaf = strrchr(base, '/'); \
 	char *result = malloc(strlen(base) + 80); \
-	if (leaf++ == NULL) leaf = base; \
-	sprintf(result, "%.20s: ", leaf); \
-	format_version(result + strlen(result)); \
+	if (result == NULL) { \
+	    static char unknown[] = "?"; \
+	    result = unknown; \
+	} else { \
+	    if (leaf++ == NULL) leaf = base; \
+	    sprintf(result, "%.20s: ", leaf); \
+	    format_version(result + strlen(result)); \
+	} \
 	return result; \
 } \
 static void show_version(char **argv) { \

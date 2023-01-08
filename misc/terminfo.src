@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1041 $
-#	$Date: 2022/12/29 20:11:56 $
+#	$Revision: 1.1045 $
+#	$Date: 2023/01/08 00:32:15 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4421,6 +4421,7 @@ mintty+common|shared capabilities for mintty,
 	use=ecma+strikeout, use=ecma+index, use=vt420+lrmm,
 	use=xterm+sm+1006, use=xterm+pcfkeys, use=xterm+tmux,
 	use=ecma+italics, use=xterm-basic, use=bracketed+paste,
+	use=report+version,
 # 2019-06-09: These capabilities are commented-out for compatibility with
 # existing releases 5.9-6.1, and may be considered for inclusion after the
 # release of ncurses 6.2:
@@ -4994,6 +4995,7 @@ xterm-p370|xterm patch #370,
 	kcbt=\E[Z, kent=\EOM, nel=\EE, use=ecma+index,
 	use=ansi+rep, use=ecma+strikeout, use=xterm+pcfkeys,
 	use=xterm+nofkeys, use=bracketed+paste,
+	use=report+version,
 
 xterm-p371|xterm patch #371,
 	use=dec+sl, use=xterm-p370,
@@ -5766,9 +5768,18 @@ xterm1|xterm terminal emulator ignoring the alternate screen buffer,
 # larger feature for manipulating the clipboard selection.  Few terminals aside
 # from xterm fully implement the clipboard feature, but several copy this
 # detail.  The names for the extended capabilities here were introduced by vim
-# in January 2017.
+# in January 2017, but used internally.  In 2023, vim patch 9.0.1117 is needed
+# to work with this change.
 bracketed+paste|xterm bracketed paste,
 	BD=\E[?2004l, BE=\E[?2004h, PE=\E[201~, PS=\E[200~,
+
+# https://invisible-island.net/xterm/xterm.log.html#xterm_354
+#
+# The response is a DSR sequence identifying the version: DCS > | text ST
+# For example:
+#	^[P>|XTerm(354)^[\
+report+version|Report xterm name and version (XTVERSION).,
+	RV=\E[>0q,
 
 #### XTERM Mouse
 # The xterm mouse protocol is used by other terminal emulators.
@@ -6440,6 +6451,7 @@ konsole-base|KDE console window (common),
 	use=ecma+index, use=xterm+sm+1006, use=ecma+strikeout,
 	use=ecma+italics, use=ecma+color, use=xterm-r6,
 	use=vt220+cvis, use=bracketed+paste,
+	use=report+version,
 
 # The keytab feature was introduced in 0.9.12 (February 2000) with "linux" and
 # "vt100" key-table files along with a compiled-in default key-table.
@@ -6599,6 +6611,7 @@ mlterm3|multi lingual terminal emulator 3.x,
 	use=xterm+pcc2, use=xterm+pce2, use=xterm+meta,
 	use=xterm+alt+title, use=xterm+sm+1006,
 	use=vt100+pfkeys, use=bracketed+paste, use=mlterm2,
+	use=report+version,
 
 # This is mlterm 2.9.3's mlterm.ti, with some additions/corrections -TD
 #
@@ -7683,7 +7696,7 @@ terminology-1.8.1|EFL-based terminal emulator (1.8.1),
 	use=ecma+index, use=xterm+256setaf, use=ansi+rep,
 	use=ecma+strikeout, use=xterm+sm+1006,
 	use=xterm+pcfkeys, use=xterm+tmux, use=vt220+cvis,
-	use=ecma+italics, use=xterm-basic,
+	use=ecma+italics, use=xterm-basic, use=report+version,
 
 terminology|EFL-based terminal emulator,
 	use=terminology-1.8.1,
@@ -7912,7 +7925,7 @@ kitty+common|KovId's TTY common properties,
 	use=xterm+pcfkeys, use=xterm+sl-twm,
 	use=ecma+strikeout, use=ecma+italics,
 	use=xterm+alt1049, use=att610+cvis, use=xterm+tmux,
-	use=bracketed+paste,
+	use=bracketed+paste, use=report+version,
 
 kitty+setal|set underline colors (nonstandard),
 	setal=\E[58:2::%p1%{65536}%/%d:%p1%{256}%/%{255}%&%d:%p1
@@ -7974,6 +7987,7 @@ foot+base|foot base fragment,
 	use=ecma+strikeout, use=xterm+alt+title,
 	use=xterm+pcfkeys, use=xterm+sm+1006, use=xterm+tmux2,
 	use=xterm+sl-alt, use=bracketed+paste,
+	use=report+version,
 
 ######## WEB CLIENTS
 
@@ -8192,18 +8206,18 @@ screen-base|VT 100/ANSI X3.64 virtual terminal (base),
 	dl=\E[%p1%dM, dl1=\E[M, ed=\E[J, el=\E[K, el1=\E[1K,
 	enacs=\E(B\E)0, flash=\Eg, home=\E[H, hpa=\E[%i%p1%dG,
 	ht=^I, hts=\EH, ich=\E[%p1%d@, il=\E[%p1%dL, il1=\E[L,
-	ind=\n, indn=\E[%p1%dS, is2=\E)0, kbs=^H, kcbt=\E[Z,
-	kcub1=\EOD, kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kf1=\EOP,
-	kf10=\E[21~, kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR,
-	kf4=\EOS, kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~,
-	kf9=\E[20~, kmous=\E[M, nel=\EE, rc=\E8, rev=\E[7m, ri=\EM,
-	rmacs=^O, rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m,
-	rmul=\E[24m, rs2=\Ec\E[?1000l\E[?25h, sc=\E7,
+	ind=\n, indn=\E[%p1%dS, is2=\E)0, kcbt=\E[Z, kcub1=\EOD,
+	kcud1=\EOB, kcuf1=\EOC, kcuu1=\EOA, kf1=\EOP, kf10=\E[21~,
+	kf11=\E[23~, kf12=\E[24~, kf2=\EOQ, kf3=\EOR, kf4=\EOS,
+	kf5=\E[15~, kf6=\E[17~, kf7=\E[18~, kf8=\E[19~, kf9=\E[20~,
+	kmous=\E[M, nel=\EE, rc=\E8, rev=\E[7m, ri=\EM, rmacs=^O,
+	rmir=\E[4l, rmkx=\E[?1l\E>, rmso=\E[23m, rmul=\E[24m,
+	rs2=\Ec\E[?1000l\E[?25h, sc=\E7,
 	sgr=\E[0%?%p6%t;1%;%?%p1%t;3%;%?%p2%t;4%;%?%p3%t;7%;%?%p4%t;
 	    5%;%?%p5%t;2%;m%?%p9%t\016%e\017%;,
 	sgr0=\E[m\017, smacs=^N, smir=\E[4h, smkx=\E[?1h\E=,
 	smso=\E[3m, smul=\E[4m, tbc=\E[3g, vpa=\E[%i%p1%dd,
-	E0=\E(B, S0=\E(%p1%c, use=vt220+pcedit,
+	E0=\E(B, S0=\E(%p1%c, use=xterm+kbs, use=vt220+pcedit,
 	use=xterm+alt1049, use=ecma+color, use=vt100+enq,
 
 screen|VT 100/ANSI X3.64 virtual terminal,
@@ -8259,7 +8273,7 @@ screen.xterm-256color|GNU Screen with xterm using 256 colors,
 	use=xterm+256setaf, use=screen.xterm-new,
 
 screen.konsole-256color|GNU Screen with konsole using 256 colors,
-	use=xterm+256setaf, use=screen.konsole,
+	RV@, use=xterm+256setaf, use=screen.konsole,
 
 screen.vte-256color|GNU Screen with vte using 256 colors,
 	use=xterm+256setaf, use=screen.vte,
@@ -8268,7 +8282,7 @@ screen.putty-256color|GNU Screen with putty using 256 colors,
 	use=xterm+256setaf, use=screen.putty,
 
 screen.mlterm-256color|GNU Screen with mlterm using 256 colors,
-	use=xterm+256setaf, use=screen.mlterm,
+	RV@, use=xterm+256setaf, use=screen.mlterm,
 
 # ======================================================================
 
@@ -8356,7 +8370,7 @@ screen.gnome|screen in GNOME Terminal,
 	use=xterm+x11mouse, use=screen+italics,
 	use=screen+fkeys, use=no+brackets, use=gnome,
 screen.konsole|screen in KDE console window,
-	use=xterm+x11mouse, use=screen+italics,
+	RV@, use=xterm+x11mouse, use=screen+italics,
 	use=screen+fkeys, use=no+brackets, use=konsole,
 # fix the backspace key
 screen.linux|screen.linux-s|screen in Linux console,
@@ -8364,8 +8378,8 @@ screen.linux|screen.linux-s|screen in Linux console,
 	kbs=^?, kcbt@, use=linux+sfkeys, use=xterm+x11mouse,
 	use=screen+fkeys, use=screen,
 screen.mlterm|screen in mlterm,
-	use=xterm+x11mouse, use=screen+fkeys, use=no+brackets,
-	use=mlterm,
+	RV@, use=xterm+x11mouse, use=screen+fkeys,
+	use=no+brackets, use=mlterm,
 screen.putty|screen in putty,
 	use=xterm+x11mouse, use=screen+fkeys, use=no+brackets,
 	use=putty,
@@ -8480,7 +8494,7 @@ tmux|tmux terminal multiplexer,
 	smso=\E[7m, E3=\E[3J, Smulx=\E[4:%p1%dm,
 	use=ecma+italics, use=ecma+strikeout, use=xterm+edit,
 	use=xterm+pcfkeys, use=xterm+sl, use=xterm+tmux,
-	use=screen, use=bracketed+paste,
+	use=screen, use=bracketed+paste, use=report+version,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
@@ -25520,6 +25534,7 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # Ms modifies the selection/clipboard.  Its parameters are
 #	p1 = the storage unit (clipboard, selection or cut buffer)
 #	p2 = the base64-encoded clipboard content.
+# RV requests the terminal to report its version, e.g., like u8/u9.
 # Se resets the cursor style to the terminal power-on default.
 # Ss is a string capability with one numeric parameter.  It is used to set the
 #    cursor style as described by the DECSCUSR function to a block or
@@ -27716,5 +27731,11 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # 2022-12-29
 #	+ correct PS vs PE names in bracketed+paste (report by Bram Moolenaar)
 #	  -TD
+#
+# 2022-01-07
+#	+ add comment to bracketed+paste explaining that vim patch 9.0.1117 is
+#	  needed for use with the updated xterm descriptions (suggested by Bram
+#	  Moolenaar).
+#	+ add RV report+version (suggested by Bram Moolenaar).
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

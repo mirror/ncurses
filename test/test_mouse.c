@@ -1,6 +1,6 @@
 /****************************************************************************
+ * Copyright 2022,2023 Thomas E. Dickey                                     *
  * Copyright 2022 Leonid S. Usov <leonid.s.usov at gmail.com>               *
- * Copyright 2022 Thomas E. Dickey                                          *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -22,7 +22,7 @@
  * THE USE OR OTHER DEALINGS IN THE SOFTWARE.                               *
  ****************************************************************************/
 /*
- * $Id: test_mouse.c,v 1.26 2022/12/04 00:40:11 tom Exp $
+ * $Id: test_mouse.c,v 1.27 2023/01/07 17:22:42 tom Exp $
  *
  * Author: Leonid S Usov
  *
@@ -165,8 +165,10 @@ main(int argc, char *argv[])
 	    break;
 	case 'T':
 	    my_environ = malloc(strlen(term_format) + strlen(optarg));
-	    sprintf(my_environ, term_format, optarg);
-	    putenv(my_environ);
+	    if (my_environ != NULL) {
+		sprintf(my_environ, term_format, optarg);
+		putenv(my_environ);
+	    }
 	    break;
 	case OPTS_VERSION:
 	    show_version(argv);

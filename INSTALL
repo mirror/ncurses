@@ -1,5 +1,5 @@
 -------------------------------------------------------------------------------
--- Copyright 2018-2021,2022 Thomas E. Dickey                                 --
+-- Copyright 2018-2022,2023 Thomas E. Dickey                                 --
 -- Copyright 1998-2017,2018 Free Software Foundation, Inc.                   --
 --                                                                           --
 -- Permission is hereby granted, free of charge, to any person obtaining a   --
@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: INSTALL,v 1.238 2022/12/29 20:30:06 tom Exp $
+-- $Id: INSTALL,v 1.240 2023/01/08 00:29:04 tom Exp $
 ---------------------------------------------------------------------
              How to install Ncurses/Terminfo on your system
 ---------------------------------------------------------------------
@@ -805,6 +805,11 @@ CONFIGURE OPTIONS:
 
     --enable-xmc-glitch
 	Compile-in support experimental xmc (magic cookie) code.
+
+    --with-abi-altered=NUM
+	Override the displayed (rather than compiled-in) ABI.  Only packagers
+	who have created configurations where the ABI differs from ncurses
+	should be interested in this option.
 
     --with-abi-version=NUM
 	Override the ABI version, which is used in shared library filenames.

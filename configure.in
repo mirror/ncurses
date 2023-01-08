@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2021,2022 Thomas E. Dickey                                *
+dnl Copyright 2018-2022,2023 Thomas E. Dickey                                *
 dnl Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.753 2022/11/05 20:14:56 tom Exp $
+dnl $Id: configure.in,v 1.755 2023/01/08 01:50:05 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.753 $)
+AC_REVISION($Revision: 1.755 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -60,6 +60,9 @@ cf_user_CFLAGS="$CFLAGS"
 CF_CFG_DEFAULTS
 ### Defaults for ncurses ABI
 CF_ABI_DEFAULTS
+
+### override ABI version, e.g., packagers
+CF_WITH_ABI_ALTERED
 
 ###	Checks for programs.
 AC_ARG_WITH(ada,
@@ -419,6 +422,10 @@ CF_WITH_LIB_PREFIX(cf_prefix)
 LIB_SUFFIX=
 AC_SUBST(LIB_SUFFIX)
 CF_PATHSEP
+
+# headers needed for checks...
+AC_CHECK_DECL(exit)
+AC_HEADER_DIRENT
 
 ###############################################################################
 
@@ -1265,7 +1272,7 @@ if test "x$with_ext_mouse" = xyes ; then
 	CF_NCURSES_ABI_6
 fi
 
-case $cf_cv_abi_version in
+case $cf_cv_abi_default in
 (5)
 	NCURSES_MOUSE_VERSION=1
 	;;
@@ -1756,8 +1763,6 @@ CF_MATH_LIB(MATH_LIB,pow(sin(x),x))
 AC_SUBST(MATH_LIB)
 
 ###	Checks for header files.
-AC_STDC_HEADERS
-AC_HEADER_DIRENT
 AC_HEADER_TIME
 CF_REGEX
 
@@ -2508,7 +2513,7 @@ cf_filter_syms=no
 if test -n "$RESULTING_SYMS"
 then
 	cf_filter_syms=$cf_dft_filter_syms
-	CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_version)
+	CF_VERBOSE(will map symbols to ABI=$cf_cv_abi_default)
 fi
 
 if test "x$WILDCARD_SYMS" = xno
@@ -2612,6 +2617,7 @@ WITH_OVERWRITE="$with_overwrite"
 cf_LIST_MODELS="$cf_list_models"
 cf_cv_VERSION_GNATMAKE=$cf_cv_VERSION_GNATMAKE
 cf_cv_VERSION_GPRBUILD=$cf_cv_VERSION_GPRBUILD
+cf_cv_abi_default="$cf_cv_abi_default"
 cf_cv_abi_version="$cf_cv_abi_version"
 cf_cv_do_relink="$cf_cv_do_relink"
 cf_cv_do_reranlib="$cf_cv_do_reranlib"
