@@ -1,5 +1,5 @@
 ##############################################################################
-# Copyright 2019-2021,2022 Thomas E. Dickey                                  #
+# Copyright 2019-2022,2023 Thomas E. Dickey                                  #
 #                                                                            #
 # Permission is hereby granted, free of charge, to any person obtaining a    #
 # copy of this software and associated documentation files (the "Software"), #
@@ -28,7 +28,7 @@
 #
 # Author: Thomas E. Dickey
 #
-# $Id: Caps-ncurses,v 1.12 2022/07/03 19:53:44 tom Exp $
+# $Id: Caps-ncurses,v 1.14 2023/01/15 01:02:07 tom Exp $
 #
 #############################################################################
 #
@@ -402,6 +402,17 @@ userdef	Ss	str	n	change the cursor style.
 userdef	rmxx	str	-	reset ECMA-48 strikeout/crossed-out attributes.
 userdef	smxx	str	-	set ECMA-48 strikeout/crossed-out attributes.
 #
+used_by vim
+userdef	BD	str	-	disables bracketed paste
+userdef	BE	str	-	enables bracketed paste
+userdef	PE	str	-	is sent after pasted text
+userdef	PS	str	-	is sent before pasted text
+userdef	RV	str	-	report terminal secondary device attributes
+userdef	XR	str	-	report terminal version as a free-format string.
+userdef	XF	bool	-	terminal supports xterm focus in/out
+userdef	rv	str	-	response to RV, regular expression
+userdef	xr	str	-	response to XR, regular expression
+#
 used_by xterm
 userdef	csl	str	-	clear status line
 userdef	kDC3	str	-	alt delete-character
@@ -460,4 +471,6 @@ userdef	ka2	str	-	vt220-keypad extensions
 userdef	kb1	str	-	vt220-keypad extensions
 userdef	kb3	str	-	vt220-keypad extensions
 userdef	kc2	str	-	vt220-keypad extensions
+userdef	kxIN	str	-	mouse response on focus-in
+userdef	kxOUT	str	-	mouse response on focus-out
 #############################################################################

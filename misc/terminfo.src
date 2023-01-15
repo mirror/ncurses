@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1045 $
-#	$Date: 2023/01/08 00:32:15 $
+#	$Revision: 1.1050 $
+#	$Date: 2023/01/15 00:26:15 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -4992,10 +4992,13 @@ xterm+nofkeys|building block for xterm fkey-variants,
 
 xterm-p370|xterm patch #370,
 	npc,
-	kcbt=\E[Z, kent=\EOM, nel=\EE, use=ecma+index,
-	use=ansi+rep, use=ecma+strikeout, use=xterm+pcfkeys,
-	use=xterm+nofkeys, use=bracketed+paste,
-	use=report+version,
+	kcbt=\E[Z, kent=\EOM, nel=\EE,
+	rv=\E\\[41;[1-6][0-9][0-9];0c,
+	xr=\EP>\\|XTerm\\([1-9][0-9]+\\)\E\\\\,
+	use=ecma+index, use=ansi+rep, use=ecma+strikeout,
+	use=xterm+pcfkeys, use=xterm+nofkeys,
+	use=bracketed+paste, use=report+version,
+	use=xterm+focus,
 
 xterm-p371|xterm patch #371,
 	use=dec+sl, use=xterm-p370,
@@ -5778,8 +5781,16 @@ bracketed+paste|xterm bracketed paste,
 # The response is a DSR sequence identifying the version: DCS > | text ST
 # For example:
 #	^[P>|XTerm(354)^[\
-report+version|Report xterm name and version (XTVERSION).,
-	RV=\E[>0q,
+report+version|Report xterm name and version (XTVERSION),
+	XR=\E[>0q, xr=\EP>\\|[ -~]+\E\\\\, use=report+da2,
+
+# Vim uses RV to denote the secondary device attributes.  Xterm documents the
+# - first parameter as the terminal type (extending it to VT100),
+# - the second as the patch number for xterm, and
+# - the third parameter as zero.
+# Other terminals may provide useful responses, though few are documented.
+report+da2|report secondary device attributes (DA2),
+	RV=\E[>c, rv=\E\\[[0-9]+;[0-9]+;[0-9]+c,
 
 #### XTERM Mouse
 # The xterm mouse protocol is used by other terminal emulators.
@@ -5882,6 +5893,7 @@ xterm-1003|example of xterm any-event mouse,
 	use=xterm+sm+1003, use=xterm,
 
 xterm+focus|xterm focus-in/out event "keys",
+	XF,
 	kxIN=\E[I, kxOUT=\E[O,
 
 # xterm patch #116 (1999/9/25) added Stephen P Wall's changes to support DEC
@@ -8273,7 +8285,7 @@ screen.xterm-256color|GNU Screen with xterm using 256 colors,
 	use=xterm+256setaf, use=screen.xterm-new,
 
 screen.konsole-256color|GNU Screen with konsole using 256 colors,
-	RV@, use=xterm+256setaf, use=screen.konsole,
+	XR@, use=xterm+256setaf, use=screen.konsole,
 
 screen.vte-256color|GNU Screen with vte using 256 colors,
 	use=xterm+256setaf, use=screen.vte,
@@ -8282,7 +8294,7 @@ screen.putty-256color|GNU Screen with putty using 256 colors,
 	use=xterm+256setaf, use=screen.putty,
 
 screen.mlterm-256color|GNU Screen with mlterm using 256 colors,
-	RV@, use=xterm+256setaf, use=screen.mlterm,
+	XR@, use=xterm+256setaf, use=screen.mlterm,
 
 # ======================================================================
 
@@ -8370,7 +8382,7 @@ screen.gnome|screen in GNOME Terminal,
 	use=xterm+x11mouse, use=screen+italics,
 	use=screen+fkeys, use=no+brackets, use=gnome,
 screen.konsole|screen in KDE console window,
-	RV@, use=xterm+x11mouse, use=screen+italics,
+	XR@, use=xterm+x11mouse, use=screen+italics,
 	use=screen+fkeys, use=no+brackets, use=konsole,
 # fix the backspace key
 screen.linux|screen.linux-s|screen in Linux console,
@@ -8378,7 +8390,7 @@ screen.linux|screen.linux-s|screen in Linux console,
 	kbs=^?, kcbt@, use=linux+sfkeys, use=xterm+x11mouse,
 	use=screen+fkeys, use=screen,
 screen.mlterm|screen in mlterm,
-	RV@, use=xterm+x11mouse, use=screen+fkeys,
+	XR@, use=xterm+x11mouse, use=screen+fkeys,
 	use=no+brackets, use=mlterm,
 screen.putty|screen in putty,
 	use=xterm+x11mouse, use=screen+fkeys, use=no+brackets,
@@ -8495,6 +8507,7 @@ tmux|tmux terminal multiplexer,
 	use=ecma+italics, use=ecma+strikeout, use=xterm+edit,
 	use=xterm+pcfkeys, use=xterm+sl, use=xterm+tmux,
 	use=screen, use=bracketed+paste, use=report+version,
+	use=xterm+focus,
 
 tmux-256color|tmux with 256 colors,
 	use=xterm+256setaf, use=tmux,
@@ -25534,7 +25547,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # Ms modifies the selection/clipboard.  Its parameters are
 #	p1 = the storage unit (clipboard, selection or cut buffer)
 #	p2 = the base64-encoded clipboard content.
-# RV requests the terminal to report its version, e.g., like u8/u9.
+# RV requests the terminal to report secondary device attributes (i.e, version).
+# rv shows the format of the terminal responses, as a regular expression.
 # Se resets the cursor style to the terminal power-on default.
 # Ss is a string capability with one numeric parameter.  It is used to set the
 #    cursor style as described by the DECSCUSR function to a block or
@@ -25554,6 +25568,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	p8 = x-ordinate ending region
 # Other extensions, used in xm:
 #	%u = UTF-8
+# XR requests the terminal to report its version as a free-format string.
+# xr shows the format of the terminal responses, as a regular expression.
 #
 #### Miscellaneous extensions:
 #
@@ -27737,5 +27753,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	  needed for use with the updated xterm descriptions (suggested by Bram
 #	  Moolenaar).
 #	+ add RV report+version (suggested by Bram Moolenaar).
+#
+# 2022-01-14
+#	+ change RV to XR/xr, to avoid conflict with pre-existing usage in vim,
+#	  to use RV/rv to denote DA2 and its response (discussion with Bram
+#	  Moolenaar) -TD
+#	+ add XF flag to xterm+focus so that termcap applications can be aware
+#	  of terminals which may support focus in/out -TD
+#	+ use xterm+focus in xterm-p370 and tmux -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!
