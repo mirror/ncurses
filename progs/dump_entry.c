@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -40,7 +40,7 @@
 #include <termsort.h>		/* this C file is generated */
 #include <parametrized.h>	/* so is this */
 
-MODULE_ID("$Id: dump_entry.c,v 1.190 2022/01/22 21:23:58 tom Exp $")
+MODULE_ID("$Id: dump_entry.c,v 1.195 2023/01/21 21:25:21 tom Exp $")
 
 #define DISCARD(string) string = ABSENT_STRING
 #define PRINTF (void) printf
@@ -933,7 +933,7 @@ fmt_entry(TERMTYPE2 *tterm,
 
     strcpy_DYN(&outbuf, 0);
     if (content_only) {
-	column = indent;	/* FIXME: workaround to prevent empty lines */
+	column = indent;	/* workaround to prevent empty lines */
     } else {
 	strcpy_DYN(&outbuf, tterm->term_names);
 
@@ -1553,6 +1553,7 @@ dump_entry(TERMTYPE2 *tterm,
     save_sgr = set_attributes;
 
     if ((FMT_ENTRY() > critlen)
+	&& TcOutput()
 	&& limited) {
 
 	save_tterm = *tterm;
@@ -1651,15 +1652,25 @@ dump_entry(TERMTYPE2 *tterm,
 }
 
 void
-dump_uses(const char *name, bool infodump)
+dump_uses(const char *value, bool infodump)
 /* dump "use=" clauses in the appropriate format */
 {
-    char buffer[MAX_TERMINFO_LENGTH];
+    char buffer[MAX_TERMINFO_LENGTH + EXTRA_CAP];
+    int limit = (VALID_STRING(value) ? (int) strlen(value) : 0);
+    const char *cap = infodump ? "use" : "tc";
 
     if (TcOutput())
 	trim_trailing();
+    if (limit == 0) {
+	_nc_warning("empty \"%s\" field", cap);
+	value = "";
+    } else if (limit > MAX_ALIAS) {
+	_nc_warning("\"%s\" field too long (%d), limit to %d",
+		    cap, limit, MAX_ALIAS);
+	limit = MAX_ALIAS;
+    }
     _nc_SPRINTF(buffer, _nc_SLIMIT(sizeof(buffer))
-		"%s%s", infodump ? "use=" : "tc=", name);
+		"%s=%.*s", cap, limit, value);
     wrap_concat1(buffer);
 }
 

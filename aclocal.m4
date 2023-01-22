@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1026 2023/01/14 14:00:15 tom Exp $
+dnl $Id: aclocal.m4,v 1.1028 2023/01/21 21:51:33 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -5586,7 +5586,7 @@ AC_SUBST(MAKE_UPPER_TAGS)
 AC_SUBST(MAKE_LOWER_TAGS)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_FORMAT version: 16 updated: 2022/11/05 16:12:11
+dnl CF_MANPAGE_FORMAT version: 17 updated: 2023/01/21 16:49:25
 dnl -----------------
 dnl Option to allow user to override automatic configuration of manpage format.
 dnl There are several special cases:
@@ -5699,6 +5699,42 @@ AC_MSG_RESULT($MANPAGE_FORMAT)
 if test -n "$cf_unknown" ; then
 	AC_MSG_WARN(Unexpected manpage-format $cf_unknown)
 fi
+
+cf_manpage_format=no
+cf_manpage_inboth=no
+cf_manpage_so_strip=
+cf_manpage_compress=
+
+for cf_item in $MANPAGE_FORMAT
+do
+case "$cf_item" in
+(catonly)
+	cf_manpage_format=yes
+	cf_manpage_inboth=no
+	;;
+(formatted)
+	cf_manpage_format=yes
+	cf_manpage_inboth=yes
+	;;
+(compress)
+	cf_manpage_so_strip="Z"
+	cf_manpage_compress=compress
+	;;
+(gzip)
+	cf_manpage_so_strip="gz"
+	cf_manpage_compress=gzip
+	;;
+(bzip2)
+	cf_manpage_so_strip="bz2"
+	cf_manpage_compress=bzip2
+	;;
+(xz)
+	cf_manpage_so_strip="xz"
+	cf_manpage_compress=xz
+	;;
+esac
+done
+
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_MANPAGE_RENAMES version: 17 updated: 2022/10/23 07:46:29
@@ -5740,7 +5776,7 @@ AC_MSG_RESULT($MANPAGE_RENAMES)
 AC_SUBST(MANPAGE_RENAMES)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MANPAGE_SYMLINKS version: 6 updated: 2015/04/17 21:13:04
+dnl CF_MANPAGE_SYMLINKS version: 7 updated: 2023/01/21 16:37:17
 dnl -------------------
 dnl Some people expect each tool to make all aliases for manpages in the
 dnl man-directory.  This accommodates the older, less-capable implementations
@@ -5774,7 +5810,7 @@ AC_ARG_WITH(manpage-symlinks,
 	[MANPAGE_SYMLINKS=$withval],
 	[MANPAGE_SYMLINKS=$cf_use_symlinks])
 
-if test "$$cf_use_symlinks" = no; then
+if test "$cf_use_symlinks" = no; then
 if test "$MANPAGE_SYMLINKS" = yes ; then
 	AC_MSG_WARN(cannot make symlinks, will use .so files)
 	MANPAGE_SYMLINKS=no
@@ -5802,7 +5838,7 @@ AC_ARG_WITH(manpage-tbl,
 AC_MSG_RESULT($MANPAGE_TBL)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_MAN_PAGES version: 54 updated: 2022/11/05 16:12:11
+dnl CF_MAN_PAGES version: 56 updated: 2023/01/21 16:49:25
 dnl ------------
 dnl Try to determine if the man-pages on the system are compressed, and if
 dnl so, what format is used.  Use this information to construct a script that
@@ -5821,46 +5857,7 @@ else
 	cf_prefix="$prefix"
 fi
 
-case "$MANPAGE_FORMAT" in
-(*catonly*)
-	cf_format=yes
-	cf_inboth=no
-	;;
-(*formatted*)
-	cf_format=yes
-	cf_inboth=yes
-	;;
-(*)
-	cf_format=no
-	cf_inboth=no
-	;;
-esac
-
 test ! -d man && mkdir man
-
-cf_so_strip=
-cf_compress=
-for cf_manpage_format in $MANPAGE_FORMAT
-do
-case "$cf_manpage_format" in
-(compress)
-	cf_so_strip="Z"
-	cf_compress=compress
-	;;
-(gzip)
-	cf_so_strip="gz"
-	cf_compress=gzip
-	;;
-(bzip2)
-	cf_so_strip="bz2"
-	cf_compress=bzip2
-	;;
-(xz)
-	cf_so_strip="xz"
-	cf_compress=xz
-	;;
-esac
-done
 
 cf_edit_man=./edit_man.sh
 cf_man_alias=`pwd`/man_alias.sed
@@ -5903,8 +5900,8 @@ top_srcdir=\[$]srcdir/..
 shift || exit 1
 
 if test "\$form" = normal ; then
-	if test "$cf_format" = yes ; then
-	if test "$cf_inboth" = no ; then
+	if test "$cf_manpage_format" = yes ; then
+	if test "$cf_manpage_inboth" = no ; then
 		$SHELL "\[$]0" format "\$verb" "\$mandir" "\$srcdir" "\[$]@"
 		exit $?
 	fi
@@ -5956,9 +5953,9 @@ CF_EOF2
 
 	aliases=
 	cf_source=\`basename "\$i"\`
-	inalias=\$cf_source
-	test ! -f "\$inalias" && inalias="\$srcdir/\$inalias"
-	if test ! -f "\$inalias" ; then
+	cf_full_alias=\$cf_source
+	test ! -f "\$cf_full_alias" && cf_full_alias="\$srcdir/\$cf_full_alias"
+	if test ! -f "\$cf_full_alias" ; then
 		echo ".. skipped \$cf_source"
 		continue
 	fi
@@ -5967,8 +5964,9 @@ CF_EOF
 if test "$MANPAGE_ALIASES" != no ; then
 cat >>$cf_edit_man <<CF_EOF
 	nCurses=ignore.3x
+	cf_part_alias=\`echo \$cf_full_alias| sed -e 's,^.*/,,'\`
 	test "$with_curses_h" = yes && nCurses=ncurses.3x
-	aliases=\`sed -f "\$top_srcdir/man/manlinks.sed" "\$inalias" |sed -f "$cf_man_alias" | sort -u; test "\$inalias" = "\$nCurses" && echo curses\`
+	aliases=\`sed -f "\$top_srcdir/man/manlinks.sed" "\$cf_full_alias" |sed -f "$cf_man_alias" | sort -u; test "\$cf_part_alias" = "\$nCurses" && echo curses\`
 CF_EOF
 fi
 
@@ -6035,15 +6033,15 @@ cat >>$cf_edit_man <<CF_EOF
 	fi
 CF_EOF
 
-if test -n "$cf_compress" ; then
+if test -n "$cf_manpage_compress" ; then
 cat >>$cf_edit_man <<CF_EOF
 	if test "\$verb" = installing ; then
-	if ( "$cf_compress" -f \$TMP )
+	if ( "$cf_manpage_compress" -f \$TMP )
 	then
-		mv \$TMP.$cf_so_strip \$TMP
+		mv \$TMP.$cf_manpage_so_strip \$TMP
 	fi
 	fi
-	cf_target="\$cf_target.$cf_so_strip"
+	cf_target="\$cf_target.$cf_manpage_so_strip"
 CF_EOF
 fi
 
@@ -6067,7 +6065,7 @@ cat >>$cf_edit_man <<CF_EOF
 		test -n "\$aliases" && (
 			cd "\$cf_subdir\${section}" && (
 				cf_source=\`echo "\$cf_target" |sed -e 's%^.*/\\([[^/]][[^/]]*/[[^/]][[^/]]*$\\)%\\1%'\`
-				test -n "$cf_so_strip" && cf_source=\`echo "\$cf_source" |sed -e 's%\\.$cf_so_strip\$%%'\`
+				test -n "$cf_manpage_so_strip" && cf_source=\`echo "\$cf_source" |sed -e 's%\\.$cf_manpage_so_strip\$%%'\`
 				cf_target=\`basename "\$cf_target"\`
 				for cf_alias in \$aliases
 				do
@@ -6101,11 +6099,11 @@ cat >>$cf_edit_man <<CF_EOF
 					elif test "\$cf_target" != "\$cf_alias\${suffix}" ; then
 						echo ".so \$cf_source" >\$TMP
 CF_EOF
-if test -n "$cf_compress" ; then
+if test -n "$cf_manpage_compress" ; then
 cat >>$cf_edit_man <<CF_EOF
-						if test -n "$cf_so_strip" ; then
-							"$cf_compress" -f \$TMP
-							mv \$TMP.$cf_so_strip \$TMP
+						if test -n "$cf_manpage_so_strip" ; then
+							"$cf_manpage_compress" -f \$TMP
+							mv \$TMP.$cf_manpage_so_strip \$TMP
 						fi
 CF_EOF
 fi
@@ -6144,7 +6142,7 @@ cat >>$cf_edit_man <<CF_EOF
 esac
 done
 
-if test "$cf_inboth" = yes ; then
+if test "$cf_manpage_inboth" = yes ; then
 if test "\$form" != format ; then
 	$SHELL "\[$]0" format "\$verb" "\$mandir" "\$srcdir" "\[$]@"
 fi
