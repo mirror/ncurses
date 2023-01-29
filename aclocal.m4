@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: aclocal.m4,v 1.1028 2023/01/21 21:51:33 tom Exp $
+dnl $Id: aclocal.m4,v 1.1029 2023/01/22 18:37:42 tom Exp $
 dnl Macros used in NCURSES auto-configuration script.
 dnl
 dnl These macros are maintained separately from NCURSES.  The copyright on
@@ -9430,7 +9430,7 @@ if test "x$with_pcre2" != xno ; then
 fi
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_PKG_CONFIG_LIBDIR version: 20 updated: 2022/01/29 17:03:42
+dnl CF_WITH_PKG_CONFIG_LIBDIR version: 21 updated: 2023/01/22 13:37:42
 dnl -------------------------
 dnl Allow the choice of the pkg-config library directory to be overridden.
 dnl
@@ -9441,7 +9441,8 @@ dnl b) $PKG_CONFIG_LIBDIR (tested second, added if set)
 dnl c) builtin-list (added if $PKG_CONFIG_LIBDIR is not set)
 dnl
 dnl pkgconf (used with some systems such as FreeBSD in place of pkg-config)
-dnl optionally ignores $PKG_CONFIG_LIBDIR.
+dnl optionally ignores $PKG_CONFIG_LIBDIR.  Very old versions of pkg-config,
+dnl e.g., Solaris 10 also do not recognize $PKG_CONFIG_LIBDIR.
 AC_DEFUN([CF_WITH_PKG_CONFIG_LIBDIR],[
 
 case "$PKG_CONFIG" in
@@ -9454,7 +9455,13 @@ case "$PKG_CONFIG" in
 esac
 
 # if $PKG_CONFIG_LIBDIR is set, try to use that
-cf_search_path=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/:/ /g' -e 's,^[[ 	]]*,,'`
+if test -n "$PKG_CONFIG_PATH"; then
+	cf_search_path=`echo "$PKG_CONFIG_PATH" | sed -e 's/:/ /g' -e 's,^[[ 	]]*,,' -e 's,[[ 	]]*$,,'`
+elif test -n "$PKG_CONFIG_LIBDIR"; then
+	cf_search_path=`echo "$PKG_CONFIG_LIBDIR" | sed -e 's/:/ /g' -e 's,^[[ 	]]*,,' -e 's,[[ 	]]*$,,'`
+else
+	cf_search_path=auto
+fi
 
 # if the option is used, let that override.  otherwise default to "libdir"
 AC_ARG_WITH(pkg-config-libdir,

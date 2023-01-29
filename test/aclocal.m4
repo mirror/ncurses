@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.210 2023/01/11 09:05:23 tom Exp $
+dnl $Id: aclocal.m4,v 1.211 2023/01/16 15:10:06 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -4116,7 +4116,7 @@ AC_MSG_RESULT([$]$1)
 AC_SUBST($1)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_WITH_NCURSES_ETC version: 5 updated: 2016/02/20 19:23:20
+dnl CF_WITH_NCURSES_ETC version: 6 updated: 2023/01/16 10:10:06
 dnl -------------------
 dnl Use this macro for programs which use any variant of "curses", e.g.,
 dnl "ncurses", and "PDCurses".  Programs that can use curses and some unrelated
@@ -4176,6 +4176,7 @@ case $cf_cv_screen in
 esac
 
 CF_NCURSES_PTHREADS($cf_cv_screen)
+AC_SUBST(cf_cv_screen)
 
 ])dnl
 dnl ---------------------------------------------------------------------------

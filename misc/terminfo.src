@@ -6,8 +6,8 @@
 # Report bugs and new terminal descriptions to
 #	bug-ncurses@gnu.org
 #
-#	$Revision: 1.1050 $
-#	$Date: 2023/01/15 00:26:15 $
+#	$Revision: 1.1052 $
+#	$Date: 2023/01/28 23:21:43 $
 #
 # The original header is preserved below for reference.  It is noted that there
 # is a "newer" version which differs in some cosmetic details (but actually
@@ -8819,6 +8819,26 @@ sun-il|Sun Microsystems console with working insert-line,
 # way to scroll.
 sun-cgsix|sun-ss5|Sun SparcStation 5 console,
 	il@, il1@, use=sun-il,
+
+# The Sun console was documented in the wscons manual page (apparently
+# unrelated to the "wscons" used by some of the BSDs).
+#
+#    https://illumos.org/man/4D/wscons
+#    https://www.bitsavers.org/pdf/sun/sun1/800-0345_Sun-1_System_Reference_Manual_Jul82.pdf
+#
+# The early cmdtool and shelltool programs in Sun's NeWS were based on this.
+# After NeWS was discontinued, XView provided a similar shelltool, with an
+# incomplete manual page.  Presumably the intent was to document features of
+# shelltool not in wscons:
+#
+#    https://manpages.ubuntu.com/manpages/bionic/en/man1/shelltool.1.html
+#    https://manpages.ubuntu.com/manpages/bionic/en/man1/cmdtool.1.html
+#
+# The wscons manual page and the XView source show that it had no feature that
+# could be used in ncurses u6/u7/u8/u9 extensions.  Interesting, the XView
+# source shows that its shelltool could tell the host what a particular mode
+# was set to.  But neither that nor its CSI..t controls support u6/u7/u8/u9.
+#
 # If you are using an SS5, change the sun definition to use sun-ss5.
 sun|sun1|sun2|Sun Microsystems Inc. workstation console,
 	use=sun-il,
@@ -25529,7 +25549,8 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 # kDC3 kDC4 kDC5 kDC6 kDC7 kDN kDN3 kDN4 kDN5 kDN6 kDN7 kEND3 kEND4 kEND5 kEND6
 # kEND7 kHOM3 kHOM4 kHOM5 kHOM6 kHOM7 kIC3 kIC4 kIC5 kIC6 kIC7 kLFT3 kLFT4
 # kLFT5 kLFT6 kLFT7 kNXT3 kNXT4 kNXT5 kNXT6 kNXT7 kPRV3 kPRV4 kPRV5 kPRV6 kPRV7
-# kRIT3 kRIT4 kRIT5 kRIT6 kRIT7 kUP kUP3 kUP4 kUP5 kUP6 kUP7 ka2 kb1 kb3 kc2
+# kRIT3 kRIT4 kRIT5 kRIT6 kRIT7 kUP kUP3 kUP4 kUP5 kUP6 kUP7 kxIN kxOUT ka2 kb1
+# kb3 kc2
 #
 # Bracketed paste is described with these capabilities in vim:
 #
@@ -25555,6 +25576,13 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #    underline.
 # TS is a string capability which acts like "tsl", but uses no parameter and
 #    goes to the first column of the "status line".
+# XF is set/true for terminals which support the xterm focus-in/focus-out
+#    escape sequences sent from the terminal to the host when private mode
+#    1004 is set.  Those are defined as kxIN and kxOUT, to take advantage of
+#    ncurses keypad mode to interpret them like a function key.  Because the
+#    1004 mode is usually combined with other flags to set the mouse protocol,
+#    this flag provides an application with the information that the focus
+#    mode is assumed to be set, e.g., in XM.
 # XM is a string capability which overrides ncurses's built-in string which
 #    enables/disables xterm mouse mode.
 # xm shows the format of the mouse responses.  Parameters:
@@ -27761,5 +27789,9 @@ v3220|LANPAR Vision II model 3220/3221/3222,
 #	+ add XF flag to xterm+focus so that termcap applications can be aware
 #	  of terminals which may support focus in/out -TD
 #	+ use xterm+focus in xterm-p370 and tmux -TD
+#
+# 2022-01-28
+#	+ document XF, kxIN and kxOUT -TD
+#	+ add note on sun/wscons/cmdtool/shelltool -TD
 #
 ######## SHANTIH!  SHANTIH!  SHANTIH!

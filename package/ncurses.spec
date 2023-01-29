@@ -1,7 +1,7 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.4
-Release: 20230121
+Release: 20230128
 License: X11
 Group: Development/Libraries
 Source: ncurses-%{version}-%{release}.tgz
