@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2021 Thomas E. Dickey                                *
+ * Copyright 2018-2021,2023 Thomas E. Dickey                                *
  * Copyright 2008-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -55,7 +55,7 @@
 
 #define CUR TerminalType(my_term).
 
-MODULE_ID("$Id: win_driver.c,v 1.67 2021/09/04 10:54:35 tom Exp $")
+MODULE_ID("$Id: win_driver.c,v 1.70 2023/02/12 00:31:33 tom Exp $")
 
 #define TypeAlloca(type,count) (type*) _alloca(sizeof(type) * (size_t) (count))
 
@@ -2213,13 +2213,13 @@ InitConsole(void)
 	for (i = 0; i < NUMPAIRS; i++)
 	    CON.pairs[i] = a;
 
-	CON.inp = GetStdHandle(STD_INPUT_HANDLE);
-	CON.out = GetStdHandle(STD_OUTPUT_HANDLE);
-
 	b = AllocConsole();
 
 	if (!b)
 	    b = AttachConsole(ATTACH_PARENT_PROCESS);
+
+	CON.inp = GetDirectHandle("CONIN$", FILE_SHARE_READ);
+	CON.out = GetDirectHandle("CONOUT$", FILE_SHARE_WRITE);
 
 	if (getenv("NCGDB") || getenv("NCURSES_CONSOLE2")) {
 	    T(("... will not buffer console"));
@@ -2228,7 +2228,7 @@ InitConsole(void)
 	} else {
 	    T(("... creating console buffer"));
 	    CON.hdl = CreateConsoleScreenBuffer(GENERIC_READ | GENERIC_WRITE,
-						0,
+						FILE_SHARE_READ | FILE_SHARE_WRITE,
 						NULL,
 						CONSOLE_TEXTMODE_BUFFER,
 						NULL);

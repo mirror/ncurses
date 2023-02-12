@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.653 2022/10/23 13:29:26 tom Exp $
+ * $Id: curses.priv.h,v 1.656 2023/02/12 00:13:11 tom Exp $
  *
  *	curses.priv.h
  *
@@ -208,6 +208,24 @@ extern int errno;
 #    undef NCURSES_PATHSEP
 #  endif
 #  define NCURSES_PATHSEP ';'
+#endif
+
+/*
+ * When the standard handles have been redirected (such as inside a text editor
+ * or the less utility), keystrokes must be read from the console rather than
+ * the redirected handle.  The standard output handle suffers from a similar
+ * problem.  Both handles are not closed once opened.  The console shall be
+ * considered reachable throughout the process.
+ */
+#if defined(_NC_WINDOWS)
+#define GetDirectHandle(fileName, shareMode) \
+	CreateFile(TEXT(fileName), \
+		   GENERIC_READ | GENERIC_WRITE, \
+		   shareMode, \
+		   0, \
+		   OPEN_EXISTING, \
+		   0, \
+		   0)
 #endif
 
 /*
@@ -2176,6 +2194,12 @@ extern int __MINGW_NOTHROW _nc_mblen(const char *, size_t);
 #define mblen(s,n) _nc_mblen(s, n)
 
 #endif /* _NC_WINDOWS && !_NC_MSC */
+
+#if defined(_NC_WINDOWS) || defined(_NC_MINGW)
+/* see wcwidth.c */
+NCURSES_EXPORT(int) mk_wcwidth(wchar_t);
+#define wcwidth(ucs) _nc_wcwidth(ucs)
+#endif
 
 #if HAVE_MBTOWC && HAVE_MBLEN
 #define reset_mbytes(state) IGNORE_RC(mblen(NULL, (size_t) 0)), IGNORE_RC(mbtowc(NULL, NULL, (size_t) 0))
