@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey 1995-on
 dnl
-dnl $Id: configure.in,v 1.755 2023/01/08 01:50:05 tom Exp $
+dnl $Id: configure.in,v 1.756 2023/02/18 22:33:23 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210101)
-AC_REVISION($Revision: 1.755 $)
+AC_REVISION($Revision: 1.756 $)
 AC_INIT(ncurses/base/lib_initscr.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -1750,12 +1750,7 @@ case "$cf_cv_system_name" in
 	CF_CHECK_LIBSSP
 	;;
 (*)
-AC_CHECK_FUNC(gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function]),[
-
-AC_CHECK_LIB(bsd, gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function])
-	CF_ADD_LIB(bsd))])dnl CLIX: bzero, select, gettimeofday
+	CF_FUNC_GETTIME
 	;;
 esac
 

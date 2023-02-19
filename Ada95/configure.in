@@ -1,5 +1,5 @@
 dnl***************************************************************************
-dnl Copyright 2018-2021,2022 Thomas E. Dickey                                *
+dnl Copyright 2018-2022,2023 Thomas E. Dickey                                *
 dnl Copyright 2010-2016,2018 Free Software Foundation, Inc.                  *
 dnl                                                                          *
 dnl Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -29,7 +29,7 @@ dnl***************************************************************************
 dnl
 dnl Author: Thomas E. Dickey
 dnl
-dnl $Id: configure.in,v 1.88 2022/12/17 22:05:22 tom Exp $
+dnl $Id: configure.in,v 1.91 2023/02/18 23:21:29 tom Exp $
 dnl Process this file with autoconf to produce a configure script.
 dnl
 dnl For additional information, see
@@ -38,7 +38,7 @@ dnl     https://invisible-island.net/autoconf/my-autoconf.html
 dnl
 dnl ---------------------------------------------------------------------------
 AC_PREREQ(2.52.20210509)
-AC_REVISION($Revision: 1.88 $)
+AC_REVISION($Revision: 1.91 $)
 AC_INIT(gen/gen.c)
 AC_CONFIG_HEADER(include/ncurses_cfg.h:include/ncurses_cfg.hin)
 
@@ -222,6 +222,7 @@ CF_ENABLE_BROKEN_LINKER
 
 # Check to define _XOPEN_SOURCE "automatically"
 CF_XOPEN_SOURCE(600)
+AC_CHECK_DECL(exit)
 
 CF_LARGEFILE
 
@@ -424,18 +425,12 @@ case $cf_cv_system_name in
 	CF_CHECK_LIBSSP
 	;;
 (*)
-AC_CHECK_FUNC(gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY),[
-
-AC_CHECK_LIB(bsd, gettimeofday,
-	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday])
-	LIBS="$LIBS -lbsd")])dnl CLIX: bzero, select, gettimeofday
+	CF_FUNC_GETTIME
 	;;
 esac
 
 ###	Checks for header files.
 AC_CHECK_SIZEOF([signed char])
-AC_STDC_HEADERS
 AC_HEADER_DIRENT
 AC_HEADER_TIME
 

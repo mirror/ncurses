@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3909 2023/02/11 23:24:11 tom Exp $
+-- $Id: NEWS,v 1.3911 2023/02/18 22:39:36 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -45,6 +45,13 @@ See the AUTHORS file for the corresponding full names.
 
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
+
+20230218
+	+ configure-script improvements:
+	  + recent msys2 headers work with _DEFAULT_SOURCE; amend check
+	  + use $ac_includes_default in most cases where stdlib.h should work
+	  + use #error consistently vs "make an error"
+	  + add configure macro for gettimeofday vs inline check
 
 20230211
 	+ set dwShareMode in calls to CreateConsoleScreenBuffer() (patch by
