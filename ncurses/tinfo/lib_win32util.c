@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2020,2021 Thomas E. Dickey                                     *
+ * Copyright 2020-2021,2023 Thomas E. Dickey                                *
  * Copyright 1998-2009,2010 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -34,7 +34,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32util.c,v 1.2 2021/09/04 10:54:35 tom Exp $")
+MODULE_ID("$Id: lib_win32util.c,v 1.3 2023/02/25 20:07:48 tom Exp $")
 
 #ifdef _NC_WINDOWS
 #include <io.h>
@@ -68,10 +68,10 @@ _nc_console_checkmintty(int fd, LPHANDLE pMinTTY)
     T((T_CALLED("lib_winhelper::_nc_console_checkmintty(%d, %p)"), fd, pMinTTY));
 
     if (handle != INVALID_HANDLE_VALUE) {
-        dw = GetFileType(handle);
+	dw = GetFileType(handle);
 	if (dw == FILE_TYPE_PIPE) {
 	    if (GetNamedPipeInfo(handle, 0, 0, 0, 0)) {
-	        ULONG pPid;
+		ULONG pPid;
 		/* Requires NT6 */
 		if (GetNamedPipeServerProcessId(handle, &pPid)) {
 		    TCHAR buf[MAX_PATH];
@@ -79,8 +79,7 @@ _nc_console_checkmintty(int fd, LPHANDLE pMinTTY)
 		    /* These security attributes may allow us to
 		       create a remote thread in mintty to manipulate
 		       the terminal state remotely */
-		    HANDLE pHandle = OpenProcess(
-						 PROCESS_CREATE_THREAD
+		    HANDLE pHandle = OpenProcess(PROCESS_CREATE_THREAD
 						 | PROCESS_QUERY_INFORMATION
 						 | PROCESS_VM_OPERATION
 						 | PROCESS_VM_WRITE
@@ -88,20 +87,19 @@ _nc_console_checkmintty(int fd, LPHANDLE pMinTTY)
 						 FALSE,
 						 pPid);
 		    if (pMinTTY)
-		        *pMinTTY = INVALID_HANDLE_VALUE;
+			*pMinTTY = INVALID_HANDLE_VALUE;
 		    if (pHandle != INVALID_HANDLE_VALUE) {
-		        if ((len = GetProcessImageFileName(
-							   pHandle,
+			if ((len = GetProcessImageFileName(pHandle,
 							   buf,
 							   (DWORD)
 							   array_length(buf)))) {
 			    TCHAR *pos = _tcsrchr(buf, _T('\\'));
 			    if (pos) {
-			        pos++;
+				pos++;
 				if (_tcsnicmp(pos, _TEXT("mintty.exe"), 10)
 				    == 0) {
 				    if (pMinTTY)
-				        *pMinTTY = pHandle;
+					*pMinTTY = pHandle;
 				    code = 1;
 				}
 			    }
@@ -114,7 +112,8 @@ _nc_console_checkmintty(int fd, LPHANDLE pMinTTY)
     returnCode(code);
 }
 #endif /* _NC_CHECK_MINTTY */
-
+
+#if HAVE_GETTIMEOFDAY == 2
 #define JAN1970 116444736000000000LL	/* the value for 01/01/1970 00:00 */
 
 NCURSES_EXPORT(int)
@@ -130,5 +129,6 @@ _nc_gettimeofday(struct timeval *tv, void *tz GCC_UNUSED)
     tv->tv_sec = (long) ((data.since1601 - JAN1970) / 10000000LL);
     return (0);
 }
+#endif // HAVE_GETTIMEOFDAY == 2
 
 #endif // _NC_WINDOWS

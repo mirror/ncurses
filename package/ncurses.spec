@@ -1,11 +1,11 @@
 Summary: shared libraries for terminal handling
 Name: ncurses6
 Version: 6.4
-Release: 20230218
+Release: 20230225
 License: X11
 Group: Development/Libraries
-Source: ncurses-%{version}-%{release}.tgz
-# URL: https://invisible-island.net/ncurses/
+URL: https://invisible-island.net/ncurses/
+Source: https://invisible-island.net/archives/ncurses/ncurses-%{version}-%{release}.tgz
 
 %global MY_ABI 6
 
@@ -124,14 +124,6 @@ rm -f test/ncurses
 %endif
 %endif
 
-%clean
-if rm -rf $RPM_BUILD_ROOT; then
-  echo OK
-else
-  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
-fi
-exit 0
-
 %files
 %defattr(-,root,root,-)
 %{_bindir}/*
@@ -139,6 +131,9 @@ exit 0
 %{_libdir}/*
 
 %changelog
+
+* Sat Feb 25 2023 Thomas Dickey
+- amend URLs per rpmlint
 
 * Sat Oct 16 2021 Thomas Dickey
 - disable rpath to address QA_RPATHS=1 warning.

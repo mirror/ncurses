@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey
  *
- * $Id: dots_termcap.c,v 1.31 2023/01/07 17:21:48 tom Exp $
+ * $Id: dots_termcap.c,v 1.32 2023/02/25 18:11:21 tom Exp $
  *
  * A simple demo of the termcap interface.
  */
@@ -150,11 +150,19 @@ ranf(void)
     return ((double) r / 32768.);
 }
 
+/*
+ * napms is a curses function which happens to be usable without initializing
+ * the screen, but if this program happened to be build with a "real" termcap
+ * library, there is nothing like napms. 
+ */
+#if HAVE_NAPMS
+#define my_napms(ms) napms(ms)
+#else
 static void
 my_napms(int ms)
 {
     if (ms > 0) {
-#if defined(_NC_WINDOWS) || !HAVE_GETTIMEOFDAY
+#if defined(_NC_WINDOWS)
 	Sleep((unsigned int) ms);
 #else
 	struct timeval data;
@@ -164,6 +172,7 @@ my_napms(int ms)
 #endif
     }
 }
+#endif
 
 static int
 get_number(NCURSES_CONST char *cap, const char *env)

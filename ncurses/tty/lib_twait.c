@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018,2020 Thomas E. Dickey                                     *
+ * Copyright 2018-2020,2023 Thomas E. Dickey                                *
  * Copyright 1998-2015,2016 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -76,8 +76,11 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.75 2020/02/29 15:46:00 anonymous.maarten Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.79 2023/02/25 21:59:30 tom Exp $")
 
+/*
+ * Returns an elapsed time, in milliseconds (if possible).
+ */
 static long
 _nc_gettime(TimeType * t0, int first)
 {
@@ -85,18 +88,20 @@ _nc_gettime(TimeType * t0, int first)
 
 #if PRECISE_GETTIME
     TimeType t1;
-    gettimeofday(&t1, (struct timezone *) 0);
-    if (first) {
+    if (GetClockTime(&t1) == -1) {
+	*t0 = t1;
+	res = first ? 0 : 1;
+    } else if (first) {
 	*t0 = t1;
 	res = 0;
     } else {
 	/* .tv_sec and .tv_usec are unsigned, be careful when subtracting */
-	if (t0->tv_usec > t1.tv_usec) {
-	    t1.tv_usec += 1000000;	/* Convert 1s in 1e6 microsecs */
+	if (t0->sub_secs > t1.sub_secs) {
+	    t1.sub_secs += TimeScale;
 	    t1.tv_sec--;
 	}
-	res = (t1.tv_sec - t0->tv_sec) * 1000
-	    + (t1.tv_usec - t0->tv_usec) / 1000;
+	res = (t1.tv_sec - t0->tv_sec) * 1000L
+	    + (t1.sub_secs - t0->sub_secs) / (TimeScale / 1000L);
     }
 #else
     time_t t1 = time((time_t *) 0);

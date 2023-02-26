@@ -27,7 +27,7 @@ dnl sale, use or other dealings in this Software without prior written       *
 dnl authorization.                                                           *
 dnl***************************************************************************
 dnl
-dnl $Id: aclocal.m4,v 1.212 2023/02/18 22:50:36 tom Exp $
+dnl $Id: aclocal.m4,v 1.213 2023/02/25 13:45:56 tom Exp $
 dnl
 dnl Author: Thomas E. Dickey
 dnl
@@ -449,7 +449,7 @@ AC_SUBST(HAVE_STDNORETURN_H)
 AC_SUBST(STDC_NORETURN)
 ])dnl
 dnl ---------------------------------------------------------------------------
-dnl CF_CC_ENV_FLAGS version: 10 updated: 2020/12/31 18:40:20
+dnl CF_CC_ENV_FLAGS version: 11 updated: 2023/02/20 11:15:46
 dnl ---------------
 dnl Check for user's environment-breakage by stuffing CFLAGS/CPPFLAGS content
 dnl into CC.  This will not help with broken scripts that wrap the compiler
@@ -490,7 +490,7 @@ case "$CC" in
 	AC_MSG_WARN(your environment uses the CC variable to hold CFLAGS/CPPFLAGS options)
 	# humor him...
 	cf_prog=`echo "$CC" | sed -e 's/	/ /g' -e 's/[[ ]]* / /g' -e 's/[[ ]]*[[ ]]-[[^ ]].*//'`
-	cf_flags=`echo "$CC" | ${AWK:-awk} -v prog="$cf_prog" '{ printf("%s", [substr]([$]0,1+length(prog))); }'`
+	cf_flags=`echo "$CC" | sed -e "s%^$cf_prog%%"`
 	CC="$cf_prog"
 	for cf_arg in $cf_flags
 	do
@@ -1684,15 +1684,31 @@ rm -f core])
 test "$cf_cv_func_curses_version" = yes && AC_DEFINE(HAVE_CURSES_VERSION,1,[Define to 1 if we have curses_version function])
 ])
 dnl ---------------------------------------------------------------------------
-dnl CF_FUNC_GETTIME version: 1 updated: 2023/02/18 17:41:25
+dnl CF_FUNC_GETTIME version: 2 updated: 2023/02/25 08:45:56
 dnl ---------------
+dnl Check for gettimeofday or clock_gettime.  In 2023, the former is still more
+dnl widely supported, but "deprecated" (2008), so we will use the latter if it
+dnl is available, to reduce compiler warnings.
 AC_DEFUN([CF_FUNC_GETTIME],[
+AC_CACHE_CHECK(for clock_gettime,cf_cv_func_clock_gettime,[
+		AC_TRY_LINK([#include <time.h>],
+		[struct timespec ts;
+		int rc = clock_gettime(CLOCK_REALTIME, &ts); (void) rc; (void)ts],
+		[cf_cv_func_clock_gettime=yes],
+		[cf_cv_func_clock_gettime=no])
+])
+
+if test "$cf_cv_func_clock_gettime" = yes
+then
+	AC_DEFINE(HAVE_CLOCK_GETTIME,1,[Define to 1 if we have clock_gettime function])
+else
 AC_CHECK_FUNC(gettimeofday,
 	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function]),[
 
 AC_CHECK_LIB(bsd, gettimeofday,
 	AC_DEFINE(HAVE_GETTIMEOFDAY,1,[Define to 1 if we have gettimeofday function])
 	CF_ADD_LIB(bsd))])dnl CLIX: bzero, select, gettimeofday
+fi
 ])dnl
 dnl ---------------------------------------------------------------------------
 dnl CF_FUNC_OPENPTY version: 6 updated: 2021/01/01 13:31:04

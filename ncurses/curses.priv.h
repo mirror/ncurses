@@ -35,7 +35,7 @@
  ****************************************************************************/
 
 /*
- * $Id: curses.priv.h,v 1.656 2023/02/12 00:13:11 tom Exp $
+ * $Id: curses.priv.h,v 1.660 2023/02/25 21:24:20 tom Exp $
  *
  *	curses.priv.h
  *
@@ -732,9 +732,18 @@ extern NCURSES_EXPORT(void) _nc_set_read_thread(bool);
 
 #endif
 
-#if HAVE_GETTIMEOFDAY
+#if HAVE_CLOCK_GETTIME
 # define PRECISE_GETTIME 1
+# define GetClockTime(t) clock_gettime(CLOCK_REALTIME, t)
+# define TimeType struct timespec
+# define TimeScale 1000000000L		/* 1e9 */
+# define sub_secs tv_nsec
+#elif HAVE_GETTIMEOFDAY
+# define PRECISE_GETTIME 1
+# define GetClockTime(t) gettimeofday(t, 0)
 # define TimeType struct timeval
+# define TimeScale 1000000L		/* 1e6 */
+# define sub_secs tv_usec
 #else
 # define PRECISE_GETTIME 0
 # define TimeType time_t

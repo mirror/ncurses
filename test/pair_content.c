@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
  * copy of this software and associated documentation files (the            *
@@ -26,7 +26,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: pair_content.c,v 1.21 2022/12/10 22:28:50 tom Exp $
+ * $Id: pair_content.c,v 1.22 2023/02/25 16:43:56 tom Exp $
  */
 
 #define NEED_TIME_H
@@ -57,10 +57,8 @@ static int x_opt;
 
 static MYPAIR *expected;
 
-#if HAVE_GETTIMEOFDAY
-static struct timeval initial_time;
-static struct timeval finish_time;
-#endif
+static TimeType initial_time;
+static TimeType finish_time;
 
 static GCC_NORETURN void
 finish(int code)
@@ -171,9 +169,7 @@ setup_test(void)
     } else {
 	failed("This demo requires a color terminal");
     }
-#if HAVE_GETTIMEOFDAY
-    gettimeofday(&initial_time, 0);
-#endif
+    GetClockTime(&initial_time);
 }
 
 static void
@@ -205,16 +201,6 @@ finish_test(void)
     getch();
     endwin();
 }
-
-#if HAVE_GETTIMEOFDAY
-static double
-seconds(struct timeval *mark)
-{
-    double result = (double) mark->tv_sec;
-    result += ((double) mark->tv_usec / 1e6);
-    return result;
-}
-#endif
 
 static void
 usage(int ok)
@@ -321,12 +307,8 @@ main(int argc, char *argv[])
 	    addch('\n');
 	}
 	printw("DONE: ");
-#if HAVE_GETTIMEOFDAY
-	gettimeofday(&finish_time, 0);
-	printw("%.03f seconds",
-	       seconds(&finish_time)
-	       - seconds(&initial_time));
-#endif
+	GetClockTime(&finish_time);
+	printw("%.03f seconds", ElapsedSeconds(&initial_time, &finish_time));
 	finish_test();
     }
 

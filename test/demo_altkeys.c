@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2020,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 2005-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
  * authorization.                                                           *
  ****************************************************************************/
 /*
- * $Id: demo_altkeys.c,v 1.16 2022/12/10 23:31:31 tom Exp $
+ * $Id: demo_altkeys.c,v 1.17 2023/02/25 18:08:02 tom Exp $
  *
  * Demonstrate the define_key() function.
  * Thomas Dickey - 2005/10/22
@@ -96,9 +96,7 @@ main(int argc, char *argv[])
 {
     int n;
     int ch;
-#if HAVE_GETTIMEOFDAY
-    struct timeval previous;
-#endif
+    TimeType previous;
 
     while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
 	switch (ch) {
@@ -147,31 +145,16 @@ main(int argc, char *argv[])
 	}
     }
 
-#if HAVE_GETTIMEOFDAY
-    gettimeofday(&previous, 0);
-#endif
+    GetClockTime(&previous);
 
     while ((ch = getch()) != ERR) {
 	bool escaped = (ch >= MY_KEYS);
 	const char *name = keyname(escaped ? (ch - MY_KEYS) : ch);
-#if HAVE_GETTIMEOFDAY
-	int secs, msecs;
-	struct timeval current;
+	TimeType current;
 
-	gettimeofday(&current, 0);
-	secs = (int) (current.tv_sec - previous.tv_sec);
-	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);
-	if (msecs < 0) {
-	    msecs += 1000;
-	    --secs;
-	}
-	if (msecs >= 1000) {
-	    secs += msecs / 1000;
-	    msecs %= 1000;
-	}
-	printw("%6d.%03d ", secs, msecs);
+	GetClockTime(&current);
+	printw("%6.03f ", ElapsedSeconds(&previous, &current));
 	previous = current;
-#endif
 	printw("Keycode %d, name %s%s\n",
 	       ch,
 	       escaped ? "ESC-" : "",

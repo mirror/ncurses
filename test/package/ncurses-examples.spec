@@ -3,15 +3,14 @@ Summary: example/test programs from ncurses
 %global AltProgram ncursest-examples
 %global AppVersion MAJOR.MINOR
 %global AppRelease YYYYMMDD
-# $Id: ncurses-examples.spec,v 1.21 2021/12/19 00:13:46 tom Exp $
+# $Id: ncurses-examples.spec,v 1.22 2023/02/25 23:10:49 tom Exp $
 Name: %{AppProgram}
 Version: %{AppVersion}
 Release: %{AppRelease}
 License: MIT
 Group: Applications/Development
-URL: ftp://ftp.invisible-island.net/pub/%{AppProgram}
-Source0: %{AppProgram}-%{AppRelease}.tgz
-Packager: Thomas Dickey <dickey@invisible-island.net>
+URL: https://invisible-island.net/ncurses/%{AppProgram}.html
+Source: https://invisible-island.net/archives/%{AppProgram}/%{AppProgram}-%{release}.tgz
 
 %description
 These are the example/test programs from the ncurses MAJOR.MINOR distribution,
@@ -83,14 +82,6 @@ pushd BUILD-%{AltProgram}
 make install PACKAGE=%{AltProgram} DESTDIR=$RPM_BUILD_ROOT
 popd
 
-%clean
-if rm -rf $RPM_BUILD_ROOT; then
-  echo OK
-else
-  find $RPM_BUILD_ROOT -type f | grep -F -v /.nfs && exit 1
-fi
-exit 0
-
 %files -n %{AppProgram}
 %defattr(-,root,root)
 %{_bindir}/%{AppProgram}
@@ -105,6 +96,9 @@ exit 0
 
 %changelog
 # each patch should add its ChangeLog entries here
+
+* Sat Feb 25 2023 Thomas Dickey
+- amend URLs per rpmlint
 
 * Sat Dec 18 2021 Thomas Dickey
 - use libexecdir for programs rather than subdir of bindir

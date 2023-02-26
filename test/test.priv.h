@@ -30,7 +30,7 @@
 /****************************************************************************
  *  Author: Thomas E. Dickey                    1996-on                     *
  ****************************************************************************/
-/* $Id: test.priv.h,v 1.207 2023/01/07 17:15:50 tom Exp $ */
+/* $Id: test.priv.h,v 1.210 2023/02/25 21:26:04 tom Exp $ */
 
 #ifndef __TEST_PRIV_H
 #define __TEST_PRIV_H 1
@@ -73,6 +73,10 @@
 
 #ifndef HAVE_CHGAT
 #define HAVE_CHGAT 0
+#endif
+
+#ifndef HAVE_CLOCK_GETTIME
+#define HAVE_CLOCK_GETTIME 0
 #endif
 
 #ifndef HAVE_COLOR_CONTENT
@@ -1081,6 +1085,26 @@ extern int TABSIZE;
 #  include <time.h>
 # endif
 #endif
+#endif
+
+#if HAVE_CLOCK_GETTIME
+# define GetClockTime(t) clock_gettime(CLOCK_REALTIME, t)
+# define TimeType struct timespec
+# define TimeScale 1000000000L		/* 1e9 */
+# define ElapsedSeconds(b,e) \
+	    (double) (((e)->tv_sec - (b)->tv_sec) \
+		    + ((e)->tv_nsec - (b)->tv_nsec) / TimeScale)
+#elif HAVE_GETTIMEOFDAY
+# define GetClockTime(t) gettimeofday(t, 0)
+# define TimeType struct timeval
+# define TimeScale 1000000L		/* 1e6 */
+# define ElapsedSeconds(b,e) \
+	    (double) (((e)->tv_sec - (b)->tv_sec) \
+		    + ((e)->tv_usec - (b)->tv_usec) / TimeScale)
+#else
+# define TimeType time_t
+# define GetClockTime(t) time((time_t*)0)
+# define ElapsedSeconds(b,e) (double)((e) - (b))
 #endif
 
 /*

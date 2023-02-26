@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 2006-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -30,7 +30,7 @@
 /*
  * Author: Thomas E. Dickey, 2006
  *
- * $Id: foldkeys.c,v 1.11 2022/12/10 23:31:31 tom Exp $
+ * $Id: foldkeys.c,v 1.12 2023/02/25 16:51:01 tom Exp $
  *
  * Demonstrate a method for altering key definitions at runtime.
  *
@@ -217,9 +217,7 @@ int
 main(int argc, char *argv[])
 {
     int ch;
-#if HAVE_GETTIMEOFDAY
-    struct timeval previous;
-#endif
+    TimeType previous;
 
     while ((ch = getopt(argc, argv, OPTS_COMMON)) != -1) {
 	switch (ch) {
@@ -250,32 +248,17 @@ main(int argc, char *argv[])
 
     demo_foldkeys();
 
-#if HAVE_GETTIMEOFDAY
-    gettimeofday(&previous, 0);
-#endif
+    GetClockTime(&previous);
 
     while ((ch = getch()) != ERR) {
 	bool escaped = (ch >= MY_KEYS);
 	const char *name = keyname(escaped ? (ch - MY_KEYS) : ch);
+	TimeType current;
 
-#if HAVE_GETTIMEOFDAY
-	int secs, msecs;
-	struct timeval current;
-
-	gettimeofday(&current, 0);
-	secs = (int) (current.tv_sec - previous.tv_sec);
-	msecs = (int) ((current.tv_usec - previous.tv_usec) / 1000);
-	if (msecs < 0) {
-	    msecs += 1000;
-	    --secs;
-	}
-	if (msecs >= 1000) {
-	    secs += msecs / 1000;
-	    msecs %= 1000;
-	}
-	printw("%6d.%03d ", secs, msecs);
+	GetClockTime(&current);
+	printw("%6.03f ", ElapsedSeconds(&previous, &current));
 	previous = current;
-#endif
+
 	printw("Keycode %d, name %s%s\n",
 	       ch,
 	       escaped ? "ESC-" : "",
