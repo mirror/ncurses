@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2020-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2020-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 2007-2014,2015 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_opaque.3x,v 1.18 2022/02/12 20:05:11 tom Exp $
+.\" $Id: curs_opaque.3x,v 1.19 2023/03/11 20:40:58 tom Exp $
 .TH curs_opaque 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -92,45 +92,45 @@ set in the WINDOW structure, allowing it to be \*(``opaque\*('' if
 the symbol \fBNCURSES_OPAQUE\fP is defined:
 .TP 5
 \fBis_cleared\fP
-returns the value set in \fBclearok\fP
+returns the value set in \fBclearok\fP(3X)
 .TP 5
 \fBis_idcok\fP
-returns the value set in \fBidcok\fP
+returns the value set in \fBidcok\fP(3X)
 .TP 5
 \fBis_idlok\fP
-returns the value set in \fBidlok\fP
+returns the value set in \fBidlok\fP(3X)
 .TP 5
 \fBis_immedok\fP
-returns the value set in \fBimmedok\fP
+returns the value set in \fBimmedok\fP(3X)
 .TP 5
 \fBis_keypad\fP
-returns the value set in \fBkeypad\fP
+returns the value set in \fBkeypad\fP(3X)
 .TP 5
 \fBis_leaveok\fP
-returns the value set in \fBleaveok\fP
+returns the value set in \fBleaveok\fP(3X)
 .TP 5
 \fBis_nodelay\fP
-returns the value set in \fBnodelay\fP
+returns the value set in \fBnodelay\fP(3X)
 .TP 5
 \fBis_notimeout\fP
-returns the value set in \fBnotimeout\fP
+returns the value set in \fBnotimeout\fP(3X)
 .TP 5
 \fBis_pad\fP
 returns \fBTRUE\fP if the window is a pad
-i.e., created by \fBnewpad\fP
+i.e., created by \fBnewpad\fP(3X)
 .TP 5
 \fBis_scrollok\fP
-returns the value set in \fBscrollok\fP
+returns the value set in \fBscrollok\fP(3X)
 .TP 5
 \fBis_subwin\fP
 returns \fBTRUE\fP if the window is a subwindow,
-i.e., created by \fBsubwin\fP or \fBderwin\fP
+i.e., created by \fBsubwin\fP(3X) or \fBderwin\fP(3X)
 .TP 5
 \fBis_syncok\fP
-returns the value set in \fBsyncok\fP
+returns the value set in \fBsyncok\fP(3X)
 .TP 5
 \fBwgetdelay\fP
-returns the delay timeout as set in \fBwtimeout\fP.
+returns the delay timeout as set in \fBwtimeout\fP(3X).
 .TP 5
 \fBwgetparent\fP
 returns the parent WINDOW pointer for subwindows,

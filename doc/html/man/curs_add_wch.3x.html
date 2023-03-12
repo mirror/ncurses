@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2019-2020,2021 Thomas E. Dickey                                *
+  * Copyright 2019-2021,2023 Thomas E. Dickey                                *
   * Copyright 2001-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_add_wch.3x,v 1.31 2021/12/25 21:37:49 tom Exp @
+  * @Id: curs_add_wch.3x,v 1.32 2023/03/11 20:40:45 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -198,9 +198,9 @@
 
        The latter may be due to different causes:
 
-       <STRONG>o</STRONG>   If  <STRONG>scrollok</STRONG> is not enabled, writing a character at the lower right
-           margin succeeds.  However, an error is returned because it  is  not
-           possible to wrap to a new line
+       <STRONG>o</STRONG>   If  <STRONG><A HREF="scrollok.3x.html">scrollok(3x)</A></STRONG>  is  not enabled, writing a character at the lower
+           right margin succeeds.  However, an error is returned because it is
+           not possible to wrap to a new line
 
        <STRONG>o</STRONG>   If  an error is detected when converting a multibyte character to a
            sequence of bytes, or if it is not  possible  to  add  all  of  the

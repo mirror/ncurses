@@ -76,7 +76,7 @@
 #endif
 #undef CUR
 
-MODULE_ID("$Id: lib_twait.c,v 1.79 2023/02/25 21:59:30 tom Exp $")
+MODULE_ID("$Id: lib_twait.c,v 1.80 2023/03/04 23:47:00 tom Exp $")
 
 /*
  * Returns an elapsed time, in milliseconds (if possible).
@@ -100,8 +100,8 @@ _nc_gettime(TimeType * t0, int first)
 	    t1.sub_secs += TimeScale;
 	    t1.tv_sec--;
 	}
-	res = (t1.tv_sec - t0->tv_sec) * 1000L
-	    + (t1.sub_secs - t0->sub_secs) / (TimeScale / 1000L);
+	res = (long) ((t1.tv_sec - t0->tv_sec) * 1000L
+		      + (t1.sub_secs - t0->sub_secs) / (TimeScale / 1000L));
     }
 #else
     time_t t1 = time((time_t *) 0);

@@ -1,6 +1,6 @@
 <!--
   ****************************************************************************
-  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+  * Copyright 2018-2022,2023 Thomas E. Dickey                                *
   * Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_refresh.3x,v 1.25 2022/02/12 20:05:11 tom Exp @
+  * @Id: curs_refresh.3x,v 1.26 2023/03/11 20:41:02 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -71,9 +71,9 @@
        ly manipulate data structures.  The routine <STRONG>wrefresh</STRONG> copies  the  named
        window  to  the  <EM>physical</EM>  <EM>screen</EM>,  taking into account what is already
        there to do optimizations.  The <STRONG>refresh</STRONG> routine is the same, using <STRONG>std-</STRONG>
-       <STRONG>scr</STRONG> as the default window.  Unless <STRONG>leaveok</STRONG> has been enabled, the physi-
-       cal cursor of the terminal is left at the location of  the  cursor  for
-       that window.
+       <STRONG>scr</STRONG>  as  the  default window.  Unless <STRONG><A HREF="leaveok.3x.html">leaveok(3x)</A></STRONG> has been enabled, the
+       physical cursor of the terminal is left at the location of  the  cursor
+       for that window.
 
 
 </PRE><H3><a name="h3-wnoutrefresh_doupdate">wnoutrefresh/doupdate</a></H3><PRE>

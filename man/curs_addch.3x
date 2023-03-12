@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_addch.3x,v 1.59 2022/02/12 20:07:29 tom Exp $
+.\" $Id: curs_addch.3x,v 1.60 2023/03/11 20:39:26 tom Exp $
 .TH curs_addch 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -71,10 +71,10 @@ If the advance is at the right margin:
 The cursor automatically wraps to the beginning of the next line.
 .bP
 At the bottom of the current scrolling region,
-and if \fBscrollok\fP is enabled,
+and if \fBscrollok\fP(3X) is enabled,
 the scrolling region is scrolled up one line.
 .bP
-If \fBscrollok\fP is not enabled,
+If \fBscrollok\fP(3X) is not enabled,
 writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line
@@ -96,7 +96,16 @@ The tab interval may be altered by setting the \fBTABSIZE\fP variable.
 .PP
 If \fIch\fP is any other nonprintable character,
 it is drawn in printable form,
-i.e., the \fB^\fIX\fR notation used by \fBunctrl\fR(3X).
+using the same convention as \fBunctrl\fR(3X):
+.bP
+Control characters are displayed in the \fB^\fIX\fR notation.
+.bP
+Values above 128 are either meta characters (if the screen has not
+been initialized, or if \fBmeta\fP(3X) has been called with a \fBTRUE\fP E parameter),
+shown in the \fBM\-\fIX\fR notation, or are displayed as themselves.
+In the latter case, the values may not be printable;
+this follows the X/Open specification.
+.PP
 Calling \fBwinch\fP after adding a
 nonprintable character does not return the character itself,
 but instead returns the printable representation of the character.
@@ -180,7 +189,7 @@ or if the window pointer is null.
 If it is not possible to add a complete character,
 an error is returned:
 .bP
-If \fBscrollok\fP is not enabled,
+If \fBscrollok\fP(3X) is not enabled,
 writing a character at the lower right margin succeeds.
 However, an error is returned because
 it is not possible to wrap to a new line

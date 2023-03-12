@@ -1,5 +1,5 @@
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2010,2016 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -27,7 +27,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: curs_refresh.3x,v 1.25 2022/02/12 20:05:11 tom Exp $
+.\" $Id: curs_refresh.3x,v 1.26 2023/03/11 20:41:02 tom Exp $
 .TH curs_refresh 3X ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -73,7 +73,7 @@ the named window to the \fIphysical screen\fP,
 taking into account what is already there to do optimizations.
 The \fBrefresh\fP routine is the
 same, using \fBstdscr\fP as the default window.
-Unless \fBleaveok\fP has been
+Unless \fBleaveok\fP(3X) has been
 enabled, the physical cursor of the terminal is left at the location of the
 cursor for that window.
 .SS wnoutrefresh/doupdate

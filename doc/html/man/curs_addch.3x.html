@@ -1,7 +1,7 @@
 <!--
   * t
   ****************************************************************************
-  * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+  * Copyright 2018-2022,2023 Thomas E. Dickey                                *
   * Copyright 1998-2015,2017 Free Software Foundation, Inc.                  *
   *                                                                          *
   * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
   * sale, use or other dealings in this Software without prior written       *
   * authorization.                                                           *
   ****************************************************************************
-  * @Id: curs_addch.3x,v 1.59 2022/02/12 20:07:29 tom Exp @
+  * @Id: curs_addch.3x,v 1.60 2023/03/11 20:39:26 tom Exp @
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
 <HTML>
@@ -74,12 +74,12 @@
 
        <STRONG>o</STRONG>   The cursor automatically wraps to the beginning of the next line.
 
-       <STRONG>o</STRONG>   At  the  bottom of the current scrolling region, and if <STRONG>scrollok</STRONG> is
-           enabled, the scrolling region is scrolled up one line.
+       <STRONG>o</STRONG>   At  the bottom of the current scrolling region, and if <STRONG><A HREF="scrollok.3x.html">scrollok(3x)</A></STRONG>
+           is enabled, the scrolling region is scrolled up one line.
 
-       <STRONG>o</STRONG>   If <STRONG>scrollok</STRONG> is not enabled, writing a character at the lower  right
-           margin  succeeds.   However, an error is returned because it is not
-           possible to wrap to a new line
+       <STRONG>o</STRONG>   If <STRONG><A HREF="scrollok.3x.html">scrollok(3x)</A></STRONG> is not enabled, writing a character  at  the  lower
+           right margin succeeds.  However, an error is returned because it is
+           not possible to wrap to a new line
 
        If <EM>ch</EM> is a tab, newline, carriage return or backspace,  the  cursor  is
        moved appropriately within the window:
@@ -97,9 +97,19 @@
            may be altered by setting the <STRONG>TABSIZE</STRONG> variable.
 
        If  <EM>ch</EM>  is  any  other nonprintable character, it is drawn in printable
-       form, i.e., the <STRONG>^</STRONG><EM>X</EM> notation used by <STRONG><A HREF="unctrl.3x.html">unctrl(3x)</A></STRONG>.   Calling  <STRONG>winch</STRONG>  after
-       adding  a  nonprintable character does not return the character itself,
-       but instead returns the printable representation of the character.
+       form, using the same convention as <STRONG><A HREF="unctrl.3x.html">unctrl(3x)</A></STRONG>:
+
+       <STRONG>o</STRONG>   Control characters are displayed in the <STRONG>^</STRONG><EM>X</EM> notation.
+
+       <STRONG>o</STRONG>   Values above 128 are either meta characters (if the screen has  not
+           been  initialized,  or  if  <STRONG><A HREF="curs_inopts.3x.html">meta(3x)</A></STRONG>  has been called with a <STRONG>TRUE</STRONG> E
+           parameter),  shown  in  the  <STRONG>M-</STRONG><EM>X</EM>  notation,  or  are  displayed  as
+           themselves.   In  the latter case, the values may not be printable;
+           this follows the X/Open specification.
+
+       Calling <STRONG>winch</STRONG> after adding a nonprintable character does not return the
+       character  itself,  but instead returns the printable representation of
+       the character.
 
        Video attributes can be combined with a character  argument  passed  to
        <STRONG>addch</STRONG>  or  related  functions by logical-ORing them into the character.
@@ -178,9 +188,9 @@
        If it is not  possible  to  add  a  complete  character,  an  error  is
        returned:
 
-       <STRONG>o</STRONG>   If  <STRONG>scrollok</STRONG> is not enabled, writing a character at the lower right
-           margin succeeds.  However, an error is returned because it  is  not
-           possible to wrap to a new line
+       <STRONG>o</STRONG>   If  <STRONG><A HREF="scrollok.3x.html">scrollok(3x)</A></STRONG>  is  not enabled, writing a character at the lower
+           right margin succeeds.  However, an error is returned because it is
+           not possible to wrap to a new line
 
        <STRONG>o</STRONG>   If  an error is detected when converting a multibyte character to a
            sequence of bytes, or if it is not  possible  to  add  all  of  the

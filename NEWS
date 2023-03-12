@@ -26,7 +26,7 @@
 -- sale, use or other dealings in this Software without prior written        --
 -- authorization.                                                            --
 -------------------------------------------------------------------------------
--- $Id: NEWS,v 1.3914 2023/02/25 22:58:50 tom Exp $
+-- $Id: NEWS,v 1.3919 2023/03/12 00:14:16 tom Exp $
 -------------------------------------------------------------------------------
 
 This is a log of changes that ncurses has gone through since Zeyd started
@@ -46,9 +46,21 @@ See the AUTHORS file for the corresponding full names.
 Changes through 1.9.9e did not credit all contributions;
 it is not possible to add this information.
 
+20230311
+	+ improve manpage description for addch versus unctrl format used for
+	  non-printable characters.
+	+ modify version-check for gcc/g++, now works for msys2.
+	+ modify check in _nc_write_entry() for multiply defined aliases to
+	  report problems within the current runtime of tic rather than for
+	  conflicts with pre-existing terminal descriptions.
+	+ allow for MinGW32-/64-bit configurations to use _DEFAULT_SOURCE
+	+ clarify interaction of -R option versus -C, -I and -r in infocmp
+	  manpage.
+	+ build-fix in lib_win32con.c (cf: 20230211).
+
 20230225
 	+ build-fixes for rpm test-packages.
-	+ add/user configure check for clock_gettime(), to supersede
+	+ add/use configure check for clock_gettime(), to supersede
 	  gettimeofday().
 
 20230218

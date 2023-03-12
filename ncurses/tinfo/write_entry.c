@@ -1,5 +1,5 @@
 /****************************************************************************
- * Copyright 2018-2021,2022 Thomas E. Dickey                                *
+ * Copyright 2018-2022,2023 Thomas E. Dickey                                *
  * Copyright 1998-2016,2017 Free Software Foundation, Inc.                  *
  *                                                                          *
  * Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -51,7 +51,7 @@
 #define TRACE_NUM(n)		/* nothing */
 #endif
 
-MODULE_ID("$Id: write_entry.c,v 1.120 2022/04/23 19:59:10 tom Exp $")
+MODULE_ID("$Id: write_entry.c,v 1.121 2023/03/05 18:45:59 tom Exp $")
 
 static int total_written;
 static int total_parts;
@@ -473,7 +473,7 @@ _nc_write_entry(TERMTYPE2 *const tp)
 	if (strcmp(filename, linkname) == 0) {
 	    _nc_warning("self-synonym ignored");
 	} else if (stat(linkname, &statbuf) >= 0 &&
-		   statbuf.st_mtime < start_time) {
+		   statbuf.st_mtime > start_time) {
 	    _nc_warning("alias %s multiply defined.", ptr);
 	} else if (_nc_access(linkname, W_OK) == 0)
 #if HAVE_LINK

@@ -1,6 +1,6 @@
 '\" t
 .\"***************************************************************************
-.\" Copyright 2018-2021,2022 Thomas E. Dickey                                *
+.\" Copyright 2018-2022,2023 Thomas E. Dickey                                *
 .\" Copyright 1998-2017,2018 Free Software Foundation, Inc.                  *
 .\"                                                                          *
 .\" Permission is hereby granted, free of charge, to any person obtaining a  *
@@ -28,7 +28,7 @@
 .\" authorization.                                                           *
 .\"***************************************************************************
 .\"
-.\" $Id: infocmp.1m,v 1.81 2022/02/12 20:02:20 tom Exp $
+.\" $Id: infocmp.1m,v 1.82 2023/03/05 00:05:39 tom Exp $
 .TH @INFOCMP@ 1M ""
 .ie \n(.g .ds `` \(lq
 .el       .ds `` ``
@@ -487,11 +487,23 @@ see \fBterminfo\fP(\*n) for details.
 .bP
 You can also choose the subset \*(``BSD\*('' which selects only capabilities
 with termcap equivalents recognized by 4.4BSD.
-The \fB\-C\fP option sets the \*(``BSD\*('' subset as a side-effect.
 .bP
 If you select any other value for \fB\-R\fP,
 it is the same as no subset, i.e., all capabilities are used.
-The \fB\-I\fP option likewise selects no subset as a side-effect.
+.RE
+.IP
+A few options override the subset selected with \fB\-R\fP,
+if they are processed later in the command parameters:
+.RS
+.TP 5
+\fB\-C\fP
+sets the \*(``BSD\*('' subset as a side-effect.
+.TP 5
+\fB\-I\fP
+sets the subset to all capabilities.
+.TP 5
+\fB\-r\fP
+sets the subset to all capabilities.
 .RE
 .TP
 \fB\-s \fI[d|i|l|c]\fR

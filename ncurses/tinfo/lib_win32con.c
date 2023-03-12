@@ -38,7 +38,7 @@
 
 #include <curses.priv.h>
 
-MODULE_ID("$Id: lib_win32con.c,v 1.11 2023/02/12 00:31:33 tom Exp $")
+MODULE_ID("$Id: lib_win32con.c,v 1.12 2023/02/26 19:55:10 tom Exp $")
 
 #ifdef _NC_WINDOWS
 
@@ -1193,7 +1193,7 @@ _nc_console_checkinit(bool initFlag, bool assumeTermInfo)
 	    for (i = 0; i < CON_NUMPAIRS; i++)
 		WINCONSOLE.pairs[i] = a;
 
-#define SaveConsoleMode(handle, data) \
+#define SaveConsoleMode(handle, value) \
             GetConsoleMode(WINCONSOLE.handle, &WINCONSOLE.originalMode.value)
 
 	    if (WINCONSOLE.isTermInfoConsole) {
